@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TableRow>
+	    <TextView android:id="@+id/hebrew_date"
+				android:text="HebDate" />
+			<TextView android:id="@+id/secular_date"
+				android:text="SecDate" />
+	    <TextView android:id="@+id/location"
+				android:text="Location" />
+    </TableRow>
+
+		<TableRow>
+			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:scrollbars="none">
+
+				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+					<TableRow>
+						<TextView android:text="@string/Alot"/>
+						<TextView android:id="@+id/alot" android:text="alot"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Talit"/>
+						<TextView android:id="@+id/talit" android:text="talit"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Hanetz"/>
+						<TextView android:id="@+id/hanetz" android:text="hanetz"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/SofZmanShemaMGA"/>
+						<TextView android:id="@+id/shemaMGA" android:text="shemaMGA"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/SofZmanTefilahMGA"/>
+						<TextView android:id="@+id/tefilahMGA" android:text="tefilah"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/SofZmanTefilahGRA"/>
+						<TextView android:id="@+id/tefilahGRA" android:text="tefilah"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Chatzot"/>
+						<TextView android:id="@+id/chatzot" android:text="chatzot"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/MinchaGedola"/>
+						<TextView android:id="@+id/mincha_gedola" android:text="mincha gedola"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/MinchaKitana"/>
+						<TextView android:id="@+id/mincha_kitana" android:text="mincha kitana"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Plag"/>
+						<TextView android:id="@+id/plag_hamincha" android:text="plag hamincha"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Shkiah"/>
+						<TextView android:id="@+id/shkiah" android:text="shkiah"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Tzait"/>
+						<TextView android:id="@+id/tzait" android:text="tzait"/>
+					</TableRow>
+				</TableLayout>
+
+			</ScrollView>
+
+		</TableRow>
+
+	</TableLayout>
+
+</LinearLayout>

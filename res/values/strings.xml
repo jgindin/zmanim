@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Zmanim</string>
+	<string name="Alot">Alot (Dawn)</string>
+	<string name="Talit">Talit/Tefilin</string>
+	<string name="Hanetz">Hanetz (Sunrise)</string>
+	<string name="SofZmanShemaMGA">Sof Zman Shema MG"A</string>
+	<string name="SofZmanTefilahMGA">Sof Zman Tefila MG"A</string>
+	<string name="SofZmanTefilahGRA">Sof Zman Tefila GRA</string>
+	<string name="Chatzot">Chatzot (Mid-Day)</string>
+	<string name="MinchaGedola">Mincha Gedola</string>
+	<string name="MinchaKitana">Mincha Kitana</string>
+	<string name="Plag">Plag HaMincha</string>
+	<string name="BeinHashemashot">Bein Hashemashot</string>
+	<string name="Shkiah">Shkia (Sunset)</string>
+	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
+	<string name="Tzait">Tzait Hachocavim (Nightfall)</string>
+	<string name="CandleLighting">Candle Lighting</string>
+</resources>

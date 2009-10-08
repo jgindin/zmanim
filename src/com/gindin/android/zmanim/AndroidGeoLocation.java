@@ -1,0 +1,114 @@
+package com.gindin.android.zmanim;
+
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import net.sourceforge.zmanim.util.GeoLocation;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.TimeZone;
+
+/**
+ * Encapsulates the necessary work of finding our current location from the phone in a way that is
+ *  usable by the Zmanim API.
+ *<p>
+ * TODO: Look at using the Geocoder class to work out what the place is called given the lat & long.
+ */
+public class AndroidGeoLocation
+	extends GeoLocation {
+
+	private static final Location                             SEATTLE;
+
+	private final Context                                     context;
+
+
+	static {
+		SEATTLE = new Location( "hard-coded" );
+		SEATTLE.setLatitude( 47.554163 );
+		SEATTLE.setLongitude( -122.257919 );
+		SEATTLE.setAltitude( 0.0 );
+		SEATTLE.setTime( System.currentTimeMillis() );
+	}
+
+
+	public AndroidGeoLocation(
+		Context context
+	) {
+		this.context = context;
+
+		initFromPhoneLocation();
+	}
+
+
+	// TODO: Call from separate thread!?!
+	@Override
+	public String getLocationName() {
+
+		final double latitude = getLatitude();
+		final double longitude = getLongitude();
+
+		Geocoder  geocoder = new Geocoder( context );
+
+		try {
+			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
+			if ( ( null == addresses ) || ( addresses.isEmpty() ) ) {
+				return getUnknownLocationName( latitude, longitude );
+			}
+
+			final Address address = addresses.get( 0 );
+			return address.getLocality() + ", " + address.getAdminArea();
+		}
+		catch ( IOException e ) {
+			return getUnknownLocationName( latitude, longitude );
+		}
+	}
+
+
+	private String getUnknownLocationName(
+		double latitude,
+		double longitude
+	) {
+		return latitude + " lat " + longitude + " long";
+	}
+
+
+	private void initFromPhoneLocation() {
+
+		Location location = getLocation();
+		setLatitude( location.getLatitude() );
+		setLongitude( location.getLongitude() );
+		setElevation( location.getAltitude() );
+		setTimeZone( TimeZone.getDefault() );
+	}
+
+
+	/**
+	 * Find a relatively accurate location.
+	 *<p>
+	 * Code taken from: http://www.androidsnippets.org/snippets/21/
+	 *
+	 * @return the phone's location
+	 */
+	private Location getLocation() {
+
+		LocationManager lm = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
+		List<String> providers = lm.getProviders( true );
+
+		// Loop over the array backwards, and if you get an accurate location, then break out the loop
+		Location location;
+
+		for ( int i = providers.size() - 1; i >= 0; i-- ) {
+			location = lm.getLastKnownLocation( providers.get( i ) );
+			if ( location != null ) {
+				return location;
+			}
+		}
+
+		return SEATTLE;
+	}
+
+
+}  // End of AndroidGeoLocation class
