@@ -2,12 +2,10 @@ package com.gindin.android.zmanim;
 
 import android.app.Activity;
 import android.os.Bundle;
-
 import android.widget.TextView;
-import com.gindin.android.zmanim.technion.Taarich;
-import net.sourceforge.zmanim.ZmanimCalendar;
-import net.sourceforge.zmanim.util.GeoLocation;
-import net.sourceforge.zmanim.ComplexZmanimCalendar;
+import il.ac.technion.math.Taarich;
+import net.sourceforge.zmanim.Calendar.ComplexZmanimCalendar;
+import net.sourceforge.zmanim.Calendar.ZmanimCalendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -19,10 +17,9 @@ import java.util.Date;
 public class ZmanimDisplay
 	extends Activity {
 
-	private DateFormat                                        timeFormatter;
+	private DateFormat timeFormatter;
 
-	private DateFormat                                        secularDateFormatter;
-
+	private DateFormat secularDateFormatter;
 
 
 	/**
@@ -38,7 +35,7 @@ public class ZmanimDisplay
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
-		
+
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation geoLocation = new AndroidGeoLocation( this );
 		ComplexZmanimCalendar zmanimCalendar = new ComplexZmanimCalendar( geoLocation );
@@ -86,8 +83,8 @@ public class ZmanimDisplay
 
 
 	private void updateField(
-		int     field,
-	  String  text
+		int field,
+		String text
 	) {
 
 		TextView view = (TextView)findViewById( field );
@@ -96,8 +93,8 @@ public class ZmanimDisplay
 
 
 	private void updateFieldWithTime(
-		int   field,
-		Date  zman
+		int field,
+		Date zman
 	) {
 
 		updateField( field, timeFormatter.format( zman ) );
