@@ -171,28 +171,19 @@
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="libraryTable">
     <library name="Zmanim API">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/thirdparty/zmanimAPI/lib/zmanim-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanim-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="file://$PROJECT_DIR$/thirdparty/zmanimAPI/docs" />
+        <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/docs" />
       </JAVADOC>
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/thirdparty/zmanimAPI/src" />
-      </SOURCES>
-    </library>
-    <library name="Zmanim Swing UI">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/thirdparty/ZmanimGUI-0.087/ZmanimGUI.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="file://$PROJECT_DIR$/thirdparty/ZmanimGUI-0.087/src" />
+        <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/src" />
       </SOURCES>
     </library>
   </component>

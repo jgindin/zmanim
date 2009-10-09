@@ -4,7 +4,18 @@
     <option name="TAB_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager" verified="true">
-    <list default="true" readonly="true" id="f37fc1cf-a31b-43df-9fea-72ee3afd75bc" name="Default" comment="" />
+    <list default="true" readonly="true" id="f37fc1cf-a31b-43df-9fea-72ee3afd75bc" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Zmanim.ipr" afterPath="$PROJECT_DIR$/Zmanim.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimoutput-1.1.jar" afterPath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimoutput-1.1.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" afterPath="$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanim-1.1.jar" afterPath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanim-1.1.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Zmanim.iml" afterPath="$PROJECT_DIR$/Zmanim.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework/zmanim/build/build.xml" afterPath="$PROJECT_DIR$/thirdparty/framework/zmanim/build/build.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework" afterPath="$PROJECT_DIR$/thirdparty/framework" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimApplet.jar" afterPath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimApplet.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimAstronomical-1.1.jar" afterPath="$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanimAstronomical-1.1.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Zmanim.iws" afterPath="$PROJECT_DIR$/Zmanim.iws" />
+    </list>
     <ignored path=".idea/workspace.xml" />
     <ignored path="Zmanim.iws" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,7 +34,7 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" line="35" class="com.gindin.android.zmanim.ZmanimDisplay" package="com.gindin.android.zmanim">
+      <breakpoint url="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" line="34" class="com.gindin.android.zmanim.ZmanimDisplay" package="com.gindin.android.zmanim">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -78,46 +89,19 @@
   <component name="FileColors" enabled="false" enabledForTabs="false" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ZmanimDisplay.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ZmanimDisplay.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="0" selection-start="746" selection-end="746" vertical-scroll-proportion="0.19393283">
+            <state line="9" column="0" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GeoLocation.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/thirdparty/zmanimAPI/src/net/sourceforge/zmanim/util/GeoLocation.java">
+      <file leaf-file-name="Alef.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/il/ac/technion/math/Alef.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="4" selection-start="4494" selection-end="4494" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="64" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="36" selection-start="169" selection-end="169" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidGeoLocation.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/AndroidGeoLocation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="29" selection-start="1092" selection-end="1092" vertical-scroll-proportion="0.0">
+            <state line="25" column="58" selection-start="1027" selection-end="1062" vertical-scroll-proportion="0.5852843">
               <folding />
             </state>
           </provider>
@@ -140,8 +124,11 @@
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/com/gindin/android/zmanim/calendar/CompleteZmanimCalendar.java" />
         <option value="$PROJECT_DIR$/src/com/gindin/android/zmanim/AndroidGeoLocation.java" />
-        <option value="$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/thirdparty/framework/zmanim/build/build.xml" />
+        <option value="$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java" />
+        <option value="$PROJECT_DIR$/src/il/ac/technion/math/Alef.java" />
+        <option value="$PROJECT_DIR$/src/il/ac/technion/math/package.html" />
       </list>
     </option>
   </component>
@@ -186,6 +173,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -200,7 +188,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Zmanim" />
+              <option name="myItemId" value="android-zmanim" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -210,13 +198,17 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Zmanim" />
+              <option name="myItemId" value="android-zmanim" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="thirdparty" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -224,7 +216,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="math" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Zmanim" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android-zmanim" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -236,15 +246,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Zmanim" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zmanim" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
       <pane id="Favorites" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -257,8 +284,8 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RunManager" selected="Android Application.Zmanim">
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -413,6 +440,24 @@
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
   <component name="TaskManager">
     <option name="tasks">
       <list>
@@ -430,26 +475,26 @@
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="99" y="104" width="1570" height="1096" extended-state="0" />
-    <editor active="true" />
+    <frame x="170" y="76" width="1570" height="1096" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32979852" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39894736" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32912722" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24950364" sideWeight="0.48526317" order="1" side_tool="true" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.32343584" order="1" side_tool="true" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24950364" sideWeight="0.50736845" order="0" side_tool="false" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.3319194" order="0" side_tool="false" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="7" side_tool="true" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="1" side_tool="false" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32912722" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" />
@@ -492,86 +537,70 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/technion/Alef.java">
+    <entry file="file://$PROJECT_DIR$/src/il/ac/technion/math/Gauss.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1659" selection-end="1659" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="42" column="0" selection-start="1662" selection-end="1662" vertical-scroll-proportion="0.24160346" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/technion/Gauss.java">
+    <entry file="file://$PROJECT_DIR$/src/il/ac/technion/math/Taarich.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1662" selection-end="1662" vertical-scroll-proportion="0.24160346">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/technion/Taarich.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="0" selection-start="2607" selection-end="2688" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="77" column="0" selection-start="2607" selection-end="2688" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="jar:///opt/devtools/java/jdk1.6/src.zip!/java/text/SimpleDateFormat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="324" column="13" selection-start="13699" selection-end="13699" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="324" column="13" selection-start="13699" selection-end="13699" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="jar:///opt/devtools/android-sdk-linux_x86-1.5_r2/platforms/android-1.5/android.jar!/android/text/format/DateFormat.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdparty/ZmanimGUI-0.087/src/zmanimgui/ZmanimGui.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="252" column="16" selection-start="7668" selection-end="7668" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="5" column="13" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gen/com/gindin/android/zmanim/R.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="19" selection-start="237" selection-end="237" vertical-scroll-proportion="0.060671724">
-          <folding />
-        </state>
+        <state line="9" column="19" selection-start="237" selection-end="237" vertical-scroll-proportion="0.060671724" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="36" selection-start="169" selection-end="169" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdparty/zmanimAPI/src/net/sourceforge/zmanim/util/GeoLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="4" selection-start="4494" selection-end="4494" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="4" column="36" selection-start="169" selection-end="169" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/AndroidGeoLocation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="29" selection-start="1092" selection-end="1092" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="41" column="29" selection-start="1092" selection-end="1092" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="64" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0">
+        <state line="31" column="64" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thirdparty/framework/zmanim/build/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="69" selection-start="3824" selection-end="3824" vertical-scroll-proportion="-32.409092">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/gindin/android/zmanim/ZmanimDisplay.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="746" selection-end="746" vertical-scroll-proportion="0.19393283">
+        <state line="9" column="0" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/ac/technion/math/package.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="79" selection-start="93" selection-end="93" vertical-scroll-proportion="0.031284917">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/ac/technion/math/Alef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="58" selection-start="1027" selection-end="1062" vertical-scroll-proportion="0.5852843">
           <folding />
         </state>
       </provider>
