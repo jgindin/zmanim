@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Zmanim API">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanim-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdparty/zmanim/lib/zmanim-1.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/docs" />
+      <root url="file://$PROJECT_DIR$/thirdparty/zmanim/docs" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/src" />
+      <root url="file://$PROJECT_DIR$/thirdparty/zmanim/src" />
     </SOURCES>
   </library>
 </component>

@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 import il.ac.technion.math.Taarich;
-import net.sourceforge.zmanim.Calendar.ComplexZmanimCalendar;
-import net.sourceforge.zmanim.Calendar.ZmanimCalendar;
+import net.sourceforge.zmanim.ComplexZmanimCalendar;
+import net.sourceforge.zmanim.ZmanimCalendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -17,9 +17,10 @@ import java.util.Date;
 public class ZmanimDisplay
 	extends Activity {
 
+	/**
+	 * Used to format the times that get displayed.
+	 */
 	private DateFormat timeFormatter;
-
-	private DateFormat secularDateFormatter;
 
 
 	/**
@@ -34,7 +35,7 @@ public class ZmanimDisplay
 		setContentView( R.layout.main );
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
+		DateFormat secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
 
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation geoLocation = new AndroidGeoLocation( this );
