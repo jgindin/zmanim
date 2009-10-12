@@ -4,7 +4,7 @@ The zmanim directory is imported from http://code.google.com/p/zmanim-framework/
 		svn propedit svn:externals .
 
 	2. In the resulting editor, enter the following, which are in the form (1) local subdirectory; 
-		(2) revision of the remote sources; (3) location of the remote sources:
+		(2) [OPTIONAL] revision of the remote sources; (3) location of the remote sources:
 		zmanim -r8 http://zmanim-framework.googlecode.com/svn/trunk/Java
 
 	3. svn update
