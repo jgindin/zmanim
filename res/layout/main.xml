@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
->
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+	>
 
 	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+	             android:layout_width="fill_parent"
+	             android:layout_height="fill_parent">
 
-    <TableRow>
-	    <TextView android:id="@+id/hebrew_date"
-				android:text="HebDate" />
-			<TextView android:id="@+id/secular_date"
-				android:text="SecDate" />
-	    <TextView android:id="@+id/location"
-				android:text="Location" />
-    </TableRow>
+		<TableRow>
+			<TextView android:id="@+id/hebrew_date" android:text="HebDate"/>
+			<TextView android:id="@+id/secular_date" android:text="SecDate"/>
+		</TableRow>
+
+		<TableRow>
+			<TextView android:id="@+id/location"
+			          android:text="Location"/>
+		</TableRow>
+
+		<TableRow>
+			<TextView android:id="@+id/holiday" android:text=""/>
+		</TableRow>
 
 		<TableRow>
 			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:scrollbars="none">
+			            android:layout_width="fill_parent"
+			            android:layout_height="wrap_content"
+			            android:scrollbars="none">
 
 				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent">
+				             android:layout_width="fill_parent"
+				             android:layout_height="fill_parent">
 					<TableRow>
 						<TextView android:text="@string/Alot"/>
 						<TextView android:id="@+id/alot" android:text="alot"/>
@@ -78,8 +83,18 @@
 					</TableRow>
 
 					<TableRow>
+						<TextView android:text="@string/Candles"/>
+						<TextView android:id="@+id/candles" android:text="candles"/>
+					</TableRow>
+
+					<TableRow>
 						<TextView android:text="@string/Shkiah"/>
 						<TextView android:id="@+id/shkiah" android:text="shkiah"/>
+					</TableRow>
+
+					<TableRow>
+						<TextView android:text="@string/Mincha"/>
+						<TextView android:id="@+id/mincha" android:text="mincha"/>
 					</TableRow>
 
 					<TableRow>

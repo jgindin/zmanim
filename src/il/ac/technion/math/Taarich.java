@@ -206,6 +206,12 @@ public class Taarich {
 	};
 
 
+	public enum HEBREW_MONTH {
+		NISAN, IYYAR, SIVAN, TAMMUZ, AV, ELUL, TISHRI,
+		HESHVAN, KISLEV, TEVET, SHEVAT, ADAR, ADAR_I, ADAR_II
+	}
+
+
 	/**
 	 * Return a Hebrew date as a UNICODE Hebrew character string.
 	 */
@@ -219,5 +225,21 @@ public class Taarich {
 	 */
 	public String toString() {
 		return d + " " + months[ m ] + " " + y;
+	}
+
+
+	public int getHebrewDayOfMonth() {
+		return d;
+	}
+
+
+	public HEBREW_MONTH getHebrewMonth() {
+
+		return HEBREW_MONTH.values()[ m ];
+	}
+
+
+	public int getHebrewYear() {
+		return y;
 	}
 }
