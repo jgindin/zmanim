@@ -72,10 +72,10 @@ public class ZmanimDisplay
 		//    majority is said after the 13.5 minute mark. Chacham Ovadia says it would be permissible so long as
 		//    you start within the time. So technically, it would be permissible if you start the Amidah in Mincha
 		//    even as late as 13 minutes and 25 seconds after sunset."
+		//  NOTE: In order to be careful and avoid rounding issues, I'm NOT including the 25 seconds.
 		Calendar latestMincha = Calendar.getInstance();
 		latestMincha.setTime( zmanimCalendar.getSunset() );
 		latestMincha.add( Calendar.MINUTE, 13 );
-		latestMincha.add( Calendar.SECOND, 25 );
 		updateFieldWithTime( R.id.mincha, latestMincha.getTime() );
 
 		updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
