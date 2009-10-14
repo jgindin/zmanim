@@ -13,8 +13,9 @@
 	<string name="Plag">Plag HaMincha</string>
 	<string name="BeinHashemashot">Bein Hashemashot</string>
 	<string name="Shkiah">Shkia (Sunset)</string>
+	<string name="Candles">Candle Lighting</string>
 	<string name="Mincha">Latest Mincha</string>
 	<string name="Tzait">Tzait Hachocavim (Nightfall)</string>
-	<string name="Candles">Candle Lighting</string>
+	<string name="Havdalah">Havdalah</string>
 	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
 </resources>

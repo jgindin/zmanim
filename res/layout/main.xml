@@ -82,7 +82,7 @@
 						<TextView android:id="@+id/plag_hamincha" android:text="plag hamincha"/>
 					</TableRow>
 
-					<TableRow>
+					<TableRow android:id="@+id/candles_row">
 						<TextView android:text="@string/Candles"/>
 						<TextView android:id="@+id/candles" android:text="candles"/>
 					</TableRow>
@@ -100,6 +100,11 @@
 					<TableRow>
 						<TextView android:text="@string/Tzait"/>
 						<TextView android:id="@+id/tzait" android:text="tzait"/>
+					</TableRow>
+
+					<TableRow android:id="@+id/havdalah_row">
+						<TextView android:text="@string/Havdalah"/>
+						<TextView android:id="@+id/havdalah" android:text="havdalah"/>
 					</TableRow>
 				</TableLayout>
 

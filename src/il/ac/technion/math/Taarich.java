@@ -189,34 +189,50 @@ public class Taarich {
 	}
 
 
-	/**
-	 * The Hebrew months names, as UNICODE Hebrew character strings.
-	 */
-	public static final String hmonths[] = {//LRO‭
-		"ניסן", "איר", "סיון", "תמוז", "אב", "אלול",
-		"תשרי", "חשון", "כםלו", "טבת", "שבט", "אדר", "אדר א", "אדר ב"
-	};
-
-	/**
-	 * The Hebrew month names in Latin transliteration.
-	 */
-	public static final String months[] = {
-		"Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Heshvan",
-		"Kislev", "Tevet", "Shevat", "Adar", "Adar I", "Adar II"
-	};
-
-
 	public enum HEBREW_MONTH {
-		NISAN, IYYAR, SIVAN, TAMMUZ, AV, ELUL, TISHRI,
-		HESHVAN, KISLEV, TEVET, SHEVAT, ADAR, ADAR_I, ADAR_II
+
+		NISAN( "ניסן", "Nisan" ),
+		IYYAR( "איר", "Iyyar" ),
+		SIVAN( "סיון", "Sivan" ),
+		TAMMUZ( "תמוז", "Tammuz" ),
+		AV( "אב", "Av" ),
+		ELUL( "אלול", "Elul" ),
+		TISHRI( "תשרי", "Tishri" ),
+		HESHVAN( "חשון", "Heshvan" ),
+		KISLEV( "כםלו", "Kislev" ),
+		TEVET( "טבת", "Tevet" ),
+		SHEVAT( "שבט", "Shevat" ),
+		ADAR( "אדר", "Adar" ),
+		ADAR_I( "אדר א", "Adar Alef" ),
+		ADAR_II( "אדר ב", "Adar Bet" );
+
+		/**
+		 * The Hebrew month's name, as UNICODE Hebrew character string.
+		 */
+		public final String inHebrew;
+
+		/**
+		 * The Hebrew month's name in Latin transliteration.
+		 */
+		public final String transliteration;
+
+
+		HEBREW_MONTH(
+			String inHebrew,
+			String transliteration
+		) {
+
+			this.inHebrew = inHebrew;
+			this.transliteration = transliteration;
+		}
 	}
 
 
 	/**
-	 * Return a Hebrew date as a UNICODE Hebrew character string.
+	 * @return a Hebrew date as a UNICODE Hebrew character string.
 	 */
 	public String toHebrew() {
-		return new Alef( d ) + " " + hmonths[ m ] + " " + new Alef( y );
+		return new Alef( d ) + " " + HEBREW_MONTH.values()[ m ].inHebrew + " " + new Alef( y );
 	}
 
 
@@ -224,7 +240,7 @@ public class Taarich {
 	 * Return a Hebrew date in Latin transliteration as a character string.
 	 */
 	public String toString() {
-		return d + " " + months[ m ] + " " + y;
+		return d + " " + HEBREW_MONTH.values()[ m ].transliteration + " " + y;
 	}
 
 
