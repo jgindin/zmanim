@@ -2,6 +2,8 @@ package com.gindin.zmanim.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateUtils;
@@ -20,11 +22,45 @@ public class ZmanimDisplay
 	extends Activity {
 
 	/**
-	 * Used to format the times that get displayed.
+	 * How many minutes after sunset can you still start mincha?
+	 * <p/>
+	 * Daily Halacha (http://www.dailyhalacha.com/Display.asp?ClipDate=6/29/2004): The latest time for mincha is: "The Ben
+	 * Ish Chai says in one place that you should not pray the Amidah if you start the Amidah at the 13th minute [after
+	 * sunset]. But in another place he says that you can start praying the Amidah so long as the majority of the Amidah is
+	 * said before the 13.5 minute mark. But Chacham Ovadia’s opinion is different. He says it would be permissible to
+	 * start the Amidah at 13 minutes after sunset even if the majority is said after the 13.5 minute mark. Chacham Ovadia
+	 * says it would be permissible so long as you start within the time. So technically, it would be permissible if you
+	 * start the Amidah in Mincha even as late as 13 minutes and 25 seconds after sunset."
+	 * <p/>
+	 * NOTE: In order to be careful and avoid rounding issues, I'm NOT including the 25 seconds.
+	 */
+	private static final int MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
+
+
+	/**
+	 * The calendar we use for displaying everything.
+	 */
+	private ComplexZmanimCalendar zmanimCalendar;
+
+	/**
+	 * Where are we?
+	 */
+	private AndroidGeoLocation geoLocation;
+
+	/**
+	 * Used to format the zmanim times that get displayed.
 	 */
 	private DateFormat timeFormatter;
 
-	private static final int MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
+	/**
+	 * Used to format the secular date in the screen's header.
+	 */
+	private DateFormat secularDateFormatter;
+
+	/**
+	 * We want to detect swiping.
+	 */
+	private GestureDetector gestureDetector;
 
 
 	/**
@@ -38,12 +74,40 @@ public class ZmanimDisplay
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
+		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
+		View.OnTouchListener touchListener = new View.OnTouchListener() {
+			public boolean onTouch(
+				View v,
+				MotionEvent event
+			) {
+				return gestureDetector.onTouchEvent( event );
+			}
+		};
+
+
+		View mainView = findViewById( R.id.main_layout );
+		mainView.setOnTouchListener( touchListener );
+
+
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		DateFormat secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
+		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
 
 		// Figure out where we are, and get a calendar ready to use.
-		AndroidGeoLocation geoLocation = new AndroidGeoLocation( this );
-		ComplexZmanimCalendar zmanimCalendar = new ComplexZmanimCalendar( geoLocation );
+		geoLocation = new AndroidGeoLocation( this );
+		zmanimCalendar = new ComplexZmanimCalendar( geoLocation );
+		showZmanim();
+	}
+
+
+	@Override
+	public boolean onTouchEvent( MotionEvent event ) {
+		gestureDetector.onTouchEvent( event );
+		return true;
+	}
+
+
+	private void showZmanim() {
 
 		// Update the header
 		final Taarich taarich = getHebrewDate( zmanimCalendar );
@@ -82,16 +146,6 @@ public class ZmanimDisplay
 		}
 
 
-		// Daily Halacha (http://www.dailyhalacha.com/Display.asp?ClipDate=6/29/2004): The latest time for
-		//  mincha is:
-		//  "The Ben Ish Chai says in one place that you should not pray the Amidah if you start the Amidah at the
-		//    13th minute [after sunset]. But in another place he says that you can start praying the Amidah so long
-		//    as the majority of the Amidah is said before the 13.5 minute mark. But Chacham Ovadia’s opinion is
-		//    different. He says it would be permissible to start the Amidah at 13 minutes after sunset even if the
-		//    majority is said after the 13.5 minute mark. Chacham Ovadia says it would be permissible so long as
-		//    you start within the time. So technically, it would be permissible if you start the Amidah in Mincha
-		//    even as late as 13 minutes and 25 seconds after sunset."
-		//  NOTE: In order to be careful and avoid rounding issues, I'm NOT including the 25 seconds.
 		Calendar latestMincha = Calendar.getInstance();
 		latestMincha.setTime( zmanimCalendar.getSunset() );
 		latestMincha.add( Calendar.MINUTE, MINUTES_AFTER_SUNSET_FOR_MINCHA );
@@ -140,5 +194,90 @@ public class ZmanimDisplay
 		updateField( field, timeFormatter.format( zman ) );
 	}
 
+
+	private void moveToNextDay() {
+
+		final Calendar calendar = zmanimCalendar.getCalendar();
+		calendar.add( Calendar.DATE, 1 );
+
+		zmanimCalendar.setCalendar( calendar );
+		showZmanim();
+	}
+
+
+	private void moveToPrevDay() {
+
+		final Calendar calendar = zmanimCalendar.getCalendar();
+		calendar.add( Calendar.DATE, -1 );
+
+		zmanimCalendar.setCalendar( calendar );
+		showZmanim();
+	}
+
+
+	private void moveToNextMonth() {
+
+		final Calendar calendar = zmanimCalendar.getCalendar();
+		calendar.add( Calendar.MONTH, 1 );
+
+		zmanimCalendar.setCalendar( calendar );
+		showZmanim();
+	}
+
+
+	private void moveToPrevMonth() {
+
+		final Calendar calendar = zmanimCalendar.getCalendar();
+		calendar.add( Calendar.MONTH, -1 );
+
+		zmanimCalendar.setCalendar( calendar );
+		showZmanim();
+	}
+
+
+	private class ZmanimGestureListener
+		extends GestureDetector.SimpleOnGestureListener {
+
+		private static final int SWIPE_MIN_DISTANCE = 120;
+
+
+		@Override
+		public boolean onFling(
+			MotionEvent startMotionEvent,
+			MotionEvent endMotionEvent,
+			float xVelocity,
+			float yVelocity
+		) {
+
+			// Did the user want to move to the next/prev day (swiping right or left) or next/prev month
+			//  (swiping up or down).
+			float xDiff = startMotionEvent.getRawX() - endMotionEvent.getRawX();
+			float yDiff = startMotionEvent.getRawY() - endMotionEvent.getRawY();
+
+			if ( ( Math.abs( xDiff ) < SWIPE_MIN_DISTANCE ) && ( Math.abs( yDiff ) < SWIPE_MIN_DISTANCE ) ) {
+				return false;
+			}
+
+			if ( Math.abs( xVelocity ) > Math.abs( yVelocity ) ) {
+				if ( xDiff > 0 ) {
+					moveToNextDay();
+				}
+				else {
+					moveToPrevDay();
+				}
+			}
+			else {
+				if ( yDiff > 0 ) {
+					moveToNextMonth();
+				}
+				else {
+					moveToPrevMonth();
+				}
+			}
+
+			return true;
+		}
+
+	}
 
 }  // End of ZmanimDisplay class

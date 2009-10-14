@@ -16,47 +16,49 @@ public final class R {
 	}
 
 	public static final class id {
-		public static final int alot = 0x7f050004;
+		public static final int alot = 0x7f050005;
 
-		public static final int candles = 0x7f05000f;
+		public static final int candles = 0x7f050010;
 
-		public static final int candles_row = 0x7f05000e;
+		public static final int candles_row = 0x7f05000f;
 
-		public static final int chatzot = 0x7f05000a;
+		public static final int chatzot = 0x7f05000b;
 
-		public static final int hanetz = 0x7f050006;
+		public static final int hanetz = 0x7f050007;
 
-		public static final int havdalah = 0x7f050014;
+		public static final int havdalah = 0x7f050015;
 
-		public static final int havdalah_row = 0x7f050013;
+		public static final int havdalah_row = 0x7f050014;
 
-		public static final int hebrew_date = 0x7f050000;
+		public static final int hebrew_date = 0x7f050001;
 
-		public static final int holiday = 0x7f050003;
+		public static final int holiday = 0x7f050004;
 
-		public static final int location = 0x7f050002;
+		public static final int location = 0x7f050003;
 
-		public static final int mincha = 0x7f050011;
+		public static final int main_layout = 0x7f050000;
 
-		public static final int mincha_gedola = 0x7f05000b;
+		public static final int mincha = 0x7f050012;
 
-		public static final int mincha_kitana = 0x7f05000c;
+		public static final int mincha_gedola = 0x7f05000c;
 
-		public static final int plag_hamincha = 0x7f05000d;
+		public static final int mincha_kitana = 0x7f05000d;
 
-		public static final int secular_date = 0x7f050001;
+		public static final int plag_hamincha = 0x7f05000e;
 
-		public static final int shemaMGA = 0x7f050007;
+		public static final int secular_date = 0x7f050002;
 
-		public static final int shkiah = 0x7f050010;
+		public static final int shemaMGA = 0x7f050008;
 
-		public static final int talit = 0x7f050005;
+		public static final int shkiah = 0x7f050011;
 
-		public static final int tefilahGRA = 0x7f050009;
+		public static final int talit = 0x7f050006;
 
-		public static final int tefilahMGA = 0x7f050008;
+		public static final int tefilahGRA = 0x7f05000a;
 
-		public static final int tzait = 0x7f050012;
+		public static final int tefilahMGA = 0x7f050009;
+
+		public static final int tzait = 0x7f050013;
 	}
 
 	public static final class layout {
