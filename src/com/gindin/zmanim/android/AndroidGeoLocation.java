@@ -1,4 +1,4 @@
-package com.gindin.android.zmanim;
+package com.gindin.zmanim.android;
 
 import android.content.Context;
 import android.location.Address;
@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Encapsulates the necessary work of finding our current location from the phone in a way that is
- *  usable by the Zmanim API.
- *<p>
+ * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
+ * API.
+ * <p/>
  * TODO: Look at using the Geocoder class to work out what the place is called given the lat & long.
  */
 public class AndroidGeoLocation
 	extends GeoLocation {
 
-	private static final Location                             SEATTLE;
+	private static final Location SEATTLE;
 
-	private final Context                                     context;
+	private final Context context;
 
 
 	static {
@@ -50,7 +50,7 @@ public class AndroidGeoLocation
 		final double latitude = getLatitude();
 		final double longitude = getLongitude();
 
-		Geocoder  geocoder = new Geocoder( context );
+		Geocoder geocoder = new Geocoder( context );
 
 		try {
 			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
@@ -87,7 +87,7 @@ public class AndroidGeoLocation
 
 	/**
 	 * Find a relatively accurate location.
-	 *<p>
+	 * <p/>
 	 * Code taken from: http://www.androidsnippets.org/snippets/21/
 	 *
 	 * @return the phone's location

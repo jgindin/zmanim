@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.gindin.android.zmanim">
+          package="com.gindin.zmanim.android">
 	<application android:icon="@drawable/icon" android:label="Zmanim">
 		<activity android:name="ZmanimDisplay">
 			<intent-filter>

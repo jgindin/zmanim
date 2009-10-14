@@ -1,4 +1,4 @@
-package com.gindin.android.zmanim;
+package com.gindin.zmanim.android;
 
 import android.app.Activity;
 import android.os.Bundle;
