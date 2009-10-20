@@ -37,35 +37,23 @@ public class ZmanimDisplay
 	private static final int MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
 
 
-	/**
-	 * The calendar we use for displaying everything.
-	 */
+	/** The calendar we use for displaying everything. */
 	private ComplexZmanimCalendar zmanimCalendar;
 
-	/**
-	 * Where are we?
-	 */
+	/** Where are we? */
 	private AndroidGeoLocation geoLocation;
 
-	/**
-	 * Used to format the zmanim times that get displayed.
-	 */
+	/** Used to format the zmanim times that get displayed. */
 	private DateFormat timeFormatter;
 
-	/**
-	 * Used to format the secular date in the screen's header.
-	 */
+	/** Used to format the secular date in the screen's header. */
 	private DateFormat secularDateFormatter;
 
-	/**
-	 * We want to detect swiping.
-	 */
+	/** We want to detect swiping. */
 	private GestureDetector gestureDetector;
 
 
-	/**
-	 * Called when the activity is first created.
-	 */
+	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(
 		Bundle savedInstanceState

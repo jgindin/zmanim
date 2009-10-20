@@ -7,10 +7,30 @@ import java.util.Calendar;
 
 /**
  * Given the hebrew date, figure out an appropriate messsage.
+ * <p/>
+ * See http://hebrewcalendar.tripod.com/ for tons more info...may have to write my own HY <--> GY converter.
+ * <p/>
+ * From http://www.jewishvirtuallibrary.org/jsource/Judaism/calendar.html: The Jewish calendar has the following months:
+ * Month     Length          Gregorian Equivalent =======   =============   ==================== Nissan 	  30 days
+ * March-April Iyar 	    29 days 	      April-May Sivan 	  30 days 	      May-June Tammuz 	  29 days 	      June-July Av
+ * 	      30 days 	      July-August Elul 	    29 days 	      August-September Tishri 	  30 days September-October
+ * Heshvan   29 or 30 days 	October-November Kislev 	  30 or 29 days 	November-December Tevet 	  29 days
+ * December-January Shevat 	  30 days 	      January-February Adar 	    29 or 30 days 	February-March Adar II   29 days
+ * March-April
+ * <p/>
+ * In leap years, Adar has 30 days. In non-leap years, Adar has 29 days.
  */
 @SuppressWarnings( { "MagicNumber" } )
 public class HebrewDateUtils {
 
+	private static final int EREV_ROSH_CHODESH = 29;
+
+	private static final int ROSH_CHODESH = 1;
+
+	private static final int ROSH_CHODESH_1 = 30;
+
+
+	/** Dates in Nisan */
 	private static final int EREV_PESACH = 14;
 
 	private static final int PESACH_1 = 15;
@@ -31,22 +51,28 @@ public class HebrewDateUtils {
 
 	private static final int PESACH_SHENI = 14;
 
+	/** Dates in Iyyar */
 	private static final int LAG_BA_OMER = 18;
 
+	/** Sivan */
 	private static final int EREV_SHAVUOT = 5;
 
 	private static final int SHAVUOT_1 = 6;
 
 	private static final int SHAVUOT_2 = 7;
 
+	/** Tammuz */
 	private static final int FAST_OF_TAMUZ = 17;
 
+	/** Av */
 	private static final int TISHA_B_AV = 9;
 
 	private static final int TU_B_AV = 15;
 
+	/** Elul */
 	private static final int EREV_ROSH_HASHANA = 29;
 
+	/** Tishri */
 	private static final int ROSH_HASHANA_1 = 1;
 
 	private static final int ROSH_HASHANA_2 = 2;
@@ -77,6 +103,7 @@ public class HebrewDateUtils {
 
 	private static final int SIMCHAT_TORAH = 23;
 
+	/** Kislev */
 	private static final int EREV_CHANUKAH = 24;
 
 	private static final int CHANUKAH_1 = 25;
@@ -89,19 +116,25 @@ public class HebrewDateUtils {
 
 	private static final int CHANUKAH_5 = 29;
 
-	private static final int CHANUKAH_6 = 30;
+	private static final int CHANUKAH_6_FULL_KISLEV = 30;
 
-	private static final int CHANUKAH_7 = 1;
+	/** Tevet */
+	private static final int CHANUKAH_7_FULL_KISLEV = 1;
 
-	private static final int CHANUKAH_8 = 2;
+	private static final int CHANUKAH_8_FULL_KISLEV = 2;
 
+	private static final int FAST_OF_TEVET = 10;
+
+	/** Shevat */
 	private static final int TU_B_SHVAT = 15;
 
+	/** Adar */
 	private static final int TAANIT_ESTHER_NORMAL = 13;
 
 	private static final int PURIM_NORMAL = 14;
 
 	private static final int SHUSHAN_PURIM = 15;
+
 
 	private final ZmanimCalendar zmanimCalendar;
 
@@ -208,11 +241,13 @@ public class HebrewDateUtils {
 				return todayInShevat();
 
 			case ADAR:
-			case ADAR_II:
 				return todayInAdar();
 
 			case ADAR_I:
-				return todayInAdarI();
+				return todayInAdarAlef();
+
+			case ADAR_II:
+				return todayInAdarBet();
 		}
 
 		return "";
@@ -223,6 +258,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case EREV_PESACH:
 				return "Taanich Bechorot";
 
@@ -249,6 +287,9 @@ public class HebrewDateUtils {
 
 			case PESACH_8:
 				return "Isru Chag";
+
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh";
 		}
 
 		return "";
@@ -259,6 +300,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case PESACH_SHENI:
 				return "Pesach Sheni";
 
@@ -274,6 +318,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case EREV_SHAVUOT:
 				return "Erev Shavuot";
 
@@ -282,6 +329,12 @@ public class HebrewDateUtils {
 
 			case SHAVUOT_2:
 				return "Isru Chag";
+
+			case EREV_ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh Tammuz";
 		}
 
 		return "";
@@ -292,6 +345,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh Tammuz";
+
 			case FAST_OF_TAMUZ:
 				return "Fast of Tammuz";
 		}
@@ -304,11 +360,20 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case TISHA_B_AV:
 				return "Tisha B'Av";
 
 			case TU_B_AV:
 				return "Tu B'Av";
+
+			case EREV_ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh Elul";
 		}
 
 		return "";
@@ -319,6 +384,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case EREV_ROSH_HASHANA:
 				return "Erev Rosh Hashana";
 		}
@@ -373,6 +441,12 @@ public class HebrewDateUtils {
 
 			case SIMCHAT_TORAH:
 				return "Simchat Torah";
+
+			case EREV_ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh Heshvan";
 		}
 
 		return "";
@@ -381,6 +455,19 @@ public class HebrewDateUtils {
 
 	private String todayInHeshvan(
 	) {
+
+		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case EREV_ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			// TODO: Heshvan can be 29 OR 30 days, depending on the year... If it's 29, then this won't happen.
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh Kislev";
+		}
+
 		return "";
 	}
 
@@ -389,6 +476,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case EREV_CHANUKAH:
 				return "Erev Chanukah";
 
@@ -405,9 +495,10 @@ public class HebrewDateUtils {
 				return "Chanukah 4";
 
 			case CHANUKAH_5:
-				return "Chanukah 5";
+				return "Chanukah 5 (Erev Rosh Chodesh)";
 
-			case CHANUKAH_6:
+			// TODO: Kislev can be 29 or 30 days :-( 
+			case CHANUKAH_6_FULL_KISLEV:
 				return "Chanukah 6";
 		}
 
@@ -419,14 +510,19 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
-			case CHANUKAH_7:
-				return "Chanukah 7";
 
-			case CHANUKAH_8:
+			// TODO: Kislev can be 29 or 30 days. If it was 30, then this is correct.
+			case CHANUKAH_7_FULL_KISLEV:
+				return "Chanukah 7 (Rosh Chodesh)";
+
+			case CHANUKAH_8_FULL_KISLEV:
 				return "Chanukah 8";
 
-			case 10:
+			case FAST_OF_TEVET:
 				return "Fast of Tevet";
+
+			case EREV_ROSH_CHODESH:
+				return "Erev Rosh Chodesh";
 		}
 
 		return "";
@@ -437,8 +533,14 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case TU_B_SHVAT:
 				return "Tu B'Shvat";
+
+			case EREV_ROSH_CHODESH:
+				return "Erev Rosh Chodesh";
 		}
 
 		return "";
@@ -449,6 +551,9 @@ public class HebrewDateUtils {
 	) {
 
 		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
 			case TAANIT_ESTHER_NORMAL:
 				// TODO: This is NOT correct if it falls out on a Friday or Shabbat...
 				return "Taanit Esther";
@@ -459,14 +564,54 @@ public class HebrewDateUtils {
 
 			case SHUSHAN_PURIM:
 				return "Shushan Purim";
+
+			case EREV_ROSH_CHODESH:
+				return "Erev Rosh Chodesh";
+
+			// If Adar has only 29 days, then we won't get here...
+			case ROSH_CHODESH_1:
+				return "Rosh Chodesh";
 		}
 
 		return "";
 	}
 
 
-	private String todayInAdarI(
+	private String todayInAdarAlef(
 	) {
+		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case EREV_ROSH_CHODESH:
+				return "Erev Rosh Chodesh";
+		}
+
+		return "";
+	}
+
+
+	private String todayInAdarBet(
+	) {
+		switch ( taarich.getHebrewDayOfMonth() ) {
+			case ROSH_CHODESH:
+				return "Rosh Chodesh";
+
+			case TAANIT_ESTHER_NORMAL:
+				// TODO: This is NOT correct if it falls out on a Friday or Shabbat...
+				return "Taanit Esther";
+
+			case PURIM_NORMAL:
+				// TODO: This is NOT correct if it falls out on a Shabbat...
+				return "Purim";
+
+			case SHUSHAN_PURIM:
+				return "Shushan Purim";
+
+			case EREV_ROSH_CHODESH:
+				return "Erev Rosh Chodesh";
+		}
+
 		return "";
 	}
 

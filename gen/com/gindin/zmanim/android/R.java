@@ -8,98 +8,56 @@
 package com.gindin.zmanim.android;
 
 public final class R {
-	public static final class attr {
-	}
-
-	public static final class drawable {
-		public static final int icon = 0x7f020000;
-	}
-
-	public static final class id {
-		public static final int alot = 0x7f050005;
-
-		public static final int candles = 0x7f050010;
-
-		public static final int candles_row = 0x7f05000f;
-
-		public static final int chatzot = 0x7f05000b;
-
-		public static final int hanetz = 0x7f050007;
-
-		public static final int havdalah = 0x7f050015;
-
-		public static final int havdalah_row = 0x7f050014;
-
-		public static final int hebrew_date = 0x7f050001;
-
-		public static final int holiday = 0x7f050004;
-
-		public static final int location = 0x7f050003;
-
-		public static final int main_layout = 0x7f050000;
-
-		public static final int mincha = 0x7f050012;
-
-		public static final int mincha_gedola = 0x7f05000c;
-
-		public static final int mincha_kitana = 0x7f05000d;
-
-		public static final int plag_hamincha = 0x7f05000e;
-
-		public static final int secular_date = 0x7f050002;
-
-		public static final int shemaMGA = 0x7f050008;
-
-		public static final int shkiah = 0x7f050011;
-
-		public static final int talit = 0x7f050006;
-
-		public static final int tefilahGRA = 0x7f05000a;
-
-		public static final int tefilahMGA = 0x7f050009;
-
-		public static final int tzait = 0x7f050013;
-	}
-
-	public static final class layout {
-		public static final int main = 0x7f030000;
-	}
-
-	public static final class string {
-		public static final int Alot = 0x7f040001;
-
-		public static final int BeinHashemashot = 0x7f04000b;
-
-		public static final int Candles = 0x7f04000d;
-
-		public static final int Chatzot = 0x7f040007;
-
-		public static final int Hanetz = 0x7f040003;
-
-		public static final int Havdalah = 0x7f040010;
-
-		public static final int Mincha = 0x7f04000e;
-
-		public static final int MinchaGedola = 0x7f040008;
-
-		public static final int MinchaKitana = 0x7f040009;
-
-		public static final int Plag = 0x7f04000a;
-
-		public static final int ShaahZmanit = 0x7f040011;
-
-		public static final int Shkiah = 0x7f04000c;
-
-		public static final int SofZmanShemaMGA = 0x7f040004;
-
-		public static final int SofZmanTefilahGRA = 0x7f040006;
-
-		public static final int SofZmanTefilahMGA = 0x7f040005;
-
-		public static final int Talit = 0x7f040002;
-
-		public static final int Tzait = 0x7f04000f;
-
-		public static final int app_name = 0x7f040000;
-	}
+    public static final class attr {
+    }
+    public static final class drawable {
+        public static final int icon=0x7f020000;
+    }
+    public static final class id {
+        public static final int alot=0x7f050005;
+        public static final int candles=0x7f050010;
+        public static final int candles_row=0x7f05000f;
+        public static final int chatzot=0x7f05000b;
+        public static final int hanetz=0x7f050007;
+        public static final int havdalah=0x7f050015;
+        public static final int havdalah_row=0x7f050014;
+        public static final int hebrew_date=0x7f050001;
+        public static final int holiday=0x7f050004;
+        public static final int location=0x7f050003;
+        public static final int main_layout=0x7f050000;
+        public static final int mincha=0x7f050012;
+        public static final int mincha_gedola=0x7f05000c;
+        public static final int mincha_kitana=0x7f05000d;
+        public static final int plag_hamincha=0x7f05000e;
+        public static final int secular_date=0x7f050002;
+        public static final int shemaMGA=0x7f050008;
+        public static final int shkiah=0x7f050011;
+        public static final int talit=0x7f050006;
+        public static final int tefilahGRA=0x7f05000a;
+        public static final int tefilahMGA=0x7f050009;
+        public static final int tzait=0x7f050013;
+    }
+    public static final class layout {
+        public static final int main=0x7f030000;
+    }
+    public static final class string {
+        public static final int Alot=0x7f040001;
+        public static final int BeinHashemashot=0x7f04000b;
+        public static final int Candles=0x7f04000d;
+        public static final int Chatzot=0x7f040007;
+        public static final int Hanetz=0x7f040003;
+        public static final int Havdalah=0x7f040010;
+        public static final int Mincha=0x7f04000e;
+        public static final int MinchaGedola=0x7f040008;
+        public static final int MinchaKitana=0x7f040009;
+        public static final int Plag=0x7f04000a;
+        public static final int ShaahZmanit=0x7f040011;
+        public static final int Shkiah=0x7f04000c;
+        public static final int SofZmanShemaMGA=0x7f040004;
+        public static final int SofZmanTefilahGRA=0x7f040006;
+        public static final int SofZmanTefilahMGA=0x7f040005;
+        public static final int Talit=0x7f040002;
+        public static final int Tzait=0x7f04000f;
+        public static final int app_name=0x7f040000;
+    }
 }
