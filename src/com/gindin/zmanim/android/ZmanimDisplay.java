@@ -34,23 +34,28 @@ public class ZmanimDisplay
 	 * <p/>
 	 * NOTE: In order to be careful and avoid rounding issues, I'm NOT including the 25 seconds.
 	 */
-	private static final int MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
+	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
 
+//	private com.ibm.icu.util.Calendar                         hebrewCalendar;
+//
+//	private com.ibm.icu.text.DateFormat                       hebrewDateFormatter;
 
 	/** The calendar we use for displaying everything. */
-	private ComplexZmanimCalendar zmanimCalendar;
+	private ComplexZmanimCalendar                             zmanimCalendar;
 
 	/** Where are we? */
-	private AndroidGeoLocation geoLocation;
+	private AndroidGeoLocation                                geoLocation;
 
 	/** Used to format the zmanim times that get displayed. */
-	private DateFormat timeFormatter;
+	private DateFormat                                        timeFormatter;
 
 	/** Used to format the secular date in the screen's header. */
-	private DateFormat secularDateFormatter;
+	private DateFormat                                        secularDateFormatter;
 
 	/** We want to detect swiping. */
-	private GestureDetector gestureDetector;
+	private GestureDetector                                   gestureDetector;
+
+
 
 
 	/** Called when the activity is first created. */
@@ -62,11 +67,15 @@ public class ZmanimDisplay
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
+//		hebrewCalendar = com.ibm.icu.util.Calendar.getInstance( new ULocale( "en_US@calendar=hebrew" ) );
+//		hebrewCalendar = new HebrewCalendar();
+//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
+
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
 		View.OnTouchListener touchListener = new View.OnTouchListener() {
 			public boolean onTouch(
-				View v,
+				View        view,
 				MotionEvent event
 			) {
 				return gestureDetector.onTouchEvent( event );
@@ -100,6 +109,9 @@ public class ZmanimDisplay
 		// Update the header
 		final Taarich taarich = getHebrewDate( zmanimCalendar );
 		final HebrewDateUtils dateUtils = new HebrewDateUtils( zmanimCalendar, taarich );
+
+
+//		updateField( R.id.hebrew_date, hebrewDateFormatter.format( hebrewCalendar ) );
 
 		updateField( R.id.hebrew_date, taarich.toString() );
 		updateField( R.id.secular_date, secularDateFormatter.format( zmanimCalendar.getCalendar().getTime() ) );

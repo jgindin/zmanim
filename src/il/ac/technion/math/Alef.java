@@ -67,7 +67,7 @@ public class Alef {
 		while ( n != 0 ) {
 			if ( i == 3 ) {
 				i = 0;
-				s.insert( 0, '׳' );
+				s.insert( 0, '\'');
 			}
 			if ( i == 0 && ( n % 100 == 15 || n % 100 == 16 ) ) {
 				s.insert( 0, special[ n % 100 - 15 ] );
