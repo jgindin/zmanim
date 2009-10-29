@@ -9,4 +9,11 @@
 			</intent-filter>
 		</activity>
 	</application>
+
+	<!--
+		Taken from http://www.devx.com/wireless/Article/40524 for accessing course location
+	-->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 </manifest>

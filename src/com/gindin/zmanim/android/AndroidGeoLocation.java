@@ -20,9 +20,11 @@ import java.util.TimeZone;
 public class AndroidGeoLocation
 	extends GeoLocation {
 
-	private static final Location SEATTLE;
+	private static final Location                             SEATTLE;
 
-	private final Context context;
+	private final Context                                     context;
+
+	private boolean                                           usedDefaultSeattleLocation = false;
 
 
 	static {
@@ -40,38 +42,6 @@ public class AndroidGeoLocation
 		this.context = context;
 
 		initFromPhoneLocation();
-	}
-
-
-	// TODO: Call from separate thread!?!
-	@Override
-	public String getLocationName() {
-
-		final double latitude = getLatitude();
-		final double longitude = getLongitude();
-
-		Geocoder geocoder = new Geocoder( context );
-
-		try {
-			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
-			if ( ( null == addresses ) || ( addresses.isEmpty() ) ) {
-				return getUnknownLocationName( latitude, longitude );
-			}
-
-			final Address address = addresses.get( 0 );
-			return address.getLocality() + ", " + address.getAdminArea();
-		}
-		catch ( IOException e ) {
-			return getUnknownLocationName( latitude, longitude );
-		}
-	}
-
-
-	private String getUnknownLocationName(
-		double latitude,
-		double longitude
-	) {
-		return latitude + " lat " + longitude + " long";
 	}
 
 
@@ -107,7 +77,48 @@ public class AndroidGeoLocation
 			}
 		}
 
+		usedDefaultSeattleLocation = true;
 		return SEATTLE;
+	}
+
+
+	// TODO: Call from separate thread!?!
+	@Override
+	public String getLocationName() {
+
+		final double latitude = getLatitude();
+		final double longitude = getLongitude();
+
+		Geocoder geocoder = new Geocoder( context );
+
+		String locationName;
+		try {
+			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
+			if ( ( null == addresses ) || ( addresses.isEmpty() ) ) {
+				locationName = getUnknownLocationName( latitude, longitude );
+			}
+			else {
+				final Address address = addresses.get( 0 );
+				locationName = address.getLocality() + ", " + address.getAdminArea();
+			}
+		}
+		catch ( IOException e ) {
+			locationName = getUnknownLocationName( latitude, longitude );
+		}
+
+		if ( usedDefaultSeattleLocation ) {
+			locationName = "** " + locationName;
+		}
+
+		return locationName;
+	}
+
+
+	private String getUnknownLocationName(
+		double latitude,
+		double longitude
+	) {
+		return latitude + " lat " + longitude + " long";
 	}
 
 

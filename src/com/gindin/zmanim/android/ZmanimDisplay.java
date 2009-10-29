@@ -27,7 +27,7 @@ public class ZmanimDisplay
 	 * Daily Halacha (http://www.dailyhalacha.com/Display.asp?ClipDate=6/29/2004): The latest time for mincha is: "The Ben
 	 * Ish Chai says in one place that you should not pray the Amidah if you start the Amidah at the 13th minute [after
 	 * sunset]. But in another place he says that you can start praying the Amidah so long as the majority of the Amidah is
-	 * said before the 13.5 minute mark. But Chacham Ovadia’s opinion is different. He says it would be permissible to
+	 * said before the 13.5 minute mark. But Chacham Ovadia's opinion is different. He says it would be permissible to
 	 * start the Amidah at 13 minutes after sunset even if the majority is said after the 13.5 minute mark. Chacham Ovadia
 	 * says it would be permissible so long as you start within the time. So technically, it would be permissible if you
 	 * start the Amidah in Mincha even as late as 13 minutes and 25 seconds after sunset."
