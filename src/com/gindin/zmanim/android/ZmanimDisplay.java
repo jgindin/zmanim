@@ -7,6 +7,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateUtils;
+import com.ibm.icu.impl.ICUData;
+import com.ibm.icu.util.HebrewCalendar;
+import com.ibm.icu.util.TimeZone;
+import com.ibm.icu.util.ULocale;
 import il.ac.technion.math.Taarich;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.ZmanimCalendar;
@@ -36,9 +40,9 @@ public class ZmanimDisplay
 	 */
 	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
 
-//	private com.ibm.icu.util.Calendar                         hebrewCalendar;
-//
-//	private com.ibm.icu.text.DateFormat                       hebrewDateFormatter;
+	private com.ibm.icu.util.Calendar                         hebrewCalendar;
+
+	private com.ibm.icu.text.DateFormat                       hebrewDateFormatter;
 
 	/** The calendar we use for displaying everything. */
 	private ComplexZmanimCalendar                             zmanimCalendar;
@@ -57,7 +61,6 @@ public class ZmanimDisplay
 
 
 
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(
@@ -67,10 +70,12 @@ public class ZmanimDisplay
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
-//		hebrewCalendar = com.ibm.icu.util.Calendar.getInstance( new ULocale( "en_US@calendar=hebrew" ) );
-//		hebrewCalendar = new HebrewCalendar();
-//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
+		ICUData.assetManager = getAssets();
 
+		hebrewCalendar = new HebrewCalendar();
+//		hebrewCalendar = com.ibm.icu.util.Calendar.getInstance( new ULocale( "en_US@calendar=hebrew" ) );
+		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
+		
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
 		View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -85,7 +90,6 @@ public class ZmanimDisplay
 
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
-
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );

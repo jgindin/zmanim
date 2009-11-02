@@ -19,6 +19,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Android 1.6 Platform" level="application" />
     <orderEntry type="library" name="Zmanim API" level="project" />
+    <orderEntry type="library" name="icu4j" level="project" />
   </component>
 </module>
 
