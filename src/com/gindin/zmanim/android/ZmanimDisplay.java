@@ -7,10 +7,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateUtils;
-import com.ibm.icu.impl.ICUData;
+import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.util.HebrewCalendar;
-import com.ibm.icu.util.TimeZone;
-import com.ibm.icu.util.ULocale;
 import il.ac.technion.math.Taarich;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.ZmanimCalendar;
@@ -70,11 +68,10 @@ public class ZmanimDisplay
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
-		ICUData.assetManager = getAssets();
+		ICUAndroidBridge.create( getAssets() );
 
 		hebrewCalendar = new HebrewCalendar();
-//		hebrewCalendar = com.ibm.icu.util.Calendar.getInstance( new ULocale( "en_US@calendar=hebrew" ) );
-		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
+//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
 		
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );

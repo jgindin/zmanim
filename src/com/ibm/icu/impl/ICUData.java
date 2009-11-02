@@ -9,6 +9,10 @@
  */
 package com.ibm.icu.impl;
 
+import android.content.res.AssetManager;
+import com.ibm.icu.ICUAndroidBridge;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.AccessController;
@@ -19,6 +23,8 @@ import java.util.MissingResourceException;
  * Provides access to ICU data files as InputStreams.  Implements security checking.
  */
 public final class ICUData {
+
+
     /*
      * Return a URL to the ICU resource names resourceName.  The
      * resource name should either be an absolute path, or a path relative to
@@ -26,53 +32,72 @@ public final class ICUData {
      * is true, throw an MissingResourceException instead of returning a null result.
      */
     public static boolean exists(final String resourceName) {
-        URL i = null;
-        if (System.getSecurityManager() != null) {
-            i = (URL)AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        return ICUData.class.getResource(resourceName);
-                    }
-                });
-        } else {
-            i = ICUData.class.getResource(resourceName);
-        }
-        return i != null;
+	    if ( null == ICUAndroidBridge.get() ) {
+		    URL i = null;
+		    if (System.getSecurityManager() != null) {
+		        i = (URL)AccessController.doPrivileged(new PrivilegedAction() {
+		                public Object run() {
+		                    return ICUData.class.getResource(resourceName);
+		                }
+		            });
+		    } else {
+		        i = ICUData.class.getResource(resourceName);
+		    }
+		    return i != null;
+	    }
+	    else {
+
+		    return ICUAndroidBridge.get().resourceExists( resourceName );
+	    }
     }
         
     private static InputStream getStream(final Class root, final String resourceName, boolean required) {
         InputStream i = null;
-        
-        if (System.getSecurityManager() != null) {
-            i = (InputStream)AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        return root.getResourceAsStream(resourceName);
-                    }
-                });
-        } else {
-            i = root.getResourceAsStream(resourceName);
-        }
 
-        if (i == null && required) {
-            throw new MissingResourceException("could not locate data " +resourceName, root.getPackage().getName(), resourceName);
-        }
-        return i;
+	    if ( null == ICUAndroidBridge.get() ) {
+		    if (System.getSecurityManager() != null) {
+		        i = (InputStream)AccessController.doPrivileged(new PrivilegedAction() {
+		                public Object run() {
+		                    return root.getResourceAsStream(resourceName);
+		                }
+		            });
+		    } else {
+		        i = root.getResourceAsStream(resourceName);
+		    }
+
+		    if (i == null && required) {
+		        throw new MissingResourceException("could not locate data " +resourceName, root.getPackage().getName(), resourceName);
+		    }
+	    }
+	    else {
+		    i = ICUAndroidBridge.get().open( resourceName, required );
+	    }
+
+	    return i;
     }
 
     private static InputStream getStream(final ClassLoader loader, final String resourceName, boolean required) {
-        InputStream i = null;
-        if (System.getSecurityManager() != null) {
-            i = (InputStream)AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        return loader.getResourceAsStream(resourceName);
-                    }
-                });
-        } else {
-            i = loader.getResourceAsStream(resourceName);
-        }
-        if (i == null && required) {
-            throw new MissingResourceException("could not locate data", loader.toString(), resourceName);
-        }
-        return i;
+	    InputStream i = null;
+	    if ( null == ICUAndroidBridge.get() ) {
+		    if (System.getSecurityManager() != null) {
+		        i = (InputStream)AccessController.doPrivileged(new PrivilegedAction() {
+		                public Object run() {
+		                    return loader.getResourceAsStream(resourceName);
+		                }
+		            });
+		    } else {
+		        i = loader.getResourceAsStream(resourceName);
+		    }
+		    if (i == null && required) {
+		        throw new MissingResourceException("could not locate data", loader.toString(), resourceName);
+		    }
+	    }
+	    else {
+		    i = ICUAndroidBridge.get().open( resourceName, required );
+	    }
+
+	    return i;
+
     }
     
     public static InputStream getStream(ClassLoader loader, String resourceName){

@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
 
+import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.impl.URLHandler.URLVisitor;
 import com.ibm.icu.util.StringTokenizer;
 import com.ibm.icu.util.ULocale;
@@ -523,8 +524,17 @@ public  class ICUResourceBundle extends UResourceBundle {
 
                     // look for prebuilt indices first
                     try {
-                        InputStream s = root.getResourceAsStream(bn + ICU_RESOURCE_INDEX + ".txt");
-                        if (s != null) {
+
+	                    final String resource = bn + ICU_RESOURCE_INDEX + ".txt";
+	                    final InputStream s;
+	                    if ( null == ICUAndroidBridge.get() ) {
+		                    s = root.getResourceAsStream( resource );
+	                    }
+	                    else {
+		                    s = ICUAndroidBridge.get().open( resource, false );
+	                    }
+
+	                    if (s != null) {
                             ArrayList lst = new ArrayList();
                             BufferedReader br = new BufferedReader(new InputStreamReader(s, "ASCII"));
                             String line;
@@ -539,6 +549,7 @@ public  class ICUResourceBundle extends UResourceBundle {
                         // swallow it
                     }
 
+	                  // TODO: This too???
                     URL url = root.getResource(bn);
                     URLHandler handler = URLHandler.get(url);
                     if (handler != null) {
