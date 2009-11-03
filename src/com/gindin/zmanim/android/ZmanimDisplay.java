@@ -6,12 +6,11 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import com.gindin.zmanim.HebrewDateUtils;
+import com.gindin.zmanim.HebrewHolidays;
 import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.util.HebrewCalendar;
-import il.ac.technion.math.Taarich;
+import com.ibm.icu.util.HebrewHoliday;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
-import net.sourceforge.zmanim.ZmanimCalendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -43,6 +42,7 @@ public class ZmanimDisplay
 	private com.ibm.icu.text.DateFormat                       hebrewDateFormatter;
 
 	/** The calendar we use for displaying everything. */
+	// TODO: Subclass to add earliest & latest mincha times directly, in a manner similar to the other times.
 	private ComplexZmanimCalendar                             zmanimCalendar;
 
 	/** Where are we? */
@@ -68,11 +68,6 @@ public class ZmanimDisplay
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
-		ICUAndroidBridge.create( getAssets() );
-
-		hebrewCalendar = new HebrewCalendar();
-//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
-		
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
 		View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -84,9 +79,13 @@ public class ZmanimDisplay
 			}
 		};
 
-
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
+
+		ICUAndroidBridge.create( getAssets() );
+
+		hebrewCalendar = new HebrewCalendar();
+//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
@@ -108,16 +107,10 @@ public class ZmanimDisplay
 	private void showZmanim() {
 
 		// Update the header
-		final Taarich taarich = getHebrewDate( zmanimCalendar );
-		final HebrewDateUtils dateUtils = new HebrewDateUtils( zmanimCalendar, taarich );
-
-
-//		updateField( R.id.hebrew_date, hebrewDateFormatter.format( hebrewCalendar ) );
-
-		updateField( R.id.hebrew_date, taarich.toString() );
+		updateField( R.id.hebrew_date, getHebrewDate() );
 		updateField( R.id.secular_date, secularDateFormatter.format( zmanimCalendar.getCalendar().getTime() ) );
 		updateField( R.id.location, geoLocation.getLocationName() );
-		updateField( R.id.holiday, dateUtils.getTodaysHoliday() );
+		updateField( R.id.holiday, getTodaysHoliday() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlos16Point1Degrees() );
 		updateFieldWithTime( R.id.talit, zmanimCalendar.getMisheyakir11Point5Degrees() );
@@ -130,21 +123,11 @@ public class ZmanimDisplay
 		updateFieldWithTime( R.id.mincha_kitana, zmanimCalendar.getMinchaKetana() );
 		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
 
-		if ( dateUtils.showCandlelighting() ) {
-			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
-		}
-		else {
-			findViewById( R.id.candles_row ).setVisibility( View.GONE );
-		}
+		updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
 
 		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getSunset() );
 
-		if ( dateUtils.showHavdalah() ) {
-
-		}
-		else {
-			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
-		}
+		findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
 
 
 		Calendar latestMincha = Calendar.getInstance();
@@ -156,24 +139,18 @@ public class ZmanimDisplay
 	}
 
 
-	private Taarich getHebrewDate(
-		ZmanimCalendar calendar
-	) {
+	private String getHebrewDate() {
 
-		Calendar secularCalendar = calendar.getCalendar();
-
-		int date = secularCalendar.get( Calendar.DATE );
-		int month = secularCalendar.get( Calendar.MONTH ) + 1;
-		int year = secularCalendar.get( Calendar.YEAR );
+		Calendar secularCalendar = zmanimCalendar.getCalendar();
+		hebrewCalendar.setTime( secularCalendar.getTime() );
 
 		// If we're past sunset, then it's tomorrow (for the Hebrew date)
 		Date now = secularCalendar.getTime();
-
-		if ( now.after( calendar.getSunset() ) ) {
-			date++;
+		if ( now.after( zmanimCalendar.getSunset() ) ) {
+			hebrewCalendar.add( Calendar.DAY_OF_MONTH, 1 );
 		}
 
-		return new Taarich( date, month, year );
+		return hebrewCalendar.get( Calendar.DAY_OF_MONTH ) + " " + hebrewCalendar.get( Calendar.MONTH ) + " " + hebrewCalendar.get( Calendar.YEAR );
 	}
 
 
@@ -233,6 +210,21 @@ public class ZmanimDisplay
 
 		zmanimCalendar.setCalendar( calendar );
 		showZmanim();
+	}
+
+
+	public String getTodaysHoliday() {
+
+		Date today = hebrewCalendar.getTime();
+		for ( HebrewHoliday hebrewHoliday : HebrewHolidays.JEWISH_HOLIDAYS ) {
+			if ( hebrewHoliday.isOn( today ) ) {
+				return hebrewHoliday.getDisplayName();
+			}
+		}
+
+		// TODO: Check for Rosh Chodesh too.
+
+		return "";
 	}
 
 
