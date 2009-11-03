@@ -33,6 +33,7 @@ public class HebrewHoliday extends Holiday
      */
     public HebrewHoliday(int month, int date, int length, String name)
     {
+	      // TODO: Need to use something other than a SimpleDateRule if length > 1
         super(name, new SimpleDateRule(month, date, gCalendar));
     }
 
@@ -82,7 +83,7 @@ public class HebrewHoliday extends Holiday
      * @draft ICU 2.8
      * @provisional This API might change or be removed in a future release.
      */
-    public static HebrewHoliday HANUKKAH        = new HebrewHoliday(HebrewCalendar.KISLEV, 25,      "Hanukkah");
+    public static HebrewHoliday HANUKKAH        = new HebrewHoliday(HebrewCalendar.KISLEV, 25, 8,   "Hanukkah");
 
     /**
      * @draft ICU 2.8
