@@ -2,8 +2,10 @@ package com.ibm.icu;
 
 import android.content.res.AssetManager;
 
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.MissingResourceException;
 
 /**
@@ -61,6 +63,12 @@ public class ICUAndroidBridge {
 			file = resourceName;
 		}
 
+		// Make sure we're not starting with a "/"... that won't work here...
+		if ( directory.startsWith( "/" ) ) {
+			directory = directory.substring( 1 );
+		}
+
+
 		try {
 			String [] files = assetManager.list( directory );
 			for ( String f : files ) {
@@ -77,12 +85,45 @@ public class ICUAndroidBridge {
 	}
 
 
+	public ArrayList<String> list(
+		String          directory,
+		FilenameFilter  filenameFilter
+	) {
+
+		// Asset manager doesn't like to do a listing if the the directory ends with a '/'...
+		if ( directory.endsWith( "/" ) ) {
+			directory = directory.substring( 0, directory.length() - 1 );
+		}
+
+		ArrayList<String> listing = new ArrayList<String>();
+
+		try {
+			String [] files = assetManager.list( directory );
+			for ( String f : files ) {
+				if ( filenameFilter.accept( null, f ) ) {
+					listing.add( f );
+				}
+			}
+		}
+		catch ( IOException e ) {
+			return null;
+		}
+
+		return listing;
+	}
+
+
 	public InputStream open(
 		String  resourceName,
 	  boolean failIfNotPresent
 	) {
 
 		InputStream i;
+
+		// Make sure we're not starting with a "/"... that won't work here...
+		if ( resourceName.startsWith( "/" ) ) {
+			resourceName = resourceName.substring( 1 );
+		}
 
 		try {
 			i = assetManager.open( resourceName );

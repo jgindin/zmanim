@@ -70,7 +70,12 @@ public final class ICUData {
 		    }
 	    }
 	    else {
-		    i = ICUAndroidBridge.get().open( resourceName, required );
+
+		    i = ICUAndroidBridge.get().open( resourceName, false );
+		    if ( null == i ) {
+			    String fullyQualified = root.getPackage().getName().replace( ".", "/" ) + "/" + resourceName;
+			    i = ICUAndroidBridge.get().open( fullyQualified, required );
+		    }
 	    }
 
 	    return i;

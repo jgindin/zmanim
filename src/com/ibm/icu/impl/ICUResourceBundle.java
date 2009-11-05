@@ -7,10 +7,7 @@
 
 package com.ibm.icu.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.ArrayList;
@@ -549,23 +546,48 @@ public  class ICUResourceBundle extends UResourceBundle {
                         // swallow it
                     }
 
-	                  // TODO: This too???
-                    URL url = root.getResource(bn);
-                    URLHandler handler = URLHandler.get(url);
-                    if (handler != null) {
-                        final ArrayList lst = new ArrayList();
-                        URLVisitor v = new URLVisitor() {
-                            public void visit(String s) {
-                                if (s.endsWith(".res") && !"res_index.res".equals(s)) {
-                                    lst.add(s.substring(0, s.length() - 4)); // strip '.res'
-                                }
-                            }
-                        };
-                        handler.guide(v, false);
-                        return lst;
-                    }
+	                final ArrayList<String> lst;
+	                if ( null == ICUAndroidBridge.get() ) {
 
-                    return null;
+		                lst = new ArrayList<String>();
+		                URL url = root.getResource(bn);
+		                URLHandler handler = URLHandler.get(url);
+		                if (handler != null) {
+ 		                    URLVisitor v = new URLVisitor() {
+		                        public void visit(String s) {
+		                            if (s.endsWith(".res") && !"res_index.res".equals(s)) {
+		                                lst.add(s.substring(0, s.length() - 4)); // strip '.res'
+		                            }
+		                        }
+		                    };
+		                    handler.guide(v, false);
+		                    return lst;
+		                }
+	                }
+	                else {
+
+		                lst = ICUAndroidBridge.get().list( bn,
+			                new FilenameFilter() {
+				                public boolean accept(
+					                File    dir,
+					                String  name
+				                ) {
+					                return ( name.endsWith(".res") && !"res_index.res".equals( name ));
+				                }
+			                }
+										);
+
+		                // To match the "normal" behavior, we have to go through the list of files and remove the .res suffix.
+		                for ( int index = 0, numResources = lst.size(); index < numResources; index++ ) {
+			                String res = lst.remove( index );
+			                res = res.substring( 0, res.length() - 4 );
+			                lst.add( index, res );
+		                }
+
+		                return lst;
+	                }
+
+	                return null;
                 }
             });
 
