@@ -85,7 +85,12 @@ public class ZmanimDisplay
 		ICUAndroidBridge.create( getAssets() );
 
 		hebrewCalendar = new HebrewCalendar();
-//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG );
+
+		// TODO: This formatter doesn't want to work right...I can't figure out how to get it to use the hebrew months...
+		// TODO: Might just be easier to have a silly little class that does the most basic of formatting, which is
+		//        all I need anyways...
+//		ULocale hebrew = ULocale.forLocale( new Locale( "he", "IL" ) );
+//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG, hebrew );
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
