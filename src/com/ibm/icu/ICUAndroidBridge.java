@@ -25,6 +25,7 @@ public class ICUAndroidBridge {
 	 */
 	private final AssetManager                                assetManager;
 
+//	public final List<String>                                 whatDidWeTryToLoad = new ArrayList<String>();
 
 	public static void create(
 		AssetManager  assetManager
@@ -126,6 +127,7 @@ public class ICUAndroidBridge {
 		}
 
 		try {
+//			whatDidWeTryToLoad.add( resourceName );
 			i = assetManager.open( resourceName );
 		}
 		catch ( IOException e ) {

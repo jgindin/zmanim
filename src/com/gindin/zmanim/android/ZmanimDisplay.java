@@ -6,10 +6,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import com.gindin.zmanim.HebrewHolidays;
+import com.gindin.zmanim.HebrewDateFormatter;
+import com.gindin.zmanim.HebrewDateUtils;
 import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.util.HebrewCalendar;
-import com.ibm.icu.util.HebrewHoliday;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 
 import java.text.DateFormat;
@@ -37,9 +37,13 @@ public class ZmanimDisplay
 	 */
 	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
 
-	private com.ibm.icu.util.Calendar                         hebrewCalendar;
+	/**
+	 * Used for our secular -> Hebrew date conversion. Cannot be final, because we have to get the ICUAndroidBridg
+	 *  configured before we can instantiate.
+	 */
+	private HebrewCalendar                                    hebrewCalendar;
 
-	private com.ibm.icu.text.DateFormat                       hebrewDateFormatter;
+	private HebrewDateUtils                                   hebrewDateUtils;
 
 	/** The calendar we use for displaying everything. */
 	// TODO: Subclass to add earliest & latest mincha times directly, in a manner similar to the other times.
@@ -85,12 +89,7 @@ public class ZmanimDisplay
 		ICUAndroidBridge.create( getAssets() );
 
 		hebrewCalendar = new HebrewCalendar();
-
-		// TODO: This formatter doesn't want to work right...I can't figure out how to get it to use the hebrew months...
-		// TODO: Might just be easier to have a silly little class that does the most basic of formatting, which is
-		//        all I need anyways...
-//		ULocale hebrew = ULocale.forLocale( new Locale( "he", "IL" ) );
-//		hebrewDateFormatter = com.ibm.icu.text.DateFormat.getDateInstance( com.ibm.icu.text.DateFormat.LONG, hebrew );
+		hebrewDateUtils = new HebrewDateUtils( hebrewCalendar );		
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
@@ -99,23 +98,25 @@ public class ZmanimDisplay
 		geoLocation = new AndroidGeoLocation( this );
 		zmanimCalendar = new ComplexZmanimCalendar( geoLocation );
 		showZmanim();
+
+		displayDebugMessages();
 	}
 
 
 	@Override
 	public boolean onTouchEvent( MotionEvent event ) {
-		gestureDetector.onTouchEvent( event );
-		return true;
+		return gestureDetector.onTouchEvent( event );
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
 		// Update the header
 		updateField( R.id.hebrew_date, getHebrewDate() );
 		updateField( R.id.secular_date, secularDateFormatter.format( zmanimCalendar.getCalendar().getTime() ) );
 		updateField( R.id.location, geoLocation.getLocationName() );
-		updateField( R.id.holiday, getTodaysHoliday() );
+		updateField( R.id.holiday, hebrewDateUtils.getTodaysHoliday() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlos16Point1Degrees() );
 		updateFieldWithTime( R.id.talit, zmanimCalendar.getMisheyakir11Point5Degrees() );
@@ -128,11 +129,20 @@ public class ZmanimDisplay
 		updateFieldWithTime( R.id.mincha_kitana, zmanimCalendar.getMinchaKetana() );
 		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
 
-		updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
+		if ( hebrewDateUtils.showCandlelighting() ) {
+			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
+		}
+		else {
+			findViewById( R.id.candles_row ).setVisibility( View.GONE );
+		}
 
 		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getSunset() );
 
-		findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
+		if ( hebrewDateUtils.showHavdalah() ) {
+		}
+		else {
+			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
+		}
 
 
 		Calendar latestMincha = Calendar.getInstance();
@@ -141,6 +151,20 @@ public class ZmanimDisplay
 		updateFieldWithTime( R.id.mincha, latestMincha.getTime() );
 
 		updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
+	}
+
+
+	private void displayDebugMessages() {
+
+//		List<String> strings= ICUAndroidBridge.get().whatDidWeTryToLoad;
+//		String loaded = "";
+//		for ( String string : strings ) {
+//			loaded = loaded + "\n";
+//			loaded = loaded + string;
+//		}
+//		updateField( R.id.debug, loaded );
+
+		findViewById( R.id.debug_row ).setVisibility( View.GONE );
 	}
 
 
@@ -155,7 +179,7 @@ public class ZmanimDisplay
 			hebrewCalendar.add( Calendar.DAY_OF_MONTH, 1 );
 		}
 
-		return hebrewCalendar.get( Calendar.DAY_OF_MONTH ) + " " + hebrewCalendar.get( Calendar.MONTH ) + " " + hebrewCalendar.get( Calendar.YEAR );
+		return HebrewDateFormatter.format( hebrewCalendar );
 	}
 
 
@@ -217,20 +241,6 @@ public class ZmanimDisplay
 		showZmanim();
 	}
 
-
-	public String getTodaysHoliday() {
-
-		Date today = hebrewCalendar.getTime();
-		for ( HebrewHoliday hebrewHoliday : HebrewHolidays.JEWISH_HOLIDAYS ) {
-			if ( hebrewHoliday.isOn( today ) ) {
-				return hebrewHoliday.getDisplayName();
-			}
-		}
-
-		// TODO: Check for Rosh Chodesh too.
-
-		return "";
-	}
 
 
 	private class ZmanimGestureListener

@@ -18,6 +18,8 @@ public final class R {
         public static final int candles=0x7f050010;
         public static final int candles_row=0x7f05000f;
         public static final int chatzot=0x7f05000b;
+        public static final int debug=0x7f050017;
+        public static final int debug_row=0x7f050016;
         public static final int hanetz=0x7f050007;
         public static final int havdalah=0x7f050015;
         public static final int havdalah_row=0x7f050014;

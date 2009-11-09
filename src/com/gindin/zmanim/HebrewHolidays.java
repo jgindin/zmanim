@@ -20,7 +20,7 @@ public class HebrewHolidays {
 		HebrewHoliday.SHUSHAN_PURIM,      HebrewHoliday.PASSOVER,           HebrewHoliday.YOM_HASHOAH,
 		HebrewHoliday.YOM_HAZIKARON,      HebrewHoliday.YOM_HAATZMAUT,      HebrewHoliday.PESACH_SHEINI,
 		HebrewHoliday.LAG_BOMER,          HebrewHoliday.YOM_YERUSHALAYIM,   HebrewHoliday.SHAVUOT,
-		HebrewHoliday.TAMMUZ_17,        HebrewHoliday.TISHA_BAV
+		HebrewHoliday.TAMMUZ_17,          HebrewHoliday.TISHA_BAV
 	};
 
 	/**
