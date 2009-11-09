@@ -10,6 +10,7 @@ import com.gindin.zmanim.HebrewDateFormatter;
 import com.gindin.zmanim.HebrewDateUtils;
 import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.util.HebrewCalendar;
+import com.ibm.icu.util.HebrewHoliday;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 
 import java.text.DateFormat;
@@ -113,10 +114,23 @@ public class ZmanimDisplay
 	private void showZmanim() {
 
 		// Update the header
-		updateField( R.id.hebrew_date, getHebrewDate() );
+		updateField( R.id.hebrew_date, HebrewDateFormatter.format( hebrewCalendar ) );
 		updateField( R.id.secular_date, secularDateFormatter.format( zmanimCalendar.getCalendar().getTime() ) );
 		updateField( R.id.location, geoLocation.getLocationName() );
-		updateField( R.id.holiday, hebrewDateUtils.getTodaysHoliday() );
+		HebrewHoliday holiday = hebrewDateUtils.isTodayAHoliday();
+		String holidayDescription;
+		if ( null == holiday ) {
+			holiday = hebrewDateUtils.isRoshChodesh();
+		}
+
+		if ( null == holiday ) {
+			holidayDescription = "";
+		}
+		else {
+			holidayDescription = holiday.getDisplayName();
+		}
+
+		updateField( R.id.holiday, holidayDescription );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlos16Point1Degrees() );
 		updateFieldWithTime( R.id.talit, zmanimCalendar.getMisheyakir11Point5Degrees() );
@@ -130,6 +144,7 @@ public class ZmanimDisplay
 		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
 
 		if ( hebrewDateUtils.showCandlelighting() ) {
+			findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
 			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
 		}
 		else {
@@ -138,19 +153,23 @@ public class ZmanimDisplay
 
 		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getSunset() );
 
-		if ( hebrewDateUtils.showHavdalah() ) {
-		}
-		else {
-			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
-		}
-
-
 		Calendar latestMincha = Calendar.getInstance();
 		latestMincha.setTime( zmanimCalendar.getSunset() );
 		latestMincha.add( Calendar.MINUTE, MINUTES_AFTER_SUNSET_FOR_MINCHA );
 		updateFieldWithTime( R.id.mincha, latestMincha.getTime() );
 
-		updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
+
+		if ( hebrewDateUtils.showHavdalah() ) {
+			findViewById( R.id.tzait_row ).setVisibility( View.GONE );
+			findViewById( R.id.havdalah_row ).setVisibility( View.VISIBLE );
+			updateFieldWithTime( R.id.havdalah, zmanimCalendar.getTzais() );
+		}
+		else {
+			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
+			findViewById( R.id.tzait_row ).setVisibility( View.VISIBLE );
+			updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
+		}
+
 	}
 
 
@@ -165,21 +184,6 @@ public class ZmanimDisplay
 //		updateField( R.id.debug, loaded );
 
 		findViewById( R.id.debug_row ).setVisibility( View.GONE );
-	}
-
-
-	private String getHebrewDate() {
-
-		Calendar secularCalendar = zmanimCalendar.getCalendar();
-		hebrewCalendar.setTime( secularCalendar.getTime() );
-
-		// If we're past sunset, then it's tomorrow (for the Hebrew date)
-		Date now = secularCalendar.getTime();
-		if ( now.after( zmanimCalendar.getSunset() ) ) {
-			hebrewCalendar.add( Calendar.DAY_OF_MONTH, 1 );
-		}
-
-		return HebrewDateFormatter.format( hebrewCalendar );
 	}
 
 
@@ -206,8 +210,10 @@ public class ZmanimDisplay
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.DATE, 1 );
-
 		zmanimCalendar.setCalendar( calendar );
+
+		hebrewCalendar.add( Calendar.DATE, 1 );
+
 		showZmanim();
 	}
 
@@ -216,8 +222,10 @@ public class ZmanimDisplay
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.DATE, -1 );
-
 		zmanimCalendar.setCalendar( calendar );
+
+		hebrewCalendar.add( Calendar.DATE, -1 );
+
 		showZmanim();
 	}
 
@@ -226,8 +234,10 @@ public class ZmanimDisplay
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.MONTH, 1 );
-
 		zmanimCalendar.setCalendar( calendar );
+
+		hebrewCalendar.add( Calendar.MONTH, 1 );
+
 		showZmanim();
 	}
 
@@ -236,8 +246,10 @@ public class ZmanimDisplay
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.MONTH, -1 );
-
 		zmanimCalendar.setCalendar( calendar );
+
+		hebrewCalendar.add( Calendar.MONTH, -1 );
+
 		showZmanim();
 	}
 
