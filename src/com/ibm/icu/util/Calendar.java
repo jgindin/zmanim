@@ -5,18 +5,6 @@
 
 package com.ibm.icu.util;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.StringCharacterIterator;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Set;
-
 import com.ibm.icu.impl.CalendarData;
 import com.ibm.icu.impl.ICUCache;
 import com.ibm.icu.impl.ICUResourceBundle;
@@ -25,6 +13,13 @@ import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.DateFormatSymbols;
 import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.SimpleDateFormat;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.StringCharacterIterator;
+import java.util.*;
 
 /**
  * <code>Calendar</code> is an abstract base class for converting between
@@ -1817,45 +1812,45 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable {
         case CALTYPE_GREGORIAN:
             cal = new GregorianCalendar(zone, locale);
             break;
-        case CALTYPE_JAPANESE:
-            cal = new JapaneseCalendar(zone, locale);
-            break;
-        case CALTYPE_BUDDHIST:
-            cal = new BuddhistCalendar(zone, locale);
-            break;
-        case CALTYPE_ROC:
-            cal = new TaiwanCalendar(zone, locale);
-            break;
-        case CALTYPE_PERSIAN:
-            // Not yet implemented in ICU4J
-            cal = new GregorianCalendar(zone, locale);
-            break;
-        case CALTYPE_ISLAMIC_CIVIL:
-            cal = new IslamicCalendar(zone, locale);
-            break;
-        case CALTYPE_ISLAMIC:
-            cal = new IslamicCalendar(zone, locale);
-            ((IslamicCalendar)cal).setCivil(false);
-            break;
+//        case CALTYPE_JAPANESE:
+//            cal = new JapaneseCalendar(zone, locale);
+//            break;
+//        case CALTYPE_BUDDHIST:
+//            cal = new BuddhistCalendar(zone, locale);
+//            break;
+//        case CALTYPE_ROC:
+//            cal = new TaiwanCalendar(zone, locale);
+//            break;
+//        case CALTYPE_PERSIAN:
+//            // Not yet implemented in ICU4J
+//            cal = new GregorianCalendar(zone, locale);
+//            break;
+//        case CALTYPE_ISLAMIC_CIVIL:
+//            cal = new IslamicCalendar(zone, locale);
+//            break;
+//        case CALTYPE_ISLAMIC:
+//            cal = new IslamicCalendar(zone, locale);
+//            ((IslamicCalendar)cal).setCivil(false);
+//            break;
         case CALTYPE_HEBREW:
             cal = new HebrewCalendar(zone, locale);
             break;
-        case CALTYPE_CHINESE:
-            cal = new ChineseCalendar(zone, locale);
-            break;
-        case CALTYPE_INDIAN:
-            cal = new IndianCalendar(zone, locale);
-            break;
-        case CALTYPE_COPTIC:
-            cal = new CopticCalendar(zone, locale);
-            break;
-        case CALTYPE_ETHIOPIC:
-            cal = new EthiopicCalendar(zone, locale);
-            break;
-        case CALTYPE_ETHIOPIC_AMETE_ALEM:
-            cal = new EthiopicCalendar(zone, locale);
-            ((EthiopicCalendar)cal).setAmeteAlemEra(true);
-            break;
+//        case CALTYPE_CHINESE:
+//            cal = new ChineseCalendar(zone, locale);
+//            break;
+//        case CALTYPE_INDIAN:
+//            cal = new IndianCalendar(zone, locale);
+//            break;
+//        case CALTYPE_COPTIC:
+//            cal = new CopticCalendar(zone, locale);
+//            break;
+//        case CALTYPE_ETHIOPIC:
+//            cal = new EthiopicCalendar(zone, locale);
+//            break;
+//        case CALTYPE_ETHIOPIC_AMETE_ALEM:
+//            cal = new EthiopicCalendar(zone, locale);
+//            ((EthiopicCalendar)cal).setAmeteAlemEra(true);
+//            break;
         default:
             // we must not get here, because unknown type is mapped to
             // Gregorian at the beginning of this method.
