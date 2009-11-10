@@ -1,0 +1,53 @@
+*   ZmanimGui, and the Zmanim API programs are free software:
+*   you can redistribute them and/or modify  them under the terms of the GNU General Public License
+*   as published by the Free Software Foundation, either version 2 of the License, or
+*   (at your option) any later version.
+
+*   This program is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+
+*   You should have received a copy of the GNU General Public License
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+*   The Hebrew Date is produced using the Taarich class by Dr. Zvi Har’El,
+*   Under the following license: (See "Taarich.java", "Gauss.java", and "Alef.java").
+	**********************************************************
+	*  Copyright © 1998-2003 Dr. Zvi Har’El <rl@math.technion.ac.il>
+	*
+	*  Redistribution and use in source and binary forms, with or without
+	*  modification, are permitted provided that the following conditions
+	*  are met:
+	*  
+	*  1. Redistributions of source code must retain the above copyright
+	*     notice, this list of conditions and the following disclaimer.
+	*  
+	*  2. Redistributions in binary form must reproduce the above copyright
+	*     notice, this list of conditions and the following disclaimer in
+	*     the documentation and/or other materials provided with the
+	*     distribution.
+	*  
+	*  3. The end-user documentation included with the redistribution,
+	*     if any, must include the following acknowledgment:
+	*  	“This product includes software developed by
+	*  	 Dr. Zvi Har’El (http://www.math.technion.ac.il/~rl/).”
+	*     Alternately, this acknowledgment may appear in the software itself,
+	*     if and wherever such third-party acknowledgments normally appear.
+	*  
+	*  This software is provided ‘as-is’, without any express or implied
+	*  warranty.  In no event will the author be held liable for any
+	*  damages arising from the use of this software.
+	*
+	*  Author:
+	*  	Dr. Zvi Har’El,
+	*  	Deptartment of Mathematics,
+	*  	Technion, Israel Institue of Technology,
+	*  	Haifa 32000, Israel.
+	*  	E-Mail: rl@math.technion.ac.il
+	**********************************************************
+
+
+*   The icon provided with ZmanimGUI is from the "Oxygen" icon package,
+*   Licensed under the  LGPL license. see "www.oxygen-icons.org" for further details.

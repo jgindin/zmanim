@@ -1,0 +1,2 @@
+Main-Class: zmanimgui.ZmanimMain
+Class-Path: lib/zmanim.jar
