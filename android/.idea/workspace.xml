@@ -11,33 +11,148 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="INFO" />
   </component>
   <component name="ChangeListManager" verified="true">
-    <list default="true" readonly="true" id="f37fc1cf-a31b-43df-9fea-72ee3afd75bc" name="Default" comment="" />
-    <list id="36bcb695-01b5-437d-a439-fb336e66a9c7" name="NEVER COMMIT" comment="">
+    <list default="true" readonly="true" id="f37fc1cf-a31b-43df-9fea-72ee3afd75bc" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_zh_Hant.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BidiLine.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecog_sbcs.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransliterationRuleSet.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/Quantifier.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/ReplaceableContextIterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_hi.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/NameUnicodeTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UppercaseTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeDecompressor.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/data/BreakIteratorRules.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBISymbolTable.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringTransform.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CompoundTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_ko.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/ComposedCharIter.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_es.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_ar_EG.xml.escaped" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/MeasureFormat.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_zh_Hans.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CollatorServiceShim.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RemoveTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/IndexCharacters.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/data/Transliterator_Han_Latin_Definition.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/AnyTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CurrencyFormat.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/ThaiBreakIterator.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/ICUResourceBundle.java" afterPath="$PROJECT_DIR$/src/com/ibm/icu/impl/ICUResourceBundle.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/CollectionUtilities.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBIRuleParseTable.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/UnicodeRegex.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/LowercaseTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BidiWriter.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringCharacterIterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringSearch.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/data/Transliterator_Han_Latin_EDICT.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/DecompData.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecog_mbcs.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_ar_EG.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/SCSU.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/DictionaryBasedBreakIterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBISetBuilder.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TitlecaseTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/FunctionReplacer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TimeUnitFormat.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BreakTransliterator.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeSet.java" afterPath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeSet.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBIDataWrapper.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBIRuleScanner.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_th.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/drawable/icon.png" afterPath="$PROJECT_DIR$/res/drawable/icon.png" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransformTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransliterationRule.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransliteratorRegistry.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RuleBasedBreakIterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeNameTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecog_Unicode.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/EscapeTransliterator.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/UCharacterProperty.java" afterPath="$PROJECT_DIR$/src/com/ibm/icu/impl/UCharacterProperty.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BreakDictionary.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringPrep.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetDetector.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_ru.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_zh_Hans_SG.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransliteratorIDParser.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/DateIntervalInfo.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RuleBasedTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/NullTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringReplacer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/TransliteratorParser.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/PropsVectors.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/StringPrepDataReader.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringMatcher.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecog_UTF8.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeCompressor.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Zmanim_API.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Zmanim_API.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/PVecToTrieCompactHandler.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/index.txt" afterPath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/index.txt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBIRuleBuilder.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/Bidi.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BidiClassifier.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/ByteBuffer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_it.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_zh_Hant_HK.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CaseFoldTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/IDNA.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecog_2022.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnescapeTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/UtilityExtensions.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/ArabicShaping.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/SearchIterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/NumberFormatServiceShim.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/DateIntervalFormat.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BreakIteratorFactory.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Zmanim.iml" afterPath="$PROJECT_DIR$/Zmanim.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetMatch.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_fr.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_ja.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/StringPrepParseException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeReplacer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/package.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/CharsetRecognizer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BidiRun.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBINode.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/BreakCTDictionary.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/Transliterator.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/util/TimeZone.java" afterPath="$PROJECT_DIR$/src/com/ibm/icu/util/TimeZone.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/RBBITableBuilder.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java" afterPath="$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/data/BreakIteratorRules_th.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/NormalizationTransliterator.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/text/ArabicShapingException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/InvalidFormatException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/ibm/icu/impl/Punycode.java" afterPath="" />
     </list>
-    <ignored path="bin/" />
-    <ignored path="thirdparty/framework/zmanim/release/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/util/" />
-    <ignored path="bin/classes/com/gindin/zmanim/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/Calculator/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/" />
-    <ignored path="thirdparty/framework/zmanim/backup/" />
-    <ignored path="Zmanim.iws" />
-    <ignored path="bin/classes/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/" />
+    <list id="36bcb695-01b5-437d-a439-fb336e66a9c7" name="NEVER COMMIT" comment="" />
     <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/Helpers/" />
+    <ignored path="thirdparty/framework/zmanim/backup/" />
+    <ignored path="bin/classes/com/gindin/zmanim/" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/" />
+    <ignored path="Zmanim.iws" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/Calculator/" />
+    <ignored path="bin/classes/il/" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/Calendar/" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/" />
+    <ignored path="bin/" />
+    <ignored path="bin/classes/" />
+    <ignored path="bin/classes/il/ac/technion/math/" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/util/" />
     <ignored path="bin/classes/com/" />
+    <ignored path="bin/classes/il/ac/" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/" />
+    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/" />
+    <ignored path="thirdparty/framework/zmanim/release/" />
     <ignored path="bin/classes/com/gindin/zmanim/android/" />
     <ignored path="bin/classes/com/gindin/" />
-    <ignored path="bin/classes/il/ac/technion/math/" />
-    <ignored path=".idea/workspace.xml" />
-    <ignored path="bin/classes/il/ac/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/Calendar/" />
     <ignored path="bin/classes/il/ac/technion/" />
-    <ignored path="bin/classes/il/" />
-    <ignored path="thirdparty/framework/zmanim/tempZmanimBuildDir/net/sourceforge/zmanim/" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="f37fc1cf-a31b-43df-9fea-72ee3afd75bc" time="1257836303203" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="true" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +169,7 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java" line="517" class="com.ibm.icu.util.UResourceBundle" package="com.ibm.icu.util">
+      <breakpoint url="file://$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java" line="518" class="com.ibm.icu.util.UResourceBundle" package="com.ibm.icu.util">
         <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -65,19 +180,6 @@
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/com/ibm/icu/impl/ICUData.java" line="103" class="com.ibm.icu.impl.ICUData" package="com.ibm.icu.impl">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="null == i" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
@@ -128,8 +230,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -145,65 +247,22 @@
   <component name="FileColors" enabled="false" enabledForTabs="false" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HebrewDateUtils.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/gindin/zmanim/HebrewDateUtils.java">
+      <file leaf-file-name="HebrewCalendar.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/HebrewCalendar.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="4" selection-start="6297" selection-end="6297" vertical-scroll-proportion="0.0">
+            <state line="9" column="31" selection-start="452" selection-end="452" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ZmanimDisplay.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/gindin/zmanim/android/ZmanimDisplay.java">
+      <file leaf-file-name="Calendar.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/Calendar.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="66" selection-start="5645" selection-end="5645" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="26" selection-start="305" selection-end="305" vertical-scroll-proportion="0.09385475">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="local.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/local.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="default.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/default.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="99" column="58" selection-start="3283" selection-end="3283" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="3306" column="66" selection-start="132893" selection-end="132893" vertical-scroll-proportion="0.24344978">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -212,28 +271,28 @@
   </component>
   <component name="FindManager">
     <FindUsagesManager>
-      <setting name="OPEN_NEW_TAB" value="false" />
+      <setting name="OPEN_NEW_TAB" value="true" />
     </FindUsagesManager>
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/com/ibm/icu/impl/Grego.java" />
-        <option value="$PROJECT_DIR$/src/com/com/ibm/icu/impl/CalendarCache.java" />
-        <option value="$PROJECT_DIR$/src/com/com/ibm/icu/impl/SimpleCache.java" />
-        <option value="$PROJECT_DIR$/src/com/com/ibm/icu/impl/ICUCache.java" />
-        <option value="$PROJECT_DIR$/src/com/com/ibm/icu/impl/TimeZoneAdapter.java" />
-        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/HebrewHoliday.java" />
-        <option value="$PROJECT_DIR$/src/com/ibm/icu/impl/ICUResourceBundle.java" />
-        <option value="$PROJECT_DIR$/src/com/ibm/icu/impl/ICUData.java" />
         <option value="$PROJECT_DIR$/src/com/gindin/zmanim/HebrewDateFormatter.java" />
         <option value="$PROJECT_DIR$/src/com/ibm/icu/ICUAndroidBridge.java" />
-        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/Calendar.java" />
         <option value="$PROJECT_DIR$/src/com/gindin/zmanim/HebrewHolidays.java" />
-        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/HebrewCalendar.java" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/src/com/gindin/zmanim/HebrewDateUtils.java" />
         <option value="$PROJECT_DIR$/src/com/gindin/zmanim/android/ZmanimDisplay.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/HebrewCalendar.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/impl/ICUResourceBundle.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/TimeZone.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/ULocale.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/impl/UCharacterProperty.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/CalendarServiceShim.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeSet.java" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/index.txt" />
+        <option value="$PROJECT_DIR$/src/com/ibm/icu/util/Calendar.java" />
       </list>
     </option>
   </component>
@@ -473,82 +532,35 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Favorites" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gindin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zmanim" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android-zmanim" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -564,20 +576,143 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ibm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="icu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ibm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="icu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="duration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ibm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="icu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="duration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="162" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="109" />
-    <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="35" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="129" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="129" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
@@ -588,7 +723,7 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="144" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="107" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../zmanim-thirdparty/ZmanimGUI-0.087/src/zmanimgui" />
+    <property name="last_opened_file_path" value="/opt/devtools/android/android-sdk-linux_x86-1.6_r1/platforms/android-1.6/templates" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth5" value="906" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="107" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth3" value="106" />
@@ -596,19 +731,19 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="124" />
-    <property name="GoToClass.includeLibraries" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth5" value="923" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="options.lastSelected" value="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurable" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder5" value="5" />
+    <property name="options.lastSelected" value="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurable" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="project.structure.side.proportion" value="0.1474704" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.side.proportion" value="0.1474704" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
@@ -743,12 +878,7 @@
       <Port>5050</Port>
     </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <changelist date="1256797363775">
-      <option name="PATH" value="$PROJECT_DIR$/../../../.IntelliJIdea90/config/shelf/Start_copying_ICU_classes_that_we_need_.patch" />
-      <option name="DESCRIPTION" value="Start copying ICU classes that we need." />
-    </changelist>
-  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
   <component name="StructureViewFactory">
     <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
     <option name="ACTIVE_ACTIONS" value="SHOW_INHERITED,ALPHA_COMPARATOR" />
@@ -765,7 +895,7 @@
     <option name="DETECT_NESTED_COPIES" value="false" />
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
-    <configuration useDefault="true">$PROJECT_DIR$/../../../.subversion</configuration>
+    <configuration useDefault="true">$PROJECT_DIR$/../../../../../.subversion</configuration>
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
@@ -813,21 +943,21 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979852" sideWeight="0.0" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24983476" sideWeight="0.5938494" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.32782552" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980832" sideWeight="0.5938494" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979852" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" x="213" y="427" width="1513" height="310" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.33510074" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.6574761" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979852" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.4718982" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24917382" sideWeight="0.5206787" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47507954" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.66754794" order="12" side_tool="true" content_ui="tabs" x="576" y="464" width="913" height="545" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32979852" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -892,97 +1022,121 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/Freezable.java">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/SimpleCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+        <state line="22" column="46" selection-start="752" selection-end="752" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/HebrewHoliday.java">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/CalendarCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="31" selection-start="1238" selection-end="1238" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/SimpleDateRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="17" selection-start="1097" selection-end="1097" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/RangeDateRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="13" selection-start="582" selection-end="582" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/SimpleHoliday.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="69" selection-start="5843" selection-end="5843" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/DateRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="785" selection-end="785" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/Holiday.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="19" selection-start="3321" selection-end="3321" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/Calendar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2349" column="24" selection-start="91479" selection-end="91490" vertical-scroll-proportion="0.0" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/HebrewCalendar.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="675" column="0" selection-start="27175" selection-end="27175" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="99" column="58" selection-start="3283" selection-end="3283" vertical-scroll-proportion="0.0">
+        <state line="9" column="31" selection-start="452" selection-end="452" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/gindin/zmanim/HebrewDateUtils.java">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundleIterator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="4" selection-start="6297" selection-end="6297" vertical-scroll-proportion="0.0">
+        <state line="36" column="21" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/gindin/zmanim/android/ZmanimDisplay.java">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/CalendarData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="66" selection-start="5645" selection-end="5645" vertical-scroll-proportion="0.0">
+        <state line="14" column="32" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/default.properties">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/ULocale.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3856" column="27" selection-start="152584" selection-end="152584" vertical-scroll-proportion="0.9300777">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/ICUResourceBundleReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.properties">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/text/UnicodeSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="267" column="13" selection-start="11353" selection-end="11353" vertical-scroll-proportion="0.33275864">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/CalendarServiceShim.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="50" selection-start="661" selection-end="661" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/UCharacterProperty.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="836" column="15" selection-start="33906" selection-end="33906" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/TimeZone.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="703" column="0" selection-start="27784" selection-end="27784" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/UResourceBundle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="87" selection-start="3296" selection-end="3296" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/text/SimpleDateFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="482" column="55" selection-start="19594" selection-end="19594" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/pfd_en.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/impl/duration/impl/data/index.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="6" column="0" selection-start="333" selection-end="333" vertical-scroll-proportion="0.09170306">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
+    <entry file="file://$PROJECT_DIR$/src/com/ibm/icu/util/Calendar.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="26" selection-start="305" selection-end="305" vertical-scroll-proportion="0.09385475">
-          <folding />
+        <state line="3306" column="66" selection-start="132893" selection-end="132893" vertical-scroll-proportion="0.24344978">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

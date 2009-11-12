@@ -4,10 +4,10 @@
       <root url="jar://$PROJECT_DIR$/libs/zmanim-1.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/thirdparty/zmanim/docs" />
+      <root url="file://$PROJECT_DIR$/../thirdparty/zmanim/docs" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/thirdparty/zmanim/src" />
+      <root url="file://$PROJECT_DIR$/../thirdparty/zmanim/src" />
     </SOURCES>
   </library>
 </component>
