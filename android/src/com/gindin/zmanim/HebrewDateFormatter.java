@@ -59,7 +59,7 @@ public class HebrewDateFormatter {
 				break;
 
 			case HebrewCalendar.TEVET:
-				month = "Tevent";
+				month = "Tevet";
 				break;
 
 			case HebrewCalendar.SHEVAT:
