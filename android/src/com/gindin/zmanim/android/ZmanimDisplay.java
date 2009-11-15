@@ -8,14 +8,15 @@ import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateFormatter;
 import com.gindin.zmanim.HebrewDateUtils;
+import com.gindin.zmanim.JewishHoliday;
 import com.ibm.icu.ICUAndroidBridge;
 import com.ibm.icu.util.HebrewCalendar;
-import com.ibm.icu.util.HebrewHoliday;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -93,7 +94,7 @@ public class ZmanimDisplay
 		hebrewDateUtils = new HebrewDateUtils( hebrewCalendar );		
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getDateFormat( this );
+		secularDateFormatter = android.text.format.DateFormat.getLongDateFormat( this );
 
 		// Figure out where we are, and get a calendar ready to use.
 		geoLocation = new AndroidGeoLocation( this );
@@ -113,24 +114,28 @@ public class ZmanimDisplay
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
+		StringBuffer holidayDescription = new StringBuffer();
+		JewishHoliday holiday = hebrewDateUtils.isTodayAHoliday();
+		if ( null != holiday ) {
+			holidayDescription.append( holiday.name );
+		}
+
+		holiday = hebrewDateUtils.isRoshChodesh();
+		if ( null != holiday ) {
+			if ( 0 == holidayDescription.length() ) {
+				holidayDescription.append( holiday.name );
+			}
+			else {
+				holidayDescription.append( " / " ).append( holiday.name );
+			}
+		}
+
+
 		// Update the header
 		updateField( R.id.hebrew_date, HebrewDateFormatter.format( hebrewCalendar ) );
-		updateField( R.id.secular_date, secularDateFormatter.format( zmanimCalendar.getCalendar().getTime() ) );
+		updateField( R.id.secular_date, formatDate() );
 		updateField( R.id.location, geoLocation.getLocationName() );
-		HebrewHoliday holiday = hebrewDateUtils.isTodayAHoliday();
-		String holidayDescription;
-		if ( null == holiday ) {
-			holiday = hebrewDateUtils.isRoshChodesh();
-		}
-
-		if ( null == holiday ) {
-			holidayDescription = "";
-		}
-		else {
-			holidayDescription = holiday.getDisplayName();
-		}
-
-		updateField( R.id.holiday, holidayDescription );
+		updateField( R.id.holiday, holidayDescription.toString() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlos16Point1Degrees() );
 		updateFieldWithTime( R.id.talit, zmanimCalendar.getMisheyakir11Point5Degrees() );
@@ -170,6 +175,49 @@ public class ZmanimDisplay
 			updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
 		}
 
+	}
+
+
+	private String formatDate() {
+
+		final Calendar calendar = zmanimCalendar.getCalendar();
+
+		final StringBuffer date = new StringBuffer();
+		switch ( calendar.get( Calendar.DAY_OF_WEEK ) ) {
+			case Calendar.SUNDAY:
+				date.append( "Sunday" );
+				break;
+
+			case Calendar.MONDAY:
+				date.append( "Monday" );
+				break;
+
+			case Calendar.TUESDAY:
+				date.append( "Tuesday" );
+				break;
+
+			case Calendar.WEDNESDAY:
+				date.append( "Wednesday" );
+				break;
+
+			case Calendar.THURSDAY:
+				date.append( "Thursday" );
+				break;
+
+			case Calendar.FRIDAY:
+				date.append( "Friday" );
+				break;
+
+			case Calendar.SATURDAY:
+				date.append( "Shabbat" );
+				break;
+
+		}
+
+		date.append( ", " );
+		date.append( secularDateFormatter.format( calendar.getTime() ) );
+
+		return date.toString();
 	}
 
 

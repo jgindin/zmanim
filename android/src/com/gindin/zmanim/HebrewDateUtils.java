@@ -1,7 +1,6 @@
 package com.gindin.zmanim;
 
 import com.ibm.icu.util.HebrewCalendar;
-import com.ibm.icu.util.HebrewHoliday;
 
 import java.util.Date;
 
@@ -10,21 +9,6 @@ import java.util.Date;
  */
 @SuppressWarnings( { "MagicNumber" } )
 public class HebrewDateUtils {
-
-	/**
-	 * Set of the holidays. We're not using the com.ibm.icu.util.HebrewHoliday.getHolidays() because the
-	 *  list declared in com.ibm.icu.impl.data.HolidayBundle_iw_IL is sadly lacking.
-	 */
-	private static HebrewHoliday[] JEWISH_HOLIDAYS = {
-		HebrewHoliday.ROSH_HASHANAH,      HebrewHoliday.GEDALIAH,           HebrewHoliday.YOM_KIPPUR,
-		HebrewHoliday.SUKKOT,             HebrewHoliday.HOSHANAH_RABBAH,    HebrewHoliday.SHEMINI_ATZERET,
-		HebrewHoliday.SIMCHAT_TORAH,      HebrewHoliday.HANUKKAH,           HebrewHoliday.TEVET_10,
-		HebrewHoliday.TU_BSHEVAT,         HebrewHoliday.ESTHER,             HebrewHoliday.PURIM,
-		HebrewHoliday.SHUSHAN_PURIM,      HebrewHoliday.PASSOVER,           HebrewHoliday.YOM_HASHOAH,
-		HebrewHoliday.YOM_HAZIKARON,      HebrewHoliday.YOM_HAATZMAUT,      HebrewHoliday.PESACH_SHEINI,
-		HebrewHoliday.LAG_BOMER,          HebrewHoliday.YOM_YERUSHALAYIM,   HebrewHoliday.SHAVUOT,
-		HebrewHoliday.TAMMUZ_17,          HebrewHoliday.TISHA_BAV
-	};
 
 
 	/**
@@ -85,53 +69,6 @@ public class HebrewDateUtils {
 	private static final int                                  SHALEM_LEAP_LENGTH = 385;
 
 
-	private static final HebrewHoliday ROSH_CHODESH_NISAN = new HebrewHoliday( HebrewCalendar.NISAN, 1, 1, "Rosh Chodesh Nisan" );
-	private static final HebrewHoliday ROSH_CHODESH_IYAR = new HebrewHoliday( HebrewCalendar.NISAN, 30, 2, "Rosh Chodesh Iyar" );
-	private static final HebrewHoliday ROSH_CHODESH_SIVAN = new HebrewHoliday( HebrewCalendar.SIVAN, 1, 1, "Rosh Chodesh Sivan" );
-	private static final HebrewHoliday ROSH_CHODESH_TAMMUZ = new HebrewHoliday( HebrewCalendar.SIVAN, 30, 2, "Rosh Chodesh Tammuz" );
-	private static final HebrewHoliday ROSH_CHODESH_AV = new HebrewHoliday( HebrewCalendar.AV, 1, 1, "Rosh Chodesh Av" );
-	private static final HebrewHoliday ROSH_CHODESH_ELUL = new HebrewHoliday( HebrewCalendar.AV, 30, 2, "Rosh Chodesh Elul" );
-	private static final HebrewHoliday ROSH_CHODESH_TISHRI = new HebrewHoliday( HebrewCalendar.ELUL, 30, 2, "Rosh Chodesh Tishri" );
-	private static final HebrewHoliday ROSH_CHODESH_HESHVAN = new HebrewHoliday( HebrewCalendar.HESHVAN, 1, 1, "Rosh Chodesh Heshvan" );
-	private static final HebrewHoliday ROSH_CHODESH_KISLEV = new HebrewHoliday( HebrewCalendar.KISLEV, 1, 1, "Rosh Chodesh Kislev" );
-	private static final HebrewHoliday ROSH_CHODESH_TEVET = new HebrewHoliday( HebrewCalendar.TEVET, 1, 1, "Rosh Chodesh Tevet" );
-	private static final HebrewHoliday ROSH_CHODESH_SHEVAT = new HebrewHoliday( HebrewCalendar.SHEVAT, 1, 1, "Rosh Chodesh Shevat" );
-	private static final HebrewHoliday ROSH_CHODESH_ADAR = new HebrewHoliday( HebrewCalendar.SHEVAT, 30, 2, "Rosh Chodesh Adar" );
-	private static final HebrewHoliday ROSH_CHODESH_ADAR_I = new HebrewHoliday( HebrewCalendar.SHEVAT, 30, 2, "Rosh Chodesh Adar I" );
-	private static final HebrewHoliday ROSH_CHODESH_ADAR_II = new HebrewHoliday( HebrewCalendar.ADAR_1, 30, 2, "Rosh Chodesh Adar II" );
-
-	/**
-	 * We treat Rosh Chodesh as a holiday too.
-	 */
-	private static final HebrewHoliday[]                      ROSH_CHODESH_HASER = {
-		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
-		ROSH_CHODESH_KISLEV,    ROSH_CHODESH_TEVET,     ROSH_CHODESH_SHEVAT,
-	};
-
-	private static final HebrewHoliday[]                      ROSH_CHODESH_QESIDRAH = {
-		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
-		ROSH_CHODESH_KISLEV,
-		new HebrewHoliday( HebrewCalendar.KISLEV, 30, 2, "Rosh Chodesh Tevet" ),    // Add a day compared to Haser
-		ROSH_CHODESH_SHEVAT,
-	};
-
-	private static final HebrewHoliday[]                      ROSH_CHODESH_SHALEM = {
-		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
-		new HebrewHoliday( HebrewCalendar.HESHVAN, 30, 2, "Rosh Chodesh Kislev" ),  // Add a day compared to Qesidrah
-		new HebrewHoliday( HebrewCalendar.KISLEV, 30, 2, "Rosh Chodesh Tevet" ),    // Add a day compared to Haser
-		ROSH_CHODESH_SHEVAT,
-	};
-
-	private static final HebrewHoliday[]                      ROSH_CHODESH_ADAR_REGULAR = {
-		ROSH_CHODESH_ADAR,
-	};
-
-	private static final HebrewHoliday[]                      ROSH_CHODESH_ADAR_LEAP = {
-		ROSH_CHODESH_ADAR_I,    ROSH_CHODESH_ADAR_II
-	};
 
 
 	private final HebrewCalendar                              hebrewCalendar;
@@ -144,18 +81,16 @@ public class HebrewDateUtils {
 	}
 
 
-	public HebrewHoliday isTodayAHoliday() {
+	public JewishHoliday isTodayAHoliday() {
 
-		Date today = hebrewCalendar.getTime();
-		for ( HebrewHoliday hebrewHoliday : JEWISH_HOLIDAYS ) {
-			if ( hebrewHoliday.isOn( today ) ) {
-				return hebrewHoliday;
+		for ( JewishHoliday jewishHoliday : JewishHoliday.JEWISH_HOLIDAYS ) {
+			if ( jewishHoliday.isOn( hebrewCalendar ) ) {
+				return jewishHoliday;
 			}
-		}
 
-		HebrewHoliday roshChodesh = isRoshChodesh();
-		if ( null != roshChodesh ) {
-			return roshChodesh;
+			if ( jewishHoliday.isErev( hebrewCalendar ) ) {
+				return JewishHoliday.createErevOf( jewishHoliday );
+			}
 		}
 
 		return null;
@@ -180,12 +115,13 @@ public class HebrewDateUtils {
 		// Is today a holiday, but not tomorrow?
 		if ( null != isTodayAHoliday() ) {
 
-			hebrewCalendar.add( 1, HebrewCalendar.DATE );
+			Date today = hebrewCalendar.getTime();
+			hebrewCalendar.add( HebrewCalendar.DATE, 1 );
 			if ( null == isTodayAHoliday() ) {
 				show = true;
 			}
 
-			hebrewCalendar.add( -1, HebrewCalendar.DATE );
+			hebrewCalendar.setTime( today );
 		}
 
 		if ( !show ) {
@@ -201,21 +137,21 @@ public class HebrewDateUtils {
 	 *
 	 * @return the Rosh Chodesh holiday, or null if this isn't a Rosh Chodesh.
 	 */
-	public HebrewHoliday isRoshChodesh() {
+	public JewishHoliday isRoshChodesh() {
 
-		HebrewHoliday[] roshChodeshim;
+		JewishHoliday[] roshChodeshim;
 
 		switch ( getYearType() ) {
 			case Haser:
-				roshChodeshim = ROSH_CHODESH_HASER;
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_HASER;
 				break;
 
 			case Qesidrah:
-				roshChodeshim = ROSH_CHODESH_QESIDRAH;
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_QESIDRAH;
 				break;
 
 			case Shalem:
-				roshChodeshim = ROSH_CHODESH_SHALEM;
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_SHALEM;
 				break;
 
 			default:
@@ -223,23 +159,30 @@ public class HebrewDateUtils {
 		}
 
 
-		final Date today = hebrewCalendar.getTime();
-		for ( HebrewHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( today ) ) {
+		for ( JewishHoliday roshChodesh : roshChodeshim ) {
+			if ( roshChodesh.isOn( hebrewCalendar ) ) {
 				return roshChodesh;
+			}
+
+			if ( roshChodesh.isErev( hebrewCalendar ) ) {
+				return JewishHoliday.createErevOf( roshChodesh );
 			}
 		}
 
 		if ( isLeapYear() ) {
-			roshChodeshim = ROSH_CHODESH_ADAR_LEAP;
+			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_LEAP;
 		}
 		else {
-			roshChodeshim = ROSH_CHODESH_ADAR_REGULAR;
+			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_REGULAR;
 		}
 
-		for ( HebrewHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( today ) ) {
+		for ( JewishHoliday roshChodesh : roshChodeshim ) {
+			if ( roshChodesh.isOn( hebrewCalendar ) ) {
 				return roshChodesh;
+			}
+
+			if ( roshChodesh.isErev( hebrewCalendar ) ) {
+				return JewishHoliday.createErevOf( roshChodesh );
 			}
 		}
 

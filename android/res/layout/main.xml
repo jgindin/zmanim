@@ -12,12 +12,18 @@
 
 		<TableRow>
 			<TextView android:id="@+id/hebrew_date" android:text="HebDate"/>
+		</TableRow>
+
+		<TableRow>
 			<TextView android:id="@+id/secular_date" android:text="SecDate"/>
 		</TableRow>
 
 		<TableRow>
-			<TextView android:id="@+id/location"
-			          android:text="Location"/>
+			<TextView android:id="@+id/location" android:text="Location"/>
+		</TableRow>
+
+		<TableRow>
+			<TextView android:id="@+id/blank" android:text=""/>
 		</TableRow>
 
 		<TableRow>
