@@ -24,6 +24,8 @@ public class AndroidGeoLocation
 
 	private final Context                                     context;
 
+	private String                                            locationName = null;
+
 	private boolean                                           usedDefaultSeattleLocation = false;
 
 
@@ -86,12 +88,15 @@ public class AndroidGeoLocation
 	@Override
 	public String getLocationName() {
 
+		if ( null != locationName ) {
+			return locationName;
+		}
+
 		final double latitude = getLatitude();
 		final double longitude = getLongitude();
 
 		Geocoder geocoder = new Geocoder( context );
 
-		String locationName;
 		try {
 			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
 			if ( ( null == addresses ) || ( addresses.isEmpty() ) ) {
