@@ -22,7 +22,7 @@
       <entry name="?*.ftl" />
       <entry name="?*.res" />
     </wildcardResourcePatterns>
-    <annotationProcessing enabled="false" useClasspath="true" />
+    <annotationProcessing enabled="false" useClasspath="true" generatedDirName="generated" />
   </component>
   <component name="EclipseCompilerSettings">
     <option name="DEBUGGING_INFO" value="true" />
