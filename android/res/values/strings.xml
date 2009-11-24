@@ -9,7 +9,7 @@
 	<string name="SofZmanTefilahGRA">Sof Zman Tefila GRA</string>
 	<string name="Chatzot">Chatzot (Mid-Day)</string>
 	<string name="MinchaGedola">Mincha Gedola</string>
-	<string name="MinchaKitana">Mincha Kitana</string>
+	<string name="MinchaKetana">Mincha Ketana</string>
 	<string name="Plag">Plag HaMincha</string>
 	<string name="BeinHashemashot">Bein Hashemashot</string>
 	<string name="Shkiah">Shkia (Sunset)</string>
@@ -18,4 +18,9 @@
 	<string name="Tzait">Tzait Hachocavim (Nightfall)</string>
 	<string name="Havdalah">Havdalah</string>
 	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
+
+	<string name="about_header">About Zmanim</string>
+	<string name="copyright">Copyright (c)2009 Jay R. Gindin</string>
+	<string name="copyright_zmanim_lib">Zmanim API from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld</string>
+	<string name="copyright_icu4j_lib">ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others</string>
 </resources>

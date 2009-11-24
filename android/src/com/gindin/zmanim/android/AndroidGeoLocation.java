@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2009. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android;
 
 import android.content.Context;

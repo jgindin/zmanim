@@ -80,8 +80,8 @@
 					</TableRow>
 
 					<TableRow>
-						<TextView android:text="@string/MinchaKitana"/>
-						<TextView android:id="@+id/mincha_kitana" android:text="mincha kitana"/>
+						<TextView android:text="@string/MinchaKetana"/>
+						<TextView android:id="@+id/mincha_ketana" android:text="mincha ketana"/>
 					</TableRow>
 
 					<TableRow>

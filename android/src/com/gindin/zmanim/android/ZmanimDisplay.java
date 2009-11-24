@@ -1,10 +1,13 @@
+/*
+ * Copyright (c) 2009. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateFormatter;
 import com.gindin.zmanim.HebrewDateUtils;
@@ -16,7 +19,6 @@ import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -63,6 +65,9 @@ public class ZmanimDisplay
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
+
+	public ZmanimDisplay() {
+	}
 
 
 	/** Called when the activity is first created. */
@@ -111,6 +116,36 @@ public class ZmanimDisplay
 	}
 
 
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu ) {
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate( R.menu.main_menu, menu );
+
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item ) {
+
+		int id = item.getItemId();
+		switch ( id ) {
+			case R.id.about:
+				AboutDialog about = new AboutDialog( this );
+				about.show();
+				return true;
+
+			case R.id.quit:
+				finish();
+				return true;
+		}
+
+		return false;
+	}
+
+
+
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
@@ -145,7 +180,7 @@ public class ZmanimDisplay
 		updateFieldWithTime( R.id.tefilahGRA, zmanimCalendar.getSofZmanTfilaGRA() );
 		updateFieldWithTime( R.id.chatzot, zmanimCalendar.getChatzos() );
 		updateFieldWithTime( R.id.mincha_gedola, zmanimCalendar.getMinchaGedola() );
-		updateFieldWithTime( R.id.mincha_kitana, zmanimCalendar.getMinchaKetana() );
+		updateFieldWithTime( R.id.mincha_ketana, zmanimCalendar.getMinchaKetana() );
 		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
 
 		if ( hebrewDateUtils.showCandlelighting() ) {
