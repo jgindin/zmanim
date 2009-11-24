@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="true" version="4">
+<project version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
   </component>
-  <component name="CodeStyleSettingsManager">
-    <option name="PER_PROJECT_SETTINGS" />
-    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
-  </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -29,9 +24,19 @@
       <entry name="?*.tld" />
       <entry name="?*.ftl" />
     </wildcardResourcePatterns>
+    <annotationProcessing enabled="false" useClasspath="true" generatedDirName="generated" />
   </component>
-  <component name="CopyrightManager" default="">
-    <module2copyright />
+  <component name="CopyrightManager" default="Gindin">
+    <copyright>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year. Jay R. Gindin" />
+      <option name="keyword" value="Copyright" />
+      <option name="allowReplaceKeyword" value="" />
+      <option name="myName" value="Gindin" />
+      <option name="myLocal" value="true" />
+    </copyright>
+    <module2copyright>
+      <element module="All" copyright="Gindin" />
+    </module2copyright>
   </component>
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
@@ -46,9 +51,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="IdProvider" IDEtalkID="6F492B381D094EBBDB7C0B68D72E3CD8" />
   <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_PROFILE" value="true" />
-    <version value="1.0" />
     <profiles>
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
@@ -112,7 +114,9 @@
         <inspection_tool class="SuspiciousIndentAfterControlStatement" enabled="true" level="WARNING" enabled_by_default="true" />
       </profile>
     </profiles>
-    <list size="0" />
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -177,13 +181,13 @@
   <component name="libraryTable">
     <library name="Zmanim API">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/thirdparty/framework/zmanim/lib/zmanim-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/zmanim-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/docs" />
+        <root url="file://$PROJECT_DIR$/../thirdparty/zmanim/docs/api" />
       </JAVADOC>
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/thirdparty/framework/zmanim/src" />
+        <root url="file://$PROJECT_DIR$/../thirdparty/zmanim/src" />
       </SOURCES>
     </library>
   </component>
