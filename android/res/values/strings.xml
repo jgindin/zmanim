@@ -20,7 +20,17 @@
 	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
 
 	<string name="about_header">About Zmanim</string>
+	<string name="zmanim_description">Zmanim - Display Halachic Times of Interest</string>
+	<string name="version">Version 0.5</string>
 	<string name="copyright">Copyright (c)2009 Jay R. Gindin</string>
+	<string name="zmanim_home">See http://code.google.com/p/android-zmanim</string>
 	<string name="copyright_zmanim_lib">Zmanim API from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld</string>
 	<string name="copyright_icu4j_lib">ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others</string>
+
+	<string name="help_header">Zmanim Help</string>
+	<string name="help_navigation">How to Navigate Dates</string>
+	<string name="help_swipe_left">* Swipe left to move to the previous day</string>
+	<string name="help_swipe_right">* Swipe right to move to the next day</string>
+	<string name="help_swipe_up">* Swipe up to move to the next month, but the same day of the month</string>
+	<string name="help_swipe_down">* Swipe down to move to the previous month, but the same day of the month</string>
 </resources>

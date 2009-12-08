@@ -5,7 +5,6 @@
 package com.gindin.zmanim.android;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.TextView;
@@ -136,8 +135,9 @@ public class ZmanimDisplay
 				about.show();
 				return true;
 
-			case R.id.quit:
-				finish();
+			case R.id.help:
+				HelpDialog help = new HelpDialog( this );
+				help.show();
 				return true;
 		}
 

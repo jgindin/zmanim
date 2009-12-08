@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.io.IOException;
+import java.util.Formatter;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -32,6 +33,7 @@ public class AndroidGeoLocation
 
 	private boolean                                           usedDefaultSeattleLocation = false;
 
+	private Formatter                                         rawLatitudeLongitudeFormatter = null;
 
 	static {
 		SEATTLE = new Location( "hard-coded" );
@@ -115,9 +117,9 @@ public class AndroidGeoLocation
 			locationName = getUnknownLocationName( latitude, longitude );
 		}
 
-		if ( usedDefaultSeattleLocation ) {
-			locationName = "** " + locationName;
-		}
+//		if ( usedDefaultSeattleLocation ) {
+//			locationName = "** " + locationName;
+//		}
 
 		return locationName;
 	}
@@ -127,7 +129,12 @@ public class AndroidGeoLocation
 		double latitude,
 		double longitude
 	) {
-		return latitude + " lat " + longitude + " long";
+
+		if ( null == rawLatitudeLongitudeFormatter ) {
+			rawLatitudeLongitudeFormatter = new Formatter();
+		}
+
+		return rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
 	}
 
 
