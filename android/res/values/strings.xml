@@ -21,7 +21,7 @@
 
 	<string name="about_header">About Zmanim</string>
 	<string name="zmanim_description">Zmanim - Display Halachic Times of Interest</string>
-	<string name="version">Version 0.5</string>
+	<string name="version">Version 1.0</string>
 	<string name="copyright">Copyright (c)2009 Jay R. Gindin</string>
 	<string name="zmanim_home">See http://code.google.com/p/android-zmanim</string>
 	<string name="copyright_zmanim_lib">Zmanim API from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld</string>
