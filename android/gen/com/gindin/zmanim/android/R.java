@@ -28,7 +28,7 @@ public final class R {
         public static final int hanetz=0x7f060014;
         public static final int havdalah=0x7f060023;
         public static final int havdalah_row=0x7f060022;
-        public static final int hebrew_date=0x7f06000d;
+        public static final int hebrew_date=0x7f06000f;
         public static final int help=0x7f060027;
         public static final int help_navigation=0x7f060007;
         public static final int help_swipe_down=0x7f06000b;
@@ -37,7 +37,7 @@ public final class R {
         public static final int help_swipe_up=0x7f06000a;
         public static final int holiday=0x7f060011;
         public static final int layout_root=0x7f060000;
-        public static final int location=0x7f06000f;
+        public static final int location=0x7f06000d;
         public static final int main_layout=0x7f06000c;
         public static final int mincha=0x7f06001f;
         public static final int mincha_gedola=0x7f060019;

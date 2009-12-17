@@ -98,7 +98,7 @@ public class ZmanimDisplay
 		hebrewDateUtils = new HebrewDateUtils( hebrewCalendar );		
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getLongDateFormat( this );
+		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
 
 		// Figure out where we are, and get a calendar ready to use.
 		geoLocation = new AndroidGeoLocation( this );
@@ -220,27 +220,27 @@ public class ZmanimDisplay
 		final StringBuffer date = new StringBuffer();
 		switch ( calendar.get( Calendar.DAY_OF_WEEK ) ) {
 			case Calendar.SUNDAY:
-				date.append( "Sunday" );
+				date.append( "Sun" );
 				break;
 
 			case Calendar.MONDAY:
-				date.append( "Monday" );
+				date.append( "Mon" );
 				break;
 
 			case Calendar.TUESDAY:
-				date.append( "Tuesday" );
+				date.append( "Tue" );
 				break;
 
 			case Calendar.WEDNESDAY:
-				date.append( "Wednesday" );
+				date.append( "Wed" );
 				break;
 
 			case Calendar.THURSDAY:
-				date.append( "Thursday" );
+				date.append( "Thur" );
 				break;
 
 			case Calendar.FRIDAY:
-				date.append( "Friday" );
+				date.append( "Fri" );
 				break;
 
 			case Calendar.SATURDAY:

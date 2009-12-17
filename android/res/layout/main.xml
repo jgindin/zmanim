@@ -5,118 +5,273 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:id="@+id/main_layout"
-	>
+	android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:id="@+id/main_layout">
 
 	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	             android:layout_width="fill_parent"
-	             android:layout_height="fill_parent">
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+	  android:paddingLeft="4px"
+	  android:paddingRight="4px"
+		android:stretchColumns="1">
 
-		<TableRow>
-			<TextView android:id="@+id/hebrew_date" android:text="HebDate"/>
+		<TableRow android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/location"
+				android:text="Location"
+				android:textStyle="bold"
+				android:gravity="center"
+				android:layout_gravity="center_horizontal"
+				android:layout_span="2"
+			/>
 		</TableRow>
 
-		<TableRow>
-			<TextView android:id="@+id/secular_date" android:text="SecDate"/>
+		<TableRow android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/secular_date"
+				android:text="SecDate"
+			  android:textSize="12sp"
+			/>
+			<TextView
+				android:id="@+id/hebrew_date"
+				android:text="HebDate"
+				android:gravity="right"
+			  android:textSize="12sp"
+			/>
 		</TableRow>
 
-		<TableRow>
-			<TextView android:id="@+id/location" android:text="Location"/>
-		</TableRow>
-
-		<TableRow>
+		<TableRow android:layout_width="fill_parent">
 			<TextView android:id="@+id/blank" android:text=""/>
 		</TableRow>
 
-		<TableRow>
-			<TextView android:id="@+id/holiday" android:text=""/>
+		<TableRow android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/holiday"
+				android:text=""
+				android:textStyle="bold"
+				android:gravity="center"
+				android:layout_gravity="center_horizontal"
+				android:layout_span="2"
+			  android:textSize="12sp"
+			/>
 		</TableRow>
 
-		<TableRow>
+		<TableRow android:layout_width="fill_parent">
 			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			            android:layout_width="fill_parent"
-			            android:layout_height="wrap_content"
-			            android:scrollbars="none">
+				android:layout_width="fill_parent"
+			  android:layout_height="wrap_content"
+			  android:scrollbars="none"
+			  android:layout_span="2">
 
 				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				             android:layout_width="fill_parent"
-				             android:layout_height="fill_parent">
-					<TableRow>
-						<TextView android:text="@string/Alot"/>
-						<TextView android:id="@+id/alot" android:text="alot"/>
+					android:layout_width="fill_parent"
+				  android:layout_height="fill_parent"
+				  android:stretchColumns="1">
+					
+					<TableRow android:layout_width="fill_parent">
+						<TextView
+							android:text="@string/Alot"
+							android:textSize="12sp"
+						/>
+						<TextView 
+							android:id="@+id/alot"
+							android:text="alot"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Talit"/>
-						<TextView android:id="@+id/talit" android:text="talit"/>
+					<TableRow android:layout_width="fill_parent">
+						<TextView
+							android:text="@string/Talit"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/talit"
+							android:text="talit"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Hanetz"/>
-						<TextView android:id="@+id/hanetz" android:text="hanetz"/>
+					<TableRow android:layout_width="fill_parent">
+						<TextView
+							android:text="@string/Hanetz"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/hanetz"
+							android:text="hanetz"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/SofZmanShemaMGA"/>
-						<TextView android:id="@+id/shemaMGA" android:text="shemaMGA"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/SofZmanShemaMGA"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/shemaMGA"
+							android:text="shemaMGA"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/SofZmanTefilahMGA"/>
-						<TextView android:id="@+id/tefilahMGA" android:text="tefilah"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/SofZmanTefilahMGA"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/tefilahMGA"
+							android:text="tefilah"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/SofZmanTefilahGRA"/>
-						<TextView android:id="@+id/tefilahGRA" android:text="tefilah"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/SofZmanTefilahGRA"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/tefilahGRA"
+							android:text="tefilah"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Chatzot"/>
-						<TextView android:id="@+id/chatzot" android:text="chatzot"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/Chatzot"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/chatzot"
+							android:text="chatzot"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/MinchaGedola"/>
-						<TextView android:id="@+id/mincha_gedola" android:text="mincha gedola"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/MinchaGedola"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/mincha_gedola"
+							android:text="mincha gedola"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/MinchaKetana"/>
-						<TextView android:id="@+id/mincha_ketana" android:text="mincha ketana"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/MinchaKetana"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/mincha_ketana"
+							android:text="mincha ketana"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Plag"/>
-						<TextView android:id="@+id/plag_hamincha" android:text="plag hamincha"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/Plag"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/plag_hamincha"
+							android:text="plag hamincha"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
 					<TableRow android:id="@+id/candles_row">
-						<TextView android:text="@string/Candles"/>
-						<TextView android:id="@+id/candles" android:text="candles"/>
+						<TextView
+							android:text="@string/Candles"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/candles"
+							android:text="candles"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Shkiah"/>
-						<TextView android:id="@+id/shkiah" android:text="shkiah"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/Shkiah"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/shkiah"
+							android:text="shkiah"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow>
-						<TextView android:text="@string/Mincha"/>
-						<TextView android:id="@+id/mincha" android:text="mincha"/>
+					<TableRow android:layout_width="fill_parent">
+
+						<TextView
+							android:text="@string/Mincha"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/mincha"
+							android:text="mincha"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow android:id="@+id/tzait_row">
-						<TextView android:text="@string/Tzait"/>
-						<TextView android:id="@+id/tzait" android:text="tzait"/>
+					<TableRow android:id="@+id/tzait_row" android:layout_width="fill_parent">
+						<TextView
+							android:text="@string/Tzait"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/tzait"
+							android:text="tzait"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 
-					<TableRow android:id="@+id/havdalah_row">
-						<TextView android:text="@string/Havdalah"/>
-						<TextView android:id="@+id/havdalah" android:text="havdalah"/>
+					<TableRow android:id="@+id/havdalah_row" android:layout_width="fill_parent">
+						<TextView
+							android:text="@string/Havdalah"
+							android:textSize="12sp"
+						/>
+						<TextView
+							android:id="@+id/havdalah"
+							android:text="havdalah"
+							android:gravity="right"
+							android:textSize="12sp"
+						/>
 					</TableRow>
 				</TableLayout>
 
@@ -126,12 +281,17 @@
 
 		<TableRow android:id="@+id/debug_row">
 			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_width="fill_parent" android:layout_height="wrap_content" android:scrollbars="none">
-				<TextView android:id="@+id/debug" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:scrollbars="none">
+				<TextView
+					android:id="@+id/debug"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+				/>
 			</ScrollView>
 		</TableRow>
 
 	</TableLayout>
-
 
 </LinearLayout>
