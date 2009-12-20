@@ -1,0 +1,504 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2008 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">004</FONT>     *<a name="line.4"></a>
+<FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
+<FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * License, or (at your option) any later version.<a name="line.7"></a>
+<FONT color="green">008</FONT>     *<a name="line.8"></a>
+<FONT color="green">009</FONT>     * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without<a name="line.9"></a>
+<FONT color="green">010</FONT>     * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU<a name="line.10"></a>
+<FONT color="green">011</FONT>     * General Public License for more details.<a name="line.11"></a>
+<FONT color="green">012</FONT>     *<a name="line.12"></a>
+<FONT color="green">013</FONT>     * You should have received a copy of the GNU General Public License along with this program; if<a name="line.13"></a>
+<FONT color="green">014</FONT>     * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA<a name="line.14"></a>
+<FONT color="green">015</FONT>     * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html<a name="line.15"></a>
+<FONT color="green">016</FONT>     */<a name="line.16"></a>
+<FONT color="green">017</FONT>    package net.sourceforge.zmanim;<a name="line.17"></a>
+<FONT color="green">018</FONT>    <a name="line.18"></a>
+<FONT color="green">019</FONT>    import java.util.Calendar;<a name="line.19"></a>
+<FONT color="green">020</FONT>    import java.util.Date;<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    import net.sourceforge.zmanim.util.AstronomicalCalculator;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import net.sourceforge.zmanim.util.GeoLocation;<a name="line.23"></a>
+<FONT color="green">024</FONT>    <a name="line.24"></a>
+<FONT color="green">025</FONT>    /**<a name="line.25"></a>
+<FONT color="green">026</FONT>     * &lt;p&gt;<a name="line.26"></a>
+<FONT color="green">027</FONT>     * Description: A Java library for calculating zmanim.<a name="line.27"></a>
+<FONT color="green">028</FONT>     * &lt;/p&gt;<a name="line.28"></a>
+<FONT color="green">029</FONT>     * The zmanim library is an API is a specialized calendar that can calculate<a name="line.29"></a>
+<FONT color="green">030</FONT>     * sunrise and sunset and Jewish &lt;em&gt;zmanim&lt;/em&gt; (religious times) for prayers<a name="line.30"></a>
+<FONT color="green">031</FONT>     * and other Jewish religious duties. For a much more extensive list of zmanim<a name="line.31"></a>
+<FONT color="green">032</FONT>     * use the {@link ComplexZmanimCalendar} that extends this class. This class<a name="line.32"></a>
+<FONT color="green">033</FONT>     * contains the main functionality of the Zmanim library. See documentation for<a name="line.33"></a>
+<FONT color="green">034</FONT>     * the {@link ComplexZmanimCalendar} and {@link AstronomicalCalendar} for simple<a name="line.34"></a>
+<FONT color="green">035</FONT>     * examples on using the API.<a name="line.35"></a>
+<FONT color="green">036</FONT>     * &lt;h2&gt;Disclaimer:&lt;/h2&gt;<a name="line.36"></a>
+<FONT color="green">037</FONT>     * While I did my best to get accurate results please do not rely on these<a name="line.37"></a>
+<FONT color="green">038</FONT>     * zmanim for &lt;em&gt;halacha lemaaseh&lt;/em&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     * <a name="line.39"></a>
+<FONT color="green">040</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2009<a name="line.40"></a>
+<FONT color="green">041</FONT>     * @version 1.1<a name="line.41"></a>
+<FONT color="green">042</FONT>     */<a name="line.42"></a>
+<FONT color="green">043</FONT>    public class ZmanimCalendar extends AstronomicalCalendar {<a name="line.43"></a>
+<FONT color="green">044</FONT>            private static final long serialVersionUID = 1;<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>            /**<a name="line.46"></a>
+<FONT color="green">047</FONT>             * The zenith of 16.1&amp;deg; below geometric zenith (90&amp;deg;). This<a name="line.47"></a>
+<FONT color="green">048</FONT>             * calculation is used for calculating &lt;em&gt;alos&lt;/em&gt; (dawn) and<a name="line.48"></a>
+<FONT color="green">049</FONT>             * &lt;em&gt;tzais&lt;/em&gt; (nightfall) in some opinions. This calculation is based<a name="line.49"></a>
+<FONT color="green">050</FONT>             * on the calculation that the time between dawn and sunrise (and sunset to<a name="line.50"></a>
+<FONT color="green">051</FONT>             * nightfall) is the time that is takes to walk 4 &lt;em&gt;mil&lt;/em&gt; at 18<a name="line.51"></a>
+<FONT color="green">052</FONT>             * minutes a mil (&lt;em&gt;Ramba"m&lt;/em&gt; and others). The sun's position at 72<a name="line.52"></a>
+<FONT color="green">053</FONT>             * minutes before {@link #getSunrise sunrise} in Jerusalem on the equinox is<a name="line.53"></a>
+<FONT color="green">054</FONT>             * 16.1&amp;deg; below {@link #GEOMETRIC_ZENITH geometric zenith}.<a name="line.54"></a>
+<FONT color="green">055</FONT>             * <a name="line.55"></a>
+<FONT color="green">056</FONT>             * @see #getAlosHashachar()<a name="line.56"></a>
+<FONT color="green">057</FONT>             * @see ComplexZmanimCalendar#getAlos16Point1Degrees()<a name="line.57"></a>
+<FONT color="green">058</FONT>             * @see ComplexZmanimCalendar#getTzais16Point1Degrees()<a name="line.58"></a>
+<FONT color="green">059</FONT>             * @see ComplexZmanimCalendar#getSofZmanShmaMGA16Point1Degrees()<a name="line.59"></a>
+<FONT color="green">060</FONT>             * @see ComplexZmanimCalendar#getSofZmanTfilaMGA16Point1Degrees()<a name="line.60"></a>
+<FONT color="green">061</FONT>             * @see ComplexZmanimCalendar#getMinchaGedola16Point1Degrees()<a name="line.61"></a>
+<FONT color="green">062</FONT>             * @see ComplexZmanimCalendar#getMinchaKetana16Point1Degrees()<a name="line.62"></a>
+<FONT color="green">063</FONT>             * @see ComplexZmanimCalendar#getPlagHamincha16Point1Degrees()<a name="line.63"></a>
+<FONT color="green">064</FONT>             * @see ComplexZmanimCalendar#getPlagAlos16Point1ToTzaisGeonim7Point083Degrees()<a name="line.64"></a>
+<FONT color="green">065</FONT>             * @see ComplexZmanimCalendar#getSofZmanShmaAlos16Point1ToSunset()<a name="line.65"></a>
+<FONT color="green">066</FONT>             */<a name="line.66"></a>
+<FONT color="green">067</FONT>            protected static final double ZENITH_16_POINT_1 = GEOMETRIC_ZENITH + 16.1;<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>            /**<a name="line.69"></a>
+<FONT color="green">070</FONT>             * The zenith of 8.5&amp;deg; below geometric zenith (90&amp;deg;). This calculation<a name="line.70"></a>
+<FONT color="green">071</FONT>             * is used for calculating &lt;em&gt;alos&lt;/em&gt; (dawn) and &lt;em&gt;tzais&lt;/em&gt;<a name="line.71"></a>
+<FONT color="green">072</FONT>             * (nightfall) in some opinions. This calculation is based on the position<a name="line.72"></a>
+<FONT color="green">073</FONT>             * of the sun 36 minutes after {@link #getSunset sunset} in Jerusalem on<a name="line.73"></a>
+<FONT color="green">074</FONT>             * March 16, about 4 days before the equinox, the day that a solar hour is<a name="line.74"></a>
+<FONT color="green">075</FONT>             * one hour, which is 8.5&amp;deg; below<a name="line.75"></a>
+<FONT color="green">076</FONT>             * {@link #GEOMETRIC_ZENITH geometric zenith}. The Ohr Meir considers this<a name="line.76"></a>
+<FONT color="green">077</FONT>             * the time that 3 small starts are visible, later than the required 3<a name="line.77"></a>
+<FONT color="green">078</FONT>             * medium stars.<a name="line.78"></a>
+<FONT color="green">079</FONT>             * <a name="line.79"></a>
+<FONT color="green">080</FONT>             * @see #getTzais()<a name="line.80"></a>
+<FONT color="green">081</FONT>             * @see ComplexZmanimCalendar#getTzaisGeonim8Point5Degrees()<a name="line.81"></a>
+<FONT color="green">082</FONT>             */<a name="line.82"></a>
+<FONT color="green">083</FONT>            protected static final double ZENITH_8_POINT_5 = GEOMETRIC_ZENITH + 8.5;<a name="line.83"></a>
+<FONT color="green">084</FONT>    <a name="line.84"></a>
+<FONT color="green">085</FONT>            // private AstronomicalCalculator astronomicalGeometryCalculator;<a name="line.85"></a>
+<FONT color="green">086</FONT>    <a name="line.86"></a>
+<FONT color="green">087</FONT>            private double candleLightingOffset = 18;<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>            /**<a name="line.89"></a>
+<FONT color="green">090</FONT>             * Returns &lt;em&gt;tzais&lt;/em&gt; (nightfall) when the sun is 8.5&amp;deg; below the<a name="line.90"></a>
+<FONT color="green">091</FONT>             * western geometric horizon (90&amp;deg;) after {@link #getSunset sunset}. For<a name="line.91"></a>
+<FONT color="green">092</FONT>             * information on the source of this calculation see<a name="line.92"></a>
+<FONT color="green">093</FONT>             * {@link #ZENITH_8_POINT_5}.<a name="line.93"></a>
+<FONT color="green">094</FONT>             * <a name="line.94"></a>
+<FONT color="green">095</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of nightfall.<a name="line.95"></a>
+<FONT color="green">096</FONT>             * @see #ZENITH_8_POINT_5<a name="line.96"></a>
+<FONT color="green">097</FONT>             */<a name="line.97"></a>
+<FONT color="green">098</FONT>            public Date getTzais() {<a name="line.98"></a>
+<FONT color="green">099</FONT>                    return this.getSunsetOffsetByDegrees(ZENITH_8_POINT_5);<a name="line.99"></a>
+<FONT color="green">100</FONT>            }<a name="line.100"></a>
+<FONT color="green">101</FONT>    <a name="line.101"></a>
+<FONT color="green">102</FONT>            /**<a name="line.102"></a>
+<FONT color="green">103</FONT>             * Returns &lt;em&gt;alos&lt;/em&gt; (dawn) based on the time when the sun is<a name="line.103"></a>
+<FONT color="green">104</FONT>             * 16.1&amp;deg; below the eastern {@link #GEOMETRIC_ZENITH geometric horizon}<a name="line.104"></a>
+<FONT color="green">105</FONT>             * before {@link #getSunrise sunrise}. For more information the source of<a name="line.105"></a>
+<FONT color="green">106</FONT>             * 16.1&amp;deg; see {@link #ZENITH_16_POINT_1}.<a name="line.106"></a>
+<FONT color="green">107</FONT>             * <a name="line.107"></a>
+<FONT color="green">108</FONT>             * @see net.sourceforge.zmanim.ZmanimCalendar#ZENITH_16_POINT_1<a name="line.108"></a>
+<FONT color="green">109</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of dawn.<a name="line.109"></a>
+<FONT color="green">110</FONT>             */<a name="line.110"></a>
+<FONT color="green">111</FONT>            public Date getAlosHashachar() {<a name="line.111"></a>
+<FONT color="green">112</FONT>                    return getSunriseOffsetByDegrees(ZENITH_16_POINT_1);<a name="line.112"></a>
+<FONT color="green">113</FONT>            }<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>            /**<a name="line.115"></a>
+<FONT color="green">116</FONT>             * Method to return &lt;em&gt;alos&lt;/em&gt; (dawn) calculated using 72 minutes<a name="line.116"></a>
+<FONT color="green">117</FONT>             * before {@link #getSeaLevelSunrise() sea level sunrise} (no adjustment for<a name="line.117"></a>
+<FONT color="green">118</FONT>             * elevation) based on the time to walk the distance of 4 &lt;em&gt;Mil&lt;/em&gt; at<a name="line.118"></a>
+<FONT color="green">119</FONT>             * 18 minutes a &lt;em&gt;Mil&lt;/em&gt;. This is based on the opinion of most<a name="line.119"></a>
+<FONT color="green">120</FONT>             * &lt;em&gt;Rishonim&lt;/em&gt; who stated that the time of the &lt;em&gt;Neshef&lt;/em&gt;<a name="line.120"></a>
+<FONT color="green">121</FONT>             * (time between dawn and sunrise) does not vary by the time of year or<a name="line.121"></a>
+<FONT color="green">122</FONT>             * location but purely depends on the time it takes to walk the distance of<a name="line.122"></a>
+<FONT color="green">123</FONT>             * 4 &lt;em&gt;Mil&lt;/em&gt;.<a name="line.123"></a>
+<FONT color="green">124</FONT>             * <a name="line.124"></a>
+<FONT color="green">125</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the time.<a name="line.125"></a>
+<FONT color="green">126</FONT>             */<a name="line.126"></a>
+<FONT color="green">127</FONT>            public Date getAlos72() {<a name="line.127"></a>
+<FONT color="green">128</FONT>                    return getTimeOffset(getSeaLevelSunrise(), -72 * MINUTE_MILLIS);<a name="line.128"></a>
+<FONT color="green">129</FONT>            }<a name="line.129"></a>
+<FONT color="green">130</FONT>    <a name="line.130"></a>
+<FONT color="green">131</FONT>            /**<a name="line.131"></a>
+<FONT color="green">132</FONT>             * This method returns &lt;em&gt;chatzos&lt;/em&gt; (midday) following the opinion of<a name="line.132"></a>
+<FONT color="green">133</FONT>             * the GRA that the day for Jewish halachic times start at<a name="line.133"></a>
+<FONT color="green">134</FONT>             * {@link #getSunrise sunrise} and ends at {@link #getSunset sunset}. The<a name="line.134"></a>
+<FONT color="green">135</FONT>             * returned value is identical to {@link #getSunTransit()}<a name="line.135"></a>
+<FONT color="green">136</FONT>             * <a name="line.136"></a>
+<FONT color="green">137</FONT>             * @see AstronomicalCalendar#getSunTransit()<a name="line.137"></a>
+<FONT color="green">138</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of chatzos.<a name="line.138"></a>
+<FONT color="green">139</FONT>             */<a name="line.139"></a>
+<FONT color="green">140</FONT>            public Date getChatzos() {<a name="line.140"></a>
+<FONT color="green">141</FONT>                    return getSunTransit();<a name="line.141"></a>
+<FONT color="green">142</FONT>            }<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>            /**<a name="line.144"></a>
+<FONT color="green">145</FONT>             * A method that returns "solar" midnight, or the time when the sun is at<a name="line.145"></a>
+<FONT color="green">146</FONT>             * it's &lt;a href="http://en.wikipedia.org/wiki/Nadir"&gt;nadir&lt;/a&gt;. &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt;<a name="line.146"></a>
+<FONT color="green">147</FONT>             * this method is experimental and might be removed (or moved)<a name="line.147"></a>
+<FONT color="green">148</FONT>             * <a name="line.148"></a>
+<FONT color="green">149</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of Solar Midnight (chatzos layla).<a name="line.149"></a>
+<FONT color="green">150</FONT>             */<a name="line.150"></a>
+<FONT color="green">151</FONT>            public Date getSolarMidnight() {<a name="line.151"></a>
+<FONT color="green">152</FONT>                    ZmanimCalendar clonedCal = (ZmanimCalendar) clone();<a name="line.152"></a>
+<FONT color="green">153</FONT>                    clonedCal.getCalendar().add(Calendar.DAY_OF_MONTH, 1);<a name="line.153"></a>
+<FONT color="green">154</FONT>                    Date sunset = getSunset();<a name="line.154"></a>
+<FONT color="green">155</FONT>                    Date sunrise = clonedCal.getSunrise();<a name="line.155"></a>
+<FONT color="green">156</FONT>                    return getTimeOffset(sunset, getTemporalHour(sunset, sunrise) * 6);<a name="line.156"></a>
+<FONT color="green">157</FONT>            }<a name="line.157"></a>
+<FONT color="green">158</FONT>    <a name="line.158"></a>
+<FONT color="green">159</FONT>            // public Date getChatzosLaylaRSZ() {<a name="line.159"></a>
+<FONT color="green">160</FONT>            // ZmanimCalendar clonedCal = (ZmanimCalendar)clone();<a name="line.160"></a>
+<FONT color="green">161</FONT>            // clonedCal.getCalendar().add(Calendar.DAY_OF_MONTH, 1);<a name="line.161"></a>
+<FONT color="green">162</FONT>            // Date sunset = getSunset();<a name="line.162"></a>
+<FONT color="green">163</FONT>            // Date sunrise = clonedCal.getAlosHashachar();<a name="line.163"></a>
+<FONT color="green">164</FONT>            // return getTimeOffset(sunset, getTemporalHour(sunset, sunrise) * 6);<a name="line.164"></a>
+<FONT color="green">165</FONT>            // }<a name="line.165"></a>
+<FONT color="green">166</FONT>    <a name="line.166"></a>
+<FONT color="green">167</FONT>            /**<a name="line.167"></a>
+<FONT color="green">168</FONT>             * This method returns the latest &lt;em&gt;zman krias shema&lt;/em&gt; (time to say<a name="line.168"></a>
+<FONT color="green">169</FONT>             * Shema in the morning). This time is 3<a name="line.169"></a>
+<FONT color="green">170</FONT>             * &lt;em&gt;{@link #getShaahZmanisGra() shaos zmaniyos}&lt;/em&gt; (solar hours)<a name="line.170"></a>
+<FONT color="green">171</FONT>             * after {@link #getSunrise() sunrise} based on the opinion of the<a name="line.171"></a>
+<FONT color="green">172</FONT>             * &lt;em&gt;GR"A&lt;/em&gt; and the &lt;em&gt;Baal Hatanya&lt;/em&gt; that the day is<a name="line.172"></a>
+<FONT color="green">173</FONT>             * calculated from sunrise to sunset. This returns the time 3 *{@link #getShaahZmanisGra()}<a name="line.173"></a>
+<FONT color="green">174</FONT>             * after {@link #getSunrise() sunrise}.<a name="line.174"></a>
+<FONT color="green">175</FONT>             * <a name="line.175"></a>
+<FONT color="green">176</FONT>             * @see net.sourceforge.zmanim.ZmanimCalendar#getShaahZmanisGra()<a name="line.176"></a>
+<FONT color="green">177</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the latest zman shema.<a name="line.177"></a>
+<FONT color="green">178</FONT>             */<a name="line.178"></a>
+<FONT color="green">179</FONT>            public Date getSofZmanShmaGRA() {<a name="line.179"></a>
+<FONT color="green">180</FONT>                    return getTimeOffset(getSunrise(), getShaahZmanisGra() * 3);<a name="line.180"></a>
+<FONT color="green">181</FONT>            }<a name="line.181"></a>
+<FONT color="green">182</FONT>    <a name="line.182"></a>
+<FONT color="green">183</FONT>            /**<a name="line.183"></a>
+<FONT color="green">184</FONT>             * This method returns the latest &lt;em&gt;zman krias shema&lt;/em&gt; (time to say<a name="line.184"></a>
+<FONT color="green">185</FONT>             * Shema in the morning) in the opinion of the &lt;em&gt;MG"A&lt;/em&gt; based on<a name="line.185"></a>
+<FONT color="green">186</FONT>             * &lt;em&gt;alos&lt;/em&gt; being 72 minutes before {@link #getSunrise() sunrise}.<a name="line.186"></a>
+<FONT color="green">187</FONT>             * This time is 3 &lt;em&gt; shaos zmaniyos&lt;/em&gt; (solar hours) after dawn based<a name="line.187"></a>
+<FONT color="green">188</FONT>             * on the opinion of the &lt;em&gt;MG"A&lt;/em&gt; that the day is calculated from a<a name="line.188"></a>
+<FONT color="green">189</FONT>             * dawn of 72 minutes before sunrise to nightfall of 72 minutes after<a name="line.189"></a>
+<FONT color="green">190</FONT>             * sunset. This returns the time of 3 * &lt;em&gt;shaos zmaniyos&lt;/em&gt; after<a name="line.190"></a>
+<FONT color="green">191</FONT>             * dawn.<a name="line.191"></a>
+<FONT color="green">192</FONT>             * <a name="line.192"></a>
+<FONT color="green">193</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the latest zman shema.<a name="line.193"></a>
+<FONT color="green">194</FONT>             * @see ComplexZmanimCalendar#getShaahZmanis72Minutes()<a name="line.194"></a>
+<FONT color="green">195</FONT>             * @see ComplexZmanimCalendar#getAlos72()<a name="line.195"></a>
+<FONT color="green">196</FONT>             * @see ComplexZmanimCalendar#getSofZmanShmaMGA72Minutes()<a name="line.196"></a>
+<FONT color="green">197</FONT>             */<a name="line.197"></a>
+<FONT color="green">198</FONT>            public Date getSofZmanShmaMGA() {<a name="line.198"></a>
+<FONT color="green">199</FONT>                    return getTimeOffset(getAlos72(), getShaahZmanisMGA() * 3);<a name="line.199"></a>
+<FONT color="green">200</FONT>            }<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>            /**<a name="line.202"></a>
+<FONT color="green">203</FONT>             * This method returns the &lt;em&gt;tzais&lt;/em&gt; (nightfall) based on the opinion<a name="line.203"></a>
+<FONT color="green">204</FONT>             * of the &lt;em&gt;Ramba"m&lt;/em&gt; and &lt;em&gt;Rabainu Tam&lt;/em&gt; that &lt;em&gt;tzais&lt;/em&gt;<a name="line.204"></a>
+<FONT color="green">205</FONT>             * is calculated as the time it takes to walk 4 &lt;em&gt;Mil&lt;/em&gt; at 18 minutes<a name="line.205"></a>
+<FONT color="green">206</FONT>             * a &lt;em&gt;Mil&lt;/em&gt; for a total of 72 minutes. Even for locations above sea<a name="line.206"></a>
+<FONT color="green">207</FONT>             * level, this is calculated at sea level, since the darkness level is not<a name="line.207"></a>
+<FONT color="green">208</FONT>             * affected by elevation.<a name="line.208"></a>
+<FONT color="green">209</FONT>             * <a name="line.209"></a>
+<FONT color="green">210</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing 72 minutes after sea level<a name="line.210"></a>
+<FONT color="green">211</FONT>             *         sunset.<a name="line.211"></a>
+<FONT color="green">212</FONT>             */<a name="line.212"></a>
+<FONT color="green">213</FONT>            public Date getTzais72() {<a name="line.213"></a>
+<FONT color="green">214</FONT>                    return getTimeOffset(getSeaLevelSunset(), 72 * MINUTE_MILLIS);<a name="line.214"></a>
+<FONT color="green">215</FONT>            }<a name="line.215"></a>
+<FONT color="green">216</FONT>    <a name="line.216"></a>
+<FONT color="green">217</FONT>            /**<a name="line.217"></a>
+<FONT color="green">218</FONT>             * A method to return candle lighting time. This is calculated as<a name="line.218"></a>
+<FONT color="green">219</FONT>             * {@link #getCandleLightingOffset()} minutes before sunset. This will<a name="line.219"></a>
+<FONT color="green">220</FONT>             * return the time for any day of the week, since it can be used to<a name="line.220"></a>
+<FONT color="green">221</FONT>             * calculate candle lighting time for &lt;em&gt;yom tov&lt;/em&gt; (holidays) as well.<a name="line.221"></a>
+<FONT color="green">222</FONT>             * <a name="line.222"></a>
+<FONT color="green">223</FONT>             * @return candle lighting time.<a name="line.223"></a>
+<FONT color="green">224</FONT>             * @see #getCandleLightingOffset()<a name="line.224"></a>
+<FONT color="green">225</FONT>             * @see #setCandleLightingOffset(double)<a name="line.225"></a>
+<FONT color="green">226</FONT>             */<a name="line.226"></a>
+<FONT color="green">227</FONT>            public Date getCandelLighting() {<a name="line.227"></a>
+<FONT color="green">228</FONT>                    return getTimeOffset(getSunset(), -getCandleLightingOffset()<a name="line.228"></a>
+<FONT color="green">229</FONT>                                    * MINUTE_MILLIS);<a name="line.229"></a>
+<FONT color="green">230</FONT>            }<a name="line.230"></a>
+<FONT color="green">231</FONT>    <a name="line.231"></a>
+<FONT color="green">232</FONT>            /**<a name="line.232"></a>
+<FONT color="green">233</FONT>             * This method returns the latest<a name="line.233"></a>
+<FONT color="green">234</FONT>             * &lt;em&gt;zman tefilah&lt;em&gt; (time to pray morning prayers). This time is 4<a name="line.234"></a>
+<FONT color="green">235</FONT>             * hours into the day based on the opinion of the &lt;em&gt;GR"A&lt;/em&gt; and the &lt;/em&gt;Baal Hatanya&lt;/em&gt;<a name="line.235"></a>
+<FONT color="green">236</FONT>             * that the day is calculated from sunrise to sunset. This returns the time<a name="line.236"></a>
+<FONT color="green">237</FONT>             * 4 * {@link #getShaahZmanisGra()} after {@link #getSunrise() sunrise}.<a name="line.237"></a>
+<FONT color="green">238</FONT>             * <a name="line.238"></a>
+<FONT color="green">239</FONT>             * @see net.sourceforge.zmanim.ZmanimCalendar#getShaahZmanisGra()<a name="line.239"></a>
+<FONT color="green">240</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the latest zman tefilah.<a name="line.240"></a>
+<FONT color="green">241</FONT>             */<a name="line.241"></a>
+<FONT color="green">242</FONT>            public Date getSofZmanTfilaGRA() {<a name="line.242"></a>
+<FONT color="green">243</FONT>                    return getTimeOffset(getSunrise(), getShaahZmanisGra() * 4);<a name="line.243"></a>
+<FONT color="green">244</FONT>            }<a name="line.244"></a>
+<FONT color="green">245</FONT>    <a name="line.245"></a>
+<FONT color="green">246</FONT>            /**<a name="line.246"></a>
+<FONT color="green">247</FONT>             * This method returns the latest &lt;em&gt;zman tfila&lt;/em&gt; (time to say the<a name="line.247"></a>
+<FONT color="green">248</FONT>             * morning prayers) in the opinion of the &lt;em&gt;MG"A&lt;/em&gt; based on<a name="line.248"></a>
+<FONT color="green">249</FONT>             * &lt;em&gt;alos&lt;/em&gt; being {@link #getAlos72() 72} minutes before<a name="line.249"></a>
+<FONT color="green">250</FONT>             * {@link #getSunrise() sunrise}. This time is 4<a name="line.250"></a>
+<FONT color="green">251</FONT>             * &lt;em&gt;{@link #getShaahZmanisMGA() shaos zmaniyos}&lt;/em&gt; (temporal hours)<a name="line.251"></a>
+<FONT color="green">252</FONT>             * after {@link #getAlos72() dawn} based on the opinion of the &lt;em&gt;MG"A&lt;/em&gt;<a name="line.252"></a>
+<FONT color="green">253</FONT>             * that the day is calculated from a {@link #getAlos72() dawn} of 72 minutes<a name="line.253"></a>
+<FONT color="green">254</FONT>             * before sunrise to {@link #getTzais72() nightfall} of 72 minutes after<a name="line.254"></a>
+<FONT color="green">255</FONT>             * sunset. This returns the time of 4 * {@link #getShaahZmanisMGA()} after<a name="line.255"></a>
+<FONT color="green">256</FONT>             * {@link #getAlos72() dawn}.<a name="line.256"></a>
+<FONT color="green">257</FONT>             * <a name="line.257"></a>
+<FONT color="green">258</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the latest zman tfila.<a name="line.258"></a>
+<FONT color="green">259</FONT>             * @see #getShaahZmanisMGA()<a name="line.259"></a>
+<FONT color="green">260</FONT>             * @see #getAlos72()<a name="line.260"></a>
+<FONT color="green">261</FONT>             */<a name="line.261"></a>
+<FONT color="green">262</FONT>            public Date getSofZmanTfilaMGA() {<a name="line.262"></a>
+<FONT color="green">263</FONT>                    return getTimeOffset(getAlos72(), getShaahZmanisMGA() * 4);<a name="line.263"></a>
+<FONT color="green">264</FONT>            }<a name="line.264"></a>
+<FONT color="green">265</FONT>    <a name="line.265"></a>
+<FONT color="green">266</FONT>            /**<a name="line.266"></a>
+<FONT color="green">267</FONT>             * This method returns the time of &lt;em&gt;mincha gedola&lt;/em&gt;.&lt;em&gt;Mincha gedola&lt;/em&gt;<a name="line.267"></a>
+<FONT color="green">268</FONT>             * is the earliest time one can pray mincha. The Ramba"m is of the opinion<a name="line.268"></a>
+<FONT color="green">269</FONT>             * that it is better to delay &lt;em&gt;mincha&lt;/em&gt; until<a name="line.269"></a>
+<FONT color="green">270</FONT>             * &lt;em&gt;{@link #getMinchaKetana() mincha ketana}&lt;/em&gt; while the &lt;em&gt;Ra"sh,<a name="line.270"></a>
+<FONT color="green">271</FONT>             * Tur, GR"A&lt;/em&gt;<a name="line.271"></a>
+<FONT color="green">272</FONT>             * and others are of the opinion that &lt;em&gt;mincha&lt;/em&gt; can be prayed<a name="line.272"></a>
+<FONT color="green">273</FONT>             * &lt;em&gt;lechatchila&lt;/em&gt; starting at &lt;em&gt;mincha gedola&lt;/em&gt;. This is<a name="line.273"></a>
+<FONT color="green">274</FONT>             * calculated as 6.5 {@link #getTemporalHour() solar hours} after sunrise.<a name="line.274"></a>
+<FONT color="green">275</FONT>             * This calculation is calculated based on the opinion of the &lt;em&gt;GR"A&lt;/em&gt;<a name="line.275"></a>
+<FONT color="green">276</FONT>             * and the &lt;em&gt;Baal Hatanya&lt;/em&gt; that the day is calculated from sunrise<a name="line.276"></a>
+<FONT color="green">277</FONT>             * to sunset. This returns the time 6.5 *{@link #getShaahZmanisGra()} after<a name="line.277"></a>
+<FONT color="green">278</FONT>             * {@link #getSunrise() sunrise}.<a name="line.278"></a>
+<FONT color="green">279</FONT>             * <a name="line.279"></a>
+<FONT color="green">280</FONT>             * @see #getShaahZmanisGra()<a name="line.280"></a>
+<FONT color="green">281</FONT>             * @see #getMinchaKetana()<a name="line.281"></a>
+<FONT color="green">282</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the time of mincha gedola.<a name="line.282"></a>
+<FONT color="green">283</FONT>             */<a name="line.283"></a>
+<FONT color="green">284</FONT>            public Date getMinchaGedola() {<a name="line.284"></a>
+<FONT color="green">285</FONT>                    return getTimeOffset(getSunrise(), getShaahZmanisGra() * 6.5);<a name="line.285"></a>
+<FONT color="green">286</FONT>            }<a name="line.286"></a>
+<FONT color="green">287</FONT>    <a name="line.287"></a>
+<FONT color="green">288</FONT>            /**<a name="line.288"></a>
+<FONT color="green">289</FONT>             * This method returns the time of &lt;em&gt;mincha ketana&lt;/em&gt;. This is the<a name="line.289"></a>
+<FONT color="green">290</FONT>             * perfered earliest time to pray &lt;em&gt;mincha&lt;/em&gt; in the opinion of the<a name="line.290"></a>
+<FONT color="green">291</FONT>             * Ramba"m and others. For more information on this see the documentation on<a name="line.291"></a>
+<FONT color="green">292</FONT>             * &lt;em&gt;{@link #getMinchaGedola() mincha gedola}&lt;/em&gt;. This is calculated<a name="line.292"></a>
+<FONT color="green">293</FONT>             * as 9.5 {@link #getTemporalHour() solar hours}after sunrise. This<a name="line.293"></a>
+<FONT color="green">294</FONT>             * calculation is calculated based on the opinion of the &lt;em&gt;GR"A&lt;/em&gt; and<a name="line.294"></a>
+<FONT color="green">295</FONT>             * the &lt;em&gt;Baal Hatanya&lt;/em&gt; that the day is calculated from sunrise to<a name="line.295"></a>
+<FONT color="green">296</FONT>             * sunset. This returns the time 9.5 * {@link #getShaahZmanisGra()} after<a name="line.296"></a>
+<FONT color="green">297</FONT>             * {@link #getSunrise() sunrise}.<a name="line.297"></a>
+<FONT color="green">298</FONT>             * <a name="line.298"></a>
+<FONT color="green">299</FONT>             * @see #getShaahZmanisGra()<a name="line.299"></a>
+<FONT color="green">300</FONT>             * @see #getMinchaGedola()<a name="line.300"></a>
+<FONT color="green">301</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the time of mincha gedola.<a name="line.301"></a>
+<FONT color="green">302</FONT>             */<a name="line.302"></a>
+<FONT color="green">303</FONT>            public Date getMinchaKetana() {<a name="line.303"></a>
+<FONT color="green">304</FONT>                    return getTimeOffset(getSunrise(), getShaahZmanisGra() * 9.5);<a name="line.304"></a>
+<FONT color="green">305</FONT>            }<a name="line.305"></a>
+<FONT color="green">306</FONT>    <a name="line.306"></a>
+<FONT color="green">307</FONT>            /**<a name="line.307"></a>
+<FONT color="green">308</FONT>             * This method returns he time of &lt;em&gt;plag hamincha&lt;/em&gt;. This is<a name="line.308"></a>
+<FONT color="green">309</FONT>             * calculated as 10.75 hours after sunrise. This calculation is calculated<a name="line.309"></a>
+<FONT color="green">310</FONT>             * based on the opinion of the &lt;em&gt;GR"A&lt;/em&gt; and the &lt;em&gt;Baal Hatanya&lt;/em&gt;<a name="line.310"></a>
+<FONT color="green">311</FONT>             * that the day is calculated from sunrise to sunset. This returns the time<a name="line.311"></a>
+<FONT color="green">312</FONT>             * 10.75 *{@link #getShaahZmanisGra()} after {@link #getSunrise() sunrise}.<a name="line.312"></a>
+<FONT color="green">313</FONT>             * <a name="line.313"></a>
+<FONT color="green">314</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; of the time of &lt;em&gt;plag hamincha&lt;/em&gt;.<a name="line.314"></a>
+<FONT color="green">315</FONT>             */<a name="line.315"></a>
+<FONT color="green">316</FONT>            public Date getPlagHamincha() {<a name="line.316"></a>
+<FONT color="green">317</FONT>                    return getTimeOffset(getSunrise(), getShaahZmanisGra() * 10.75);<a name="line.317"></a>
+<FONT color="green">318</FONT>            }<a name="line.318"></a>
+<FONT color="green">319</FONT>    <a name="line.319"></a>
+<FONT color="green">320</FONT>            /**<a name="line.320"></a>
+<FONT color="green">321</FONT>             * Method to return a &lt;em&gt;shaah zmanis&lt;/em&gt; ({@link #getTemporalHour temporal hour})<a name="line.321"></a>
+<FONT color="green">322</FONT>             * according to the opinion of the &lt;em&gt;GR"A&lt;/em&gt; and the<a name="line.322"></a>
+<FONT color="green">323</FONT>             * &lt;em&gt;Baal Hatanya&lt;/em&gt;. This calculation divides the day based on the<a name="line.323"></a>
+<FONT color="green">324</FONT>             * opinion of the &lt;em&gt;GR"A&lt;/em&gt; and the &lt;em&gt;Baal Hatanya&lt;/em&gt; that the<a name="line.324"></a>
+<FONT color="green">325</FONT>             * day runs from {@link #getSunrise() sunrise} to {@link #getSunset sunset}.<a name="line.325"></a>
+<FONT color="green">326</FONT>             * The day is split into 12 equal parts each part with each one being a<a name="line.326"></a>
+<FONT color="green">327</FONT>             * &lt;em&gt;shaah zmanis&lt;/em&gt;. This method is identical to<a name="line.327"></a>
+<FONT color="green">328</FONT>             * {@link #getTemporalHour} (it is actually a wrapper that calls that<a name="line.328"></a>
+<FONT color="green">329</FONT>             * method) and is provided for clarity.<a name="line.329"></a>
+<FONT color="green">330</FONT>             * <a name="line.330"></a>
+<FONT color="green">331</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of a<a name="line.331"></a>
+<FONT color="green">332</FONT>             *         &lt;em&gt;shaah zmanis&lt;/em&gt;.<a name="line.332"></a>
+<FONT color="green">333</FONT>             * @see #getTemporalHour()<a name="line.333"></a>
+<FONT color="green">334</FONT>             */<a name="line.334"></a>
+<FONT color="green">335</FONT>            public long getShaahZmanisGra() {<a name="line.335"></a>
+<FONT color="green">336</FONT>                    return getTemporalHour();<a name="line.336"></a>
+<FONT color="green">337</FONT>            }<a name="line.337"></a>
+<FONT color="green">338</FONT>    <a name="line.338"></a>
+<FONT color="green">339</FONT>            /**<a name="line.339"></a>
+<FONT color="green">340</FONT>             * Method to return a &lt;em&gt;shaah zmanis&lt;/em&gt; (temporal hour) according to<a name="line.340"></a>
+<FONT color="green">341</FONT>             * the opinion of the MGA. This calculation divides the day based on the<a name="line.341"></a>
+<FONT color="green">342</FONT>             * opinion of the &lt;em&gt;MGA&lt;/em&gt; that the day runs from dawn to dusk (for<a name="line.342"></a>
+<FONT color="green">343</FONT>             * sof zman krias shema and tfila). Dawn for this calculation is 72 minutes<a name="line.343"></a>
+<FONT color="green">344</FONT>             * before sunrise and dusk is 72 minutes after sunset. This day is split<a name="line.344"></a>
+<FONT color="green">345</FONT>             * into 12 equal parts with each part being a &lt;em&gt;shaah zmanis&lt;/em&gt;.<a name="line.345"></a>
+<FONT color="green">346</FONT>             * Alternate mothods of calculating a &lt;em&gt;shaah zmanis&lt;/em&gt; are available<a name="line.346"></a>
+<FONT color="green">347</FONT>             * in the subclass {@link ComplexZmanimCalendar}.<a name="line.347"></a>
+<FONT color="green">348</FONT>             * <a name="line.348"></a>
+<FONT color="green">349</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of a<a name="line.349"></a>
+<FONT color="green">350</FONT>             *         &lt;em&gt;shaah zmanis&lt;/em&gt;.<a name="line.350"></a>
+<FONT color="green">351</FONT>             */<a name="line.351"></a>
+<FONT color="green">352</FONT>            public long getShaahZmanisMGA() {<a name="line.352"></a>
+<FONT color="green">353</FONT>                    return getTemporalHour(getAlos72(), getTzais72());<a name="line.353"></a>
+<FONT color="green">354</FONT>            }<a name="line.354"></a>
+<FONT color="green">355</FONT>    <a name="line.355"></a>
+<FONT color="green">356</FONT>            /**<a name="line.356"></a>
+<FONT color="green">357</FONT>             * Default constructor will set a default {@link GeoLocation#GeoLocation()},<a name="line.357"></a>
+<FONT color="green">358</FONT>             * a default<a name="line.358"></a>
+<FONT color="green">359</FONT>             * {@link AstronomicalCalculator#getDefault() AstronomicalCalculator} and<a name="line.359"></a>
+<FONT color="green">360</FONT>             * default the calendar to the current date.<a name="line.360"></a>
+<FONT color="green">361</FONT>             * <a name="line.361"></a>
+<FONT color="green">362</FONT>             * @see AstronomicalCalendar#AstronomicalCalendar()<a name="line.362"></a>
+<FONT color="green">363</FONT>             */<a name="line.363"></a>
+<FONT color="green">364</FONT>            public ZmanimCalendar() {<a name="line.364"></a>
+<FONT color="green">365</FONT>                    super();<a name="line.365"></a>
+<FONT color="green">366</FONT>            }<a name="line.366"></a>
+<FONT color="green">367</FONT>    <a name="line.367"></a>
+<FONT color="green">368</FONT>            /**<a name="line.368"></a>
+<FONT color="green">369</FONT>             * A constructor that takes a {@link GeoLocation} as a parameter.<a name="line.369"></a>
+<FONT color="green">370</FONT>             * <a name="line.370"></a>
+<FONT color="green">371</FONT>             * @param location<a name="line.371"></a>
+<FONT color="green">372</FONT>             *            the location<a name="line.372"></a>
+<FONT color="green">373</FONT>             */<a name="line.373"></a>
+<FONT color="green">374</FONT>            public ZmanimCalendar(GeoLocation location) {<a name="line.374"></a>
+<FONT color="green">375</FONT>                    super(location);<a name="line.375"></a>
+<FONT color="green">376</FONT>            }<a name="line.376"></a>
+<FONT color="green">377</FONT>    <a name="line.377"></a>
+<FONT color="green">378</FONT>            /**<a name="line.378"></a>
+<FONT color="green">379</FONT>             * @see java.lang.Object#equals(Object)<a name="line.379"></a>
+<FONT color="green">380</FONT>             */<a name="line.380"></a>
+<FONT color="green">381</FONT>            public boolean equals(Object object) {<a name="line.381"></a>
+<FONT color="green">382</FONT>                    if (this == object) {<a name="line.382"></a>
+<FONT color="green">383</FONT>                            return true;<a name="line.383"></a>
+<FONT color="green">384</FONT>                    }<a name="line.384"></a>
+<FONT color="green">385</FONT>                    if (!(object instanceof ZmanimCalendar)) {<a name="line.385"></a>
+<FONT color="green">386</FONT>                            return false;<a name="line.386"></a>
+<FONT color="green">387</FONT>                    }<a name="line.387"></a>
+<FONT color="green">388</FONT>                    ZmanimCalendar zCal = (ZmanimCalendar) object;<a name="line.388"></a>
+<FONT color="green">389</FONT>                    // return getCalendar().getTime().equals(zCal.getCalendar().getTime())<a name="line.389"></a>
+<FONT color="green">390</FONT>                    return getCalendar().equals(zCal.getCalendar())<a name="line.390"></a>
+<FONT color="green">391</FONT>                                    &amp;&amp; getGeoLocation().equals(zCal.getGeoLocation())<a name="line.391"></a>
+<FONT color="green">392</FONT>                                    &amp;&amp; getAstronomicalCalculator().equals(<a name="line.392"></a>
+<FONT color="green">393</FONT>                                                    zCal.getAstronomicalCalculator());<a name="line.393"></a>
+<FONT color="green">394</FONT>            }<a name="line.394"></a>
+<FONT color="green">395</FONT>    <a name="line.395"></a>
+<FONT color="green">396</FONT>            /**<a name="line.396"></a>
+<FONT color="green">397</FONT>             * @see java.lang.Object#hashCode()<a name="line.397"></a>
+<FONT color="green">398</FONT>             */<a name="line.398"></a>
+<FONT color="green">399</FONT>            public int hashCode() {<a name="line.399"></a>
+<FONT color="green">400</FONT>                    int result = 17;<a name="line.400"></a>
+<FONT color="green">401</FONT>                    // needed or this and subclasses will return identical hash<a name="line.401"></a>
+<FONT color="green">402</FONT>                    result = 37 * result + getClass().hashCode();<a name="line.402"></a>
+<FONT color="green">403</FONT>                    result += 37 * result + getCalendar().hashCode();<a name="line.403"></a>
+<FONT color="green">404</FONT>                    result += 37 * result + getGeoLocation().hashCode();<a name="line.404"></a>
+<FONT color="green">405</FONT>                    result += 37 * result + getAstronomicalCalculator().hashCode();<a name="line.405"></a>
+<FONT color="green">406</FONT>                    return result;<a name="line.406"></a>
+<FONT color="green">407</FONT>            }<a name="line.407"></a>
+<FONT color="green">408</FONT>    <a name="line.408"></a>
+<FONT color="green">409</FONT>            /**<a name="line.409"></a>
+<FONT color="green">410</FONT>             * A method to get the offset in minutes before<a name="line.410"></a>
+<FONT color="green">411</FONT>             * {@link AstronomicalCalendar#getSunset() sunset} that is used in<a name="line.411"></a>
+<FONT color="green">412</FONT>             * calculating candle lighting time. The default time used is 18 minutes<a name="line.412"></a>
+<FONT color="green">413</FONT>             * before sunset. Some calendars use 15 minutes, while the custom in<a name="line.413"></a>
+<FONT color="green">414</FONT>             * Jerusalem is to use a 40 minute offset. Please check the local custom for<a name="line.414"></a>
+<FONT color="green">415</FONT>             * candel lighting time.<a name="line.415"></a>
+<FONT color="green">416</FONT>             * <a name="line.416"></a>
+<FONT color="green">417</FONT>             * @return Returns the candle lighting offset to set in minutes..<a name="line.417"></a>
+<FONT color="green">418</FONT>             * @see #getCandelLighting()<a name="line.418"></a>
+<FONT color="green">419</FONT>             */<a name="line.419"></a>
+<FONT color="green">420</FONT>            public double getCandleLightingOffset() {<a name="line.420"></a>
+<FONT color="green">421</FONT>                    return candleLightingOffset;<a name="line.421"></a>
+<FONT color="green">422</FONT>            }<a name="line.422"></a>
+<FONT color="green">423</FONT>    <a name="line.423"></a>
+<FONT color="green">424</FONT>            /**<a name="line.424"></a>
+<FONT color="green">425</FONT>             * A method to set the offset in minutes before<a name="line.425"></a>
+<FONT color="green">426</FONT>             * {@link AstronomicalCalendar#getSunset() sunset} that is used in<a name="line.426"></a>
+<FONT color="green">427</FONT>             * calculating candle lighting time. The default time used is 18 minutes<a name="line.427"></a>
+<FONT color="green">428</FONT>             * before sunset. Some calendars use 15 minutes, while the custom in<a name="line.428"></a>
+<FONT color="green">429</FONT>             * Jerusalem is to use a 40 minute offset.<a name="line.429"></a>
+<FONT color="green">430</FONT>             * <a name="line.430"></a>
+<FONT color="green">431</FONT>             * @param candleLightingOffset<a name="line.431"></a>
+<FONT color="green">432</FONT>             *            The candle lighting offset to set in minutes.<a name="line.432"></a>
+<FONT color="green">433</FONT>             * @see #getCandelLighting()<a name="line.433"></a>
+<FONT color="green">434</FONT>             */<a name="line.434"></a>
+<FONT color="green">435</FONT>            public void setCandleLightingOffset(double candleLightingOffset) {<a name="line.435"></a>
+<FONT color="green">436</FONT>                    this.candleLightingOffset = candleLightingOffset;<a name="line.436"></a>
+<FONT color="green">437</FONT>            }<a name="line.437"></a>
+<FONT color="green">438</FONT>    }<a name="line.438"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

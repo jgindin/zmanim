@@ -1,0 +1,712 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2008 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">004</FONT>     *<a name="line.4"></a>
+<FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
+<FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * License, or (at your option) any later version.<a name="line.7"></a>
+<FONT color="green">008</FONT>     *<a name="line.8"></a>
+<FONT color="green">009</FONT>     * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without<a name="line.9"></a>
+<FONT color="green">010</FONT>     * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU<a name="line.10"></a>
+<FONT color="green">011</FONT>     * General Public License for more details.<a name="line.11"></a>
+<FONT color="green">012</FONT>     *<a name="line.12"></a>
+<FONT color="green">013</FONT>     * You should have received a copy of the GNU General Public License along with this program; if<a name="line.13"></a>
+<FONT color="green">014</FONT>     * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA<a name="line.14"></a>
+<FONT color="green">015</FONT>     * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html<a name="line.15"></a>
+<FONT color="green">016</FONT>     */<a name="line.16"></a>
+<FONT color="green">017</FONT>    package net.sourceforge.zmanim.util;<a name="line.17"></a>
+<FONT color="green">018</FONT>    <a name="line.18"></a>
+<FONT color="green">019</FONT>    import java.util.TimeZone;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    /**<a name="line.21"></a>
+<FONT color="green">022</FONT>     * A class that contains location information such as latitude and longitude<a name="line.22"></a>
+<FONT color="green">023</FONT>     * required for astronomical calculations. The elevation field is not used by<a name="line.23"></a>
+<FONT color="green">024</FONT>     * most calculation engines and would be ignored if set. Check the documentation<a name="line.24"></a>
+<FONT color="green">025</FONT>     * for specific implementations of the {@link AstronomicalCalculator} to see if<a name="line.25"></a>
+<FONT color="green">026</FONT>     * elevation is calculated as part o the algorithm.<a name="line.26"></a>
+<FONT color="green">027</FONT>     * <a name="line.27"></a>
+<FONT color="green">028</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2008<a name="line.28"></a>
+<FONT color="green">029</FONT>     * @version 1.1<a name="line.29"></a>
+<FONT color="green">030</FONT>     */<a name="line.30"></a>
+<FONT color="green">031</FONT>    public class GeoLocation implements Cloneable {<a name="line.31"></a>
+<FONT color="green">032</FONT>            private double latitude;<a name="line.32"></a>
+<FONT color="green">033</FONT>            private double longitude;<a name="line.33"></a>
+<FONT color="green">034</FONT>            private String locationName;<a name="line.34"></a>
+<FONT color="green">035</FONT>            private TimeZone timeZone;<a name="line.35"></a>
+<FONT color="green">036</FONT>            private double elevation;<a name="line.36"></a>
+<FONT color="green">037</FONT>            private int DISTANCE = 0;<a name="line.37"></a>
+<FONT color="green">038</FONT>            private int INITIAL_BEARING = 1;<a name="line.38"></a>
+<FONT color="green">039</FONT>            private int FINAL_BEARING = 2;<a name="line.39"></a>
+<FONT color="green">040</FONT>    <a name="line.40"></a>
+<FONT color="green">041</FONT>            /** constant for milliseconds in a minute (60,000) */<a name="line.41"></a>
+<FONT color="green">042</FONT>            private static final long MINUTE_MILLIS = 60 * 1000;<a name="line.42"></a>
+<FONT color="green">043</FONT>    <a name="line.43"></a>
+<FONT color="green">044</FONT>            /** constant for milliseconds in an hour (3,600,000) */<a name="line.44"></a>
+<FONT color="green">045</FONT>            private static final long HOUR_MILLIS = MINUTE_MILLIS * 60;<a name="line.45"></a>
+<FONT color="green">046</FONT>    <a name="line.46"></a>
+<FONT color="green">047</FONT>            /**<a name="line.47"></a>
+<FONT color="green">048</FONT>             * Method to get the elevation in Meters.<a name="line.48"></a>
+<FONT color="green">049</FONT>             * <a name="line.49"></a>
+<FONT color="green">050</FONT>             * @return Returns the elevation in Meters.<a name="line.50"></a>
+<FONT color="green">051</FONT>             */<a name="line.51"></a>
+<FONT color="green">052</FONT>            public double getElevation() {<a name="line.52"></a>
+<FONT color="green">053</FONT>                    return elevation;<a name="line.53"></a>
+<FONT color="green">054</FONT>            }<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>            /**<a name="line.56"></a>
+<FONT color="green">057</FONT>             * Method to set the elevation in Meters &lt;b&gt;above &lt;/b&gt; sea level.<a name="line.57"></a>
+<FONT color="green">058</FONT>             * <a name="line.58"></a>
+<FONT color="green">059</FONT>             * @param elevation<a name="line.59"></a>
+<FONT color="green">060</FONT>             *            The elevation to set in Meters. An IllegalArgumentException<a name="line.60"></a>
+<FONT color="green">061</FONT>             *            will be thrown if the value is a negative.<a name="line.61"></a>
+<FONT color="green">062</FONT>             */<a name="line.62"></a>
+<FONT color="green">063</FONT>            public void setElevation(double elevation) {<a name="line.63"></a>
+<FONT color="green">064</FONT>                    if (elevation &lt; 0) {<a name="line.64"></a>
+<FONT color="green">065</FONT>                            throw new IllegalArgumentException("Elevation cannot be negative");<a name="line.65"></a>
+<FONT color="green">066</FONT>                    }<a name="line.66"></a>
+<FONT color="green">067</FONT>                    this.elevation = elevation;<a name="line.67"></a>
+<FONT color="green">068</FONT>            }<a name="line.68"></a>
+<FONT color="green">069</FONT>    <a name="line.69"></a>
+<FONT color="green">070</FONT>            /**<a name="line.70"></a>
+<FONT color="green">071</FONT>             * GeoLocation constructor with parameters for all required fields.<a name="line.71"></a>
+<FONT color="green">072</FONT>             * <a name="line.72"></a>
+<FONT color="green">073</FONT>             * @param name<a name="line.73"></a>
+<FONT color="green">074</FONT>             *            The location name for display use such as &amp;quot;Lakewood,<a name="line.74"></a>
+<FONT color="green">075</FONT>             *            NJ&amp;quot;<a name="line.75"></a>
+<FONT color="green">076</FONT>             * @param latitude<a name="line.76"></a>
+<FONT color="green">077</FONT>             *            the latitude in a double format such as 40.095965 for<a name="line.77"></a>
+<FONT color="green">078</FONT>             *            Lakewood, NJ &lt;br/&gt; &lt;b&gt;Note: &lt;/b&gt; For latitudes south of the<a name="line.78"></a>
+<FONT color="green">079</FONT>             *            equator, a negative value should be used.<a name="line.79"></a>
+<FONT color="green">080</FONT>             * @param longitude<a name="line.80"></a>
+<FONT color="green">081</FONT>             *            double the longitude in a double format such as -74.222130 for<a name="line.81"></a>
+<FONT color="green">082</FONT>             *            Lakewood, NJ. &lt;br/&gt; &lt;b&gt;Note: &lt;/b&gt; For longitudes east of the<a name="line.82"></a>
+<FONT color="green">083</FONT>             *            &lt;a href="http://en.wikipedia.org/wiki/Prime_Meridian"&gt;Prime<a name="line.83"></a>
+<FONT color="green">084</FONT>             *            Meridian &lt;/a&gt; (Greenwich), a negative value should be used.<a name="line.84"></a>
+<FONT color="green">085</FONT>             * @param timeZone<a name="line.85"></a>
+<FONT color="green">086</FONT>             *            the &lt;code&gt;TimeZone&lt;/code&gt; for the location.<a name="line.86"></a>
+<FONT color="green">087</FONT>             */<a name="line.87"></a>
+<FONT color="green">088</FONT>            public GeoLocation(String name, double latitude, double longitude,<a name="line.88"></a>
+<FONT color="green">089</FONT>                            TimeZone timeZone) {<a name="line.89"></a>
+<FONT color="green">090</FONT>                    this(name, latitude, longitude, 0, timeZone);<a name="line.90"></a>
+<FONT color="green">091</FONT>            }<a name="line.91"></a>
+<FONT color="green">092</FONT>    <a name="line.92"></a>
+<FONT color="green">093</FONT>            /**<a name="line.93"></a>
+<FONT color="green">094</FONT>             * GeoLocation constructor with parameters for all required fields.<a name="line.94"></a>
+<FONT color="green">095</FONT>             * <a name="line.95"></a>
+<FONT color="green">096</FONT>             * @param name<a name="line.96"></a>
+<FONT color="green">097</FONT>             *            The location name for display use such as &amp;quot;Lakewood,<a name="line.97"></a>
+<FONT color="green">098</FONT>             *            NJ&amp;quot;<a name="line.98"></a>
+<FONT color="green">099</FONT>             * @param latitude<a name="line.99"></a>
+<FONT color="green">100</FONT>             *            the latitude in a double format such as 40.095965 for<a name="line.100"></a>
+<FONT color="green">101</FONT>             *            Lakewood, NJ &lt;br/&gt; &lt;b&gt;Note: &lt;/b&gt; For latitudes south of the<a name="line.101"></a>
+<FONT color="green">102</FONT>             *            equator, a negative value should be used.<a name="line.102"></a>
+<FONT color="green">103</FONT>             * @param longitude<a name="line.103"></a>
+<FONT color="green">104</FONT>             *            double the longitude in a double format such as -74.222130 for<a name="line.104"></a>
+<FONT color="green">105</FONT>             *            Lakewood, NJ. &lt;br/&gt; &lt;b&gt;Note: &lt;/b&gt; For longitudes east of the<a name="line.105"></a>
+<FONT color="green">106</FONT>             *            &lt;a href="http://en.wikipedia.org/wiki/Prime_Meridian"&gt;Prime<a name="line.106"></a>
+<FONT color="green">107</FONT>             *            Meridian &lt;/a&gt; (Greenwich), a negative value should be used.<a name="line.107"></a>
+<FONT color="green">108</FONT>             * @param elevation<a name="line.108"></a>
+<FONT color="green">109</FONT>             *            the elevation above sea level in Meters. Elevation is not used<a name="line.109"></a>
+<FONT color="green">110</FONT>             *            in most algorithms used for calculating sunrise and set.<a name="line.110"></a>
+<FONT color="green">111</FONT>             * @param timeZone<a name="line.111"></a>
+<FONT color="green">112</FONT>             *            the &lt;code&gt;TimeZone&lt;/code&gt; for the location.<a name="line.112"></a>
+<FONT color="green">113</FONT>             */<a name="line.113"></a>
+<FONT color="green">114</FONT>            public GeoLocation(String name, double latitude, double longitude,<a name="line.114"></a>
+<FONT color="green">115</FONT>                            double elevation, TimeZone timeZone) {<a name="line.115"></a>
+<FONT color="green">116</FONT>                    setLocationName(name);<a name="line.116"></a>
+<FONT color="green">117</FONT>                    setLatitude(latitude);<a name="line.117"></a>
+<FONT color="green">118</FONT>                    setLongitude(longitude);<a name="line.118"></a>
+<FONT color="green">119</FONT>                    setElevation(elevation);<a name="line.119"></a>
+<FONT color="green">120</FONT>                    setTimeZone(timeZone);<a name="line.120"></a>
+<FONT color="green">121</FONT>            }<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>            /**<a name="line.123"></a>
+<FONT color="green">124</FONT>             * Default GeoLocation constructor will set location to the Prime Meridian<a name="line.124"></a>
+<FONT color="green">125</FONT>             * at Greenwich, England and a TimeZone of GMT. The longitude will be set to<a name="line.125"></a>
+<FONT color="green">126</FONT>             * 0 and the latitude will be 51.4772 to match the location of the &lt;a<a name="line.126"></a>
+<FONT color="green">127</FONT>             * href="http://www.rog.nmm.ac.uk"&gt;Royal Observatory, Greenwich &lt;/a&gt;. No<a name="line.127"></a>
+<FONT color="green">128</FONT>             * daylight savings time will be used.<a name="line.128"></a>
+<FONT color="green">129</FONT>             */<a name="line.129"></a>
+<FONT color="green">130</FONT>            public GeoLocation() {<a name="line.130"></a>
+<FONT color="green">131</FONT>                    setLocationName("Greenwich, England");<a name="line.131"></a>
+<FONT color="green">132</FONT>                    setLongitude(0); // added for clarity<a name="line.132"></a>
+<FONT color="green">133</FONT>                    setLatitude(51.4772);<a name="line.133"></a>
+<FONT color="green">134</FONT>                    setTimeZone(TimeZone.getTimeZone("GMT"));<a name="line.134"></a>
+<FONT color="green">135</FONT>            }<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>            /**<a name="line.137"></a>
+<FONT color="green">138</FONT>             * Method to set the latitude.<a name="line.138"></a>
+<FONT color="green">139</FONT>             * <a name="line.139"></a>
+<FONT color="green">140</FONT>             * @param latitude<a name="line.140"></a>
+<FONT color="green">141</FONT>             *            The degrees of latitude to set. The values should be between<a name="line.141"></a>
+<FONT color="green">142</FONT>             *            -90&amp;deg; and 90&amp;deg;. An IllegalArgumentException will be<a name="line.142"></a>
+<FONT color="green">143</FONT>             *            thrown if the value exceeds the limit. For example 40.095965<a name="line.143"></a>
+<FONT color="green">144</FONT>             *            would be used for Lakewood, NJ. &lt;b&gt;Note: &lt;/b&gt; For latitudes south of the<a name="line.144"></a>
+<FONT color="green">145</FONT>             *            equator, a negative value should be used.<a name="line.145"></a>
+<FONT color="green">146</FONT>             */<a name="line.146"></a>
+<FONT color="green">147</FONT>            public void setLatitude(double latitude) {<a name="line.147"></a>
+<FONT color="green">148</FONT>                    if (latitude &gt; 90 || latitude &lt; -90) {<a name="line.148"></a>
+<FONT color="green">149</FONT>                            throw new IllegalArgumentException(<a name="line.149"></a>
+<FONT color="green">150</FONT>                                            "Latitude must be between -90 and  90");<a name="line.150"></a>
+<FONT color="green">151</FONT>                    }<a name="line.151"></a>
+<FONT color="green">152</FONT>                    this.latitude = latitude;<a name="line.152"></a>
+<FONT color="green">153</FONT>            }<a name="line.153"></a>
+<FONT color="green">154</FONT>    <a name="line.154"></a>
+<FONT color="green">155</FONT>            /**<a name="line.155"></a>
+<FONT color="green">156</FONT>             * Method to set the latitude in degrees, minutes and seconds.<a name="line.156"></a>
+<FONT color="green">157</FONT>             * <a name="line.157"></a>
+<FONT color="green">158</FONT>             * @param degrees<a name="line.158"></a>
+<FONT color="green">159</FONT>             *            The degrees of latitude to set between -90 and 90. An<a name="line.159"></a>
+<FONT color="green">160</FONT>             *            IllegalArgumentException will be thrown if the value exceeds<a name="line.160"></a>
+<FONT color="green">161</FONT>             *            the limit. For example 40 would be used for Lakewood, NJ.<a name="line.161"></a>
+<FONT color="green">162</FONT>             * @param minutes &lt;a href="http://en.wikipedia.org/wiki/Minute_of_arc#Cartography"&gt;minutes of arc&lt;/a&gt;<a name="line.162"></a>
+<FONT color="green">163</FONT>             * @param seconds &lt;a href="http://en.wikipedia.org/wiki/Minute_of_arc#Cartography"&gt;seconds of arc&lt;/a&gt;<a name="line.163"></a>
+<FONT color="green">164</FONT>             * @param direction<a name="line.164"></a>
+<FONT color="green">165</FONT>             *            N for north and S for south. An IllegalArgumentException will<a name="line.165"></a>
+<FONT color="green">166</FONT>             *            be thrown if the value is not S or N.<a name="line.166"></a>
+<FONT color="green">167</FONT>             */<a name="line.167"></a>
+<FONT color="green">168</FONT>            public void setLatitude(int degrees, int minutes, double seconds,<a name="line.168"></a>
+<FONT color="green">169</FONT>                            String direction) {<a name="line.169"></a>
+<FONT color="green">170</FONT>                    double tempLat = degrees + ((minutes + (seconds / 60.0)) / 60.0);<a name="line.170"></a>
+<FONT color="green">171</FONT>                    if (tempLat &gt; 90 || tempLat &lt; 0) {<a name="line.171"></a>
+<FONT color="green">172</FONT>                            throw new IllegalArgumentException(<a name="line.172"></a>
+<FONT color="green">173</FONT>                                            "Latitude must be between 0 and  90. Use direction of S instead of negative.");<a name="line.173"></a>
+<FONT color="green">174</FONT>                    }<a name="line.174"></a>
+<FONT color="green">175</FONT>                    if (direction.equals("S")) {<a name="line.175"></a>
+<FONT color="green">176</FONT>                            tempLat *= -1;<a name="line.176"></a>
+<FONT color="green">177</FONT>                    } else if (!direction.equals("N")) {<a name="line.177"></a>
+<FONT color="green">178</FONT>                            throw new IllegalArgumentException(<a name="line.178"></a>
+<FONT color="green">179</FONT>                                            "Latitude direction must be N or S");<a name="line.179"></a>
+<FONT color="green">180</FONT>                    }<a name="line.180"></a>
+<FONT color="green">181</FONT>                    this.latitude = tempLat;<a name="line.181"></a>
+<FONT color="green">182</FONT>            }<a name="line.182"></a>
+<FONT color="green">183</FONT>    <a name="line.183"></a>
+<FONT color="green">184</FONT>            /**<a name="line.184"></a>
+<FONT color="green">185</FONT>             * @return Returns the latitude.<a name="line.185"></a>
+<FONT color="green">186</FONT>             */<a name="line.186"></a>
+<FONT color="green">187</FONT>            public double getLatitude() {<a name="line.187"></a>
+<FONT color="green">188</FONT>                    return latitude;<a name="line.188"></a>
+<FONT color="green">189</FONT>            }<a name="line.189"></a>
+<FONT color="green">190</FONT>    <a name="line.190"></a>
+<FONT color="green">191</FONT>            /**<a name="line.191"></a>
+<FONT color="green">192</FONT>             * Method to set the longitude in a double format.<a name="line.192"></a>
+<FONT color="green">193</FONT>             * <a name="line.193"></a>
+<FONT color="green">194</FONT>             * @param longitude<a name="line.194"></a>
+<FONT color="green">195</FONT>             *            The degrees of longitude to set in a double format between<a name="line.195"></a>
+<FONT color="green">196</FONT>             *            -180&amp;deg; and 180&amp;deg;. An IllegalArgumentException will be<a name="line.196"></a>
+<FONT color="green">197</FONT>             *            thrown if the value exceeds the limit. For example -74.2094<a name="line.197"></a>
+<FONT color="green">198</FONT>             *            would be used for Lakewood, NJ. Note: for longitudes east of<a name="line.198"></a>
+<FONT color="green">199</FONT>             *            the &lt;a<a name="line.199"></a>
+<FONT color="green">200</FONT>             *            href="http://en.wikipedia.org/wiki/Prime_Meridian"&gt;Prime<a name="line.200"></a>
+<FONT color="green">201</FONT>             *            Meridian&lt;/a&gt; (Greenwich) a negative value should be used.<a name="line.201"></a>
+<FONT color="green">202</FONT>             */<a name="line.202"></a>
+<FONT color="green">203</FONT>            public void setLongitude(double longitude) {<a name="line.203"></a>
+<FONT color="green">204</FONT>                    if (longitude &gt; 180 || longitude &lt; -180) {<a name="line.204"></a>
+<FONT color="green">205</FONT>                            throw new IllegalArgumentException(<a name="line.205"></a>
+<FONT color="green">206</FONT>                                            "Longitude must be between -180 and  180");<a name="line.206"></a>
+<FONT color="green">207</FONT>                    }<a name="line.207"></a>
+<FONT color="green">208</FONT>                    this.longitude = longitude;<a name="line.208"></a>
+<FONT color="green">209</FONT>            }<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>            /**<a name="line.211"></a>
+<FONT color="green">212</FONT>             * Method to set the longitude in degrees, minutes and seconds.<a name="line.212"></a>
+<FONT color="green">213</FONT>             * <a name="line.213"></a>
+<FONT color="green">214</FONT>             * @param degrees<a name="line.214"></a>
+<FONT color="green">215</FONT>             *            The degrees of longitude to set between -180 and 180. An<a name="line.215"></a>
+<FONT color="green">216</FONT>             *            IllegalArgumentException will be thrown if the value exceeds<a name="line.216"></a>
+<FONT color="green">217</FONT>             *            the limit. For example -74 would be used for Lakewood, NJ.<a name="line.217"></a>
+<FONT color="green">218</FONT>             *            Note: for longitudes east of the &lt;a<a name="line.218"></a>
+<FONT color="green">219</FONT>             *            href="http://en.wikipedia.org/wiki/Prime_Meridian"&gt;Prime<a name="line.219"></a>
+<FONT color="green">220</FONT>             *            Meridian &lt;/a&gt; (Greenwich) a negative value should be used.<a name="line.220"></a>
+<FONT color="green">221</FONT>             * @param minutes &lt;a href="http://en.wikipedia.org/wiki/Minute_of_arc#Cartography"&gt;minutes of arc&lt;/a&gt;<a name="line.221"></a>
+<FONT color="green">222</FONT>             * @param seconds &lt;a href="http://en.wikipedia.org/wiki/Minute_of_arc#Cartography"&gt;seconds of arc&lt;/a&gt;<a name="line.222"></a>
+<FONT color="green">223</FONT>             * @param direction<a name="line.223"></a>
+<FONT color="green">224</FONT>             *            E for east of the Prime Meridian or W for west of it. An<a name="line.224"></a>
+<FONT color="green">225</FONT>             *            IllegalArgumentException will be thrown if the value is not E<a name="line.225"></a>
+<FONT color="green">226</FONT>             *            or W.<a name="line.226"></a>
+<FONT color="green">227</FONT>             */<a name="line.227"></a>
+<FONT color="green">228</FONT>            public void setLongitude(int degrees, int minutes, double seconds,<a name="line.228"></a>
+<FONT color="green">229</FONT>                            String direction) {<a name="line.229"></a>
+<FONT color="green">230</FONT>                    double longTemp = degrees + ((minutes + (seconds / 60.0)) / 60.0);<a name="line.230"></a>
+<FONT color="green">231</FONT>                    if (longTemp &gt; 180 || longitude &lt; 0) {<a name="line.231"></a>
+<FONT color="green">232</FONT>                            throw new IllegalArgumentException(<a name="line.232"></a>
+<FONT color="green">233</FONT>                                            "Longitude must be between 0 and  180. Use the ");<a name="line.233"></a>
+<FONT color="green">234</FONT>                    }<a name="line.234"></a>
+<FONT color="green">235</FONT>                    if (direction.equals("W")) {<a name="line.235"></a>
+<FONT color="green">236</FONT>                            longTemp *= -1;<a name="line.236"></a>
+<FONT color="green">237</FONT>                    } else if (!direction.equals("E")) {<a name="line.237"></a>
+<FONT color="green">238</FONT>                            throw new IllegalArgumentException(<a name="line.238"></a>
+<FONT color="green">239</FONT>                                            "Longitude direction must be E or W");<a name="line.239"></a>
+<FONT color="green">240</FONT>                    }<a name="line.240"></a>
+<FONT color="green">241</FONT>                    this.longitude = longTemp;<a name="line.241"></a>
+<FONT color="green">242</FONT>            }<a name="line.242"></a>
+<FONT color="green">243</FONT>    <a name="line.243"></a>
+<FONT color="green">244</FONT>            /**<a name="line.244"></a>
+<FONT color="green">245</FONT>             * @return Returns the longitude.<a name="line.245"></a>
+<FONT color="green">246</FONT>             */<a name="line.246"></a>
+<FONT color="green">247</FONT>            public double getLongitude() {<a name="line.247"></a>
+<FONT color="green">248</FONT>                    return longitude;<a name="line.248"></a>
+<FONT color="green">249</FONT>            }<a name="line.249"></a>
+<FONT color="green">250</FONT>    <a name="line.250"></a>
+<FONT color="green">251</FONT>            /**<a name="line.251"></a>
+<FONT color="green">252</FONT>             * @return Returns the location name.<a name="line.252"></a>
+<FONT color="green">253</FONT>             */<a name="line.253"></a>
+<FONT color="green">254</FONT>            public String getLocationName() {<a name="line.254"></a>
+<FONT color="green">255</FONT>                    return locationName;<a name="line.255"></a>
+<FONT color="green">256</FONT>            }<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>            /**<a name="line.258"></a>
+<FONT color="green">259</FONT>             * @param name<a name="line.259"></a>
+<FONT color="green">260</FONT>             *            The setter method for the display name.<a name="line.260"></a>
+<FONT color="green">261</FONT>             */<a name="line.261"></a>
+<FONT color="green">262</FONT>            public void setLocationName(String name) {<a name="line.262"></a>
+<FONT color="green">263</FONT>                    this.locationName = name;<a name="line.263"></a>
+<FONT color="green">264</FONT>            }<a name="line.264"></a>
+<FONT color="green">265</FONT>    <a name="line.265"></a>
+<FONT color="green">266</FONT>            /**<a name="line.266"></a>
+<FONT color="green">267</FONT>             * @return Returns the timeZone.<a name="line.267"></a>
+<FONT color="green">268</FONT>             */<a name="line.268"></a>
+<FONT color="green">269</FONT>            public TimeZone getTimeZone() {<a name="line.269"></a>
+<FONT color="green">270</FONT>                    return timeZone;<a name="line.270"></a>
+<FONT color="green">271</FONT>            }<a name="line.271"></a>
+<FONT color="green">272</FONT>    <a name="line.272"></a>
+<FONT color="green">273</FONT>            /**<a name="line.273"></a>
+<FONT color="green">274</FONT>             * Method to set the TimeZone. If this is ever set after the GeoLocation is<a name="line.274"></a>
+<FONT color="green">275</FONT>             * set in the {@link net.sourceforge.zmanim.AstronomicalCalendar}, it is<a name="line.275"></a>
+<FONT color="green">276</FONT>             * critical that<a name="line.276"></a>
+<FONT color="green">277</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.{@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)}<a name="line.277"></a>
+<FONT color="green">278</FONT>             * be called in order for the AstronomicalCalendar to output times in the<a name="line.278"></a>
+<FONT color="green">279</FONT>             * expected offset. This situation will arise if the AstronomicalCalendar is<a name="line.279"></a>
+<FONT color="green">280</FONT>             * ever {@link net.sourceforge.zmanim.AstronomicalCalendar#clone() cloned}.<a name="line.280"></a>
+<FONT color="green">281</FONT>             * <a name="line.281"></a>
+<FONT color="green">282</FONT>             * @param timeZone<a name="line.282"></a>
+<FONT color="green">283</FONT>             *            The timeZone to set.<a name="line.283"></a>
+<FONT color="green">284</FONT>             */<a name="line.284"></a>
+<FONT color="green">285</FONT>            public void setTimeZone(TimeZone timeZone) {<a name="line.285"></a>
+<FONT color="green">286</FONT>                    this.timeZone = timeZone;<a name="line.286"></a>
+<FONT color="green">287</FONT>            }<a name="line.287"></a>
+<FONT color="green">288</FONT>    <a name="line.288"></a>
+<FONT color="green">289</FONT>            /**<a name="line.289"></a>
+<FONT color="green">290</FONT>             * A method that will return the location's local mean time offset in<a name="line.290"></a>
+<FONT color="green">291</FONT>             * milliseconds from local standard time. The globe is split into 360&amp;deg;,<a name="line.291"></a>
+<FONT color="green">292</FONT>             * with 15&amp;deg; per hour of the day. For a local that is at a longitude that<a name="line.292"></a>
+<FONT color="green">293</FONT>             * is evenly divisible by 15 (longitude % 15 == 0), at solar<a name="line.293"></a>
+<FONT color="green">294</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getSunTransit() noon}<a name="line.294"></a>
+<FONT color="green">295</FONT>             * (with adjustment for the &lt;a<a name="line.295"></a>
+<FONT color="green">296</FONT>             * href="http://en.wikipedia.org/wiki/Equation_of_time"&gt;equation of time&lt;/a&gt;)<a name="line.296"></a>
+<FONT color="green">297</FONT>             * the sun should be directly overhead, so a user who is 1&amp;deg; west of this<a name="line.297"></a>
+<FONT color="green">298</FONT>             * will have noon at 4 minutes after standard time noon, and conversely, a<a name="line.298"></a>
+<FONT color="green">299</FONT>             * user who is 1&amp;deg; east of the 15&amp;deg longitude will have noon at 11:56<a name="line.299"></a>
+<FONT color="green">300</FONT>             * AM. The offset returned does not account for the &lt;a<a name="line.300"></a>
+<FONT color="green">301</FONT>             * href="http://en.wikipedia.org/wiki/Daylight_saving_time"&gt;Daylight saving<a name="line.301"></a>
+<FONT color="green">302</FONT>             * time&lt;/a&gt; offset since this class is unaware of dates.<a name="line.302"></a>
+<FONT color="green">303</FONT>             * <a name="line.303"></a>
+<FONT color="green">304</FONT>             * @return the offset in milliseconds not accounting for Daylight saving<a name="line.304"></a>
+<FONT color="green">305</FONT>             *         time. A positive value will be returned East of the timezone<a name="line.305"></a>
+<FONT color="green">306</FONT>             *         line, and a negative value West of it.<a name="line.306"></a>
+<FONT color="green">307</FONT>             * @since 1.1<a name="line.307"></a>
+<FONT color="green">308</FONT>             */<a name="line.308"></a>
+<FONT color="green">309</FONT>            public long getLocalMeanTimeOffset() {<a name="line.309"></a>
+<FONT color="green">310</FONT>                    return (long) (getLongitude() * 4 * MINUTE_MILLIS - getTimeZone()<a name="line.310"></a>
+<FONT color="green">311</FONT>                                    .getRawOffset());<a name="line.311"></a>
+<FONT color="green">312</FONT>            }<a name="line.312"></a>
+<FONT color="green">313</FONT>    <a name="line.313"></a>
+<FONT color="green">314</FONT>            /**<a name="line.314"></a>
+<FONT color="green">315</FONT>             * Calculate the initial &lt;a<a name="line.315"></a>
+<FONT color="green">316</FONT>             * href="http://en.wikipedia.org/wiki/Great_circle"&gt;geodesic&lt;/a&gt; bearing<a name="line.316"></a>
+<FONT color="green">317</FONT>             * between this Object and a second Object passed to this method using &lt;a<a name="line.317"></a>
+<FONT color="green">318</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.318"></a>
+<FONT color="green">319</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.319"></a>
+<FONT color="green">320</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.320"></a>
+<FONT color="green">321</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.321"></a>
+<FONT color="green">322</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975<a name="line.322"></a>
+<FONT color="green">323</FONT>             * <a name="line.323"></a>
+<FONT color="green">324</FONT>             * @param location<a name="line.324"></a>
+<FONT color="green">325</FONT>             *            the destination location<a name="line.325"></a>
+<FONT color="green">326</FONT>             */<a name="line.326"></a>
+<FONT color="green">327</FONT>            public double getGeodesicInitialBearing(GeoLocation location) {<a name="line.327"></a>
+<FONT color="green">328</FONT>                    return vincentyFormula(location, INITIAL_BEARING);<a name="line.328"></a>
+<FONT color="green">329</FONT>            }<a name="line.329"></a>
+<FONT color="green">330</FONT>    <a name="line.330"></a>
+<FONT color="green">331</FONT>            /**<a name="line.331"></a>
+<FONT color="green">332</FONT>             * Calculate the final &lt;a<a name="line.332"></a>
+<FONT color="green">333</FONT>             * href="http://en.wikipedia.org/wiki/Great_circle"&gt;geodesic&lt;/a&gt; bearing<a name="line.333"></a>
+<FONT color="green">334</FONT>             * between this Object and a second Object passed to this method using &lt;a<a name="line.334"></a>
+<FONT color="green">335</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.335"></a>
+<FONT color="green">336</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.336"></a>
+<FONT color="green">337</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.337"></a>
+<FONT color="green">338</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.338"></a>
+<FONT color="green">339</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975<a name="line.339"></a>
+<FONT color="green">340</FONT>             * <a name="line.340"></a>
+<FONT color="green">341</FONT>             * @param location<a name="line.341"></a>
+<FONT color="green">342</FONT>             *            the destination location<a name="line.342"></a>
+<FONT color="green">343</FONT>             */<a name="line.343"></a>
+<FONT color="green">344</FONT>            public double getGeodesicFinalBearing(GeoLocation location) {<a name="line.344"></a>
+<FONT color="green">345</FONT>                    return vincentyFormula(location, FINAL_BEARING);<a name="line.345"></a>
+<FONT color="green">346</FONT>            }<a name="line.346"></a>
+<FONT color="green">347</FONT>    <a name="line.347"></a>
+<FONT color="green">348</FONT>            /**<a name="line.348"></a>
+<FONT color="green">349</FONT>             * Calculate &lt;a<a name="line.349"></a>
+<FONT color="green">350</FONT>             * href="http://en.wikipedia.org/wiki/Great-circle_distance"&gt;geodesic<a name="line.350"></a>
+<FONT color="green">351</FONT>             * distance&lt;/a&gt; in Meters between this Object and a second Object passed to<a name="line.351"></a>
+<FONT color="green">352</FONT>             * this method using &lt;a<a name="line.352"></a>
+<FONT color="green">353</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.353"></a>
+<FONT color="green">354</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.354"></a>
+<FONT color="green">355</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.355"></a>
+<FONT color="green">356</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.356"></a>
+<FONT color="green">357</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975<a name="line.357"></a>
+<FONT color="green">358</FONT>             * <a name="line.358"></a>
+<FONT color="green">359</FONT>             * @param location<a name="line.359"></a>
+<FONT color="green">360</FONT>             *            the destination location<a name="line.360"></a>
+<FONT color="green">361</FONT>             */<a name="line.361"></a>
+<FONT color="green">362</FONT>            public double getGeodesicDistance(GeoLocation location) {<a name="line.362"></a>
+<FONT color="green">363</FONT>                    return vincentyFormula(location, DISTANCE);<a name="line.363"></a>
+<FONT color="green">364</FONT>            }<a name="line.364"></a>
+<FONT color="green">365</FONT>    <a name="line.365"></a>
+<FONT color="green">366</FONT>            /**<a name="line.366"></a>
+<FONT color="green">367</FONT>             * Calculate &lt;a<a name="line.367"></a>
+<FONT color="green">368</FONT>             * href="http://en.wikipedia.org/wiki/Great-circle_distance"&gt;geodesic<a name="line.368"></a>
+<FONT color="green">369</FONT>             * distance&lt;/a&gt; in Meters between this Object and a second Object passed to<a name="line.369"></a>
+<FONT color="green">370</FONT>             * this method using &lt;a<a name="line.370"></a>
+<FONT color="green">371</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.371"></a>
+<FONT color="green">372</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.372"></a>
+<FONT color="green">373</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.373"></a>
+<FONT color="green">374</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.374"></a>
+<FONT color="green">375</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975<a name="line.375"></a>
+<FONT color="green">376</FONT>             * <a name="line.376"></a>
+<FONT color="green">377</FONT>             * @param location<a name="line.377"></a>
+<FONT color="green">378</FONT>             *            the destination location<a name="line.378"></a>
+<FONT color="green">379</FONT>             * @param formula<a name="line.379"></a>
+<FONT color="green">380</FONT>             *            This formula calculates initial bearing ({@link #INITIAL_BEARING}),<a name="line.380"></a>
+<FONT color="green">381</FONT>             *            final bearing ({@link #FINAL_BEARING}) and distance ({@link #DISTANCE}).<a name="line.381"></a>
+<FONT color="green">382</FONT>             */<a name="line.382"></a>
+<FONT color="green">383</FONT>            private double vincentyFormula(GeoLocation location, int formula) {<a name="line.383"></a>
+<FONT color="green">384</FONT>                    double a = 6378137;<a name="line.384"></a>
+<FONT color="green">385</FONT>                    double b = 6356752.3142;<a name="line.385"></a>
+<FONT color="green">386</FONT>                    double f = 1 / 298.257223563; // WGS-84 ellipsiod<a name="line.386"></a>
+<FONT color="green">387</FONT>                    double L = Math.toRadians(location.getLongitude() - getLongitude());<a name="line.387"></a>
+<FONT color="green">388</FONT>                    double U1 = Math<a name="line.388"></a>
+<FONT color="green">389</FONT>                                    .atan((1 - f) * Math.tan(Math.toRadians(getLatitude())));<a name="line.389"></a>
+<FONT color="green">390</FONT>                    double U2 = Math.atan((1 - f)<a name="line.390"></a>
+<FONT color="green">391</FONT>                                    * Math.tan(Math.toRadians(location.getLatitude())));<a name="line.391"></a>
+<FONT color="green">392</FONT>                    double sinU1 = Math.sin(U1), cosU1 = Math.cos(U1);<a name="line.392"></a>
+<FONT color="green">393</FONT>                    double sinU2 = Math.sin(U2), cosU2 = Math.cos(U2);<a name="line.393"></a>
+<FONT color="green">394</FONT>    <a name="line.394"></a>
+<FONT color="green">395</FONT>                    double lambda = L;<a name="line.395"></a>
+<FONT color="green">396</FONT>                    double lambdaP = 2 * Math.PI;<a name="line.396"></a>
+<FONT color="green">397</FONT>                    double iterLimit = 20;<a name="line.397"></a>
+<FONT color="green">398</FONT>                    double sinLambda = 0;<a name="line.398"></a>
+<FONT color="green">399</FONT>                    double cosLambda = 0;<a name="line.399"></a>
+<FONT color="green">400</FONT>                    double sinSigma = 0;<a name="line.400"></a>
+<FONT color="green">401</FONT>                    double cosSigma = 0;<a name="line.401"></a>
+<FONT color="green">402</FONT>                    double sigma = 0;<a name="line.402"></a>
+<FONT color="green">403</FONT>                    double sinAlpha = 0;<a name="line.403"></a>
+<FONT color="green">404</FONT>                    double cosSqAlpha = 0;<a name="line.404"></a>
+<FONT color="green">405</FONT>                    double cos2SigmaM = 0;<a name="line.405"></a>
+<FONT color="green">406</FONT>                    double C;<a name="line.406"></a>
+<FONT color="green">407</FONT>                    while (Math.abs(lambda - lambdaP) &gt; 1e-12 &amp;&amp; --iterLimit &gt; 0) {<a name="line.407"></a>
+<FONT color="green">408</FONT>                            sinLambda = Math.sin(lambda);<a name="line.408"></a>
+<FONT color="green">409</FONT>                            cosLambda = Math.cos(lambda);<a name="line.409"></a>
+<FONT color="green">410</FONT>                            sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda)<a name="line.410"></a>
+<FONT color="green">411</FONT>                                            + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)<a name="line.411"></a>
+<FONT color="green">412</FONT>                                            * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));<a name="line.412"></a>
+<FONT color="green">413</FONT>                            if (sinSigma == 0)<a name="line.413"></a>
+<FONT color="green">414</FONT>                                    return 0; // co-incident points<a name="line.414"></a>
+<FONT color="green">415</FONT>                            cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;<a name="line.415"></a>
+<FONT color="green">416</FONT>                            sigma = Math.atan2(sinSigma, cosSigma);<a name="line.416"></a>
+<FONT color="green">417</FONT>                            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;<a name="line.417"></a>
+<FONT color="green">418</FONT>                            cosSqAlpha = 1 - sinAlpha * sinAlpha;<a name="line.418"></a>
+<FONT color="green">419</FONT>                            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha;<a name="line.419"></a>
+<FONT color="green">420</FONT>                            if (Double.isNaN(cos2SigmaM))<a name="line.420"></a>
+<FONT color="green">421</FONT>                                    cos2SigmaM = 0; // equatorial line: cosSqAlpha=0 (§6)<a name="line.421"></a>
+<FONT color="green">422</FONT>                            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));<a name="line.422"></a>
+<FONT color="green">423</FONT>                            lambdaP = lambda;<a name="line.423"></a>
+<FONT color="green">424</FONT>                            lambda = L<a name="line.424"></a>
+<FONT color="green">425</FONT>                                            + (1 - C)<a name="line.425"></a>
+<FONT color="green">426</FONT>                                            * f<a name="line.426"></a>
+<FONT color="green">427</FONT>                                            * sinAlpha<a name="line.427"></a>
+<FONT color="green">428</FONT>                                            * (sigma + C<a name="line.428"></a>
+<FONT color="green">429</FONT>                                                            * sinSigma<a name="line.429"></a>
+<FONT color="green">430</FONT>                                                            * (cos2SigmaM + C * cosSigma<a name="line.430"></a>
+<FONT color="green">431</FONT>                                                                            * (-1 + 2 * cos2SigmaM * cos2SigmaM)));<a name="line.431"></a>
+<FONT color="green">432</FONT>                    }<a name="line.432"></a>
+<FONT color="green">433</FONT>                    if (iterLimit == 0)<a name="line.433"></a>
+<FONT color="green">434</FONT>                            return Double.NaN; // formula failed to converge<a name="line.434"></a>
+<FONT color="green">435</FONT>    <a name="line.435"></a>
+<FONT color="green">436</FONT>                    double uSq = cosSqAlpha * (a * a - b * b) / (b * b);<a name="line.436"></a>
+<FONT color="green">437</FONT>                    double A = 1 + uSq / 16384<a name="line.437"></a>
+<FONT color="green">438</FONT>                                    * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));<a name="line.438"></a>
+<FONT color="green">439</FONT>                    double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));<a name="line.439"></a>
+<FONT color="green">440</FONT>                    double deltaSigma = B<a name="line.440"></a>
+<FONT color="green">441</FONT>                                    * sinSigma<a name="line.441"></a>
+<FONT color="green">442</FONT>                                    * (cos2SigmaM + B<a name="line.442"></a>
+<FONT color="green">443</FONT>                                                    / 4<a name="line.443"></a>
+<FONT color="green">444</FONT>                                                    * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B<a name="line.444"></a>
+<FONT color="green">445</FONT>                                                                    / 6 * cos2SigmaM<a name="line.445"></a>
+<FONT color="green">446</FONT>                                                                    * (-3 + 4 * sinSigma * sinSigma)<a name="line.446"></a>
+<FONT color="green">447</FONT>                                                                    * (-3 + 4 * cos2SigmaM * cos2SigmaM)));<a name="line.447"></a>
+<FONT color="green">448</FONT>                    double distance = b * A * (sigma - deltaSigma);<a name="line.448"></a>
+<FONT color="green">449</FONT>    <a name="line.449"></a>
+<FONT color="green">450</FONT>                    // initial bearing<a name="line.450"></a>
+<FONT color="green">451</FONT>                    double fwdAz = Math.toDegrees(Math.atan2(cosU2 * sinLambda, cosU1<a name="line.451"></a>
+<FONT color="green">452</FONT>                                    * sinU2 - sinU1 * cosU2 * cosLambda));<a name="line.452"></a>
+<FONT color="green">453</FONT>                    // final bearing<a name="line.453"></a>
+<FONT color="green">454</FONT>                    double revAz = Math.toDegrees(Math.atan2(cosU1 * sinLambda, -sinU1<a name="line.454"></a>
+<FONT color="green">455</FONT>                                    * cosU2 + cosU1 * sinU2 * cosLambda));<a name="line.455"></a>
+<FONT color="green">456</FONT>                    if (formula == DISTANCE) {<a name="line.456"></a>
+<FONT color="green">457</FONT>                            return distance;<a name="line.457"></a>
+<FONT color="green">458</FONT>                    } else if (formula == INITIAL_BEARING) {<a name="line.458"></a>
+<FONT color="green">459</FONT>                            return fwdAz;<a name="line.459"></a>
+<FONT color="green">460</FONT>                    } else if (formula == FINAL_BEARING) {<a name="line.460"></a>
+<FONT color="green">461</FONT>                            return revAz;<a name="line.461"></a>
+<FONT color="green">462</FONT>                    } else { // should never happpen<a name="line.462"></a>
+<FONT color="green">463</FONT>                            return Double.NaN;<a name="line.463"></a>
+<FONT color="green">464</FONT>                    }<a name="line.464"></a>
+<FONT color="green">465</FONT>            }<a name="line.465"></a>
+<FONT color="green">466</FONT>    <a name="line.466"></a>
+<FONT color="green">467</FONT>            /**<a name="line.467"></a>
+<FONT color="green">468</FONT>             * Returns the &lt;a href="http://en.wikipedia.org/wiki/Rhumb_line"&gt;rhumb line&lt;/a&gt;<a name="line.468"></a>
+<FONT color="green">469</FONT>             * bearing from the current location to the GeoLocation passed in.<a name="line.469"></a>
+<FONT color="green">470</FONT>             * <a name="line.470"></a>
+<FONT color="green">471</FONT>             * @param location<a name="line.471"></a>
+<FONT color="green">472</FONT>             *            destination location<a name="line.472"></a>
+<FONT color="green">473</FONT>             * @return the bearing in degrees<a name="line.473"></a>
+<FONT color="green">474</FONT>             */<a name="line.474"></a>
+<FONT color="green">475</FONT>            public double getRhumbLineBearing(GeoLocation location) {<a name="line.475"></a>
+<FONT color="green">476</FONT>                    double dLon = Math.toRadians(location.getLongitude() - getLongitude());<a name="line.476"></a>
+<FONT color="green">477</FONT>                    double dPhi = Math.log(Math.tan(Math.toRadians(location.getLatitude())<a name="line.477"></a>
+<FONT color="green">478</FONT>                                    / 2 + Math.PI / 4)<a name="line.478"></a>
+<FONT color="green">479</FONT>                                    / Math.tan(Math.toRadians(getLatitude()) / 2 + Math.PI / 4));<a name="line.479"></a>
+<FONT color="green">480</FONT>                    if (Math.abs(dLon) &gt; Math.PI)<a name="line.480"></a>
+<FONT color="green">481</FONT>                            dLon = dLon &gt; 0 ? -(2 * Math.PI - dLon) : (2 * Math.PI + dLon);<a name="line.481"></a>
+<FONT color="green">482</FONT>                    return Math.toDegrees(Math.atan2(dLon, dPhi));<a name="line.482"></a>
+<FONT color="green">483</FONT>            }<a name="line.483"></a>
+<FONT color="green">484</FONT>    <a name="line.484"></a>
+<FONT color="green">485</FONT>            /**<a name="line.485"></a>
+<FONT color="green">486</FONT>             * Returns the &lt;a href="http://en.wikipedia.org/wiki/Rhumb_line"&gt;rhumb line&lt;/a&gt;<a name="line.486"></a>
+<FONT color="green">487</FONT>             * distance from the current location to the GeoLocation passed in.<a name="line.487"></a>
+<FONT color="green">488</FONT>             * <a name="line.488"></a>
+<FONT color="green">489</FONT>             * @param location<a name="line.489"></a>
+<FONT color="green">490</FONT>             *            the destination location<a name="line.490"></a>
+<FONT color="green">491</FONT>             * @return the distance in Meters<a name="line.491"></a>
+<FONT color="green">492</FONT>             */<a name="line.492"></a>
+<FONT color="green">493</FONT>            public double getRhumbLineDistance(GeoLocation location) {<a name="line.493"></a>
+<FONT color="green">494</FONT>                    double R = 6371; // earth's mean radius in km<a name="line.494"></a>
+<FONT color="green">495</FONT>                    double dLat = Math.toRadians(location.getLatitude() - getLatitude());<a name="line.495"></a>
+<FONT color="green">496</FONT>                    double dLon = Math.toRadians(Math.abs(location.getLongitude()<a name="line.496"></a>
+<FONT color="green">497</FONT>                                    - getLongitude()));<a name="line.497"></a>
+<FONT color="green">498</FONT>                    double dPhi = Math.log(Math.tan(Math.toRadians(location.getLongitude())<a name="line.498"></a>
+<FONT color="green">499</FONT>                                    / 2 + Math.PI / 4)<a name="line.499"></a>
+<FONT color="green">500</FONT>                                    / Math.tan(Math.toRadians(getLatitude()) / 2 + Math.PI / 4));<a name="line.500"></a>
+<FONT color="green">501</FONT>                    double q = (Math.abs(dLat) &gt; 1e-10) ? dLat / dPhi : Math.cos(Math<a name="line.501"></a>
+<FONT color="green">502</FONT>                                    .toRadians(getLatitude()));<a name="line.502"></a>
+<FONT color="green">503</FONT>                    // if dLon over 180° take shorter rhumb across 180° meridian:<a name="line.503"></a>
+<FONT color="green">504</FONT>                    if (dLon &gt; Math.PI)<a name="line.504"></a>
+<FONT color="green">505</FONT>                            dLon = 2 * Math.PI - dLon;<a name="line.505"></a>
+<FONT color="green">506</FONT>                    double d = Math.sqrt(dLat * dLat + q * q * dLon * dLon);<a name="line.506"></a>
+<FONT color="green">507</FONT>                    return d * R;<a name="line.507"></a>
+<FONT color="green">508</FONT>            }<a name="line.508"></a>
+<FONT color="green">509</FONT>    <a name="line.509"></a>
+<FONT color="green">510</FONT>            /**<a name="line.510"></a>
+<FONT color="green">511</FONT>             * A method that returns an XML formatted &lt;code&gt;String&lt;/code&gt; representing<a name="line.511"></a>
+<FONT color="green">512</FONT>             * the serialized &lt;code&gt;Object&lt;/code&gt;. Very similar to the toString<a name="line.512"></a>
+<FONT color="green">513</FONT>             * method but the return value is in an xml format. The format currently<a name="line.513"></a>
+<FONT color="green">514</FONT>             * used (subject to change) is:<a name="line.514"></a>
+<FONT color="green">515</FONT>             * <a name="line.515"></a>
+<FONT color="green">516</FONT>             * &lt;pre&gt;<a name="line.516"></a>
+<FONT color="green">517</FONT>             *   &amp;lt;GeoLocation&amp;gt;<a name="line.517"></a>
+<FONT color="green">518</FONT>             *       &amp;lt;LocationName&amp;gt;Lakewood, NJ&amp;lt;/LocationName&amp;gt;<a name="line.518"></a>
+<FONT color="green">519</FONT>             *       &amp;lt;Latitude&amp;gt;40.0828&amp;amp;deg&amp;lt;/Latitude&amp;gt;<a name="line.519"></a>
+<FONT color="green">520</FONT>             *       &amp;lt;Longitude&amp;gt;-74.2094&amp;amp;deg&amp;lt;/Longitude&amp;gt;<a name="line.520"></a>
+<FONT color="green">521</FONT>             *       &amp;lt;Elevation&amp;gt;0 Meters&amp;lt;/Elevation&amp;gt;<a name="line.521"></a>
+<FONT color="green">522</FONT>             *       &amp;lt;TimezoneName&amp;gt;America/New_York&amp;lt;/TimezoneName&amp;gt;<a name="line.522"></a>
+<FONT color="green">523</FONT>             *       &amp;lt;TimeZoneDisplayName&amp;gt;Eastern Standard Time&amp;lt;/TimeZoneDisplayName&amp;gt;<a name="line.523"></a>
+<FONT color="green">524</FONT>             *       &amp;lt;TimezoneGMTOffset&amp;gt;-5&amp;lt;/TimezoneGMTOffset&amp;gt;<a name="line.524"></a>
+<FONT color="green">525</FONT>             *       &amp;lt;TimezoneDSTOffset&amp;gt;1&amp;lt;/TimezoneDSTOffset&amp;gt;<a name="line.525"></a>
+<FONT color="green">526</FONT>             *   &amp;lt;/GeoLocation&amp;gt;<a name="line.526"></a>
+<FONT color="green">527</FONT>             * &lt;/pre&gt;<a name="line.527"></a>
+<FONT color="green">528</FONT>             * <a name="line.528"></a>
+<FONT color="green">529</FONT>             * @return The XML formatted &lt;code&gt;String&lt;/code&gt;.<a name="line.529"></a>
+<FONT color="green">530</FONT>             */<a name="line.530"></a>
+<FONT color="green">531</FONT>            public String toXML() {<a name="line.531"></a>
+<FONT color="green">532</FONT>                    StringBuffer sb = new StringBuffer();<a name="line.532"></a>
+<FONT color="green">533</FONT>                    sb.append("&lt;GeoLocation&gt;\n");<a name="line.533"></a>
+<FONT color="green">534</FONT>                    sb.append("\t&lt;LocationName&gt;").append(getLocationName()).append(<a name="line.534"></a>
+<FONT color="green">535</FONT>                                    "&lt;/LocationName&gt;\n");<a name="line.535"></a>
+<FONT color="green">536</FONT>                    sb.append("\t&lt;Latitude&gt;").append(getLatitude()).append("&amp;deg;").append(<a name="line.536"></a>
+<FONT color="green">537</FONT>                                    "&lt;/Latitude&gt;\n");<a name="line.537"></a>
+<FONT color="green">538</FONT>                    sb.append("\t&lt;Longitude&gt;").append(getLongitude()).append("&amp;deg;")<a name="line.538"></a>
+<FONT color="green">539</FONT>                                    .append("&lt;/Longitude&gt;\n");<a name="line.539"></a>
+<FONT color="green">540</FONT>                    sb.append("\t&lt;Elevation&gt;").append(getElevation()).append(" Meters")<a name="line.540"></a>
+<FONT color="green">541</FONT>                                    .append("&lt;/Elevation&gt;\n");<a name="line.541"></a>
+<FONT color="green">542</FONT>                    sb.append("\t&lt;TimezoneName&gt;").append(getTimeZone().getID()).append(<a name="line.542"></a>
+<FONT color="green">543</FONT>                                    "&lt;/TimezoneName&gt;\n");<a name="line.543"></a>
+<FONT color="green">544</FONT>                    sb.append("\t&lt;TimeZoneDisplayName&gt;").append(<a name="line.544"></a>
+<FONT color="green">545</FONT>                                    getTimeZone().getDisplayName()).append(<a name="line.545"></a>
+<FONT color="green">546</FONT>                                    "&lt;/TimeZoneDisplayName&gt;\n");<a name="line.546"></a>
+<FONT color="green">547</FONT>                    sb.append("\t&lt;TimezoneGMTOffset&gt;").append(<a name="line.547"></a>
+<FONT color="green">548</FONT>                                    getTimeZone().getRawOffset() / HOUR_MILLIS).append(<a name="line.548"></a>
+<FONT color="green">549</FONT>                                    "&lt;/TimezoneGMTOffset&gt;\n");<a name="line.549"></a>
+<FONT color="green">550</FONT>                    sb.append("\t&lt;TimezoneDSTOffset&gt;").append(<a name="line.550"></a>
+<FONT color="green">551</FONT>                                    getTimeZone().getDSTSavings() / HOUR_MILLIS).append(<a name="line.551"></a>
+<FONT color="green">552</FONT>                                    "&lt;/TimezoneDSTOffset&gt;\n");<a name="line.552"></a>
+<FONT color="green">553</FONT>                    sb.append("&lt;/GeoLocation&gt;");<a name="line.553"></a>
+<FONT color="green">554</FONT>                    return sb.toString();<a name="line.554"></a>
+<FONT color="green">555</FONT>            }<a name="line.555"></a>
+<FONT color="green">556</FONT>    <a name="line.556"></a>
+<FONT color="green">557</FONT>            /**<a name="line.557"></a>
+<FONT color="green">558</FONT>             * @see java.lang.Object#equals(Object)<a name="line.558"></a>
+<FONT color="green">559</FONT>             */<a name="line.559"></a>
+<FONT color="green">560</FONT>            public boolean equals(Object object) {<a name="line.560"></a>
+<FONT color="green">561</FONT>                    if (this == object)<a name="line.561"></a>
+<FONT color="green">562</FONT>                            return true;<a name="line.562"></a>
+<FONT color="green">563</FONT>                    if (!(object instanceof GeoLocation))<a name="line.563"></a>
+<FONT color="green">564</FONT>                            return false;<a name="line.564"></a>
+<FONT color="green">565</FONT>                    GeoLocation geo = (GeoLocation) object;<a name="line.565"></a>
+<FONT color="green">566</FONT>                    return Double.doubleToLongBits(latitude) == Double<a name="line.566"></a>
+<FONT color="green">567</FONT>                                    .doubleToLongBits(geo.latitude)<a name="line.567"></a>
+<FONT color="green">568</FONT>                                    &amp;&amp; Double.doubleToLongBits(longitude) == Double<a name="line.568"></a>
+<FONT color="green">569</FONT>                                                    .doubleToLongBits(geo.longitude)<a name="line.569"></a>
+<FONT color="green">570</FONT>                                    &amp;&amp; elevation == geo.elevation<a name="line.570"></a>
+<FONT color="green">571</FONT>                                    &amp;&amp; (locationName == null ? geo.locationName == null<a name="line.571"></a>
+<FONT color="green">572</FONT>                                                    : locationName.equals(geo.locationName))<a name="line.572"></a>
+<FONT color="green">573</FONT>                                    &amp;&amp; (timeZone == null ? geo.timeZone == null : timeZone<a name="line.573"></a>
+<FONT color="green">574</FONT>                                                    .equals(geo.timeZone));<a name="line.574"></a>
+<FONT color="green">575</FONT>            }<a name="line.575"></a>
+<FONT color="green">576</FONT>    <a name="line.576"></a>
+<FONT color="green">577</FONT>            /**<a name="line.577"></a>
+<FONT color="green">578</FONT>             * @see java.lang.Object#hashCode()<a name="line.578"></a>
+<FONT color="green">579</FONT>             */<a name="line.579"></a>
+<FONT color="green">580</FONT>            public int hashCode() {<a name="line.580"></a>
+<FONT color="green">581</FONT>    <a name="line.581"></a>
+<FONT color="green">582</FONT>                    int result = 17;<a name="line.582"></a>
+<FONT color="green">583</FONT>                    long latLong = Double.doubleToLongBits(latitude);<a name="line.583"></a>
+<FONT color="green">584</FONT>                    long lonLong = Double.doubleToLongBits(longitude);<a name="line.584"></a>
+<FONT color="green">585</FONT>                    long elevLong = Double.doubleToLongBits(elevation);<a name="line.585"></a>
+<FONT color="green">586</FONT>                    int latInt = (int) (latLong ^ (latLong &gt;&gt;&gt; 32));<a name="line.586"></a>
+<FONT color="green">587</FONT>                    int lonInt = (int) (lonLong ^ (lonLong &gt;&gt;&gt; 32));<a name="line.587"></a>
+<FONT color="green">588</FONT>                    int elevInt = (int) (elevLong ^ (elevLong &gt;&gt;&gt; 32));<a name="line.588"></a>
+<FONT color="green">589</FONT>                    result = 37 * result + getClass().hashCode();<a name="line.589"></a>
+<FONT color="green">590</FONT>                    result += 37 * result + latInt;<a name="line.590"></a>
+<FONT color="green">591</FONT>                    result += 37 * result + lonInt;<a name="line.591"></a>
+<FONT color="green">592</FONT>                    result += 37 * result + elevInt;<a name="line.592"></a>
+<FONT color="green">593</FONT>                    result += 37 * result<a name="line.593"></a>
+<FONT color="green">594</FONT>                                    + (locationName == null ? 0 : locationName.hashCode());<a name="line.594"></a>
+<FONT color="green">595</FONT>                    result += 37 * result + (timeZone == null ? 0 : timeZone.hashCode());<a name="line.595"></a>
+<FONT color="green">596</FONT>                    return result;<a name="line.596"></a>
+<FONT color="green">597</FONT>            }<a name="line.597"></a>
+<FONT color="green">598</FONT>    <a name="line.598"></a>
+<FONT color="green">599</FONT>            /**<a name="line.599"></a>
+<FONT color="green">600</FONT>             * @see java.lang.Object#toString()<a name="line.600"></a>
+<FONT color="green">601</FONT>             */<a name="line.601"></a>
+<FONT color="green">602</FONT>            public String toString() {<a name="line.602"></a>
+<FONT color="green">603</FONT>                    StringBuffer sb = new StringBuffer();<a name="line.603"></a>
+<FONT color="green">604</FONT>                    sb.append("\nLocation Name:\t\t\t").append(getLocationName());<a name="line.604"></a>
+<FONT color="green">605</FONT>                    sb.append("\nLatitude:\t\t\t").append(getLatitude()).append("&amp;deg;");<a name="line.605"></a>
+<FONT color="green">606</FONT>                    sb.append("\nLongitude:\t\t\t").append(getLongitude()).append("&amp;deg;");<a name="line.606"></a>
+<FONT color="green">607</FONT>                    sb.append("\nElevation:\t\t\t").append(getElevation())<a name="line.607"></a>
+<FONT color="green">608</FONT>                                    .append(" Meters");<a name="line.608"></a>
+<FONT color="green">609</FONT>                    sb.append("\nTimezone Name:\t\t\t").append(getTimeZone().getID());<a name="line.609"></a>
+<FONT color="green">610</FONT>                    /*<a name="line.610"></a>
+<FONT color="green">611</FONT>                     * sb.append("\nTimezone Display Name:\t\t").append(<a name="line.611"></a>
+<FONT color="green">612</FONT>                     * getTimeZone().getDisplayName());<a name="line.612"></a>
+<FONT color="green">613</FONT>                     */<a name="line.613"></a>
+<FONT color="green">614</FONT>                    sb.append("\nTimezone GMT Offset:\t\t").append(<a name="line.614"></a>
+<FONT color="green">615</FONT>                                    getTimeZone().getRawOffset() / HOUR_MILLIS);<a name="line.615"></a>
+<FONT color="green">616</FONT>                    sb.append("\nTimezone DST Offset:\t\t").append(<a name="line.616"></a>
+<FONT color="green">617</FONT>                                    getTimeZone().getDSTSavings() / HOUR_MILLIS);<a name="line.617"></a>
+<FONT color="green">618</FONT>                    return sb.toString();<a name="line.618"></a>
+<FONT color="green">619</FONT>            }<a name="line.619"></a>
+<FONT color="green">620</FONT>    <a name="line.620"></a>
+<FONT color="green">621</FONT>            /**<a name="line.621"></a>
+<FONT color="green">622</FONT>             * An implementation of the {@link java.lang.Object#clone()} method that<a name="line.622"></a>
+<FONT color="green">623</FONT>             * creates a &lt;a<a name="line.623"></a>
+<FONT color="green">624</FONT>             * href="http://en.wikipedia.org/wiki/Object_copy#Deep_copy"&gt;deep copy&lt;/a&gt;<a name="line.624"></a>
+<FONT color="green">625</FONT>             * of the object. &lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; If the {@link java.util.TimeZone} in<a name="line.625"></a>
+<FONT color="green">626</FONT>             * the clone will be changed from the original, it is critical that<a name="line.626"></a>
+<FONT color="green">627</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.{@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)}<a name="line.627"></a>
+<FONT color="green">628</FONT>             * is called after cloning in order for the AstronomicalCalendar to output<a name="line.628"></a>
+<FONT color="green">629</FONT>             * times in the expected offset.<a name="line.629"></a>
+<FONT color="green">630</FONT>             * <a name="line.630"></a>
+<FONT color="green">631</FONT>             * @see java.lang.Object#clone()<a name="line.631"></a>
+<FONT color="green">632</FONT>             * @since 1.1<a name="line.632"></a>
+<FONT color="green">633</FONT>             */<a name="line.633"></a>
+<FONT color="green">634</FONT>            public Object clone() {<a name="line.634"></a>
+<FONT color="green">635</FONT>                    GeoLocation clone = null;<a name="line.635"></a>
+<FONT color="green">636</FONT>                    try {<a name="line.636"></a>
+<FONT color="green">637</FONT>                            clone = (GeoLocation) super.clone();<a name="line.637"></a>
+<FONT color="green">638</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.638"></a>
+<FONT color="green">639</FONT>                            System.out<a name="line.639"></a>
+<FONT color="green">640</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.640"></a>
+<FONT color="green">641</FONT>                    }<a name="line.641"></a>
+<FONT color="green">642</FONT>                    clone.timeZone = (TimeZone) getTimeZone().clone();<a name="line.642"></a>
+<FONT color="green">643</FONT>                    clone.locationName = (String) getLocationName();<a name="line.643"></a>
+<FONT color="green">644</FONT>                    return clone;<a name="line.644"></a>
+<FONT color="green">645</FONT>            }<a name="line.645"></a>
+<FONT color="green">646</FONT>    }<a name="line.646"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

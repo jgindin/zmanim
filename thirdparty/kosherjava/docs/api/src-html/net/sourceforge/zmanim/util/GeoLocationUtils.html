@@ -1,0 +1,297 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2008 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">004</FONT>     *<a name="line.4"></a>
+<FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
+<FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * License, or (at your option) any later version.<a name="line.7"></a>
+<FONT color="green">008</FONT>     *<a name="line.8"></a>
+<FONT color="green">009</FONT>     * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without<a name="line.9"></a>
+<FONT color="green">010</FONT>     * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU<a name="line.10"></a>
+<FONT color="green">011</FONT>     * General Public License for more details.<a name="line.11"></a>
+<FONT color="green">012</FONT>     *<a name="line.12"></a>
+<FONT color="green">013</FONT>     * You should have received a copy of the GNU General Public License along with this program; if<a name="line.13"></a>
+<FONT color="green">014</FONT>     * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA<a name="line.14"></a>
+<FONT color="green">015</FONT>     * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html<a name="line.15"></a>
+<FONT color="green">016</FONT>     */<a name="line.16"></a>
+<FONT color="green">017</FONT>    package net.sourceforge.zmanim.util;<a name="line.17"></a>
+<FONT color="green">018</FONT>    <a name="line.18"></a>
+<FONT color="green">019</FONT>    import java.util.TimeZone;<a name="line.19"></a>
+<FONT color="green">020</FONT>    <a name="line.20"></a>
+<FONT color="green">021</FONT>    /**<a name="line.21"></a>
+<FONT color="green">022</FONT>     * A class for various location calculations<a name="line.22"></a>
+<FONT color="green">023</FONT>     * Most of the code in this class is ported from &lt;a href="http://www.movable-type.co.uk/"&gt;Chris Veness'&lt;/a&gt;<a name="line.23"></a>
+<FONT color="green">024</FONT>     * &lt;a href="http://www.fsf.org/licensing/licenses/lgpl.html"&gt;LGPL&lt;/a&gt; Javascript Implementation<a name="line.24"></a>
+<FONT color="green">025</FONT>     *<a name="line.25"></a>
+<FONT color="green">026</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2008<a name="line.26"></a>
+<FONT color="green">027</FONT>     * @version 0.1<a name="line.27"></a>
+<FONT color="green">028</FONT>     */<a name="line.28"></a>
+<FONT color="green">029</FONT>    public class GeoLocationUtils {<a name="line.29"></a>
+<FONT color="green">030</FONT>            private static int DISTANCE = 0;<a name="line.30"></a>
+<FONT color="green">031</FONT>            private static int INITIAL_BEARING = 1;<a name="line.31"></a>
+<FONT color="green">032</FONT>            private static int FINAL_BEARING = 2;<a name="line.32"></a>
+<FONT color="green">033</FONT>    <a name="line.33"></a>
+<FONT color="green">034</FONT>            /**<a name="line.34"></a>
+<FONT color="green">035</FONT>             * Calculate the initial &lt;a<a name="line.35"></a>
+<FONT color="green">036</FONT>             * href="http://en.wikipedia.org/wiki/Great_circle"&gt;geodesic&lt;/a&gt; bearing<a name="line.36"></a>
+<FONT color="green">037</FONT>             * between this Object and a second Object passed to this method using &lt;a<a name="line.37"></a>
+<FONT color="green">038</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.39"></a>
+<FONT color="green">040</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.40"></a>
+<FONT color="green">041</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.41"></a>
+<FONT color="green">042</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975.<a name="line.42"></a>
+<FONT color="green">043</FONT>             *<a name="line.43"></a>
+<FONT color="green">044</FONT>             * @param location<a name="line.44"></a>
+<FONT color="green">045</FONT>             *            the destination location<a name="line.45"></a>
+<FONT color="green">046</FONT>             */<a name="line.46"></a>
+<FONT color="green">047</FONT>            public static double getGeodesicInitialBearing(GeoLocation location, GeoLocation destination) {<a name="line.47"></a>
+<FONT color="green">048</FONT>                    return vincentyFormula(location, destination, INITIAL_BEARING);<a name="line.48"></a>
+<FONT color="green">049</FONT>            }<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>            /**<a name="line.51"></a>
+<FONT color="green">052</FONT>             * Calculate the final &lt;a<a name="line.52"></a>
+<FONT color="green">053</FONT>             * href="http://en.wikipedia.org/wiki/Great_circle"&gt;geodesic&lt;/a&gt; bearing<a name="line.53"></a>
+<FONT color="green">054</FONT>             * between this Object and a second Object passed to this method using &lt;a<a name="line.54"></a>
+<FONT color="green">055</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.55"></a>
+<FONT color="green">056</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.56"></a>
+<FONT color="green">057</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.57"></a>
+<FONT color="green">058</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.58"></a>
+<FONT color="green">059</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975.<a name="line.59"></a>
+<FONT color="green">060</FONT>             *<a name="line.60"></a>
+<FONT color="green">061</FONT>             * @param location<a name="line.61"></a>
+<FONT color="green">062</FONT>             *            the destination location<a name="line.62"></a>
+<FONT color="green">063</FONT>             */<a name="line.63"></a>
+<FONT color="green">064</FONT>            public static double getGeodesicFinalBearing(GeoLocation location, GeoLocation destination) {<a name="line.64"></a>
+<FONT color="green">065</FONT>                    return vincentyFormula(location, destination, FINAL_BEARING);<a name="line.65"></a>
+<FONT color="green">066</FONT>            }<a name="line.66"></a>
+<FONT color="green">067</FONT>    <a name="line.67"></a>
+<FONT color="green">068</FONT>            /**<a name="line.68"></a>
+<FONT color="green">069</FONT>             * Calculate &lt;a<a name="line.69"></a>
+<FONT color="green">070</FONT>             * href="http://en.wikipedia.org/wiki/Great-circle_distance"&gt;geodesic<a name="line.70"></a>
+<FONT color="green">071</FONT>             * distance&lt;/a&gt; in Meters between this Object and a second Object passed to<a name="line.71"></a>
+<FONT color="green">072</FONT>             * this method using &lt;a<a name="line.72"></a>
+<FONT color="green">073</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.73"></a>
+<FONT color="green">074</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.74"></a>
+<FONT color="green">075</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.75"></a>
+<FONT color="green">076</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.76"></a>
+<FONT color="green">077</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975.<a name="line.77"></a>
+<FONT color="green">078</FONT>             *<a name="line.78"></a>
+<FONT color="green">079</FONT>             * @param location<a name="line.79"></a>
+<FONT color="green">080</FONT>             *            the destination location<a name="line.80"></a>
+<FONT color="green">081</FONT>             */<a name="line.81"></a>
+<FONT color="green">082</FONT>            public static double getGeodesicDistance(GeoLocation location, GeoLocation destination) {<a name="line.82"></a>
+<FONT color="green">083</FONT>                    return vincentyFormula(location, destination, DISTANCE);<a name="line.83"></a>
+<FONT color="green">084</FONT>            }<a name="line.84"></a>
+<FONT color="green">085</FONT>    <a name="line.85"></a>
+<FONT color="green">086</FONT>            /**<a name="line.86"></a>
+<FONT color="green">087</FONT>             * Calculate &lt;a<a name="line.87"></a>
+<FONT color="green">088</FONT>             * href="http://en.wikipedia.org/wiki/Great-circle_distance"&gt;geodesic<a name="line.88"></a>
+<FONT color="green">089</FONT>             * distance&lt;/a&gt; in Meters between this Object and a second Object passed to<a name="line.89"></a>
+<FONT color="green">090</FONT>             * this method using &lt;a<a name="line.90"></a>
+<FONT color="green">091</FONT>             * href="http://en.wikipedia.org/wiki/Thaddeus_Vincenty"&gt;Thaddeus Vincenty's&lt;/a&gt;<a name="line.91"></a>
+<FONT color="green">092</FONT>             * inverse formula See T Vincenty, "&lt;a<a name="line.92"></a>
+<FONT color="green">093</FONT>             * href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf"&gt;Direct and Inverse<a name="line.93"></a>
+<FONT color="green">094</FONT>             * Solutions of Geodesics on the Ellipsoid with application of nested<a name="line.94"></a>
+<FONT color="green">095</FONT>             * equations&lt;/a&gt;", Survey Review, vol XXII no 176, 1975.<a name="line.95"></a>
+<FONT color="green">096</FONT>             *<a name="line.96"></a>
+<FONT color="green">097</FONT>             * @param location<a name="line.97"></a>
+<FONT color="green">098</FONT>             *            the destination location<a name="line.98"></a>
+<FONT color="green">099</FONT>             * @param formula<a name="line.99"></a>
+<FONT color="green">100</FONT>             *            This formula calculates initial bearing ({@link #INITIAL_BEARING}),<a name="line.100"></a>
+<FONT color="green">101</FONT>             *            final bearing ({@link #FINAL_BEARING}) and distance ({@link #DISTANCE}).<a name="line.101"></a>
+<FONT color="green">102</FONT>             */<a name="line.102"></a>
+<FONT color="green">103</FONT>            private static double vincentyFormula(GeoLocation location, GeoLocation destination, int formula) {<a name="line.103"></a>
+<FONT color="green">104</FONT>                    double a = 6378137;<a name="line.104"></a>
+<FONT color="green">105</FONT>                    double b = 6356752.3142;<a name="line.105"></a>
+<FONT color="green">106</FONT>                    double f = 1 / 298.257223563; // WGS-84 ellipsiod<a name="line.106"></a>
+<FONT color="green">107</FONT>                    double L = Math.toRadians(destination.getLongitude() - location.getLongitude());<a name="line.107"></a>
+<FONT color="green">108</FONT>                    double U1 = Math<a name="line.108"></a>
+<FONT color="green">109</FONT>                                    .atan((1 - f) * Math.tan(Math.toRadians(location.getLatitude())));<a name="line.109"></a>
+<FONT color="green">110</FONT>                    double U2 = Math.atan((1 - f)<a name="line.110"></a>
+<FONT color="green">111</FONT>                                    * Math.tan(Math.toRadians(destination.getLatitude())));<a name="line.111"></a>
+<FONT color="green">112</FONT>                    double sinU1 = Math.sin(U1), cosU1 = Math.cos(U1);<a name="line.112"></a>
+<FONT color="green">113</FONT>                    double sinU2 = Math.sin(U2), cosU2 = Math.cos(U2);<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>                    double lambda = L;<a name="line.115"></a>
+<FONT color="green">116</FONT>                    double lambdaP = 2 * Math.PI;<a name="line.116"></a>
+<FONT color="green">117</FONT>                    double iterLimit = 20;<a name="line.117"></a>
+<FONT color="green">118</FONT>                    double sinLambda = 0;<a name="line.118"></a>
+<FONT color="green">119</FONT>                    double cosLambda = 0;<a name="line.119"></a>
+<FONT color="green">120</FONT>                    double sinSigma = 0;<a name="line.120"></a>
+<FONT color="green">121</FONT>                    double cosSigma = 0;<a name="line.121"></a>
+<FONT color="green">122</FONT>                    double sigma = 0;<a name="line.122"></a>
+<FONT color="green">123</FONT>                    double sinAlpha = 0;<a name="line.123"></a>
+<FONT color="green">124</FONT>                    double cosSqAlpha = 0;<a name="line.124"></a>
+<FONT color="green">125</FONT>                    double cos2SigmaM = 0;<a name="line.125"></a>
+<FONT color="green">126</FONT>                    double C;<a name="line.126"></a>
+<FONT color="green">127</FONT>                    while (Math.abs(lambda - lambdaP) &gt; 1e-12 &amp;&amp; --iterLimit &gt; 0) {<a name="line.127"></a>
+<FONT color="green">128</FONT>                            sinLambda = Math.sin(lambda);<a name="line.128"></a>
+<FONT color="green">129</FONT>                            cosLambda = Math.cos(lambda);<a name="line.129"></a>
+<FONT color="green">130</FONT>                            sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda)<a name="line.130"></a>
+<FONT color="green">131</FONT>                                            + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)<a name="line.131"></a>
+<FONT color="green">132</FONT>                                            * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));<a name="line.132"></a>
+<FONT color="green">133</FONT>                            if (sinSigma == 0)<a name="line.133"></a>
+<FONT color="green">134</FONT>                                    return 0; // co-incident points<a name="line.134"></a>
+<FONT color="green">135</FONT>                            cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;<a name="line.135"></a>
+<FONT color="green">136</FONT>                            sigma = Math.atan2(sinSigma, cosSigma);<a name="line.136"></a>
+<FONT color="green">137</FONT>                            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;<a name="line.137"></a>
+<FONT color="green">138</FONT>                            cosSqAlpha = 1 - sinAlpha * sinAlpha;<a name="line.138"></a>
+<FONT color="green">139</FONT>                            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha;<a name="line.139"></a>
+<FONT color="green">140</FONT>                            if (Double.isNaN(cos2SigmaM))<a name="line.140"></a>
+<FONT color="green">141</FONT>                                    cos2SigmaM = 0; // equatorial line: cosSqAlpha=0 (§6)<a name="line.141"></a>
+<FONT color="green">142</FONT>                            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));<a name="line.142"></a>
+<FONT color="green">143</FONT>                            lambdaP = lambda;<a name="line.143"></a>
+<FONT color="green">144</FONT>                            lambda = L<a name="line.144"></a>
+<FONT color="green">145</FONT>                                            + (1 - C)<a name="line.145"></a>
+<FONT color="green">146</FONT>                                            * f<a name="line.146"></a>
+<FONT color="green">147</FONT>                                            * sinAlpha<a name="line.147"></a>
+<FONT color="green">148</FONT>                                            * (sigma + C<a name="line.148"></a>
+<FONT color="green">149</FONT>                                                            * sinSigma<a name="line.149"></a>
+<FONT color="green">150</FONT>                                                            * (cos2SigmaM + C * cosSigma<a name="line.150"></a>
+<FONT color="green">151</FONT>                                                                            * (-1 + 2 * cos2SigmaM * cos2SigmaM)));<a name="line.151"></a>
+<FONT color="green">152</FONT>                    }<a name="line.152"></a>
+<FONT color="green">153</FONT>                    if (iterLimit == 0)<a name="line.153"></a>
+<FONT color="green">154</FONT>                            return Double.NaN; // formula failed to converge<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>                    double uSq = cosSqAlpha * (a * a - b * b) / (b * b);<a name="line.156"></a>
+<FONT color="green">157</FONT>                    double A = 1 + uSq / 16384<a name="line.157"></a>
+<FONT color="green">158</FONT>                                    * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));<a name="line.158"></a>
+<FONT color="green">159</FONT>                    double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));<a name="line.159"></a>
+<FONT color="green">160</FONT>                    double deltaSigma = B<a name="line.160"></a>
+<FONT color="green">161</FONT>                                    * sinSigma<a name="line.161"></a>
+<FONT color="green">162</FONT>                                    * (cos2SigmaM + B<a name="line.162"></a>
+<FONT color="green">163</FONT>                                                    / 4<a name="line.163"></a>
+<FONT color="green">164</FONT>                                                    * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B<a name="line.164"></a>
+<FONT color="green">165</FONT>                                                                    / 6 * cos2SigmaM<a name="line.165"></a>
+<FONT color="green">166</FONT>                                                                    * (-3 + 4 * sinSigma * sinSigma)<a name="line.166"></a>
+<FONT color="green">167</FONT>                                                                    * (-3 + 4 * cos2SigmaM * cos2SigmaM)));<a name="line.167"></a>
+<FONT color="green">168</FONT>                    double distance = b * A * (sigma - deltaSigma);<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>                    // initial bearing<a name="line.170"></a>
+<FONT color="green">171</FONT>                    double fwdAz = Math.toDegrees(Math.atan2(cosU2 * sinLambda, cosU1<a name="line.171"></a>
+<FONT color="green">172</FONT>                                    * sinU2 - sinU1 * cosU2 * cosLambda));<a name="line.172"></a>
+<FONT color="green">173</FONT>                    // final bearing<a name="line.173"></a>
+<FONT color="green">174</FONT>                    double revAz = Math.toDegrees(Math.atan2(cosU1 * sinLambda, -sinU1<a name="line.174"></a>
+<FONT color="green">175</FONT>                                    * cosU2 + cosU1 * sinU2 * cosLambda));<a name="line.175"></a>
+<FONT color="green">176</FONT>                    if (formula == DISTANCE) {<a name="line.176"></a>
+<FONT color="green">177</FONT>                            return distance;<a name="line.177"></a>
+<FONT color="green">178</FONT>                    } else if (formula == INITIAL_BEARING) {<a name="line.178"></a>
+<FONT color="green">179</FONT>                            return fwdAz;<a name="line.179"></a>
+<FONT color="green">180</FONT>                    } else if (formula == FINAL_BEARING) {<a name="line.180"></a>
+<FONT color="green">181</FONT>                            return revAz;<a name="line.181"></a>
+<FONT color="green">182</FONT>                    } else { // should never happpen<a name="line.182"></a>
+<FONT color="green">183</FONT>                            return Double.NaN;<a name="line.183"></a>
+<FONT color="green">184</FONT>                    }<a name="line.184"></a>
+<FONT color="green">185</FONT>            }<a name="line.185"></a>
+<FONT color="green">186</FONT>    <a name="line.186"></a>
+<FONT color="green">187</FONT>            /**<a name="line.187"></a>
+<FONT color="green">188</FONT>             * Returns the &lt;a href="http://en.wikipedia.org/wiki/Rhumb_line"&gt;rhumb line&lt;/a&gt;<a name="line.188"></a>
+<FONT color="green">189</FONT>             * bearing from the current location to the GeoLocation passed in.<a name="line.189"></a>
+<FONT color="green">190</FONT>             *<a name="line.190"></a>
+<FONT color="green">191</FONT>             * @param location<a name="line.191"></a>
+<FONT color="green">192</FONT>             *            destination location<a name="line.192"></a>
+<FONT color="green">193</FONT>             * @return the bearing in degrees<a name="line.193"></a>
+<FONT color="green">194</FONT>             */<a name="line.194"></a>
+<FONT color="green">195</FONT>            public static double getRhumbLineBearing(GeoLocation location, GeoLocation destination) {<a name="line.195"></a>
+<FONT color="green">196</FONT>                    double dLon = Math.toRadians(destination.getLongitude() - location.getLongitude());<a name="line.196"></a>
+<FONT color="green">197</FONT>                    double dPhi = Math.log(Math.tan(Math.toRadians(destination.getLatitude())<a name="line.197"></a>
+<FONT color="green">198</FONT>                                    / 2 + Math.PI / 4)<a name="line.198"></a>
+<FONT color="green">199</FONT>                                    / Math.tan(Math.toRadians(location.getLatitude()) / 2 + Math.PI / 4));<a name="line.199"></a>
+<FONT color="green">200</FONT>                    if (Math.abs(dLon) &gt; Math.PI)<a name="line.200"></a>
+<FONT color="green">201</FONT>                            dLon = dLon &gt; 0 ? -(2 * Math.PI - dLon) : (2 * Math.PI + dLon);<a name="line.201"></a>
+<FONT color="green">202</FONT>                    return Math.toDegrees(Math.atan2(dLon, dPhi));<a name="line.202"></a>
+<FONT color="green">203</FONT>            }<a name="line.203"></a>
+<FONT color="green">204</FONT>    <a name="line.204"></a>
+<FONT color="green">205</FONT>            /**<a name="line.205"></a>
+<FONT color="green">206</FONT>             * Returns the &lt;a href="http://en.wikipedia.org/wiki/Rhumb_line"&gt;rhumb line&lt;/a&gt;<a name="line.206"></a>
+<FONT color="green">207</FONT>             * distance from the current location to the GeoLocation passed in.<a name="line.207"></a>
+<FONT color="green">208</FONT>             * Ported from &lt;a href="http://www.movable-type.co.uk/"&gt;Chris Veness'&lt;/a&gt; Javascript Implementation<a name="line.208"></a>
+<FONT color="green">209</FONT>             *<a name="line.209"></a>
+<FONT color="green">210</FONT>             * @param location<a name="line.210"></a>
+<FONT color="green">211</FONT>             *            the destination location<a name="line.211"></a>
+<FONT color="green">212</FONT>             * @return the distance in Meters<a name="line.212"></a>
+<FONT color="green">213</FONT>             */<a name="line.213"></a>
+<FONT color="green">214</FONT>            public static double getRhumbLineDistance(GeoLocation location, GeoLocation destination) {<a name="line.214"></a>
+<FONT color="green">215</FONT>                    double R = 6371; // earth's mean radius in km<a name="line.215"></a>
+<FONT color="green">216</FONT>                    double dLat = Math.toRadians(destination.getLatitude() - location.getLatitude());<a name="line.216"></a>
+<FONT color="green">217</FONT>                    double dLon = Math.toRadians(Math.abs(destination.getLongitude()<a name="line.217"></a>
+<FONT color="green">218</FONT>                                    - location.getLongitude()));<a name="line.218"></a>
+<FONT color="green">219</FONT>                    double dPhi = Math.log(Math.tan(Math.toRadians(destination.getLongitude())<a name="line.219"></a>
+<FONT color="green">220</FONT>                                    / 2 + Math.PI / 4)<a name="line.220"></a>
+<FONT color="green">221</FONT>                                    / Math.tan(Math.toRadians(location.getLatitude()) / 2 + Math.PI / 4));<a name="line.221"></a>
+<FONT color="green">222</FONT>                    double q = (Math.abs(dLat) &gt; 1e-10) ? dLat / dPhi : Math.cos(Math<a name="line.222"></a>
+<FONT color="green">223</FONT>                                    .toRadians(location.getLatitude()));<a name="line.223"></a>
+<FONT color="green">224</FONT>                    // if dLon over 180° take shorter rhumb across 180° meridian:<a name="line.224"></a>
+<FONT color="green">225</FONT>                    if (dLon &gt; Math.PI)<a name="line.225"></a>
+<FONT color="green">226</FONT>                            dLon = 2 * Math.PI - dLon;<a name="line.226"></a>
+<FONT color="green">227</FONT>                    double d = Math.sqrt(dLat * dLat + q * q * dLon * dLon);<a name="line.227"></a>
+<FONT color="green">228</FONT>                    return d * R;<a name="line.228"></a>
+<FONT color="green">229</FONT>            }<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>    }<a name="line.231"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
