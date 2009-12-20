@@ -1,15 +1,17 @@
-package com.gindin.zmanim;
+/*
+ * Copyright (c) 2009. Jay R. Gindin
+ */
 
-import com.ibm.icu.util.HebrewCalendar;
+package com.gindin.zmanim;
 
 import java.util.Date;
 
 /**
- * Contains utilities for determining "stuff" about a Hebrew date.
+ * Adds support for determining additional information about the current day, including whether or not
+ *  the day is a holiday.
  */
-@SuppressWarnings( { "MagicNumber" } )
-public class HebrewDateUtils {
-
+public class HebrewCalendar 
+	extends com.ibm.icu.util.HebrewCalendar {
 
 	/**
 	 * In the Hebrew calendar, the six single year lengths give rise to the terms haser, qesidrah, and shalem.
@@ -68,27 +70,15 @@ public class HebrewDateUtils {
 	private static final int                                  SHALEM_REGULAR_LENGTH = 355;
 	private static final int                                  SHALEM_LEAP_LENGTH = 385;
 
-
-
-
-	private final HebrewCalendar                              hebrewCalendar;
-	
-	public HebrewDateUtils(
-		HebrewCalendar hebrewCalendar
-	) {
-
-		this.hebrewCalendar = hebrewCalendar;
-	}
-
-
+	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isTodayAHoliday() {
 
 		for ( JewishHoliday jewishHoliday : JewishHoliday.JEWISH_HOLIDAYS ) {
-			if ( jewishHoliday.isOn( hebrewCalendar ) ) {
+			if ( jewishHoliday.isOn( this ) ) {
 				return jewishHoliday;
 			}
 
-			if ( jewishHoliday.isErev( hebrewCalendar ) ) {
+			if ( jewishHoliday.isErev( this ) ) {
 				return JewishHoliday.createErevOf( jewishHoliday );
 			}
 		}
@@ -104,7 +94,7 @@ public class HebrewDateUtils {
 			return true;
 		}
 
-		return HebrewCalendar.FRIDAY == hebrewCalendar.get( HebrewCalendar.DAY_OF_WEEK );
+		return FRIDAY == get( DAY_OF_WEEK );
 	}
 
 
@@ -115,17 +105,17 @@ public class HebrewDateUtils {
 		// Is today a holiday, but not tomorrow?
 		if ( null != isTodayAHoliday() ) {
 
-			Date today = hebrewCalendar.getTime();
-			hebrewCalendar.add( HebrewCalendar.DATE, 1 );
+			Date today = getTime();
+			add( DATE, 1 );
 			if ( null == isTodayAHoliday() ) {
 				show = true;
 			}
 
-			hebrewCalendar.setTime( today );
+			setTime( today );
 		}
 
 		if ( !show ) {
-			show = ( HebrewCalendar.SATURDAY == hebrewCalendar.get( HebrewCalendar.DAY_OF_WEEK ) );
+			show = ( SATURDAY == get( DAY_OF_WEEK ) );
 		}
 
 		return show;
@@ -160,11 +150,11 @@ public class HebrewDateUtils {
 
 
 		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( hebrewCalendar ) ) {
+			if ( roshChodesh.isOn( this ) ) {
 				return roshChodesh;
 			}
 
-			if ( roshChodesh.isErev( hebrewCalendar ) ) {
+			if ( roshChodesh.isErev( this ) ) {
 				return JewishHoliday.createErevOf( roshChodesh );
 			}
 		}
@@ -177,11 +167,11 @@ public class HebrewDateUtils {
 		}
 
 		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( hebrewCalendar ) ) {
+			if ( roshChodesh.isOn( this ) ) {
 				return roshChodesh;
 			}
 
-			if ( roshChodesh.isErev( hebrewCalendar ) ) {
+			if ( roshChodesh.isErev( this ) ) {
 				return JewishHoliday.createErevOf( roshChodesh );
 			}
 		}
@@ -193,7 +183,7 @@ public class HebrewDateUtils {
 	private YearType getYearType() {
 
 		// Year lengths can have 2 values, based on whether we're in a leap year or not.
-		int yearLength = hebrewCalendar.getActualMaximum( HebrewCalendar.DAY_OF_YEAR );
+		int yearLength = getActualMaximum( DAY_OF_YEAR );
 		switch ( yearLength ) {
 			case HASER_REGULAR_LENGTH:
 			case HASER_LEAP_LENGTH:
@@ -215,9 +205,9 @@ public class HebrewDateUtils {
 
 	private boolean isLeapYear() {
 
-		int yearLength = hebrewCalendar.getActualMaximum( HebrewCalendar.DAY_OF_YEAR );
+		int yearLength = getActualMaximum( DAY_OF_YEAR );
 		return yearLength > 355;
 	}
-
-
-}  // End of HebrewDateUtils class
+	
+	
+}  // End of HebrewCalendar class

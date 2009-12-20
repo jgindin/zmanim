@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewDateFormatter;
-import com.gindin.zmanim.HebrewDateUtils;
+import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.JewishHoliday;
 import com.ibm.icu.ICUAndroidBridge;
-import com.ibm.icu.util.HebrewCalendar;
-import net.sourceforge.zmanim.ComplexZmanimCalendar;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -25,41 +23,12 @@ import java.util.Date;
 public class ZmanimDisplay
 	extends Activity {
 
-	/**
-	 * How many minutes after sunset can you still start mincha?
-	 * <p/>
-	 * Daily Halacha (http://www.dailyhalacha.com/Display.asp?ClipDate=6/29/2004): The latest time for mincha is: "The Ben
-	 * Ish Chai says in one place that you should not pray the Amidah if you start the Amidah at the 13th minute [after
-	 * sunset]. But in another place he says that you can start praying the Amidah so long as the majority of the Amidah is
-	 * said before the 13.5 minute mark. But Chacham Ovadia's opinion is different. He says it would be permissible to
-	 * start the Amidah at 13 minutes after sunset even if the majority is said after the 13.5 minute mark. Chacham Ovadia
-	 * says it would be permissible so long as you start within the time. So technically, it would be permissible if you
-	 * start the Amidah in Mincha even as late as 13 minutes and 25 seconds after sunset."
-	 * <p/>
-	 * NOTE: In order to be careful and avoid rounding issues, I'm NOT including the 25 seconds.
-	 */
-	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
-
-	/**
-	 * Used for our secular -> Hebrew date conversion. Cannot be final, because we have to get the ICUAndroidBridg
-	 *  configured before we can instantiate.
-	 */
-	private HebrewCalendar                                    hebrewCalendar;
-
-	private HebrewDateUtils                                   hebrewDateUtils;
 
 	/** The calendar we use for displaying everything. */
-	// TODO: Subclass to add earliest & latest mincha times directly, in a manner similar to the other times.
-	private ComplexZmanimCalendar                             zmanimCalendar;
+	private HebrewZmanimCalendar                              zmanimCalendar;
 
-	/** Where are we? */
-	private AndroidGeoLocation                                geoLocation;
-
-	/** Used to format the zmanim times that get displayed. */
-	private DateFormat                                        timeFormatter;
-
-	/** Used to format the secular date in the screen's header. */
-	private DateFormat                                        secularDateFormatter;
+	/** Used to format all of the dates and times. */
+	private HebrewDateFormatter                               dateFormatter;
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
@@ -94,15 +63,14 @@ public class ZmanimDisplay
 
 		ICUAndroidBridge.create( getAssets() );
 
-		hebrewCalendar = new HebrewCalendar();
-		hebrewDateUtils = new HebrewDateUtils( hebrewCalendar );		
-
-		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+		DateFormat timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
+		DateFormat secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+		dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
 
 		// Figure out where we are, and get a calendar ready to use.
-		geoLocation = new AndroidGeoLocation( this );
-		zmanimCalendar = new ComplexZmanimCalendar( geoLocation );
+		GeoLocation location = new AndroidGeoLocation( this );
+		zmanimCalendar = new HebrewZmanimCalendar( location );
+		updateField( R.id.location, location.getLocationName() );
 		showZmanim();
 
 		displayDebugMessages();
@@ -150,12 +118,12 @@ public class ZmanimDisplay
 	private void showZmanim() {
 
 		StringBuffer holidayDescription = new StringBuffer();
-		JewishHoliday holiday = hebrewDateUtils.isTodayAHoliday();
+		JewishHoliday holiday = zmanimCalendar.isTodayAHoliday();
 		if ( null != holiday ) {
 			holidayDescription.append( holiday.name );
 		}
 
-		holiday = hebrewDateUtils.isRoshChodesh();
+		holiday = zmanimCalendar.isRoshChodesh();
 		if ( null != holiday ) {
 			if ( 0 == holidayDescription.length() ) {
 				holidayDescription.append( holiday.name );
@@ -167,92 +135,44 @@ public class ZmanimDisplay
 
 
 		// Update the header
-		updateField( R.id.hebrew_date, HebrewDateFormatter.format( hebrewCalendar ) );
-		updateField( R.id.secular_date, formatDate() );
-		updateField( R.id.location, geoLocation.getLocationName() );
+		updateField( R.id.hebrew_date, dateFormatter.formatHebrewDate( zmanimCalendar ) );
+		updateField( R.id.secular_date, dateFormatter.formatSecularDate( zmanimCalendar ) );
 		updateField( R.id.holiday, holidayDescription.toString() );
 
-		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlos16Point1Degrees() );
-		updateFieldWithTime( R.id.talit, zmanimCalendar.getMisheyakir11Point5Degrees() );
-		updateFieldWithTime( R.id.hanetz, zmanimCalendar.getSunrise() );
-		updateFieldWithTime( R.id.shemaMGA, zmanimCalendar.getSofZmanShmaMGA() );
-		updateFieldWithTime( R.id.tefilahMGA, zmanimCalendar.getSofZmanTfilaMGA() );
-		updateFieldWithTime( R.id.tefilahGRA, zmanimCalendar.getSofZmanTfilaGRA() );
-		updateFieldWithTime( R.id.chatzot, zmanimCalendar.getChatzos() );
+		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
+		updateFieldWithTime( R.id.talit, zmanimCalendar.getTalit() );
+		updateFieldWithTime( R.id.hanetz, zmanimCalendar.getHanetz() );
+		updateFieldWithTime( R.id.shemaMGA, zmanimCalendar.getSofZmanShma() );
+		updateFieldWithTime( R.id.tefilahMGA, zmanimCalendar.getSofZmanTefila() );
+		updateFieldWithTime( R.id.chatzot, zmanimCalendar.getChatzot() );
 		updateFieldWithTime( R.id.mincha_gedola, zmanimCalendar.getMinchaGedola() );
 		updateFieldWithTime( R.id.mincha_ketana, zmanimCalendar.getMinchaKetana() );
 		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
 
-		if ( hebrewDateUtils.showCandlelighting() ) {
+		if ( zmanimCalendar.showCandlelighting() ) {
 			findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandelLighting() );
+			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandlelighting() );
 		}
 		else {
 			findViewById( R.id.candles_row ).setVisibility( View.GONE );
 		}
 
-		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getSunset() );
+		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getShkiah() );
 
-		Calendar latestMincha = Calendar.getInstance();
-		latestMincha.setTime( zmanimCalendar.getSunset() );
-		latestMincha.add( Calendar.MINUTE, MINUTES_AFTER_SUNSET_FOR_MINCHA );
-		updateFieldWithTime( R.id.mincha, latestMincha.getTime() );
+		updateFieldWithTime( R.id.mincha, zmanimCalendar.getLatestMincha() );
 
 
-		if ( hebrewDateUtils.showHavdalah() ) {
+		if ( zmanimCalendar.showHavdalah() ) {
 			findViewById( R.id.tzait_row ).setVisibility( View.GONE );
 			findViewById( R.id.havdalah_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.havdalah, zmanimCalendar.getTzais() );
+			updateFieldWithTime( R.id.havdalah, zmanimCalendar.getTzaitHachocavim() );
 		}
 		else {
 			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
 			findViewById( R.id.tzait_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzais() );
+			updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzaitHachocavim() );
 		}
 
-	}
-
-
-	private String formatDate() {
-
-		final Calendar calendar = zmanimCalendar.getCalendar();
-
-		final StringBuffer date = new StringBuffer();
-		switch ( calendar.get( Calendar.DAY_OF_WEEK ) ) {
-			case Calendar.SUNDAY:
-				date.append( "Sun" );
-				break;
-
-			case Calendar.MONDAY:
-				date.append( "Mon" );
-				break;
-
-			case Calendar.TUESDAY:
-				date.append( "Tue" );
-				break;
-
-			case Calendar.WEDNESDAY:
-				date.append( "Wed" );
-				break;
-
-			case Calendar.THURSDAY:
-				date.append( "Thur" );
-				break;
-
-			case Calendar.FRIDAY:
-				date.append( "Fri" );
-				break;
-
-			case Calendar.SATURDAY:
-				date.append( "Shabbat" );
-				break;
-
-		}
-
-		date.append( ", " );
-		date.append( secularDateFormatter.format( calendar.getTime() ) );
-
-		return date.toString();
 	}
 
 
@@ -285,54 +205,34 @@ public class ZmanimDisplay
 		Date zman
 	) {
 
-		updateField( field, timeFormatter.format( zman ) );
+		updateField( field, dateFormatter.formatZmanTime( zman ) );
 	}
 
 
 	private void moveToNextDay() {
 
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.DATE, 1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.DATE, 1 );
-
+		zmanimCalendar.nextDay();
 		showZmanim();
 	}
 
 
 	private void moveToPrevDay() {
 
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.DATE, -1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.DATE, -1 );
-
+		zmanimCalendar.previousDay();
 		showZmanim();
 	}
 
 
 	private void moveToNextMonth() {
 
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.MONTH, 1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.MONTH, 1 );
-
+		zmanimCalendar.nextMonth();
 		showZmanim();
 	}
 
 
 	private void moveToPrevMonth() {
 
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.MONTH, -1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.MONTH, -1 );
-
+		zmanimCalendar.previousMonth();
 		showZmanim();
 	}
 
