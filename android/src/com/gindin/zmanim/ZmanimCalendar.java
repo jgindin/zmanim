@@ -30,7 +30,8 @@ public class ZmanimCalendar
 	 */
 	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA = 13;
 
-	static final long MINUTE_MILLIS = 60000L;
+	/** Have to copy this since it is package-local in the base class. */
+	private static final long                                 MINUTE_MILLIS = 60000L;
 	
 
 	public ZmanimCalendar( GeoLocation location ) {
