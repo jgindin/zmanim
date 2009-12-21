@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.TextView;
-import com.gindin.zmanim.HebrewDateFormatter;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.JewishHoliday;
 import com.ibm.icu.ICUAndroidBridge;
@@ -18,7 +17,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 /**
- *
+ * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimDisplay
 	extends Activity {
@@ -26,9 +25,6 @@ public class ZmanimDisplay
 
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
-
-	/** Used to format all of the dates and times. */
-	private HebrewDateFormatter                               dateFormatter;
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
@@ -65,11 +61,10 @@ public class ZmanimDisplay
 
 		DateFormat timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
 		DateFormat secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
-		dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
 
 		// Figure out where we are, and get a calendar ready to use.
 		GeoLocation location = new AndroidGeoLocation( this );
-		zmanimCalendar = new HebrewZmanimCalendar( location );
+		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 		updateField( R.id.location, location.getLocationName() );
 		showZmanim();
 
@@ -135,8 +130,8 @@ public class ZmanimDisplay
 
 
 		// Update the header
-		updateField( R.id.hebrew_date, dateFormatter.formatHebrewDate( zmanimCalendar ) );
-		updateField( R.id.secular_date, dateFormatter.formatSecularDate( zmanimCalendar ) );
+		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
+		updateField( R.id.secular_date, zmanimCalendar.formatSecularDate() );
 		updateField( R.id.holiday, holidayDescription.toString() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
@@ -205,7 +200,7 @@ public class ZmanimDisplay
 		Date zman
 	) {
 
-		updateField( field, dateFormatter.formatZmanTime( zman ) );
+		updateField( field, zmanimCalendar.formatZmanTime( zman ) );
 	}
 
 

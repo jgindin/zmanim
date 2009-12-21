@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Just a simple, hard-coded formatting of the dates.
  */
-public class HebrewDateFormatter {
+class HebrewDateFormatter {
 
 
 	/** Used to format the zmanim times that get displayed. */
@@ -36,17 +36,15 @@ public class HebrewDateFormatter {
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public String formatHebrewDate(
-		HebrewZmanimCalendar hebrewZmanimCalendar
+		HebrewCalendar calendar
 	) {
-
-		HebrewCalendar calendar = hebrewZmanimCalendar.getInternalCalendar();
 
 		final int day = calendar.get( HebrewCalendar.DAY_OF_MONTH );
 		final int monthIndex = calendar.get( HebrewCalendar.MONTH );
 		final int year = calendar.get( HebrewCalendar.YEAR );
 
 		final String month;
-		switch( monthIndex ) {
+		switch ( monthIndex ) {
 			case HebrewCalendar.NISAN:
 				month = "Nisan";
 				break;
@@ -117,10 +115,8 @@ public class HebrewDateFormatter {
 
 
 	public String formatSecularDate(
-		HebrewZmanimCalendar hebrewZmanimCalendar
+		Calendar calendar
 	) {
-
-		HebrewCalendar calendar = hebrewZmanimCalendar.getInternalCalendar();
 
 		final StringBuffer date = new StringBuffer();
 		switch ( calendar.get( Calendar.DAY_OF_WEEK ) ) {
