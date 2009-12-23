@@ -117,9 +117,9 @@ public class AndroidGeoLocation
 			locationName = getUnknownLocationName( latitude, longitude );
 		}
 
-//		if ( usedDefaultSeattleLocation ) {
-//			locationName = "** " + locationName;
-//		}
+		if ( usedDefaultSeattleLocation ) {
+			locationName = "** Unable to Determine Actual Location ** " + locationName;
+		}
 
 		return locationName;
 	}
