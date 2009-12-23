@@ -25,15 +25,18 @@ public class HebrewZmanimCalendar {
 	 */
 	private final ZmanimCalendar                              zmanimCalendar;
 
+	/** Used to format all of the dates and times. */
+	private final HebrewDateFormatter                         dateFormatter;
+
+
 	/**
 	 * When the user is viewing the actual day, and it's after sunset, we'll adjust the hebrew
 	 *  calendar. To do this, we've got to know when they're viewing 'today'.
 	 */
 	private final Calendar                                    today = Calendar.getInstance();
 
-
-	/** Used to format all of the dates and times. */
-	private HebrewDateFormatter                               dateFormatter;
+	/** When we need to round a zman up or down, this is the guy to do it. */
+	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
 
 
 
@@ -53,13 +56,15 @@ public class HebrewZmanimCalendar {
 
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<String>() {
-				public String dateAdjusted() {
-					return "Or le " + dateFormatter.formatHebrewDate( hebrewCalendar );
-				}
+				public String dateAdjusted( boolean adjustmentWasRequired ) {
+					String prefix = "";
 
-
-				public String noAdjustmentRequired() {
-					return dateFormatter.formatHebrewDate( hebrewCalendar );
+					// We want to prefix with "Or le..."
+					//  * After sunset. E.g., Dec 22, 2009 --> 5 Tevet 5770, but after sunset it's now 6 Tevet
+					if ( adjustmentWasRequired ) {
+						prefix = "Or le ";
+					}
+					return prefix + dateFormatter.formatHebrewDate( hebrewCalendar );
 				}
 			}
 		);
@@ -149,7 +154,7 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getTalit() {
-		return zmanimCalendar.getMisheyakir11Point5Degrees();
+		return zmanRounder.roundToLatestMinute( zmanimCalendar.getMisheyakir11Point5Degrees() );
 	}
 
 	public Date getHanetz() {
@@ -157,11 +162,11 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getSofZmanShma() {
-		return zmanimCalendar.getSofZmanShmaMGA();
+		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanShmaMGA() );
 	}
 
 	public Date getSofZmanTefila() {
-		return zmanimCalendar.getSofZmanTfilaMGA();
+		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanTfilaMGA() );
 	}
 
 	public Date getChatzot() {
@@ -181,7 +186,7 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getCandlelighting() {
-		return zmanimCalendar.getCandelLighting();
+		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getCandelLighting() );
 	}
 
 	public Date getShkiah() {
@@ -189,23 +194,18 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getLatestMincha() {
-		return zmanimCalendar.getLatestMinchaOvadiaYosef();
+		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getLatestMinchaOvadiaYosef() );
 	}
 
 	public Date getTzaitHachocavim() {
-		return zmanimCalendar.getTzais();
+		return zmanRounder.roundToLatestMinute( zmanimCalendar.getTzais() );
 	}
 
 	public JewishHoliday isTodayAHoliday() {
 
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted() {
-					return hebrewCalendar.isTodayAHoliday();
-				}
-
-
-				public JewishHoliday noAdjustmentRequired() {
+				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
 					return hebrewCalendar.isTodayAHoliday();
 				}
 			}
@@ -216,12 +216,7 @@ public class HebrewZmanimCalendar {
 
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted() {
-					return hebrewCalendar.isRoshChodesh();
-				}
-
-
-				public JewishHoliday noAdjustmentRequired() {
+				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
 					return hebrewCalendar.isRoshChodesh();
 				}
 			}
@@ -234,12 +229,7 @@ public class HebrewZmanimCalendar {
 		//noinspection UnnecessaryUnboxing
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<Boolean>() {
-				public Boolean dateAdjusted() {
-					return Boolean.valueOf( hebrewCalendar.showCandlelighting() );
-				}
-
-
-				public Boolean noAdjustmentRequired() {
+				public Boolean dateAdjusted( boolean adjustmentWasRequired ) {
 					return Boolean.valueOf( hebrewCalendar.showCandlelighting() );
 				}
 			}
@@ -253,12 +243,7 @@ public class HebrewZmanimCalendar {
 		//noinspection UnnecessaryUnboxing
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<Boolean>() {
-				public Boolean dateAdjusted() {
-					return Boolean.valueOf( hebrewCalendar.showHavdalah() );
-				}
-
-
-				public Boolean noAdjustmentRequired() {
+				public Boolean dateAdjusted( boolean adjustmentWasRequired ) {
 					return Boolean.valueOf( hebrewCalendar.showHavdalah() );
 				}
 			}
@@ -317,14 +302,16 @@ public class HebrewZmanimCalendar {
 		boolean adjusted = isTodayAfterSunset();
 		if ( adjusted ) {
 			hebrewCalendar.add( Calendar.DATE, 1 );
-			T retVal = callback.dateAdjusted();
-			hebrewCalendar.add( Calendar.DATE, -1 );
+		}
 
-			return retVal;
+		T retVal = callback.dateAdjusted( adjusted );
+
+		if ( adjusted ) {
+			hebrewCalendar.add( Calendar.DATE, -1 );
 		}
-		else {
-			return callback.noAdjustmentRequired();
-		}
+
+		return retVal;
+
 	}
 
 
@@ -333,9 +320,63 @@ public class HebrewZmanimCalendar {
 	 */
 	private static interface HebrewDateAdjustedCallback<T> {
 
-		T dateAdjusted();
-
-		T noAdjustmentRequired();
+		T dateAdjusted( boolean adjustmentWasRequired );
 	}
+
+
+	/**
+	 * Helper class that handles rounding of zmanim.
+	 */
+	private static class ZmanRounder {
+
+		private static final Calendar                           scratchCalendar = Calendar.getInstance();
+
+		/**
+		 * Because the application does not show seconds to the user, we want to ensure that we're not going
+		 *  to cause an error. Therefore, for some zmanim, we want to ensure that the time which gets displayed
+		 *  is not rounded up. E.g., If the latest time for saying mincha is actually 4:33.35, we're much better
+		 *  off if we report that time as 4:33, rather than 4:34.
+		 *
+		 * @param zman The zman to round
+		 *
+		 * @return the rounded zman.
+		 */
+		Date roundToEarliestMinute(
+			Date zman
+		) {
+
+		  scratchCalendar.setTime( zman );
+			scratchCalendar.set( Calendar.SECOND, 0 );
+			scratchCalendar.set( Calendar.MILLISECOND, 0 );
+
+			return scratchCalendar.getTime();
+		}
+
+
+		/**
+		 * Because the application does not show seconds to the user, we want to ensure that we're not going
+		 *  to cause an error. Therefore, for some zmanim, we want to ensure that the time which gets displayed
+		 *  is rounded up. E.g., If the earliest time for putting on tefiln is actually 6:33.05, we're much better
+		 *  off if we report that time as 6:34, rather than 6:33.
+		 *
+		 * @param zman The zman to round
+		 *
+		 * @return the rounded zman.
+		 */
+		Date roundToLatestMinute(
+			Date zman
+		) {
+
+			scratchCalendar.setTime( zman );
+
+			scratchCalendar.add( Calendar.MINUTE, 1 );
+			scratchCalendar.set( Calendar.SECOND, 0 );
+			scratchCalendar.set( Calendar.MILLISECOND, 0 );
+
+			return scratchCalendar.getTime();
+		}
+
+	} // End of ZmanRounder class
+
 
 }  // End of HebrewZmanimCalendar class
