@@ -33,6 +33,7 @@
 				android:id="@+id/secular_date"
 				android:text="SecDate"
 			  android:textSize="12sp"
+			  android:bufferType="spannable"
 			/>
 			<TextView
 				android:id="@+id/hebrew_date"

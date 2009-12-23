@@ -5,8 +5,13 @@
 package com.gindin.zmanim.android;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.*;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.JewishHoliday;
@@ -14,6 +19,7 @@ import com.ibm.icu.ICUAndroidBridge;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,6 +28,8 @@ import java.util.Date;
 public class ZmanimDisplay
 	extends Activity {
 
+	/** Identifies the secular date picker dialog box. */
+	private static final int                                  DATE_DIALOG_ID = 100;
 
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
@@ -29,8 +37,23 @@ public class ZmanimDisplay
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
+	private final DatePickerDialog.OnDateSetListener          dateChangedListener;
+
 
 	public ZmanimDisplay() {
+
+		dateChangedListener = new DatePickerDialog.OnDateSetListener() {
+			public void onDateSet(
+				DatePicker datePicker,
+				int year,
+				int month,
+				int date
+			) {
+				
+				zmanimCalendar.goToSecularDate( year, month, date );
+				showZmanim();
+			}
+		};
 	}
 
 
@@ -56,6 +79,16 @@ public class ZmanimDisplay
 
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
+
+		final View secularDate = findViewById( R.id.secular_date );
+		secularDate.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick(View v) {
+					showDialog( DATE_DIALOG_ID );
+				}
+			}
+		);
+
 
 		ICUAndroidBridge.create( getAssets() );
 
@@ -108,6 +141,19 @@ public class ZmanimDisplay
 	}
 
 
+	@Override
+	protected Dialog onCreateDialog( int dialogID ) {
+
+		switch ( dialogID ) {
+			case DATE_DIALOG_ID:
+				Calendar secularDate = zmanimCalendar.getSecularDate();
+				return new DatePickerDialog( this, dateChangedListener, secularDate.get( Calendar.YEAR ),
+					secularDate.get( Calendar.MONTH ), secularDate.get( Calendar.DAY_OF_MONTH ) );
+		}
+
+		return null;
+	}
+
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
@@ -131,7 +177,7 @@ public class ZmanimDisplay
 
 		// Update the header
 		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
-		updateField( R.id.secular_date, zmanimCalendar.formatSecularDate() );
+		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
 		updateField( R.id.holiday, holidayDescription.toString() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
@@ -186,8 +232,8 @@ public class ZmanimDisplay
 
 
 	private void updateField(
-		int field,
-		String text
+		int     field,
+		String  text
 	) {
 
 		TextView view = (TextView)findViewById( field );
@@ -196,11 +242,21 @@ public class ZmanimDisplay
 
 
 	private void updateFieldWithTime(
-		int field,
-		Date zman
+		int   field,
+		Date  zman
 	) {
 
 		updateField( field, zmanimCalendar.formatZmanTime( zman ) );
+	}
+
+
+	private void updateField(
+		int     field,
+		Spanned text
+	) {
+
+		TextView view = (TextView)findViewById( field );
+		view.setText( text );
 	}
 
 

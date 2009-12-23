@@ -139,13 +139,26 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	public void goToDate( Date newDate ) {
+	public void goToSecularDate(
+		int year,
+	  int month,
+	  int date
+	) {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.setTime( newDate );
+		calendar.set( year, month, date );
 		zmanimCalendar.setCalendar( calendar );
 
-		hebrewCalendar.setTime( newDate );
+		hebrewCalendar.setTime( calendar.getTime() );
+	}
+
+
+	public Calendar getSecularDate() {
+
+		Calendar c = Calendar.getInstance();
+		c.setTime( zmanimCalendar.getCalendar().getTime() );
+
+		return c;
 	}
 
 
