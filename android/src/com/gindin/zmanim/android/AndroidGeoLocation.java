@@ -31,9 +31,10 @@ public class AndroidGeoLocation
 
 	private String                                            locationName = null;
 
-	private boolean                                           usedDefaultSeattleLocation = false;
+	private boolean                                           locationWasDetermined = false;
 
 	private Formatter                                         rawLatitudeLongitudeFormatter = null;
+
 
 	static {
 		SEATTLE = new Location( "hard-coded" );
@@ -81,11 +82,12 @@ public class AndroidGeoLocation
 		for ( int i = providers.size() - 1; i >= 0; i-- ) {
 			location = lm.getLastKnownLocation( providers.get( i ) );
 			if ( location != null ) {
+				locationWasDetermined = true;
 				return location;
 			}
 		}
 
-		usedDefaultSeattleLocation = true;
+		locationWasDetermined = false;
 		return SEATTLE;
 	}
 
@@ -117,11 +119,12 @@ public class AndroidGeoLocation
 			locationName = getUnknownLocationName( latitude, longitude );
 		}
 
-		if ( usedDefaultSeattleLocation ) {
-			locationName = "** Unable to Determine Actual Location ** " + locationName;
-		}
-
 		return locationName;
+	}
+
+
+	public boolean isLocationDetermined() {
+		return locationWasDetermined;
 	}
 
 

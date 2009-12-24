@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2009. Jay R. Gindin
+  -->
+
+<AbsoluteLayout
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+	<TableLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:stretchColumns="1"
+		android:layout_x="0px"
+		android:layout_y="0px"
+		>
+		<TableRow
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:text="Latitude:"
+				android:layout_gravity="center_vertical"
+				>
+			</TextView>
+			<EditText
+				android:id="@+id/latitude"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="EditText"
+				android:textSize="18sp"
+				>
+			</EditText>
+		</TableRow>
+		<TableRow
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:text="Longitude:"
+				android:layout_gravity="center_vertical"
+				>
+			</TextView>
+			<EditText
+				android:id="@+id/longitude"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="EditText"
+				android:textSize="18sp"
+				>
+			</EditText>
+		</TableRow>
+	</TableLayout>
+</AbsoluteLayout>

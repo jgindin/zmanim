@@ -13,11 +13,11 @@ import android.text.Spanned;
 import android.view.*;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.JewishHoliday;
 import com.gindin.zmanim.ZmanRounder;
 import com.ibm.icu.ICUAndroidBridge;
-import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -28,9 +28,6 @@ import java.util.Date;
  */
 public class ZmanimDisplay
 	extends Activity {
-
-	/** Identifies the secular date picker dialog box. */
-	private static final int                                  DATE_DIALOG_ID = 100;
 
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
@@ -57,6 +54,36 @@ public class ZmanimDisplay
 
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
+		setupListeners();
+
+
+		ICUAndroidBridge.create( getAssets() );
+
+		DateFormat timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
+		DateFormat secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+
+		// Figure out where we are, and get a calendar ready to use.
+		AndroidGeoLocation location = new AndroidGeoLocation( this );
+		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+
+		updateField( R.id.location, Html.fromHtml( "<u>" + location.getLocationName() + "</u>" ) );
+		showZmanim();
+
+		if ( !location.isLocationDetermined() ) {
+			// TODO: Maybe a notification instead? This seems to go away kinda quickly...
+			Toast toast = Toast.makeText( this,
+				"Unable to determine your current location. Please click on the location heading to set where you are.",
+				Toast.LENGTH_LONG );
+			toast.show();
+		}
+
+		displayDebugMessages();
+	}
+
+
+	private void setupListeners() {
+
+		// Handle gestures. In our case, we're listening for swiping left, right, up & down...
 		View.OnTouchListener touchListener = new View.OnTouchListener() {
 			public boolean onTouch(
 				View        view,
@@ -69,28 +96,27 @@ public class ZmanimDisplay
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
 
+
+		// Listen for 'clicks' indicating the user wants to change the date being viewed.
 		final View secularDate = findViewById( R.id.secular_date );
 		secularDate.setOnClickListener(
 			new View.OnClickListener() {
 				public void onClick(View v) {
-					showDialog( DATE_DIALOG_ID );
+					showDialog( R.id.secular_date );
 				}
 			}
 		);
 
 
-		ICUAndroidBridge.create( getAssets() );
-
-		DateFormat timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		DateFormat secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
-
-		// Figure out where we are, and get a calendar ready to use.
-		GeoLocation location = new AndroidGeoLocation( this );
-		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-		updateField( R.id.location, location.getLocationName() );
-		showZmanim();
-
-		displayDebugMessages();
+		// Listen for 'clicks' indicating the user wants to change their location.
+		final View location = findViewById( R.id.location );
+		location.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick( View view ) {
+					showDialog( R.id.location );
+				}
+			}
+		);
 	}
 
 
@@ -132,8 +158,11 @@ public class ZmanimDisplay
 	protected Dialog onCreateDialog( int dialogID ) {
 
 		switch ( dialogID ) {
-			case DATE_DIALOG_ID:
+			case R.id.secular_date:
 				return createSecularDatePickerDialog();
+
+			case R.id.location:
+				return createLocationSelectionDialog();
 
 			case R.id.about:
 				return new AboutDialog( this );
@@ -143,6 +172,12 @@ public class ZmanimDisplay
 		}
 
 		return null;
+	}
+
+
+	private Dialog createLocationSelectionDialog() {
+		// TODO: Just for testing...
+		return new AboutDialog( this ); 
 	}
 
 
