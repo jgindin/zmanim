@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.JewishHoliday;
+import com.gindin.zmanim.ZmanRounder;
 import com.ibm.icu.ICUAndroidBridge;
 import net.sourceforge.zmanim.util.GeoLocation;
 
@@ -34,26 +35,14 @@ public class ZmanimDisplay
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
 
+	/** When we need to round a zman up or down, this is the guy to do it. */
+	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
+
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
-	private final DatePickerDialog.OnDateSetListener          dateChangedListener;
-
 
 	public ZmanimDisplay() {
-
-		dateChangedListener = new DatePickerDialog.OnDateSetListener() {
-			public void onDateSet(
-				DatePicker datePicker,
-				int year,
-				int month,
-				int date
-			) {
-				
-				zmanimCalendar.goToSecularDate( year, month, date );
-				showZmanim();
-			}
-		};
 	}
 
 
@@ -127,13 +116,11 @@ public class ZmanimDisplay
 		int id = item.getItemId();
 		switch ( id ) {
 			case R.id.about:
-				AboutDialog about = new AboutDialog( this );
-				about.show();
+				showDialog( id );
 				return true;
 
 			case R.id.help:
-				HelpDialog help = new HelpDialog( this );
-				help.show();
+				showDialog( id );
 				return true;
 		}
 
@@ -146,12 +133,38 @@ public class ZmanimDisplay
 
 		switch ( dialogID ) {
 			case DATE_DIALOG_ID:
-				Calendar secularDate = zmanimCalendar.getSecularDate();
-				return new DatePickerDialog( this, dateChangedListener, secularDate.get( Calendar.YEAR ),
-					secularDate.get( Calendar.MONTH ), secularDate.get( Calendar.DAY_OF_MONTH ) );
+				return createSecularDatePickerDialog();
+
+			case R.id.about:
+				return new AboutDialog( this );
+
+			case R.id.help:
+				return new HelpDialog( this );
 		}
 
 		return null;
+	}
+
+
+	private Dialog createSecularDatePickerDialog() {
+
+		final DatePickerDialog.OnDateSetListener dateChangedListener = new DatePickerDialog.OnDateSetListener() {
+			public void onDateSet(
+				DatePicker datePicker,
+				int year,
+				int month,
+				int date
+			) {
+
+				zmanimCalendar.goToSecularDate( year, month, date );
+				showZmanim();
+			}
+		};
+
+		Calendar secularDate = zmanimCalendar.getSecularDate();
+
+		return new DatePickerDialog( this, dateChangedListener, secularDate.get( Calendar.YEAR ),
+			secularDate.get( Calendar.MONTH ), secularDate.get( Calendar.DAY_OF_MONTH ) );
 	}
 
 
@@ -181,10 +194,10 @@ public class ZmanimDisplay
 		updateField( R.id.holiday, holidayDescription.toString() );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
-		updateFieldWithTime( R.id.talit, zmanimCalendar.getTalit() );
+		updateFieldWithTime( R.id.talit, zmanRounder.roundToLatestMinute( zmanimCalendar.getTalit() ) );
 		updateFieldWithTime( R.id.hanetz, zmanimCalendar.getHanetz() );
-		updateFieldWithTime( R.id.shemaMGA, zmanimCalendar.getSofZmanShma() );
-		updateFieldWithTime( R.id.tefilahMGA, zmanimCalendar.getSofZmanTefila() );
+		updateFieldWithTime( R.id.shemaMGA, zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanShma() ) );
+		updateFieldWithTime( R.id.tefilahMGA, zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanTefila() ) );
 		updateFieldWithTime( R.id.chatzot, zmanimCalendar.getChatzot() );
 		updateFieldWithTime( R.id.mincha_gedola, zmanimCalendar.getMinchaGedola() );
 		updateFieldWithTime( R.id.mincha_ketana, zmanimCalendar.getMinchaKetana() );
@@ -192,7 +205,7 @@ public class ZmanimDisplay
 
 		if ( zmanimCalendar.showCandlelighting() ) {
 			findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.candles, zmanimCalendar.getCandlelighting() );
+			updateFieldWithTime( R.id.candles, zmanRounder.roundToEarliestMinute( zmanimCalendar.getCandlelighting() ) );
 		}
 		else {
 			findViewById( R.id.candles_row ).setVisibility( View.GONE );
@@ -200,18 +213,18 @@ public class ZmanimDisplay
 
 		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getShkiah() );
 
-		updateFieldWithTime( R.id.mincha, zmanimCalendar.getLatestMincha() );
+		updateFieldWithTime( R.id.mincha, zmanRounder.roundToEarliestMinute( zmanimCalendar.getLatestMincha() ) );
 
 
 		if ( zmanimCalendar.showHavdalah() ) {
 			findViewById( R.id.tzait_row ).setVisibility( View.GONE );
 			findViewById( R.id.havdalah_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.havdalah, zmanimCalendar.getTzaitHachocavim() );
+			updateFieldWithTime( R.id.havdalah, zmanRounder.roundToLatestMinute( zmanimCalendar.getTzaitHachocavim() ) );
 		}
 		else {
 			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
 			findViewById( R.id.tzait_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.tzait, zmanimCalendar.getTzaitHachocavim() );
+			updateFieldWithTime( R.id.tzait, zmanRounder.roundToLatestMinute( zmanimCalendar.getTzaitHachocavim() ) );
 		}
 
 	}

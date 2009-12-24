@@ -35,9 +35,6 @@ public class HebrewZmanimCalendar {
 	 */
 	private final Calendar                                    today = Calendar.getInstance();
 
-	/** When we need to round a zman up or down, this is the guy to do it. */
-	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
-
 
 
 	public HebrewZmanimCalendar(
@@ -167,7 +164,7 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getTalit() {
-		return zmanRounder.roundToLatestMinute( zmanimCalendar.getMisheyakir11Point5Degrees() );
+		return zmanimCalendar.getMisheyakir11Point5Degrees();
 	}
 
 	public Date getHanetz() {
@@ -175,11 +172,11 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getSofZmanShma() {
-		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanShmaMGA() );
+		return zmanimCalendar.getSofZmanShmaMGA();
 	}
 
 	public Date getSofZmanTefila() {
-		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanTfilaMGA() );
+		return zmanimCalendar.getSofZmanTfilaMGA();
 	}
 
 	public Date getChatzot() {
@@ -199,7 +196,7 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getCandlelighting() {
-		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getCandelLighting() );
+		return zmanimCalendar.getCandelLighting();
 	}
 
 	public Date getShkiah() {
@@ -207,11 +204,11 @@ public class HebrewZmanimCalendar {
 	}
 
 	public Date getLatestMincha() {
-		return zmanRounder.roundToEarliestMinute( zmanimCalendar.getLatestMinchaOvadiaYosef() );
+		return zmanimCalendar.getLatestMinchaOvadiaYosef();
 	}
 
 	public Date getTzaitHachocavim() {
-		return zmanRounder.roundToLatestMinute( zmanimCalendar.getTzais() );
+		return zmanimCalendar.getTzais();
 	}
 
 	public JewishHoliday isTodayAHoliday() {
@@ -335,61 +332,5 @@ public class HebrewZmanimCalendar {
 
 		T dateAdjusted( boolean adjustmentWasRequired );
 	}
-
-
-	/**
-	 * Helper class that handles rounding of zmanim.
-	 */
-	private static class ZmanRounder {
-
-		private static final Calendar                           scratchCalendar = Calendar.getInstance();
-
-		/**
-		 * Because the application does not show seconds to the user, we want to ensure that we're not going
-		 *  to cause an error. Therefore, for some zmanim, we want to ensure that the time which gets displayed
-		 *  is not rounded up. E.g., If the latest time for saying mincha is actually 4:33.35, we're much better
-		 *  off if we report that time as 4:33, rather than 4:34.
-		 *
-		 * @param zman The zman to round
-		 *
-		 * @return the rounded zman.
-		 */
-		Date roundToEarliestMinute(
-			Date zman
-		) {
-
-		  scratchCalendar.setTime( zman );
-			scratchCalendar.set( Calendar.SECOND, 0 );
-			scratchCalendar.set( Calendar.MILLISECOND, 0 );
-
-			return scratchCalendar.getTime();
-		}
-
-
-		/**
-		 * Because the application does not show seconds to the user, we want to ensure that we're not going
-		 *  to cause an error. Therefore, for some zmanim, we want to ensure that the time which gets displayed
-		 *  is rounded up. E.g., If the earliest time for putting on tefiln is actually 6:33.05, we're much better
-		 *  off if we report that time as 6:34, rather than 6:33.
-		 *
-		 * @param zman The zman to round
-		 *
-		 * @return the rounded zman.
-		 */
-		Date roundToLatestMinute(
-			Date zman
-		) {
-
-			scratchCalendar.setTime( zman );
-
-			scratchCalendar.add( Calendar.MINUTE, 1 );
-			scratchCalendar.set( Calendar.SECOND, 0 );
-			scratchCalendar.set( Calendar.MILLISECOND, 0 );
-
-			return scratchCalendar.getTime();
-		}
-
-	} // End of ZmanRounder class
-
 
 }  // End of HebrewZmanimCalendar class
