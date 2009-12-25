@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -179,19 +180,35 @@ public class ZmanimDisplay
 				return createLocationSelectionDialog();
 
 			case R.id.about:
-				return new AboutDialog( this );
+				return createSimpleDialog( R.string.about_header, R.layout.about );
 
 			case R.id.help:
-				return new HelpDialog( this );
+				return createSimpleDialog( R.string.help_header, R.layout.help );
 		}
 
 		return null;
 	}
 
 
+	private Dialog createSimpleDialog(
+		int   titleResource,
+	  int   layoutResource
+	) {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		builder.setTitle( titleResource );
+
+		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
+		View layout = inflater.inflate( layoutResource, (ViewGroup)findViewById( R.id.layout_root ) );
+		builder.setView( layout );
+
+		return builder.create();
+	}
+
+
 	private Dialog createLocationSelectionDialog() {
 		// TODO: Just for testing...
-		return new AboutDialog( this ); 
+		return createSimpleDialog( R.string.about_header, R.layout.about );
 	}
 
 
