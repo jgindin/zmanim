@@ -1,6 +1,5 @@
 package com.gindin.zmanim;
 
-import com.ibm.icu.util.HebrewCalendar;
 
 
 /**
@@ -22,7 +21,7 @@ public class JewishHoliday {
 	private static JewishHoliday TEVET_10        = new JewishHoliday( HebrewCalendar.TEVET,  10,      "Fast of Tevet 10" );
 	private static JewishHoliday TU_BSHEVAT      = new JewishHoliday( HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
 	private static JewishHoliday ESTHER          = new TaanitEsther();
-	private static JewishHoliday PURIM_KATAN     = new JewishHoliday( HebrewCalendar.ADAR_1, 14,      "Purim Katan" );
+	private static JewishHoliday PURIM_KATAN     = new PurimKatan();
 	private static JewishHoliday PURIM           = new JewishHoliday( HebrewCalendar.ADAR,   14,      "Purim" );
 	private static JewishHoliday SHUSHAN_PURIM   = new JewishHoliday( HebrewCalendar.ADAR,   15,      "Shushan Purim" );
 	private static JewishHoliday PASSOVER        = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
@@ -261,5 +260,31 @@ public class JewishHoliday {
 			return dateToUse;
 		}
 	} // End of TaanitEsther class
+
+
+	private static class PurimKatan
+		extends JewishHoliday {
+
+		PurimKatan() {
+			super( HebrewCalendar.ADAR_1, 14, "Purim Katan" );
+		}
+
+
+		@Override
+		public boolean isErev( HebrewCalendar dateToTest ) {
+
+			// Not a leap year? Then this "holiday" doesn't exist...
+			return dateToTest.isLeapYear() && super.isErev( dateToTest );
+		}
+
+
+		@Override
+		public boolean isOn( HebrewCalendar dateToTest ) {
+
+			// Not a leap year? Then this "holiday" doesn't exist...
+			return dateToTest.isLeapYear() && super.isOn( dateToTest );
+		}
+	}
+
 
 }  // End of JewishHoliday class
