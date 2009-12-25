@@ -29,6 +29,13 @@ import java.util.Date;
 public class ZmanimDisplay
 	extends Activity {
 
+	/** Is the manual location selection stuff ready to go yet? */
+	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
+
+	/** Message when we can't figure out where the user is. */
+	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location.";
+//	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location. Please click on the location heading to set where you are.";
+
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
 
@@ -37,6 +44,7 @@ public class ZmanimDisplay
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
+
 
 
 	public ZmanimDisplay() {
@@ -66,15 +74,21 @@ public class ZmanimDisplay
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 
-		updateField( R.id.location, Html.fromHtml( "<u>" + location.getLocationName() + "</u>" ) );
+		if ( ALLOW_MANUAL_LOCATION_CHANGE ) {
+			updateField( R.id.location, Html.fromHtml( "<u>" + location.getLocationName() + "</u>" ) );
+		}
+		else {
+			updateField( R.id.location, location.getLocationName() );
+		}
+		
 		showZmanim();
 
 		if ( !location.isLocationDetermined() ) {
 			// TODO: Maybe a notification instead? This seems to go away kinda quickly...
-			Toast toast = Toast.makeText( this,
-				"Unable to determine your current location. Please click on the location heading to set where you are.",
-				Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
 			toast.show();
+
+			updateField( R.id.messages, UNABLE_TO_DETERMINE_CURRENT_LOCATION );
 		}
 
 		displayDebugMessages();
@@ -273,9 +287,7 @@ public class ZmanimDisplay
 //			loaded = loaded + "\n";
 //			loaded = loaded + string;
 //		}
-//		updateField( R.id.debug, loaded );
-
-		findViewById( R.id.debug_row ).setVisibility( View.GONE );
+//		updateField( R.id.messages, loaded );
 	}
 
 

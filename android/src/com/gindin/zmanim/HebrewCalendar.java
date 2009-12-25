@@ -203,7 +203,7 @@ public class HebrewCalendar
 	}
 
 
-	private boolean isLeapYear() {
+	public boolean isLeapYear() {
 
 		int yearLength = getActualMaximum( DAY_OF_YEAR );
 		return yearLength > 355;

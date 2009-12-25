@@ -4,15 +4,15 @@
   ~ Copyright (c) 2009. Jay R. Gindin
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:id="@+id/main_layout">
 
 	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/main_content"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
 	  android:paddingLeft="4px"
 	  android:paddingRight="4px"
 		android:stretchColumns="1">
@@ -266,19 +266,27 @@
 
 		</TableRow>
 
-		<TableRow android:id="@+id/debug_row">
-			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:scrollbars="none">
-				<TextView
-					android:id="@+id/debug"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent"
-				/>
-			</ScrollView>
-		</TableRow>
-
 	</TableLayout>
 
-</LinearLayout>
+	<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/main_content"
+		android:gravity="bottom"
+	  android:paddingTop="15px"
+		>
+
+		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:scrollbars="none">
+			<TextView
+				android:id="@+id/messages"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+			/>
+		</ScrollView>
+
+	</FrameLayout>
+
+</RelativeLayout>

@@ -91,14 +91,12 @@ class HebrewDateFormatter {
 
 			case HebrewCalendar.ADAR:
 				// If this is a leap year, then month is Adar II.
-				calendar.add( -1, HebrewCalendar.MONTH );
-				if ( HebrewCalendar.ADAR_1 == calendar.get( HebrewCalendar.MONTH ) ) {
+				if ( calendar.isLeapYear() ) {
 					month = "Adar II";
 				}
 				else {
 					month = "Adar";
 				}
-				calendar.add( 1, HebrewCalendar.MONTH );
 				break;
 
 			case HebrewCalendar.ADAR_1:
