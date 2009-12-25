@@ -51,19 +51,19 @@ public class JewishHoliday {
 	};
 
 	
-	private static final JewishHoliday ROSH_CHODESH_NISAN = new JewishHoliday( HebrewCalendar.NISAN, 1, 1, "Rosh Chodesh Nisan" );
-	private static final JewishHoliday ROSH_CHODESH_IYAR = new JewishHoliday( HebrewCalendar.NISAN, 30, 2, "Rosh Chodesh Iyar" );
-	private static final JewishHoliday ROSH_CHODESH_SIVAN = new JewishHoliday( HebrewCalendar.SIVAN, 1, 1, "Rosh Chodesh Sivan" );
-	private static final JewishHoliday ROSH_CHODESH_TAMMUZ = new JewishHoliday( HebrewCalendar.SIVAN, 30, 2, "Rosh Chodesh Tammuz" );
-	private static final JewishHoliday ROSH_CHODESH_AV = new JewishHoliday( HebrewCalendar.AV, 1, 1, "Rosh Chodesh Av" );
-	private static final JewishHoliday ROSH_CHODESH_ELUL = new JewishHoliday( HebrewCalendar.AV, 30, 2, "Rosh Chodesh Elul" );
-	private static final JewishHoliday ROSH_CHODESH_TISHRI = new JewishHoliday( HebrewCalendar.ELUL, 30, 2, "Rosh Chodesh Tishri" );
+	private static final JewishHoliday ROSH_CHODESH_NISAN = new JewishHoliday( HebrewCalendar.NISAN,     1, 1, "Rosh Chodesh Nisan" );
+	private static final JewishHoliday ROSH_CHODESH_IYAR = new JewishHoliday( HebrewCalendar.NISAN,     30, 2, "Rosh Chodesh Iyar" );
+	private static final JewishHoliday ROSH_CHODESH_SIVAN = new JewishHoliday( HebrewCalendar.SIVAN,     1, 1, "Rosh Chodesh Sivan" );
+	private static final JewishHoliday ROSH_CHODESH_TAMMUZ = new JewishHoliday( HebrewCalendar.SIVAN,   30, 2, "Rosh Chodesh Tammuz" );
+	private static final JewishHoliday ROSH_CHODESH_AV = new JewishHoliday( HebrewCalendar.AV,           1, 1, "Rosh Chodesh Av" );
+	private static final JewishHoliday ROSH_CHODESH_ELUL = new JewishHoliday( HebrewCalendar.AV,        30, 2, "Rosh Chodesh Elul" );
+	private static final JewishHoliday ROSH_CHODESH_TISHRI = new JewishHoliday( HebrewCalendar.ELUL,    30, 2, "Rosh Chodesh Tishri" );
 	private static final JewishHoliday ROSH_CHODESH_HESHVAN = new JewishHoliday( HebrewCalendar.HESHVAN, 1, 1, "Rosh Chodesh Heshvan" );
-	private static final JewishHoliday ROSH_CHODESH_KISLEV = new JewishHoliday( HebrewCalendar.KISLEV, 1, 1, "Rosh Chodesh Kislev" );
-	private static final JewishHoliday ROSH_CHODESH_TEVET = new JewishHoliday( HebrewCalendar.TEVET, 1, 1, "Rosh Chodesh Tevet" );
-	private static final JewishHoliday ROSH_CHODESH_SHEVAT = new JewishHoliday( HebrewCalendar.SHEVAT, 1, 1, "Rosh Chodesh Shevat" );
-	private static final JewishHoliday ROSH_CHODESH_ADAR = new JewishHoliday( HebrewCalendar.SHEVAT, 30, 2, "Rosh Chodesh Adar" );
-	private static final JewishHoliday ROSH_CHODESH_ADAR_I = new JewishHoliday( HebrewCalendar.SHEVAT, 30, 2, "Rosh Chodesh Adar I" );
+	private static final JewishHoliday ROSH_CHODESH_KISLEV = new JewishHoliday( HebrewCalendar.KISLEV,   1, 1, "Rosh Chodesh Kislev" );
+	private static final JewishHoliday ROSH_CHODESH_TEVET = new JewishHoliday( HebrewCalendar.TEVET,     1, 1, "Rosh Chodesh Tevet" );
+	private static final JewishHoliday ROSH_CHODESH_SHEVAT = new JewishHoliday( HebrewCalendar.SHEVAT,   1, 1, "Rosh Chodesh Shevat" );
+	private static final JewishHoliday ROSH_CHODESH_ADAR = new JewishHoliday( HebrewCalendar.SHEVAT,    30, 2, "Rosh Chodesh Adar" );
+	private static final JewishHoliday ROSH_CHODESH_ADAR_I = new JewishHoliday( HebrewCalendar.SHEVAT,  30, 2, "Rosh Chodesh Adar I" );
 	private static final JewishHoliday ROSH_CHODESH_ADAR_II = new JewishHoliday( HebrewCalendar.ADAR_1, 30, 2, "Rosh Chodesh Adar II" );
 
 	/**
