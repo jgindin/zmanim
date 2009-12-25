@@ -11,29 +11,30 @@ import com.ibm.icu.util.HebrewCalendar;
 @SuppressWarnings( { "MagicNumber" } )
 public class JewishHoliday {
 
-	private static JewishHoliday ROSH_HASHANAH   = new JewishHoliday(HebrewCalendar.TISHRI,  1,  2,  "Rosh Hashanah");
-	private static JewishHoliday GEDALIAH        = new JewishHoliday(HebrewCalendar.TISHRI,  3,      "Fast of Gedaliah");
-	private static JewishHoliday YOM_KIPPUR      = new JewishHoliday(HebrewCalendar.TISHRI, 10,      "Yom Kippur");
-	private static JewishHoliday SUKKOT          = new JewishHoliday(HebrewCalendar.TISHRI, 15,  6,  "Sukkot");
-	private static JewishHoliday HOSHANAH_RABBAH = new JewishHoliday(HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah");
-	private static JewishHoliday SHEMINI_ATZERET = new JewishHoliday(HebrewCalendar.TISHRI, 22,      "Shemini Atzeret");
-	private static JewishHoliday SIMCHAT_TORAH   = new JewishHoliday(HebrewCalendar.TISHRI, 23,      "Simchat Torah");
-	private static JewishHoliday HANUKKAH        = new JewishHoliday(HebrewCalendar.KISLEV, 25, 8,   "Hanukkah");
-	private static JewishHoliday TEVET_10        = new JewishHoliday(HebrewCalendar.TEVET,  10,      "Fast of Tevet 10");
-	private static JewishHoliday TU_BSHEVAT      = new JewishHoliday(HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat");
-	private static JewishHoliday ESTHER          = new JewishHoliday(HebrewCalendar.ADAR,   13,      "Fast of Esther");
-	private static JewishHoliday PURIM           = new JewishHoliday(HebrewCalendar.ADAR,   14,      "Purim");
-	private static JewishHoliday SHUSHAN_PURIM   = new JewishHoliday(HebrewCalendar.ADAR,   15,      "Shushan Purim");
-	private static JewishHoliday PASSOVER        = new JewishHoliday(HebrewCalendar.NISAN,  15,  8,  "Pesach");
-	private static JewishHoliday YOM_HASHOAH     = new JewishHoliday(HebrewCalendar.NISAN,  27,      "Yom Hashoah");
-	private static JewishHoliday YOM_HAZIKARON   = new JewishHoliday(HebrewCalendar.IYAR,    4,      "Yom Hazikaron");
-	private static JewishHoliday YOM_HAATZMAUT   = new JewishHoliday(HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut");
-	private static JewishHoliday PESACH_SHEINI   = new JewishHoliday(HebrewCalendar.IYAR,   14,      "Pesach Sheini");
-	private static JewishHoliday LAG_BOMER       = new JewishHoliday(HebrewCalendar.IYAR,   18,      "Lab B'Omer");
-	private static JewishHoliday YOM_YERUSHALAYIM = new JewishHoliday(HebrewCalendar.IYAR,  28,      "Yom Yerushalayim");
-	private static JewishHoliday SHAVUOT         = new JewishHoliday(HebrewCalendar.SIVAN,   6,  2,  "Shavuot");
-	private static JewishHoliday TAMMUZ_17       = new JewishHoliday(HebrewCalendar.TAMUZ,  17,      "Fast of Tammuz 17");
-	private static JewishHoliday TISHA_BAV       = new JewishHoliday(HebrewCalendar.AV,      9,      "Fast of Tisha B'Av");
+	private static JewishHoliday ROSH_HASHANAH   = new JewishHoliday( HebrewCalendar.TISHRI,  1,  2,  "Rosh Hashanah" );
+	private static JewishHoliday GEDALIAH        = new JewishHoliday( HebrewCalendar.TISHRI,  3,      "Fast of Gedaliah" );
+	private static JewishHoliday YOM_KIPPUR      = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
+	private static JewishHoliday SUKKOT          = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
+	private static JewishHoliday HOSHANAH_RABBAH = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
+	private static JewishHoliday SHEMINI_ATZERET = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
+	private static JewishHoliday SIMCHAT_TORAH   = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
+	private static JewishHoliday HANUKKAH        = new JewishHoliday( HebrewCalendar.KISLEV, 25, 8,   "Hanukkah" );
+	private static JewishHoliday TEVET_10        = new JewishHoliday( HebrewCalendar.TEVET,  10,      "Fast of Tevet 10" );
+	private static JewishHoliday TU_BSHEVAT      = new JewishHoliday( HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
+	private static JewishHoliday ESTHER          = new TaanitEsther();
+	private static JewishHoliday PURIM_KATAN     = new JewishHoliday( HebrewCalendar.ADAR_1, 14,      "Purim Katan" );
+	private static JewishHoliday PURIM           = new JewishHoliday( HebrewCalendar.ADAR,   14,      "Purim" );
+	private static JewishHoliday SHUSHAN_PURIM   = new JewishHoliday( HebrewCalendar.ADAR,   15,      "Shushan Purim" );
+	private static JewishHoliday PASSOVER        = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
+	private static JewishHoliday YOM_HASHOAH     = new JewishHoliday( HebrewCalendar.NISAN,  27,      "Yom Hashoah" );
+	private static JewishHoliday YOM_HAZIKARON   = new JewishHoliday( HebrewCalendar.IYAR,    4,      "Yom Hazikaron" );
+	private static JewishHoliday YOM_HAATZMAUT   = new JewishHoliday( HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut" );
+	private static JewishHoliday PESACH_SHEINI   = new JewishHoliday( HebrewCalendar.IYAR,   14,      "Pesach Sheini" );
+	private static JewishHoliday LAG_BOMER       = new JewishHoliday( HebrewCalendar.IYAR,   18,      "Lab B'Omer" );
+	private static JewishHoliday YOM_YERUSHALAYIM = new JewishHoliday( HebrewCalendar.IYAR,  28,      "Yom Yerushalayim" );
+	private static JewishHoliday SHAVUOT         = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
+	private static JewishHoliday TAMMUZ_17       = new JewishHoliday( HebrewCalendar.TAMUZ,  17,      "Fast of Tammuz 17" );
+	private static JewishHoliday TISHA_BAV       = new JewishHoliday( HebrewCalendar.AV,      9,      "Fast of Tisha B'Av" );
 	                                    
 	/**
 	 * Set of the holidays. We're not using the com.ibm.icu.util.JewishHoliday.getHolidays() because the
@@ -43,11 +44,11 @@ public class JewishHoliday {
 		JewishHoliday.ROSH_HASHANAH,      JewishHoliday.GEDALIAH,           JewishHoliday.YOM_KIPPUR,
 		JewishHoliday.SUKKOT,             JewishHoliday.HOSHANAH_RABBAH,    JewishHoliday.SHEMINI_ATZERET,
 		JewishHoliday.SIMCHAT_TORAH,      JewishHoliday.HANUKKAH,           JewishHoliday.TEVET_10,
-		JewishHoliday.TU_BSHEVAT,         JewishHoliday.ESTHER,             JewishHoliday.PURIM,
-		JewishHoliday.SHUSHAN_PURIM,      JewishHoliday.PASSOVER,           JewishHoliday.YOM_HASHOAH,
-		JewishHoliday.YOM_HAZIKARON,      JewishHoliday.YOM_HAATZMAUT,      JewishHoliday.PESACH_SHEINI,
-		JewishHoliday.LAG_BOMER,          JewishHoliday.YOM_YERUSHALAYIM,   JewishHoliday.SHAVUOT,
-		JewishHoliday.TAMMUZ_17,          JewishHoliday.TISHA_BAV
+		JewishHoliday.TU_BSHEVAT,         JewishHoliday.PURIM_KATAN,        JewishHoliday.ESTHER,
+		JewishHoliday.PURIM,              JewishHoliday.SHUSHAN_PURIM,      JewishHoliday.PASSOVER,
+		JewishHoliday.YOM_HASHOAH,        JewishHoliday.YOM_HAZIKARON,      JewishHoliday.YOM_HAATZMAUT,
+		JewishHoliday.PESACH_SHEINI,      JewishHoliday.LAG_BOMER,          JewishHoliday.YOM_YERUSHALAYIM,
+		JewishHoliday.SHAVUOT,            JewishHoliday.TAMMUZ_17,          JewishHoliday.TISHA_BAV
 	};
 
 	
@@ -111,9 +112,9 @@ public class JewishHoliday {
 	
 	public final String                                       name;
 	
-	private final int                                         month;
-	private final int                                         date;
-	private final int                                         length;
+	protected final int                                       month;
+	protected final int                                       date;
+	protected final int                                       length;
 
 
 	public JewishHoliday(
@@ -177,7 +178,8 @@ public class JewishHoliday {
 	}
 
 
-	private static boolean isSameDate(
+	@SuppressWarnings( { "FeatureEnvy" } )
+	protected static boolean isSameDate(
 		HebrewCalendar cal1,
 	  HebrewCalendar cal2
 	) {
@@ -196,5 +198,68 @@ public class JewishHoliday {
 
 		return true;
 	}
+
+
+	private static class TaanitEsther
+		extends JewishHoliday {
+
+		TaanitEsther() {
+			super( HebrewCalendar.ADAR, 13, "Fast of Esther" );
+		}
+
+
+		@SuppressWarnings( { "FeatureEnvy" } )
+		@Override
+		public boolean isOn( HebrewCalendar dateToTest ) {
+
+			// Not Adar? Then it can't be ta'anit Esther!
+			if ( HebrewCalendar.ADAR != dateToTest.get( HebrewCalendar.MONTH ) ) {
+				return false;
+			}
+
+			int dateToUse = getDateToUse( dateToTest );
+
+			calendar.set( HebrewCalendar.DATE, dateToUse );
+			return isSameDate( dateToTest, calendar );
+		}
+
+
+		@Override
+		public boolean isErev( HebrewCalendar dateToTest ) {
+
+			// Not Adar? Then it can't be ta'anit Esther!
+			if ( HebrewCalendar.ADAR != dateToTest.get( HebrewCalendar.MONTH ) ) {
+				return false;
+			}
+
+			int dateToUse = getDateToUse( dateToTest );
+
+			calendar.set( HebrewCalendar.DATE, dateToUse );
+			calendar.add( HebrewCalendar.DATE, -1 );
+			
+			return isSameDate( dateToTest, calendar );
+		}
+
+
+		@SuppressWarnings( { "FeatureEnvy" } )
+		private int getDateToUse(
+			HebrewCalendar dateToTest
+		) {
+
+			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
+
+			int dateToUse = date;
+
+			// Now, if the fast is supposed to fall out on a Friday or Shabbat, move it back to Thursday.
+			final int dayOfWeek = calendar.get( HebrewCalendar.DAY_OF_WEEK );
+			if ( HebrewCalendar.FRIDAY == dayOfWeek ) {
+				dateToUse--;
+			}
+			else if ( HebrewCalendar.SATURDAY == dayOfWeek ) {
+				dateToUse -= 2;
+			}
+			return dateToUse;
+		}
+	} // End of TaanitEsther class
 
 }  // End of JewishHoliday class
