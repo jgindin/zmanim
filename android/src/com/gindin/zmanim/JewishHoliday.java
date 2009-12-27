@@ -248,7 +248,7 @@ public class JewishHoliday {
 		extends DayTimeTaanit {
 
 		TaanitEsther() {
-			super( HebrewCalendar.ADAR, 13, "Fast of Esther" );
+			super( HebrewCalendar.ADAR, 13, "Esther" );
 		}
 
 
@@ -261,9 +261,9 @@ public class JewishHoliday {
 				return false;
 			}
 
-			int dateToUse = getDateToUse( dateToTest );
+			int adjustment = getDateToUse( dateToTest );
 
-			calendar.set( HebrewCalendar.DATE, dateToUse );
+			calendar.add( HebrewCalendar.DATE, adjustment );
 			return isSameDate( dateToTest, calendar );
 		}
 
@@ -276,10 +276,8 @@ public class JewishHoliday {
 				return false;
 			}
 
-			int dateToUse = getDateToUse( dateToTest );
-
-			calendar.set( HebrewCalendar.DATE, dateToUse );
-			calendar.add( HebrewCalendar.DATE, -1 );
+			int adjustment = getDateToUse( dateToTest );
+			calendar.add( HebrewCalendar.DATE, adjustment - 1 );
 			
 			return isSameDate( dateToTest, calendar );
 		}
@@ -292,18 +290,20 @@ public class JewishHoliday {
 
 			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
 
-			int dateToUse = date;
+			int adjustment = 0;
 
 			// Now, if the fast is supposed to fall out on a Friday or Shabbat, move it back to Thursday.
 			final int dayOfWeek = calendar.get( HebrewCalendar.DAY_OF_WEEK );
 			if ( HebrewCalendar.FRIDAY == dayOfWeek ) {
-				dateToUse--;
+				adjustment = -1;
 			}
 			else if ( HebrewCalendar.SATURDAY == dayOfWeek ) {
-				dateToUse -= 2;
+				adjustment = -2;
 			}
-			return dateToUse;
+
+			return adjustment;
 		}
+
 	} // End of TaanitEsther class
 
 
