@@ -87,6 +87,23 @@ public class HebrewCalendar
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
+	public JewishHoliday isTodayATaanit() {
+
+		for ( JewishHoliday jewishHoliday : JewishHoliday.DAY_TIME_TAANIT ) {
+			if ( jewishHoliday.isOn( this ) ) {
+				return jewishHoliday;
+			}
+
+			if ( jewishHoliday.isErev( this ) ) {
+				return JewishHoliday.createErevOf( jewishHoliday );
+			}
+		}
+
+		return null;
+	}
+	
+
 	public boolean showCandlelighting() {
 
 		//noinspection SimplifiableIfStatement
@@ -127,6 +144,7 @@ public class HebrewCalendar
 	 *
 	 * @return the Rosh Chodesh holiday, or null if this isn't a Rosh Chodesh.
 	 */
+	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isRoshChodesh() {
 
 		JewishHoliday[] roshChodeshim;

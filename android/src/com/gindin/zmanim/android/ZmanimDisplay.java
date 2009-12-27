@@ -253,6 +253,12 @@ public class ZmanimDisplay
 			}
 		}
 
+		if ( 0 == holidayDescription.length() ) {
+			holiday = zmanimCalendar.isTodayATaanit();
+			if ( null != holiday ) {
+				holidayDescription.append( holiday.name );
+			}
+		}
 
 		// Update the header
 		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );

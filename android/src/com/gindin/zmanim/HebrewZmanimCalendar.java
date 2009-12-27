@@ -222,6 +222,22 @@ public class HebrewZmanimCalendar {
 		);
 	}
 
+
+	public JewishHoliday isTodayATaanit() {
+
+		return adjustHebrewDateIfNecessary(
+			new HebrewDateAdjustedCallback<JewishHoliday>() {
+				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+
+					if ( !adjustmentWasRequired ) {
+						return hebrewCalendar.isTodayATaanit();
+					}
+					return null;
+				}
+			}
+		);
+	}
+
 	public JewishHoliday isRoshChodesh() {
 
 		return adjustHebrewDateIfNecessary(
