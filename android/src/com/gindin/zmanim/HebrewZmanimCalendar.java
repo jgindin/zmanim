@@ -84,55 +84,56 @@ public class HebrewZmanimCalendar {
 
 	/**
 	 * Moves the calendar to the next day after where it is currently set.
+	 *<p>
+	 * Operates on the secular date.
 	 */
 	public void nextDay() {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.DATE, 1 );
-		zmanimCalendar.setCalendar( calendar );
 
-		hebrewCalendar.add( Calendar.DATE, 1 );
+		syncToSecularCalendar( calendar );
 	}
 
 
 	/**
 	 * Moves the calendar to the next month after where it is currently set, attempting to keep
 	 *  the day of the month the same. Appropriate wrapping will be applied.
+	 *<p>
+	 * Operates on the secular date.
 	 */
 	public void nextMonth() {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.MONTH, 1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.MONTH, 1 );
+		syncToSecularCalendar( calendar );
 	}
 
 
 	/**
 	 * Moves the calendar to the day before where it is currently set.
+	 *<p>
+	 * Operates on the secular date.
 	 */
 	public void previousDay() {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.DATE, -1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.DATE, -1 );
+		syncToSecularCalendar( calendar );
 	}
 
 
 	/**
 	 * Moves the calendar to the month before where it is currently set, attempting to keep
 	 *  the day of the month the same. Appropriate wrapping will be applied.
+	 *<p>
+	 * Operates on the secular date.
 	 */
 	public void previousMonth() {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.MONTH, -1 );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.add( Calendar.MONTH, -1 );
+		syncToSecularCalendar( calendar );
 	}
 
 
@@ -144,9 +145,7 @@ public class HebrewZmanimCalendar {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.set( year, month, date );
-		zmanimCalendar.setCalendar( calendar );
-
-		hebrewCalendar.setTime( calendar.getTime() );
+		syncToSecularCalendar( calendar );
 	}
 
 
@@ -156,6 +155,20 @@ public class HebrewZmanimCalendar {
 		c.setTime( zmanimCalendar.getCalendar().getTime() );
 
 		return c;
+	}
+
+
+	/**
+	 * Given the specified secular calendar, make sure our zmanim & Hebrew calendars are both reflecting that date.
+	 *
+	 * @param calendar the secular date to now be using.
+	 */
+	private void syncToSecularCalendar(
+		Calendar calendar
+	) {
+
+		zmanimCalendar.setCalendar( calendar );
+		hebrewCalendar.setTime( calendar.getTime() );
 	}
 
 
