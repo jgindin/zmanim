@@ -16,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gindin.zmanim.HebrewZmanimCalendar;
-import com.gindin.zmanim.JewishHoliday;
 import com.gindin.zmanim.ZmanRounder;
 import com.ibm.icu.ICUAndroidBridge;
 
@@ -53,6 +52,7 @@ public class ZmanimDisplay
 
 
 	/** Called when the activity is first created. */
+	@SuppressWarnings( { "FeatureEnvy" } )
 	@Override
 	public void onCreate(
 		Bundle savedInstanceState
@@ -85,7 +85,6 @@ public class ZmanimDisplay
 		showZmanim();
 
 		if ( !location.isLocationDetermined() ) {
-			// TODO: Maybe a notification instead? This seems to go away kinda quickly...
 			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
 			toast.show();
 
@@ -237,33 +236,12 @@ public class ZmanimDisplay
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
-		StringBuffer holidayDescription = new StringBuffer();
-		JewishHoliday holiday = zmanimCalendar.isTodayAHoliday();
-		if ( null != holiday ) {
-			holidayDescription.append( holiday.name );
-		}
-
-		holiday = zmanimCalendar.isRoshChodesh();
-		if ( null != holiday ) {
-			if ( 0 == holidayDescription.length() ) {
-				holidayDescription.append( holiday.name );
-			}
-			else {
-				holidayDescription.append( " / " ).append( holiday.name );
-			}
-		}
-
-		if ( 0 == holidayDescription.length() ) {
-			holiday = zmanimCalendar.isTodayATaanit();
-			if ( null != holiday ) {
-				holidayDescription.append( holiday.name );
-			}
-		}
+		String description = zmanimCalendar.getTodaysDescription();
 
 		// Update the header
 		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
-		updateField( R.id.holiday, holidayDescription.toString() );
+		updateField( R.id.holiday, description );
 
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
 		updateFieldWithTime( R.id.talit, zmanRounder.roundToLatestMinute( zmanimCalendar.getTalit() ) );

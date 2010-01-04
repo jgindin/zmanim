@@ -211,6 +211,36 @@ public class HebrewZmanimCalendar {
 		return zmanimCalendar.getTzais();
 	}
 
+
+	public String getTodaysDescription() {
+
+		StringBuffer description = new StringBuffer();
+		JewishHoliday holiday = isTodayAHoliday();
+		if ( null != holiday ) {
+			description.append( holiday.name );
+		}
+
+		holiday = isRoshChodesh();
+		if ( null != holiday ) {
+			if ( 0 == description.length() ) {
+				description.append( holiday.name );
+			}
+			else {
+				description.append( " / " ).append( holiday.name );
+			}
+		}
+
+		if ( 0 == description.length() ) {
+			holiday = isTodayATaanit();
+			if ( null != holiday ) {
+				description.append( holiday.name );
+			}
+		}
+
+		return description.toString(); 
+	}
+
+
 	public JewishHoliday isTodayAHoliday() {
 
 		return adjustHebrewDateIfNecessary(

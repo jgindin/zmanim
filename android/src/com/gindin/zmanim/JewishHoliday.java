@@ -51,7 +51,7 @@ public class JewishHoliday {
 	private static JewishHoliday ESTHER          = new TaanitEsther();
 	private static JewishHoliday TAMMUZ_17       = new DayTimeTaanit( HebrewCalendar.TAMUZ,  17,      "Tammuz 17" );
 
-	public static JewishHoliday[] DAY_TIME_TAANIT = {
+	public static JewishHoliday[] ARBA_TAANIOT = {
 		JewishHoliday.GEDALIAH,           JewishHoliday.TEVET_10,           JewishHoliday.ESTHER,
 		JewishHoliday.TAMMUZ_17
 	};

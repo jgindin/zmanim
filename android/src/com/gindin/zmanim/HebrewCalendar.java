@@ -90,7 +90,7 @@ public class HebrewCalendar
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isTodayATaanit() {
 
-		for ( JewishHoliday jewishHoliday : JewishHoliday.DAY_TIME_TAANIT ) {
+		for ( JewishHoliday jewishHoliday : JewishHoliday.ARBA_TAANIOT ) {
 			if ( jewishHoliday.isOn( this ) ) {
 				return jewishHoliday;
 			}
