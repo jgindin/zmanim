@@ -1,0 +1,4 @@
+The raw data (contained in zipcode.csv) was downloaded from http://www.boutell.com/zipcodes/zipcode.zip.
+
+I have created the Zipcode.java file to strip out precision and some of the other fields
+to make it smaller.
