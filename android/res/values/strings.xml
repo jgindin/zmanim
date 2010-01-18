@@ -21,7 +21,6 @@
 
 	<string name="about_header">About Zmanim</string>
 	<string name="zmanim_description">Zmanim - Display Halachic Times of Interest</string>
-	<string name="version">Version 1.0</string>
 	<string name="copyright">Copyright (c)2009 Jay R. Gindin</string>
 	<string name="zmanim_home">See http://code.google.com/p/android-zmanim</string>
 	<string name="copyright_zmanim_lib">Zmanim API from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld</string>
@@ -33,4 +32,9 @@
 	<string name="help_swipe_right">* Swipe right to move to the next day</string>
 	<string name="help_swipe_up">* Swipe up to move to the next month, but the same day of the month</string>
 	<string name="help_swipe_down">* Swipe down to move to the previous month, but the same day of the month</string>
+
+	<!-- MUST BE FORMATTED ON 2 LINES!!! -->
+	<string name="version">1.108
+	</string>
+
 </resources>
