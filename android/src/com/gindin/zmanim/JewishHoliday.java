@@ -26,7 +26,7 @@ public class JewishHoliday {
 	private static JewishHoliday YOM_HAZIKARON   = new JewishHoliday( HebrewCalendar.IYAR,    4,      "Yom Hazikaron" );
 	private static JewishHoliday YOM_HAATZMAUT   = new JewishHoliday( HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut" );
 	private static JewishHoliday PESACH_SHEINI   = new JewishHoliday( HebrewCalendar.IYAR,   14,      "Pesach Sheini" );
-	private static JewishHoliday LAG_BOMER       = new JewishHoliday( HebrewCalendar.IYAR,   18,      "Lab B'Omer" );
+	private static JewishHoliday LAG_BOMER       = new JewishHoliday( HebrewCalendar.IYAR,   18,      "Lag B'Omer" );
 	private static JewishHoliday YOM_YERUSHALAYIM = new JewishHoliday( HebrewCalendar.IYAR,  28,      "Yom Yerushalayim" );
 	private static JewishHoliday SHAVUOT         = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
 	private static JewishHoliday TISHA_BAV       = new JewishHoliday( HebrewCalendar.AV,      9,      "Fast of Tisha B'Av" );
