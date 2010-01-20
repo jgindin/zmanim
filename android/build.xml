@@ -99,6 +99,11 @@
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="1.${svn.status.committed.max}"'/>
 		<replaceregexp  file="res/values/strings.xml" match='name="version">(.*)' replace='name="version">1.${svn.status.committed.max}'/>
 
+		<echo>Updating internal build number...</echo>
+		<buildnumber file="build.number"/>
+		<echo>New build.number = ${build.number}</echo>
+		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
+
 	</target>
 
 	<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
