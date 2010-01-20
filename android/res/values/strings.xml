@@ -34,7 +34,7 @@
 	<string name="help_swipe_down">* Swipe down to move to the previous month, but the same day of the month</string>
 
 	<!-- MUST BE FORMATTED ON 2 LINES!!! -->
-	<string name="version">1.108
+	<string name="version">1.113
 	</string>
 
 </resources>

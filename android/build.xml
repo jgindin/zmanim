@@ -95,10 +95,19 @@
 
 	<target name="update-version" depends="get-svn-state">
 
+		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="1.${svn.status.committed.max}"'/>
 		<replaceregexp  file="res/values/strings.xml" match='name="version">(.*)' replace='name="version">1.${svn.status.committed.max}'/>
 
 	</target>
+
+	<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
+	<property name="zipalign" value="${android-tools}/zipalign${exe}" />
+	<property name="adb" value="${android-tools}/adb${exe}"/>
+	<property name="key.store" value="jay-gindin-android-apps.keystore"/>
+	<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
+	<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
+	<property name="out-release-package" value="${out-folder}/${ant.project.name}-release.apk"/>
 
 	<target name="do-release" depends="update-version">
 
@@ -108,7 +117,50 @@
 			modified=${svn.status.modified}
 		</echo>
 
+		<!--
+			TODO: If modified, then fail!??!!
+		-->
+		<delete dir="bin"/>
+		<antcall target="release"/>
+		<echo>Done building ${out-unsigned-package}.</echo>
 
+		<input
+			message="Please enter keystore password (store: ${key.store}):"
+		  addproperty="key.store.password"/>
+
+
+		<echo>Signing package...</echo>
+		<signjar
+			verbose="true"
+			keystore="${key.store}"
+			storepass="${key.store.password}"
+			jar="${out-unsigned-package}"
+			signedjar="${out-unaligned-package}"
+			alias="android-app"
+		/>
+		<echo>Signed ${out-unaligned-package}</echo>
+
+		<echo>Running zip align on the final, signed JAR...</echo>
+		<exec executable="${zipalign}" failonerror="true">
+			<arg value="-f" />
+			<arg value="4" />
+			<arg path="${out-unaligned-package}" />
+			<arg path="${out-release-package}" />
+		</exec>
+		<echo>Release Package: ${out-release-package}</echo>
+
+	</target>
+
+	<target name="install-release" depends="do-release">
+
+		<echo>Installing ${out-release-package}...</echo>
+		<exec executable="${adb}" failonerror="true">
+			<arg value="-d"/>
+			<arg value="install"/>
+			<arg value="-r"/>
+			<arg path="${out-release-package}"/>
+		</exec>
+		
 
 	</target>
 
