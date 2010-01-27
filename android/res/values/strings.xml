@@ -27,14 +27,21 @@
 	<string name="copyright_icu4j_lib">ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others</string>
 
 	<string name="help_header">Zmanim Help</string>
-	<string name="help_navigation">How to Navigate Dates</string>
-	<string name="help_swipe_left">* Swipe left to move to the previous day</string>
-	<string name="help_swipe_right">* Swipe right to move to the next day</string>
-	<string name="help_swipe_up">* Swipe up to move to the next month, but the same day of the month</string>
-	<string name="help_swipe_down">* Swipe down to move to the previous month, but the same day of the month</string>
+	<string name="help_text">
+		&lt;h2&gt;&lt;center&gt;How to Navigate Dates&lt;/center&gt;&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;Swipe left to move to the previous day&lt;/li&gt;
+			&lt;li&gt;Swipe right to move to the next day&lt;/li&gt;
+			&lt;li&gt;Swipe up to move to the next month, but the same day of the month&lt;/li&gt;
+			&lt;li&gt;Swipe down to move to the previous month, but the same day of the month&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;p&gt;
+			You can also 'click' on the secular date to see a date selection dialog box.
+		&lt;/p&gt;
+	</string>
 
 	<!-- MUST BE FORMATTED ON 2 LINES!!! -->
-	<string name="version">1.113
+	<string name="version">1.116
 	</string>
 
 </resources>

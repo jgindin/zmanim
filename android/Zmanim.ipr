@@ -197,6 +197,13 @@
         <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/src" />
       </SOURCES>
     </library>
+    <library name="Flurry">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/FlurryAgent.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 

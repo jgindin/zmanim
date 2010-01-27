@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
+import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.flurry.android.FlurryAgent;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.ZmanRounder;
 import com.ibm.icu.ICUAndroidBridge;
@@ -48,6 +50,22 @@ public class ZmanimDisplay
 
 
 	public ZmanimDisplay() {
+	}
+
+
+	@Override
+	protected void onStart() {
+
+		super.onStart();
+		FlurryAgent.onStartSession( this, "HDK5S96L5E7C638N91S1" );
+	}
+
+
+	@Override
+	protected void onStop() {
+
+		FlurryAgent.onEndSession( this );
+		super.onStop();
 	}
 
 
@@ -182,7 +200,7 @@ public class ZmanimDisplay
 				return createSimpleDialog( R.string.about_header, R.layout.about );
 
 			case R.id.help:
-				return createSimpleDialog( R.string.help_header, R.layout.help );
+				return createHelpDialog();
 		}
 
 		return null;
@@ -201,6 +219,22 @@ public class ZmanimDisplay
 		View layout = inflater.inflate( layoutResource, (ViewGroup)findViewById( R.id.layout_root ) );
 		builder.setView( layout );
 
+		return builder.create();
+	}
+
+
+	private Dialog createHelpDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		builder.setTitle( R.string.help_header );
+
+		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
+		View layout = inflater.inflate( R.layout.help, (ViewGroup)findViewById( R.id.layout_root ) );
+
+		WebView helpText = (WebView)layout.findViewById( R.id.help_text );
+		helpText.loadData( getResources().getString( R.string.help_text ), "text/html", "utf-8" );
+
+		builder.setView( layout );
 		return builder.create();
 	}
 
