@@ -20,28 +20,39 @@
 	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
 
 	<string name="about_header">About Zmanim</string>
-	<string name="zmanim_description">Zmanim - Display Halachic Times of Interest</string>
-	<string name="copyright">Copyright (c)2009 Jay R. Gindin</string>
-	<string name="zmanim_home">See http://code.google.com/p/android-zmanim</string>
-	<string name="copyright_zmanim_lib">Zmanim API from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld</string>
-	<string name="copyright_icu4j_lib">ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others</string>
+	<string name="about_text">
+		&lt;div style=%22font-size: 80%25;%22&gt;
+			&lt;br&gt;Copyright (C) 2009-2010 Jay R. Gindin&lt;/br&gt;
+
+			<!-- VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
+			&lt;br&gt;
+				Version 1.118-DEV
+			&lt;/br&gt;
+			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
+			&lt;br&gt;
+				This project could is made possible by using the following libraries:
+				&lt;ul&gt;
+					&lt;li&gt;Zmanim API calculation engine from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld&lt;/li&gt;
+					&lt;li&gt;ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/br&gt;
+		&lt;/div&gt;
+	</string>
 
 	<string name="help_header">Zmanim Help</string>
 	<string name="help_text">
-		&lt;h2&gt;&lt;center&gt;How to Navigate Dates&lt;/center&gt;&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;Swipe left to move to the previous day&lt;/li&gt;
-			&lt;li&gt;Swipe right to move to the next day&lt;/li&gt;
-			&lt;li&gt;Swipe up to move to the next month, but the same day of the month&lt;/li&gt;
-			&lt;li&gt;Swipe down to move to the previous month, but the same day of the month&lt;/li&gt;
-		&lt;/ul&gt;
-		&lt;p&gt;
-			You can also 'click' on the secular date to see a date selection dialog box.
-		&lt;/p&gt;
-	</string>
-
-	<!-- MUST BE FORMATTED ON 2 LINES!!! -->
-	<string name="version">1.116
+		&lt;h3&gt;&lt;center&gt;How to Navigate Dates&lt;/center&gt;&lt;/h3&gt;
+			&lt;div style=%22font-size: 80%25;%22&gt;
+			&lt;ul&gt;
+				&lt;li&gt;Swipe left to move to the previous day&lt;/li&gt;
+				&lt;li&gt;Swipe right to move to the next day&lt;/li&gt;
+				&lt;li&gt;Swipe up to move to the next month, but the same day of the month&lt;/li&gt;
+				&lt;li&gt;Swipe down to move to the previous month, but the same day of the month&lt;/li&gt;
+			&lt;/ul&gt;
+			&lt;p&gt;
+				You can also 'click' on the secular date to see a date selection dialog box.
+			&lt;/p&gt;
+		&lt;/div&gt;
 	</string>
 
 </resources>

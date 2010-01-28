@@ -197,10 +197,10 @@ public class ZmanimDisplay
 				return createLocationSelectionDialog();
 
 			case R.id.about:
-				return createSimpleDialog( R.string.about_header, R.layout.about );
+				return createSimpleDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );
 
 			case R.id.help:
-				return createHelpDialog();
+				return createSimpleDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
 		}
 
 		return null;
@@ -209,7 +209,9 @@ public class ZmanimDisplay
 
 	private Dialog createSimpleDialog(
 		int   titleResource,
-	  int   layoutResource
+	  int   layoutResource,
+	  int   webviewId,
+	  int   textId
 	) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( this );
@@ -217,22 +219,10 @@ public class ZmanimDisplay
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
 		View layout = inflater.inflate( layoutResource, (ViewGroup)findViewById( R.id.layout_root ) );
-		builder.setView( layout );
 
-		return builder.create();
-	}
-
-
-	private Dialog createHelpDialog() {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder( this );
-		builder.setTitle( R.string.help_header );
-
-		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
-		View layout = inflater.inflate( R.layout.help, (ViewGroup)findViewById( R.id.layout_root ) );
-
-		WebView helpText = (WebView)layout.findViewById( R.id.help_text );
-		helpText.loadData( getResources().getString( R.string.help_text ), "text/html", "utf-8" );
+		WebView helpText = (WebView)layout.findViewById( webviewId );
+		final String text = getResources().getString( textId );
+		helpText.loadData( text, "text/html", "utf-8" );
 
 		builder.setView( layout );
 		return builder.create();
@@ -241,7 +231,7 @@ public class ZmanimDisplay
 
 	private Dialog createLocationSelectionDialog() {
 		// TODO: Just for testing...
-		return createSimpleDialog( R.string.about_header, R.layout.about );
+		return null;
 	}
 
 

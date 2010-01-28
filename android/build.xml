@@ -93,11 +93,26 @@
 	</target>
 
 
+	<!--
+	  Extract the work necessary to change the version number in all the right places.
+	-->
 	<target name="update-version" depends="get-svn-state">
 
+		<condition property="version" value="1.${svn.status.committed.max}" else="1.${svn.status.committed.max}-DEV">
+			<isset property="release_build" />
+		</condition>
+
+
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="1.${svn.status.committed.max}"'/>
-		<replaceregexp  file="res/values/strings.xml" match='name="version">(.*)' replace='name="version">1.${svn.status.committed.max}'/>
+		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
+		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
+
+	</target>
+
+
+	<!--
+	-->
+	<target name="update-release-version" depends="update-version">
 
 		<echo>Updating internal build number...</echo>
 		<buildnumber file="build.number"/>
@@ -105,6 +120,7 @@
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
 
 	</target>
+
 
 	<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
 	<property name="zipalign" value="${android-tools}/zipalign${exe}" />
@@ -114,7 +130,14 @@
 	<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
 	<property name="out-release-package" value="${out-folder}/${ant.project.name}-release.apk"/>
 
-	<target name="do-release" depends="update-version">
+	<!--
+		When performing a build for a new release, this target does it all:
+		  * Updates the version numbers in all the right places
+		  * Builds the APK, signs it, and aligns it
+	-->
+	<target name="do-release" depends="update-release-version">
+
+		<property name="release_build" value="true"/>
 
 		<echo>
 			repository.url=${svn.status.repository.url}
@@ -156,6 +179,11 @@
 
 	</target>
 
+
+	<!--
+		When performing a build for a new release, this target will get everything versioned and built properly,
+			and will then deploy it to a locally attached device.
+	-->
 	<target name="install-release" depends="do-release">
 
 		<echo>Installing ${out-release-package}...</echo>
@@ -166,7 +194,6 @@
 			<arg path="${out-release-package}"/>
 		</exec>
 		
-
 	</target>
 
 	
