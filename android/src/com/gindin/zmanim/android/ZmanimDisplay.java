@@ -4,10 +4,7 @@
 
 package com.gindin.zmanim.android;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.app.*;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -29,7 +26,7 @@ import java.util.Date;
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimDisplay
-	extends Activity {
+	extends ExpandableListActivity {
 
 	/** Is the manual location selection stuff ready to go yet? */
 	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
@@ -267,6 +264,7 @@ public class ZmanimDisplay
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
 		updateField( R.id.holiday, description );
 
+		/*
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
 		updateFieldWithTime( R.id.talit, zmanRounder.roundToLatestMinute( zmanimCalendar.getTalit() ) );
 		updateFieldWithTime( R.id.hanetz, zmanimCalendar.getHanetz() );
@@ -300,6 +298,7 @@ public class ZmanimDisplay
 			findViewById( R.id.tzait_row ).setVisibility( View.VISIBLE );
 			updateFieldWithTime( R.id.tzait, zmanRounder.roundToLatestMinute( zmanimCalendar.getTzaitHachocavim() ) );
 		}
+		*/
 
 	}
 
