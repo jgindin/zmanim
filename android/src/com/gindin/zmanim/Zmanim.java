@@ -14,11 +14,12 @@ public class Zmanim {
 	public final Type                                         type;
 
 	/** Stored in sorted order, from earliest to latest. */
-	private final Set<Zman>                                   zmanim;
+	private final List<Zman>                                  zmanim;
 
 
 	protected Zmanim(
-		Type type
+		Type      type,
+	  Zman ...  zmanim
 	) {
 		this.type = type;
 
@@ -29,26 +30,27 @@ public class Zmanim {
 			}
 		};
 
-		zmanim = new TreeSet<Zman>( zmanStartComparator );
-	}
-
-
-	public void addZman(
-		Zman zman
-	) {
-
-		zmanim.add( zman );
-	}
-
-
-	public Iterator<Zman> iterator() {
-
-		return zmanim.iterator();
+		this.zmanim = Arrays.asList( zmanim );
+		Collections.sort( this.zmanim, zmanStartComparator );
 	}
 
 
 	public int size() {
 		return zmanim.size();
+	}
+
+
+	public Zman get( int position ) {
+		if ( position >= zmanim.size() ) {
+			return null;
+		}
+
+		return zmanim.get( position );
+	}
+
+
+	public Iterator<Zman> iterator() {
+		return zmanim.iterator();
 	}
 
 

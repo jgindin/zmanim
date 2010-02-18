@@ -4,10 +4,15 @@
 
 package com.gindin.zmanim.android;
 
+import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
 import com.gindin.zmanim.HebrewZmanimCalendar;
+import com.gindin.zmanim.Zman;
 import com.gindin.zmanim.ZmanRounder;
 import com.gindin.zmanim.Zmanim;
 
@@ -17,6 +22,8 @@ import com.gindin.zmanim.Zmanim;
 public class ZmanimExpandableListAdapter
 	extends BaseExpandableListAdapter {
 
+	private final Context                                     context;
+
 	/** The calendar we use for displaying everything. */
 	private final HebrewZmanimCalendar                        zmanimCalendar;
 
@@ -24,7 +31,11 @@ public class ZmanimExpandableListAdapter
 	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
 
 
-	public ZmanimExpandableListAdapter( HebrewZmanimCalendar zmanimCalendar ) {
+	public ZmanimExpandableListAdapter(
+		Context               context,
+		HebrewZmanimCalendar  zmanimCalendar
+	) {
+		this.context = context;
 		this.zmanimCalendar = zmanimCalendar;
 	}
 
@@ -44,26 +55,39 @@ public class ZmanimExpandableListAdapter
 	 * Gets the number of children in a specified group.
 	 */
 	public int getChildrenCount( int group ) {
-		return 0;  //To change body of implemented methods use File | Settings | File Templates.
+
+		Zmanim.Type type = Zmanim.Type.values()[ group ];
+		final Zmanim zmanim = zmanimCalendar.get( type );
+
+		return ( null == zmanim ? 0 : zmanim.size() );
 	}
 
 
 	/**
 	 * Gets the data associated with the given group.
 	 */
-	public Object getGroup( int group ) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+	public Zmanim getGroup( int group ) {
+
+		Zmanim.Type type = Zmanim.Type.values()[ group ];
+		return zmanimCalendar.get( type );
 	}
 
 
 	/**
 	 * Gets the data associated with the given child within the given group.
 	 */
-	public Object getChild(
+	public Zman getChild(
 		int group,
 		int child
 	) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+		Zmanim.Type type = Zmanim.Type.values()[ group ];
+		final Zmanim zmanim = zmanimCalendar.get( type );
+		if ( null == zmanim ) {
+			return null;
+		}
+
+		return zmanim.get( child );
 	}
 
 
@@ -72,7 +96,7 @@ public class ZmanimExpandableListAdapter
 	 *  (see getCombinedGroupId(long)) must be unique across ALL items (groups and all children).
 	 */
 	public long getGroupId( int group ) {
-		return 0;  //To change body of implemented methods use File | Settings | File Templates.
+		return group;
 	}
 
 
@@ -84,7 +108,7 @@ public class ZmanimExpandableListAdapter
 		int group,
 		int child
 	) {
-		return 0;  //To change body of implemented methods use File | Settings | File Templates.
+		return child;
 	}
 
 
@@ -114,11 +138,17 @@ public class ZmanimExpandableListAdapter
 		View      convertView,
 		ViewGroup parent
 	) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+		final Zmanim zmanim = getGroup( group );
+		final TextView groupView = getGenericView();
+		groupView.setText( zmanim.type.name );
+
+		return groupView;
 	}
 
 
 	/**
+	 * Gets a View that displays the data for the given child within the given group.
 	 *
 	 * @param group the position of the group that contains the child
 	 * @param child the position of the child (for which the View is returned) within the group
@@ -136,7 +166,12 @@ public class ZmanimExpandableListAdapter
 		View      convertView,
 		ViewGroup parent
 	) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+		final Zman zman = getChild( group, child );
+		final TextView view = getGenericView();
+		view.setText( zman.getTime().toString() );
+
+		return view;
 	}
 
 
@@ -174,6 +209,23 @@ public class ZmanimExpandableListAdapter
 	 */
 	public void onGroupCollapsed( int group ) {
 		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+
+	private TextView getGenericView() {
+
+		// Layout parameters for the ExpandableListView
+		TextView textView = new TextView( context );
+		AbsListView.LayoutParams lp = new AbsListView.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, 64 );
+		textView.setLayoutParams( lp );
+
+		// Center the text vertically
+		textView.setGravity( Gravity.CENTER_VERTICAL | Gravity.LEFT );
+
+		// Set the text starting position
+		textView.setPadding( 36, 0, 0, 0 );
+
+		return textView;
 	}
 
 

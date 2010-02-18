@@ -38,9 +38,6 @@ public class ZmanimDisplay
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
 
-	/** When we need to round a zman up or down, this is the guy to do it. */
-	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
-
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
@@ -89,6 +86,9 @@ public class ZmanimDisplay
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+
+		// Now we can set our adapter, which handles the interaction with the expanding list part of our display.
+		setListAdapter( new ZmanimExpandableListAdapter( this, zmanimCalendar ) );
 
 		if ( ALLOW_MANUAL_LOCATION_CHANGE ) {
 			updateField( R.id.location, Html.fromHtml( "<u>" + location.getLocationName() + "</u>" ) );
