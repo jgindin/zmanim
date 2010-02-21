@@ -9,6 +9,8 @@ import net.sourceforge.zmanim.util.GeoLocation;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Combines the functionality of a Hebrew calendar with a Zmanim calculator.
@@ -36,6 +38,7 @@ public class HebrewZmanimCalendar {
 	 */
 	private final Calendar                                    today = Calendar.getInstance();
 
+	private final Map<Zmanim.Type, Zmanim>                    typeMap = new HashMap<Zmanim.Type, Zmanim>();
 
 
 	public HebrewZmanimCalendar(
@@ -75,10 +78,10 @@ public class HebrewZmanimCalendar {
 
 
 	public String formatZmanTime(
-		Date zman
+		Zman zman
 	) {
 
-		return dateFormatter.formatZmanTime( zman );
+		return dateFormatter.formatZmanTime( zman.getTime() );
 	}
 
 
@@ -174,48 +177,67 @@ public class HebrewZmanimCalendar {
 
 	public Zmanim get( Zmanim.Type type ) {
 
-		switch ( type ) {
-			case Alot:
-				return getAlot();
-
-			case Candlelighting:
-				return getCandlelighting();
-
-			case Chatzot:
-				return getChatzot();
-
-			case Hanetz:
-				return getHanetz();
-
-			case LatestMincha:
-				return getLatestMincha();
-
-			case MinchaGedola:
-				return getMinchaGedola();
-
-			case MinchaKetana:
-				return getMinchaKetana();
-
-			case PlagHaMincha:
-				return getPlagHamincha();
-
-			case Shkia:
-				return getShkiah();
-
-			case SofZmanShma:
-				return getSofZmanShma();
-
-			case SofZmanTefila:
-				return getSofZmanTefila();
-
-			case Talit:
-				return getTalit();
-
-			case TzaitHachocavim:
-				return getTzaitHachocavim();
+		Zmanim zmanim = typeMap.get( type );
+		if ( null != zmanim ) {
+			return zmanim;
 		}
 
-		return null;
+		switch ( type ) {
+			case Alot:
+				zmanim = getAlot();
+				break;
+
+			case Candlelighting:
+				zmanim = getCandlelighting();
+				break;
+
+			case Chatzot:
+				zmanim = getChatzot();
+				break;
+
+			case Hanetz:
+				zmanim = getHanetz();
+				break;
+
+			case LatestMincha:
+				zmanim = getLatestMincha();
+				break;
+
+			case MinchaGedola:
+				zmanim = getMinchaGedola();
+				break;
+
+			case MinchaKetana:
+				zmanim = getMinchaKetana();
+				break;
+
+			case PlagHaMincha:
+				zmanim = getPlagHamincha();
+				break;
+
+			case Shkia:
+				zmanim = getShkiah();
+				break;
+
+			case SofZmanShma:
+				zmanim = getSofZmanShma();
+				break;
+
+			case SofZmanTefila:
+				zmanim = getSofZmanTefila();
+				break;
+
+			case Talit:
+				zmanim = getTalit();
+				break;
+
+			case TzaitHachocavim:
+				zmanim = getTzaitHachocavim();
+				break;
+		}
+
+		typeMap.put( type, zmanim );
+		return zmanim;
 	}
 
 
@@ -227,7 +249,7 @@ public class HebrewZmanimCalendar {
 	//  - GR"A --> GR'A
 	//  - Cleanup terms that may not be immediately familiar (misheyakir...)
 
-	public Zmanim getAlot() {
+	private Zmanim getAlot() {
 
 		Zmanim alot = new Zmanim(
 			Zmanim.Type.Alot,
@@ -313,7 +335,7 @@ public class HebrewZmanimCalendar {
 		return alot;
 	}
 
-	public Zmanim getTalit() {
+	private Zmanim getTalit() {
 
 		// TODO: See this link to enhance the options presented here:
 		//  http://www.yutorah.org/_shiurim/The%20Earliest%20Time%20to%20Perform%20the%20Mitzvot%20of%20the%20Morning.html
@@ -342,7 +364,7 @@ public class HebrewZmanimCalendar {
 		return talit;
 	}
 
-	public Zmanim getHanetz() {
+	private Zmanim getHanetz() {
 
 		Zmanim hanetz = new Zmanim(
 			Zmanim.Type.Hanetz,
@@ -356,7 +378,7 @@ public class HebrewZmanimCalendar {
 		return hanetz;
 	}
 
-	public Zmanim getSofZmanShma() {
+	private Zmanim getSofZmanShma() {
 
 		Zmanim sofZmanShema = new Zmanim(
 			Zmanim.Type.SofZmanShma,
@@ -458,7 +480,7 @@ public class HebrewZmanimCalendar {
 		return sofZmanShema;
 	}
 
-	public Zmanim getSofZmanTefila() {
+	private Zmanim getSofZmanTefila() {
 
 		Zmanim sofZmanTefila = new Zmanim(
 			Zmanim.Type.SofZmanTefila,
@@ -542,7 +564,7 @@ public class HebrewZmanimCalendar {
 		return sofZmanTefila;
 	}
 
-	public Zmanim getChatzot() {
+	private Zmanim getChatzot() {
 
 		Zmanim chatzot = new Zmanim(
 			Zmanim.Type.Chatzot,
@@ -557,7 +579,7 @@ public class HebrewZmanimCalendar {
 		return chatzot;
 	}
 
-	public Zmanim getMinchaGedola() {
+	private Zmanim getMinchaGedola() {
 
 		Zmanim minchaGedola = new Zmanim(
 			Zmanim.Type.MinchaGedola,
@@ -593,7 +615,7 @@ public class HebrewZmanimCalendar {
 		return minchaGedola;
 	}
 
-	public Zmanim getMinchaKetana() {
+	private Zmanim getMinchaKetana() {
 
 		Zmanim minchaKetana = new Zmanim(
 			Zmanim.Type.MinchaKetana,
@@ -625,7 +647,7 @@ public class HebrewZmanimCalendar {
 		return minchaKetana;
 	}
 
-	public Zmanim getPlagHamincha() {
+	private Zmanim getPlagHamincha() {
 
 		Zmanim plagHaMincha = new Zmanim(
 			Zmanim.Type.PlagHaMincha,
@@ -723,7 +745,7 @@ public class HebrewZmanimCalendar {
 		return plagHaMincha;
 	}
 
-	public Zmanim getCandlelighting() {
+	private Zmanim getCandlelighting() {
 
 		Zmanim candles = new Zmanim(
 			Zmanim.Type.Candlelighting,
@@ -737,7 +759,7 @@ public class HebrewZmanimCalendar {
 		return candles;
 	}
 
-	public Zmanim getShkiah() {
+	private Zmanim getShkiah() {
 
 		Zmanim shkiah = new Zmanim(
 			Zmanim.Type.Shkia,
@@ -752,7 +774,7 @@ public class HebrewZmanimCalendar {
 		return shkiah;
 	}
 
-	public Zmanim getLatestMincha() {
+	private Zmanim getLatestMincha() {
 
 		Zmanim mincha = new Zmanim(
 			Zmanim.Type.LatestMincha,
@@ -779,7 +801,7 @@ public class HebrewZmanimCalendar {
 	}
 
 	
-	public Zmanim getTzaitHachocavim() {
+	private Zmanim getTzaitHachocavim() {
 
 		Zmanim tzait = new Zmanim(
 			Zmanim.Type.TzaitHachocavim,

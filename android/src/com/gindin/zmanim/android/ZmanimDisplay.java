@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android;
 
 import android.app.*;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -15,12 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.gindin.zmanim.HebrewZmanimCalendar;
-import com.gindin.zmanim.ZmanRounder;
 import com.ibm.icu.ICUAndroidBridge;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Entry point to the Android application which displays zmanim.
@@ -41,6 +40,7 @@ public class ZmanimDisplay
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
+	private ZmanimExpandableListAdapter                       expandableListAdapter;
 
 
 	public ZmanimDisplay() {
@@ -88,16 +88,10 @@ public class ZmanimDisplay
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 
 		// Now we can set our adapter, which handles the interaction with the expanding list part of our display.
-		setListAdapter( new ZmanimExpandableListAdapter( this, zmanimCalendar ) );
+		expandableListAdapter = new ZmanimExpandableListAdapter( this, zmanimCalendar );
+		setListAdapter( expandableListAdapter );
 
-		if ( ALLOW_MANUAL_LOCATION_CHANGE ) {
-			updateField( R.id.location, Html.fromHtml( "<u>" + location.getLocationName() + "</u>" ) );
-		}
-		else {
-			updateField( R.id.location, location.getLocationName() );
-		}
-		
-		showZmanim();
+		buildHeader( location );
 
 		if ( !location.isLocationDetermined() ) {
 			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
@@ -107,6 +101,42 @@ public class ZmanimDisplay
 		}
 
 		displayDebugMessages();
+	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
+	private void buildHeader(
+		AndroidGeoLocation location
+	) {
+
+		AsyncTask<AndroidGeoLocation, Void, String> getLocationTask = new AsyncTask<AndroidGeoLocation, Void, String>() {
+			@Override
+			protected String doInBackground( AndroidGeoLocation... geoLocations ) {
+				return geoLocations[0].getLocationName();
+			}
+
+			@Override
+			protected void onPostExecute( String locationName ) {
+				super.onPostExecute( locationName );
+
+				if ( ALLOW_MANUAL_LOCATION_CHANGE ) {
+					updateField( R.id.location, Html.fromHtml( "<u>" + locationName + "</u>" ) );
+				}
+				else {
+					updateField( R.id.location, locationName );
+				}
+			}
+		};
+
+		getLocationTask.execute( location );
+
+
+		String description = zmanimCalendar.getTodaysDescription();
+
+		// Update the header
+		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
+		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
+		updateField( R.id.holiday, description );
 	}
 
 
@@ -257,12 +287,9 @@ public class ZmanimDisplay
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
-		String description = zmanimCalendar.getTodaysDescription();
+		expandableListAdapter.notifyDataSetChanged();
 
-		// Update the header
-		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
-		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
-		updateField( R.id.holiday, description );
+		// TODO: Update the header!
 
 		/*
 		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
@@ -322,15 +349,6 @@ public class ZmanimDisplay
 
 		TextView view = (TextView)findViewById( field );
 		view.setText( text );
-	}
-
-
-	private void updateFieldWithTime(
-		int   field,
-		Date  zman
-	) {
-
-		updateField( field, zmanimCalendar.formatZmanTime( zman ) );
 	}
 
 

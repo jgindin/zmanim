@@ -13,7 +13,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import com.gindin.zmanim.HebrewZmanimCalendar;
 import com.gindin.zmanim.Zman;
-import com.gindin.zmanim.ZmanRounder;
 import com.gindin.zmanim.Zmanim;
 
 /**
@@ -26,9 +25,6 @@ public class ZmanimExpandableListAdapter
 
 	/** The calendar we use for displaying everything. */
 	private final HebrewZmanimCalendar                        zmanimCalendar;
-
-	/** When we need to round a zman up or down, this is the guy to do it. */
-	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
 
 
 	public ZmanimExpandableListAdapter(
@@ -139,8 +135,15 @@ public class ZmanimExpandableListAdapter
 		ViewGroup parent
 	) {
 
+		final TextView groupView;
+		if ( null == convertView ) {
+			groupView = getGenericView();
+		}
+		else {
+			groupView = (TextView)convertView;
+		}
+
 		final Zmanim zmanim = getGroup( group );
-		final TextView groupView = getGenericView();
 		groupView.setText( zmanim.type.name );
 
 		return groupView;
@@ -167,9 +170,16 @@ public class ZmanimExpandableListAdapter
 		ViewGroup parent
 	) {
 
+		final TextView view;
+		if ( null == convertView ) {
+			view = getGenericView();
+		}
+		else {
+			view = (TextView)convertView;
+		}
+
 		final Zman zman = getChild( group, child );
-		final TextView view = getGenericView();
-		view.setText( zman.getTime().toString() );
+		view.setText(  zmanimCalendar.formatZmanTime( zman ) );
 
 		return view;
 	}
@@ -183,16 +193,6 @@ public class ZmanimExpandableListAdapter
 		int child
 	) {
 		return true;
-	}
-
-
-	public boolean areAllItemsEnabled() {
-		return false;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-
-	public boolean isEmpty() {
-		return false;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 
@@ -216,7 +216,7 @@ public class ZmanimExpandableListAdapter
 
 		// Layout parameters for the ExpandableListView
 		TextView textView = new TextView( context );
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, 64 );
+		AbsListView.LayoutParams lp = new AbsListView.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, 32 );
 		textView.setLayoutParams( lp );
 
 		// Center the text vertically

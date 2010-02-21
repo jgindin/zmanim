@@ -16,6 +16,17 @@ public class Zmanim {
 	/** Stored in sorted order, from earliest to latest. */
 	private final List<Zman>                                  zmanim;
 
+	/** When we need to round a zman up or down, this is the guy to do it. */
+	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
+
+
+	private static final Comparator<Zman>                     ZMAN_START_COMPARATOR = new Comparator<Zman>() {
+		public int compare( Zman z1, Zman z2 ) {
+
+			return z1.getTime().compareTo( z2.getTime() );
+		}
+	};
+
 
 	protected Zmanim(
 		Type      type,
@@ -23,15 +34,8 @@ public class Zmanim {
 	) {
 		this.type = type;
 
-		Comparator<Zman> zmanStartComparator = new Comparator<Zman>() {
-			public int compare( Zman z1, Zman z2 ) {
-
-				return z1.getTime().compareTo( z2.getTime() );
-			}
-		};
-
 		this.zmanim = Arrays.asList( zmanim );
-		Collections.sort( this.zmanim, zmanStartComparator );
+		Collections.sort( this.zmanim, ZMAN_START_COMPARATOR );
 	}
 
 
@@ -88,5 +92,5 @@ public class Zmanim {
 			this.description = description;
 		}
 	}
-	
+
 }  // End of Zmanim class

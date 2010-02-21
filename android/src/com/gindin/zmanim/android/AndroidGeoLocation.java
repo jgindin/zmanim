@@ -92,7 +92,6 @@ public class AndroidGeoLocation
 	}
 
 
-	// TODO: Call from separate thread!?!
 	@Override
 	public String getLocationName() {
 
