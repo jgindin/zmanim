@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import com.gindin.zmanim.HebrewZmanimCalendar;
+import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.Zman;
 import com.gindin.zmanim.Zmanim;
 
@@ -24,7 +24,7 @@ public class ZmanimExpandableListAdapter
 	private final Context                                     context;
 
 	/** The calendar we use for displaying everything. */
-	private final HebrewZmanimCalendar                        zmanimCalendar;
+	private final HebrewZmanimCalendar zmanimCalendar;
 
 
 	public ZmanimExpandableListAdapter(

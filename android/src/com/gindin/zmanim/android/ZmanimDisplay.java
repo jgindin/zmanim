@@ -15,7 +15,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
-import com.gindin.zmanim.HebrewZmanimCalendar;
+import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
 
 import java.text.DateFormat;

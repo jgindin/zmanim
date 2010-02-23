@@ -1,4 +1,6 @@
-package com.gindin.zmanim;
+package com.gindin.zmanim.calendar;
+
+import com.gindin.zmanim.calendar.HebrewCalendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;

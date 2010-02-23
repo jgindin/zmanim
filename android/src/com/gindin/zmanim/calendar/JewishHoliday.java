@@ -1,4 +1,4 @@
-package com.gindin.zmanim;
+package com.gindin.zmanim.calendar;
 
 
 

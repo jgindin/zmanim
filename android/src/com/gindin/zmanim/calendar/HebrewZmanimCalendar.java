@@ -2,8 +2,14 @@
  * Copyright (c) 2009. Jay R. Gindin
  */
 
-package com.gindin.zmanim;
+package com.gindin.zmanim.calendar;
 
+import com.gindin.zmanim.Zman;
+import com.gindin.zmanim.Zmanim;
+import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.calendar.HebrewDateFormatter;
+import com.gindin.zmanim.calendar.JewishHoliday;
+import com.gindin.zmanim.calendar.ZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;

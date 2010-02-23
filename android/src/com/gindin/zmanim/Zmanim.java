@@ -28,7 +28,7 @@ public class Zmanim {
 	};
 
 
-	protected Zmanim(
+	public Zmanim(
 		Type      type,
 	  Zman ...  zmanim
 	) {
