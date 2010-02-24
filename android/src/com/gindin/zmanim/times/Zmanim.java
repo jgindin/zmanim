@@ -2,23 +2,15 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim;
+package com.gindin.zmanim.times;
+
 
 import java.util.*;
 
 /**
  * Contains a set of related zmanim.
  */
-public class Zmanim {
-
-	public final Type                                         type;
-
-	/** Stored in sorted order, from earliest to latest. */
-	private final List<Zman>                                  zmanim;
-
-	/** When we need to round a zman up or down, this is the guy to do it. */
-	private final ZmanRounder                                 zmanRounder = new ZmanRounder();
-
+public abstract class Zmanim {
 
 	private static final Comparator<Zman>                     ZMAN_START_COMPARATOR = new Comparator<Zman>() {
 		public int compare( Zman z1, Zman z2 ) {
@@ -28,13 +20,22 @@ public class Zmanim {
 	};
 
 
-	public Zmanim(
-		Type      type,
-	  Zman ...  zmanim
+	public final Type                                         type;
+
+	/** Stored in sorted order, from earliest to latest. */
+	private final List<Zman>                                  zmanim;
+
+	/** When we need to round a zman up or down, this is the guy to do it. */
+	protected final ZmanRounder                               zmanRounder = new ZmanRounder();
+
+
+	protected Zmanim(
+		Type        type,
+	  List<Zman>  zmanim
 	) {
 		this.type = type;
 
-		this.zmanim = Arrays.asList( zmanim );
+		this.zmanim = zmanim;
 		Collections.sort( this.zmanim, ZMAN_START_COMPARATOR );
 	}
 
@@ -44,7 +45,10 @@ public class Zmanim {
 	}
 
 
-	public Zman get( int position ) {
+	public Zman get(
+		int position
+	) {
+
 		if ( position >= zmanim.size() ) {
 			return null;
 		}
@@ -66,13 +70,13 @@ public class Zmanim {
 		Alot( "Alot Hashachar", "Dawn" ),
 		Talit( "Misheyakir", "Earliest Tefilin" ),
 		Hanetz( "Hanetz", "Sunrise" ),
-		SofZmanShma( "Sof Zman Shema", "Latest Time for Shema" ),
+		SofZmanShema( "Sof Zman Shema", "Latest Time for Shema" ),
 		SofZmanTefila( "Sof Zman Tefila", "Latest Time for Shacharit" ),
 		Chatzot( "Chatzot", "Mid-day" ),
 		MinchaGedola( "Mincha Gedola", "Earliest Mincha" ),
 		MinchaKetana( "Mincha Ketana", "Earliest Mincha (Rambam)" ),
 		PlagHaMincha( "Plag HaMincha", "Earliest Arvit" ),
-		Candlelighting( "Candle Lighting", "" ),
+		CandleLighting( "Candle Lighting", "" ),
 		Shkia( "Shkia", "Sunset" ),
 		LatestMincha( "Latest Mincha", "" ),
 		TzaitHachocavim( "Tzait Hachocavim", "Nightfall" );

@@ -2,22 +2,20 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim;
+package com.gindin.zmanim.times;
 
 import java.util.Date;
 
 /**
- * Describes a single time.
+ * Describes a single time. Intended to be reused as the date changes, without having to be
+ *  recreated.
  */
 public abstract class Zman {
 
 	public final String                                       name;
 
-	/** Describes this zman. E.g., "Latest Shema according to the GRA". */
+	/** Describes this zman. E.g., "Latest Shema according to the GR'A". */
 	public final String                                       description;
-
-	/** At what time does this zman occur? */
-	private Date                                              time;
 
 
 	public Zman(
@@ -30,11 +28,8 @@ public abstract class Zman {
 
 	public Date getTime() {
 
-		if ( null == time ) {
-			time = calculate();
-		}
-
-		return time;
+		// Can't cache because the day may change...
+		return calculate();
 	}
 
 

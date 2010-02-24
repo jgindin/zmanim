@@ -12,8 +12,8 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.Zman;
-import com.gindin.zmanim.Zmanim;
+import com.gindin.zmanim.times.Zman;
+import com.gindin.zmanim.times.Zmanim;
 
 /**
  * Adapts the zmanim that we can display for the expandable list view.
