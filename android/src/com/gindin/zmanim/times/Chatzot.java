@@ -20,7 +20,7 @@ class Chatzot
 		final ZmanimCalendar zmanimCalendar
 	) {
 
-		super( Type.Alot, buildZmanim( zmanimCalendar ) );
+		super( Type.Chatzot, buildZmanim( zmanimCalendar ) );
 	}
 
 
