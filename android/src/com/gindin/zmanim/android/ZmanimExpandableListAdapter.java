@@ -21,11 +21,20 @@ import com.gindin.zmanim.times.Zmanim;
 public class ZmanimExpandableListAdapter
 	extends BaseExpandableListAdapter {
 
+	private static final int                                  MAX_GROUPS = Zmanim.Type.values().length;
+
+	private final int                                         UNKNOWN = -1;
+
 	private final Context                                     context;
 
 	/** The calendar we use for displaying everything. */
-	private final HebrewZmanimCalendar zmanimCalendar;
+	private final HebrewZmanimCalendar                        zmanimCalendar;
 
+	/**
+	 * Cache this so we don't have to constantly ask if we're supposed to show candle lighting, which
+	 *  causes a calculation.
+ 	 */
+	private int                                               currentNumberOfGroups = UNKNOWN;
 
 	public ZmanimExpandableListAdapter(
 		Context               context,
@@ -36,14 +45,33 @@ public class ZmanimExpandableListAdapter
 	}
 
 
+	@Override
+	public void notifyDataSetChanged() {
+
+		currentNumberOfGroups = UNKNOWN;
+		super.notifyDataSetChanged();
+	}
+
+
+	@Override
+	public void notifyDataSetInvalidated() {
+
+		currentNumberOfGroups = UNKNOWN;
+		super.notifyDataSetInvalidated();
+	}
+
+
 	public int getGroupCount() {
 
-		int numGroups = Zmanim.Type.values().length;
-		if ( !zmanimCalendar.showCandlelighting() ) {
-			numGroups--;
+		if ( UNKNOWN == currentNumberOfGroups ) {
+
+			currentNumberOfGroups = MAX_GROUPS;
+			if ( !zmanimCalendar.showCandlelighting() ) {
+				currentNumberOfGroups--;
+			}
 		}
 
-		return numGroups;
+		return currentNumberOfGroups;
 	}
 
 
@@ -53,6 +81,12 @@ public class ZmanimExpandableListAdapter
 	public int getChildrenCount( int group ) {
 
 		Zmanim.Type type = Zmanim.Type.values()[ group ];
+
+		// If we're not showing candle lighting, then we have to skip it.
+		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+			type = Zmanim.Type.values()[ group + 1 ];
+		}
+
 		final Zmanim zmanim = zmanimCalendar.get( type );
 
 		return ( null == zmanim ? 0 : zmanim.size() );
@@ -65,6 +99,12 @@ public class ZmanimExpandableListAdapter
 	public Zmanim getGroup( int group ) {
 
 		Zmanim.Type type = Zmanim.Type.values()[ group ];
+
+		// If we're not showing candle lighting, then we have to skip it.
+		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+			type = Zmanim.Type.values()[ group + 1 ];
+		}
+
 		return zmanimCalendar.get( type );
 	}
 
@@ -78,6 +118,12 @@ public class ZmanimExpandableListAdapter
 	) {
 
 		Zmanim.Type type = Zmanim.Type.values()[ group ];
+
+		// If we're not showing candle lighting, then we have to skip it.
+		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+			type = Zmanim.Type.values()[ group + 1 ];
+		}
+
 		final Zmanim zmanim = zmanimCalendar.get( type );
 		if ( null == zmanim ) {
 			return null;

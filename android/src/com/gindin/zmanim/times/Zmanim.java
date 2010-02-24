@@ -12,13 +12,6 @@ import java.util.*;
  */
 public abstract class Zmanim {
 
-	private static final Comparator<Zman>                     ZMAN_START_COMPARATOR = new Comparator<Zman>() {
-		public int compare( Zman z1, Zman z2 ) {
-
-			return z1.getTime().compareTo( z2.getTime() );
-		}
-	};
-
 
 	public final Type                                         type;
 
@@ -36,7 +29,6 @@ public abstract class Zmanim {
 		this.type = type;
 
 		this.zmanim = zmanim;
-		Collections.sort( this.zmanim, ZMAN_START_COMPARATOR );
 	}
 
 
