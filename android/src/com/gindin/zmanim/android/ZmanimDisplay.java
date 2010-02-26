@@ -130,12 +130,18 @@ public class ZmanimDisplay
 
 		getLocationTask.execute( location );
 
-
-		String description = zmanimCalendar.getTodaysDescription();
-
 		// Update the header
+		updateHeader();
+	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
+	private void updateHeader() {
+
 		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
+
+		String description = zmanimCalendar.getTodaysDescription();
 		updateField( R.id.holiday, description );
 	}
 
@@ -288,45 +294,7 @@ public class ZmanimDisplay
 	private void showZmanim() {
 
 		expandableListAdapter.notifyDataSetChanged();
-
-		// TODO: Update the header!
-
-		/*
-		updateFieldWithTime( R.id.alot, zmanimCalendar.getAlot() );
-		updateFieldWithTime( R.id.talit, zmanRounder.roundToLatestMinute( zmanimCalendar.getTalit() ) );
-		updateFieldWithTime( R.id.hanetz, zmanimCalendar.getHanetz() );
-		updateFieldWithTime( R.id.shemaMGA, zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanShma() ) );
-		updateFieldWithTime( R.id.tefilahMGA, zmanRounder.roundToEarliestMinute( zmanimCalendar.getSofZmanTefila() ) );
-		updateFieldWithTime( R.id.chatzot, zmanimCalendar.getChatzot() );
-		updateFieldWithTime( R.id.mincha_gedola, zmanimCalendar.getMinchaGedola() );
-		updateFieldWithTime( R.id.mincha_ketana, zmanimCalendar.getMinchaKetana() );
-		updateFieldWithTime( R.id.plag_hamincha, zmanimCalendar.getPlagHamincha() );
-
-		if ( zmanimCalendar.showCandlelighting() ) {
-			findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.candles, zmanRounder.roundToEarliestMinute( zmanimCalendar.getCandlelighting() ) );
-		}
-		else {
-			findViewById( R.id.candles_row ).setVisibility( View.GONE );
-		}
-
-		updateFieldWithTime( R.id.shkiah, zmanimCalendar.getShkiah() );
-
-		updateFieldWithTime( R.id.mincha, zmanRounder.roundToEarliestMinute( zmanimCalendar.getLatestMincha() ) );
-
-
-		if ( zmanimCalendar.showHavdalah() ) {
-			findViewById( R.id.tzait_row ).setVisibility( View.GONE );
-			findViewById( R.id.havdalah_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.havdalah, zmanRounder.roundToLatestMinute( zmanimCalendar.getTzaitHachocavim() ) );
-		}
-		else {
-			findViewById( R.id.havdalah_row ).setVisibility( View.GONE );
-			findViewById( R.id.tzait_row ).setVisibility( View.VISIBLE );
-			updateFieldWithTime( R.id.tzait, zmanRounder.roundToLatestMinute( zmanimCalendar.getTzaitHachocavim() ) );
-		}
-		*/
-
+		updateHeader();
 	}
 
 

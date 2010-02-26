@@ -19,19 +19,17 @@ import java.util.Date;
 public class HebrewZmanimCalendar {
 
 
-	/**
-	 * Aggregated to expose all the Hebrew date functionality.
-	 */
+	/** Aggregated to expose all the Hebrew date functionality. */
 	private final HebrewCalendar                              hebrewCalendar = new HebrewCalendar();
 
-	/**
-	 * Aggregated to expose the Zmanim functionality.
-	 */
+	/** Aggregated to expose the Zmanim functionality. */
 	private final ZmanimCalendar                              zmanimCalendar;
 
 	/** Used to format all of the dates and times. */
 	private final HebrewDateFormatter                         dateFormatter;
 
+	/** This is how we create the zmanim that we need. */
+	private final ZmanimFactory                               zmanimFactory;
 
 	/**
 	 * When the user is viewing the actual day, and it's after sunset, we'll adjust the hebrew
@@ -48,6 +46,7 @@ public class HebrewZmanimCalendar {
 
 		this.zmanimCalendar = new ZmanimCalendar( location );
 		this.dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
+		this.zmanimFactory = new ZmanimFactory( zmanimCalendar );
 	}
 
 
@@ -176,7 +175,7 @@ public class HebrewZmanimCalendar {
 
 	public Zmanim get( Zmanim.Type type ) {
 
-		return ZmanimFactory.getOrCreate( type, zmanimCalendar );
+		return zmanimFactory.getOrCreate( type );
 	}
 
 

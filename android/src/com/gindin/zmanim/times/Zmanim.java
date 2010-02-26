@@ -15,7 +15,7 @@ public abstract class Zmanim {
 
 	public final Type                                         type;
 
-	/** Stored in sorted order, from earliest to latest. */
+	/** The individual zmanim for this set. */
 	private final List<Zman>                                  zmanim;
 
 	/** When we need to round a zman up or down, this is the guy to do it. */
@@ -23,11 +23,11 @@ public abstract class Zmanim {
 
 
 	protected Zmanim(
-		Type        type,
-	  List<Zman>  zmanim
+		final Type        type,
+	  final List<Zman>  zmanim
 	) {
-		this.type = type;
 
+		this.type = type;
 		this.zmanim = zmanim;
 	}
 
@@ -51,6 +51,17 @@ public abstract class Zmanim {
 
 	public Iterator<Zman> iterator() {
 		return zmanim.iterator();
+	}
+
+
+	/**
+	 * Must be called whenever the date has changed so that we can clear our caches.
+	 */
+	public void clearCaches() {
+
+		for ( Zman zman : zmanim ) {
+			zman.clearCache();
+		}
 	}
 
 

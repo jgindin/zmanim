@@ -17,6 +17,9 @@ public abstract class Zman {
 	/** Describes this zman. E.g., "Latest Shema according to the GR'A". */
 	public final String                                       description;
 
+	/** Keep the calculation cached until we're told to clear the cache. */
+	private Date                                              cachedTime;
+
 
 	public Zman(
 		String  name,
@@ -28,14 +31,21 @@ public abstract class Zman {
 
 	public Date getTime() {
 
-		// Can't cache because the day may change...
-		return calculate();
+		if ( null == cachedTime ) {
+			cachedTime = calculate();
+		}
+
+		return cachedTime;
 	}
 
+	public void clearCache() {
+		cachedTime = null;
+	}
 
 	/**
 	 * @return Subclass must implement to return the actual time of the zman.
 	 */
 	protected abstract Date calculate();
-	
+
+
 } // End of Zman interface
