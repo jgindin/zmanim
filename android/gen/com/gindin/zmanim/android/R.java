@@ -14,11 +14,11 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int about=0x7f060010;
+        public static final int about=0x7f060016;
         public static final int about_text=0x7f060001;
         public static final int blank=0x7f06000d;
         public static final int hebrew_date=0x7f06000c;
-        public static final int help=0x7f060011;
+        public static final int help=0x7f060017;
         public static final int help_text=0x7f060002;
         public static final int holiday=0x7f06000e;
         public static final int latitude=0x7f060005;
@@ -32,12 +32,20 @@ public final class R {
         public static final int messages=0x7f06000f;
         public static final int secular_date=0x7f06000b;
         public static final int zipcode=0x7f060004;
+        public static final int zman_description=0x7f060013;
+        public static final int zman_name=0x7f060011;
+        public static final int zman_time=0x7f060012;
+        public static final int zmanim_list_row=0x7f060010;
+        public static final int zmanim_name=0x7f060014;
+        public static final int zmanim_time=0x7f060015;
     }
     public static final class layout {
         public static final int about=0x7f030000;
         public static final int help=0x7f030001;
         public static final int location=0x7f030002;
         public static final int main=0x7f030003;
+        public static final int zman_list_row=0x7f030004;
+        public static final int zmanim_list_row=0x7f030005;
     }
     public static final class menu {
         public static final int main_menu=0x7f050000;

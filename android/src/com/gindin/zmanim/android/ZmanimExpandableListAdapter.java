@@ -6,6 +6,7 @@ package com.gindin.zmanim.android;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -181,16 +182,27 @@ public class ZmanimExpandableListAdapter
 		ViewGroup parent
 	) {
 
-		final TextView groupView;
+		final View groupView;
+		final ZmanimRowWrapper wrapper;
 		if ( null == convertView ) {
-			groupView = getGenericView();
+
+			LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			groupView = inflater.inflate( R.layout.zmanim_list_row, parent, false );
+
+			wrapper = new ZmanimRowWrapper( groupView );
+			groupView.setTag( wrapper );
 		}
 		else {
-			groupView = (TextView)convertView;
+			groupView = convertView;
+			wrapper = (ZmanimRowWrapper)groupView.getTag();
 		}
 
 		final Zmanim zmanim = getGroup( group );
-		groupView.setText( zmanim.type.name );
+		wrapper.getNameField().setText( zmanim.type.name );
+
+		// Just for testing, show the first time...
+		Zman zman = zmanim.get( 0 );
+		wrapper.getTimeField().setText( zmanimCalendar.formatZmanTime( zman ) );
 
 		return groupView;
 	}
@@ -225,7 +237,7 @@ public class ZmanimExpandableListAdapter
 		}
 
 		final Zman zman = getChild( group, child );
-		view.setText(  zmanimCalendar.formatZmanTime( zman ) );
+		view.setText( zmanimCalendar.formatZmanTime( zman ) );
 
 		return view;
 	}
@@ -272,6 +284,33 @@ public class ZmanimExpandableListAdapter
 		textView.setPadding( 36, 0, 0, 0 );
 
 		return textView;
+	}
+
+
+	private static class ZmanimRowWrapper {
+
+		private final View                                      zmanimRowView;
+		private TextView                                        nameField;
+		private TextView                                        timeField;
+
+
+		ZmanimRowWrapper( View zmanimRowView ) {
+			this.zmanimRowView = zmanimRowView;
+		}
+
+		TextView getNameField() {
+			if ( null == nameField ) {
+				nameField = (TextView)zmanimRowView.findViewById( R.id.zmanim_name );
+			}
+			return nameField;
+		}
+
+		TextView getTimeField() {
+			if ( null == timeField ) {
+				timeField = (TextView)zmanimRowView.findViewById( R.id.zmanim_time );
+			}
+			return timeField;
+		}
 	}
 
 
