@@ -31,8 +31,10 @@ public abstract class Zman {
 
 	public Date getTime() {
 
-		if ( null == cachedTime ) {
-			cachedTime = calculate();
+		synchronized ( this ) {
+			if ( null == cachedTime ) {
+				cachedTime = calculate();
+			}
 		}
 
 		return cachedTime;

@@ -5,16 +5,16 @@
 package com.gindin.zmanim.android;
 
 import android.content.Context;
-import android.view.Gravity;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
+
 
 /**
  * Adapts the zmanim that we can display for the expandable list view.
@@ -246,7 +246,9 @@ public class ZmanimExpandableListAdapter
 
 		final Zman zman = getChild( group, child );
 		wrapper.nameField.setText( zman.name );
-		wrapper.timeField.setText( zmanimCalendar.formatZmanTime( zman ) );
+
+		ZmanAsyncCalculator asyncCalculator = new ZmanAsyncCalculator( zmanimCalendar, wrapper.timeField );
+		asyncCalculator.execute( zman );
 
 		return childView;
 	}
@@ -267,43 +269,38 @@ public class ZmanimExpandableListAdapter
 	 * Called when a group is expanded.
 	 */
 	public void onGroupExpanded( int group ) {
-		//To change body of implemented methods use File | Settings | File Templates.
+
+		// TODO: Should we kick off a pre-calc of the zmanim in this group?
+
 	}
 
 
 	/**
-	 * Called when a group is collapsed.
+	 * Wraps a zmanim group, making for quick & easy recycling.
 	 */
-	public void onGroupCollapsed( int group ) {
-		//To change body of implemented methods use File | Settings | File Templates.
-	}
-
-
 	private static class ZmanimRowWrapper {
 
 		final TextView                                          nameField;
 		final TextView                                          timeField;
 
-		private final View                                      zmanimRowView;
-
 
 		ZmanimRowWrapper( View zmanimRowView ) {
-			this.zmanimRowView = zmanimRowView;
 			nameField = (TextView)zmanimRowView.findViewById( R.id.zmanim_name );
 			timeField = (TextView)zmanimRowView.findViewById( R.id.zmanim_time );
 		}
 	}
 
 
+	/**
+	 * Wraps a zman row, making for quick & easy recycling.
+	 */
 	private static class ZmanRowWrapper {
 
 		final TextView                                          nameField;
 		final TextView                                          timeField;
 		final TextView                                          descriptionField;
-		private final View                                      zmanRowView;
 
 		ZmanRowWrapper( View zmanRowView ) {
-			this.zmanRowView = zmanRowView;
 			nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
 			timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
 			descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
@@ -311,8 +308,39 @@ public class ZmanimExpandableListAdapter
 			// TODO: Not showing descriptions just yet...
 			descriptionField.setVisibility( View.GONE );
 		}
-
 	}
 
+
+	/**
+	 * Used to asynchronously calculate the zman.
+	 */
+	private static class ZmanAsyncCalculator
+		extends AsyncTask<Zman, Void, String> {
+
+		private final HebrewZmanimCalendar                      zmanimCalendar;
+		private final TextView                                  timeField;
+
+
+		ZmanAsyncCalculator(
+			HebrewZmanimCalendar  zmanimCalendar,
+			TextView              timeField
+		) {
+			this.zmanimCalendar = zmanimCalendar;
+			this.timeField = timeField;
+		}
+
+
+		@Override
+		protected String doInBackground( Zman... zmans ) {
+			return zmanimCalendar.formatZmanTime( zmans[0] );
+		}
+
+
+		@Override
+		protected void onPostExecute( String formattedZman ) {
+			super.onPostExecute( formattedZman );
+			timeField.setText( formattedZman ); 
+		}
+	}
 
 }  // End of ZmanimExpandableListAdapter class
