@@ -102,7 +102,7 @@ public class ZmanimExpandableListAdapter
 		Zmanim.Type type = Zmanim.Type.values()[ group ];
 
 		// If we're not showing candle lighting, then we have to skip it.
-		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+		if ( ( type.ordinal() >= Zmanim.Type.CandleLighting.ordinal() ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
 			type = Zmanim.Type.values()[ group + 1 ];
 		}
 
@@ -121,7 +121,7 @@ public class ZmanimExpandableListAdapter
 		Zmanim.Type type = Zmanim.Type.values()[ group ];
 
 		// If we're not showing candle lighting, then we have to skip it.
-		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+		if ( ( type.ordinal() >= Zmanim.Type.CandleLighting.ordinal() ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
 			type = Zmanim.Type.values()[ group + 1 ];
 		}
 
@@ -198,11 +198,11 @@ public class ZmanimExpandableListAdapter
 		}
 
 		final Zmanim zmanim = getGroup( group );
-		wrapper.getNameField().setText( zmanim.type.name );
+		wrapper.nameField.setText( zmanim.type.name );
 
 		// Just for testing, show the first time...
 		Zman zman = zmanim.get( 0 );
-		wrapper.getTimeField().setText( zmanimCalendar.formatZmanTime( zman ) );
+		wrapper.timeField.setText( zmanimCalendar.formatZmanTime( zman ) );
 
 		return groupView;
 	}
@@ -228,18 +228,27 @@ public class ZmanimExpandableListAdapter
 		ViewGroup parent
 	) {
 
-		final TextView view;
+		final View childView;
+		final ZmanRowWrapper wrapper;
+
 		if ( null == convertView ) {
-			view = getGenericView();
+
+			LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			childView = inflater.inflate( R.layout.zman_list_row, parent, false );
+
+			wrapper = new ZmanRowWrapper( childView );
+			childView.setTag( wrapper );
 		}
 		else {
-			view = (TextView)convertView;
+			childView = convertView;
+			wrapper = (ZmanRowWrapper)childView.getTag();
 		}
 
 		final Zman zman = getChild( group, child );
-		view.setText( zmanimCalendar.formatZmanTime( zman ) );
+		wrapper.nameField.setText( zman.name );
+		wrapper.timeField.setText( zmanimCalendar.formatZmanTime( zman ) );
 
-		return view;
+		return childView;
 	}
 
 
@@ -250,7 +259,7 @@ public class ZmanimExpandableListAdapter
 		int group,
 		int child
 	) {
-		return true;
+		return false;
 	}
 
 
@@ -270,47 +279,39 @@ public class ZmanimExpandableListAdapter
 	}
 
 
-	private TextView getGenericView() {
-
-		// Layout parameters for the ExpandableListView
-		TextView textView = new TextView( context );
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, 32 );
-		textView.setLayoutParams( lp );
-
-		// Center the text vertically
-		textView.setGravity( Gravity.CENTER_VERTICAL | Gravity.LEFT );
-
-		// Set the text starting position
-		textView.setPadding( 36, 0, 0, 0 );
-
-		return textView;
-	}
-
-
 	private static class ZmanimRowWrapper {
 
+		final TextView                                          nameField;
+		final TextView                                          timeField;
+
 		private final View                                      zmanimRowView;
-		private TextView                                        nameField;
-		private TextView                                        timeField;
 
 
 		ZmanimRowWrapper( View zmanimRowView ) {
 			this.zmanimRowView = zmanimRowView;
+			nameField = (TextView)zmanimRowView.findViewById( R.id.zmanim_name );
+			timeField = (TextView)zmanimRowView.findViewById( R.id.zmanim_time );
+		}
+	}
+
+
+	private static class ZmanRowWrapper {
+
+		final TextView                                          nameField;
+		final TextView                                          timeField;
+		final TextView                                          descriptionField;
+		private final View                                      zmanRowView;
+
+		ZmanRowWrapper( View zmanRowView ) {
+			this.zmanRowView = zmanRowView;
+			nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
+			timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
+			descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
+
+			// TODO: Not showing descriptions just yet...
+			descriptionField.setVisibility( View.GONE );
 		}
 
-		TextView getNameField() {
-			if ( null == nameField ) {
-				nameField = (TextView)zmanimRowView.findViewById( R.id.zmanim_name );
-			}
-			return nameField;
-		}
-
-		TextView getTimeField() {
-			if ( null == timeField ) {
-				timeField = (TextView)zmanimRowView.findViewById( R.id.zmanim_time );
-			}
-			return timeField;
-		}
 	}
 
 
