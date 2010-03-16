@@ -208,7 +208,7 @@
   <component name="libraryTable">
     <library name="Zmanim API">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/libs/zmanim-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/zmanim.jar!/" />
       </CLASSES>
       <JAVADOC>
         <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/docs" />
