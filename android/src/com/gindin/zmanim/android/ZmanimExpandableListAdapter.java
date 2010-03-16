@@ -81,13 +81,7 @@ public class ZmanimExpandableListAdapter
 	 */
 	public int getChildrenCount( int group ) {
 
-		Zmanim.Type type = Zmanim.Type.values()[ group ];
-
-		// If we're not showing candle lighting, then we have to skip it.
-		if ( ( Zmanim.Type.CandleLighting == type ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
-			type = Zmanim.Type.values()[ group + 1 ];
-		}
-
+		final Zmanim.Type type = getTypeForGroup( group );
 		final Zmanim zmanim = zmanimCalendar.get( type );
 
 		return ( null == zmanim ? 0 : zmanim.size() );
@@ -99,13 +93,7 @@ public class ZmanimExpandableListAdapter
 	 */
 	public Zmanim getGroup( int group ) {
 
-		Zmanim.Type type = Zmanim.Type.values()[ group ];
-
-		// If we're not showing candle lighting, then we have to skip it.
-		if ( ( type.ordinal() >= Zmanim.Type.CandleLighting.ordinal() ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
-			type = Zmanim.Type.values()[ group + 1 ];
-		}
-
+		final Zmanim.Type type = getTypeForGroup( group );
 		return zmanimCalendar.get( type );
 	}
 
@@ -118,13 +106,7 @@ public class ZmanimExpandableListAdapter
 		int child
 	) {
 
-		Zmanim.Type type = Zmanim.Type.values()[ group ];
-
-		// If we're not showing candle lighting, then we have to skip it.
-		if ( ( type.ordinal() >= Zmanim.Type.CandleLighting.ordinal() ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
-			type = Zmanim.Type.values()[ group + 1 ];
-		}
-
+		final Zmanim.Type type = getTypeForGroup( group );
 		final Zmanim zmanim = zmanimCalendar.get( type );
 		if ( null == zmanim ) {
 			return null;
@@ -272,6 +254,18 @@ public class ZmanimExpandableListAdapter
 
 		// TODO: Should we kick off a pre-calc of the zmanim in this group?
 
+	}
+
+
+	private Zmanim.Type getTypeForGroup( int group ) {
+
+		Zmanim.Type type = Zmanim.Type.values()[ group ];
+
+		// If we're not showing candle lighting, then we have to skip it.
+		if ( ( type.ordinal() >= Zmanim.Type.CandleLighting.ordinal() ) && ( MAX_GROUPS != currentNumberOfGroups ) ) {
+			type = Zmanim.Type.values()[ group + 1 ];
+		}
+		return type;
 	}
 
 
