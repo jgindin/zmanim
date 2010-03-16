@@ -31,7 +31,7 @@ class PlagHaMincha
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "GR'A", "10.75 hours after sunrise. This calculation is calculated based on the opinion of the GR\"A and the Baal Hatanya that the day is calculated from sunrise to sunset. This returns the time 10.75 *getShaahZmanisGra() after sunrise." ) {
+			new Zman( "GR'A", "10.75 hours after sunrise. Based on the opinion of the GR'A and the Baal Hatanya that the day is calculated from sunrise to sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha();
 				}
@@ -39,7 +39,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 120 Minutes", "" ) {
+			new Zman( "MG'A 120 Minutes", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 120 minutes before sunrise and dusk is 120 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha120Minutes();
 				}
@@ -47,7 +47,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 120 Minutes Zmaniyot", "" ) {
+			new Zman( "MG'A 120 Minutes Zmaniyot", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 120 minutes zemaniyot before sunrise and dusk is 120 minutes zemaniyot after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha120MinutesZmanis();
 				}
@@ -55,7 +55,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "" ) {
+			new Zman( "MG'A 16.1°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 16.1° and ends at tzais 16.1°. This is calculated as 10.75 hours zmaniyos after dawn" ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha16Point1Degrees();
 				}
@@ -63,7 +63,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 18°", "" ) {
+			new Zman( "MG'A 18°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 18° and ends at tzait 18°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha18Degrees();
 				}
@@ -71,7 +71,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "" ) {
+			new Zman( "MG'A 19.8°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 19.8° and ends at tzait 19.8°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha19Point8Degrees();
 				}
@@ -79,7 +79,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 26°", "" ) {
+			new Zman( "MG'A 26°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 26° and ends at tzais 26°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha26Degrees();
 				}
@@ -87,7 +87,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 60 Minutes", "" ) {
+			new Zman( "MG'A 60 Minutes", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 60 minutes before sunrise and dusk is 60 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha60Minutes();
 				}
@@ -95,7 +95,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 72 Minutes", "" ) {
+			new Zman( "MG'A 72 Minutes", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 72 minutes before sunrise and dusk is 72 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha72Minutes();
 				}
@@ -103,7 +103,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 72 Minutes Zmaniyot", "" ) {
+			new Zman( "MG'A 72 Minutes Zmaniyot", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 72 minutes zemaniyot before sunrise and dusk is 72 zemaniyot minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha72MinutesZmanis();
 				}
@@ -111,7 +111,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes", "" ) {
+			new Zman( "MG'A 90 Minutes", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 90 minutes before sunrise and dusk is 90 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha90Minutes();
 				}
@@ -119,7 +119,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes Zmaniyot", "" ) {
+			new Zman( "MG'A 90 Minutes Zmaniyot", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 90 minutes zemaniyot before sunrise and dusk is 90 zemaniyot minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha90MinutesZmanis();
 				}
@@ -127,7 +127,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 96 Minutes", "" ) {
+			new Zman( "MG'A 96 Minutes", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 96 minutes before sunrise and dusk is 96 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha96Minutes();
 				}
@@ -135,7 +135,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 96 Minutes Zmaniyot", "" ) {
+			new Zman( "MG'A 96 Minutes Zmaniyot", "10.75 hours after dawn. Based on the opinion of the MG'A that the day runs from dawn to dusk. Dawn for this calculation is 96 minutes zemaniyot before sunrise and dusk is 96 zemaniyot minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha96MinutesZmanis();
 				}

@@ -31,7 +31,7 @@ class Shkia
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Sunset", "" ) {
+			new Zman( "Sunset", "The exact sunset time.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSunset();
 				}

@@ -18,9 +18,6 @@ public abstract class Zmanim {
 	/** The individual zmanim for this set. */
 	private final List<Zman>                                  zmanim;
 
-	/** When we need to round a zman up or down, this is the guy to do it. */
-	protected final ZmanRounder                               zmanRounder = new ZmanRounder();
-
 
 	protected Zmanim(
 		final Type        type,

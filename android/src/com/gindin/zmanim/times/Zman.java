@@ -17,6 +17,9 @@ public abstract class Zman {
 	/** Describes this zman. E.g., "Latest Shema according to the GR'A". */
 	public final String                                       description;
 
+	/** Advanced zmanim should not be shown unless the user has explicitly indicated they want to see them. */
+	public final boolean                                      advanced;
+
 	/** Keep the calculation cached until we're told to clear the cache. */
 	private Date                                              cachedTime;
 
@@ -25,8 +28,18 @@ public abstract class Zman {
 		String  name,
 		String  description
 	) {
+		this( name, description, true );
+	}
+
+
+	public Zman(
+		String  name,
+		String  description,
+	  boolean advanced
+	) {
 		this.name = name;
 		this.description = description;
+		this.advanced = advanced;
 	}
 
 	public Date getTime() {
