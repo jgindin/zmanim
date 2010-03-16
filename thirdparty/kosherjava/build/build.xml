@@ -1,17 +1,18 @@
 <project name="BuildZmanim" default="all" basedir="../">
 	<target name="all" depends="jar_zmanim, jar_zmanim_output, jar_zmanim_applet, javadoc_zmanim, zip_zmanim, backup_zmanim"/>
-	<property name="version" value="1.1"/>
+	<property name="version" value="1.2"/>
 	<property name="author" value="Eliyahu Hershfeld"/>
 	<property name="lib_dir" value="lib"/>
+	<property name="third_party_jars" value="../../dev/jars"/>
 	<property name="src_dir" value="src/Java"/>
 	<property name="tmp_dir" value="tempZmanimBuildDir"/>
 	<property name="release_dir" value="release"/>
 	<property name="doc_dir" value="docs/api"/>
 	<property name="build_dir" value="build"/>
 	<property name="backup_dir" value="backup"/>
-	<!--property name="javac_exe" value="C:\j2sdk1.4.2_08\bin\javac"/-->
 
 	<target name="echo_values">
+		<echo message="third_party_jars = ${third_party_jars}"/>
 		<echo message="lib_dir = ${lib_dir}"/>
 		<echo message="src_dir = ${src_dir}"/>
 		<echo message="release_dir = ${release_dir}"/>
@@ -28,11 +29,12 @@
 		<mkdir dir="${backup_dir}"/>
 	</target>
 	<path id="project.class.path">
-		<fileset dir="${lib_dir}">
-			<include name="itext-2.0.0.jar"/>
+		<fileset dir="${third_party_jars}">
+			<include name="iText.jar"/>
+			<!--include name="poi-3.6-20091214.jar"/--><!--JDK greater than 1.4? -->
 			<include name="poi-3.2-FINAL-20081019.jar"/>
 			<include name="jdom-1.0.jar"/>
-			<include name="rome-0.9.jar"/>
+			<include name="rome-1.0.jar"/>
 		</fileset>
     </path>
 
@@ -163,8 +165,7 @@
 			windowtitle="Zmanim API ${version}"
 			linksource="yes"
 			breakiterator="yes"
-			charset="utf-8"
-			executable="C:\Program Files\Java\jdk1.6.0\bin\javadoc.exe">
+			charset="utf-8">
 			<classpath refid="project.class.path"/>
     		<fileset dir="${src_dir}" defaultexcludes="yes">
     			<include name="**/*.java" />
@@ -174,7 +175,7 @@
     		</fileset>
     		<doctitle><![CDATA[<h1>Zmanim API ${version}</h1>]]></doctitle>
 			<header><![CDATA[<a href="http://www.kosherjava.com/zmanim/" target="_top">KosherJava Zmanim Homepage</a>]]></header>
-    		<bottom><![CDATA[<i>Copyright &#169; 2004 - 2009 Eliyahu Hershfeld. All Rights Reserved. Released under the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt">GPL 2 license</a></i>]]></bottom>
+    		<bottom><![CDATA[<i>Copyright &#169; 2004 - 2010 Eliyahu Hershfeld. All Rights Reserved. Released under the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt">GPL 2 license</a></i>]]></bottom>
 			<link offline="true" href="http://java.sun.com/javase/6/docs/api/" packagelistLoc="${build_dir}/packageLists/sun"/>
 			<!--link offline="true" href="http://itext.ugent.be/library/api/" packagelistLoc="${build_dir}/packageLists/iText"/>
 			<link offline="true" href="http://jakarta.apache.org/poi/apidocs/" packagelistLoc="${build_dir}/packageLists/poi"/>

@@ -1,6 +1,6 @@
 /*
  * Zmanim Java API
- * Copyright (C) 2004-2007 Eliyahu Hershfeld
+ * Copyright (C) 2004-2010 Eliyahu Hershfeld
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 2 of the
@@ -34,8 +34,8 @@ import net.sourceforge.zmanim.*;
  * {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour()} returns
  * the length of the hour in milliseconds. This class can format this time.
  * 
- * @author &copy; Eliyahu Hershfeld 2004 - 2007
- * @version 0.9.0
+ * @author &copy; Eliyahu Hershfeld 2004 - 2010
+ * @version 1.2
  */
 public class ZmanimFormatter {
 	private boolean prependZeroHours;
@@ -82,7 +82,7 @@ public class ZmanimFormatter {
 	static final long MINUTE_MILLIS = 60 * 1000;
 	
 	/** constant for milliseconds in an hour (3,600,000) */
-	static final long HOUR_MILLIS = MINUTE_MILLIS * 60;
+	public static final long HOUR_MILLIS = MINUTE_MILLIS * 60;
 
 	/**
 	 * Format using the XSD Duration format. This is in the format of
@@ -378,7 +378,7 @@ public class ZmanimFormatter {
 				+ "\"";
 		output += " timeZoneOffset=\""
 				+ (ac.getGeoLocation().getTimeZone().getOffset(
-						ac.getCalendar().getTimeInMillis()) / (HOUR_MILLIS))
+						ac.getCalendar().getTimeInMillis()) / ((double)HOUR_MILLIS))
 				+ "\"";
 
 		output += ">\n";

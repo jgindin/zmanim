@@ -16,14 +16,12 @@
  */
 package net.sourceforge.zmanim.util;
 
-import java.util.TimeZone;
-
 /**
  * A class for various location calculations
  * Most of the code in this class is ported from <a href="http://www.movable-type.co.uk/">Chris Veness'</a>
  * <a href="http://www.fsf.org/licensing/licenses/lgpl.html">LGPL</a> Javascript Implementation
  *
- * @author &copy; Eliyahu Hershfeld 2008
+ * @author &copy; Eliyahu Hershfeld 2009
  * @version 0.1
  */
 public class GeoLocationUtils {

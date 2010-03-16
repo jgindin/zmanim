@@ -3,7 +3,7 @@
 <PRE>
 <FONT color="green">001</FONT>    /*<a name="line.1"></a>
 <FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
-<FONT color="green">003</FONT>     * Copyright (C) 2004-2007 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2010 Eliyahu Hershfeld<a name="line.3"></a>
 <FONT color="green">004</FONT>     * <a name="line.4"></a>
 <FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
 <FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
@@ -37,8 +37,8 @@
 <FONT color="green">034</FONT>     * {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour()} returns<a name="line.34"></a>
 <FONT color="green">035</FONT>     * the length of the hour in milliseconds. This class can format this time.<a name="line.35"></a>
 <FONT color="green">036</FONT>     * <a name="line.36"></a>
-<FONT color="green">037</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2007<a name="line.37"></a>
-<FONT color="green">038</FONT>     * @version 0.9.0<a name="line.38"></a>
+<FONT color="green">037</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2010<a name="line.37"></a>
+<FONT color="green">038</FONT>     * @version 1.2<a name="line.38"></a>
 <FONT color="green">039</FONT>     */<a name="line.39"></a>
 <FONT color="green">040</FONT>    public class ZmanimFormatter {<a name="line.40"></a>
 <FONT color="green">041</FONT>            private boolean prependZeroHours;<a name="line.41"></a>
@@ -85,7 +85,7 @@
 <FONT color="green">082</FONT>            static final long MINUTE_MILLIS = 60 * 1000;<a name="line.82"></a>
 <FONT color="green">083</FONT>            <a name="line.83"></a>
 <FONT color="green">084</FONT>            /** constant for milliseconds in an hour (3,600,000) */<a name="line.84"></a>
-<FONT color="green">085</FONT>            static final long HOUR_MILLIS = MINUTE_MILLIS * 60;<a name="line.85"></a>
+<FONT color="green">085</FONT>            public static final long HOUR_MILLIS = MINUTE_MILLIS * 60;<a name="line.85"></a>
 <FONT color="green">086</FONT>    <a name="line.86"></a>
 <FONT color="green">087</FONT>            /**<a name="line.87"></a>
 <FONT color="green">088</FONT>             * Format using the XSD Duration format. This is in the format of<a name="line.88"></a>
@@ -381,7 +381,7 @@
 <FONT color="green">378</FONT>                                    + "\"";<a name="line.378"></a>
 <FONT color="green">379</FONT>                    output += " timeZoneOffset=\""<a name="line.379"></a>
 <FONT color="green">380</FONT>                                    + (ac.getGeoLocation().getTimeZone().getOffset(<a name="line.380"></a>
-<FONT color="green">381</FONT>                                                    ac.getCalendar().getTimeInMillis()) / (HOUR_MILLIS))<a name="line.381"></a>
+<FONT color="green">381</FONT>                                                    ac.getCalendar().getTimeInMillis()) / ((double)HOUR_MILLIS))<a name="line.381"></a>
 <FONT color="green">382</FONT>                                    + "\"";<a name="line.382"></a>
 <FONT color="green">383</FONT>    <a name="line.383"></a>
 <FONT color="green">384</FONT>                    output += "&gt;\n";<a name="line.384"></a>

@@ -3,7 +3,7 @@
 <PRE>
 <FONT color="green">001</FONT>    /*<a name="line.1"></a>
 <FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
-<FONT color="green">003</FONT>     * Copyright (C) 2004-2008 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2010 Eliyahu Hershfeld<a name="line.3"></a>
 <FONT color="green">004</FONT>     *<a name="line.4"></a>
 <FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
 <FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
@@ -72,8 +72,8 @@
 <FONT color="green">069</FONT>     * &lt;/pre&gt;<a name="line.69"></a>
 <FONT color="green">070</FONT>     * <a name="line.70"></a>
 <FONT color="green">071</FONT>     * <a name="line.71"></a>
-<FONT color="green">072</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2009<a name="line.72"></a>
-<FONT color="green">073</FONT>     * @version 1.1<a name="line.73"></a>
+<FONT color="green">072</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2010<a name="line.72"></a>
+<FONT color="green">073</FONT>     * @version 1.2<a name="line.73"></a>
 <FONT color="green">074</FONT>     */<a name="line.74"></a>
 <FONT color="green">075</FONT>    public class AstronomicalCalendar implements Cloneable {<a name="line.75"></a>
 <FONT color="green">076</FONT>            private static final long serialVersionUID = 1;<a name="line.76"></a>
@@ -589,228 +589,226 @@
 <FONT color="green">586</FONT>                    }<a name="line.586"></a>
 <FONT color="green">587</FONT>                    time = getOffsetTime(time);<a name="line.587"></a>
 <FONT color="green">588</FONT>                    time = (time + 240) % 24; // the calculators sometimes return a double<a name="line.588"></a>
-<FONT color="green">589</FONT>                    // that is negative or slightly greater than<a name="line.589"></a>
-<FONT color="green">590</FONT>                    // 24<a name="line.590"></a>
-<FONT color="green">591</FONT>                    Calendar cal = new GregorianCalendar();<a name="line.591"></a>
-<FONT color="green">592</FONT>                    cal.clear();<a name="line.592"></a>
-<FONT color="green">593</FONT>                    cal.set(Calendar.YEAR, getCalendar().get(Calendar.YEAR));<a name="line.593"></a>
-<FONT color="green">594</FONT>                    cal.set(Calendar.MONTH, getCalendar().get(Calendar.MONTH));<a name="line.594"></a>
-<FONT color="green">595</FONT>                    cal<a name="line.595"></a>
-<FONT color="green">596</FONT>                                    .set(Calendar.DAY_OF_MONTH, getCalendar().get(<a name="line.596"></a>
-<FONT color="green">597</FONT>                                                    Calendar.DAY_OF_MONTH));<a name="line.597"></a>
-<FONT color="green">598</FONT>    <a name="line.598"></a>
-<FONT color="green">599</FONT>                    int hours = (int) time; // cut off minutes<a name="line.599"></a>
-<FONT color="green">600</FONT>    <a name="line.600"></a>
-<FONT color="green">601</FONT>                    time -= hours;<a name="line.601"></a>
-<FONT color="green">602</FONT>                    int minutes = (int) (time *= 60);<a name="line.602"></a>
-<FONT color="green">603</FONT>                    time -= minutes;<a name="line.603"></a>
-<FONT color="green">604</FONT>                    int seconds = (int) (time *= 60);<a name="line.604"></a>
-<FONT color="green">605</FONT>                    time -= seconds; // milliseconds<a name="line.605"></a>
-<FONT color="green">606</FONT>    <a name="line.606"></a>
-<FONT color="green">607</FONT>                    cal.set(Calendar.HOUR_OF_DAY, hours);<a name="line.607"></a>
-<FONT color="green">608</FONT>                    cal.set(Calendar.MINUTE, minutes);<a name="line.608"></a>
-<FONT color="green">609</FONT>                    cal.set(Calendar.SECOND, seconds);<a name="line.609"></a>
-<FONT color="green">610</FONT>                    cal.set(Calendar.MILLISECOND, (int) (time * 1000));<a name="line.610"></a>
-<FONT color="green">611</FONT>                    return cal.getTime();<a name="line.611"></a>
-<FONT color="green">612</FONT>            }<a name="line.612"></a>
-<FONT color="green">613</FONT>    <a name="line.613"></a>
-<FONT color="green">614</FONT>            /**<a name="line.614"></a>
-<FONT color="green">615</FONT>             * Will return the dip below the horizon before sunrise that matches the<a name="line.615"></a>
-<FONT color="green">616</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.616"></a>
-<FONT color="green">617</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.617"></a>
-<FONT color="green">618</FONT>             * 16.1&amp;deg;<a name="line.618"></a>
-<FONT color="green">619</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.619"></a>
-<FONT color="green">620</FONT>             * TODO: Improve efficiency.<a name="line.620"></a>
-<FONT color="green">621</FONT>             * @param minutes<a name="line.621"></a>
-<FONT color="green">622</FONT>             *            offset<a name="line.622"></a>
-<FONT color="green">623</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.623"></a>
-<FONT color="green">624</FONT>             *         equinox in Jerusalem at sea level.<a name="line.624"></a>
-<FONT color="green">625</FONT>             */<a name="line.625"></a>
-<FONT color="green">626</FONT>            public double getSunriseSolarDipFromOffset(double minutes) {<a name="line.626"></a>
-<FONT color="green">627</FONT>                    Date offsetByDegrees = getSeaLevelSunrise();<a name="line.627"></a>
-<FONT color="green">628</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunrise(), -(minutes * MINUTE_MILLIS));<a name="line.628"></a>
-<FONT color="green">629</FONT>    <a name="line.629"></a>
-<FONT color="green">630</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.630"></a>
-<FONT color="green">631</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.631"></a>
-<FONT color="green">632</FONT>                    while (offsetByDegrees == null<a name="line.632"></a>
-<FONT color="green">633</FONT>                                    || offsetByDegrees.getTime() &gt; offsetByTime.getTime()) {<a name="line.633"></a>
-<FONT color="green">634</FONT>                            degrees = degrees.add(incrementor);<a name="line.634"></a>
-<FONT color="green">635</FONT>                            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH    + degrees.doubleValue());<a name="line.635"></a>
-<FONT color="green">636</FONT>                    }<a name="line.636"></a>
-<FONT color="green">637</FONT>                    return degrees.doubleValue();<a name="line.637"></a>
-<FONT color="green">638</FONT>            }<a name="line.638"></a>
-<FONT color="green">639</FONT>            <a name="line.639"></a>
-<FONT color="green">640</FONT>            /**<a name="line.640"></a>
-<FONT color="green">641</FONT>             * Will return the dip below the horizon after sunset that matches the<a name="line.641"></a>
-<FONT color="green">642</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.642"></a>
-<FONT color="green">643</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.643"></a>
-<FONT color="green">644</FONT>             * 16.1&amp;deg;<a name="line.644"></a>
-<FONT color="green">645</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.645"></a>
-<FONT color="green">646</FONT>             * &lt;em&gt;&lt;b&gt;TODO:&lt;/b&gt;&lt;/em&gt; Improve efficiency.<a name="line.646"></a>
-<FONT color="green">647</FONT>             * @param minutes offset<a name="line.647"></a>
-<FONT color="green">648</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.648"></a>
-<FONT color="green">649</FONT>             *         equinox in Jerusalem at sea level.<a name="line.649"></a>
-<FONT color="green">650</FONT>             * @see #getSunriseSolarDipFromOffset(double)<a name="line.650"></a>
-<FONT color="green">651</FONT>             */<a name="line.651"></a>
-<FONT color="green">652</FONT>            public double getSunsetSolarDipFromOffset(double minutes) {<a name="line.652"></a>
-<FONT color="green">653</FONT>                    Date offsetByDegrees = getSeaLevelSunset();<a name="line.653"></a>
-<FONT color="green">654</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunset(), minutes * MINUTE_MILLIS);<a name="line.654"></a>
-<FONT color="green">655</FONT>    <a name="line.655"></a>
-<FONT color="green">656</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.656"></a>
-<FONT color="green">657</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.657"></a>
-<FONT color="green">658</FONT>                    while (offsetByDegrees == null<a name="line.658"></a>
-<FONT color="green">659</FONT>                                    || offsetByDegrees.getTime() &lt; offsetByTime.getTime()) {<a name="line.659"></a>
-<FONT color="green">660</FONT>                            degrees = degrees.add(incrementor);<a name="line.660"></a>
-<FONT color="green">661</FONT>                            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH     + degrees.doubleValue());<a name="line.661"></a>
-<FONT color="green">662</FONT>                    }<a name="line.662"></a>
-<FONT color="green">663</FONT>                    return degrees.doubleValue();<a name="line.663"></a>
-<FONT color="green">664</FONT>            }<a name="line.664"></a>
-<FONT color="green">665</FONT>    <a name="line.665"></a>
-<FONT color="green">666</FONT>            /**<a name="line.666"></a>
-<FONT color="green">667</FONT>             * @return an XML formatted representation of the class. It returns the<a name="line.667"></a>
-<FONT color="green">668</FONT>             *         default output of the<a name="line.668"></a>
-<FONT color="green">669</FONT>             *         {@link net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar) toXML}<a name="line.669"></a>
-<FONT color="green">670</FONT>             *         method.<a name="line.670"></a>
-<FONT color="green">671</FONT>             * @see net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)<a name="line.671"></a>
-<FONT color="green">672</FONT>             * @see java.lang.Object#toString()<a name="line.672"></a>
-<FONT color="green">673</FONT>             */<a name="line.673"></a>
-<FONT color="green">674</FONT>            public String toString() {<a name="line.674"></a>
-<FONT color="green">675</FONT>                    return ZmanimFormatter.toXML(this);<a name="line.675"></a>
-<FONT color="green">676</FONT>            }<a name="line.676"></a>
-<FONT color="green">677</FONT>    <a name="line.677"></a>
-<FONT color="green">678</FONT>            /**<a name="line.678"></a>
-<FONT color="green">679</FONT>             * @see java.lang.Object#equals(Object)<a name="line.679"></a>
-<FONT color="green">680</FONT>             */<a name="line.680"></a>
-<FONT color="green">681</FONT>            public boolean equals(Object object) {<a name="line.681"></a>
-<FONT color="green">682</FONT>                    if (this == object)<a name="line.682"></a>
-<FONT color="green">683</FONT>                            return true;<a name="line.683"></a>
-<FONT color="green">684</FONT>                    if (!(object instanceof AstronomicalCalendar))<a name="line.684"></a>
-<FONT color="green">685</FONT>                            return false;<a name="line.685"></a>
-<FONT color="green">686</FONT>                    AstronomicalCalendar aCal = (AstronomicalCalendar) object;<a name="line.686"></a>
-<FONT color="green">687</FONT>                    return getCalendar().equals(aCal.getCalendar())<a name="line.687"></a>
-<FONT color="green">688</FONT>                                    &amp;&amp; getGeoLocation().equals(aCal.getGeoLocation())<a name="line.688"></a>
-<FONT color="green">689</FONT>                                    &amp;&amp; getAstronomicalCalculator().equals(<a name="line.689"></a>
-<FONT color="green">690</FONT>                                                    aCal.getAstronomicalCalculator());<a name="line.690"></a>
-<FONT color="green">691</FONT>            }<a name="line.691"></a>
-<FONT color="green">692</FONT>    <a name="line.692"></a>
-<FONT color="green">693</FONT>            /**<a name="line.693"></a>
-<FONT color="green">694</FONT>             * @see java.lang.Object#hashCode()<a name="line.694"></a>
-<FONT color="green">695</FONT>             */<a name="line.695"></a>
-<FONT color="green">696</FONT>            public int hashCode() {<a name="line.696"></a>
-<FONT color="green">697</FONT>                    int result = 17;<a name="line.697"></a>
-<FONT color="green">698</FONT>                    // needed or this and subclasses will return identical hash<a name="line.698"></a>
-<FONT color="green">699</FONT>                    result = 37 * result + getClass().hashCode();<a name="line.699"></a>
-<FONT color="green">700</FONT>                    result += 37 * result + getCalendar().hashCode();<a name="line.700"></a>
-<FONT color="green">701</FONT>                    result += 37 * result + getGeoLocation().hashCode();<a name="line.701"></a>
-<FONT color="green">702</FONT>                    result += 37 * result + getAstronomicalCalculator().hashCode();<a name="line.702"></a>
-<FONT color="green">703</FONT>                    return result;<a name="line.703"></a>
-<FONT color="green">704</FONT>            }<a name="line.704"></a>
-<FONT color="green">705</FONT>    <a name="line.705"></a>
-<FONT color="green">706</FONT>            /**<a name="line.706"></a>
-<FONT color="green">707</FONT>             * A method that returns the currently set {@link GeoLocation} that contains<a name="line.707"></a>
-<FONT color="green">708</FONT>             * location information used for the astronomical calculations.<a name="line.708"></a>
-<FONT color="green">709</FONT>             * <a name="line.709"></a>
-<FONT color="green">710</FONT>             * @return Returns the geoLocation.<a name="line.710"></a>
-<FONT color="green">711</FONT>             */<a name="line.711"></a>
-<FONT color="green">712</FONT>            public GeoLocation getGeoLocation() {<a name="line.712"></a>
-<FONT color="green">713</FONT>                    return geoLocation;<a name="line.713"></a>
-<FONT color="green">714</FONT>            }<a name="line.714"></a>
-<FONT color="green">715</FONT>    <a name="line.715"></a>
-<FONT color="green">716</FONT>            /**<a name="line.716"></a>
-<FONT color="green">717</FONT>             * Set the {@link GeoLocation} to be used for astronomical calculations.<a name="line.717"></a>
-<FONT color="green">718</FONT>             * <a name="line.718"></a>
-<FONT color="green">719</FONT>             * @param geoLocation<a name="line.719"></a>
-<FONT color="green">720</FONT>             *            The geoLocation to set.<a name="line.720"></a>
-<FONT color="green">721</FONT>             */<a name="line.721"></a>
-<FONT color="green">722</FONT>            public void setGeoLocation(GeoLocation geoLocation) {<a name="line.722"></a>
-<FONT color="green">723</FONT>                    this.geoLocation = geoLocation;<a name="line.723"></a>
-<FONT color="green">724</FONT>                    // if not set the output will be in the original timezone. The call<a name="line.724"></a>
-<FONT color="green">725</FONT>                    // below is also in the constructor<a name="line.725"></a>
-<FONT color="green">726</FONT>                    getCalendar().setTimeZone(geoLocation.getTimeZone());<a name="line.726"></a>
-<FONT color="green">727</FONT>            }<a name="line.727"></a>
-<FONT color="green">728</FONT>    <a name="line.728"></a>
-<FONT color="green">729</FONT>            /**<a name="line.729"></a>
-<FONT color="green">730</FONT>             * A method to return the current AstronomicalCalculator set.<a name="line.730"></a>
-<FONT color="green">731</FONT>             * <a name="line.731"></a>
-<FONT color="green">732</FONT>             * @return Returns the astronimicalCalculator.<a name="line.732"></a>
-<FONT color="green">733</FONT>             * @see #setAstronomicalCalculator(AstronomicalCalculator)<a name="line.733"></a>
-<FONT color="green">734</FONT>             */<a name="line.734"></a>
-<FONT color="green">735</FONT>            public AstronomicalCalculator getAstronomicalCalculator() {<a name="line.735"></a>
-<FONT color="green">736</FONT>                    return astronomicalCalculator;<a name="line.736"></a>
-<FONT color="green">737</FONT>            }<a name="line.737"></a>
-<FONT color="green">738</FONT>    <a name="line.738"></a>
-<FONT color="green">739</FONT>            /**<a name="line.739"></a>
-<FONT color="green">740</FONT>             * A method to set the {@link AstronomicalCalculator} used for astronomical<a name="line.740"></a>
-<FONT color="green">741</FONT>             * calculations. The Zmanim package ships with a number of different<a name="line.741"></a>
-<FONT color="green">742</FONT>             * implementations of the &lt;code&gt;abstract&lt;/code&gt;<a name="line.742"></a>
-<FONT color="green">743</FONT>             * {@link AstronomicalCalculator} based on different algorithms, including<a name="line.743"></a>
-<FONT color="green">744</FONT>             * {@link net.sourceforge.zmanim.util.SunTimesCalculator one implementation}<a name="line.744"></a>
-<FONT color="green">745</FONT>             * based on the &lt;a href = "http://aa.usno.navy.mil/"&gt;US Naval Observatory's&lt;/a&gt;<a name="line.745"></a>
-<FONT color="green">746</FONT>             * algorithm, and<a name="line.746"></a>
-<FONT color="green">747</FONT>             * {@link net.sourceforge.zmanim.util.JSuntimeCalculator another} based on<a name="line.747"></a>
-<FONT color="green">748</FONT>             * &lt;a href=""http://noaa.gov"&gt;NOAA's&lt;/a&gt; algorithm. This allows easy<a name="line.748"></a>
-<FONT color="green">749</FONT>             * runtime switching and comparison of different algorithms.<a name="line.749"></a>
-<FONT color="green">750</FONT>             * <a name="line.750"></a>
-<FONT color="green">751</FONT>             * @param astronomicalCalculator<a name="line.751"></a>
-<FONT color="green">752</FONT>             *            The astronimicalCalculator to set.<a name="line.752"></a>
-<FONT color="green">753</FONT>             */<a name="line.753"></a>
-<FONT color="green">754</FONT>            public void setAstronomicalCalculator(<a name="line.754"></a>
-<FONT color="green">755</FONT>                            AstronomicalCalculator astronomicalCalculator) {<a name="line.755"></a>
-<FONT color="green">756</FONT>                    this.astronomicalCalculator = astronomicalCalculator;<a name="line.756"></a>
-<FONT color="green">757</FONT>            }<a name="line.757"></a>
-<FONT color="green">758</FONT>    <a name="line.758"></a>
-<FONT color="green">759</FONT>            /**<a name="line.759"></a>
-<FONT color="green">760</FONT>             * returns the Calendar object encapsulated in this class.<a name="line.760"></a>
-<FONT color="green">761</FONT>             * <a name="line.761"></a>
-<FONT color="green">762</FONT>             * @return Returns the calendar.<a name="line.762"></a>
-<FONT color="green">763</FONT>             */<a name="line.763"></a>
-<FONT color="green">764</FONT>            public Calendar getCalendar() {<a name="line.764"></a>
-<FONT color="green">765</FONT>                    return calendar;<a name="line.765"></a>
-<FONT color="green">766</FONT>            }<a name="line.766"></a>
-<FONT color="green">767</FONT>    <a name="line.767"></a>
-<FONT color="green">768</FONT>            /**<a name="line.768"></a>
-<FONT color="green">769</FONT>             * @param calendar<a name="line.769"></a>
-<FONT color="green">770</FONT>             *            The calendar to set.<a name="line.770"></a>
-<FONT color="green">771</FONT>             */<a name="line.771"></a>
-<FONT color="green">772</FONT>            public void setCalendar(Calendar calendar) {<a name="line.772"></a>
-<FONT color="green">773</FONT>                    this.calendar = calendar;<a name="line.773"></a>
-<FONT color="green">774</FONT>                    if (getGeoLocation() != null) {// set the timezone if possible<a name="line.774"></a>
-<FONT color="green">775</FONT>                            // Always set the Calendar's timezone to match the GeoLocation<a name="line.775"></a>
-<FONT color="green">776</FONT>                            // TimeZone<a name="line.776"></a>
-<FONT color="green">777</FONT>                            getCalendar().setTimeZone(getGeoLocation().getTimeZone());<a name="line.777"></a>
-<FONT color="green">778</FONT>                    }<a name="line.778"></a>
-<FONT color="green">779</FONT>            }<a name="line.779"></a>
-<FONT color="green">780</FONT>    <a name="line.780"></a>
-<FONT color="green">781</FONT>            /**<a name="line.781"></a>
-<FONT color="green">782</FONT>             * A method that creates a &lt;a<a name="line.782"></a>
-<FONT color="green">783</FONT>             * href="http://en.wikipedia.org/wiki/Object_copy#Deep_copy"&gt;deep copy&lt;/a&gt;<a name="line.783"></a>
-<FONT color="green">784</FONT>             * of the object. &lt;br /&gt;<a name="line.784"></a>
-<FONT color="green">785</FONT>             * &lt;b&gt;Note:&lt;/b&gt; If the {@link java.util.TimeZone} in the cloned<a name="line.785"></a>
-<FONT color="green">786</FONT>             * {@link net.sourceforge.zmanim.util.GeoLocation} will be changed from the<a name="line.786"></a>
-<FONT color="green">787</FONT>             * original, it is critical that<a name="line.787"></a>
-<FONT color="green">788</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.{@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)}<a name="line.788"></a>
-<FONT color="green">789</FONT>             * be called in order for the AstronomicalCalendar to output times in the<a name="line.789"></a>
-<FONT color="green">790</FONT>             * expected offset after being cloned.<a name="line.790"></a>
-<FONT color="green">791</FONT>             * <a name="line.791"></a>
-<FONT color="green">792</FONT>             * @see java.lang.Object#clone()<a name="line.792"></a>
-<FONT color="green">793</FONT>             * @since 1.1<a name="line.793"></a>
-<FONT color="green">794</FONT>             */<a name="line.794"></a>
-<FONT color="green">795</FONT>            public Object clone() {<a name="line.795"></a>
-<FONT color="green">796</FONT>                    AstronomicalCalendar clone = null;<a name="line.796"></a>
-<FONT color="green">797</FONT>                    try {<a name="line.797"></a>
-<FONT color="green">798</FONT>                            clone = (AstronomicalCalendar) super.clone();<a name="line.798"></a>
-<FONT color="green">799</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.799"></a>
-<FONT color="green">800</FONT>                            System.out<a name="line.800"></a>
-<FONT color="green">801</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.801"></a>
-<FONT color="green">802</FONT>                    }<a name="line.802"></a>
-<FONT color="green">803</FONT>                    clone.setGeoLocation((GeoLocation) getGeoLocation().clone());<a name="line.803"></a>
-<FONT color="green">804</FONT>                    clone.setCalendar((Calendar) getCalendar().clone());<a name="line.804"></a>
-<FONT color="green">805</FONT>                    clone<a name="line.805"></a>
-<FONT color="green">806</FONT>                                    .setAstronomicalCalculator((AstronomicalCalculator) getAstronomicalCalculator()<a name="line.806"></a>
-<FONT color="green">807</FONT>                                                    .clone());<a name="line.807"></a>
-<FONT color="green">808</FONT>                    return clone;<a name="line.808"></a>
-<FONT color="green">809</FONT>            }<a name="line.809"></a>
-<FONT color="green">810</FONT>    }<a name="line.810"></a>
+<FONT color="green">589</FONT>                    // that is negative or slightly greater than 24<a name="line.589"></a>
+<FONT color="green">590</FONT>                    Calendar cal = new GregorianCalendar();<a name="line.590"></a>
+<FONT color="green">591</FONT>                    cal.clear();<a name="line.591"></a>
+<FONT color="green">592</FONT>                    cal.set(Calendar.YEAR, getCalendar().get(Calendar.YEAR));<a name="line.592"></a>
+<FONT color="green">593</FONT>                    cal.set(Calendar.MONTH, getCalendar().get(Calendar.MONTH));<a name="line.593"></a>
+<FONT color="green">594</FONT>                    cal<a name="line.594"></a>
+<FONT color="green">595</FONT>                                    .set(Calendar.DAY_OF_MONTH, getCalendar().get(<a name="line.595"></a>
+<FONT color="green">596</FONT>                                                    Calendar.DAY_OF_MONTH));<a name="line.596"></a>
+<FONT color="green">597</FONT>    <a name="line.597"></a>
+<FONT color="green">598</FONT>                    int hours = (int) time; // cut off minutes<a name="line.598"></a>
+<FONT color="green">599</FONT>    <a name="line.599"></a>
+<FONT color="green">600</FONT>                    time -= hours;<a name="line.600"></a>
+<FONT color="green">601</FONT>                    int minutes = (int) (time *= 60);<a name="line.601"></a>
+<FONT color="green">602</FONT>                    time -= minutes;<a name="line.602"></a>
+<FONT color="green">603</FONT>                    int seconds = (int) (time *= 60);<a name="line.603"></a>
+<FONT color="green">604</FONT>                    time -= seconds; // milliseconds<a name="line.604"></a>
+<FONT color="green">605</FONT>    <a name="line.605"></a>
+<FONT color="green">606</FONT>                    cal.set(Calendar.HOUR_OF_DAY, hours);<a name="line.606"></a>
+<FONT color="green">607</FONT>                    cal.set(Calendar.MINUTE, minutes);<a name="line.607"></a>
+<FONT color="green">608</FONT>                    cal.set(Calendar.SECOND, seconds);<a name="line.608"></a>
+<FONT color="green">609</FONT>                    cal.set(Calendar.MILLISECOND, (int) (time * 1000));<a name="line.609"></a>
+<FONT color="green">610</FONT>                    return cal.getTime();<a name="line.610"></a>
+<FONT color="green">611</FONT>            }<a name="line.611"></a>
+<FONT color="green">612</FONT>    <a name="line.612"></a>
+<FONT color="green">613</FONT>            /**<a name="line.613"></a>
+<FONT color="green">614</FONT>             * Will return the dip below the horizon before sunrise that matches the<a name="line.614"></a>
+<FONT color="green">615</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.615"></a>
+<FONT color="green">616</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.616"></a>
+<FONT color="green">617</FONT>             * 16.1&amp;deg;<a name="line.617"></a>
+<FONT color="green">618</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.618"></a>
+<FONT color="green">619</FONT>             * TODO: Improve efficiency.<a name="line.619"></a>
+<FONT color="green">620</FONT>             * @param minutes<a name="line.620"></a>
+<FONT color="green">621</FONT>             *            offset<a name="line.621"></a>
+<FONT color="green">622</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.622"></a>
+<FONT color="green">623</FONT>             *         equinox in Jerusalem at sea level.<a name="line.623"></a>
+<FONT color="green">624</FONT>             */<a name="line.624"></a>
+<FONT color="green">625</FONT>            public double getSunriseSolarDipFromOffset(double minutes) {<a name="line.625"></a>
+<FONT color="green">626</FONT>                    Date offsetByDegrees = getSeaLevelSunrise();<a name="line.626"></a>
+<FONT color="green">627</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunrise(), -(minutes * MINUTE_MILLIS));<a name="line.627"></a>
+<FONT color="green">628</FONT>    <a name="line.628"></a>
+<FONT color="green">629</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.629"></a>
+<FONT color="green">630</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.630"></a>
+<FONT color="green">631</FONT>                    while (offsetByDegrees == null<a name="line.631"></a>
+<FONT color="green">632</FONT>                                    || offsetByDegrees.getTime() &gt; offsetByTime.getTime()) {<a name="line.632"></a>
+<FONT color="green">633</FONT>                            degrees = degrees.add(incrementor);<a name="line.633"></a>
+<FONT color="green">634</FONT>                            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH    + degrees.doubleValue());<a name="line.634"></a>
+<FONT color="green">635</FONT>                    }<a name="line.635"></a>
+<FONT color="green">636</FONT>                    return degrees.doubleValue();<a name="line.636"></a>
+<FONT color="green">637</FONT>            }<a name="line.637"></a>
+<FONT color="green">638</FONT>            <a name="line.638"></a>
+<FONT color="green">639</FONT>            /**<a name="line.639"></a>
+<FONT color="green">640</FONT>             * Will return the dip below the horizon after sunset that matches the<a name="line.640"></a>
+<FONT color="green">641</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.641"></a>
+<FONT color="green">642</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.642"></a>
+<FONT color="green">643</FONT>             * 16.1&amp;deg;<a name="line.643"></a>
+<FONT color="green">644</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.644"></a>
+<FONT color="green">645</FONT>             * &lt;em&gt;&lt;b&gt;TODO:&lt;/b&gt;&lt;/em&gt; Improve efficiency.<a name="line.645"></a>
+<FONT color="green">646</FONT>             * @param minutes offset<a name="line.646"></a>
+<FONT color="green">647</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.647"></a>
+<FONT color="green">648</FONT>             *         equinox in Jerusalem at sea level.<a name="line.648"></a>
+<FONT color="green">649</FONT>             * @see #getSunriseSolarDipFromOffset(double)<a name="line.649"></a>
+<FONT color="green">650</FONT>             */<a name="line.650"></a>
+<FONT color="green">651</FONT>            public double getSunsetSolarDipFromOffset(double minutes) {<a name="line.651"></a>
+<FONT color="green">652</FONT>                    Date offsetByDegrees = getSeaLevelSunset();<a name="line.652"></a>
+<FONT color="green">653</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunset(), minutes * MINUTE_MILLIS);<a name="line.653"></a>
+<FONT color="green">654</FONT>    <a name="line.654"></a>
+<FONT color="green">655</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.655"></a>
+<FONT color="green">656</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.656"></a>
+<FONT color="green">657</FONT>                    while (offsetByDegrees == null<a name="line.657"></a>
+<FONT color="green">658</FONT>                                    || offsetByDegrees.getTime() &lt; offsetByTime.getTime()) {<a name="line.658"></a>
+<FONT color="green">659</FONT>                            degrees = degrees.add(incrementor);<a name="line.659"></a>
+<FONT color="green">660</FONT>                            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH     + degrees.doubleValue());<a name="line.660"></a>
+<FONT color="green">661</FONT>                    }<a name="line.661"></a>
+<FONT color="green">662</FONT>                    return degrees.doubleValue();<a name="line.662"></a>
+<FONT color="green">663</FONT>            }<a name="line.663"></a>
+<FONT color="green">664</FONT>    <a name="line.664"></a>
+<FONT color="green">665</FONT>            /**<a name="line.665"></a>
+<FONT color="green">666</FONT>             * @return an XML formatted representation of the class. It returns the<a name="line.666"></a>
+<FONT color="green">667</FONT>             *         default output of the<a name="line.667"></a>
+<FONT color="green">668</FONT>             *         {@link net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar) toXML}<a name="line.668"></a>
+<FONT color="green">669</FONT>             *         method.<a name="line.669"></a>
+<FONT color="green">670</FONT>             * @see net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)<a name="line.670"></a>
+<FONT color="green">671</FONT>             * @see java.lang.Object#toString()<a name="line.671"></a>
+<FONT color="green">672</FONT>             */<a name="line.672"></a>
+<FONT color="green">673</FONT>            public String toString() {<a name="line.673"></a>
+<FONT color="green">674</FONT>                    return ZmanimFormatter.toXML(this);<a name="line.674"></a>
+<FONT color="green">675</FONT>            }<a name="line.675"></a>
+<FONT color="green">676</FONT>    <a name="line.676"></a>
+<FONT color="green">677</FONT>            /**<a name="line.677"></a>
+<FONT color="green">678</FONT>             * @see java.lang.Object#equals(Object)<a name="line.678"></a>
+<FONT color="green">679</FONT>             */<a name="line.679"></a>
+<FONT color="green">680</FONT>            public boolean equals(Object object) {<a name="line.680"></a>
+<FONT color="green">681</FONT>                    if (this == object)<a name="line.681"></a>
+<FONT color="green">682</FONT>                            return true;<a name="line.682"></a>
+<FONT color="green">683</FONT>                    if (!(object instanceof AstronomicalCalendar))<a name="line.683"></a>
+<FONT color="green">684</FONT>                            return false;<a name="line.684"></a>
+<FONT color="green">685</FONT>                    AstronomicalCalendar aCal = (AstronomicalCalendar) object;<a name="line.685"></a>
+<FONT color="green">686</FONT>                    return getCalendar().equals(aCal.getCalendar())<a name="line.686"></a>
+<FONT color="green">687</FONT>                                    &amp;&amp; getGeoLocation().equals(aCal.getGeoLocation())<a name="line.687"></a>
+<FONT color="green">688</FONT>                                    &amp;&amp; getAstronomicalCalculator().equals(<a name="line.688"></a>
+<FONT color="green">689</FONT>                                                    aCal.getAstronomicalCalculator());<a name="line.689"></a>
+<FONT color="green">690</FONT>            }<a name="line.690"></a>
+<FONT color="green">691</FONT>    <a name="line.691"></a>
+<FONT color="green">692</FONT>            /**<a name="line.692"></a>
+<FONT color="green">693</FONT>             * @see java.lang.Object#hashCode()<a name="line.693"></a>
+<FONT color="green">694</FONT>             */<a name="line.694"></a>
+<FONT color="green">695</FONT>            public int hashCode() {<a name="line.695"></a>
+<FONT color="green">696</FONT>                    int result = 17;<a name="line.696"></a>
+<FONT color="green">697</FONT>                    result = 37 * result + getClass().hashCode(); // needed or this and subclasses will return identical hash<a name="line.697"></a>
+<FONT color="green">698</FONT>                    result += 37 * result + getCalendar().hashCode();<a name="line.698"></a>
+<FONT color="green">699</FONT>                    result += 37 * result + getGeoLocation().hashCode();<a name="line.699"></a>
+<FONT color="green">700</FONT>                    result += 37 * result + getAstronomicalCalculator().hashCode();<a name="line.700"></a>
+<FONT color="green">701</FONT>                    return result;<a name="line.701"></a>
+<FONT color="green">702</FONT>            }<a name="line.702"></a>
+<FONT color="green">703</FONT>    <a name="line.703"></a>
+<FONT color="green">704</FONT>            /**<a name="line.704"></a>
+<FONT color="green">705</FONT>             * A method that returns the currently set {@link GeoLocation} that contains<a name="line.705"></a>
+<FONT color="green">706</FONT>             * location information used for the astronomical calculations.<a name="line.706"></a>
+<FONT color="green">707</FONT>             * <a name="line.707"></a>
+<FONT color="green">708</FONT>             * @return Returns the geoLocation.<a name="line.708"></a>
+<FONT color="green">709</FONT>             */<a name="line.709"></a>
+<FONT color="green">710</FONT>            public GeoLocation getGeoLocation() {<a name="line.710"></a>
+<FONT color="green">711</FONT>                    return geoLocation;<a name="line.711"></a>
+<FONT color="green">712</FONT>            }<a name="line.712"></a>
+<FONT color="green">713</FONT>    <a name="line.713"></a>
+<FONT color="green">714</FONT>            /**<a name="line.714"></a>
+<FONT color="green">715</FONT>             * Set the {@link GeoLocation} to be used for astronomical calculations.<a name="line.715"></a>
+<FONT color="green">716</FONT>             * <a name="line.716"></a>
+<FONT color="green">717</FONT>             * @param geoLocation<a name="line.717"></a>
+<FONT color="green">718</FONT>             *            The geoLocation to set.<a name="line.718"></a>
+<FONT color="green">719</FONT>             */<a name="line.719"></a>
+<FONT color="green">720</FONT>            public void setGeoLocation(GeoLocation geoLocation) {<a name="line.720"></a>
+<FONT color="green">721</FONT>                    this.geoLocation = geoLocation;<a name="line.721"></a>
+<FONT color="green">722</FONT>                    // if not set the output will be in the original timezone. The call<a name="line.722"></a>
+<FONT color="green">723</FONT>                    // below is also in the constructor<a name="line.723"></a>
+<FONT color="green">724</FONT>                    getCalendar().setTimeZone(geoLocation.getTimeZone());<a name="line.724"></a>
+<FONT color="green">725</FONT>            }<a name="line.725"></a>
+<FONT color="green">726</FONT>    <a name="line.726"></a>
+<FONT color="green">727</FONT>            /**<a name="line.727"></a>
+<FONT color="green">728</FONT>             * A method to return the current AstronomicalCalculator set.<a name="line.728"></a>
+<FONT color="green">729</FONT>             * <a name="line.729"></a>
+<FONT color="green">730</FONT>             * @return Returns the astronimicalCalculator.<a name="line.730"></a>
+<FONT color="green">731</FONT>             * @see #setAstronomicalCalculator(AstronomicalCalculator)<a name="line.731"></a>
+<FONT color="green">732</FONT>             */<a name="line.732"></a>
+<FONT color="green">733</FONT>            public AstronomicalCalculator getAstronomicalCalculator() {<a name="line.733"></a>
+<FONT color="green">734</FONT>                    return astronomicalCalculator;<a name="line.734"></a>
+<FONT color="green">735</FONT>            }<a name="line.735"></a>
+<FONT color="green">736</FONT>    <a name="line.736"></a>
+<FONT color="green">737</FONT>            /**<a name="line.737"></a>
+<FONT color="green">738</FONT>             * A method to set the {@link AstronomicalCalculator} used for astronomical<a name="line.738"></a>
+<FONT color="green">739</FONT>             * calculations. The Zmanim package ships with a number of different<a name="line.739"></a>
+<FONT color="green">740</FONT>             * implementations of the &lt;code&gt;abstract&lt;/code&gt;<a name="line.740"></a>
+<FONT color="green">741</FONT>             * {@link AstronomicalCalculator} based on different algorithms, including<a name="line.741"></a>
+<FONT color="green">742</FONT>             * {@link net.sourceforge.zmanim.util.SunTimesCalculator one implementation}<a name="line.742"></a>
+<FONT color="green">743</FONT>             * based on the &lt;a href = "http://aa.usno.navy.mil/"&gt;US Naval Observatory's&lt;/a&gt;<a name="line.743"></a>
+<FONT color="green">744</FONT>             * algorithm, and<a name="line.744"></a>
+<FONT color="green">745</FONT>             * {@link net.sourceforge.zmanim.util.JSuntimeCalculator another} based on<a name="line.745"></a>
+<FONT color="green">746</FONT>             * &lt;a href=""http://noaa.gov"&gt;NOAA's&lt;/a&gt; algorithm. This allows easy<a name="line.746"></a>
+<FONT color="green">747</FONT>             * runtime switching and comparison of different algorithms.<a name="line.747"></a>
+<FONT color="green">748</FONT>             * <a name="line.748"></a>
+<FONT color="green">749</FONT>             * @param astronomicalCalculator<a name="line.749"></a>
+<FONT color="green">750</FONT>             *            The astronimicalCalculator to set.<a name="line.750"></a>
+<FONT color="green">751</FONT>             */<a name="line.751"></a>
+<FONT color="green">752</FONT>            public void setAstronomicalCalculator(<a name="line.752"></a>
+<FONT color="green">753</FONT>                            AstronomicalCalculator astronomicalCalculator) {<a name="line.753"></a>
+<FONT color="green">754</FONT>                    this.astronomicalCalculator = astronomicalCalculator;<a name="line.754"></a>
+<FONT color="green">755</FONT>            }<a name="line.755"></a>
+<FONT color="green">756</FONT>    <a name="line.756"></a>
+<FONT color="green">757</FONT>            /**<a name="line.757"></a>
+<FONT color="green">758</FONT>             * returns the Calendar object encapsulated in this class.<a name="line.758"></a>
+<FONT color="green">759</FONT>             * <a name="line.759"></a>
+<FONT color="green">760</FONT>             * @return Returns the calendar.<a name="line.760"></a>
+<FONT color="green">761</FONT>             */<a name="line.761"></a>
+<FONT color="green">762</FONT>            public Calendar getCalendar() {<a name="line.762"></a>
+<FONT color="green">763</FONT>                    return calendar;<a name="line.763"></a>
+<FONT color="green">764</FONT>            }<a name="line.764"></a>
+<FONT color="green">765</FONT>    <a name="line.765"></a>
+<FONT color="green">766</FONT>            /**<a name="line.766"></a>
+<FONT color="green">767</FONT>             * @param calendar<a name="line.767"></a>
+<FONT color="green">768</FONT>             *            The calendar to set.<a name="line.768"></a>
+<FONT color="green">769</FONT>             */<a name="line.769"></a>
+<FONT color="green">770</FONT>            public void setCalendar(Calendar calendar) {<a name="line.770"></a>
+<FONT color="green">771</FONT>                    this.calendar = calendar;<a name="line.771"></a>
+<FONT color="green">772</FONT>                    if (getGeoLocation() != null) {// set the timezone if possible<a name="line.772"></a>
+<FONT color="green">773</FONT>                            // Always set the Calendar's timezone to match the GeoLocation<a name="line.773"></a>
+<FONT color="green">774</FONT>                            // TimeZone<a name="line.774"></a>
+<FONT color="green">775</FONT>                            getCalendar().setTimeZone(getGeoLocation().getTimeZone());<a name="line.775"></a>
+<FONT color="green">776</FONT>                    }<a name="line.776"></a>
+<FONT color="green">777</FONT>            }<a name="line.777"></a>
+<FONT color="green">778</FONT>    <a name="line.778"></a>
+<FONT color="green">779</FONT>            /**<a name="line.779"></a>
+<FONT color="green">780</FONT>             * A method that creates a &lt;a<a name="line.780"></a>
+<FONT color="green">781</FONT>             * href="http://en.wikipedia.org/wiki/Object_copy#Deep_copy"&gt;deep copy&lt;/a&gt;<a name="line.781"></a>
+<FONT color="green">782</FONT>             * of the object. &lt;br /&gt;<a name="line.782"></a>
+<FONT color="green">783</FONT>             * &lt;b&gt;Note:&lt;/b&gt; If the {@link java.util.TimeZone} in the cloned<a name="line.783"></a>
+<FONT color="green">784</FONT>             * {@link net.sourceforge.zmanim.util.GeoLocation} will be changed from the<a name="line.784"></a>
+<FONT color="green">785</FONT>             * original, it is critical that<a name="line.785"></a>
+<FONT color="green">786</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.{@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)}<a name="line.786"></a>
+<FONT color="green">787</FONT>             * be called in order for the AstronomicalCalendar to output times in the<a name="line.787"></a>
+<FONT color="green">788</FONT>             * expected offset after being cloned.<a name="line.788"></a>
+<FONT color="green">789</FONT>             * <a name="line.789"></a>
+<FONT color="green">790</FONT>             * @see java.lang.Object#clone()<a name="line.790"></a>
+<FONT color="green">791</FONT>             * @since 1.1<a name="line.791"></a>
+<FONT color="green">792</FONT>             */<a name="line.792"></a>
+<FONT color="green">793</FONT>            public Object clone() {<a name="line.793"></a>
+<FONT color="green">794</FONT>                    AstronomicalCalendar clone = null;<a name="line.794"></a>
+<FONT color="green">795</FONT>                    try {<a name="line.795"></a>
+<FONT color="green">796</FONT>                            clone = (AstronomicalCalendar) super.clone();<a name="line.796"></a>
+<FONT color="green">797</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.797"></a>
+<FONT color="green">798</FONT>                            System.out<a name="line.798"></a>
+<FONT color="green">799</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.799"></a>
+<FONT color="green">800</FONT>                    }<a name="line.800"></a>
+<FONT color="green">801</FONT>                    clone.setGeoLocation((GeoLocation) getGeoLocation().clone());<a name="line.801"></a>
+<FONT color="green">802</FONT>                    clone.setCalendar((Calendar) getCalendar().clone());<a name="line.802"></a>
+<FONT color="green">803</FONT>                    clone<a name="line.803"></a>
+<FONT color="green">804</FONT>                                    .setAstronomicalCalculator((AstronomicalCalculator) getAstronomicalCalculator()<a name="line.804"></a>
+<FONT color="green">805</FONT>                                                    .clone());<a name="line.805"></a>
+<FONT color="green">806</FONT>                    return clone;<a name="line.806"></a>
+<FONT color="green">807</FONT>            }<a name="line.807"></a>
+<FONT color="green">808</FONT>    }<a name="line.808"></a>
 
 
 

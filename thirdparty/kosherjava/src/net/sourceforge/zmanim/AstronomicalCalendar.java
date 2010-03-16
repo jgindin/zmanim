@@ -1,6 +1,6 @@
 /*
  * Zmanim Java API
- * Copyright (C) 2004-2008 Eliyahu Hershfeld
+ * Copyright (C) 2004-2010 Eliyahu Hershfeld
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 2 of the
@@ -69,8 +69,8 @@ import net.sourceforge.zmanim.util.ZmanimFormatter;
  * </pre>
  * 
  * 
- * @author &copy; Eliyahu Hershfeld 2004 - 2009
- * @version 1.1
+ * @author &copy; Eliyahu Hershfeld 2004 - 2010
+ * @version 1.2
  */
 public class AstronomicalCalendar implements Cloneable {
 	private static final long serialVersionUID = 1;
@@ -586,8 +586,7 @@ public class AstronomicalCalendar implements Cloneable {
 		}
 		time = getOffsetTime(time);
 		time = (time + 240) % 24; // the calculators sometimes return a double
-		// that is negative or slightly greater than
-		// 24
+		// that is negative or slightly greater than 24
 		Calendar cal = new GregorianCalendar();
 		cal.clear();
 		cal.set(Calendar.YEAR, getCalendar().get(Calendar.YEAR));
@@ -695,8 +694,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 */
 	public int hashCode() {
 		int result = 17;
-		// needed or this and subclasses will return identical hash
-		result = 37 * result + getClass().hashCode();
+		result = 37 * result + getClass().hashCode(); // needed or this and subclasses will return identical hash
 		result += 37 * result + getCalendar().hashCode();
 		result += 37 * result + getGeoLocation().hashCode();
 		result += 37 * result + getAstronomicalCalculator().hashCode();
