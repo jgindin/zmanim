@@ -228,6 +228,15 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 */
 	protected static final double ZENITH_26_DEGREES = GEOMETRIC_ZENITH + 26.0;
 
+	/**
+	 * Experimental and may not make the final 1.3 cut
+	 */
+	protected static final double ZENITH_4_POINT_37 = GEOMETRIC_ZENITH + 4.37;
+	protected static final double ZENITH_4_POINT_61 = GEOMETRIC_ZENITH + 4.61;
+	protected static final double ZENITH_4_POINT_8 = GEOMETRIC_ZENITH + 4.8;
+	protected static final double ZENITH_3_POINT_65 = GEOMETRIC_ZENITH + 3.65;
+	protected static final double ZENITH_5_POINT_88 = GEOMETRIC_ZENITH + 5.88;
+	
 	private double ateretTorahSunsetOffset = 40;
 
 	public ComplexZmanimCalendar(GeoLocation location) {
@@ -1703,6 +1712,49 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	public Date getTzaisGeonim5Point95Degrees() {
 		return getSunsetOffsetByDegrees(ZENITH_5_POINT_95);
 	}
+	
+	/**
+	 * experimental
+	 * @return
+	 */
+	public Date getTzaisGeonim3Point65Degrees() {
+		return getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_3_POINT_65);
+	}
+	
+	/**
+	 * experimental
+	 * @return
+	 */
+	public Date getTzaisGeonim4Point61Degrees() {
+		return getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_4_POINT_61);
+	}
+	
+	/**
+	 * experimental
+	 * @return
+	 */
+	public Date getTzaisGeonim4Point37Degrees() {
+		return getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_4_POINT_37);
+	}
+	
+	/**
+	 * experimental
+	 * @return
+	 */
+	public Date getTzaisGeonim5Point88Degrees() {
+		return getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_5_POINT_88);
+	}
+	
+	/**
+	 * experimental
+	 * @return
+	 */
+	public Date getTzaisGeonim4Point8Degrees() {
+		return getSunsetOffsetByDegrees(ComplexZmanimCalendar.ZENITH_4_POINT_8);
+	}
+
+
+
 
 	/**
 	 * This method returns the <em>tzais</em> (nightfall) based on the opinion
