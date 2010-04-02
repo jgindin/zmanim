@@ -39,7 +39,7 @@ class Talit
 		);
 
 		zmanim.add(
-			new Zman( "11°", "Based on the position of the sun when it is 11° below geometric zenith (90°). Based on the position of the sun 48 minutes before sunrisein Jerusalem in the equinox which calculates to 11° below geometric zenith." ) {
+			new Zman( "11°", "Based on the position of the sun when it is 11° below geometric zenith (90°). Based on the position of the sun 48 minutes before sunrisein Jerusalem in the equinox which calculates to 11° below geometric zenith.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMisheyakir11Degrees();
 				}

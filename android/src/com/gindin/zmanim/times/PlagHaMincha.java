@@ -31,7 +31,7 @@ class PlagHaMincha
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "GR'A", "10.75 hours after sunrise. Based on the opinion of the GR'A and the Baal Hatanya that the day is calculated from sunrise to sunset." ) {
+			new Zman( "GR'A", "10.75 hours after sunrise. Based on the opinion of the GR'A and the Baal Hatanya that the day is calculated from sunrise to sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha();
 				}
@@ -55,7 +55,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 16.1° and ends at tzais 16.1°. This is calculated as 10.75 hours zmaniyos after dawn" ) {
+			new Zman( "MG'A 16.1°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alot 16.1° and ends at tzais 16.1°. This is calculated as 10.75 hours zmaniyos after dawn", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha16Point1Degrees();
 				}
@@ -63,7 +63,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 18°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 18° and ends at tzait 18°." ) {
+			new Zman( "MG'A 18°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alot 18° and ends at tzait 18°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha18Degrees();
 				}
@@ -71,7 +71,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 19.8° and ends at tzait 19.8°." ) {
+			new Zman( "MG'A 19.8°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alot 19.8° and ends at tzait 19.8°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha19Point8Degrees();
 				}
@@ -79,7 +79,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 26°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alos 26° and ends at tzais 26°." ) {
+			new Zman( "MG'A 26°", "10.75 hours zemaniyot after dawn. Based on the opinion that the day starts at alot 26° and ends at tzais 26°." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha26Degrees();
 				}
@@ -143,7 +143,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "Chacham Yosef Harari-Raful", "Based on the calculation of Chacham Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset. shaos zmaniyos are calculated based on this day and added to alos to reach this time. This time is 10.75 shaos zmaniyos (temporal hours) after dawn." ) {
+			new Zman( "Chacham Yosef Harari-Raful", "Based on the calculation of Chacham Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset. shaot zmaniyot are calculated based on this day and added to alot to reach this time. This time is 10.75 shaot zmaniyot (temporal hours) after dawn." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHaminchaAteretTorah();
 				}

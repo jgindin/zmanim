@@ -39,7 +39,7 @@ class MinchaGedola
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "This method returns the time of mincha gedola according to the Magen Avraham with the day starting and ending 16.1° below the horizon." ) {
+			new Zman( "MG'A 16.1°", "This method returns the time of mincha gedola according to the Magen Avraham with the day starting and ending 16.1° below the horizon.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaGedola16Point1Degrees();
 				}

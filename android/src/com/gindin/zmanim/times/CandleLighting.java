@@ -32,7 +32,7 @@ class CandleLighting
 
 
 		zmanim.add(
-				new Zman( "Candle Lighting", "" ) {
+				new Zman( "Candle Lighting", "", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getCandelLighting();
 				}

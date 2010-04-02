@@ -72,7 +72,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "GR'a Kol Eliyahu", "From the GR'A in Kol Eliyahu on Berachos #173 that states that zman kriat shema is calculated as half the time from sunrise to fixed local chatzos." ) {
+			new Zman( "GR'A Kol Eliyahu", "From the GR'A in Kol Eliyahu on Berachos #173 that states that zman kriat shema is calculated as half the time from sunrise to fixed local chatzos." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaKolEliyahu();
 				}
@@ -96,7 +96,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "MG'A based on alot being 16.1° before sunrise." ) {
+			new Zman( "MG'A 16.1°", "MG'A based on alot being 16.1° before sunrise.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaMGA16Point1Degrees();
 				}

@@ -48,7 +48,7 @@ class LatestMincha
 		);
 
 		zmanim.add(
-			new Zman( "According to Hacham Ben Sion", "Daily Halacha's representation of Chacham Ben Sion Abba Shaul's ruling, that mincha can be prayed so long as you FINISH NO LATER THAN 26 minutes after sunset." ) {
+			new Zman( "According to Hacham Ben Sion", "Daily Halacha's representation of Chacham Ben Sion Abba Shaul's ruling, that mincha can be prayed so long as you FINISH NO LATER THAN 26 minutes after sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getLatestMinchaBenSion();
 				}

@@ -87,7 +87,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "72 Minutes", "72 minutes before sea level sunrise (no adjustment for elevation) based on the time to walk the distance of 4 Mil at 18 minutes a Mil." ) {
+			new Zman( "72 Minutes", "72 minutes before sea level sunrise (no adjustment for elevation) based on the time to walk the distance of 4 Mil at 18 minutes a Mil.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos72();
 				}
@@ -103,7 +103,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "90 Minutes", "90 minutes before sea level sunrise on the time to walk the distance of 4 Mil at 22.5 minutes a Mil." ) {
+			new Zman( "90 Minutes", "90 minutes before sea level sunrise on the time to walk the distance of 4 Mil at 22.5 minutes a Mil.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos90();
 				}
