@@ -161,6 +161,9 @@ public class ZmanimDisplay
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
 
+		View listing = findViewById( android.R.id.list );
+		listing.setOnTouchListener( touchListener );
+
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
 		final View secularDate = findViewById( R.id.secular_date );
