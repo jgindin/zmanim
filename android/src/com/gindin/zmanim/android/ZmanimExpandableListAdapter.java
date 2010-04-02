@@ -84,7 +84,17 @@ public class ZmanimExpandableListAdapter
 		final Zmanim.Type type = getTypeForGroup( group );
 		final Zmanim zmanim = zmanimCalendar.get( type );
 
-		return ( null == zmanim ? 0 : zmanim.size() );
+		if ( null == zmanim ) {
+			return 0;
+		}
+
+		// If there's only 1 value, then there may as well not be any children...
+		final int numChildren = zmanim.size();
+		if ( 1 == numChildren ) {
+			return 0;
+		}
+
+		return numChildren;
 	}
 
 
@@ -182,7 +192,7 @@ public class ZmanimExpandableListAdapter
 		final Zmanim zmanim = getGroup( group );
 		wrapper.nameField.setText( zmanim.type.name );
 
-		// Just for testing, show the first time...
+		// TODO: Just for testing, show the first time... For real, we'd want to save the user's selection...
 		Zman zman = zmanim.get( 0 );
 		wrapper.timeField.setText( zmanimCalendar.formatZmanTime( zman ) );
 
