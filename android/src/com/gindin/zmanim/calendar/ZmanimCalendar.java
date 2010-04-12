@@ -6,11 +6,7 @@ package com.gindin.zmanim.calendar;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Adds support for earliest time for Mincha.
@@ -56,46 +52,12 @@ public class ZmanimCalendar
 	 */
 	private static final long                                 MINUTE_MILLIS = 60000L;
 
-	/** Allow interested parties to be notified when the date has changed. */
-	private final List<Listener>                              listeners = new ArrayList<Listener>();
-
 
 
 	public ZmanimCalendar( GeoLocation location ) {
 		super( location );
 	}
 
-
-	public void addListener( Listener listener ) {
-
-		synchronized ( listeners ) {
-			listeners.add( listener );
-		}
-	}
-
-
-	public void removeListener( Listener listener ) {
-
-		synchronized ( listeners ) {
-			listeners.remove( listener );
-		}
-	}
-
-
-	@Override
-	public void setCalendar( Calendar calendar ) {
-		super.setCalendar( calendar );
-
-		// Unfortunately, this can be called from the superclass' ctor, so we're not really ready
-		//  to handle it...
-		if ( null != listeners ) {
-			synchronized ( listeners ) {
-				for ( Listener listener : listeners ) {
-					listener.dateChanged();
-				}
-			}
-		}
-	}
 
 
 	/**
@@ -128,12 +90,6 @@ public class ZmanimCalendar
 	 */
 	public Date getLatestMinchaBenSion() {
 		return getTimeOffset( getSunset(), MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL * MINUTE_MILLIS);
-	}
-
-
-	public interface Listener {
-
-		void dateChanged();
 	}
 
 }  // End of ZmanimCalendar class

@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.times;
 
+import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.calendar.ZmanimCalendar;
 
 import java.util.HashMap;
@@ -21,12 +22,12 @@ public class ZmanimFactory {
 
 
 	public ZmanimFactory(
-		ZmanimCalendar  zmanimCalendar
+		HebrewZmanimCalendar hebrewZmanimCalendar
 	) {
 
-		this.zmanimCalendar = zmanimCalendar;
+		this.zmanimCalendar = hebrewZmanimCalendar.getZmanimCalendar();
 
-		ZmanimCalendar.Listener listener = new ZmanimCalendar.Listener() {
+		HebrewZmanimCalendar.Listener listener = new HebrewZmanimCalendar.Listener() {
 			public void dateChanged() {
 
 				synchronized ( typeToZmanimMap ) {
@@ -36,7 +37,8 @@ public class ZmanimFactory {
 				}
 			}
 		};
-		zmanimCalendar.addListener( listener );
+
+		hebrewZmanimCalendar.addListener( listener );
 	}
 
 

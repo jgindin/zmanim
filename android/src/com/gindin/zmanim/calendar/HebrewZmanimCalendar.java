@@ -10,8 +10,10 @@ import com.gindin.zmanim.times.ZmanimFactory;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Combines the functionality of a Hebrew calendar with a Zmanim calculator.
@@ -38,6 +40,10 @@ public class HebrewZmanimCalendar {
 	private final Calendar                                    today = Calendar.getInstance();
 
 
+	/** Set of listeners who want to know when the date has been changed. */
+	private final List<Listener>                              listeners = new ArrayList<Listener>();
+
+
 	public HebrewZmanimCalendar(
 		GeoLocation location,
 		DateFormat  timeFormatter,
@@ -46,7 +52,32 @@ public class HebrewZmanimCalendar {
 
 		this.zmanimCalendar = new ZmanimCalendar( location );
 		this.dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
-		this.zmanimFactory = new ZmanimFactory( zmanimCalendar );
+		this.zmanimFactory = new ZmanimFactory( this );
+	}
+
+
+	public void addListener(
+		Listener newListener
+	)  {
+
+		synchronized ( this ) {
+			listeners.add( newListener );
+		}
+	}
+
+
+	public void removeListener(
+		Listener listener
+	) {
+
+		synchronized ( this  ) {
+			listeners.remove( listener );
+		}
+	}
+
+
+	public ZmanimCalendar getZmanimCalendar() {
+		return zmanimCalendar;
 	}
 
 
@@ -170,6 +201,10 @@ public class HebrewZmanimCalendar {
 
 		zmanimCalendar.setCalendar( calendar );
 		hebrewCalendar.setTime( calendar.getTime() );
+
+		for ( Listener listener : listeners ) {
+			listener.dateChanged();
+		}
 	}
 
 
@@ -177,16 +212,6 @@ public class HebrewZmanimCalendar {
 
 		return zmanimFactory.getOrCreate( type );
 	}
-
-
-	// TODO:  Need to do some replacements and cleanup:
-	//  - zmaniyos --> zmaniyot
-	//  - Look for references to API
-	//  - MG"A --> MG'A
-	//  - Magen Avraham --> MG'A
-	//  - GR"A --> GR'A
-	//  - Cleanup terms that may not be immediately familiar (misheyakir...)
-
 
 
 	public String getTodaysDescription() {
@@ -355,6 +380,12 @@ public class HebrewZmanimCalendar {
 	private static interface HebrewDateAdjustedCallback<T> {
 
 		T dateAdjusted( boolean adjustmentWasRequired );
+	}
+
+
+	public static interface Listener {
+
+		void dateChanged();
 	}
 
 }  // End of HebrewZmanimCalendar class

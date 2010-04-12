@@ -40,6 +40,8 @@ public class ZmanimActivity
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
+	private HebrewZmanimCalendar.Listener                     zmanimCalendarListener;
+
 
 	public ZmanimActivity() {
 	}
@@ -84,8 +86,7 @@ public class ZmanimActivity
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-
-		showZmanim();
+		ZmanimDisplay zmanimDisplay = new ZmanimDisplay( this, zmanimCalendar );
 
 		buildHeader( location );
 
@@ -97,6 +98,22 @@ public class ZmanimActivity
 		}
 
 		displayDebugMessages();
+
+		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
+			public void dateChanged() {
+				updateHeader();
+			}
+		};
+		zmanimCalendar.addListener( zmanimCalendarListener );
+	}
+
+
+	@Override
+	protected void onDestroy() {
+
+		zmanimCalendar.removeListener( zmanimCalendarListener );
+
+		super.onDestroy();
 	}
 
 
@@ -275,7 +292,6 @@ public class ZmanimActivity
 			) {
 
 				zmanimCalendar.goToSecularDate( year, month, date );
-				showZmanim();
 			}
 		};
 
@@ -283,14 +299,6 @@ public class ZmanimActivity
 
 		return new DatePickerDialog( this, dateChangedListener, secularDate.get( Calendar.YEAR ),
 			secularDate.get( Calendar.MONTH ), secularDate.get( Calendar.DAY_OF_MONTH ) );
-	}
-
-
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private void showZmanim() {
-
-		//expandableListAdapter.notifyDataSetChanged();
-		updateHeader();
 	}
 
 
@@ -329,28 +337,24 @@ public class ZmanimActivity
 	private void moveToNextDay() {
 
 		zmanimCalendar.nextDay();
-		showZmanim();
 	}
 
 
 	private void moveToPrevDay() {
 
 		zmanimCalendar.previousDay();
-		showZmanim();
 	}
 
 
 	private void moveToNextMonth() {
 
 		zmanimCalendar.nextMonth();
-		showZmanim();
 	}
 
 
 	private void moveToPrevMonth() {
 
 		zmanimCalendar.previousMonth();
-		showZmanim();
 	}
 
 

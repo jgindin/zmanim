@@ -4,9 +4,8 @@
 	<string name="Alot">Alot (Dawn)</string>
 	<string name="Talit">Talit/Tefilin</string>
 	<string name="Hanetz">Hanetz (Sunrise)</string>
-	<string name="SofZmanShemaMGA">Sof Zman Shema MG"A</string>
-	<string name="SofZmanTefilahMGA">Sof Zman Tefila MG"A</string>
-	<string name="SofZmanTefilahGRA">Sof Zman Tefila GRA</string>
+	<string name="SofZmanShema">Sof Zman Shema</string>
+	<string name="SofZmanTefilah">Sof Zman Tefila</string>
 	<string name="Chatzot">Chatzot (Mid-Day)</string>
 	<string name="MinchaGedola">Mincha Gedola</string>
 	<string name="MinchaKetana">Mincha Ketana</string>
@@ -26,7 +25,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 1.141-DEV
+				Version 1.143-DEV
 			&lt;/br&gt;
 			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;

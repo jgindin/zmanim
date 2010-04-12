@@ -14,18 +14,16 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int about=0x7f060027;
+        public static final int about=0x7f060026;
         public static final int about_text=0x7f060001;
-        public static final int alot=0x7f06000f;
+        public static final int alot=0x7f060010;
         public static final int blank=0x7f06000d;
-        public static final int candles=0x7f060019;
-        public static final int candles_row=0x7f060018;
-        public static final int chatzot=0x7f060014;
-        public static final int hanetz=0x7f060011;
-        public static final int havdalah=0x7f06001f;
-        public static final int havdalah_row=0x7f06001e;
+        public static final int candles=0x7f06001a;
+        public static final int candles_row=0x7f060019;
+        public static final int chatzot=0x7f060015;
+        public static final int hanetz=0x7f060012;
         public static final int hebrew_date=0x7f06000c;
-        public static final int help=0x7f060028;
+        public static final int help=0x7f060027;
         public static final int help_text=0x7f060002;
         public static final int holiday=0x7f06000e;
         public static final int latitude=0x7f060005;
@@ -36,25 +34,26 @@ public final class R {
         public static final int longitude=0x7f060006;
         public static final int main_content=0x7f060009;
         public static final int main_layout=0x7f060008;
-        public static final int messages=0x7f060020;
-        public static final int mincha=0x7f06001b;
-        public static final int mincha_gedola=0x7f060015;
-        public static final int mincha_ketana=0x7f060016;
-        public static final int plag_hamincha=0x7f060017;
+        public static final int messages=0x7f06001f;
+        public static final int mincha=0x7f06001c;
+        public static final int mincha_gedola=0x7f060016;
+        public static final int mincha_ketana=0x7f060017;
+        public static final int plag_hamincha=0x7f060018;
         public static final int secular_date=0x7f06000b;
-        public static final int shemaMGA=0x7f060012;
-        public static final int shkiah=0x7f06001a;
-        public static final int talit=0x7f060010;
-        public static final int tefilahMGA=0x7f060013;
-        public static final int tzait=0x7f06001d;
-        public static final int tzait_row=0x7f06001c;
+        public static final int shema=0x7f060013;
+        public static final int shkiah=0x7f06001b;
+        public static final int talit=0x7f060011;
+        public static final int tefilah=0x7f060014;
+        public static final int tzait=0x7f06001e;
+        public static final int tzait_row=0x7f06001d;
         public static final int zipcode=0x7f060004;
-        public static final int zman_description=0x7f060024;
-        public static final int zman_name=0x7f060022;
-        public static final int zman_time=0x7f060023;
-        public static final int zmanim_list_row=0x7f060021;
-        public static final int zmanim_name=0x7f060025;
-        public static final int zmanim_time=0x7f060026;
+        public static final int zman_description=0x7f060023;
+        public static final int zman_name=0x7f060021;
+        public static final int zman_time=0x7f060022;
+        public static final int zmanim_list_row=0x7f060020;
+        public static final int zmanim_name=0x7f060024;
+        public static final int zmanim_time=0x7f060025;
+        public static final int zmanim_view=0x7f06000f;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -69,28 +68,27 @@ public final class R {
     }
     public static final class string {
         public static final int Alot=0x7f040001;
-        public static final int BeinHashemashot=0x7f04000b;
-        public static final int Candles=0x7f04000d;
-        public static final int Chatzot=0x7f040007;
+        public static final int BeinHashemashot=0x7f04000a;
+        public static final int Candles=0x7f04000c;
+        public static final int Chatzot=0x7f040006;
         public static final int Hanetz=0x7f040003;
-        public static final int Havdalah=0x7f040010;
-        public static final int Mincha=0x7f04000e;
-        public static final int MinchaGedola=0x7f040008;
-        public static final int MinchaKetana=0x7f040009;
-        public static final int Plag=0x7f04000a;
-        public static final int ShaahZmanit=0x7f040011;
-        public static final int Shkiah=0x7f04000c;
-        public static final int SofZmanShemaMGA=0x7f040004;
-        public static final int SofZmanTefilahGRA=0x7f040006;
-        public static final int SofZmanTefilahMGA=0x7f040005;
+        public static final int Havdalah=0x7f04000f;
+        public static final int Mincha=0x7f04000d;
+        public static final int MinchaGedola=0x7f040007;
+        public static final int MinchaKetana=0x7f040008;
+        public static final int Plag=0x7f040009;
+        public static final int ShaahZmanit=0x7f040010;
+        public static final int Shkiah=0x7f04000b;
+        public static final int SofZmanShema=0x7f040004;
+        public static final int SofZmanTefilah=0x7f040005;
         public static final int Talit=0x7f040002;
-        public static final int Tzait=0x7f04000f;
-        public static final int about_header=0x7f040012;
+        public static final int Tzait=0x7f04000e;
+        public static final int about_header=0x7f040011;
         /**  VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! 
          */
-        public static final int about_text=0x7f040013;
+        public static final int about_text=0x7f040012;
         public static final int app_name=0x7f040000;
-        public static final int help_header=0x7f040014;
-        public static final int help_text=0x7f040015;
+        public static final int help_header=0x7f040013;
+        public static final int help_text=0x7f040014;
     }
 }
