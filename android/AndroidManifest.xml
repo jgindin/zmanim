@@ -14,7 +14,7 @@
 
 	<application android:icon="@drawable/icon" android:label="Zmanim">
 		<activity
-			android:name="ZmanimDisplay"
+			android:name=".ZmanimActivity"
 		  android:theme="@android:style/Theme.Light">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

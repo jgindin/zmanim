@@ -24,8 +24,8 @@ import java.util.Calendar;
 /**
  * Entry point to the Android application which displays zmanim.
  */
-public class ZmanimDisplay
-	extends ExpandableListActivity {
+public class ZmanimActivity
+	extends Activity {
 
 	/** Is the manual location selection stuff ready to go yet? */
 	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
@@ -40,10 +40,8 @@ public class ZmanimDisplay
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
-	private ZmanimExpandableListAdapter                       expandableListAdapter;
 
-
-	public ZmanimDisplay() {
+	public ZmanimActivity() {
 	}
 
 
@@ -87,9 +85,7 @@ public class ZmanimDisplay
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 
-		// Now we can set our adapter, which handles the interaction with the expanding list part of our display.
-		expandableListAdapter = new ZmanimExpandableListAdapter( this, zmanimCalendar );
-		setListAdapter( expandableListAdapter );
+		showZmanim();
 
 		buildHeader( location );
 
@@ -160,9 +156,6 @@ public class ZmanimDisplay
 
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
-
-		View listing = findViewById( android.R.id.list );
-		listing.setOnTouchListener( touchListener );
 
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
@@ -296,7 +289,7 @@ public class ZmanimDisplay
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void showZmanim() {
 
-		expandableListAdapter.notifyDataSetChanged();
+		//expandableListAdapter.notifyDataSetChanged();
 		updateHeader();
 	}
 
@@ -407,4 +400,4 @@ public class ZmanimDisplay
 
 	}
 
-}  // End of ZmanimDisplay class
+}  // End of ZmanimActivity class
