@@ -31,7 +31,7 @@ class MinchaKetana
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "GR'A 9.5 Hours", "9.5 solar hours after sunrise, based on the opinion of the GR'A and the Baal Hatanya that the day is calculated from sunrise to sunset.", false ) {
+			new Zman( "GR'A 9.5 Hours", "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana();
 				}

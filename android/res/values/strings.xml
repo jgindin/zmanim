@@ -25,7 +25,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 1.143-DEV
+				Version 1.144-DEV
 			&lt;/br&gt;
 			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
@@ -53,5 +53,7 @@
 			&lt;/p&gt;
 		&lt;/div&gt;
 	</string>
+
+	<string name="zmanim_selector">Select Zman to Use</string> 
 
 </resources>

@@ -18,11 +18,6 @@ public abstract class Zmanim {
 	/** The individual zmanim for this set. */
 	private final List<Zman>                                  allZmanim;
 
-	/**
-	 * The list of zmanim includes 'simple' and 'advanced'. We want to be able to differentiate. The contents of this
-	 *  list are just references to the zmanim in the allZmanim list.
-	 */
-	private final List<Zman>                                  simpleZmanim = new ArrayList<Zman>();
 
 
 	protected Zmanim(
@@ -32,38 +27,15 @@ public abstract class Zmanim {
 
 		this.type = type;
 		this.allZmanim = zmanim;
-
-		for ( Zman zman : zmanim ) {
-			if ( !zman.advanced ) {
-				simpleZmanim.add( zman );
-			}
-		}
 	}
 
 
 	public int size() {
-		return simpleZmanim.size();
-	}
-
-
-	public int advancedSize() {
 		return allZmanim.size();
 	}
 
 
 	public Zman get(
-		int position
-	) {
-
-		if ( position >= simpleZmanim.size() ) {
-			return null;
-		}
-
-		return simpleZmanim.get( position );
-	}
-
-
-	public Zman advancedGet(
 		int position
 	) {
 
@@ -76,12 +48,12 @@ public abstract class Zmanim {
 
 
 	public Iterator<Zman> iterator() {
-		return simpleZmanim.iterator();
+		return allZmanim.iterator();
 	}
 
 
-	public Iterator<Zman> advancedIterator() {
-		return allZmanim.iterator();
+	public Zman[] toArray() {
+		return allZmanim.toArray( new Zman[ allZmanim.size() ] );
 	}
 
 

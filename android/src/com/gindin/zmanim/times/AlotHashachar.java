@@ -31,7 +31,7 @@ class AlotHashachar
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "120 Minutes", "120 minutes before sea level sunrise (no adjustment for elevation is made) based on the time to walk the distance of 5 Mil( Ula) at 24 minutes a Mil." ) {
+			new Zman( "120 Minutes", "Before sea level sunrise, based on the time to walk the distance of 5 Mil at 24 minutes a Mil." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos120();
 				}
@@ -39,7 +39,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "120 Minutes Zmaniyot", "120 minutes zmaniyot (GR'A and the Baal Hatanya) or 1/6th of the day before sea level sunrise." ) {
+			new Zman( "120 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/6th of the day before sea level sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos120Zmanis();
 				}
@@ -79,7 +79,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "60 Minutes", "60 minutes before sea level sunrise on the time to walk the distance of 4 Mil at 15 minutes a Mil (the opinion of the Chavas Yair)." ) {
+			new Zman( "60 Minutes", "Before sea level sunrise, based on the time to walk the distance of 4 Mil at 15 minutes a Mil (the opinion of the Chavas Yair)." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos60();
 				}
@@ -87,7 +87,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "72 Minutes", "72 minutes before sea level sunrise (no adjustment for elevation) based on the time to walk the distance of 4 Mil at 18 minutes a Mil.", false ) {
+			new Zman( "72 Minutes", "Before sea level sunrise, based on the time to walk the distance of 4 Mil at 18 minutes a Mil.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos72();
 				}
@@ -95,7 +95,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "72 Minutes Zmaniyot", "72 minutes zmaniyot (GR'A and the Baal Hatanya) or 1/10th of the day before sea level sunrise." ) {
+			new Zman( "72 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/10th of the day before sea level sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos72Zmanis();
 				}
@@ -103,7 +103,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "90 Minutes", "90 minutes before sea level sunrise on the time to walk the distance of 4 Mil at 22.5 minutes a Mil.", false ) {
+			new Zman( "90 Minutes", "Before sea level sunrise, based on the time to walk the distance of 4 Mil at 22.5 minutes a Mil.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos90();
 				}
@@ -111,7 +111,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "90 Minutes Zmaniyot", "90 minutes zmaniyot (GR'A and the Baal Hatanya) or 1/8th of the day before sea level sunrise." ) {
+			new Zman( "90 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/8th of the day before sea level sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos90Zmanis();
 				}
@@ -119,7 +119,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes", "96 minutes before sea level sunrise based on the time to walk the distance of 4 Mil at 24 minutes a Mil." ) {
+			new Zman( "96 Minutes", "Before sea level sunrise, based on the time to walk the distance of 4 Mil at 24 minutes a Mil." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos96();
 				}
@@ -127,7 +127,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes Zmaniyot", "96 minutes zmaniyot (GR'A and the Baal Hatanya) or 1/8th of the day before sea level sunrise." ) {
+			new Zman( "96 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/8th of the day before sea level sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos96Zmanis();
 				}

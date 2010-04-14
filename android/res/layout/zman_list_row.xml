@@ -9,8 +9,8 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:layout_weight="1"
-	android:paddingLeft="36px"
-	android:paddingRight="8px"
+	android:paddingLeft="10px"
+	android:paddingRight="10px"
 	android:stretchColumns="1"
 	>
 
@@ -21,6 +21,7 @@
 	>
 		<TextView
 			android:id="@+id/zman_name"
+			android:textStyle="bold"
 		/>
 		<TextView
 			android:id="@+id/zman_time"
@@ -35,8 +36,8 @@
 		<TextView
 			android:id="@+id/zman_description"
 			android:layout_span="2"
+		  android:textStyle="italic"
 		/>
-
 	</TableRow>
 
 </TableLayout>

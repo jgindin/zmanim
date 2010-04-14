@@ -31,7 +31,7 @@ class Chatzot
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Mid-day", "This method returns chatzos (mid-day) following the opinion of the GR'A that the day for Jewish halachic times starts at sunrise and ends at sunset.", false ) {
+			new Zman( "Mid-day", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getChatzos();
 				}

@@ -86,7 +86,9 @@ public class ZmanimActivity
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-		ZmanimDisplay zmanimDisplay = new ZmanimDisplay( this, zmanimCalendar );
+
+		// We just need a display...don't need to hold on to it...
+		new ZmanimDisplay( this, findViewById( R.id.zmanim_view ), zmanimCalendar );
 
 		buildHeader( location );
 
@@ -264,7 +266,7 @@ public class ZmanimActivity
 		builder.setTitle( titleResource );
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
-		View layout = inflater.inflate( layoutResource, (ViewGroup)findViewById( R.id.layout_root ) );
+		View layout = inflater.inflate( layoutResource, null );
 
 		WebView helpText = (WebView)layout.findViewById( webviewId );
 		final String text = getResources().getString( textId );

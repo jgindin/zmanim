@@ -76,7 +76,7 @@
 					android:layout_height="fill_parent"
 					android:stretchColumns="1">
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/alot_row">
 						<TextView
 							android:text="@string/Alot"
 							android:textSize="12sp"
@@ -89,7 +89,7 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/talit_row">
 						<TextView
 							android:text="@string/Talit"
 							android:textSize="12sp"
@@ -102,7 +102,7 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/hanetz_row">
 						<TextView
 							android:text="@string/Hanetz"
 							android:textSize="12sp"
@@ -115,35 +115,35 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/sofZmanShema_row">
 
 						<TextView
 							android:text="@string/SofZmanShema"
 							android:textSize="12sp"
 						/>
 						<TextView
-							android:id="@+id/shema"
+							android:id="@+id/sofZmanShema"
 							android:text="shema"
 							android:gravity="right"
 							android:textSize="12sp"
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/sofZmanTefilah_row">
 
 						<TextView
 							android:text="@string/SofZmanTefilah"
 							android:textSize="12sp"
 						/>
 						<TextView
-							android:id="@+id/tefilah"
+							android:id="@+id/sofZmanTefilah"
 							android:text="tefilah"
 							android:gravity="right"
 							android:textSize="12sp"
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/chatzot_row">
 
 						<TextView
 							android:text="@string/Chatzot"
@@ -157,49 +157,49 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/minchaGedola_row">
 
 						<TextView
 							android:text="@string/MinchaGedola"
 							android:textSize="12sp"
 						/>
 						<TextView
-							android:id="@+id/mincha_gedola"
+							android:id="@+id/minchaGedola"
 							android:text="mincha gedola"
 							android:gravity="right"
 							android:textSize="12sp"
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/minchaKetana_row">
 
 						<TextView
 							android:text="@string/MinchaKetana"
 							android:textSize="12sp"
 						/>
 						<TextView
-							android:id="@+id/mincha_ketana"
+							android:id="@+id/minchaKetana"
 							android:text="mincha ketana"
 							android:gravity="right"
 							android:textSize="12sp"
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/plagHamincha_row">
 
 						<TextView
 							android:text="@string/Plag"
 							android:textSize="12sp"
 						/>
 						<TextView
-							android:id="@+id/plag_hamincha"
+							android:id="@+id/plagHamincha"
 							android:text="plag hamincha"
 							android:gravity="right"
 							android:textSize="12sp"
 						/>
 					</TableRow>
 
-					<TableRow android:id="@+id/candles_row">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/candles_row">
 						<TextView
 							android:text="@string/Candles"
 							android:textSize="12sp"
@@ -212,7 +212,7 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/shkiah_row">
 
 						<TextView
 							android:text="@string/Shkiah"
@@ -226,7 +226,7 @@
 						/>
 					</TableRow>
 
-					<TableRow android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/mincha_row">
 
 						<TextView
 							android:text="@string/Mincha"
@@ -240,7 +240,7 @@
 						/>
 					</TableRow>
 
-					<TableRow android:id="@+id/tzait_row" android:layout_width="fill_parent">
+					<TableRow android:layout_width="fill_parent" android:id="@+id/tzait_row">
 						<TextView
 							android:text="@string/Tzait"
 							android:textSize="12sp"

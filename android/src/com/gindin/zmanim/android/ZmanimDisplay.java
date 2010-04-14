@@ -4,19 +4,57 @@
 
 package com.gindin.zmanim.android;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Actually displays the zmanim on the screen.
  */
+@SuppressWarnings( { "UnnecessaryBoxing", "AutoUnboxing", "UnnecessaryUnboxing" } )
 class ZmanimDisplay {
 
-	private final Activity                                    context;
+	/** Maps from the Zmanim type to the ID of the field that contains it. */
+	private static final Map<Zmanim.Type, Integer>            zmanimTypeToFieldID = new HashMap<Zmanim.Type, Integer>();
+
+	private static final Map<Zmanim.Type, Integer>            zmanimTypeToRowID = new HashMap<Zmanim.Type, Integer>();
+	
+	static {
+		zmanimTypeToFieldID.put( Zmanim.Type.Alot, Integer.valueOf( R.id.alot ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.Talit, Integer.valueOf( R.id.talit ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.Hanetz, Integer.valueOf( R.id.hanetz ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.SofZmanShema, Integer.valueOf( R.id.sofZmanShema ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.SofZmanTefila, Integer.valueOf( R.id.sofZmanTefilah ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.Chatzot, Integer.valueOf( R.id.chatzot ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.MinchaGedola, Integer.valueOf( R.id.minchaGedola ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.MinchaKetana, Integer.valueOf( R.id.minchaKetana ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.PlagHaMincha, Integer.valueOf( R.id.plagHamincha ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.CandleLighting, Integer.valueOf( R.id.candles ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.Shkia, Integer.valueOf( R.id.shkiah ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.LatestMincha, Integer.valueOf( R.id.mincha ) );
+		zmanimTypeToFieldID.put( Zmanim.Type.TzaitHachocavim, Integer.valueOf( R.id.tzait ) );
+
+		zmanimTypeToRowID.put( Zmanim.Type.Alot, Integer.valueOf( R.id.alot_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.Talit, Integer.valueOf( R.id.talit_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.Hanetz, Integer.valueOf( R.id.hanetz_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.SofZmanShema, Integer.valueOf( R.id.sofZmanShema_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.SofZmanTefila, Integer.valueOf( R.id.sofZmanTefilah_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.Chatzot, Integer.valueOf( R.id.chatzot_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.MinchaGedola, Integer.valueOf( R.id.minchaGedola_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.MinchaKetana, Integer.valueOf( R.id.minchaKetana_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.PlagHaMincha, Integer.valueOf( R.id.plagHamincha_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.CandleLighting, Integer.valueOf( R.id.candles_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.Shkia, Integer.valueOf( R.id.shkiah_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.LatestMincha, Integer.valueOf( R.id.mincha_row ) );
+		zmanimTypeToRowID.put( Zmanim.Type.TzaitHachocavim, Integer.valueOf( R.id.tzait_row ) );
+	}
+
 
 	/** The calendar we use for displaying everything. */
 	private final HebrewZmanimCalendar                        zmanimCalendar;
@@ -24,16 +62,22 @@ class ZmanimDisplay {
 	/** The view where we're going to display all the zmanim. */
 	private final View                                        zmanimView;
 
+	/** Manages the selection process, allowing the user to select a different zman. */
+	private final ZmanimSelector                              selector;
+
 
 	ZmanimDisplay(
-		Activity              context,
+		Context               context,
+		View                  zmanimView,
 		HebrewZmanimCalendar  zmanimCalendar
 	) {
 
-		this.context = context;
+		this.zmanimView = zmanimView;
 		this.zmanimCalendar = zmanimCalendar;
 
-		zmanimView = context.findViewById( R.id.zmanim_view );
+		selector = new ZmanimSelector( context, zmanimCalendar );
+
+		listenToRows();
 
 		zmanimCalendar.addListener(
 			new HebrewZmanimCalendar.Listener() {
@@ -48,69 +92,69 @@ class ZmanimDisplay {
 	}
 
 
+	private void listenToRows() {
+
+		for ( final Map.Entry<Zmanim.Type, Integer> typeToRowIdEntry : zmanimTypeToRowID.entrySet() ) {
+
+			View row = zmanimView.findViewById( typeToRowIdEntry.getValue() );
+			row.setOnClickListener(
+				new View.OnClickListener() {
+					public void onClick( View view ) {
+
+						selector.selectFrom( typeToRowIdEntry.getKey(),
+							new ZmanimSelector.SelectionCallback() {
+								public void selected( Zman selection ) {
+									//To change body of implemented methods use File | Settings | File Templates.
+								}
+							}
+						);
+					}
+				}
+			);
+		}
+	}
+
+
 	@SuppressWarnings( { "FeatureEnvy" } )
 	void update() {
 
-		// TODO: Calculate on separate threads!!!!
+		// TODO:
+		//  1. Calculate on separate threads!!!!
+		//  2. Make each row clickable, and popup a choice for which zman. Use preferences!
 
-		Zmanim zmanim = zmanimCalendar.get( Zmanim.Type.Alot );
-		Zman zman = zmanim.get( 0 );
-		updateField( R.id.alot, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.Talit );
-		zman = zmanim.get( 0 );
-		updateField( R.id.talit, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.Hanetz );
-		zman = zmanim.get( 0 );
-		updateField( R.id.hanetz, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.SofZmanShema );
-		zman = zmanim.get( 0 );
-		updateField( R.id.shema, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.SofZmanTefila );
-		zman = zmanim.get( 0 );
-		updateField( R.id.tefilah, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.Chatzot );
-		zman = zmanim.get( 0 );
-		updateField( R.id.chatzot, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.MinchaGedola );
-		zman = zmanim.get( 0 );
-		updateField( R.id.mincha_gedola, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.MinchaKetana );
-		zman = zmanim.get( 0 );
-		updateField( R.id.mincha_ketana, zmanimCalendar.formatZmanTime( zman ) );
-
-		zmanim = zmanimCalendar.get( Zmanim.Type.PlagHaMincha );
-		zman = zmanim.get( 0 );
-		updateField( R.id.plag_hamincha, zmanimCalendar.formatZmanTime( zman ) );
+		displayZman( Zmanim.Type.Alot );
+		displayZman( Zmanim.Type.Talit );
+		displayZman( Zmanim.Type.Hanetz );
+		displayZman( Zmanim.Type.SofZmanShema );
+		displayZman( Zmanim.Type.SofZmanTefila );
+		displayZman( Zmanim.Type.Chatzot );
+		displayZman( Zmanim.Type.MinchaGedola );
+		displayZman( Zmanim.Type.MinchaKetana );
+		displayZman( Zmanim.Type.PlagHaMincha );
 
 		if ( zmanimCalendar.showCandlelighting() ) {
-			context.findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
-
-			zmanim = zmanimCalendar.get( Zmanim.Type.CandleLighting );
-			zman = zmanim.get( 0 );
-			updateField( R.id.candles, zmanimCalendar.formatZmanTime( zman ) );
+			zmanimView.findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
+			displayZman( Zmanim.Type.CandleLighting );
 		}
 		else {
-			context.findViewById( R.id.candles_row ).setVisibility( View.GONE );
+			zmanimView.findViewById( R.id.candles_row ).setVisibility( View.GONE );
 		}
 
-		zmanim = zmanimCalendar.get( Zmanim.Type.Shkia );
-		zman = zmanim.get( 0 );
-		updateField( R.id.shkiah, zmanimCalendar.formatZmanTime( zman ) );
+		displayZman( Zmanim.Type.Shkia );
+		displayZman( Zmanim.Type.LatestMincha );
+		displayZman( Zmanim.Type.TzaitHachocavim );
+	}
 
-		zmanim = zmanimCalendar.get( Zmanim.Type.LatestMincha );
-		zman = zmanim.get( 0 );
-		updateField( R.id.mincha, zmanimCalendar.formatZmanTime( zman ) );
 
-		zmanim = zmanimCalendar.get( Zmanim.Type.TzaitHachocavim );
-		zman = zmanim.get( 0 );
-		updateField( R.id.tzait, zmanimCalendar.formatZmanTime( zman ) );
+	private void displayZman(
+		Zmanim.Type type
+	) {
+
+		Zmanim zmanim = zmanimCalendar.get( type );
+
+		// TODO: Get the right one based on the user's preference!
+		Zman zman = zmanim.get( 0 );
+		updateField( zmanimTypeToFieldID.get( type ).intValue(), zmanimCalendar.formatZmanTime( zman ) );
 	}
 
 
