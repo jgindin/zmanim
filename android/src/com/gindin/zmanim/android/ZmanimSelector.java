@@ -11,10 +11,7 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
@@ -28,6 +25,19 @@ public class ZmanimSelector {
 
 	private final HebrewZmanimCalendar                        zmanimCalendar;
 
+	/** Let's only build our dialog once and re-use it... */
+	private final Dialog                                      dialog;
+
+	/** Only one instance of the dialog means only one instance of the list... */
+	private final ListView                                    listView;
+
+	/** When we're displaying a selection dialog, what type of zmanim are being selected? */
+	private Zmanim.Type                                       typeToSelectFrom;
+
+	/** When we're displaying a selection dialog, who do we notify when we're done? */
+	private SelectionCallback                                 typeSelectionCallback;
+
+
 	public ZmanimSelector(
 		Context               context,
 		HebrewZmanimCalendar  zmanimCalendar
@@ -35,16 +45,6 @@ public class ZmanimSelector {
 
 		this.context = context;
 		this.zmanimCalendar = zmanimCalendar;
-	}
-
-
-	void selectFrom(
-		final Zmanim.Type       type,
-	  final SelectionCallback callback
-	) {
-
-		final Zmanim zmanim = zmanimCalendar.get( type );
-		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( zmanim.toArray() );
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( context );
 		builder.setTitle( R.string.zmanim_selector );
@@ -53,10 +53,9 @@ public class ZmanimSelector {
 		View layout = inflater.inflate( R.layout.zmanim_selection, null );
 
 		builder.setView( layout );
-		final Dialog dialog = builder.create();
+		dialog = builder.create();
 
-		ListView listView = (ListView)layout.findViewById( android.R.id.list );
-		listView.setAdapter( listAdapter );
+		listView = (ListView)layout.findViewById( android.R.id.list );
 		listView.setOnItemClickListener(
 			new AdapterView.OnItemClickListener() {
 				public void onItemClick(
@@ -66,9 +65,10 @@ public class ZmanimSelector {
 					long            id
 				) {
 
-					Zman selection = listAdapter.getItem( position );
+					final ZmanimListAdapter adapter = (ZmanimListAdapter)listView.getAdapter();
+					Zman selection = adapter.getItem( position );
 					dialog.dismiss();
-					callback.selected( type, selection );
+					typeSelectionCallback.selected( typeToSelectFrom, selection );
 				}
 
 				public void onNothingSelected( AdapterView<?> adapterView ) {
@@ -76,7 +76,22 @@ public class ZmanimSelector {
 				}
 			}
 		);
-		
+	}
+
+
+	void selectFrom(
+		final Zmanim.Type       type,
+	  final SelectionCallback callback
+	) {
+
+		typeToSelectFrom = type;
+		typeSelectionCallback = callback;
+
+		final Zmanim zmanim = zmanimCalendar.get( type );
+		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( zmanim.toArray() );
+
+		listView.setAdapter( listAdapter );
+
 		dialog.show();
 	}
 
@@ -98,6 +113,24 @@ public class ZmanimSelector {
 		) {
 
 			super( context, R.layout.zman_list_row, zmanim );
+		}
+
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
+
+
+		@Override
+		public long getItemId( int position ) {
+			return position;
+		}
+
+
+		@Override
+		public boolean areAllItemsEnabled() {
+			return true;
 		}
 
 

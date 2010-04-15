@@ -164,6 +164,11 @@ class ZmanimDisplay {
 		Zmanim zmanim = zmanimCalendar.get( type );
 		String zmanName = preferences.getString( type.name, zmanim.getDefault().name );
 		Zman zman = zmanim.getByName( zmanName );
+		if ( null == zman ) {
+			// Should only happen in development builds if I change the name of a zman...
+			zman = zmanim.getDefault();
+		}
+
 		updateField( zmanimTypeToFieldID.get( type ).intValue(), zmanimCalendar.formatZmanTime( zman ) );
 	}
 
