@@ -110,7 +110,14 @@ public class HebrewZmanimCalendar {
 		Zman zman
 	) {
 
-		return dateFormatter.formatZmanTime( zman.getTime() );
+		String time = zman.getCachedFormattedTime();
+		if ( null == time ) {
+
+			time = dateFormatter.formatZmanTime( zman.getTime() );
+			zman.setCachedFormattedTime( time );
+		}
+
+		return time;
 	}
 
 
