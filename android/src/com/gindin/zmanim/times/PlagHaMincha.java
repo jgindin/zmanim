@@ -55,7 +55,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "Based on the day starting at alot 16.1° and ending at tzait 16.1°. This is calculated as 10.75 hours zmaniyot after dawn", false ) {
+			new Zman( "MG'A 16.1 deg", "Based on the day starting at alot 16.1 degrees and ending at tzait 16.1 degrees. This is calculated as 10.75 hours zmaniyot after dawn", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha16Point1Degrees();
 				}
@@ -63,7 +63,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 18°", "Based on the day starting at alot 18° and ending at tzait 18°." ) {
+			new Zman( "MG'A 18 deg", "Based on the day starting at alot 18 degrees and ending at tzait 18 degrees." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha18Degrees();
 				}
@@ -71,7 +71,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "Based on the the day starting at alot 19.8° and endind at tzait 19.8°." ) {
+			new Zman( "MG'A 19.8 deg", "Based on the the day starting at alot 19.8 degrees and ending at tzait 19.8 degrees." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha19Point8Degrees();
 				}
@@ -79,7 +79,7 @@ class PlagHaMincha
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 26°", "Based on the day starting at alot 26° and ending at tzait 26°." ) {
+			new Zman( "MG'A 26 deg", "Based on the day starting at alot 26 degrees and ending at tzait 26 degrees." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getPlagHamincha26Degrees();
 				}

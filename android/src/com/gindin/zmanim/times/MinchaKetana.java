@@ -39,7 +39,7 @@ class MinchaKetana
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "Based on the day starting and ending 16.1° below the horizon.", false ) {
+			new Zman( "MG'A 16.1 deg", "Based on the day starting and ending 16.1 degrees below the horizon.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana16Point1Degrees();
 				}

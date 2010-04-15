@@ -38,7 +38,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "16.1° to Sunset", "Based on the day starting at at alot 16.1° and ending at sunset." ) {
+			new Zman( "16.1 deg to Sunset", "Based on the day starting at at alot 16.1 degrees and ending at sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaAlos16Point1ToSunset();
 				}
@@ -46,7 +46,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "16.1° and ending at tzait 7.083°", "Based on the day starting at at alot 16.1° and ending at tzait 7.083°." ) {
+			new Zman( "16.1 deg to tzait 7.083 deg", "Based on the day starting at at alot 16.1 degrees and ending at tzait 7.083 degrees." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees();
 				}
@@ -96,7 +96,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "Based on alot being 16.1° before sunrise.", false ) {
+			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaMGA16Point1Degrees();
 				}
@@ -104,7 +104,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "Based on alot being 19.8° before sunrise." ) {
+			new Zman( "MG'A 19.8 deg", "Based on alot being 19.8 degrees before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaMGA19Point8Degrees();
 				}

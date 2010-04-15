@@ -47,7 +47,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "16.1°", "When the sun is 16.1° below the eastern geometric horizon before sunrise.", false ) {
+			new Zman( "16.1 deg", "When the sun is 16.1 degrees below the eastern geometric horizon before sunrise.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos16Point1Degrees();
 				}
@@ -55,7 +55,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "18°", "When the sun is 18° below the eastern geometric horizon before sunrise." ) {
+			new Zman( "18 deg", "When the sun is 18 degrees below the eastern geometric horizon before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos18Degrees();
 				}
@@ -63,7 +63,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "19.8°", "When the sun is 19.8° below the eastern geometric horizon before sunrise." ) {
+			new Zman( "19.8 deg", "When the sun is 19.8 degrees below the eastern geometric horizon before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos19Point8Degrees();
 				}
@@ -71,7 +71,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "26°", "When the sun is 26° below the eastern geometric horizon before sunrise." ) {
+			new Zman( "26 deg", "When the sun is 26 degrees below the eastern geometric horizon before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos26Degrees();
 				}

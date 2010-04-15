@@ -32,7 +32,7 @@ class TzaitHachocavim
 
 
 		zmanim.add(
-			new Zman( "8.5°", "When the sun is 8.5° below the western geometric horizon (90°) after sunset.", false ) {
+			new Zman( "8.5 deg", "When the sun is 8.5 degrees below the western geometric horizon after sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais();
 				}
@@ -56,7 +56,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "16.1°", "When the sun is 16.1° below the western geometric horizon after sunset." ) {
+			new Zman( "16.1 deg", "When the sun is 16.1 degrees below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais16Point1Degrees();
 				}
@@ -64,7 +64,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "18°", "When the sun is 18° below the western geometric horizon after sunset." ) {
+			new Zman( "18 deg", "When the sun is 18 degrees below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais18Degrees();
 				}
@@ -72,7 +72,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "19.8°", "When the sun is 19.8° below the western geometric horizon after sunset." ) {
+			new Zman( "19.8 deg", "When the sun is 19.8 degrees below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais19Point8Degrees();
 				}
@@ -80,7 +80,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "26°", "When the sun is 26° below the western geometric horizon after sunset." ) {
+			new Zman( "26 deg", "When the sun is 26 degrees below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais26Degrees();
 				}
@@ -152,7 +152,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 5.95°", "Based on the sun's position at 5.95° below the western horizon." ) {
+			new Zman( "Geonim 5.95 deg", "Based on the sun's position at 5.95 degrees below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim5Point95Degrees();
 				}
@@ -160,7 +160,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 7.083°", "Based on the sun's position at 7.083° below the western horizon." ) {
+			new Zman( "Geonim 7.083 deg", "Based on the sun's position at 7.083 degrees below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim7Point083Degrees();
 				}
@@ -168,7 +168,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 8.5°", "Based on the sun's position at 8.5° below the western horizon." ) {
+			new Zman( "Geonim 8.5 deg", "Based on the sun's position at 8.5 degrees below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim8Point5Degrees();
 				}

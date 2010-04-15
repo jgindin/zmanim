@@ -73,7 +73,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "Based on alot being 16.1° before sunrise.", false ) {
+			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA16Point1Degrees();
 				}
@@ -81,7 +81,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "Based on alot being 19.8° before sunrise." ) {
+			new Zman( "MG'A 19.8 deg", "Based on alot being 19.8 degrees before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA19Point8Degrees();
 				}
