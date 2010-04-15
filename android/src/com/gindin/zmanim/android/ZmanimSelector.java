@@ -28,6 +28,9 @@ public class ZmanimSelector {
 	/** Let's only build our dialog once and re-use it... */
 	private final Dialog                                      dialog;
 
+	/** Resource to which we append the zmanim type being selected. */
+	private final String                                      baseTitle;
+
 	/** Only one instance of the dialog means only one instance of the list... */
 	private final ListView                                    listView;
 
@@ -46,8 +49,9 @@ public class ZmanimSelector {
 		this.context = context;
 		this.zmanimCalendar = zmanimCalendar;
 
+		baseTitle = context.getString( R.string.zmanim_selector );
+
 		AlertDialog.Builder builder = new AlertDialog.Builder( context );
-		builder.setTitle( R.string.zmanim_selector );
 
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 		View layout = inflater.inflate( R.layout.zmanim_selection, null );
@@ -91,6 +95,8 @@ public class ZmanimSelector {
 		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( zmanim.toArray() );
 
 		listView.setAdapter( listAdapter );
+
+		dialog.setTitle( baseTitle + " " + type.name );
 
 		dialog.show();
 	}
