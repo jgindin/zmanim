@@ -47,6 +47,45 @@ public abstract class Zmanim {
 	}
 
 
+	/**
+	 * Finds the named zman.
+	 *
+	 * @param zmanName which zman to locate.
+	 *
+	 * @return the named zman, or null if it cannot be found.
+	 */
+	public Zman getByName(
+		String zmanName
+	) {
+
+		for ( Zman zman : allZmanim ) {
+			if ( zmanName.equals( zman.name ) ) {
+				return zman;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Finds a default zman to represent this group.
+	 *
+	 * @return As currently implemented, returns the first non-advanced zman in the group.
+	 */
+	public Zman getDefault() {
+
+		for ( Zman zman : allZmanim ) {
+			if ( !zman.advanced ) {
+				return zman;
+			}
+		}
+
+		// Should never get here.
+		return null;
+	}
+
+
 	public Iterator<Zman> iterator() {
 		return allZmanim.iterator();
 	}

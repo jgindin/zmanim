@@ -40,7 +40,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 120 Minutes", "MG'A that the time to walk the distance of a Mil in the Rambam's opinion is 2/5 of an hour (24 minutes) for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah (sunset)." ) {
+			new Zman( "MG'A 120 Minutes", "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah (sunset)." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120();
 				}
@@ -48,7 +48,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 120 Minutes Zmaniyot", "120 minutes zmaniyot (GR'A and the Baal Hatanya) after sea level sunset." ) {
+			new Zman( "GR'A 120 Minutes Zmaniyot", "120 minutes zmaniyot after sea level sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120Zmanis();
 				}
@@ -56,7 +56,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "16.1°", "" ) {
+			new Zman( "16.1°", "When the sun is 16.1° below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais16Point1Degrees();
 				}
@@ -64,7 +64,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "18°", "" ) {
+			new Zman( "18°", "When the sun is 18° below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais18Degrees();
 				}
@@ -72,7 +72,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "19.8°", "" ) {
+			new Zman( "19.8°", "When the sun is 19.8° below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais19Point8Degrees();
 				}
@@ -80,7 +80,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "26°", "" ) {
+			new Zman( "26°", "When the sun is 26° below the western geometric horizon after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais26Degrees();
 				}
@@ -88,7 +88,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Chavas Yair and Divray Malkiel", "Based on the opinion of the Chavas Yair and Divray Malkiel that the time to walk the distance of a Mil is 15 minutes for a total of 60 minutes for 4 mil after sea level sunset." ) {
+			new Zman( "Chavas Yair and Divray Malkiel", "Based on the time to walk 4 Mil at 15 minutes/Mil." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais60();
 				}
@@ -96,7 +96,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Rambam", "Based on the opinion of the Rambam and Rabainu Tam that tzait is calculated as the time it takes to walk 4 Mil at 18 minutes a Mil for a total of 72 minutes." ) {
+			new Zman( "Rambam / Rabainu Tam", "Based on the time to walk 4 Mil at 18 minutes/Mil." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais72();
 				}
@@ -112,7 +112,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes", "Based on the opinion of the Magen Avraham that the time to walk the distance of a Mil in the Ramba\"m's opinion is 18 minutes for a total of 90 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah (sunset)." ) {
+			new Zman( "MG'A 90 Minutes", "Based on the time to walk 5 Mil at 18 minutes/Mil." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais90();
 				}
@@ -120,7 +120,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 90 Minutes Zmaniyot", "Calculated using 90 minutes zmaniyot (GR'A and the Baal Hatanya) after sea level sunset." ) {
+			new Zman( "GR'A 90 Minutes Zmaniyot", "90 minutes zmaniyot after sea level sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais90Zmanis();
 				}
@@ -128,7 +128,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes", "Calculated as 96 minutes after sea level sunset." ) {
+			new Zman( "96 Minutes", "96 minutes after sea level sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais96();
 				}
@@ -136,7 +136,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 96 Minutes Zmaniyot", "Calculated using 96 minutes zmaniyot (GR'A and the Baal Hatanya) after sea level sunset." ) {
+			new Zman( "GR'A 96 Minutes Zmaniyot", "96 minutes zmaniyot after sea level sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais96Zmanis();
 				}
@@ -144,7 +144,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "40 Minutes After Sunset", "Usually calculated as 40 minutes after sunset. Please note that Chacham Yosef Harari-Raful of Yeshivat Ateret Torah who uses this time, does so only for calculating various other zmanai hayom such as Sof Zman Kriat Shema and Plag Hamincha. His calendars do not publish a zman for Tzait. It should also be noted that Chacham Harari-Raful provided a 25 minute zman for Israel." ) {
+			new Zman( "Chacham Yosef Harari-Raful", "Usually calculated as 40 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisAteretTorah();
 				}
@@ -152,7 +152,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 5.95°", "Based on the opinion of the Geonim calculated at the sun's position at 5.95° below the western horizon." ) {
+			new Zman( "Geonim 5.95°", "Based on the sun's position at 5.95° below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim5Point95Degrees();
 				}
@@ -160,7 +160,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 7.083°", "Based on the opinion of the Geonim calculated at the sun's position at 7.083° below the western horizon." ) {
+			new Zman( "Geonim 7.083°", "Based on the sun's position at 7.083° below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim7Point083Degrees();
 				}
@@ -168,7 +168,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 8.5°", "Based on the opinion of the Geonim calculated at the sun's position at 8.5° below the western horizon." ) {
+			new Zman( "Geonim 8.5°", "Based on the sun's position at 8.5° below the western horizon." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim8Point5Degrees();
 				}

@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
@@ -65,6 +66,9 @@ class ZmanimDisplay {
 	/** Manages the selection process, allowing the user to select a different zman. */
 	private final ZmanimSelector                              selector;
 
+	/** Set/Get the choosen zmanim. */
+	private final SharedPreferences                           preferences;
+
 
 	ZmanimDisplay(
 		Context               context,
@@ -87,6 +91,9 @@ class ZmanimDisplay {
 			}
 		);
 
+
+		preferences = context.getSharedPreferences( "ZmanimSelection", Context.MODE_PRIVATE );
+
 		// Make sure we're starting off with the right stuff...
 		update();
 	}
@@ -94,20 +101,24 @@ class ZmanimDisplay {
 
 	private void listenToRows() {
 
+		final ZmanimSelector.SelectionCallback selectionCallback = new ZmanimSelector.SelectionCallback() {
+			public void selected( Zmanim.Type type, Zman selection ) {
+
+				final SharedPreferences.Editor editor = preferences.edit();
+				editor.putString( type.name, selection.name );
+				editor.commit();
+
+				displayZman( type );
+			}
+		};
+
 		for ( final Map.Entry<Zmanim.Type, Integer> typeToRowIdEntry : zmanimTypeToRowID.entrySet() ) {
 
 			View row = zmanimView.findViewById( typeToRowIdEntry.getValue() );
 			row.setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick( View view ) {
-
-						selector.selectFrom( typeToRowIdEntry.getKey(),
-							new ZmanimSelector.SelectionCallback() {
-								public void selected( Zman selection ) {
-									//To change body of implemented methods use File | Settings | File Templates.
-								}
-							}
-						);
+						selector.selectFrom( typeToRowIdEntry.getKey(), selectionCallback );
 					}
 				}
 			);
@@ -151,9 +162,8 @@ class ZmanimDisplay {
 	) {
 
 		Zmanim zmanim = zmanimCalendar.get( type );
-
-		// TODO: Get the right one based on the user's preference!
-		Zman zman = zmanim.get( 0 );
+		String zmanName = preferences.getString( type.name, zmanim.getDefault().name );
+		Zman zman = zmanim.getByName( zmanName );
 		updateField( zmanimTypeToFieldID.get( type ).intValue(), zmanimCalendar.formatZmanTime( zman ) );
 	}
 

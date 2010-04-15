@@ -41,7 +41,7 @@ class SofZmanTefila
 //		sofZmanTefila.addZman( zmanimCalendar.getSofZmanTfilaFixedLocal(), "", "" );
 
 		zmanim.add(
-			new Zman( "GR'A", "This time is 4 hours into the day based on the opinion of the GR'A and the Baal Hatanya that the day is calculated from sunrise to sunset.", false ) {
+			new Zman( "GR'A", "Based on the day as calculated from sunrise to sunset.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaGRA();
 				}
@@ -49,7 +49,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "Chacham Yosef Harari-Raful", "Chacham Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset." ) {
+			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting at 1/10th of the day before sunrise and is usually calculated as ending 40 minutes after sunset." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilahAteretTorah();
 				}
@@ -57,7 +57,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A", "MG'A based on alot being 72 minutes before sunrise." ) {
+			new Zman( "MG'A", "Based on alot being 72 minutes before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA();
 				}
@@ -65,7 +65,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 120 Minutes", "MG'A based on alot being 120 minutes before sunrise." ) {
+			new Zman( "MG'A 120 Minutes", "Based on alot being 120 minutes before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA120Minutes();
 				}
@@ -73,7 +73,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1°", "MG'A based on alot being 16.1° before sunrise.", false ) {
+			new Zman( "MG'A 16.1°", "Based on alot being 16.1° before sunrise.", false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA16Point1Degrees();
 				}
@@ -81,7 +81,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 19.8°", "MG'A based on alot being 19.8° before sunrise." ) {
+			new Zman( "MG'A 19.8°", "Based on alot being 19.8° before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA19Point8Degrees();
 				}
@@ -91,7 +91,7 @@ class SofZmanTefila
 //		sofZmanTefila.addZman( zmanimCalendar.getSofZmanTfilaMGA72Minutes(), "", "" );
 
 		zmanim.add(
-			new Zman( "MG'A 72 Minutes Zmaniyot", "MG'A based on alot being 72 minutes zmaniyot before sunrise." ) {
+			new Zman( "MG'A 72 Minutes Zmaniyot", "Based on alot being 72 minutes zmaniyot before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA72MinutesZmanis();
 				}
@@ -99,7 +99,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes", "MG'A based on alot being 90 minutes before sunrise." ) {
+			new Zman( "MG'A 90 Minutes", "Based on alot being 90 minutes before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA90Minutes();
 				}
@@ -107,7 +107,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes Zmaniyot", "MG'A based on alot being 90 minutes zmaniyot before sunrise." ) {
+			new Zman( "MG'A 90 Minutes Zmaniyot", "Based on alot being 90 minutes zmaniyot before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA90MinutesZmanis();
 				}
@@ -115,7 +115,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes", "MG'A based on alot being 96 minutes before sunrise." ) {
+			new Zman( "MG'A 96 Minutes", "Based on alot being 96 minutes before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA96Minutes();
 				}
@@ -123,7 +123,7 @@ class SofZmanTefila
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes Zmaniyot", "MG'A based on alot being 96 minutes zmaniyot before sunrise." ) {
+			new Zman( "MG'A 96 Minutes Zmaniyot", "Based on alot being 96 minutes zmaniyot before sunrise." ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaMGA96MinutesZmanis();
 				}

@@ -68,7 +68,7 @@ public class ZmanimSelector {
 
 					Zman selection = listAdapter.getItem( position );
 					dialog.dismiss();
-					callback.selected( selection );
+					callback.selected( type, selection );
 				}
 
 				public void onNothingSelected( AdapterView<?> adapterView ) {
@@ -83,7 +83,10 @@ public class ZmanimSelector {
 
 	public static interface SelectionCallback {
 
-		void selected( Zman selection );
+		void selected(
+			Zmanim.Type type,
+			Zman        selection
+		);
 	}
 
 
