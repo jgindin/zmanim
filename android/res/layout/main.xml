@@ -4,88 +4,76 @@
   ~ Copyright (c) 2009. Jay R. Gindin
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/main_layout"
 	android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-	android:orientation="vertical"
+	android:layout_height="fill_parent"
+	android:layout_weight="1"
+	android:paddingLeft="4px"
+	android:paddingRight="4px"
+	android:stretchColumns="1"
 	>
 
-	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/main_content"
-		android:layout_width="fill_parent"
-		android:layout_height="0px"
-		android:layout_weight="1"
-		android:paddingLeft="4px"
-		android:paddingRight="4px"
-		android:stretchColumns="1"
-		>
+	<!-- Header -->
 
-		<!-- Header -->
+	<TableRow android:layout_width="fill_parent">
+		<TextView
+			android:id="@+id/location"
+			android:text="Location"
+			android:textStyle="bold"
+			android:gravity="center"
+			android:layout_gravity="center_horizontal"
+			android:layout_span="2"
+		/>
+	</TableRow>
 
-		<TableRow android:layout_width="fill_parent">
-			<TextView
-				android:id="@+id/location"
-				android:text="Location"
-				android:textStyle="bold"
-				android:gravity="center"
-				android:layout_gravity="center_horizontal"
-				android:layout_span="2"
-			/>
-		</TableRow>
+	<TableRow android:layout_width="fill_parent">
+		<TextView
+			android:id="@+id/secular_date"
+			android:text="SecDate"
+			android:bufferType="spannable"
+		/>
+		<TextView
+			android:id="@+id/hebrew_date"
+			android:text="HebDate"
+			android:gravity="right"
+		/>
+	</TableRow>
 
-		<TableRow android:layout_width="fill_parent">
-			<TextView
-				android:id="@+id/secular_date"
-				android:text="SecDate"
-				android:bufferType="spannable"
-			/>
-			<TextView
-				android:id="@+id/hebrew_date"
-				android:text="HebDate"
-				android:gravity="right"
-			/>
-		</TableRow>
+	<TableRow android:layout_width="fill_parent">
+		<TextView android:id="@+id/blank" android:text=""/>
+	</TableRow>
 
-		<TableRow android:layout_width="fill_parent">
-			<TextView android:id="@+id/blank" android:text=""/>
-		</TableRow>
+	<TableRow android:layout_width="fill_parent">
+		<TextView
+			android:id="@+id/holiday"
+			android:text=""
+			android:textStyle="bold"
+			android:gravity="center"
+			android:layout_gravity="center_horizontal"
+			android:layout_span="2"
+		/>
+	</TableRow>
 
-		<TableRow android:layout_width="fill_parent">
-			<TextView
-				android:id="@+id/holiday"
-				android:text=""
-				android:textStyle="bold"
-				android:gravity="center"
-				android:layout_gravity="center_horizontal"
-				android:layout_span="2"
-			/>
-		</TableRow>
-
-		<!-- The interesting stuff! -->
+	<!-- The interesting stuff! -->
+	<TableRow android:layout_width="fill_parent">
 		<ListView
 			android:id="@android:id/list"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:drawSelectorOnTop="false"
+			android:layout_span="2"
 		/>
+	</TableRow>
 
-		<!-- Footer -->
-		<TableRow android:layout_width="fill_parent">
-			<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:scrollbars="none"
-				>
-				<TextView
-					android:id="@+id/messages"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-				/>
-			</ScrollView>
-		</TableRow>
+	<!-- Footer -->
+	<TableRow android:layout_width="fill_parent">
+		<TextView
+			android:id="@+id/messages"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_span="2"
+		/>
+	</TableRow>
 
-	</TableLayout>
-
-</LinearLayout>
-
+</TableLayout>

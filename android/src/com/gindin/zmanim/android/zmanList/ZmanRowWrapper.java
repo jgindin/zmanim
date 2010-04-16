@@ -80,6 +80,8 @@ public abstract class ZmanRowWrapper {
 		) {
 			this.zmanimCalendar = zmanimCalendar;
 			this.timeField = timeField;
+
+			timeField.setText( "" );
 		}
 
 
