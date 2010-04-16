@@ -31,7 +31,7 @@ class MinchaKetana
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "GR'A 9.5 Hours", "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", false ) {
+			new Zman( "GR'A 9.5 Hours", "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaKetana, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana();
 				}
@@ -39,7 +39,7 @@ class MinchaKetana
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1 deg", "Based on the day starting and ending 16.1 degrees below the horizon.", false ) {
+			new Zman( "MG'A 16.1 deg", "Based on the day starting and ending 16.1 degrees below the horizon.", Zmanim.Type.MinchaKetana, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana16Point1Degrees();
 				}
@@ -47,7 +47,7 @@ class MinchaKetana
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 72 Minutes", "Based on the day starting 72 minutes before sunrise and ending 72 minutes after sunset." ) {
+			new Zman( "MG'A 72 Minutes", "Based on the day starting 72 minutes before sunrise and ending 72 minutes after sunset.", Zmanim.Type.MinchaKetana ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana72Minutes();
 				}
@@ -55,7 +55,7 @@ class MinchaKetana
 		);
 
 		zmanim.add(
-			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset." ) {
+			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.MinchaKetana ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetanaAteretTorah();
 				}

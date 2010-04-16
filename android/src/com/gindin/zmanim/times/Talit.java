@@ -31,7 +31,7 @@ class Talit
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "10.2 deg", "Based on the position of the sun when it is 10.2 degrees below geometric zenith (90 deg).", false )  {
+			new Zman( "10.2 deg", "Based on the position of the sun when it is 10.2 degrees below geometric zenith.", Zmanim.Type.Talit, false )  {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMisheyakir10Point2Degrees();
 				}
@@ -39,7 +39,7 @@ class Talit
 		);
 
 		zmanim.add(
-			new Zman( "11 deg", "Based on the position of the sun when it is 11 degrees below geometric zenith (90 deg).", false ) {
+			new Zman( "11 deg", "Based on the position of the sun when it is 11 degrees below geometric zenith.", Zmanim.Type.Talit, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMisheyakir11Degrees();
 				}
@@ -47,7 +47,7 @@ class Talit
 		);
 
 		zmanim.add(
-			new Zman( "11.5 deg", "based on the position of the sun when it is 11.5 degrees below geometric zenith (90 deg)." ) {
+			new Zman( "11.5 deg", "Based on the position of the sun when it is 11.5 degrees below geometric zenith.", Zmanim.Type.Talit ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMisheyakir11Point5Degrees();
 				}

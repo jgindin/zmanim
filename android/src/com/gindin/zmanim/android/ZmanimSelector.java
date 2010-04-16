@@ -7,11 +7,11 @@ package com.gindin.zmanim.android;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
+import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
+import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
@@ -92,7 +92,11 @@ public class ZmanimSelector {
 		typeSelectionCallback = callback;
 
 		final Zmanim zmanim = zmanimCalendar.get( type );
-		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( zmanim.toArray() );
+		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.toArray() ) {
+			@Override protected ZmanRowWrapper createRowWrapper( View rowView ) {
+				return new SelectorRow( rowView, zmanimCalendar );
+			}
+		};
 
 		listView.setAdapter( listAdapter );
 
@@ -111,118 +115,20 @@ public class ZmanimSelector {
 	}
 
 
-	private class ZmanimListAdapter
-		extends ArrayAdapter<Zman> {
+	private static class SelectorRow
+		extends ZmanRowWrapper {
 
-		private ZmanimListAdapter(
-			Zman[] zmanim
+		private SelectorRow(
+			View                  zmanRowView,
+			HebrewZmanimCalendar  zmanimCalendar
 		) {
-
-			super( context, R.layout.zman_list_row, zmanim );
+			super( zmanRowView, zmanimCalendar );
 		}
 
 
-		@Override
-		public boolean hasStableIds() {
-			return true;
-		}
-
-
-		@Override
-		public long getItemId( int position ) {
-			return position;
-		}
-
-
-		@Override
-		public boolean areAllItemsEnabled() {
-			return true;
-		}
-
-
-		@Override
-		public View getView(
-			int       position,
-			View      convertView,
-			ViewGroup parent
-		) {
-
-			final View childView;
-			final ZmanRowWrapper wrapper;
-
-			if ( null == convertView ) {
-
-				LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-				childView = inflater.inflate( R.layout.zman_list_row, parent, false );
-
-				wrapper = new ZmanRowWrapper( childView );
-				childView.setTag( wrapper );
-			}
-			else {
-				childView = convertView;
-				wrapper = (ZmanRowWrapper)childView.getTag();
-			}
-
-			final Zman zman = getItem( position );
-			wrapper.nameField.setText( zman.name );
-			wrapper.descriptionField.setText( zman.description ); 
-
-			ZmanAsyncCalculator asyncCalculator = new ZmanAsyncCalculator( zmanimCalendar, wrapper.timeField );
-			asyncCalculator.execute( zman );
-
-			return childView;
-		}
-
-	} // End of ZmanimListAdapter
-
-
-
-	/**
-	 * Wraps a zman row, making for quick & easy recycling.
-	 */
-	private static class ZmanRowWrapper {
-
-		final TextView nameField;
-		final TextView                                          timeField;
-		final TextView                                          descriptionField;
-
-		ZmanRowWrapper( View zmanRowView ) {
-			nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
-			timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
-			descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
-		}
-	}
-
-
-	/**
-	 * Used to asynchronously calculate the zman.
-	 */
-	private static class ZmanAsyncCalculator
-		extends AsyncTask<Zman, Void, String> {
-
-		private final HebrewZmanimCalendar                      zmanimCalendar;
-		private final TextView                                  timeField;
-
-
-		ZmanAsyncCalculator(
-			HebrewZmanimCalendar  zmanimCalendar,
-			TextView              timeField
-		) {
-			this.zmanimCalendar = zmanimCalendar;
-			this.timeField = timeField;
-		}
-
-
-		@Override
-		protected String doInBackground( Zman... zmans ) {
-			return zmanimCalendar.formatZmanTime( zmans[0] );
-		}
-
-
-		@Override
-		protected void onPostExecute( String formattedZman ) {
-			super.onPostExecute( formattedZman );
-			timeField.setText( formattedZman );
+		protected void updateTextFields( Zman zman ) {
+			nameField.setText( zman.name );
+			descriptionField.setText( zman.description );
 		}
 	}
 

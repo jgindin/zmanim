@@ -4,16 +4,17 @@
 
 package com.gindin.zmanim.android;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
+import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Actually displays the zmanim on the screen.
@@ -21,47 +22,11 @@ import java.util.Map;
 @SuppressWarnings( { "UnnecessaryBoxing", "AutoUnboxing", "UnnecessaryUnboxing" } )
 class ZmanimDisplay {
 
-	/** Maps from the Zmanim type to the ID of the field that contains it. */
-	private static final Map<Zmanim.Type, Integer>            zmanimTypeToFieldID = new HashMap<Zmanim.Type, Integer>();
-
-	private static final Map<Zmanim.Type, Integer>            zmanimTypeToRowID = new HashMap<Zmanim.Type, Integer>();
-	
-	static {
-		zmanimTypeToFieldID.put( Zmanim.Type.Alot, Integer.valueOf( R.id.alot ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.Talit, Integer.valueOf( R.id.talit ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.Hanetz, Integer.valueOf( R.id.hanetz ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.SofZmanShema, Integer.valueOf( R.id.sofZmanShema ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.SofZmanTefila, Integer.valueOf( R.id.sofZmanTefilah ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.Chatzot, Integer.valueOf( R.id.chatzot ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.MinchaGedola, Integer.valueOf( R.id.minchaGedola ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.MinchaKetana, Integer.valueOf( R.id.minchaKetana ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.PlagHaMincha, Integer.valueOf( R.id.plagHamincha ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.CandleLighting, Integer.valueOf( R.id.candles ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.Shkia, Integer.valueOf( R.id.shkiah ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.LatestMincha, Integer.valueOf( R.id.mincha ) );
-		zmanimTypeToFieldID.put( Zmanim.Type.TzaitHachocavim, Integer.valueOf( R.id.tzait ) );
-
-		zmanimTypeToRowID.put( Zmanim.Type.Alot, Integer.valueOf( R.id.alot_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.Talit, Integer.valueOf( R.id.talit_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.Hanetz, Integer.valueOf( R.id.hanetz_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.SofZmanShema, Integer.valueOf( R.id.sofZmanShema_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.SofZmanTefila, Integer.valueOf( R.id.sofZmanTefilah_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.Chatzot, Integer.valueOf( R.id.chatzot_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.MinchaGedola, Integer.valueOf( R.id.minchaGedola_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.MinchaKetana, Integer.valueOf( R.id.minchaKetana_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.PlagHaMincha, Integer.valueOf( R.id.plagHamincha_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.CandleLighting, Integer.valueOf( R.id.candles_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.Shkia, Integer.valueOf( R.id.shkiah_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.LatestMincha, Integer.valueOf( R.id.mincha_row ) );
-		zmanimTypeToRowID.put( Zmanim.Type.TzaitHachocavim, Integer.valueOf( R.id.tzait_row ) );
-	}
-
+	/** The activity we're associated with. */
+	private final ListActivity                                listActivity;
 
 	/** The calendar we use for displaying everything. */
 	private final HebrewZmanimCalendar                        zmanimCalendar;
-
-	/** The view where we're going to display all the zmanim. */
-	private final View                                        zmanimView;
 
 	/** Manages the selection process, allowing the user to select a different zman. */
 	private final ZmanimSelector                              selector;
@@ -71,31 +36,63 @@ class ZmanimDisplay {
 
 
 	ZmanimDisplay(
-		Context               context,
-		View                  zmanimView,
+		final ListActivity    listActivity,
 		HebrewZmanimCalendar  zmanimCalendar
 	) {
 
-		this.zmanimView = zmanimView;
+		this.listActivity = listActivity;
 		this.zmanimCalendar = zmanimCalendar;
 
-		selector = new ZmanimSelector( context, zmanimCalendar );
+		selector = new ZmanimSelector( listActivity, zmanimCalendar );
 
 		listenToRows();
 
 		zmanimCalendar.addListener(
 			new HebrewZmanimCalendar.Listener() {
 				public void dateChanged() {
-					update();
+					listActivity.setListAdapter( getListAdapter() );
 				}
 			}
 		);
 
+		preferences = listActivity.getSharedPreferences( "ZmanimSelection", Context.MODE_PRIVATE );
 
-		preferences = context.getSharedPreferences( "ZmanimSelection", Context.MODE_PRIVATE );
+		listActivity.setListAdapter( getListAdapter() );
+	}
 
-		// Make sure we're starting off with the right stuff...
-		update();
+
+	@SuppressWarnings( { "ValueOfIncrementOrDecrementUsed" } )
+	private ListAdapter getListAdapter() {
+
+		int numZmanim = Zmanim.Type.values().length;
+
+		final boolean showCandles = zmanimCalendar.showCandlelighting();
+		if ( !showCandles ) {
+			numZmanim--;
+		}
+
+		Zman[] zmanimToDisplay = new Zman[ numZmanim ];
+
+		int index = 0;
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Alot );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Talit );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Hanetz );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.SofZmanShema );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.SofZmanTefila );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Chatzot );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.MinchaGedola );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.MinchaKetana );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.PlagHaMincha );
+
+		if ( showCandles ) {
+			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.CandleLighting );
+		}
+
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Shkia );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.LatestMincha );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHachocavim );
+
+		return new ListAdapter( listActivity, zmanimToDisplay );
 	}
 
 
@@ -108,56 +105,31 @@ class ZmanimDisplay {
 				editor.putString( type.name, selection.name );
 				editor.commit();
 
-				displayZman( type );
+				getZmanForType( type );
 			}
 		};
 
-		for ( final Map.Entry<Zmanim.Type, Integer> typeToRowIdEntry : zmanimTypeToRowID.entrySet() ) {
+		listActivity.getListView().setOnItemClickListener(
+			new AdapterView.OnItemClickListener() {
+				public void onItemClick(
+					AdapterView<?>  adapterView,
+					View            view,
+					int             position,
+					long            id
+				) {
 
-			View row = zmanimView.findViewById( typeToRowIdEntry.getValue() );
-			row.setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick( View view ) {
-						selector.selectFrom( typeToRowIdEntry.getKey(), selectionCallback );
-					}
+					ListAdapter adapter = (ListAdapter)listActivity.getListAdapter();
+					Zman zman = adapter.getItem( position );
+					selector.selectFrom( zman.type, selectionCallback );
 				}
-			);
-		}
+			}
+		);
+
 	}
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	void update() {
-
-		// TODO:
-		//  1. Calculate on separate threads!!!!
-		//  2. Make each row clickable, and popup a choice for which zman. Use preferences!
-
-		displayZman( Zmanim.Type.Alot );
-		displayZman( Zmanim.Type.Talit );
-		displayZman( Zmanim.Type.Hanetz );
-		displayZman( Zmanim.Type.SofZmanShema );
-		displayZman( Zmanim.Type.SofZmanTefila );
-		displayZman( Zmanim.Type.Chatzot );
-		displayZman( Zmanim.Type.MinchaGedola );
-		displayZman( Zmanim.Type.MinchaKetana );
-		displayZman( Zmanim.Type.PlagHaMincha );
-
-		if ( zmanimCalendar.showCandlelighting() ) {
-			zmanimView.findViewById( R.id.candles_row ).setVisibility( View.VISIBLE );
-			displayZman( Zmanim.Type.CandleLighting );
-		}
-		else {
-			zmanimView.findViewById( R.id.candles_row ).setVisibility( View.GONE );
-		}
-
-		displayZman( Zmanim.Type.Shkia );
-		displayZman( Zmanim.Type.LatestMincha );
-		displayZman( Zmanim.Type.TzaitHachocavim );
-	}
-
-
-	private void displayZman(
+	private Zman getZmanForType(
 		Zmanim.Type type
 	) {
 
@@ -169,21 +141,46 @@ class ZmanimDisplay {
 			zman = zmanim.getDefault();
 		}
 
-		updateField( zmanimTypeToFieldID.get( type ).intValue(), zmanimCalendar.formatZmanTime( zman ) );
+		return zman;
 	}
 
 
-	// TODO: This same method is in ZmanimActivity....
-	private void updateField(
-		int     field,
-		String  text
-	) {
 
-		TextView view = (TextView)zmanimView.findViewById( field );
-		view.setText( text );
+	private class ListAdapter
+		extends ZmanimListAdapter {
+
+		private ListAdapter(
+			Context context,
+			Zman[]  zmanim
+		) {
+			super( context, zmanim );
+		}
+
+
+		@Override
+		protected ZmanRowWrapper createRowWrapper( View rowView ) {
+			return new RowWrapper( rowView, zmanimCalendar );
+		}
 	}
 
 
+	private static class RowWrapper
+		extends ZmanRowWrapper {
+
+		private RowWrapper(
+			View                  zmanRowView,
+			HebrewZmanimCalendar  zmanimCalendar
+		) {
+			super( zmanRowView, zmanimCalendar );
+		}
+
+
+		@Override
+		protected void updateTextFields( Zman zman ) {
+			nameField.setText( zman.type.name );
+			descriptionField.setText( zman.name );
+		}
+	}
 
 
 }  // End of ZmanimDisplay class

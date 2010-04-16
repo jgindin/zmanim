@@ -25,7 +25,7 @@ import java.util.Calendar;
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends Activity {
+	extends ListActivity {
 
 	/** Is the manual location selection stuff ready to go yet? */
 	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
@@ -42,9 +42,6 @@ public class ZmanimActivity
 
 	private HebrewZmanimCalendar.Listener                     zmanimCalendarListener;
 
-
-	public ZmanimActivity() {
-	}
 
 
 	@Override
@@ -87,10 +84,12 @@ public class ZmanimActivity
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 
-		// We just need a display...don't need to hold on to it...
-		new ZmanimDisplay( this, findViewById( R.id.zmanim_view ), zmanimCalendar );
-
 		buildHeader( location );
+		buildFooter();
+
+		// We just need a display...don't need to hold on to it...
+		new ZmanimDisplay( this, zmanimCalendar );
+
 
 		if ( !location.isLocationDetermined() ) {
 			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
@@ -98,8 +97,6 @@ public class ZmanimActivity
 
 			updateField( R.id.messages, UNABLE_TO_DETERMINE_CURRENT_LOCATION );
 		}
-
-		displayDebugMessages();
 
 		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
 			public void dateChanged() {
@@ -145,8 +142,35 @@ public class ZmanimActivity
 
 		getLocationTask.execute( location );
 
+		// Listen for 'clicks' indicating the user wants to change the date being viewed.
+		final View secularDate = findViewById( R.id.secular_date );
+		secularDate.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick(View v) {
+					showDialog( R.id.secular_date );
+				}
+			}
+		);
+
+
+		// Listen for 'clicks' indicating the user wants to change their location.
+		final View locationField = findViewById( R.id.location );
+		locationField.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick( View view ) {
+					showDialog( R.id.location );
+				}
+			}
+		);
+
 		// Update the header
 		updateHeader();
+	}
+
+
+	private void buildFooter() {
+
+		displayDebugMessages();
 	}
 
 
@@ -176,27 +200,8 @@ public class ZmanimActivity
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
 
-
-		// Listen for 'clicks' indicating the user wants to change the date being viewed.
-		final View secularDate = findViewById( R.id.secular_date );
-		secularDate.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick(View v) {
-					showDialog( R.id.secular_date );
-				}
-			}
-		);
-
-
-		// Listen for 'clicks' indicating the user wants to change their location.
-		final View location = findViewById( R.id.location );
-		location.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View view ) {
-					showDialog( R.id.location );
-				}
-			}
-		);
+		View listing = findViewById( android.R.id.list );
+		listing.setOnTouchListener( touchListener );
 	}
 
 

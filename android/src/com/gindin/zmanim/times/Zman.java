@@ -20,6 +20,9 @@ public abstract class Zman {
 	/** Advanced zmanim should not be shown unless the user has explicitly indicated they want to see them. */
 	public final boolean                                      advanced;
 
+	/** What type of zman is this? */
+	public final Zmanim.Type                                  type;
+
 	/** Keep the calculation cached until we're told to clear the cache. */
 	private Date                                              cachedTime;
 
@@ -28,20 +31,23 @@ public abstract class Zman {
 
 
 	public Zman(
-		String  name,
-		String  description
+		String      name,
+		String      description,
+		Zmanim.Type type
 	) {
-		this( name, description, true );
+		this( name, description, type, true );
 	}
 
 
 	public Zman(
-		String  name,
-		String  description,
-	  boolean advanced
+		String      name,
+		String      description,
+		Zmanim.Type type,
+	  boolean     advanced
 	) {
 		this.name = name;
 		this.description = description;
+		this.type = type;
 		this.advanced = advanced;
 	}
 

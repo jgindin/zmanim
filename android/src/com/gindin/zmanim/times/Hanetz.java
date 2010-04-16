@@ -31,7 +31,7 @@ class Hanetz
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Sunrise", "The exact sunrise time.", false ) {
+			new Zman( "Sunrise", "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSunrise();
 				}
