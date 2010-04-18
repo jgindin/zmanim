@@ -206,8 +206,10 @@ public class ZmanimActivity
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
 
-		View listing = findViewById( android.R.id.list );
-		listing.setOnTouchListener( touchListener );
+		// TODO: This is nice to have, but the problem is that we wind up getting confused between scrolling the
+		//        list and swiping (to change the date)...
+//		View listing = findViewById( android.R.id.list );
+//		listing.setOnTouchListener( touchListener );
 	}
 
 
