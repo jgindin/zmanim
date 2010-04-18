@@ -55,25 +55,40 @@
 		/>
 	</TableRow>
 
-	<!-- The interesting stuff! -->
 	<TableRow android:layout_width="fill_parent">
-		<ListView
-			android:id="@android:id/list"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:drawSelectorOnTop="false"
-			android:layout_span="2"
-		/>
-	</TableRow>
 
-	<!-- Footer -->
-	<TableRow android:layout_width="fill_parent">
-		<TextView
-			android:id="@+id/messages"
-			android:layout_width="fill_parent"
+		<!--
+			What? Another layout hiding in here? Oh, and huh? The footer is....before the list?
+				Yes, well, it seems that the only way to get the footer to show up is this way. Chck out this
+				from StackOverflow: http://stackoverflow.com/questions/2383847/android-layout-with-listview-and-buttons
+		-->
+		<RelativeLayout
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_span="2"
-		/>
+		>
+
+			<!-- Footer -->
+			<TextView
+				android:id="@+id/messages"
+				android:text=""
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+			  android:layout_alignParentBottom="true"
+			/>
+
+			<!-- The interesting stuff! -->
+			<ListView
+				android:id="@android:id/list"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_above="@id/messages"
+				android:drawSelectorOnTop="false"
+			/>
+
+		</RelativeLayout>
+		
 	</TableRow>
 
 </TableLayout>
