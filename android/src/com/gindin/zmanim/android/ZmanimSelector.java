@@ -74,10 +74,6 @@ public class ZmanimSelector {
 					dialog.dismiss();
 					typeSelectionCallback.selected( typeToSelectFrom, selection );
 				}
-
-				public void onNothingSelected( AdapterView<?> adapterView ) {
-					// Ignore
-				}
 			}
 		);
 	}
