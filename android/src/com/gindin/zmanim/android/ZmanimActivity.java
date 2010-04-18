@@ -181,7 +181,13 @@ public class ZmanimActivity
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
 
 		String description = zmanimCalendar.getTodaysDescription();
-		updateField( R.id.holiday, description );
+		if ( ( null == description ) || ( 0 == description.trim().length() ) ) {
+			findViewById( R.id.holiday_row ).setVisibility( View.GONE );
+		}
+		else {
+			findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
+			updateField( R.id.holiday, description );
+		}
 	}
 
 

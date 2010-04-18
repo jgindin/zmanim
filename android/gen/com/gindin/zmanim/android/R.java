@@ -14,13 +14,14 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int about=0x7f060013;
+        public static final int about=0x7f060014;
         public static final int about_text=0x7f060001;
         public static final int blank=0x7f06000c;
         public static final int hebrew_date=0x7f06000b;
-        public static final int help=0x7f060014;
+        public static final int help=0x7f060015;
         public static final int help_text=0x7f060002;
-        public static final int holiday=0x7f06000d;
+        public static final int holiday=0x7f06000e;
+        public static final int holiday_row=0x7f06000d;
         public static final int latitude=0x7f060005;
         public static final int layout_root=0x7f060000;
         public static final int location=0x7f060009;
@@ -28,13 +29,13 @@ public final class R {
         public static final int location_layout=0x7f060003;
         public static final int longitude=0x7f060006;
         public static final int main_layout=0x7f060008;
-        public static final int messages=0x7f06000e;
+        public static final int messages=0x7f06000f;
         public static final int secular_date=0x7f06000a;
         public static final int zipcode=0x7f060004;
-        public static final int zman_description=0x7f060012;
-        public static final int zman_list_row=0x7f06000f;
-        public static final int zman_name=0x7f060010;
-        public static final int zman_time=0x7f060011;
+        public static final int zman_description=0x7f060013;
+        public static final int zman_list_row=0x7f060010;
+        public static final int zman_name=0x7f060011;
+        public static final int zman_time=0x7f060012;
     }
     public static final class layout {
         public static final int about=0x7f030000;

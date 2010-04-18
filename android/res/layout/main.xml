@@ -44,7 +44,7 @@
 		<TextView android:id="@+id/blank" android:text=""/>
 	</TableRow>
 
-	<TableRow android:layout_width="fill_parent">
+	<TableRow android:layout_width="fill_parent" android:id="@+id/holiday_row">
 		<TextView
 			android:id="@+id/holiday"
 			android:text=""
