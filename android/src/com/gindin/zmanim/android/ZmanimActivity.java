@@ -34,6 +34,8 @@ public class ZmanimActivity
 	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location.";
 //	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location. Please click on the location heading to set where you are.";
 
+	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
+
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
 
@@ -95,7 +97,15 @@ public class ZmanimActivity
 			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
 			toast.show();
 
-			updateField( R.id.messages, UNABLE_TO_DETERMINE_CURRENT_LOCATION );
+			updateField( R.id.messages, Html.fromHtml( "<u>" + UNABLE_TO_DETERMINE_CURRENT_LOCATION + "</u>" ) );
+			View messages = findViewById( R.id.messages );
+			messages.setOnClickListener(
+				new View.OnClickListener() {
+					public void onClick( View view ) {
+						showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
+					}
+				}
+			);
 		}
 
 		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
@@ -262,6 +272,9 @@ public class ZmanimActivity
 
 			case R.id.help:
 				return createSimpleDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
+
+			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
+				return createSimpleDialog( R.string.unable_to_determin_location_header, R.layout.help, R.id.help_text, R.string.unable_to_determin_location_text );
 		}
 
 		return null;

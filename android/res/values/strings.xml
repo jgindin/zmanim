@@ -25,7 +25,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 1.155-DEV
+				Version 1.164-DEV
 			&lt;/br&gt;
 			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
@@ -41,7 +41,7 @@
 	<string name="help_header">Zmanim Help</string>
 	<string name="help_text">
 		&lt;h3&gt;&lt;center&gt;How to Navigate Dates&lt;/center&gt;&lt;/h3&gt;
-			&lt;div style=%22font-size: 80%25;%22&gt;
+		&lt;div style=%22font-size: 80%25;%22&gt;
 			&lt;ul&gt;
 				&lt;li&gt;Swipe left to move to the previous day&lt;/li&gt;
 				&lt;li&gt;Swipe right to move to the next day&lt;/li&gt;
@@ -55,5 +55,16 @@
 	</string>
 
 	<string name="zmanim_selector">Select Zman: </string> 
+
+	<string name="unable_to_determin_location_header">Enable Location</string>
+	<string name="unable_to_determin_location_text">
+		&lt;div style=%22font-size: 80%25;%22&gt;
+			&lt;ul&gt;
+				&lt;li&gt;Go to the Settings (click the menu button while looking at your home screen, and choose the "Settings" button)&lt;/li&gt;
+				&lt;li&gt;Go into "Security &amp; Location"&lt;/li&gt;
+				&lt;li&gt;Make sure the "Use wireless networks" is turned on&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/div&gt;
+	</string>
 
 </resources>
