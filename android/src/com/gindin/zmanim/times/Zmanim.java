@@ -113,7 +113,7 @@ public abstract class Zmanim {
 	public enum Type {
 
 		Alot( "Alot Hashachar", "Dawn" ),
-		Talit( "Misheyakir", "Earliest Tefilin" ),
+		Talit( "Talit/Tefilin", "Earliest Time to don Talit and Tefilin" ),
 		Hanetz( "Hanetz", "Sunrise" ),
 		SofZmanShema( "Sof Zman Shema", "Latest Time for Shema" ),
 		SofZmanTefila( "Sof Zman Tefila", "Latest Time for Shacharit" ),
