@@ -21,10 +21,12 @@
 	>
 		<TextView
 			android:id="@+id/zman_name"
+			android:textSize="13sp"
 		/>
 		<TextView
 			android:id="@+id/zman_time"
 			android:gravity="right"
+			android:textSize="13sp"
 		/>
 	</TableRow>
 
@@ -37,6 +39,7 @@
 			android:layout_span="2"
 		  android:textStyle="italic"
 		  android:paddingLeft="10px"
+		  android:textSize="11sp"
 		/>
 	</TableRow>
 
