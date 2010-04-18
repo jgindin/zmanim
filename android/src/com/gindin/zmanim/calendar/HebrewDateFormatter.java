@@ -1,6 +1,7 @@
 package com.gindin.zmanim.calendar;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.times.Zman;
+import com.gindin.zmanim.times.ZmanRounder;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -14,25 +15,53 @@ class HebrewDateFormatter {
 
 
 	/** Used to format the zmanim times that get displayed. */
-	private DateFormat                                        timeFormatter;
+	private final DateFormat                                  timeFormatter;
 
 	/** Used to format the secular date in the screen's header. */
-	private DateFormat                                        secularDateFormatter;
+	private final DateFormat                                  secularDateFormatter;
 
+	/** Used to ensure certain zmanim are rounded properly. */
+	private final ZmanRounder                                 zmanRounder;
 
 	public HebrewDateFormatter(
 		DateFormat timeFormatter,
 		DateFormat secularDateFormatter
 	) {
+
 		this.timeFormatter = timeFormatter;
 		this.secularDateFormatter = secularDateFormatter;
+
+		zmanRounder = new ZmanRounder();
 	}
 
 
 	public String formatZmanTime(
-		Date zman
+		Zman zman
 	) {
-		return timeFormatter.format( zman );
+
+		Date time = zman.getTime();
+
+		// Some of the zman types we need to do some rounding so that we avoid a situation of showing
+		//  a time that can mislead someone into missing their mitzvah...
+		switch ( zman.type ) {
+
+			case Talit:
+			case CandleLighting:
+			case TzaitHachocavim:
+				time = zmanRounder.roundToLatestMinute( time );
+				break;
+
+			case SofZmanShema:
+			case SofZmanTefila:
+			case MinchaGedola:
+			case MinchaKetana:
+			case PlagHaMincha:
+			case LatestMincha:
+				time = zmanRounder.roundToEarliestMinute( time );
+				break;
+		}
+
+		return timeFormatter.format( time );
 	}
 
 
