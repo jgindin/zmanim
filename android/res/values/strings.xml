@@ -25,7 +25,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 1.164-DEV
+				Version 1.166-DEV
 			&lt;/br&gt;
 			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
@@ -56,15 +56,26 @@
 
 	<string name="zmanim_selector">Select Zman: </string> 
 
-	<string name="unable_to_determin_location_header">Enable Location</string>
-	<string name="unable_to_determin_location_text">
+	<string name="unable_to_determine_location_header">Enable Location</string>
+	<string name="unable_to_determine_location_text">
 		&lt;div style=%22font-size: 80%25;%22&gt;
-			&lt;ul&gt;
-				&lt;li&gt;Go to the Settings (click the menu button while looking at your home screen, and choose the "Settings" button)&lt;/li&gt;
-				&lt;li&gt;Go into "Security &amp; Location"&lt;/li&gt;
-				&lt;li&gt;Make sure the "Use wireless networks" is turned on&lt;/li&gt;
-			&lt;/ul&gt;
+		&lt;p&gt;
+			Zmanim is unable to determine your location because no location sources have been enabled.
+		&lt;/p&gt;
+		&lt;p&gt;
+			Clicking the "Enable" button below will open the "Security &amp; Location" screen, where you can turn on either "Use wireless networks" or "Enable GPS satellites".
+		&lt;/p&gt;
+		&lt;p&gt;
+			Generally, your location can be determined just by enabling the wireless network location source, though sometimes it may be necessary to enable GPS.
+		&lt;/p&gt;
 		&lt;/div&gt;
 	</string>
+
+	<string name="unable_to_determine_location_button">
+		Enable
+	</string>
+
+	<string name="unable_to_determine_location_error">Unable to determine your current location.</string>
+	<string name="no_location_management">Please enable a location source.</string>
 
 </resources>

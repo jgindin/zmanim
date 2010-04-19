@@ -72,8 +72,11 @@ public final class R {
         public static final int app_name=0x7f040000;
         public static final int help_header=0x7f040013;
         public static final int help_text=0x7f040014;
-        public static final int unable_to_determin_location_header=0x7f040016;
-        public static final int unable_to_determin_location_text=0x7f040017;
+        public static final int no_location_management=0x7f04001a;
+        public static final int unable_to_determine_location_button=0x7f040018;
+        public static final int unable_to_determine_location_error=0x7f040019;
+        public static final int unable_to_determine_location_header=0x7f040016;
+        public static final int unable_to_determine_location_text=0x7f040017;
         public static final int zmanim_selector=0x7f040015;
     }
 }

@@ -5,6 +5,9 @@
 package com.gindin.zmanim.android;
 
 import android.app.*;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -30,11 +33,13 @@ public class ZmanimActivity
 	/** Is the manual location selection stuff ready to go yet? */
 	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
 
-	/** Message when we can't figure out where the user is. */
-	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location.";
-//	private static final String                               UNABLE_TO_DETERMINE_CURRENT_LOCATION = "Unable to determine your current location. Please click on the location heading to set where you are.";
-
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
+
+	/**
+	 * In case there are no location sources enabled, we'll make a request to the intent that will allow the
+	 *  user to turn something on.
+	 */
+	private static final int                                  REQUEST_ENABLE_LOCATION_SOURCES = 0;
 
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
@@ -44,6 +49,13 @@ public class ZmanimActivity
 
 	private HebrewZmanimCalendar.Listener                     zmanimCalendarListener;
 
+	/** The format for the times that we're going to display. */
+	@SuppressWarnings( { "FieldCanBeLocal" } )
+	private DateFormat                                        timeFormatter;
+
+	/** The format for the secular dates that we're going to display. */
+	@SuppressWarnings( { "FieldCanBeLocal" } )
+	private DateFormat                                        secularDateFormatter;
 
 
 	@Override
@@ -76,44 +88,9 @@ public class ZmanimActivity
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
 		setupListeners();
 
-
 		ICUAndroidBridge.create( getAssets() );
 
-		DateFormat timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		DateFormat secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
-
-		// Figure out where we are, and get a calendar ready to use.
-		AndroidGeoLocation location = new AndroidGeoLocation( this );
-		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-
-		buildHeader( location );
-		buildFooter();
-
-		// We just need a display...don't need to hold on to it...
-		new ZmanimDisplay( this, zmanimCalendar );
-
-
-		if ( !location.isLocationDetermined() ) {
-			Toast toast = Toast.makeText( this, UNABLE_TO_DETERMINE_CURRENT_LOCATION, Toast.LENGTH_LONG );
-			toast.show();
-
-			updateField( R.id.messages, Html.fromHtml( "<u>" + UNABLE_TO_DETERMINE_CURRENT_LOCATION + "</u>" ) );
-			View messages = findViewById( R.id.messages );
-			messages.setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick( View view ) {
-						showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
-					}
-				}
-			);
-		}
-
-		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
-			public void dateChanged() {
-				updateHeader();
-			}
-		};
-		zmanimCalendar.addListener( zmanimCalendarListener );
+		rebuildUI();
 	}
 
 
@@ -123,6 +100,49 @@ public class ZmanimActivity
 		zmanimCalendar.removeListener( zmanimCalendarListener );
 
 		super.onDestroy();
+	}
+
+
+	@Override
+	protected void onActivityResult(
+		int requestCode,
+		int resultCode,
+		Intent data
+	) {
+
+		super.onActivityResult( requestCode, resultCode, data );
+
+		switch ( requestCode ) {
+
+			case REQUEST_ENABLE_LOCATION_SOURCES:
+				rebuildUI();
+				break;
+		}
+	}
+
+
+	private void rebuildUI() {
+
+		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
+		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+
+		// Figure out where we are, and get a calendar ready to use.
+		AndroidGeoLocation location = new AndroidGeoLocation( this );
+		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+
+		buildHeader( location );
+		buildFooter( location );
+
+		// We just need a display...don't need to hold on to it...
+		new ZmanimDisplay( this, zmanimCalendar );
+
+
+		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
+			public void dateChanged() {
+				updateHeader();
+			}
+		};
+		zmanimCalendar.addListener( zmanimCalendarListener );
 	}
 
 
@@ -178,9 +198,44 @@ public class ZmanimActivity
 	}
 
 
-	private void buildFooter() {
+	private void buildFooter(
+		AndroidGeoLocation location
+	) {
 
-		displayDebugMessages();
+		if ( !location.isLocationDetermined() ) {
+
+			String error = getResources().getString( R.string.unable_to_determine_location_error );
+
+			Toast toast = Toast.makeText( this, error, Toast.LENGTH_LONG );
+			toast.show();
+
+			// Now...why is it we couldn't determine our location?
+			LocationManager lm = (LocationManager)getSystemService( LOCATION_SERVICE );
+			if ( !lm.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) && !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+
+				// Well, gosh..looks like the user hasn't turned on location management!
+				String extra = getResources().getString( R.string.no_location_management );
+				error = error + " <u>" + extra + "</u>";
+
+				View messages = findViewById( R.id.messages );
+				messages.setOnClickListener(
+					new View.OnClickListener() {
+						public void onClick( View view ) {
+
+							showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
+						}
+					}
+				);
+			}
+			else {
+
+				// Hmmm... Not really sure what's going on here...
+			}
+			
+			updateField( R.id.messages, Html.fromHtml( error + "<br/>" ) );
+		}
+
+		//displayDebugMessages();
 	}
 
 
@@ -274,7 +329,7 @@ public class ZmanimActivity
 				return createSimpleDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
 
 			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
-				return createSimpleDialog( R.string.unable_to_determin_location_header, R.layout.help, R.id.help_text, R.string.unable_to_determin_location_text );
+				return createEnableLocationSourcesDialog();
 		}
 
 		return null;
@@ -330,8 +385,39 @@ public class ZmanimActivity
 	}
 
 
-	private void displayDebugMessages() {
+	private Dialog createEnableLocationSourcesDialog() {
 
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		builder.setTitle( R.string.unable_to_determine_location_header );
+
+		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
+		View layout = inflater.inflate( R.layout.help, null );
+
+		WebView helpText = (WebView)layout.findViewById( R.id.help_text );
+		final String text = getResources().getString( R.string.unable_to_determine_location_text );
+		helpText.loadData( text, "text/html", "utf-8" );
+
+		builder.setPositiveButton( R.string.unable_to_determine_location_button,
+			new DialogInterface.OnClickListener() {
+				public void onClick(
+					DialogInterface dialogInterface,
+					int             buttonId
+				) {
+
+					// Launch the correct settings screen for the user. Saw this example from:
+					//  http://stackoverflow.com/questions/623225/android-go-to-settings-screen
+					startActivityForResult( new Intent( android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS ),
+						REQUEST_ENABLE_LOCATION_SOURCES );
+				}
+			}
+		);
+
+		builder.setView( layout );
+		return builder.create();
+	}
+
+//	private void displayDebugMessages() {
+//
 //		List<String> strings= ICUAndroidBridge.get().whatDidWeTryToLoad;
 //		String loaded = "";
 //		for ( String string : strings ) {
@@ -339,7 +425,7 @@ public class ZmanimActivity
 //			loaded = loaded + string;
 //		}
 //		updateField( R.id.messages, loaded );
-	}
+//	}
 
 
 	private void updateField(
