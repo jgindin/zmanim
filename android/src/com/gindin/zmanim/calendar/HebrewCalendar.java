@@ -106,9 +106,9 @@ public class HebrewCalendar
 
 	public boolean showCandlelighting() {
 
-		//noinspection SimplifiableIfStatement
-		if ( null != isTodayAHoliday() ) {
-			return true;
+		JewishHoliday todaysHoliday = isTodayAHoliday();
+		if ( null != todaysHoliday ) {
+			return todaysHoliday.showCandlelighting();
 		}
 
 		return FRIDAY == get( DAY_OF_WEEK );
@@ -224,7 +224,9 @@ public class HebrewCalendar
 	public boolean isLeapYear() {
 
 		int yearLength = getActualMaximum( DAY_OF_YEAR );
-		return yearLength > 355;
+
+		// Shalem is the longest of the regular lenth years...
+		return yearLength > SHALEM_REGULAR_LENGTH;
 	}
 	
 	

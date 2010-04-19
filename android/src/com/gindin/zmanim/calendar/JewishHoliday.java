@@ -17,19 +17,19 @@ public class JewishHoliday {
 	private static JewishHoliday SHEMINI_ATZERET = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
 	private static JewishHoliday SIMCHAT_TORAH   = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
 	private static JewishHoliday HANUKKAH        = new JewishHoliday( HebrewCalendar.KISLEV, 25, 8,   "Hanukkah" );
-	private static JewishHoliday TU_BSHEVAT      = new JewishHoliday( HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
+	private static JewishHoliday TU_BSHEVAT      = new Observance( HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
 	private static JewishHoliday PURIM_KATAN     = new PurimKatan();
-	private static JewishHoliday PURIM           = new JewishHoliday( HebrewCalendar.ADAR,   14,      "Purim" );
-	private static JewishHoliday SHUSHAN_PURIM   = new JewishHoliday( HebrewCalendar.ADAR,   15,      "Shushan Purim" );
+	private static JewishHoliday PURIM           = new Observance( HebrewCalendar.ADAR,   14,      "Purim" );
+	private static JewishHoliday SHUSHAN_PURIM   = new Observance( HebrewCalendar.ADAR,   15,      "Shushan Purim" );
 	private static JewishHoliday PASSOVER        = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
-	private static JewishHoliday YOM_HASHOAH     = new JewishHoliday( HebrewCalendar.NISAN,  27,      "Yom Hashoah" );
-	private static JewishHoliday YOM_HAZIKARON   = new JewishHoliday( HebrewCalendar.IYAR,    4,      "Yom Hazikaron" );
-	private static JewishHoliday YOM_HAATZMAUT   = new JewishHoliday( HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut" );
-	private static JewishHoliday PESACH_SHEINI   = new JewishHoliday( HebrewCalendar.IYAR,   14,      "Pesach Sheini" );
-	private static JewishHoliday LAG_BOMER       = new JewishHoliday( HebrewCalendar.IYAR,   18,      "Lag B'Omer" );
-	private static JewishHoliday YOM_YERUSHALAYIM = new JewishHoliday( HebrewCalendar.IYAR,  28,      "Yom Yerushalayim" );
+	private static JewishHoliday YOM_HASHOAH     = new Observance( HebrewCalendar.NISAN,  27,      "Yom Hashoah" );
+	private static JewishHoliday YOM_HAZIKARON   = new Observance( HebrewCalendar.IYAR,    4,      "Yom Hazikaron" );
+	private static JewishHoliday YOM_HAATZMAUT   = new Observance( HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut" );
+	private static JewishHoliday PESACH_SHEINI   = new Observance( HebrewCalendar.IYAR,   14,      "Pesach Sheini" );
+	private static JewishHoliday LAG_BOMER       = new Observance( HebrewCalendar.IYAR,   18,      "Lag B'Omer" );
+	private static JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,  28,      "Yom Yerushalayim" );
 	private static JewishHoliday SHAVUOT         = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
-	private static JewishHoliday TISHA_BAV       = new JewishHoliday( HebrewCalendar.AV,      9,      "Fast of Tisha B'Av" );
+	private static JewishHoliday TISHA_BAV       = new Observance( HebrewCalendar.AV,      9,      "Fast of Tisha B'Av" );
 	                                    
 	/**
 	 * Set of the holidays. We're not using the com.ibm.icu.util.JewishHoliday.getHolidays() because the
@@ -182,6 +182,11 @@ public class JewishHoliday {
 	}
 
 
+	public boolean showCandlelighting() {
+		return true;
+	}
+
+
 	@SuppressWarnings( { "FeatureEnvy" } )
 	protected static boolean isSameDate(
 		HebrewCalendar cal1,
@@ -205,21 +210,53 @@ public class JewishHoliday {
 
 
 	/**
+	 * A non-holiday observance. The real difference is this is not a Yom Tov which requires
+	 *  candle lighting.
+	 */
+	private static class Observance
+		extends JewishHoliday {
+
+		private Observance(
+			int     month,
+			int     date,
+			String  name
+		) {
+			super( month, date, name );
+		}
+
+
+		private Observance(
+			int     month,
+			int     date,
+			int     length,
+			String  name
+		) {
+			super( month, date, length, name );
+		}
+
+
+		@Override
+		public boolean showCandlelighting() {
+			return false;
+		}
+	}
+
+	/**
 	 * Specialized for Rosh Chodesh
 	 */
 	private static class RoshChodesh
-		extends JewishHoliday {
+		extends Observance {
 
 		private RoshChodesh(
-			int month,
-			int date,
-			int length,
-			String name
+			int     month,
+			int     date,
+			int     length,
+			String  name
 		) {
 			
 			super( month, date, length, "Rosh Chodesh " + name );
 		}
-		
+
 	} // End of RoshChodesh class
 
 
@@ -227,7 +264,7 @@ public class JewishHoliday {
 	 * Specialized because most fasts are just during the day.
 	 */
 	private static class DayTimeTaanit
-		extends JewishHoliday {
+		extends Observance {
 
 		private DayTimeTaanit(
 			int     month,
@@ -237,7 +274,7 @@ public class JewishHoliday {
 			super( month, date, "Ta'anit " + name );
 		}
 
-	} // End of DayTimeTaanit 
+	} // End of DayTimeTaanit
 
 
 
@@ -311,7 +348,7 @@ public class JewishHoliday {
 	 * Special class to ensure that Purim katan only shows up in leap years.
 	 */
 	private static class PurimKatan
-		extends JewishHoliday {
+		extends Observance {
 
 		PurimKatan() {
 			super( HebrewCalendar.ADAR_1, 14, "Purim Katan" );
