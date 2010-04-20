@@ -20,7 +20,8 @@ import java.util.TimeZone;
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
  * API.
  * <p/>
- * TODO: Look at using the Geocoder class to work out what the place is called given the lat & long.
+ * TODO: Rework this class to use the GeoLocation, not extend. Use a Context to listen for location changes
+ * TODO:    and fire a notification.
  */
 public class AndroidGeoLocation
 	extends GeoLocation {
