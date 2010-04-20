@@ -186,15 +186,15 @@ public class ZmanimActivity
 		);
 
 
-		// Listen for 'clicks' indicating the user wants to change their location.
-		final View locationField = findViewById( R.id.location );
-		locationField.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View view ) {
-					showDialog( R.id.location );
-				}
-			}
-		);
+		// TODO: Listen for 'clicks' indicating the user wants to change their location.
+//		final View locationField = findViewById( R.id.location );
+//		locationField.setOnClickListener(
+//			new View.OnClickListener() {
+//				public void onClick( View view ) {
+//					showDialog( R.id.location );
+//				}
+//			}
+//		);
 
 		// Update the header
 		updateHeader();
