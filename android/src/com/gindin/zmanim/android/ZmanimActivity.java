@@ -84,6 +84,9 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
+		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
+		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+
 		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
 		setupListeners();
@@ -97,7 +100,7 @@ public class ZmanimActivity
 	@Override
 	protected void onDestroy() {
 
-		zmanimCalendar.removeListener( zmanimCalendarListener );
+		cleanupCalendarListeners();
 
 		super.onDestroy();
 	}
@@ -115,6 +118,7 @@ public class ZmanimActivity
 		switch ( requestCode ) {
 
 			case REQUEST_ENABLE_LOCATION_SOURCES:
+				cleanupCalendarListeners();
 				rebuildUI();
 				break;
 		}
@@ -122,9 +126,6 @@ public class ZmanimActivity
 
 
 	private void rebuildUI() {
-
-		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
 
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
@@ -150,6 +151,8 @@ public class ZmanimActivity
 	private void buildHeader(
 		AndroidGeoLocation location
 	) {
+
+		updateField( R.id.location, "Determining Location Name..." );
 
 		AsyncTask<AndroidGeoLocation, Void, String> getLocationTask = new AsyncTask<AndroidGeoLocation, Void, String>() {
 			@Override
@@ -202,7 +205,10 @@ public class ZmanimActivity
 		AndroidGeoLocation location
 	) {
 
-		if ( !location.isLocationDetermined() ) {
+		if ( location.isLocationDetermined() ) {
+			updateField( R.id.messages, "" );
+		}
+		else {
 
 			String error = getResources().getString( R.string.unable_to_determine_location_error );
 
@@ -275,6 +281,14 @@ public class ZmanimActivity
 		//        list and swiping (to change the date)...
 //		View listing = findViewById( android.R.id.list );
 //		listing.setOnTouchListener( touchListener );
+	}
+
+
+	private void cleanupCalendarListeners() {
+
+		if ( ( null != zmanimCalendar ) && ( null != zmanimCalendarListener ) ) {
+			zmanimCalendar.removeListener( zmanimCalendarListener );
+		}
 	}
 
 
