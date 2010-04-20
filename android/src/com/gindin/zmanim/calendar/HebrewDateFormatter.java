@@ -45,6 +45,7 @@ class HebrewDateFormatter {
 		//  a time that can mislead someone into missing their mitzvah...
 		switch ( zman.type ) {
 
+			case Alot:
 			case Talit:
 			case CandleLighting:
 			case TzaitHachocavim:
