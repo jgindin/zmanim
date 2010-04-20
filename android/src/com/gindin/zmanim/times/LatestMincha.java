@@ -16,6 +16,8 @@ import java.util.List;
 class LatestMincha
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "Hacham Ovadia Yosef";
+
 	LatestMincha(
 		final ZmanimCalendar zmanimCalendar
 	) {
@@ -24,6 +26,13 @@ class LatestMincha
 	}
 
 
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
+	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
 	private static List<Zman> buildZmanim(
 		final ZmanimCalendar  zmanimCalendar
 	) {
@@ -40,7 +49,7 @@ class LatestMincha
 		);
 
 		zmanim.add(
-			new Zman( "Hacham Ovadia Yosef", "Daily Halacha's representation of Chacham Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "Daily Halacha's representation of Chacham Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getLatestMinchaOvadiaYosef();
 				}

@@ -16,12 +16,22 @@ import java.util.List;
 class SofZmanShema
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "MG'A 16.1 deg";
+	
+
 	SofZmanShema(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
 		super( Type.SofZmanShema, buildZmanim( zmanimCalendar ) );
 	}
+
+
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
+	}
+
 
 	private static List<Zman> buildZmanim(
 		final ZmanimCalendar  zmanimCalendar
@@ -96,7 +106,7 @@ class SofZmanShema
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanShema, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanShema, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanShmaMGA16Point1Degrees();
 				}

@@ -16,11 +16,20 @@ import java.util.List;
 class TzaitHachocavim
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "8.5 deg";
+
+
 	TzaitHachocavim(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
 		super( Type.TzaitHachocavim, buildZmanim( zmanimCalendar ) );
+	}
+
+
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
 	}
 
 
@@ -32,7 +41,7 @@ class TzaitHachocavim
 
 
 		zmanim.add(
-			new Zman( "8.5 deg", "When the sun is 8.5 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 8.5 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais();
 				}

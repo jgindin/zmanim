@@ -16,11 +16,20 @@ import java.util.List;
 class AlotHashachar
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "16.1 deg";
+
+
 	AlotHashachar(
 		final ZmanimCalendar  zmanimCalendar
 	) {
 
 		super( Type.Alot, buildZmanim( zmanimCalendar ) );
+	}
+
+
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
 	}
 
 
@@ -47,7 +56,7 @@ class AlotHashachar
 		);
 
 		zmanim.add(
-			new Zman( "16.1 deg", "When the sun is 16.1 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 16.1 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getAlos16Point1Degrees();
 				}

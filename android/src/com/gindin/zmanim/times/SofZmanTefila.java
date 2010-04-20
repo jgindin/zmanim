@@ -16,11 +16,20 @@ import java.util.List;
 class SofZmanTefila
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
+	
+
 	SofZmanTefila(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
 		super( Type.SofZmanTefila, buildZmanim( zmanimCalendar ) );
+	}
+
+
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
 	}
 
 
@@ -41,7 +50,7 @@ class SofZmanTefila
 //		sofZmanTefila.addZman( zmanimCalendar.getSofZmanTfilaFixedLocal(), "", "" );
 
 		zmanim.add(
-			new Zman( "GR'A", "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanTefila, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanTefila, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getSofZmanTfilaGRA();
 				}

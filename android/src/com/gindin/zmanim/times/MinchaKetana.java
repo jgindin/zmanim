@@ -16,11 +16,20 @@ import java.util.List;
 class MinchaKetana
 	extends Zmanim {
 
+	private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
+
+
 	MinchaKetana(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
 		super( Type.MinchaKetana, buildZmanim( zmanimCalendar ) );
+	}
+
+
+	@Override
+	public Zman getDefault() {
+		return getByName( DEFAULT_ZMAN_NAME );
 	}
 
 
@@ -31,7 +40,7 @@ class MinchaKetana
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "GR'A 9.5 Hours", "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaKetana, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaKetana, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getMinchaKetana();
 				}
