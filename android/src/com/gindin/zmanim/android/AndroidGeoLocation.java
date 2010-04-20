@@ -29,8 +29,6 @@ public class AndroidGeoLocation
 
 	private final Context                                     context;
 
-	private String                                            locationName = null;
-
 	private boolean                                           locationWasDetermined = false;
 
 	private Formatter                                         rawLatitudeLongitudeFormatter = null;
@@ -48,6 +46,7 @@ public class AndroidGeoLocation
 	public AndroidGeoLocation(
 		Context context
 	) {
+
 		this.context = context;
 
 		initFromPhoneLocation();
@@ -61,6 +60,9 @@ public class AndroidGeoLocation
 		setLongitude( location.getLongitude() );
 		setElevation( location.getAltitude() );
 		setTimeZone( TimeZone.getDefault() );
+
+		// We don't yet know the location name...
+		setLocationName( null );
 	}
 
 
@@ -95,8 +97,8 @@ public class AndroidGeoLocation
 	@Override
 	public String getLocationName() {
 
-		if ( null != locationName ) {
-			return locationName;
+		if ( null != super.getLocationName() ) {
+			return super.getLocationName();
 		}
 
 		final double latitude = getLatitude();
@@ -107,18 +109,18 @@ public class AndroidGeoLocation
 		try {
 			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
 			if ( ( null == addresses ) || ( addresses.isEmpty() ) ) {
-				locationName = getUnknownLocationName( latitude, longitude );
+				setLocationName( getUnknownLocationName( latitude, longitude ) );
 			}
 			else {
 				final Address address = addresses.get( 0 );
-				locationName = address.getLocality() + ", " + address.getAdminArea();
+				setLocationName( address.getLocality() + ", " + address.getAdminArea() );
 			}
 		}
 		catch ( IOException e ) {
-			locationName = getUnknownLocationName( latitude, longitude );
+			setLocationName( getUnknownLocationName( latitude, longitude ) );
 		}
 
-		return locationName;
+		return super.getLocationName();
 	}
 
 
