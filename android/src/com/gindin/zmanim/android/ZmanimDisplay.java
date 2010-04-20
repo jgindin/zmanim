@@ -105,7 +105,10 @@ class ZmanimDisplay {
 				editor.putString( type.name, selection.name );
 				editor.commit();
 
-				getZmanForType( type );
+				// This is a bit of a hammer, but it works...
+				//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
+				//  apparently the List which backs the adapter doesn't support remove().
+				listActivity.setListAdapter( getListAdapter() );
 			}
 		};
 
@@ -161,6 +164,7 @@ class ZmanimDisplay {
 		protected ZmanRowWrapper createRowWrapper( View rowView ) {
 			return new RowWrapper( rowView, zmanimCalendar );
 		}
+
 	}
 
 
