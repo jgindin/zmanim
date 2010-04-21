@@ -66,7 +66,7 @@ public final class R {
         public static final int Talit=0x7f040002;
         public static final int Tzait=0x7f04000e;
         public static final int about_header=0x7f040011;
-        /**  VERSION STUFF MUST BE PROPERLY FOR THE DYNAMIC TEXT REPLACEMENT!!! 
+        /**  VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! 
          */
         public static final int about_text=0x7f040012;
         public static final int app_name=0x7f040000;
