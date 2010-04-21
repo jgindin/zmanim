@@ -62,7 +62,9 @@ class HebrewDateFormatter {
 				break;
 		}
 
-		return timeFormatter.format( time );
+		synchronized ( this ) {
+			return timeFormatter.format( time );
+		}
 	}
 
 
