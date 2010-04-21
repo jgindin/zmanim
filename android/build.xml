@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ZmanimDisplay" default="help">
+<project name="ZmanimDisplay" default="build-install">
 
 	<!-- The local.properties file is created and updated by the 'android' tool.
 					 It contain the path to the SDK. It should *NOT* be checked in in Version
@@ -94,7 +94,20 @@
 
 
 	<!--
-	  Extract the work necessary to change the version number in all the right places.
+	  Extract the work necessary to change the version numbers in all the right places.
+	-->
+	<target name="bump-release-versions">
+
+		<!-- Set this property so that we do the right versioning for an actual release. -->
+		<property name="release_build" value="true"/>
+
+		<antcall target="update-release-version"/>
+
+	</target>
+
+
+	<!--
+		Takes care of updating the user-visible version string.
 	-->
 	<target name="update-version" depends="get-svn-state">
 
@@ -112,6 +125,7 @@
 
 
 	<!--
+		Takes care of updating the android:versionCode attribute so that we never screw that up.
 	-->
 	<target name="update-release-version" depends="update-version">
 
@@ -119,7 +133,7 @@
 		<buildnumber file="build.number"/>
 		<echo>New build.number = ${build.number}</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
-		<replaceregexp file="res/values/strings.xml" match='CodeVersion (.*)' replace='CodeVersion ${build.number}'/>
+		<replaceregexp file="res/values/strings.xml" match='\(CodeVersion(.*)' replace='(CodeVersion ${build.number})'/>
 		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final String androidCodeVersion(.*)' replace='public static final String androidCodeVersion = ${build.number}";'/>
 
 	</target>
@@ -135,12 +149,11 @@
 
 	<!--
 		When performing a build for a new release, this target does it all:
-		  * Updates the version numbers in all the right places
-		  * Builds the APK, signs it, and aligns it
+		  * Builds the APK
+		  * Signs the APK
+		  * Aligns the APK
 	-->
-	<target name="build-release" depends="update-release-version">
-
-		<property name="release_build" value="true"/>
+	<target name="build-release">
 
 		<echo>
 			repository.url=${svn.status.repository.url}
@@ -183,6 +196,9 @@
 	</target>
 
 
+	<!--
+		Copies the .apk to an ACTUAL device that is plugged into the USB.
+	-->
 	<target name="install">
 		<echo>Installing ${out-release-package}...</echo>
 		<exec executable="${adb}" failonerror="true">
@@ -197,7 +213,7 @@
 		When performing a build for a new release, this target will get everything versioned and built properly,
 			and will then deploy it to a locally attached device.
 	-->
-	<target name="install-release" depends="build-release">
+	<target name="build-install" depends="bump-release-versions,build-release,install">
 	</target>
 
 
