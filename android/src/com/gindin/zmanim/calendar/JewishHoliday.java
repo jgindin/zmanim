@@ -10,27 +10,28 @@ package com.gindin.zmanim.calendar;
 @SuppressWarnings( { "MagicNumber" } )
 public class JewishHoliday {
 
-	private static JewishHoliday ROSH_HASHANAH   = new JewishHoliday( HebrewCalendar.TISHRI,  1,  2,  "Rosh Hashanah" );
-	private static JewishHoliday YOM_KIPPUR      = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
-	private static JewishHoliday SUKKOT          = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
-	private static JewishHoliday HOSHANAH_RABBAH = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
-	private static JewishHoliday SHEMINI_ATZERET = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
-	private static JewishHoliday SIMCHAT_TORAH   = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
-	private static JewishHoliday HANUKKAH        = new JewishHoliday( HebrewCalendar.KISLEV, 25, 8,   "Hanukkah" );
-	private static JewishHoliday TU_BSHEVAT      = new Observance( HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
-	private static JewishHoliday PURIM_KATAN     = new PurimKatan();
-	private static JewishHoliday PURIM           = new Observance( HebrewCalendar.ADAR,   14,      "Purim" );
-	private static JewishHoliday SHUSHAN_PURIM   = new Observance( HebrewCalendar.ADAR,   15,      "Shushan Purim" );
-	private static JewishHoliday PASSOVER        = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
-	private static JewishHoliday YOM_HASHOAH     = new Observance( HebrewCalendar.NISAN,  27,      "Yom Hashoah" );
-	private static JewishHoliday YOM_HAZIKARON   = new Observance( HebrewCalendar.IYAR,    4,      "Yom Hazikaron" );
-	private static JewishHoliday YOM_HAATZMAUT   = new Observance( HebrewCalendar.IYAR,    5,      "Yom Ha'Atzmaut" );
-	private static JewishHoliday PESACH_SHEINI   = new Observance( HebrewCalendar.IYAR,   14,      "Pesach Sheini" );
-	private static JewishHoliday LAG_BOMER       = new Observance( HebrewCalendar.IYAR,   18,      "Lag B'Omer" );
-	private static JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,  28,      "Yom Yerushalayim" );
-	private static JewishHoliday SHAVUOT         = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
-	private static JewishHoliday TISHA_BAV       = new Observance( HebrewCalendar.AV,      9,      "Fast of Tisha B'Av" );
-	                                    
+	private static JewishHoliday ROSH_HASHANAH    = new RoshHashana();
+	private static JewishHoliday YOM_KIPPUR       = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
+	private static JewishHoliday SUKKOT           = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
+	private static JewishHoliday HOSHANAH_RABBAH  = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
+	private static JewishHoliday SHEMINI_ATZERET  = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
+	private static JewishHoliday SIMCHAT_TORAH    = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
+	private static JewishHoliday HANUKKAH         = new JewishHoliday( HebrewCalendar.KISLEV, 25, 8,   "Hanukkah" );
+	private static JewishHoliday TU_BSHEVAT       = new Observance( HebrewCalendar.SHEVAT,    15,      "Tu B'Shevat" );
+	private static JewishHoliday PURIM_KATAN      = new PurimKatan();
+	private static JewishHoliday PURIM            = new Observance( HebrewCalendar.ADAR,      14,      "Purim" );
+	private static JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR,      15,      "Shushan Purim" );
+	private static JewishHoliday PASSOVER         = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
+	private static JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN,     27,      "Yom Hashoah" );
+	private static JewishHoliday YOM_HAZIKARON    = new Observance( HebrewCalendar.IYAR,       4,      "Yom Hazikaron" );
+	private static JewishHoliday YOM_HAATZMAUT    = new Observance( HebrewCalendar.IYAR,       5,      "Yom Ha'Atzmaut" );
+	private static JewishHoliday PESACH_SHEINI    = new Observance( HebrewCalendar.IYAR,      14,      "Pesach Sheini" );
+	private static JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR,      18,      "Lag B'Omer" );
+	private static JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,      28,      "Yom Yerushalayim" );
+	private static JewishHoliday SHAVUOT          = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
+	private static JewishHoliday TISHA_BAV        = new Observance( HebrewCalendar.AV,         9,      "Fast of Tisha B'Av" );
+	private static JewishHoliday TU_BAV           = new Observance( HebrewCalendar.AV,        15,      "Tu B'Av" );
+
 	/**
 	 * Set of the holidays. We're not using the com.ibm.icu.util.JewishHoliday.getHolidays() because the
 	 *  list declared in com.ibm.icu.impl.data.HolidayBundle_iw_IL is sadly lacking.
@@ -42,7 +43,7 @@ public class JewishHoliday {
 		JewishHoliday.PURIM,              JewishHoliday.SHUSHAN_PURIM,      JewishHoliday.PASSOVER,
 		JewishHoliday.YOM_HASHOAH,        JewishHoliday.YOM_HAZIKARON,      JewishHoliday.YOM_HAATZMAUT,
 		JewishHoliday.PESACH_SHEINI,      JewishHoliday.LAG_BOMER,          JewishHoliday.YOM_YERUSHALAYIM,
-		JewishHoliday.SHAVUOT,            JewishHoliday.TISHA_BAV
+		JewishHoliday.SHAVUOT,            JewishHoliday.TISHA_BAV,          JewishHoliday.TU_BAV
 	};
 
 
@@ -62,7 +63,8 @@ public class JewishHoliday {
 	private static final JewishHoliday ROSH_CHODESH_TAMMUZ  = new RoshChodesh( HebrewCalendar.SIVAN,  30, 2, "Tammuz" );
 	private static final JewishHoliday ROSH_CHODESH_AV      = new RoshChodesh( HebrewCalendar.AV,      1, 1, "Av" );
 	private static final JewishHoliday ROSH_CHODESH_ELUL    = new RoshChodesh( HebrewCalendar.AV,     30, 2, "Elul" );
-	private static final JewishHoliday ROSH_CHODESH_TISHRI  = new RoshChodesh( HebrewCalendar.ELUL,   30, 2, "Tishri" );
+	// Don't bother...this is Rosh Hashana...
+	//private static final JewishHoliday ROSH_CHODESH_TISHRI  = new RoshChodesh( HebrewCalendar.ELUL,   30, 2, "Tishri" );
 	private static final JewishHoliday ROSH_CHODESH_HESHVAN = new RoshChodesh( HebrewCalendar.HESHVAN, 1, 1, "Heshvan" );
 	private static final JewishHoliday ROSH_CHODESH_KISLEV  = new RoshChodesh( HebrewCalendar.KISLEV,  1, 1, "Kislev" );
 	private static final JewishHoliday ROSH_CHODESH_TEVET   = new RoshChodesh( HebrewCalendar.TEVET,   1, 1, "Tevet" );
@@ -76,13 +78,13 @@ public class JewishHoliday {
 	 */
 	public static final JewishHoliday[]                       ROSH_CHODESH_HASER = {
 		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
+		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_HESHVAN,
 		ROSH_CHODESH_KISLEV,    ROSH_CHODESH_TEVET,     ROSH_CHODESH_SHEVAT,
 	};
 
 	public static final JewishHoliday[]                       ROSH_CHODESH_QESIDRAH = {
 		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
+		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_HESHVAN,
 		ROSH_CHODESH_KISLEV,
 		new JewishHoliday( HebrewCalendar.KISLEV, 30, 2, "Rosh Chodesh Tevet" ),    // Add a day compared to Haser
 		ROSH_CHODESH_SHEVAT,
@@ -90,7 +92,7 @@ public class JewishHoliday {
 
 	public static final JewishHoliday[]                       ROSH_CHODESH_SHALEM = {
 		ROSH_CHODESH_NISAN,     ROSH_CHODESH_IYAR,      ROSH_CHODESH_SIVAN,     ROSH_CHODESH_TAMMUZ,
-		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_TISHRI,    ROSH_CHODESH_HESHVAN,
+		ROSH_CHODESH_AV,        ROSH_CHODESH_ELUL,      ROSH_CHODESH_HESHVAN,
 		new JewishHoliday( HebrewCalendar.HESHVAN, 30, 2, "Rosh Chodesh Kislev" ),  // Add a day compared to Qesidrah
 		new JewishHoliday( HebrewCalendar.KISLEV, 30, 2, "Rosh Chodesh Tevet" ),    // Add a day compared to Haser
 		ROSH_CHODESH_SHEVAT,
@@ -240,6 +242,33 @@ public class JewishHoliday {
 			return false;
 		}
 	}
+
+
+	/**
+	 * Specialized for Rosh Hashana, because when we try to check for Erev, the years will be different...
+	 */
+	private static class RoshHashana
+		extends JewishHoliday {
+
+		private RoshHashana() {
+			super( HebrewCalendar.TISHRI,  1,  2,  "Rosh Hashanah" );
+		}
+
+
+		@Override
+		public boolean isErev( HebrewCalendar dateToTest ) {
+
+			// Basically the same as the base class, but when we're actually checking for Erev Rosh Hashana,
+			//  the date to test will be, e.g., "29 Elul 5770". When we subtract a day from our day (1 Tishri),
+			//  then we wind up going "back" to 5769, so we don't match...
+			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
+			calendar.add( HebrewCalendar.DATE, -1 );
+			calendar.add( HebrewCalendar.YEAR, 1 );
+
+			return isSameDate( dateToTest, calendar );
+		}
+	}
+
 
 	/**
 	 * Specialized for Rosh Chodesh
