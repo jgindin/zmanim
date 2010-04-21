@@ -62,14 +62,25 @@ public class ZmanimActivity
 	protected void onStart() {
 
 		super.onStart();
-		FlurryAgent.onStartSession( this, "HDK5S96L5E7C638N91S1" );
+
+		if ( !Version.isDevelopment() ) {
+			FlurryAgent.onStartSession( this, "HDK5S96L5E7C638N91S1" );
+		}
+		else {
+			// Just so we *KNOW* we're dealing with a dev version...
+			Toast toast = Toast.makeText( this, "No flurry...this is dev...", Toast.LENGTH_LONG );
+			toast.show();
+		}
 	}
 
 
 	@Override
 	protected void onStop() {
 
-		FlurryAgent.onEndSession( this );
+		if ( !Version.isDevelopment() ) {
+			FlurryAgent.onEndSession( this );
+		}
+
 		super.onStop();
 	}
 

@@ -98,7 +98,7 @@
 	-->
 	<target name="update-version" depends="get-svn-state">
 
-		<condition property="version" value="1.${svn.status.committed.max}" else="1.${svn.status.committed.max}-DEV">
+		<condition property="version" value="2.${svn.status.committed.max}" else="2.${svn.status.committed.max}-DEV">
 			<isset property="release_build" />
 		</condition>
 
@@ -106,6 +106,7 @@
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
 		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
+		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
 
 	</target>
 
@@ -118,6 +119,8 @@
 		<buildnumber file="build.number"/>
 		<echo>New build.number = ${build.number}</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
+		<replaceregexp file="res/values/strings.xml" match='CodeVersion (.*)' replace='CodeVersion ${build.number}'/>
+		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final String androidCodeVersion(.*)' replace='public static final String androidCodeVersion = ${build.number}";'/>
 
 	</target>
 
@@ -135,7 +138,7 @@
 		  * Updates the version numbers in all the right places
 		  * Builds the APK, signs it, and aligns it
 	-->
-	<target name="do-release" depends="update-release-version">
+	<target name="build-release" depends="update-release-version">
 
 		<property name="release_build" value="true"/>
 
@@ -180,12 +183,7 @@
 	</target>
 
 
-	<!--
-		When performing a build for a new release, this target will get everything versioned and built properly,
-			and will then deploy it to a locally attached device.
-	-->
-	<target name="install-release" depends="do-release">
-
+	<target name="install">
 		<echo>Installing ${out-release-package}...</echo>
 		<exec executable="${adb}" failonerror="true">
 			<arg value="-d"/>
@@ -193,8 +191,15 @@
 			<arg value="-r"/>
 			<arg path="${out-release-package}"/>
 		</exec>
-		
 	</target>
+
+	<!--
+		When performing a build for a new release, this target will get everything versioned and built properly,
+			and will then deploy it to a locally attached device.
+	-->
+	<target name="install-release" depends="build-release">
+	</target>
+
 
 	
 </project>
