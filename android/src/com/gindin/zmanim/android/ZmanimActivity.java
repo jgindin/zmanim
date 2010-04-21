@@ -228,7 +228,7 @@ public class ZmanimActivity
 
 			// Now...why is it we couldn't determine our location?
 			LocationManager lm = (LocationManager)getSystemService( LOCATION_SERVICE );
-			if ( !lm.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) && !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+			if ( !lm.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) || !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
 
 				// Well, gosh..looks like the user hasn't turned on location management!
 				String extra = getResources().getString( R.string.no_location_management );
