@@ -288,10 +288,8 @@ public class ZmanimActivity
 		View mainView = findViewById( R.id.main_layout );
 		mainView.setOnTouchListener( touchListener );
 
-		// TODO: This is nice to have, but the problem is that we wind up getting confused between scrolling the
-		//        list and swiping (to change the date)...
-//		View listing = findViewById( android.R.id.list );
-//		listing.setOnTouchListener( touchListener );
+		View listing = findViewById( android.R.id.list );
+		listing.setOnTouchListener( touchListener );
 	}
 
 
@@ -513,11 +511,11 @@ public class ZmanimActivity
 		) {
 
 			// Did the user want to move to the next/prev day (swiping right or left) or next/prev month
-			//  (swiping up or down).
+			//  (swiping up or down)?
+			// TODO: Re-enable the up/down swiping if we can...
 			float xDiff = startMotionEvent.getRawX() - endMotionEvent.getRawX();
-			float yDiff = startMotionEvent.getRawY() - endMotionEvent.getRawY();
 
-			if ( ( Math.abs( xDiff ) < SWIPE_MIN_DISTANCE ) && ( Math.abs( yDiff ) < SWIPE_MIN_DISTANCE ) ) {
+			if ( Math.abs( xDiff ) < SWIPE_MIN_DISTANCE ) {
 				return false;
 			}
 
@@ -528,17 +526,11 @@ public class ZmanimActivity
 				else {
 					moveToPrevDay();
 				}
-			}
-			else {
-				if ( yDiff > 0 ) {
-					moveToNextMonth();
-				}
-				else {
-					moveToPrevMonth();
-				}
+
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 	}
