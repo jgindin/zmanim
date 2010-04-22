@@ -25,14 +25,14 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.181
-				(CodeVersion 24)
+				Version 2.184
+				(CodeVersion 26)
 			&lt;/br&gt;
-			&lt;br&gt;See http://code.google.com/p/android-zmanim for full details, version change lists, and bug tracking.&lt;/br&gt;
+			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
-				This project could is made possible by using the following libraries:
+				This project is made possible by using the following libraries:
 				&lt;ul&gt;
-					&lt;li&gt;Zmanim API calculation engine from http://www.kosherjava.com: Copyright (C) 2004-2008 Eliyahu Hershfeld&lt;/li&gt;
+					&lt;li&gt;Zmanim API calculation engine from http://www.kosherjava.com: Copyright (C) 2004-2010 Eliyahu Hershfeld&lt;/li&gt;
 					&lt;li&gt;ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others&lt;/li&gt;
 				&lt;/ul&gt;
 			&lt;/br&gt;
