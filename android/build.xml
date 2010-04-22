@@ -134,7 +134,7 @@
 		<echo>New build.number = ${build.number}</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
 		<replaceregexp file="res/values/strings.xml" match='\(CodeVersion(.*)' replace='(CodeVersion ${build.number})'/>
-		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final String androidCodeVersion(.*)' replace='public static final String androidCodeVersion = ${build.number}";'/>
+		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
 
 	</target>
 
