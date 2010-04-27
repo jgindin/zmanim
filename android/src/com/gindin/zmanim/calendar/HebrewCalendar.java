@@ -13,6 +13,10 @@ import java.util.Date;
 public class HebrewCalendar 
 	extends com.ibm.icu.util.HebrewCalendar {
 
+	/** Indicates the getDayOfOmer() is not returning a day that is part of the omer. */
+	public static final int                                   NOT_COUNTING_OMER = -1;
+
+
 	/**
 	 * In the Hebrew calendar, the six single year lengths give rise to the terms haser, qesidrah, and shalem.
 	 *
@@ -195,6 +199,34 @@ public class HebrewCalendar
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * @return -1 if today is not part of the omer; the daily count, otherwise.
+	 */
+	public int getDayOfOmer() {
+
+		final int month = get( MONTH );
+		final int day = get( DAY_OF_MONTH );
+
+		if ( NISAN == month ) {
+			if ( day > 15 ) {
+				return day - 15;
+			}
+		}
+		else if ( IYAR == month ) {
+			// Only counting the omer for the last 15 days of Nisan.
+			return 15 + day;
+		}
+		else if ( SIVAN == month ) {
+			if ( day < 6 ) {
+				// Only counting the omer for the last 15 days of Nisan,, 29 days Iyar, and only counting for the first 5 days of Sivan.
+				return 15 + 29 + day; 
+			}
+		}
+
+		return NOT_COUNTING_OMER;
 	}
 
 

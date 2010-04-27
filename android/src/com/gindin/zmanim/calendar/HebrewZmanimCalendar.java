@@ -246,6 +246,16 @@ public class HebrewZmanimCalendar {
 			}
 		}
 
+		final int omer = hebrewCalendar.getDayOfOmer();
+		if ( HebrewCalendar.NOT_COUNTING_OMER != omer ) {
+
+			if ( 0 != description.length() ) {
+				description.append( " / " );
+			}
+
+			description.append( "Omer Count: " ).append( omer ); 
+		}
+
 		return description.toString(); 
 	}
 
