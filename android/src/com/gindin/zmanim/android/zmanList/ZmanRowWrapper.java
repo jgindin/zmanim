@@ -7,9 +7,13 @@ package com.gindin.zmanim.android.zmanList;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
+import com.flurry.android.FlurryAgent;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Wraps a zman row, making for quick & easy recycling.
@@ -87,7 +91,37 @@ public abstract class ZmanRowWrapper {
 
 		@Override
 		protected String doInBackground( Zman... zmans ) {
-			return zmanimCalendar.formatZmanTime( zmans[0] );
+
+			String formatted = "";
+
+			try {
+
+				if ( 0 == zmans.length ) {
+					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
+					//  up in the Flurry log...
+					FlurryAgent.onError( "doInBackground", "empty zmans", "zmans.length == 0" );
+				}
+				else if ( null == zmans[ 0 ] ) {
+					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
+					//  up in the Flurry log...
+					FlurryAgent.onError( "doInBackground", "null zmans", "zmans.length: " + zmans.length + "; zmans[0]: null" );
+				}
+				else {
+					formatted = zmanimCalendar.formatZmanTime( zmans[0] );
+				}
+			}
+			catch ( Exception e ) {
+
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter( sw );
+				e.printStackTrace( pw );
+
+				final Zman zman = zmans[ 0 ];
+				FlurryAgent.onError( "doInBackground", "Trying to format zman. Type: " + zman.type.name + "; zman: " + zman.name,
+					sw.getBuffer().toString() );
+			}
+
+			return formatted;
 		}
 
 
