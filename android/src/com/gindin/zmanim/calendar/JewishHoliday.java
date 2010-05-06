@@ -149,7 +149,7 @@ public class JewishHoliday {
 		JewishHoliday holiday
 	) {
 
-		return new JewishHoliday( holiday.month, holiday.date, 1, "Erev " + holiday.name );
+		return new Erev( holiday );
 	}
 
 
@@ -208,6 +208,30 @@ public class JewishHoliday {
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Used by the isErev() method to create a 'placeholder'.
+	 */
+	private static class Erev
+		extends JewishHoliday {
+
+		private final boolean showCandles;
+
+		private Erev(
+			JewishHoliday holiday
+		) {
+
+			super( holiday.month, holiday.date, 1, "Erev " + holiday.name );
+			showCandles = holiday.showCandlelighting();
+		}
+
+
+		@Override
+		public boolean showCandlelighting() {
+			return showCandles;
+		}
 	}
 
 
