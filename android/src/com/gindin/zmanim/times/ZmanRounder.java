@@ -28,11 +28,14 @@ public class ZmanRounder {
 		Date zman
 	) {
 
-	  scratchCalendar.setTime( zman );
-		scratchCalendar.set( Calendar.SECOND, 0 );
-		scratchCalendar.set( Calendar.MILLISECOND, 0 );
+		// Synchronized because the methods in this class can be called from multiple threads, simultaneously...
+		synchronized ( scratchCalendar ) {
+			scratchCalendar.setTime( zman );
+			scratchCalendar.set( Calendar.SECOND, 0 );
+			scratchCalendar.set( Calendar.MILLISECOND, 0 );
 
-		return scratchCalendar.getTime();
+			return scratchCalendar.getTime();
+		}
 	}
 
 
@@ -50,13 +53,16 @@ public class ZmanRounder {
 		Date zman
 	) {
 
-		scratchCalendar.setTime( zman );
+		// Synchronized because the methods in this class can be called from multiple threads, simultaneously...
+		synchronized ( scratchCalendar ) {
+			scratchCalendar.setTime( zman );
 
-		scratchCalendar.add( Calendar.MINUTE, 1 );
-		scratchCalendar.set( Calendar.SECOND, 0 );
-		scratchCalendar.set( Calendar.MILLISECOND, 0 );
+			scratchCalendar.add( Calendar.MINUTE, 1 );
+			scratchCalendar.set( Calendar.SECOND, 0 );
+			scratchCalendar.set( Calendar.MILLISECOND, 0 );
 
-		return scratchCalendar.getTime();
+			return scratchCalendar.getTime();
+		}
 	}
 
 } // End of ZmanRounder class
