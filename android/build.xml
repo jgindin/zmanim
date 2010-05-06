@@ -94,19 +94,6 @@
 
 
 	<!--
-	  Extract the work necessary to change the version numbers in all the right places.
-	-->
-	<target name="bump-release-versions">
-
-		<!-- Set this property so that we do the right versioning for an actual release. -->
-		<property name="release_build" value="true"/>
-
-		<antcall target="update-release-version"/>
-
-	</target>
-
-
-	<!--
 		Takes care of updating the user-visible version string.
 	-->
 	<target name="update-version" depends="get-svn-state">
@@ -139,14 +126,6 @@
 	</target>
 
 
-	<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
-	<property name="zipalign" value="${android-tools}/zipalign${exe}" />
-	<property name="adb" value="${android-tools}/adb${exe}"/>
-	<property name="key.store" value="jay-gindin-android-apps.keystore"/>
-	<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
-	<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
-	<property name="out-release-package" value="${out-folder}/${ant.project.name}-release.apk"/>
-
 	<!--
 		When performing a build for a new release, this target does it all:
 		  * Builds the APK
@@ -155,6 +134,14 @@
 	-->
 	<target name="build-release">
 
+		<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
+		<property name="zipalign" value="${android-tools}/zipalign${exe}" />
+		<property name="adb" value="${android-tools}/adb${exe}"/>
+		<property name="key.store" value="jay-gindin-android-apps.keystore"/>
+		<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
+		<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
+		<property name="out-release-package" value="${out-folder}/${ant.project.name}-release-${version}.apk"/>
+		
 		<echo>
 			repository.url=${svn.status.repository.url}
 			committed.max=${svn.status.committed.max}
@@ -162,7 +149,8 @@
 		</echo>
 
 		<!--
-			TODO: If modified, then fail!??!!
+			If modified, then fail!??!!
+				- No, because files which we're dynamically changing (based on the version) will be changed...
 		-->
 		<delete dir="bin"/>
 		<antcall target="release"/>
@@ -209,11 +197,21 @@
 		</exec>
 	</target>
 
+
+	<!--
+		Takes care to set the necessary properties such that everyone else knows we're doing a real release.
+	-->
+	<target name="setup-for-release">
+		<!-- Set this property so that we do the right versioning for an actual release. -->
+		<property name="release_build" value="true"/>
+	</target>
+
+
 	<!--
 		When performing a build for a new release, this target will get everything versioned and built properly,
 			and will then deploy it to a locally attached device.
 	-->
-	<target name="build-install" depends="bump-release-versions,build-release,install">
+	<target name="build-install" depends="setup-for-release,update-release-version,build-release,install">
 	</target>
 
 
