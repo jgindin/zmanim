@@ -17,7 +17,7 @@ import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.flurry.android.FlurryAgent;
+import com.gindin.util.debug.FlurryLogger;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
 
@@ -64,7 +64,7 @@ public class ZmanimActivity
 		super.onStart();
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onStartSession( this, "HDK5S96L5E7C638N91S1" );
+			FlurryLogger.startSession( this );
 		}
 		else {
 			// Just so we *KNOW* we're dealing with a dev version...
@@ -78,7 +78,7 @@ public class ZmanimActivity
 	protected void onStop() {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onEndSession( this );
+			FlurryLogger.endSession( this );
 		}
 
 		super.onStop();
@@ -140,6 +140,8 @@ public class ZmanimActivity
 
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
+		FlurryLogger.setLocation( location );
+
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 
 		buildHeader( location );

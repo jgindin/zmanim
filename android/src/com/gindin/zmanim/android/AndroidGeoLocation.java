@@ -67,34 +67,6 @@ public class AndroidGeoLocation
 	}
 
 
-	/**
-	 * Find a relatively accurate location.
-	 * <p/>
-	 * Code taken from: http://www.androidsnippets.org/snippets/21/
-	 *
-	 * @return the phone's location
-	 */
-	private Location getLocation() {
-
-		LocationManager lm = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
-		List<String> providers = lm.getProviders( true );
-
-		// Loop over the array backwards, and if you get an accurate location, then break out the loop
-		Location location;
-
-		for ( int i = providers.size() - 1; i >= 0; i-- ) {
-			location = lm.getLastKnownLocation( providers.get( i ) );
-			if ( location != null ) {
-				locationWasDetermined = true;
-				return location;
-			}
-		}
-
-		locationWasDetermined = false;
-		return SEATTLE;
-	}
-
-
 	@Override
 	public String getLocationName() {
 
@@ -127,6 +99,48 @@ public class AndroidGeoLocation
 
 	public boolean isLocationDetermined() {
 		return locationWasDetermined;
+	}
+
+
+	public String toLocationString() {
+
+		return
+			"lat: "   + getLatitude()           + "; " +
+			"long: "  + getLongitude()          + "; " +
+			"el: "    + getElevation()          + "; " +
+			"tz: "    + getTimeZone()           + "; " +
+
+			// NOTE: We're calling super so that we don't go and do the work... 
+			"name: "  + super.getLocationName() +
+			"det? "   + locationWasDetermined;
+	}
+
+
+	/**
+	 * Find a relatively accurate location.
+	 * <p/>
+	 * Code taken from: http://www.androidsnippets.org/snippets/21/
+	 *
+	 * @return the phone's location
+	 */
+	private Location getLocation() {
+
+		LocationManager lm = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
+		List<String> providers = lm.getProviders( true );
+
+		// Loop over the array backwards, and if you get an accurate location, then break out the loop
+		Location location;
+
+		for ( int i = providers.size() - 1; i >= 0; i-- ) {
+			location = lm.getLastKnownLocation( providers.get( i ) );
+			if ( location != null ) {
+				locationWasDetermined = true;
+				return location;
+			}
+		}
+
+		locationWasDetermined = false;
+		return SEATTLE;
 	}
 
 

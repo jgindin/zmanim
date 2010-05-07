@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.zmanList;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
-import com.flurry.android.FlurryAgent;
+import com.gindin.util.debug.FlurryLogger;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
@@ -99,12 +99,12 @@ public abstract class ZmanRowWrapper {
 				if ( 0 == zmans.length ) {
 					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
 					//  up in the Flurry log...
-					FlurryAgent.onError( "doInBackground", "empty zmans", "zmans.length == 0" );
+					FlurryLogger.logError( "doInBackground", "empty zmans: zmans.length == 0" );
 				}
 				else if ( null == zmans[ 0 ] ) {
 					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
 					//  up in the Flurry log...
-					FlurryAgent.onError( "doInBackground", "null zmans", "zmans.length: " + zmans.length + "; zmans[0]: null" );
+					FlurryLogger.logError( "doInBackground", "null zmans: zmans.length: " + zmans.length + "; zmans[0]: null" );
 				}
 				else {
 					formatted = zmanimCalendar.formatZmanTime( zmans[0] );
@@ -117,7 +117,7 @@ public abstract class ZmanRowWrapper {
 				e.printStackTrace( pw );
 
 				final Zman zman = zmans[ 0 ];
-				FlurryAgent.onError( "doInBackground", "Trying to format zman. Type: " + zman.type.name + "; zman: " + zman.name,
+				FlurryLogger.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; " +
 					sw.getBuffer().toString() );
 			}
 
