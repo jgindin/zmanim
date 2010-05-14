@@ -17,7 +17,7 @@ import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.gindin.util.debug.FlurryLogger;
+import com.gindin.util.debug.DebugUtils;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
 
@@ -58,41 +58,17 @@ public class ZmanimActivity
 	private DateFormat                                        secularDateFormatter;
 
 
-	@Override
-	protected void onStart() {
-
-		super.onStart();
-
-		if ( !Version.isDevelopment() ) {
-			FlurryLogger.startSession( this );
-		}
-		else {
-			// Just so we *KNOW* we're dealing with a dev version...
-			Toast toast = Toast.makeText( this, "No flurry...this is dev...", Toast.LENGTH_LONG );
-			toast.show();
-		}
-	}
-
-
-	@Override
-	protected void onStop() {
-
-		if ( !Version.isDevelopment() ) {
-			FlurryLogger.endSession( this );
-		}
-
-		super.onStop();
-	}
-
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings( { "FeatureEnvy" } )
 	@Override
 	public void onCreate(
 		Bundle savedInstanceState
 	) {
 
 		super.onCreate( savedInstanceState );
+
+		DebugUtils.startSession( this );
+
 		setContentView( R.layout.main );
 
 		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
@@ -113,6 +89,8 @@ public class ZmanimActivity
 
 		cleanupCalendarListeners();
 
+		DebugUtils.endSession( this );
+		
 		super.onDestroy();
 	}
 
@@ -140,7 +118,7 @@ public class ZmanimActivity
 
 		// Figure out where we are, and get a calendar ready to use.
 		AndroidGeoLocation location = new AndroidGeoLocation( this );
-		FlurryLogger.setLocation( location );
+		DebugUtils.setLocation( location );
 
 		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
 

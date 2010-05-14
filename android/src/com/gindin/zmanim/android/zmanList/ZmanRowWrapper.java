@@ -7,13 +7,10 @@ package com.gindin.zmanim.android.zmanList;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
-import com.gindin.util.debug.FlurryLogger;
+import com.gindin.util.debug.DebugUtils;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * Wraps a zman row, making for quick & easy recycling.
@@ -99,12 +96,12 @@ public abstract class ZmanRowWrapper {
 				if ( 0 == zmans.length ) {
 					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
 					//  up in the Flurry log...
-					FlurryLogger.logError( "doInBackground", "empty zmans: zmans.length == 0" );
+					DebugUtils.logError( "doInBackground", "empty zmans: zmans.length == 0" );
 				}
 				else if ( null == zmans[ 0 ] ) {
 					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
 					//  up in the Flurry log...
-					FlurryLogger.logError( "doInBackground", "null zmans: zmans.length: " + zmans.length + "; zmans[0]: null" );
+					DebugUtils.logError( "doInBackground", "null zmans: zmans.length: " + zmans.length + "; zmans[0]: null" );
 				}
 				else {
 					formatted = zmanimCalendar.formatZmanTime( zmans[0] );
@@ -112,13 +109,9 @@ public abstract class ZmanRowWrapper {
 			}
 			catch ( Exception e ) {
 
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter( sw );
-				e.printStackTrace( pw );
 
 				final Zman zman = zmans[ 0 ];
-				FlurryLogger.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; " +
-					sw.getBuffer().toString() );
+				DebugUtils.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; ", e );
 			}
 
 			return formatted;
