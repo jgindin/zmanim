@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import com.gindin.util.debug.DebugUtils;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.io.IOException;
@@ -126,11 +127,21 @@ public class AndroidGeoLocation
 	private Location getLocation() {
 
 		LocationManager lm = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
-		List<String> providers = lm.getProviders( true );
+		if ( null == lm ) {
+			DebugUtils.logError( "AndroidGeoLocation::getLocation()", "No location manager?!?" );
+			locationWasDetermined = false;
+			return SEATTLE;
+		}
+
+		final List<String> providers = lm.getProviders( true );
+		if ( null == providers ) {
+			DebugUtils.logError( "AndroidGeoLocation::getLocation()", "No providers?!?" );
+			locationWasDetermined = false;
+			return SEATTLE;
+		}
 
 		// Loop over the array backwards, and if you get an accurate location, then break out the loop
 		Location location;
-
 		for ( int i = providers.size() - 1; i >= 0; i-- ) {
 			location = lm.getLastKnownLocation( providers.get( i ) );
 			if ( location != null ) {
