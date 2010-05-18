@@ -60,7 +60,14 @@ public class AndroidGeoLocation
 		Location location = getLocation();
 		setLatitude( location.getLatitude() );
 		setLongitude( location.getLongitude() );
-		setElevation( location.getAltitude() );
+
+		if ( location.hasAltitude() ) {
+			setElevation( location.getAltitude() );
+		}
+		else {
+			setElevation( 0.0 );
+		}
+
 		setTimeZone( TimeZone.getDefault() );
 
 		// We don't yet know the location name...
