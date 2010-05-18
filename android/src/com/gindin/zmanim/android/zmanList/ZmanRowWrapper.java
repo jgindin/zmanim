@@ -92,24 +92,9 @@ public abstract class ZmanRowWrapper {
 			String formatted = "";
 
 			try {
-
-				if ( 0 == zmans.length ) {
-					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
-					//  up in the Flurry log...
-					DebugUtils.logError( "doInBackground", "empty zmans: zmans.length == 0" );
-				}
-				else if ( null == zmans[ 0 ] ) {
-					// Never seen this happen...just being paranoid because some RuntimeException errors are showing
-					//  up in the Flurry log...
-					DebugUtils.logError( "doInBackground", "null zmans: zmans.length: " + zmans.length + "; zmans[0]: null" );
-				}
-				else {
-					formatted = zmanimCalendar.formatZmanTime( zmans[0] );
-				}
+				formatted = zmanimCalendar.formatZmanTime( zmans[0] );
 			}
 			catch ( Exception e ) {
-
-
 				final Zman zman = zmans[ 0 ];
 				DebugUtils.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; ", e );
 			}

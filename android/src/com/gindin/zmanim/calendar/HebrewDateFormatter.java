@@ -39,7 +39,12 @@ class HebrewDateFormatter {
 		Zman zman
 	) {
 
+		// This can return null in case the zman just doesn't apply. E.g., there are places where the Sun never
+		//  actually gets low enough to be able to calculate Alot @ 26degrees.
 		Date time = zman.getTime();
+		if ( null == time ) {
+			return "";
+		}
 
 		// Some of the zman types we need to do some rounding so that we avoid a situation of showing
 		//  a time that can mislead someone into missing their mitzvah...
