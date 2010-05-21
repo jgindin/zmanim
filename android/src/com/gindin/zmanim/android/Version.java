@@ -10,10 +10,10 @@ package com.gindin.zmanim.android;
 public class Version {
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final int androidCodeVersion = 31;
+	public static final int androidCodeVersion = 34;
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final String androidVersionName = "2.208";
+	public static final String androidVersionName = "2.212";
 
 
 	public static boolean isDevelopment() {
