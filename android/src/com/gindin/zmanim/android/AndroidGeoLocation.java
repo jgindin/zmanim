@@ -61,12 +61,13 @@ public class AndroidGeoLocation
 		setLatitude( location.getLatitude() );
 		setLongitude( location.getLongitude() );
 
-		if ( location.hasAltitude() ) {
-			setElevation( location.getAltitude() );
+		// whoa! Apparently, altitude can be negative, which is not allowed by the Zmanim API.
+		double altitude = 0.0;
+		if ( location.hasAltitude() && ( altitude > 0 ) ) {
+			setElevation( altitude );
 		}
-		else {
-			setElevation( 0.0 );
-		}
+
+		setElevation( altitude );
 
 		setTimeZone( TimeZone.getDefault() );
 
