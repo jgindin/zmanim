@@ -52,7 +52,7 @@ class HebrewDateFormatter {
 
 			case Alot:
 			case Talit:
-			case CandleLighting:
+			case Hanetz:
 			case TzaitHachocavim:
 				time = zmanRounder.roundToLatestMinute( time );
 				break;
@@ -62,6 +62,7 @@ class HebrewDateFormatter {
 			case MinchaGedola:
 			case MinchaKetana:
 			case PlagHaMincha:
+			case CandleLighting:
 			case LatestMincha:
 				time = zmanRounder.roundToEarliestMinute( time );
 				break;
