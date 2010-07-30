@@ -70,8 +70,12 @@ You can use the following methods (during a session only) to report additional d
    The FlurryAgent will also notify you of uncaught exceptions in the same way.
    If you would like to disable this behavior, call setCaptureUncaughtExceptions(false)
    before onStartSession.
-
-  - To disable FlurryAgent logging call FlurryAgent.setLogEnabled(false).
+				 							
+ - FlurryAgent.onPageView().  Use onPageView to report page view count.  You should call this method 
+   whenever a new page is shown to the user to increment the total count.  Page view is tracked 
+   separately from events. 
+				 												
+ - To disable FlurryAgent logging call FlurryAgent.setLogEnabled(false).
 
 Please let us know if you have any questions. If you need any help, just email androidsupport@flurry.com!
 
