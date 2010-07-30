@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.util;
 
 /**
  * Allows us to access programmatically some info about the current version.
@@ -13,7 +13,7 @@ public class Version {
 	public static final int androidCodeVersion = 35;
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final String androidVersionName = "2.218";
+	public static final String androidVersionName = "2.219-DEV";
 
 
 	public static boolean isDevelopment() {

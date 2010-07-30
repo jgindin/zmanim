@@ -70,6 +70,7 @@ public final class R {
          */
         public static final int about_text=0x7f040012;
         public static final int app_name=0x7f040000;
+        public static final int cannot_determine_location=0x7f04001b;
         public static final int help_header=0x7f040013;
         public static final int help_text=0x7f040014;
         public static final int no_location_management=0x7f04001a;

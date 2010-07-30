@@ -25,7 +25,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.218
+				Version 2.219-DEV
 				(CodeVersion 35)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -78,5 +78,6 @@
 
 	<string name="unable_to_determine_location_error">Unable to determine your current location.</string>
 	<string name="no_location_management">Please enable a location source.</string>
+	<string name="cannot_determine_location">No locations are available.</string>
 
 </resources>

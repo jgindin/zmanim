@@ -65,6 +65,28 @@
 	<setup/>
 
 
+	<!-- Convert this project's .class files into .dex files. -->
+	<!--
+		Uncomment this if need to see what class is causing a warning like:
+	    warning: Ignoring InnerClasses attribute for an anonymous inner class that doesn't come with an associated EnclosingMethod attribute. (This class was probably produced by a broken compiler.)
+		Note that the single "-" needs to be changed to to a double "-" in the "arg" statements. Unforutunately,
+		 ant gets unhappy with two "-" characters in a comment...
+	-->
+<!--
+	<target name="dex" depends="compile">
+	    <echo>Converting compiled files and external libraries into ${out-folder}/${dex-file}...</echo>
+			<echo>MEMEMEMEMEMEME</echo>
+	    <apply executable="${dx}" failonerror="true" parallel="true">
+	        <arg value="-dex" />
+			    <arg value="-verbose" />
+	        <arg value="-output=${intermediate-dex-location}" />
+	        <arg path="${out-classes-location}" />
+	        <fileset dir="${external-libs-folder}" includes="*.jar"/>
+	    </apply>
+	</target>
+-->
+
+
 	<!--
 		BEGIN Customized targets
 	-->
@@ -106,7 +128,7 @@
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
 		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
-		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
+		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
 
 	</target>
 
@@ -121,7 +143,7 @@
 		<echo>New build.number = ${build.number}</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
 		<replaceregexp file="res/values/strings.xml" match='\(CodeVersion(.*)' replace='(CodeVersion ${build.number})'/>
-		<replaceregexp file="src/com/gindin/zmanim/android/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
+		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
 
 	</target>
 

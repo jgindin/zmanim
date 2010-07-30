@@ -4,11 +4,14 @@
 
 package com.gindin.zmanim.android;
 
+import android.os.AsyncTask;
+import com.gindin.util.LocationHandler;
+import com.gindin.util.debug.DebugUtils;
+import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -17,9 +20,8 @@ import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.gindin.util.debug.DebugUtils;
-import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -29,9 +31,6 @@ import java.util.Calendar;
  */
 public class ZmanimActivity
 	extends ListActivity {
-
-	/** Is the manual location selection stuff ready to go yet? */
-	private static final boolean                              ALLOW_MANUAL_LOCATION_CHANGE = false;
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
@@ -57,6 +56,9 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FieldCanBeLocal" } )
 	private DateFormat                                        secularDateFormatter;
 
+	private ZmanimLocation                                    locationHandler;
+
+	private ZmanimLocation.Listener                           locationListener;
 
 
 	/** Called when the activity is first created. */
@@ -71,21 +73,68 @@ public class ZmanimActivity
 
 		setContentView( R.layout.main );
 
-		timeFormatter = android.text.format.DateFormat.getTimeFormat( this );
-		secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( this );
+		final ProgressDialog loading = new ProgressDialog( this );
+		loading.setIndeterminate( true );
+		loading.setMessage( "Determining location..." );
+		loading.show();
 
-		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
-		gestureDetector = new GestureDetector( this, new ZmanimGestureListener() );
-		setupListeners();
+		locationListener = new ZmanimLocation.Listener() {
+			public void locationChanged( GeoLocation newLocation ) {
+				if ( !loading.isShowing() ) {
+					loading.setMessage( "Updating With New Location..." );
+					loading.show();
+				}
+				rebuildUI( newLocation );
+				loading.dismiss();
+			}
 
-		ICUAndroidBridge.create( getAssets() );
 
-		rebuildUI();
+			public void error( LocationHandler.Error error ) {
+				handleLocationError( error );
+				loading.dismiss();
+			}
+		};
+
+		AsyncTask<Void, Void, Void> initUITask = new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground( Void... voids ) {
+
+				timeFormatter = android.text.format.DateFormat.getTimeFormat( ZmanimActivity.this );
+				secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( ZmanimActivity.this );
+
+				setupListeners();
+
+				ICUAndroidBridge.create( getAssets() );
+
+				locationHandler = new ZmanimLocation( ZmanimActivity.this );
+				DebugUtils.setLocation( locationHandler );
+
+				return null;
+			}
+
+
+			@Override
+			protected void onPostExecute( Void aVoid ) {
+				super.onPostExecute( aVoid );
+
+				// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+				// Note that it *must* be run on the UI thread...
+				gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
+
+				// Now start listening for location changes...
+				locationHandler.addListener( locationListener );
+			}
+		};
+		initUITask.execute( (Void)null );
+
 	}
 
 
 	@Override
 	protected void onDestroy() {
+
+		locationHandler.removeListener( locationListener );
+		locationHandler.onDestroy();
 
 		cleanupCalendarListeners();
 
@@ -108,63 +157,53 @@ public class ZmanimActivity
 
 			case REQUEST_ENABLE_LOCATION_SOURCES:
 				cleanupCalendarListeners();
-				rebuildUI();
+				locationHandler.reset();
 				break;
 		}
 	}
 
 
-	private void rebuildUI() {
+	private void rebuildUI(
+		GeoLocation location
+	) {
 
-		// Figure out where we are, and get a calendar ready to use.
-		AndroidGeoLocation location = new AndroidGeoLocation( this );
-		DebugUtils.setLocation( location );
+		AsyncTask<GeoLocation, Void, GeoLocation> buildUITask = new AsyncTask<GeoLocation, Void, GeoLocation>() {
+			@Override
+			protected GeoLocation doInBackground( GeoLocation... geoLocation ) {
 
-		zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-
-		buildHeader( location );
-		buildFooter( location );
-
-		// We just need a display...don't need to hold on to it...
-		new ZmanimDisplay( this, zmanimCalendar );
+				zmanimCalendar = new HebrewZmanimCalendar( geoLocation[0], timeFormatter, secularDateFormatter );
+				return geoLocation[0];
+			}
 
 
-		zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
-			public void dateChanged() {
-				updateHeader();
+			@Override
+			protected void onPostExecute( GeoLocation geoLocation ) {
+				super.onPostExecute( geoLocation );
+
+				buildHeader( geoLocation );
+				buildFooter( geoLocation );
+
+				// We just need a display...don't need to hold on to it...
+				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
+
+				zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
+					public void dateChanged() {
+						updateHeader();
+					}
+				};
+				zmanimCalendar.addListener( zmanimCalendarListener );
 			}
 		};
-		zmanimCalendar.addListener( zmanimCalendarListener );
+		buildUITask.execute( location );
+
 	}
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
 	private void buildHeader(
-		AndroidGeoLocation location
+		GeoLocation location
 	) {
 
-		updateField( R.id.location, "Determining Location Name..." );
-
-		AsyncTask<AndroidGeoLocation, Void, String> getLocationTask = new AsyncTask<AndroidGeoLocation, Void, String>() {
-			@Override
-			protected String doInBackground( AndroidGeoLocation... geoLocations ) {
-				return geoLocations[0].getLocationName();
-			}
-
-			@Override
-			protected void onPostExecute( String locationName ) {
-				super.onPostExecute( locationName );
-
-				if ( ALLOW_MANUAL_LOCATION_CHANGE ) {
-					updateField( R.id.location, Html.fromHtml( "<u>" + locationName + "</u>" ) );
-				}
-				else {
-					updateField( R.id.location, locationName );
-				}
-			}
-		};
-
-		getLocationTask.execute( location );
+		updateField( R.id.location, location.getLocationName() );
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
 		final View secularDate = findViewById( R.id.secular_date );
@@ -193,46 +232,54 @@ public class ZmanimActivity
 
 
 	private void buildFooter(
-		AndroidGeoLocation location
+		GeoLocation location
 	) {
 
-		if ( location.isLocationDetermined() ) {
-			updateField( R.id.messages, "" );
-		}
-		else {
+		updateField( R.id.messages, "" );
+		//displayDebugMessages();
+	}
 
-			String error = getResources().getString( R.string.unable_to_determine_location_error );
 
-			Toast toast = Toast.makeText( this, error, Toast.LENGTH_LONG );
-			toast.show();
+	private void handleLocationError(
+		LocationHandler.Error error
+	) {
 
-			// Now...why is it we couldn't determine our location?
-			LocationManager lm = (LocationManager)getSystemService( LOCATION_SERVICE );
-			if ( null == lm || !lm.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) || !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+		String errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
 
+		Toast toast = Toast.makeText( this, errorMessage, Toast.LENGTH_LONG );
+		toast.show();
+
+		// Now...why is it we couldn't determine our location?
+		String extra = "";
+		switch ( error ) {
+
+			case NO_LOCATION_MANAGER_SERVICE:
+				// This is just weird...
+				extra = "No location manager??? Internal error...";
+				break;
+
+			case CANNOT_DETERMINE_LOCATION:
+				extra = getResources().getString( R.string.cannot_determine_location );
+				break;
+
+			case NO_PROVIDERS:
 				// Well, gosh..looks like the user hasn't turned on location management!
-				String extra = getResources().getString( R.string.no_location_management );
-				error = error + " <u>" + extra + "</u>";
+				extra = getResources().getString( R.string.no_location_management );
 
 				View messages = findViewById( R.id.messages );
 				messages.setOnClickListener(
 					new View.OnClickListener() {
 						public void onClick( View view ) {
-
 							showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
 						}
 					}
 				);
-			}
-			else {
-
-				// Hmmm... Not really sure what's going on here...
-			}
-			
-			updateField( R.id.messages, Html.fromHtml( error + "<br/>" ) );
+				break;
 		}
 
-		//displayDebugMessages();
+		errorMessage = errorMessage + " <u>" + extra + "</u>";
+
+		updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
 	}
 
 

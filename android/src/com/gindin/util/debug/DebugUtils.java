@@ -8,8 +8,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
-import com.gindin.zmanim.android.AndroidGeoLocation;
-import com.gindin.zmanim.android.Version;
+import com.gindin.zmanim.android.ZmanimLocation;
+import com.gindin.util.Version;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -21,7 +21,7 @@ public class DebugUtils {
 
 
 	/** Remember where we are. */
-	private static AndroidGeoLocation                         location;
+	private static ZmanimLocation                             location;
 
 
 	private DebugUtils() {
@@ -70,7 +70,7 @@ public class DebugUtils {
 
 
 	public static void setLocation(
-		AndroidGeoLocation location
+		ZmanimLocation location
 	) {
 
 		DebugUtils.location = location;
@@ -83,7 +83,7 @@ public class DebugUtils {
 	) {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onError( errorID, message, location.toLocationString() );
+			FlurryAgent.onError( errorID, message, location.getLastKnownLocation().toString() );
 		}
 		else {
 			Log.e( errorID, message );
