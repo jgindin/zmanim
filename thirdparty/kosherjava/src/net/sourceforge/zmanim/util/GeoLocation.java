@@ -307,8 +307,7 @@ public class GeoLocation implements Cloneable {
 	 * @since 1.1
 	 */
 	public long getLocalMeanTimeOffset() {
-		return (long) (getLongitude() * 4 * MINUTE_MILLIS - getTimeZone()
-				.getRawOffset());
+		return (long) (getLongitude() * 4 * MINUTE_MILLIS - getTimeZone().getRawOffset());
 	}
 
 	/**

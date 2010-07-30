@@ -1,6 +1,6 @@
 <project name="BuildZmanim" default="all" basedir="../">
 	<target name="all" depends="jar_zmanim, jar_zmanim_output, jar_zmanim_applet, javadoc_zmanim, zip_zmanim, backup_zmanim"/>
-	<property name="version" value="1.3alpha1"/>
+	<property name="version" value="1.2.1"/>
 	<property name="author" value="Eliyahu Hershfeld"/>
 	<property name="lib_dir" value="lib"/>
 	<property name="third_party_jars" value="../../dev/jars"/>

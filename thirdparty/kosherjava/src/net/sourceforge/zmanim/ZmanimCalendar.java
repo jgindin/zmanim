@@ -32,12 +32,14 @@ import net.sourceforge.zmanim.util.GeoLocation;
  * use the {@link ComplexZmanimCalendar} that extends this class. This class
  * contains the main functionality of the Zmanim library. See documentation for
  * the {@link ComplexZmanimCalendar} and {@link AstronomicalCalendar} for simple
- * examples on using the API. <h2>Disclaimer:</h2> While I did my best to get
- * accurate results please do not rely on these zmanim for
- * <em>halacha lemaaseh</em>
+ * examples on using the API. <br/>
+ * <b>Note:</b> It is important to read the technical notes on top of the
+ * {@link AstronomicalCalculator} documentation. <h2>
+ * Disclaimer:</h2> While I did my best to get accurate results please do not
+ * rely on these zmanim for <em>halacha lemaaseh</em>.
  * 
  * @author &copy; Eliyahu Hershfeld 2004 - 2010
- * @version 1.2
+ * @version 1.2.1
  */
 public class ZmanimCalendar extends AstronomicalCalendar {
 	private static final long serialVersionUID = 1;
@@ -93,7 +95,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * information on the source of this calculation see
 	 * {@link #ZENITH_8_POINT_5}.
 	 * 
-	 * @return The <code>Date</code> of nightfall.
+	 * @return The <code>Date</code> of nightfall. If the calculation can't be
+	 *         computed such as northern and southern locations even south of
+	 *         the Arctic Circle and north of the Antarctic Circle where the sun
+	 *         may not reach low enough below the horizon for this calculation,
+	 *         a null will be returned. See detailed explanation on top of the
+	 *         {@link AstronomicalCalendar} documentation.
 	 * @see #ZENITH_8_POINT_5
 	 */
 	public Date getTzais() {
@@ -107,7 +114,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * see {@link #ZENITH_16_POINT_1}.
 	 * 
 	 * @see net.sourceforge.zmanim.ZmanimCalendar#ZENITH_16_POINT_1
-	 * @return The <code>Date</code> of dawn.
+	 * @return The <code>Date</code> of dawn. If the calculation can't be
+	 *         computed such as northern and southern locations even south of
+	 *         the Arctic Circle and north of the Antarctic Circle where the sun
+	 *         may not reach low enough below the horizon for this calculation,
+	 *         a null will be returned. See detailed explanation on top of the
+	 *         {@link AstronomicalCalendar} documentation.
 	 */
 	public Date getAlosHashachar() {
 		return getSunriseOffsetByDegrees(ZENITH_16_POINT_1);
@@ -123,7 +135,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * but purely depends on the time it takes to walk the distance of 4
 	 * <em>Mil</em>.
 	 * 
-	 * @return the <code>Date</code> representing the time.
+	 * @return the <code>Date</code> representing the time. If the calculation
+	 *         can't be computed such as in the Arctic Circle where there is at
+	 *         least one day a year where the sun does not rise, and one where
+	 *         it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getAlos72() {
 		return getTimeOffset(getSeaLevelSunrise(), -72 * MINUTE_MILLIS);
@@ -136,7 +153,11 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * returned value is identical to {@link #getSunTransit()}
 	 * 
 	 * @see AstronomicalCalendar#getSunTransit()
-	 * @return the <code>Date</code> of chatzos.
+	 * @return the <code>Date</code> of chatzos. If the calculation can't be
+	 *         computed such as in the Arctic Circle where there is at least one
+	 *         day where the sun does not rise, and one where it does not set, a
+	 *         null will be returned. See detailed explanation on top of the
+	 *         {@link AstronomicalCalendar} documentation.
 	 */
 	public Date getChatzos() {
 		return getSunTransit();
@@ -148,7 +169,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * <br/>
 	 * <b>Note:</b> this method is experimental and might be removed (or moved)
 	 * 
-	 * @return the <code>Date</code> of Solar Midnight (chatzos layla).
+	 * @return the <code>Date</code> of Solar Midnight (chatzos layla). If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getSolarMidnight() {
 		ZmanimCalendar clonedCal = (ZmanimCalendar) clone();
@@ -177,7 +203,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * sunrise}.
 	 * 
 	 * @see net.sourceforge.zmanim.ZmanimCalendar#getShaahZmanisGra()
-	 * @return the <code>Date</code> of the latest zman shema.
+	 * @return the <code>Date</code> of the latest zman shema. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getSofZmanShmaGRA() {
 		return getTimeOffset(getSeaLevelSunrise(), getShaahZmanisGra() * 3);
@@ -192,7 +223,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * minutes before sunrise to nightfall of 72 minutes after sunset. This
 	 * returns the time of 3 * <em>shaos zmaniyos</em> after dawn.
 	 * 
-	 * @return the <code>Date</code> of the latest zman shema.
+	 * @return the <code>Date</code> of the latest zman shema. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 * @see ComplexZmanimCalendar#getShaahZmanis72Minutes()
 	 * @see ComplexZmanimCalendar#getAlos72()
 	 * @see ComplexZmanimCalendar#getSofZmanShmaMGA72Minutes()
@@ -210,7 +246,11 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * affected by elevation.
 	 * 
 	 * @return the <code>Date</code> representing 72 minutes after sea level
-	 *         sunset.
+	 *         sunset. If the calculation can't be computed such as in the
+	 *         Arctic Circle where there is at least one day a year where the
+	 *         sun does not rise, and one where it does not set, a null will be
+	 *         returned See detailed explanation on top of the
+	 *         {@link AstronomicalCalendar} documentation.
 	 */
 	public Date getTzais72() {
 		return getTimeOffset(getSeaLevelSunset(), 72 * MINUTE_MILLIS);
@@ -222,7 +262,11 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * return the time for any day of the week, since it can be used to
 	 * calculate candle lighting time for <em>yom tov</em> (holidays) as well.
 	 * 
-	 * @return candle lighting time.
+	 * @return candle lighting time. If the calculation can't be computed such
+	 *         as in the Arctic Circle where there is at least one day a year
+	 *         where the sun does not rise, and one where it does not set, a
+	 *         null will be returned. See detailed explanation on top of the
+	 *         {@link AstronomicalCalendar} documentation.
 	 * @see #getCandleLightingOffset()
 	 * @see #setCandleLightingOffset(double)
 	 */
@@ -240,7 +284,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * {@link #getSeaLevelSunrise() sea level sunrise}.
 	 * 
 	 * @see net.sourceforge.zmanim.ZmanimCalendar#getShaahZmanisGra()
-	 * @return the <code>Date</code> of the latest zman tefilah.
+	 * @return the <code>Date</code> of the latest zman tefilah. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getSofZmanTfilaGRA() {
 		return getTimeOffset(getSeaLevelSunrise(), getShaahZmanisGra() * 4);
@@ -258,7 +307,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * sunset. This returns the time of 4 * {@link #getShaahZmanisMGA()} after
 	 * {@link #getAlos72() dawn}.
 	 * 
-	 * @return the <code>Date</code> of the latest zman tfila.
+	 * @return the <code>Date</code> of the latest zman tfila. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set), a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 * @see #getShaahZmanisMGA()
 	 * @see #getAlos72()
 	 */
@@ -283,7 +337,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * 
 	 * @see #getShaahZmanisGra()
 	 * @see #getMinchaKetana()
-	 * @return the <code>Date</code> of the time of mincha gedola.
+	 * @return the <code>Date</code> of the time of mincha gedola. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getMinchaGedola() {
 		return getTimeOffset(getSeaLevelSunrise(), getShaahZmanisGra() * 6.5);
@@ -303,7 +362,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * 
 	 * @see #getShaahZmanisGra()
 	 * @see #getMinchaGedola()
-	 * @return the <code>Date</code> of the time of mincha gedola.
+	 * @return the <code>Date</code> of the time of mincha gedola. If the
+	 *         calculation can't be computed such as in the Arctic Circle where
+	 *         there is at least one day a year where the sun does not rise, and
+	 *         one where it does not set, a null will be returned. See detailed
+	 *         explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getMinchaKetana() {
 		return getTimeOffset(getSeaLevelSunrise(), getShaahZmanisGra() * 9.5);
@@ -317,7 +381,12 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * {@link #getShaahZmanisGra()} after {@link #getSeaLevelSunrise() sea level
 	 * sunrise}.
 	 * 
-	 * @return the <code>Date</code> of the time of <em>plag hamincha</em>.
+	 * @return the <code>Date</code> of the time of <em>plag hamincha</em>. If
+	 *         the calculation can't be computed such as in the Arctic Circle
+	 *         where there is at least one day a year where the sun does not
+	 *         rise, and one where it does not set, a null will be returned. See
+	 *         detailed explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 */
 	public Date getPlagHamincha() {
 		return getTimeOffset(getSeaLevelSunrise(), getShaahZmanisGra() * 10.75);
@@ -339,7 +408,11 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * Jerusalem, 2007.
 	 * 
 	 * @return the <code>long</code> millisecond length of a
-	 *         <em>shaah zmanis</em>.
+	 *         <em>shaah zmanis</em>. If the calculation can't be computed such
+	 *         as in the Arctic Circle where there is at least one day a year
+	 *         where the sun does not rise, and one where it does not set,
+	 *         {@link Long#MIN_VALUE} will be returned. See detailed explanation on
+	 *         top of the {@link AstronomicalCalendar} documentation.
 	 * @see #getTemporalHour(Date, Date)
 	 */
 	public long getShaahZmanisGra() {
@@ -357,7 +430,11 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * subclass {@link ComplexZmanimCalendar}.
 	 * 
 	 * @return the <code>long</code> millisecond length of a
-	 *         <em>shaah zmanis</em>.
+	 *         <em>shaah zmanis</em>. If the calculation can't be computed such
+	 *         as in the Arctic Circle where there is at least one day a year
+	 *         where the sun does not rise, and one where it does not set,
+	 *         {@link Long#MIN_VALUE} will be returned. See detailed explanation
+	 *         on top of the {@link AstronomicalCalendar} documentation.
 	 */
 	public long getShaahZmanisMGA() {
 		return getTemporalHour(getAlos72(), getTzais72());

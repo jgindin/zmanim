@@ -21,794 +21,832 @@
 <FONT color="green">018</FONT>    <a name="line.18"></a>
 <FONT color="green">019</FONT>    import java.util.Calendar;<a name="line.19"></a>
 <FONT color="green">020</FONT>    import java.util.Date;<a name="line.20"></a>
-<FONT color="green">021</FONT>    import java.util.GregorianCalendar;<a name="line.21"></a>
-<FONT color="green">022</FONT>    <a name="line.22"></a>
-<FONT color="green">023</FONT>    import net.sourceforge.zmanim.util.AstronomicalCalculator;<a name="line.23"></a>
-<FONT color="green">024</FONT>    import net.sourceforge.zmanim.util.GeoLocation;<a name="line.24"></a>
-<FONT color="green">025</FONT>    import net.sourceforge.zmanim.util.ZmanimFormatter;<a name="line.25"></a>
-<FONT color="green">026</FONT>    <a name="line.26"></a>
-<FONT color="green">027</FONT>    /**<a name="line.27"></a>
-<FONT color="green">028</FONT>     * A Java calendar that calculates astronomical time calculations such as<a name="line.28"></a>
-<FONT color="green">029</FONT>     * {@link #getSunrise() sunrise} and {@link #getSunset() sunset} times. This<a name="line.29"></a>
-<FONT color="green">030</FONT>     * class contains a {@link #getCalendar() Calendar} and can therefore use the<a name="line.30"></a>
-<FONT color="green">031</FONT>     * standard Calendar functionality to change dates etc. The calculation engine<a name="line.31"></a>
-<FONT color="green">032</FONT>     * used to calculate the astronomical times can be changed to a different<a name="line.32"></a>
-<FONT color="green">033</FONT>     * implementation by implementing the {@link AstronomicalCalculator} and setting<a name="line.33"></a>
-<FONT color="green">034</FONT>     * it with the {@link #setAstronomicalCalculator(AstronomicalCalculator)}. A<a name="line.34"></a>
-<FONT color="green">035</FONT>     * number of different implementations are included in the util package &lt;br /&gt;<a name="line.35"></a>
-<FONT color="green">036</FONT>     * &lt;b&gt;Note:&lt;/b&gt; There are times when the algorithms can't calculate proper<a name="line.36"></a>
-<FONT color="green">037</FONT>     * values for sunrise and sunset. This is usually caused by trying to calculate<a name="line.37"></a>
-<FONT color="green">038</FONT>     * times for areas either very far North or South, where sunrise / sunset never<a name="line.38"></a>
-<FONT color="green">039</FONT>     * happen on that date. This is common when calculating twilight with a deep dip<a name="line.39"></a>
-<FONT color="green">040</FONT>     * below the horizon for locations as south of the North Pole as London in the<a name="line.40"></a>
-<FONT color="green">041</FONT>     * northern hemisphere. When the calculations encounter this condition a null<a name="line.41"></a>
-<FONT color="green">042</FONT>     * will be returned when a &lt;code&gt;{@link java.util.Date}&lt;/code&gt; is expected and<a name="line.42"></a>
-<FONT color="green">043</FONT>     * {@link Double#NaN} when a double is expected. The reason that<a name="line.43"></a>
-<FONT color="green">044</FONT>     * &lt;code&gt;Exception&lt;/code&gt;s are not thrown in these cases is because the lack<a name="line.44"></a>
-<FONT color="green">045</FONT>     * of a rise/set are not exceptions, but expected in many parts of the world.<a name="line.45"></a>
-<FONT color="green">046</FONT>     * <a name="line.46"></a>
-<FONT color="green">047</FONT>     * Here is a simple example of how to use the API to calculate sunrise: &lt;br /&gt;<a name="line.47"></a>
-<FONT color="green">048</FONT>     * First create the Calendar for the location you would like to calculate:<a name="line.48"></a>
-<FONT color="green">049</FONT>     * <a name="line.49"></a>
-<FONT color="green">050</FONT>     * &lt;pre&gt;<a name="line.50"></a>
-<FONT color="green">051</FONT>     * String locationName = &amp;quot;Lakewood, NJ&amp;quot;;<a name="line.51"></a>
-<FONT color="green">052</FONT>     * double latitude = 40.0828; //Lakewood, NJ<a name="line.52"></a>
-<FONT color="green">053</FONT>     * double longitude = -74.2094; //Lakewood, NJ<a name="line.53"></a>
-<FONT color="green">054</FONT>     * double elevation = 20; // optional elevation correction in Meters<a name="line.54"></a>
-<FONT color="green">055</FONT>     * //the String parameter in getTimeZone() has to be a valid timezone listed in {@link java.util.TimeZone#getAvailableIDs()}<a name="line.55"></a>
-<FONT color="green">056</FONT>     * TimeZone timeZone = TimeZone.getTimeZone(&amp;quot;America/New_York&amp;quot;);<a name="line.56"></a>
-<FONT color="green">057</FONT>     * GeoLocation location = new GeoLocation(locationName, latitude, longitude,<a name="line.57"></a>
-<FONT color="green">058</FONT>     *              elevation, timeZone);<a name="line.58"></a>
-<FONT color="green">059</FONT>     * AstronomicalCalendar ac = new AstronomicalCalendar(location);<a name="line.59"></a>
-<FONT color="green">060</FONT>     * &lt;/pre&gt;<a name="line.60"></a>
-<FONT color="green">061</FONT>     * <a name="line.61"></a>
-<FONT color="green">062</FONT>     * To get the time of sunrise, first set the date (if not set, the date will<a name="line.62"></a>
-<FONT color="green">063</FONT>     * default to today):<a name="line.63"></a>
-<FONT color="green">064</FONT>     * <a name="line.64"></a>
-<FONT color="green">065</FONT>     * &lt;pre&gt;<a name="line.65"></a>
-<FONT color="green">066</FONT>     * ac.getCalendar().set(Calendar.MONTH, Calendar.FEBRUARY);<a name="line.66"></a>
-<FONT color="green">067</FONT>     * ac.getCalendar().set(Calendar.DAY_OF_MONTH, 8);<a name="line.67"></a>
-<FONT color="green">068</FONT>     * Date sunrise = ac.getSunrise();<a name="line.68"></a>
-<FONT color="green">069</FONT>     * &lt;/pre&gt;<a name="line.69"></a>
-<FONT color="green">070</FONT>     * <a name="line.70"></a>
-<FONT color="green">071</FONT>     * <a name="line.71"></a>
-<FONT color="green">072</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2010<a name="line.72"></a>
-<FONT color="green">073</FONT>     * @version 1.2<a name="line.73"></a>
-<FONT color="green">074</FONT>     */<a name="line.74"></a>
-<FONT color="green">075</FONT>    public class AstronomicalCalendar implements Cloneable {<a name="line.75"></a>
-<FONT color="green">076</FONT>            private static final long serialVersionUID = 1;<a name="line.76"></a>
-<FONT color="green">077</FONT>    <a name="line.77"></a>
-<FONT color="green">078</FONT>            /**<a name="line.78"></a>
-<FONT color="green">079</FONT>             * 90&amp;deg; below the vertical. Used for certain calculations.&lt;br /&gt;<a name="line.79"></a>
-<FONT color="green">080</FONT>             * &lt;b&gt;Note &lt;/b&gt;: it is important to note the distinction between this zenith<a name="line.80"></a>
-<FONT color="green">081</FONT>             * and the {@link AstronomicalCalculator#adjustZenith adjusted zenith} used<a name="line.81"></a>
-<FONT color="green">082</FONT>             * for some solar calculations. This 90 zenith is only used because some<a name="line.82"></a>
-<FONT color="green">083</FONT>             * calculations in some subclasses are historically calculated as an offset<a name="line.83"></a>
-<FONT color="green">084</FONT>             * in reference to 90.<a name="line.84"></a>
-<FONT color="green">085</FONT>             */<a name="line.85"></a>
-<FONT color="green">086</FONT>            public static final double GEOMETRIC_ZENITH = 90;<a name="line.86"></a>
-<FONT color="green">087</FONT>    <a name="line.87"></a>
-<FONT color="green">088</FONT>            /**<a name="line.88"></a>
-<FONT color="green">089</FONT>             * Default value for Sun's zenith and true rise/set Zenith (used in this<a name="line.89"></a>
-<FONT color="green">090</FONT>             * class and subclasses) is the angle that the center of the Sun makes to a<a name="line.90"></a>
-<FONT color="green">091</FONT>             * line perpendicular to the Earth's surface. If the Sun were a point and<a name="line.91"></a>
-<FONT color="green">092</FONT>             * the Earth were without an atmosphere, true sunset and sunrise would<a name="line.92"></a>
-<FONT color="green">093</FONT>             * correspond to a 90&amp;deg; zenith. Because the Sun is not a point, and<a name="line.93"></a>
-<FONT color="green">094</FONT>             * because the atmosphere refracts light, this 90&amp;deg; zenith does not, in<a name="line.94"></a>
-<FONT color="green">095</FONT>             * fact, correspond to true sunset or sunrise, instead the center of the<a name="line.95"></a>
-<FONT color="green">096</FONT>             * Sun's disk must lie just below the horizon for the upper edge to be<a name="line.96"></a>
-<FONT color="green">097</FONT>             * obscured. This means that a zenith of just above 90&amp;deg; must be used.<a name="line.97"></a>
-<FONT color="green">098</FONT>             * The Sun subtends an angle of 16 minutes of arc (this can be changed via<a name="line.98"></a>
-<FONT color="green">099</FONT>             * the {@link #setSunRadius(double)} method , and atmospheric refraction<a name="line.99"></a>
-<FONT color="green">100</FONT>             * accounts for 34 minutes or so (this can be changed via the<a name="line.100"></a>
-<FONT color="green">101</FONT>             * {@link #setRefraction(double)} method), giving a total of 50 arcminutes.<a name="line.101"></a>
-<FONT color="green">102</FONT>             * The total value for ZENITH is 90+(5/6) or 90.8333333&amp;deg; for true<a name="line.102"></a>
-<FONT color="green">103</FONT>             * sunrise/sunset.<a name="line.103"></a>
-<FONT color="green">104</FONT>             */<a name="line.104"></a>
-<FONT color="green">105</FONT>            // public static double ZENITH = GEOMETRIC_ZENITH + 5.0 / 6.0;<a name="line.105"></a>
-<FONT color="green">106</FONT>            /** Sun's zenith at civil twilight (96&amp;deg;). */<a name="line.106"></a>
-<FONT color="green">107</FONT>            public static final double CIVIL_ZENITH = 96;<a name="line.107"></a>
-<FONT color="green">108</FONT>    <a name="line.108"></a>
-<FONT color="green">109</FONT>            /** Sun's zenith at nautical twilight (102&amp;deg;). */<a name="line.109"></a>
-<FONT color="green">110</FONT>            public static final double NAUTICAL_ZENITH = 102;<a name="line.110"></a>
-<FONT color="green">111</FONT>    <a name="line.111"></a>
-<FONT color="green">112</FONT>            /** Sun's zenith at astronomical twilight (108&amp;deg;). */<a name="line.112"></a>
-<FONT color="green">113</FONT>            public static final double ASTRONOMICAL_ZENITH = 108;<a name="line.113"></a>
-<FONT color="green">114</FONT>    <a name="line.114"></a>
-<FONT color="green">115</FONT>            /** constant for milliseconds in a minute (60,000) */<a name="line.115"></a>
-<FONT color="green">116</FONT>            static final long MINUTE_MILLIS = 60 * 1000;<a name="line.116"></a>
-<FONT color="green">117</FONT>    <a name="line.117"></a>
-<FONT color="green">118</FONT>            /** constant for milliseconds in an hour (3,600,000) */<a name="line.118"></a>
-<FONT color="green">119</FONT>            static final long HOUR_MILLIS = MINUTE_MILLIS * 60;<a name="line.119"></a>
-<FONT color="green">120</FONT>    <a name="line.120"></a>
-<FONT color="green">121</FONT>            /**<a name="line.121"></a>
-<FONT color="green">122</FONT>             * The Java Calendar encapsulated by this class to track the current date<a name="line.122"></a>
-<FONT color="green">123</FONT>             * used by the class<a name="line.123"></a>
-<FONT color="green">124</FONT>             */<a name="line.124"></a>
-<FONT color="green">125</FONT>            private Calendar calendar;<a name="line.125"></a>
-<FONT color="green">126</FONT>    <a name="line.126"></a>
-<FONT color="green">127</FONT>            private GeoLocation geoLocation;<a name="line.127"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    import net.sourceforge.zmanim.util.AstronomicalCalculator;<a name="line.22"></a>
+<FONT color="green">023</FONT>    import net.sourceforge.zmanim.util.GeoLocation;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import net.sourceforge.zmanim.util.ZmanimFormatter;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    /**<a name="line.26"></a>
+<FONT color="green">027</FONT>     * A Java calendar that calculates astronomical time calculations such as<a name="line.27"></a>
+<FONT color="green">028</FONT>     * {@link #getSunrise() sunrise} and {@link #getSunset() sunset} times. This<a name="line.28"></a>
+<FONT color="green">029</FONT>     * class contains a {@link #getCalendar() Calendar} and can therefore use the<a name="line.29"></a>
+<FONT color="green">030</FONT>     * standard Calendar functionality to change dates etc. The calculation engine<a name="line.30"></a>
+<FONT color="green">031</FONT>     * used to calculate the astronomical times can be changed to a different<a name="line.31"></a>
+<FONT color="green">032</FONT>     * implementation by implementing the {@link AstronomicalCalculator} and setting<a name="line.32"></a>
+<FONT color="green">033</FONT>     * it with the {@link #setAstronomicalCalculator(AstronomicalCalculator)}. A<a name="line.33"></a>
+<FONT color="green">034</FONT>     * number of different implementations are included in the util package &lt;br /&gt;<a name="line.34"></a>
+<FONT color="green">035</FONT>     * &lt;b&gt;Note:&lt;/b&gt; There are times when the algorithms can't calculate proper<a name="line.35"></a>
+<FONT color="green">036</FONT>     * values for sunrise, sunset and twilight. This is usually caused by trying to<a name="line.36"></a>
+<FONT color="green">037</FONT>     * calculate times for areas either very far North or South, where sunrise /<a name="line.37"></a>
+<FONT color="green">038</FONT>     * sunset never happen on that date. This is common when calculating twilight<a name="line.38"></a>
+<FONT color="green">039</FONT>     * with a deep dip below the horizon for locations as far south of the North<a name="line.39"></a>
+<FONT color="green">040</FONT>     * Pole as London, in the northern hemisphere. The sun never reaches this dip at<a name="line.40"></a>
+<FONT color="green">041</FONT>     * certain times of the year. When the calculations encounter this condition a<a name="line.41"></a>
+<FONT color="green">042</FONT>     * null will be returned when a &lt;code&gt;{@link java.util.Date}&lt;/code&gt; is expected<a name="line.42"></a>
+<FONT color="green">043</FONT>     * and {@link Long#MIN_VALUE} when a long is expected. The reason that<a name="line.43"></a>
+<FONT color="green">044</FONT>     * &lt;code&gt;Exception&lt;/code&gt;s are not thrown in these cases is because the lack of<a name="line.44"></a>
+<FONT color="green">045</FONT>     * a rise/set or twilight is not an exception, but expected in many parts of the<a name="line.45"></a>
+<FONT color="green">046</FONT>     * world.<a name="line.46"></a>
+<FONT color="green">047</FONT>     * <a name="line.47"></a>
+<FONT color="green">048</FONT>     * Here is a simple example of how to use the API to calculate sunrise: &lt;br /&gt;<a name="line.48"></a>
+<FONT color="green">049</FONT>     * First create the Calendar for the location you would like to calculate:<a name="line.49"></a>
+<FONT color="green">050</FONT>     * <a name="line.50"></a>
+<FONT color="green">051</FONT>     * &lt;pre&gt;<a name="line.51"></a>
+<FONT color="green">052</FONT>     * String locationName = &amp;quot;Lakewood, NJ&amp;quot;;<a name="line.52"></a>
+<FONT color="green">053</FONT>     * double latitude = 40.0828; // Lakewood, NJ<a name="line.53"></a>
+<FONT color="green">054</FONT>     * double longitude = -74.2094; // Lakewood, NJ<a name="line.54"></a>
+<FONT color="green">055</FONT>     * double elevation = 20; // optional elevation correction in Meters<a name="line.55"></a>
+<FONT color="green">056</FONT>     * // the String parameter in getTimeZone() has to be a valid timezone listed in<a name="line.56"></a>
+<FONT color="green">057</FONT>     * // {@link java.util.TimeZone#getAvailableIDs()}<a name="line.57"></a>
+<FONT color="green">058</FONT>     * TimeZone timeZone = TimeZone.getTimeZone(&amp;quot;America/New_York&amp;quot;);<a name="line.58"></a>
+<FONT color="green">059</FONT>     * GeoLocation location = new GeoLocation(locationName, latitude, longitude,<a name="line.59"></a>
+<FONT color="green">060</FONT>     *              elevation, timeZone);<a name="line.60"></a>
+<FONT color="green">061</FONT>     * AstronomicalCalendar ac = new AstronomicalCalendar(location);<a name="line.61"></a>
+<FONT color="green">062</FONT>     * &lt;/pre&gt;<a name="line.62"></a>
+<FONT color="green">063</FONT>     * <a name="line.63"></a>
+<FONT color="green">064</FONT>     * To get the time of sunrise, first set the date (if not set, the date will<a name="line.64"></a>
+<FONT color="green">065</FONT>     * default to today):<a name="line.65"></a>
+<FONT color="green">066</FONT>     * <a name="line.66"></a>
+<FONT color="green">067</FONT>     * &lt;pre&gt;<a name="line.67"></a>
+<FONT color="green">068</FONT>     * ac.getCalendar().set(Calendar.MONTH, Calendar.FEBRUARY);<a name="line.68"></a>
+<FONT color="green">069</FONT>     * ac.getCalendar().set(Calendar.DAY_OF_MONTH, 8);<a name="line.69"></a>
+<FONT color="green">070</FONT>     * Date sunrise = ac.getSunrise();<a name="line.70"></a>
+<FONT color="green">071</FONT>     * &lt;/pre&gt;<a name="line.71"></a>
+<FONT color="green">072</FONT>     * <a name="line.72"></a>
+<FONT color="green">073</FONT>     * <a name="line.73"></a>
+<FONT color="green">074</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2010<a name="line.74"></a>
+<FONT color="green">075</FONT>     * @version 1.2.1<a name="line.75"></a>
+<FONT color="green">076</FONT>     */<a name="line.76"></a>
+<FONT color="green">077</FONT>    public class AstronomicalCalendar implements Cloneable {<a name="line.77"></a>
+<FONT color="green">078</FONT>            private static final long serialVersionUID = 1;<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>            /**<a name="line.80"></a>
+<FONT color="green">081</FONT>             * 90&amp;deg; below the vertical. Used for certain calculations.&lt;br /&gt;<a name="line.81"></a>
+<FONT color="green">082</FONT>             * &lt;b&gt;Note &lt;/b&gt;: it is important to note the distinction between this zenith<a name="line.82"></a>
+<FONT color="green">083</FONT>             * and the {@link AstronomicalCalculator#adjustZenith adjusted zenith} used<a name="line.83"></a>
+<FONT color="green">084</FONT>             * for some solar calculations. This 90 zenith is only used because some<a name="line.84"></a>
+<FONT color="green">085</FONT>             * calculations in some subclasses are historically calculated as an offset<a name="line.85"></a>
+<FONT color="green">086</FONT>             * in reference to 90.<a name="line.86"></a>
+<FONT color="green">087</FONT>             */<a name="line.87"></a>
+<FONT color="green">088</FONT>            public static final double GEOMETRIC_ZENITH = 90;<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>            /**<a name="line.90"></a>
+<FONT color="green">091</FONT>             * Default value for Sun's zenith and true rise/set Zenith (used in this<a name="line.91"></a>
+<FONT color="green">092</FONT>             * class and subclasses) is the angle that the center of the Sun makes to a<a name="line.92"></a>
+<FONT color="green">093</FONT>             * line perpendicular to the Earth's surface. If the Sun were a point and<a name="line.93"></a>
+<FONT color="green">094</FONT>             * the Earth were without an atmosphere, true sunset and sunrise would<a name="line.94"></a>
+<FONT color="green">095</FONT>             * correspond to a 90&amp;deg; zenith. Because the Sun is not a point, and<a name="line.95"></a>
+<FONT color="green">096</FONT>             * because the atmosphere refracts light, this 90&amp;deg; zenith does not, in<a name="line.96"></a>
+<FONT color="green">097</FONT>             * fact, correspond to true sunset or sunrise, instead the center of the<a name="line.97"></a>
+<FONT color="green">098</FONT>             * Sun's disk must lie just below the horizon for the upper edge to be<a name="line.98"></a>
+<FONT color="green">099</FONT>             * obscured. This means that a zenith of just above 90&amp;deg; must be used.<a name="line.99"></a>
+<FONT color="green">100</FONT>             * The Sun subtends an angle of 16 minutes of arc (this can be changed via<a name="line.100"></a>
+<FONT color="green">101</FONT>             * the {@link #setSunRadius(double)} method , and atmospheric refraction<a name="line.101"></a>
+<FONT color="green">102</FONT>             * accounts for 34 minutes or so (this can be changed via the<a name="line.102"></a>
+<FONT color="green">103</FONT>             * {@link #setRefraction(double)} method), giving a total of 50 arcminutes.<a name="line.103"></a>
+<FONT color="green">104</FONT>             * The total value for ZENITH is 90+(5/6) or 90.8333333&amp;deg; for true<a name="line.104"></a>
+<FONT color="green">105</FONT>             * sunrise/sunset.<a name="line.105"></a>
+<FONT color="green">106</FONT>             */<a name="line.106"></a>
+<FONT color="green">107</FONT>            // public static double ZENITH = GEOMETRIC_ZENITH + 5.0 / 6.0;<a name="line.107"></a>
+<FONT color="green">108</FONT>            /** Sun's zenith at civil twilight (96&amp;deg;). */<a name="line.108"></a>
+<FONT color="green">109</FONT>            public static final double CIVIL_ZENITH = 96;<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>            /** Sun's zenith at nautical twilight (102&amp;deg;). */<a name="line.111"></a>
+<FONT color="green">112</FONT>            public static final double NAUTICAL_ZENITH = 102;<a name="line.112"></a>
+<FONT color="green">113</FONT>    <a name="line.113"></a>
+<FONT color="green">114</FONT>            /** Sun's zenith at astronomical twilight (108&amp;deg;). */<a name="line.114"></a>
+<FONT color="green">115</FONT>            public static final double ASTRONOMICAL_ZENITH = 108;<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>            /** constant for milliseconds in a minute (60,000) */<a name="line.117"></a>
+<FONT color="green">118</FONT>            static final long MINUTE_MILLIS = 60 * 1000;<a name="line.118"></a>
+<FONT color="green">119</FONT>    <a name="line.119"></a>
+<FONT color="green">120</FONT>            /** constant for milliseconds in an hour (3,600,000) */<a name="line.120"></a>
+<FONT color="green">121</FONT>            static final long HOUR_MILLIS = MINUTE_MILLIS * 60;<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>            /**<a name="line.123"></a>
+<FONT color="green">124</FONT>             * The Java Calendar encapsulated by this class to track the current date<a name="line.124"></a>
+<FONT color="green">125</FONT>             * used by the class<a name="line.125"></a>
+<FONT color="green">126</FONT>             */<a name="line.126"></a>
+<FONT color="green">127</FONT>            private Calendar calendar;<a name="line.127"></a>
 <FONT color="green">128</FONT>    <a name="line.128"></a>
-<FONT color="green">129</FONT>            private AstronomicalCalculator astronomicalCalculator;<a name="line.129"></a>
+<FONT color="green">129</FONT>            private GeoLocation geoLocation;<a name="line.129"></a>
 <FONT color="green">130</FONT>    <a name="line.130"></a>
-<FONT color="green">131</FONT>            /**<a name="line.131"></a>
-<FONT color="green">132</FONT>             * The getSunrise method Returns a &lt;code&gt;Date&lt;/code&gt; representing the<a name="line.132"></a>
-<FONT color="green">133</FONT>             * sunrise time. The zenith used for the calculation uses<a name="line.133"></a>
-<FONT color="green">134</FONT>             * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&amp;deg;. This is adjusted<a name="line.134"></a>
-<FONT color="green">135</FONT>             * by the {@link AstronomicalCalculator} that adds approximately 50/60 of a<a name="line.135"></a>
-<FONT color="green">136</FONT>             * degree to account for 34 archminutes of refraction and 16 archminutes for<a name="line.136"></a>
-<FONT color="green">137</FONT>             * the sun's radius for a total of<a name="line.137"></a>
-<FONT color="green">138</FONT>             * {@link AstronomicalCalculator#adjustZenith 90.83333&amp;deg;}. See<a name="line.138"></a>
-<FONT color="green">139</FONT>             * documentation for the specific implementation of the<a name="line.139"></a>
-<FONT color="green">140</FONT>             * {@link AstronomicalCalculator} that you are using.<a name="line.140"></a>
-<FONT color="green">141</FONT>             * <a name="line.141"></a>
-<FONT color="green">142</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sunrise time. If<a name="line.142"></a>
-<FONT color="green">143</FONT>             *         the calculation can not be computed null will be returned.<a name="line.143"></a>
-<FONT color="green">144</FONT>             * @see AstronomicalCalculator#adjustZenith<a name="line.144"></a>
-<FONT color="green">145</FONT>             */<a name="line.145"></a>
-<FONT color="green">146</FONT>            public Date getSunrise() {<a name="line.146"></a>
-<FONT color="green">147</FONT>                    double sunrise = getUTCSunrise(GEOMETRIC_ZENITH);<a name="line.147"></a>
-<FONT color="green">148</FONT>                    if (Double.isNaN(sunrise)) {<a name="line.148"></a>
-<FONT color="green">149</FONT>                            return null;<a name="line.149"></a>
-<FONT color="green">150</FONT>                    } else {<a name="line.150"></a>
-<FONT color="green">151</FONT>                            return getDateFromTime(sunrise);<a name="line.151"></a>
-<FONT color="green">152</FONT>                    }<a name="line.152"></a>
-<FONT color="green">153</FONT>            }<a name="line.153"></a>
-<FONT color="green">154</FONT>    <a name="line.154"></a>
-<FONT color="green">155</FONT>            /**<a name="line.155"></a>
-<FONT color="green">156</FONT>             * Method that returns the sunrise without correction for elevation.<a name="line.156"></a>
-<FONT color="green">157</FONT>             * Non-sunrise and sunset calculations such as dawn and dusk, depend on the<a name="line.157"></a>
-<FONT color="green">158</FONT>             * amount of visible light, something that is not affected by elevation.<a name="line.158"></a>
-<FONT color="green">159</FONT>             * This method returns sunrise calculated at sea level. This forms the base<a name="line.159"></a>
-<FONT color="green">160</FONT>             * for dawn calculations that are calculated as a dip below the horizon<a name="line.160"></a>
-<FONT color="green">161</FONT>             * before sunrise.<a name="line.161"></a>
-<FONT color="green">162</FONT>             * <a name="line.162"></a>
-<FONT color="green">163</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sea-level sunrise<a name="line.163"></a>
-<FONT color="green">164</FONT>             *         time. If the calculation can not be computed null will be<a name="line.164"></a>
-<FONT color="green">165</FONT>             *         returned.<a name="line.165"></a>
-<FONT color="green">166</FONT>             * @see AstronomicalCalendar#getSunrise<a name="line.166"></a>
-<FONT color="green">167</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunrise<a name="line.167"></a>
-<FONT color="green">168</FONT>             */<a name="line.168"></a>
-<FONT color="green">169</FONT>            public Date getSeaLevelSunrise() {<a name="line.169"></a>
-<FONT color="green">170</FONT>                    double sunrise = getUTCSeaLevelSunrise(GEOMETRIC_ZENITH);<a name="line.170"></a>
-<FONT color="green">171</FONT>                    if (Double.isNaN(sunrise)) {<a name="line.171"></a>
-<FONT color="green">172</FONT>                            return null;<a name="line.172"></a>
-<FONT color="green">173</FONT>                    } else {<a name="line.173"></a>
-<FONT color="green">174</FONT>                            return getDateFromTime(sunrise);<a name="line.174"></a>
-<FONT color="green">175</FONT>                    }<a name="line.175"></a>
-<FONT color="green">176</FONT>            }<a name="line.176"></a>
-<FONT color="green">177</FONT>    <a name="line.177"></a>
-<FONT color="green">178</FONT>            /**<a name="line.178"></a>
-<FONT color="green">179</FONT>             * A method to return the the beginning of civil twilight (dawn) using a<a name="line.179"></a>
-<FONT color="green">180</FONT>             * zenith of {@link #CIVIL_ZENITH 96&amp;deg;}.<a name="line.180"></a>
-<FONT color="green">181</FONT>             * <a name="line.181"></a>
-<FONT color="green">182</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of civil twilight using<a name="line.182"></a>
-<FONT color="green">183</FONT>             *         a zenith of 96&amp;deg;. If the calculation can not be computed null<a name="line.183"></a>
-<FONT color="green">184</FONT>             *         will be returned.<a name="line.184"></a>
-<FONT color="green">185</FONT>             * @see #CIVIL_ZENITH<a name="line.185"></a>
-<FONT color="green">186</FONT>             */<a name="line.186"></a>
-<FONT color="green">187</FONT>            public Date getBeginCivilTwilight() {<a name="line.187"></a>
-<FONT color="green">188</FONT>                    return getSunriseOffsetByDegrees(CIVIL_ZENITH);<a name="line.188"></a>
-<FONT color="green">189</FONT>            }<a name="line.189"></a>
-<FONT color="green">190</FONT>    <a name="line.190"></a>
-<FONT color="green">191</FONT>            /**<a name="line.191"></a>
-<FONT color="green">192</FONT>             * A method to return the the beginning of nautical twilight using a zenith<a name="line.192"></a>
-<FONT color="green">193</FONT>             * of {@link #NAUTICAL_ZENITH 102&amp;deg;}.<a name="line.193"></a>
-<FONT color="green">194</FONT>             * <a name="line.194"></a>
-<FONT color="green">195</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of nautical twilight<a name="line.195"></a>
-<FONT color="green">196</FONT>             *         using a zenith of 102&amp;deg;. If the calculation can not be<a name="line.196"></a>
-<FONT color="green">197</FONT>             *         computed null will be returned.<a name="line.197"></a>
-<FONT color="green">198</FONT>             * @see #NAUTICAL_ZENITH<a name="line.198"></a>
-<FONT color="green">199</FONT>             */<a name="line.199"></a>
-<FONT color="green">200</FONT>            public Date getBeginNauticalTwilight() {<a name="line.200"></a>
-<FONT color="green">201</FONT>                    return getSunriseOffsetByDegrees(NAUTICAL_ZENITH);<a name="line.201"></a>
-<FONT color="green">202</FONT>            }<a name="line.202"></a>
-<FONT color="green">203</FONT>    <a name="line.203"></a>
-<FONT color="green">204</FONT>            /**<a name="line.204"></a>
-<FONT color="green">205</FONT>             * A method that returns the the beginning of astronomical twilight using a<a name="line.205"></a>
-<FONT color="green">206</FONT>             * zenith of {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}.<a name="line.206"></a>
-<FONT color="green">207</FONT>             * <a name="line.207"></a>
-<FONT color="green">208</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of astronomical twilight<a name="line.208"></a>
-<FONT color="green">209</FONT>             *         using a zenith of 108&amp;deg;. If the calculation can not be<a name="line.209"></a>
-<FONT color="green">210</FONT>             *         computed null will be returned.<a name="line.210"></a>
-<FONT color="green">211</FONT>             * @see #ASTRONOMICAL_ZENITH<a name="line.211"></a>
-<FONT color="green">212</FONT>             */<a name="line.212"></a>
-<FONT color="green">213</FONT>            public Date getBeginAstronomicalTwilight() {<a name="line.213"></a>
-<FONT color="green">214</FONT>                    return getSunriseOffsetByDegrees(ASTRONOMICAL_ZENITH);<a name="line.214"></a>
-<FONT color="green">215</FONT>            }<a name="line.215"></a>
-<FONT color="green">216</FONT>    <a name="line.216"></a>
-<FONT color="green">217</FONT>            /**<a name="line.217"></a>
-<FONT color="green">218</FONT>             * The getSunset method Returns a &lt;code&gt;Date&lt;/code&gt; representing the<a name="line.218"></a>
-<FONT color="green">219</FONT>             * sunset time. The zenith used for the calculation uses<a name="line.219"></a>
-<FONT color="green">220</FONT>             * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&amp;deg;. This is adjusted<a name="line.220"></a>
-<FONT color="green">221</FONT>             * by the {@link AstronomicalCalculator} that adds approximately 50/60 of a<a name="line.221"></a>
-<FONT color="green">222</FONT>             * degree to account for 34 archminutes of refraction and 16 archminutes for<a name="line.222"></a>
-<FONT color="green">223</FONT>             * the sun's radius for a total of<a name="line.223"></a>
-<FONT color="green">224</FONT>             * {@link AstronomicalCalculator#adjustZenith 90.83333&amp;deg;}. See<a name="line.224"></a>
-<FONT color="green">225</FONT>             * documentation for the specific implementation of the<a name="line.225"></a>
-<FONT color="green">226</FONT>             * {@link AstronomicalCalculator} that you are using. Note: In certain cases<a name="line.226"></a>
-<FONT color="green">227</FONT>             * the calculates sunset will occur before sunrise. This will typically<a name="line.227"></a>
-<FONT color="green">228</FONT>             * happen when a timezone other than the local timezone is used (calculating<a name="line.228"></a>
-<FONT color="green">229</FONT>             * Los Angeles sunset using a GMT timezone for example). In this case the<a name="line.229"></a>
-<FONT color="green">230</FONT>             * sunset date will be incremented to the following date.<a name="line.230"></a>
-<FONT color="green">231</FONT>             * <a name="line.231"></a>
-<FONT color="green">232</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sunset time. If<a name="line.232"></a>
-<FONT color="green">233</FONT>             *         the calculation can not be computed null will be returned. If the<a name="line.233"></a>
-<FONT color="green">234</FONT>             *         time calculation<a name="line.234"></a>
-<FONT color="green">235</FONT>             * @see AstronomicalCalculator#adjustZenith<a name="line.235"></a>
-<FONT color="green">236</FONT>             */<a name="line.236"></a>
-<FONT color="green">237</FONT>            public Date getSunset() {<a name="line.237"></a>
-<FONT color="green">238</FONT>                    double sunset = getUTCSunset(GEOMETRIC_ZENITH);<a name="line.238"></a>
-<FONT color="green">239</FONT>                    if (Double.isNaN(sunset)) {<a name="line.239"></a>
-<FONT color="green">240</FONT>                            return null;<a name="line.240"></a>
-<FONT color="green">241</FONT>                    } else {<a name="line.241"></a>
-<FONT color="green">242</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset), getSunrise());<a name="line.242"></a>
-<FONT color="green">243</FONT>                    }<a name="line.243"></a>
-<FONT color="green">244</FONT>            }<a name="line.244"></a>
-<FONT color="green">245</FONT>    <a name="line.245"></a>
-<FONT color="green">246</FONT>            /**<a name="line.246"></a>
-<FONT color="green">247</FONT>             * A method that will roll the sunset time forward a day if sunset occurs<a name="line.247"></a>
-<FONT color="green">248</FONT>             * before sunrise. This will typically happen when a timezone other than the<a name="line.248"></a>
-<FONT color="green">249</FONT>             * local timezone is used (calculating Los Angeles sunset using a GMT<a name="line.249"></a>
-<FONT color="green">250</FONT>             * timezone for example). In this case the sunset date will be incremented<a name="line.250"></a>
-<FONT color="green">251</FONT>             * to the following date.<a name="line.251"></a>
-<FONT color="green">252</FONT>             * <a name="line.252"></a>
-<FONT color="green">253</FONT>             * @param sunset<a name="line.253"></a>
-<FONT color="green">254</FONT>             *            the sunset date to adjust if needed<a name="line.254"></a>
-<FONT color="green">255</FONT>             * @param sunrise<a name="line.255"></a>
-<FONT color="green">256</FONT>             *            the sunrise to compare to the sunset<a name="line.256"></a>
-<FONT color="green">257</FONT>             * @return the adjusted sunset date<a name="line.257"></a>
-<FONT color="green">258</FONT>             */<a name="line.258"></a>
-<FONT color="green">259</FONT>            private Date getAdjustedSunsetDate(Date sunset, Date sunrise) {<a name="line.259"></a>
-<FONT color="green">260</FONT>                    if (sunset != null &amp;&amp; sunrise != null &amp;&amp; sunrise.compareTo(sunset) &gt;= 0) {<a name="line.260"></a>
-<FONT color="green">261</FONT>                            Calendar clonedCalendar = (GregorianCalendar) getCalendar().clone();<a name="line.261"></a>
-<FONT color="green">262</FONT>                            clonedCalendar.setTime(sunset);<a name="line.262"></a>
-<FONT color="green">263</FONT>                            clonedCalendar.add(Calendar.DAY_OF_MONTH, 1);<a name="line.263"></a>
-<FONT color="green">264</FONT>                            return clonedCalendar.getTime();<a name="line.264"></a>
-<FONT color="green">265</FONT>                    } else {<a name="line.265"></a>
-<FONT color="green">266</FONT>                            return sunset;<a name="line.266"></a>
-<FONT color="green">267</FONT>                    }<a name="line.267"></a>
-<FONT color="green">268</FONT>            }<a name="line.268"></a>
-<FONT color="green">269</FONT>    <a name="line.269"></a>
-<FONT color="green">270</FONT>            /**<a name="line.270"></a>
-<FONT color="green">271</FONT>             * Method that returns the sunset without correction for elevation.<a name="line.271"></a>
-<FONT color="green">272</FONT>             * Non-sunrise and sunset calculations such as dawn and dusk, depend on the<a name="line.272"></a>
-<FONT color="green">273</FONT>             * amount of visible light, something that is not affected by elevation.<a name="line.273"></a>
-<FONT color="green">274</FONT>             * This method returns sunset calculated at sea level. This forms the base<a name="line.274"></a>
-<FONT color="green">275</FONT>             * for dusk calculations that are calculated as a dip below the horizon<a name="line.275"></a>
-<FONT color="green">276</FONT>             * after sunset.<a name="line.276"></a>
-<FONT color="green">277</FONT>             * <a name="line.277"></a>
-<FONT color="green">278</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sea-level sunset<a name="line.278"></a>
-<FONT color="green">279</FONT>             *         time. If the calculation can not be computed null will be<a name="line.279"></a>
-<FONT color="green">280</FONT>             *         returned.<a name="line.280"></a>
-<FONT color="green">281</FONT>             * @see AstronomicalCalendar#getSunset<a name="line.281"></a>
-<FONT color="green">282</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.282"></a>
-<FONT color="green">283</FONT>             */<a name="line.283"></a>
-<FONT color="green">284</FONT>            public Date getSeaLevelSunset() {<a name="line.284"></a>
-<FONT color="green">285</FONT>                    double sunset = getUTCSeaLevelSunset(GEOMETRIC_ZENITH);<a name="line.285"></a>
-<FONT color="green">286</FONT>                    if (Double.isNaN(sunset)) {<a name="line.286"></a>
-<FONT color="green">287</FONT>                            return null;<a name="line.287"></a>
-<FONT color="green">288</FONT>                    } else {<a name="line.288"></a>
-<FONT color="green">289</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset),<a name="line.289"></a>
-<FONT color="green">290</FONT>                                            getSeaLevelSunrise());<a name="line.290"></a>
-<FONT color="green">291</FONT>                    }<a name="line.291"></a>
-<FONT color="green">292</FONT>            }<a name="line.292"></a>
-<FONT color="green">293</FONT>    <a name="line.293"></a>
-<FONT color="green">294</FONT>            /**<a name="line.294"></a>
-<FONT color="green">295</FONT>             * A method to return the the end of civil twilight using a zenith of<a name="line.295"></a>
-<FONT color="green">296</FONT>             * {@link #CIVIL_ZENITH 96&amp;deg;}.<a name="line.296"></a>
-<FONT color="green">297</FONT>             * <a name="line.297"></a>
-<FONT color="green">298</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the end of civil twilight using a<a name="line.298"></a>
-<FONT color="green">299</FONT>             *         zenith of {@link #CIVIL_ZENITH 96&amp;deg;}. If the calculation can<a name="line.299"></a>
-<FONT color="green">300</FONT>             *         not be computed null will be returned.<a name="line.300"></a>
-<FONT color="green">301</FONT>             * @see #CIVIL_ZENITH<a name="line.301"></a>
-<FONT color="green">302</FONT>             */<a name="line.302"></a>
-<FONT color="green">303</FONT>            public Date getEndCivilTwilight() {<a name="line.303"></a>
-<FONT color="green">304</FONT>                    return getSunsetOffsetByDegrees(CIVIL_ZENITH);<a name="line.304"></a>
-<FONT color="green">305</FONT>            }<a name="line.305"></a>
-<FONT color="green">306</FONT>    <a name="line.306"></a>
-<FONT color="green">307</FONT>            /**<a name="line.307"></a>
-<FONT color="green">308</FONT>             * A method to return the the end of nautical twilight using a zenith of<a name="line.308"></a>
-<FONT color="green">309</FONT>             * {@link #NAUTICAL_ZENITH 102&amp;deg;}.<a name="line.309"></a>
-<FONT color="green">310</FONT>             * <a name="line.310"></a>
-<FONT color="green">311</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the end of nautical twilight using a<a name="line.311"></a>
-<FONT color="green">312</FONT>             *         zenith of {@link #NAUTICAL_ZENITH 102&amp;deg;}. If the calculation<a name="line.312"></a>
-<FONT color="green">313</FONT>             *         can not be computed null will be returned.<a name="line.313"></a>
-<FONT color="green">314</FONT>             * @see #NAUTICAL_ZENITH<a name="line.314"></a>
-<FONT color="green">315</FONT>             */<a name="line.315"></a>
-<FONT color="green">316</FONT>            public Date getEndNauticalTwilight() {<a name="line.316"></a>
-<FONT color="green">317</FONT>                    return getSunsetOffsetByDegrees(NAUTICAL_ZENITH);<a name="line.317"></a>
-<FONT color="green">318</FONT>            }<a name="line.318"></a>
-<FONT color="green">319</FONT>    <a name="line.319"></a>
-<FONT color="green">320</FONT>            /**<a name="line.320"></a>
-<FONT color="green">321</FONT>             * A method to return the the end of astronomical twilight using a zenith of<a name="line.321"></a>
-<FONT color="green">322</FONT>             * {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}.<a name="line.322"></a>
-<FONT color="green">323</FONT>             * <a name="line.323"></a>
-<FONT color="green">324</FONT>             * @return The The &lt;code&gt;Date&lt;/code&gt; of the end of astronomical twilight<a name="line.324"></a>
-<FONT color="green">325</FONT>             *         using a zenith of {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}. If the<a name="line.325"></a>
-<FONT color="green">326</FONT>             *         calculation can not be computed null will be returned.<a name="line.326"></a>
-<FONT color="green">327</FONT>             * @see #ASTRONOMICAL_ZENITH<a name="line.327"></a>
-<FONT color="green">328</FONT>             */<a name="line.328"></a>
-<FONT color="green">329</FONT>            public Date getEndAstronomicalTwilight() {<a name="line.329"></a>
-<FONT color="green">330</FONT>                    return getSunsetOffsetByDegrees(ASTRONOMICAL_ZENITH);<a name="line.330"></a>
-<FONT color="green">331</FONT>            }<a name="line.331"></a>
-<FONT color="green">332</FONT>    <a name="line.332"></a>
-<FONT color="green">333</FONT>            /**<a name="line.333"></a>
-<FONT color="green">334</FONT>             * Utility method that returns a date offset by the offset time passed in.<a name="line.334"></a>
-<FONT color="green">335</FONT>             * This method casts the offset as a &lt;code&gt;long&lt;/code&gt; and calls<a name="line.335"></a>
-<FONT color="green">336</FONT>             * {@link #getTimeOffset(Date, long)}.<a name="line.336"></a>
-<FONT color="green">337</FONT>             * <a name="line.337"></a>
-<FONT color="green">338</FONT>             * @param time<a name="line.338"></a>
-<FONT color="green">339</FONT>             *            the start time<a name="line.339"></a>
-<FONT color="green">340</FONT>             * @param offset<a name="line.340"></a>
-<FONT color="green">341</FONT>             *            the offset in milliseconds to add to the time<a name="line.341"></a>
-<FONT color="green">342</FONT>             * @return the {@link java.util.Date}with the offset added to it<a name="line.342"></a>
-<FONT color="green">343</FONT>             */<a name="line.343"></a>
-<FONT color="green">344</FONT>            public Date getTimeOffset(Date time, double offset) {<a name="line.344"></a>
-<FONT color="green">345</FONT>                    return getTimeOffset(time, (long) offset);<a name="line.345"></a>
-<FONT color="green">346</FONT>            }<a name="line.346"></a>
-<FONT color="green">347</FONT>    <a name="line.347"></a>
-<FONT color="green">348</FONT>            /**<a name="line.348"></a>
-<FONT color="green">349</FONT>             * A utility method to return a date offset by the offset time passed in.<a name="line.349"></a>
-<FONT color="green">350</FONT>             * <a name="line.350"></a>
-<FONT color="green">351</FONT>             * @param time<a name="line.351"></a>
-<FONT color="green">352</FONT>             *            the start time<a name="line.352"></a>
-<FONT color="green">353</FONT>             * @param offset<a name="line.353"></a>
-<FONT color="green">354</FONT>             *            the offset in milliseconds to add to the time.<a name="line.354"></a>
-<FONT color="green">355</FONT>             * @return the {@link java.util.Date} with the offset in milliseconds added<a name="line.355"></a>
-<FONT color="green">356</FONT>             *         to it<a name="line.356"></a>
-<FONT color="green">357</FONT>             */<a name="line.357"></a>
-<FONT color="green">358</FONT>            public Date getTimeOffset(Date time, long offset) {<a name="line.358"></a>
-<FONT color="green">359</FONT>                    if (time == null || offset == Long.MIN_VALUE) {<a name="line.359"></a>
-<FONT color="green">360</FONT>                            return null;<a name="line.360"></a>
-<FONT color="green">361</FONT>                    }<a name="line.361"></a>
-<FONT color="green">362</FONT>                    return new Date(time.getTime() + offset);<a name="line.362"></a>
+<FONT color="green">131</FONT>            private AstronomicalCalculator astronomicalCalculator;<a name="line.131"></a>
+<FONT color="green">132</FONT>    <a name="line.132"></a>
+<FONT color="green">133</FONT>            /**<a name="line.133"></a>
+<FONT color="green">134</FONT>             * The getSunrise method Returns a &lt;code&gt;Date&lt;/code&gt; representing the<a name="line.134"></a>
+<FONT color="green">135</FONT>             * sunrise time. The zenith used for the calculation uses<a name="line.135"></a>
+<FONT color="green">136</FONT>             * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&amp;deg;. This is adjusted<a name="line.136"></a>
+<FONT color="green">137</FONT>             * by the {@link AstronomicalCalculator} that adds approximately 50/60 of a<a name="line.137"></a>
+<FONT color="green">138</FONT>             * degree to account for 34 archminutes of refraction and 16 archminutes for<a name="line.138"></a>
+<FONT color="green">139</FONT>             * the sun's radius for a total of<a name="line.139"></a>
+<FONT color="green">140</FONT>             * {@link AstronomicalCalculator#adjustZenith 90.83333&amp;deg;}. See<a name="line.140"></a>
+<FONT color="green">141</FONT>             * documentation for the specific implementation of the<a name="line.141"></a>
+<FONT color="green">142</FONT>             * {@link AstronomicalCalculator} that you are using.<a name="line.142"></a>
+<FONT color="green">143</FONT>             * <a name="line.143"></a>
+<FONT color="green">144</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sunrise time. If the<a name="line.144"></a>
+<FONT color="green">145</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.145"></a>
+<FONT color="green">146</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.146"></a>
+<FONT color="green">147</FONT>             *         one where it does not set, a null will be returned. See detailed<a name="line.147"></a>
+<FONT color="green">148</FONT>             *         explanation on top of the page.<a name="line.148"></a>
+<FONT color="green">149</FONT>             * @see AstronomicalCalculator#adjustZenith<a name="line.149"></a>
+<FONT color="green">150</FONT>             */<a name="line.150"></a>
+<FONT color="green">151</FONT>            public Date getSunrise() {<a name="line.151"></a>
+<FONT color="green">152</FONT>                    double sunrise = getUTCSunrise(GEOMETRIC_ZENITH);<a name="line.152"></a>
+<FONT color="green">153</FONT>                    if (Double.isNaN(sunrise)) {<a name="line.153"></a>
+<FONT color="green">154</FONT>                            return null;<a name="line.154"></a>
+<FONT color="green">155</FONT>                    } else {<a name="line.155"></a>
+<FONT color="green">156</FONT>                            return getDateFromTime(sunrise);<a name="line.156"></a>
+<FONT color="green">157</FONT>                    }<a name="line.157"></a>
+<FONT color="green">158</FONT>            }<a name="line.158"></a>
+<FONT color="green">159</FONT>    <a name="line.159"></a>
+<FONT color="green">160</FONT>            /**<a name="line.160"></a>
+<FONT color="green">161</FONT>             * Method that returns the sunrise without correction for elevation.<a name="line.161"></a>
+<FONT color="green">162</FONT>             * Non-sunrise and sunset calculations such as dawn and dusk, depend on the<a name="line.162"></a>
+<FONT color="green">163</FONT>             * amount of visible light, something that is not affected by elevation.<a name="line.163"></a>
+<FONT color="green">164</FONT>             * This method returns sunrise calculated at sea level. This forms the base<a name="line.164"></a>
+<FONT color="green">165</FONT>             * for dawn calculations that are calculated as a dip below the horizon<a name="line.165"></a>
+<FONT color="green">166</FONT>             * before sunrise.<a name="line.166"></a>
+<FONT color="green">167</FONT>             * <a name="line.167"></a>
+<FONT color="green">168</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sea-level sunrise<a name="line.168"></a>
+<FONT color="green">169</FONT>             *         time. If the calculation can't be computed such as in the Arctic<a name="line.169"></a>
+<FONT color="green">170</FONT>             *         Circle where there is at least one day a year where the sun does<a name="line.170"></a>
+<FONT color="green">171</FONT>             *         not rise, and one where it does not set, a null will be returned.<a name="line.171"></a>
+<FONT color="green">172</FONT>             *         See detailed explanation on top of the page.<a name="line.172"></a>
+<FONT color="green">173</FONT>             * @see AstronomicalCalendar#getSunrise<a name="line.173"></a>
+<FONT color="green">174</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunrise<a name="line.174"></a>
+<FONT color="green">175</FONT>             */<a name="line.175"></a>
+<FONT color="green">176</FONT>            public Date getSeaLevelSunrise() {<a name="line.176"></a>
+<FONT color="green">177</FONT>                    double sunrise = getUTCSeaLevelSunrise(GEOMETRIC_ZENITH);<a name="line.177"></a>
+<FONT color="green">178</FONT>                    if (Double.isNaN(sunrise)) {<a name="line.178"></a>
+<FONT color="green">179</FONT>                            return null;<a name="line.179"></a>
+<FONT color="green">180</FONT>                    } else {<a name="line.180"></a>
+<FONT color="green">181</FONT>                            return getDateFromTime(sunrise);<a name="line.181"></a>
+<FONT color="green">182</FONT>                    }<a name="line.182"></a>
+<FONT color="green">183</FONT>            }<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>            /**<a name="line.185"></a>
+<FONT color="green">186</FONT>             * A method to return the the beginning of civil twilight (dawn) using a<a name="line.186"></a>
+<FONT color="green">187</FONT>             * zenith of {@link #CIVIL_ZENITH 96&amp;deg;}.<a name="line.187"></a>
+<FONT color="green">188</FONT>             * <a name="line.188"></a>
+<FONT color="green">189</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of civil twilight using a<a name="line.189"></a>
+<FONT color="green">190</FONT>             *         zenith of 96&amp;deg;. If the calculation can't be computed (see<a name="line.190"></a>
+<FONT color="green">191</FONT>             *         explanation on top of the page), null will be returned.<a name="line.191"></a>
+<FONT color="green">192</FONT>             * @see #CIVIL_ZENITH<a name="line.192"></a>
+<FONT color="green">193</FONT>             */<a name="line.193"></a>
+<FONT color="green">194</FONT>            public Date getBeginCivilTwilight() {<a name="line.194"></a>
+<FONT color="green">195</FONT>                    return getSunriseOffsetByDegrees(CIVIL_ZENITH);<a name="line.195"></a>
+<FONT color="green">196</FONT>            }<a name="line.196"></a>
+<FONT color="green">197</FONT>    <a name="line.197"></a>
+<FONT color="green">198</FONT>            /**<a name="line.198"></a>
+<FONT color="green">199</FONT>             * A method to return the the beginning of nautical twilight using a zenith<a name="line.199"></a>
+<FONT color="green">200</FONT>             * of {@link #NAUTICAL_ZENITH 102&amp;deg;}.<a name="line.200"></a>
+<FONT color="green">201</FONT>             * <a name="line.201"></a>
+<FONT color="green">202</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of nautical twilight using<a name="line.202"></a>
+<FONT color="green">203</FONT>             *         a zenith of 102&amp;deg;. If the calculation can't be computed (see<a name="line.203"></a>
+<FONT color="green">204</FONT>             *         explanation on top of the page) null will be returned.<a name="line.204"></a>
+<FONT color="green">205</FONT>             * @see #NAUTICAL_ZENITH<a name="line.205"></a>
+<FONT color="green">206</FONT>             */<a name="line.206"></a>
+<FONT color="green">207</FONT>            public Date getBeginNauticalTwilight() {<a name="line.207"></a>
+<FONT color="green">208</FONT>                    return getSunriseOffsetByDegrees(NAUTICAL_ZENITH);<a name="line.208"></a>
+<FONT color="green">209</FONT>            }<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>            /**<a name="line.211"></a>
+<FONT color="green">212</FONT>             * A method that returns the the beginning of astronomical twilight using a<a name="line.212"></a>
+<FONT color="green">213</FONT>             * zenith of {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}.<a name="line.213"></a>
+<FONT color="green">214</FONT>             * <a name="line.214"></a>
+<FONT color="green">215</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the beginning of astronomical twilight<a name="line.215"></a>
+<FONT color="green">216</FONT>             *         using a zenith of 108&amp;deg;. If the calculation can't be computed<a name="line.216"></a>
+<FONT color="green">217</FONT>             *         (see explanation on top of the page), null will be returned.<a name="line.217"></a>
+<FONT color="green">218</FONT>             * @see #ASTRONOMICAL_ZENITH<a name="line.218"></a>
+<FONT color="green">219</FONT>             */<a name="line.219"></a>
+<FONT color="green">220</FONT>            public Date getBeginAstronomicalTwilight() {<a name="line.220"></a>
+<FONT color="green">221</FONT>                    return getSunriseOffsetByDegrees(ASTRONOMICAL_ZENITH);<a name="line.221"></a>
+<FONT color="green">222</FONT>            }<a name="line.222"></a>
+<FONT color="green">223</FONT>    <a name="line.223"></a>
+<FONT color="green">224</FONT>            /**<a name="line.224"></a>
+<FONT color="green">225</FONT>             * The getSunset method Returns a &lt;code&gt;Date&lt;/code&gt; representing the sunset<a name="line.225"></a>
+<FONT color="green">226</FONT>             * time. The zenith used for the calculation uses {@link #GEOMETRIC_ZENITH<a name="line.226"></a>
+<FONT color="green">227</FONT>             * geometric zenith} of 90&amp;deg;. This is adjusted by the<a name="line.227"></a>
+<FONT color="green">228</FONT>             * {@link AstronomicalCalculator} that adds approximately 50/60 of a degree<a name="line.228"></a>
+<FONT color="green">229</FONT>             * to account for 34 archminutes of refraction and 16 archminutes for the<a name="line.229"></a>
+<FONT color="green">230</FONT>             * sun's radius for a total of {@link AstronomicalCalculator#adjustZenith<a name="line.230"></a>
+<FONT color="green">231</FONT>             * 90.83333&amp;deg;}. See documentation for the specific implementation of the<a name="line.231"></a>
+<FONT color="green">232</FONT>             * {@link AstronomicalCalculator} that you are using. Note: In certain cases<a name="line.232"></a>
+<FONT color="green">233</FONT>             * the calculates sunset will occur before sunrise. This will typically<a name="line.233"></a>
+<FONT color="green">234</FONT>             * happen when a timezone other than the local timezone is used (calculating<a name="line.234"></a>
+<FONT color="green">235</FONT>             * Los Angeles sunset using a GMT timezone for example). In this case the<a name="line.235"></a>
+<FONT color="green">236</FONT>             * sunset date will be incremented to the following date.<a name="line.236"></a>
+<FONT color="green">237</FONT>             * <a name="line.237"></a>
+<FONT color="green">238</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sunset time. If the<a name="line.238"></a>
+<FONT color="green">239</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.239"></a>
+<FONT color="green">240</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.240"></a>
+<FONT color="green">241</FONT>             *         one where it does not set, a null will be returned. See detailed<a name="line.241"></a>
+<FONT color="green">242</FONT>             *         explanation on top of the page.<a name="line.242"></a>
+<FONT color="green">243</FONT>             * @see AstronomicalCalculator#adjustZenith<a name="line.243"></a>
+<FONT color="green">244</FONT>             */<a name="line.244"></a>
+<FONT color="green">245</FONT>            public Date getSunset() {<a name="line.245"></a>
+<FONT color="green">246</FONT>                    double sunset = getUTCSunset(GEOMETRIC_ZENITH);<a name="line.246"></a>
+<FONT color="green">247</FONT>                    if (Double.isNaN(sunset)) {<a name="line.247"></a>
+<FONT color="green">248</FONT>                            return null;<a name="line.248"></a>
+<FONT color="green">249</FONT>                    } else {<a name="line.249"></a>
+<FONT color="green">250</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset), getSunrise());<a name="line.250"></a>
+<FONT color="green">251</FONT>                    }<a name="line.251"></a>
+<FONT color="green">252</FONT>            }<a name="line.252"></a>
+<FONT color="green">253</FONT>    <a name="line.253"></a>
+<FONT color="green">254</FONT>            /**<a name="line.254"></a>
+<FONT color="green">255</FONT>             * A method that will roll the sunset time forward a day if sunset occurs<a name="line.255"></a>
+<FONT color="green">256</FONT>             * before sunrise. This will typically happen when a timezone other than the<a name="line.256"></a>
+<FONT color="green">257</FONT>             * local timezone is used (calculating Los Angeles sunset using a GMT<a name="line.257"></a>
+<FONT color="green">258</FONT>             * timezone for example). In this case the sunset date will be incremented<a name="line.258"></a>
+<FONT color="green">259</FONT>             * to the following date.<a name="line.259"></a>
+<FONT color="green">260</FONT>             * <a name="line.260"></a>
+<FONT color="green">261</FONT>             * @param sunset<a name="line.261"></a>
+<FONT color="green">262</FONT>             *            the sunset date to adjust if needed<a name="line.262"></a>
+<FONT color="green">263</FONT>             * @param sunrise<a name="line.263"></a>
+<FONT color="green">264</FONT>             *            the sunrise to compare to the sunset<a name="line.264"></a>
+<FONT color="green">265</FONT>             * @return the adjusted sunset date. If the calculation can't be computed<a name="line.265"></a>
+<FONT color="green">266</FONT>             *         such as in the Arctic Circle where there is at least one day a<a name="line.266"></a>
+<FONT color="green">267</FONT>             *         year where the sun does not rise, and one where it does not set,<a name="line.267"></a>
+<FONT color="green">268</FONT>             *         a null will be returned. See detailed explanation on top of the<a name="line.268"></a>
+<FONT color="green">269</FONT>             *         page.<a name="line.269"></a>
+<FONT color="green">270</FONT>             */<a name="line.270"></a>
+<FONT color="green">271</FONT>            private Date getAdjustedSunsetDate(Date sunset, Date sunrise) {<a name="line.271"></a>
+<FONT color="green">272</FONT>                    if (sunset != null &amp;&amp; sunrise != null &amp;&amp; sunrise.compareTo(sunset) &gt;= 0) {<a name="line.272"></a>
+<FONT color="green">273</FONT>                            Calendar clonedCalendar = (Calendar) getCalendar().clone();<a name="line.273"></a>
+<FONT color="green">274</FONT>                            clonedCalendar.setTime(sunset);<a name="line.274"></a>
+<FONT color="green">275</FONT>                            clonedCalendar.add(Calendar.DAY_OF_MONTH, 1);<a name="line.275"></a>
+<FONT color="green">276</FONT>                            return clonedCalendar.getTime();<a name="line.276"></a>
+<FONT color="green">277</FONT>                    } else {<a name="line.277"></a>
+<FONT color="green">278</FONT>                            return sunset;<a name="line.278"></a>
+<FONT color="green">279</FONT>                    }<a name="line.279"></a>
+<FONT color="green">280</FONT>            }<a name="line.280"></a>
+<FONT color="green">281</FONT>    <a name="line.281"></a>
+<FONT color="green">282</FONT>            /**<a name="line.282"></a>
+<FONT color="green">283</FONT>             * Method that returns the sunset without correction for elevation.<a name="line.283"></a>
+<FONT color="green">284</FONT>             * Non-sunrise and sunset calculations such as dawn and dusk, depend on the<a name="line.284"></a>
+<FONT color="green">285</FONT>             * amount of visible light, something that is not affected by elevation.<a name="line.285"></a>
+<FONT color="green">286</FONT>             * This method returns sunset calculated at sea level. This forms the base<a name="line.286"></a>
+<FONT color="green">287</FONT>             * for dusk calculations that are calculated as a dip below the horizon<a name="line.287"></a>
+<FONT color="green">288</FONT>             * after sunset.<a name="line.288"></a>
+<FONT color="green">289</FONT>             * <a name="line.289"></a>
+<FONT color="green">290</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing the exact sea-level sunset<a name="line.290"></a>
+<FONT color="green">291</FONT>             *         time. If the calculation can't be computed such as in the Arctic<a name="line.291"></a>
+<FONT color="green">292</FONT>             *         Circle where there is at least one day a year where the sun does<a name="line.292"></a>
+<FONT color="green">293</FONT>             *         not rise, and one where it does not set, a null will be returned.<a name="line.293"></a>
+<FONT color="green">294</FONT>             *         See detailed explanation on top of the page.<a name="line.294"></a>
+<FONT color="green">295</FONT>             * @see AstronomicalCalendar#getSunset<a name="line.295"></a>
+<FONT color="green">296</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.296"></a>
+<FONT color="green">297</FONT>             */<a name="line.297"></a>
+<FONT color="green">298</FONT>            public Date getSeaLevelSunset() {<a name="line.298"></a>
+<FONT color="green">299</FONT>                    double sunset = getUTCSeaLevelSunset(GEOMETRIC_ZENITH);<a name="line.299"></a>
+<FONT color="green">300</FONT>                    if (Double.isNaN(sunset)) {<a name="line.300"></a>
+<FONT color="green">301</FONT>                            return null;<a name="line.301"></a>
+<FONT color="green">302</FONT>                    } else {<a name="line.302"></a>
+<FONT color="green">303</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset),<a name="line.303"></a>
+<FONT color="green">304</FONT>                                            getSeaLevelSunrise());<a name="line.304"></a>
+<FONT color="green">305</FONT>                    }<a name="line.305"></a>
+<FONT color="green">306</FONT>            }<a name="line.306"></a>
+<FONT color="green">307</FONT>    <a name="line.307"></a>
+<FONT color="green">308</FONT>            /**<a name="line.308"></a>
+<FONT color="green">309</FONT>             * A method to return the the end of civil twilight using a zenith of<a name="line.309"></a>
+<FONT color="green">310</FONT>             * {@link #CIVIL_ZENITH 96&amp;deg;}.<a name="line.310"></a>
+<FONT color="green">311</FONT>             * <a name="line.311"></a>
+<FONT color="green">312</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the end of civil twilight using a zenith<a name="line.312"></a>
+<FONT color="green">313</FONT>             *         of {@link #CIVIL_ZENITH 96&amp;deg;}. If the calculation can't be<a name="line.313"></a>
+<FONT color="green">314</FONT>             *         computed (see explanation on top of the page), null will be<a name="line.314"></a>
+<FONT color="green">315</FONT>             *         returned.<a name="line.315"></a>
+<FONT color="green">316</FONT>             * @see #CIVIL_ZENITH<a name="line.316"></a>
+<FONT color="green">317</FONT>             */<a name="line.317"></a>
+<FONT color="green">318</FONT>            public Date getEndCivilTwilight() {<a name="line.318"></a>
+<FONT color="green">319</FONT>                    return getSunsetOffsetByDegrees(CIVIL_ZENITH);<a name="line.319"></a>
+<FONT color="green">320</FONT>            }<a name="line.320"></a>
+<FONT color="green">321</FONT>    <a name="line.321"></a>
+<FONT color="green">322</FONT>            /**<a name="line.322"></a>
+<FONT color="green">323</FONT>             * A method to return the the end of nautical twilight using a zenith of<a name="line.323"></a>
+<FONT color="green">324</FONT>             * {@link #NAUTICAL_ZENITH 102&amp;deg;}.<a name="line.324"></a>
+<FONT color="green">325</FONT>             * <a name="line.325"></a>
+<FONT color="green">326</FONT>             * @return The &lt;code&gt;Date&lt;/code&gt; of the end of nautical twilight using a<a name="line.326"></a>
+<FONT color="green">327</FONT>             *         zenith of {@link #NAUTICAL_ZENITH 102&amp;deg;}. If the calculation<a name="line.327"></a>
+<FONT color="green">328</FONT>             *         can't be computed (see explanation on top of the page), null will<a name="line.328"></a>
+<FONT color="green">329</FONT>             *         be returned.<a name="line.329"></a>
+<FONT color="green">330</FONT>             * @see #NAUTICAL_ZENITH<a name="line.330"></a>
+<FONT color="green">331</FONT>             */<a name="line.331"></a>
+<FONT color="green">332</FONT>            public Date getEndNauticalTwilight() {<a name="line.332"></a>
+<FONT color="green">333</FONT>                    return getSunsetOffsetByDegrees(NAUTICAL_ZENITH);<a name="line.333"></a>
+<FONT color="green">334</FONT>            }<a name="line.334"></a>
+<FONT color="green">335</FONT>    <a name="line.335"></a>
+<FONT color="green">336</FONT>            /**<a name="line.336"></a>
+<FONT color="green">337</FONT>             * A method to return the the end of astronomical twilight using a zenith of<a name="line.337"></a>
+<FONT color="green">338</FONT>             * {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}.<a name="line.338"></a>
+<FONT color="green">339</FONT>             * <a name="line.339"></a>
+<FONT color="green">340</FONT>             * @return The The &lt;code&gt;Date&lt;/code&gt; of the end of astronomical twilight<a name="line.340"></a>
+<FONT color="green">341</FONT>             *         using a zenith of {@link #ASTRONOMICAL_ZENITH 108&amp;deg;}. If the<a name="line.341"></a>
+<FONT color="green">342</FONT>             *         calculation can't be computed (see explanation on top of the<a name="line.342"></a>
+<FONT color="green">343</FONT>             *         page), null will be returned.<a name="line.343"></a>
+<FONT color="green">344</FONT>             * @see #ASTRONOMICAL_ZENITH<a name="line.344"></a>
+<FONT color="green">345</FONT>             */<a name="line.345"></a>
+<FONT color="green">346</FONT>            public Date getEndAstronomicalTwilight() {<a name="line.346"></a>
+<FONT color="green">347</FONT>                    return getSunsetOffsetByDegrees(ASTRONOMICAL_ZENITH);<a name="line.347"></a>
+<FONT color="green">348</FONT>            }<a name="line.348"></a>
+<FONT color="green">349</FONT>    <a name="line.349"></a>
+<FONT color="green">350</FONT>            /**<a name="line.350"></a>
+<FONT color="green">351</FONT>             * Utility method that returns a date offset by the offset time passed in.<a name="line.351"></a>
+<FONT color="green">352</FONT>             * This method casts the offset as a &lt;code&gt;long&lt;/code&gt; and calls<a name="line.352"></a>
+<FONT color="green">353</FONT>             * {@link #getTimeOffset(Date, long)}.<a name="line.353"></a>
+<FONT color="green">354</FONT>             * <a name="line.354"></a>
+<FONT color="green">355</FONT>             * @param time<a name="line.355"></a>
+<FONT color="green">356</FONT>             *            the start time<a name="line.356"></a>
+<FONT color="green">357</FONT>             * @param offset<a name="line.357"></a>
+<FONT color="green">358</FONT>             *            the offset in milliseconds to add to the time<a name="line.358"></a>
+<FONT color="green">359</FONT>             * @return the {@link java.util.Date}with the offset added to it<a name="line.359"></a>
+<FONT color="green">360</FONT>             */<a name="line.360"></a>
+<FONT color="green">361</FONT>            public Date getTimeOffset(Date time, double offset) {<a name="line.361"></a>
+<FONT color="green">362</FONT>                    return getTimeOffset(time, (long) offset);<a name="line.362"></a>
 <FONT color="green">363</FONT>            }<a name="line.363"></a>
 <FONT color="green">364</FONT>    <a name="line.364"></a>
 <FONT color="green">365</FONT>            /**<a name="line.365"></a>
-<FONT color="green">366</FONT>             * A utility method to return the time of an offset by degrees below or<a name="line.366"></a>
-<FONT color="green">367</FONT>             * above the horizon of {@link #getSunrise() sunrise}.<a name="line.367"></a>
-<FONT color="green">368</FONT>             * <a name="line.368"></a>
-<FONT color="green">369</FONT>             * @param offsetZenith<a name="line.369"></a>
-<FONT color="green">370</FONT>             *            the degrees before {@link #getSunrise()} to use in the<a name="line.370"></a>
-<FONT color="green">371</FONT>             *            calculation. For time after sunrise use negative numbers.<a name="line.371"></a>
-<FONT color="green">372</FONT>             * @return The {@link java.util.Date} of the offset after (or before)<a name="line.372"></a>
-<FONT color="green">373</FONT>             *         {@link #getSunrise()}. If the calculation can not be computed<a name="line.373"></a>
-<FONT color="green">374</FONT>             *         null will be returned.<a name="line.374"></a>
-<FONT color="green">375</FONT>             */<a name="line.375"></a>
-<FONT color="green">376</FONT>            public Date getSunriseOffsetByDegrees(double offsetZenith) {<a name="line.376"></a>
-<FONT color="green">377</FONT>                    double alos = getUTCSunrise(offsetZenith);<a name="line.377"></a>
-<FONT color="green">378</FONT>                    if (Double.isNaN(alos)) {<a name="line.378"></a>
-<FONT color="green">379</FONT>                            return null;<a name="line.379"></a>
-<FONT color="green">380</FONT>                    } else {<a name="line.380"></a>
-<FONT color="green">381</FONT>                            return getDateFromTime(alos);<a name="line.381"></a>
-<FONT color="green">382</FONT>                    }<a name="line.382"></a>
-<FONT color="green">383</FONT>            }<a name="line.383"></a>
-<FONT color="green">384</FONT>    <a name="line.384"></a>
-<FONT color="green">385</FONT>            /**<a name="line.385"></a>
-<FONT color="green">386</FONT>             * A utility method to return the time of an offset by degrees below or<a name="line.386"></a>
-<FONT color="green">387</FONT>             * above the horizon of {@link #getSunset() sunset}.<a name="line.387"></a>
-<FONT color="green">388</FONT>             * <a name="line.388"></a>
-<FONT color="green">389</FONT>             * @param offsetZenith<a name="line.389"></a>
-<FONT color="green">390</FONT>             *            the degrees after {@link #getSunset()} to use in the<a name="line.390"></a>
-<FONT color="green">391</FONT>             *            calculation. For time before sunset use negative numbers.<a name="line.391"></a>
-<FONT color="green">392</FONT>             * @return The {@link java.util.Date}of the offset after (or before)<a name="line.392"></a>
-<FONT color="green">393</FONT>             *         {@link #getSunset()}. If the calculation can not be computed<a name="line.393"></a>
-<FONT color="green">394</FONT>             *         null will be returned.<a name="line.394"></a>
+<FONT color="green">366</FONT>             * A utility method to return a date offset by the offset time passed in.<a name="line.366"></a>
+<FONT color="green">367</FONT>             * <a name="line.367"></a>
+<FONT color="green">368</FONT>             * @param time<a name="line.368"></a>
+<FONT color="green">369</FONT>             *            the start time<a name="line.369"></a>
+<FONT color="green">370</FONT>             * @param offset<a name="line.370"></a>
+<FONT color="green">371</FONT>             *            the offset in milliseconds to add to the time.<a name="line.371"></a>
+<FONT color="green">372</FONT>             * @return the {@link java.util.Date} with the offset in milliseconds added<a name="line.372"></a>
+<FONT color="green">373</FONT>             *         to it<a name="line.373"></a>
+<FONT color="green">374</FONT>             */<a name="line.374"></a>
+<FONT color="green">375</FONT>            public Date getTimeOffset(Date time, long offset) {<a name="line.375"></a>
+<FONT color="green">376</FONT>                    if (time == null || offset == Long.MIN_VALUE) {<a name="line.376"></a>
+<FONT color="green">377</FONT>                            return null;<a name="line.377"></a>
+<FONT color="green">378</FONT>                    }<a name="line.378"></a>
+<FONT color="green">379</FONT>                    return new Date(time.getTime() + offset);<a name="line.379"></a>
+<FONT color="green">380</FONT>            }<a name="line.380"></a>
+<FONT color="green">381</FONT>    <a name="line.381"></a>
+<FONT color="green">382</FONT>            /**<a name="line.382"></a>
+<FONT color="green">383</FONT>             * A utility method to return the time of an offset by degrees below or<a name="line.383"></a>
+<FONT color="green">384</FONT>             * above the horizon of {@link #getSunrise() sunrise}.<a name="line.384"></a>
+<FONT color="green">385</FONT>             * <a name="line.385"></a>
+<FONT color="green">386</FONT>             * @param offsetZenith<a name="line.386"></a>
+<FONT color="green">387</FONT>             *            the degrees before {@link #getSunrise()} to use in the<a name="line.387"></a>
+<FONT color="green">388</FONT>             *            calculation. For time after sunrise use negative numbers.<a name="line.388"></a>
+<FONT color="green">389</FONT>             * @return The {@link java.util.Date} of the offset after (or before)<a name="line.389"></a>
+<FONT color="green">390</FONT>             *         {@link #getSunrise()}. If the calculation can't be computed such<a name="line.390"></a>
+<FONT color="green">391</FONT>             *         as in the Arctic Circle where there is at least one day a year<a name="line.391"></a>
+<FONT color="green">392</FONT>             *         where the sun does not rise, and one where it does not set, a<a name="line.392"></a>
+<FONT color="green">393</FONT>             *         null will be returned. See detailed explanation on top of the<a name="line.393"></a>
+<FONT color="green">394</FONT>             *         page.<a name="line.394"></a>
 <FONT color="green">395</FONT>             */<a name="line.395"></a>
-<FONT color="green">396</FONT>            public Date getSunsetOffsetByDegrees(double offsetZenith) {<a name="line.396"></a>
-<FONT color="green">397</FONT>                    double sunset = getUTCSunset(offsetZenith);<a name="line.397"></a>
-<FONT color="green">398</FONT>                    if (Double.isNaN(sunset)) {<a name="line.398"></a>
+<FONT color="green">396</FONT>            public Date getSunriseOffsetByDegrees(double offsetZenith) {<a name="line.396"></a>
+<FONT color="green">397</FONT>                    double alos = getUTCSunrise(offsetZenith);<a name="line.397"></a>
+<FONT color="green">398</FONT>                    if (Double.isNaN(alos)) {<a name="line.398"></a>
 <FONT color="green">399</FONT>                            return null;<a name="line.399"></a>
 <FONT color="green">400</FONT>                    } else {<a name="line.400"></a>
-<FONT color="green">401</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset),<a name="line.401"></a>
-<FONT color="green">402</FONT>                                            getSunriseOffsetByDegrees(offsetZenith));<a name="line.402"></a>
-<FONT color="green">403</FONT>                    }<a name="line.403"></a>
-<FONT color="green">404</FONT>            }<a name="line.404"></a>
-<FONT color="green">405</FONT>    <a name="line.405"></a>
-<FONT color="green">406</FONT>            /**<a name="line.406"></a>
-<FONT color="green">407</FONT>             * Default constructor will set a default {@link GeoLocation#GeoLocation()},<a name="line.407"></a>
-<FONT color="green">408</FONT>             * a default<a name="line.408"></a>
-<FONT color="green">409</FONT>             * {@link AstronomicalCalculator#getDefault() AstronomicalCalculator} and<a name="line.409"></a>
-<FONT color="green">410</FONT>             * default the calendar to the current date.<a name="line.410"></a>
-<FONT color="green">411</FONT>             */<a name="line.411"></a>
-<FONT color="green">412</FONT>            public AstronomicalCalendar() {<a name="line.412"></a>
-<FONT color="green">413</FONT>                    this(new GeoLocation());<a name="line.413"></a>
-<FONT color="green">414</FONT>            }<a name="line.414"></a>
-<FONT color="green">415</FONT>    <a name="line.415"></a>
-<FONT color="green">416</FONT>            /**<a name="line.416"></a>
-<FONT color="green">417</FONT>             * A constructor that takes in as a parameter geolocation information<a name="line.417"></a>
-<FONT color="green">418</FONT>             * <a name="line.418"></a>
-<FONT color="green">419</FONT>             * @param geoLocation<a name="line.419"></a>
-<FONT color="green">420</FONT>             *            The location information used for astronomical calculating sun<a name="line.420"></a>
-<FONT color="green">421</FONT>             *            times.<a name="line.421"></a>
-<FONT color="green">422</FONT>             */<a name="line.422"></a>
-<FONT color="green">423</FONT>            public AstronomicalCalendar(GeoLocation geoLocation) {<a name="line.423"></a>
-<FONT color="green">424</FONT>                    setCalendar(Calendar.getInstance(geoLocation.getTimeZone()));<a name="line.424"></a>
-<FONT color="green">425</FONT>                    setGeoLocation(geoLocation);// duplicate call<a name="line.425"></a>
-<FONT color="green">426</FONT>                    setAstronomicalCalculator(AstronomicalCalculator.getDefault());<a name="line.426"></a>
+<FONT color="green">401</FONT>                            return getDateFromTime(alos);<a name="line.401"></a>
+<FONT color="green">402</FONT>                    }<a name="line.402"></a>
+<FONT color="green">403</FONT>            }<a name="line.403"></a>
+<FONT color="green">404</FONT>    <a name="line.404"></a>
+<FONT color="green">405</FONT>            /**<a name="line.405"></a>
+<FONT color="green">406</FONT>             * A utility method to return the time of an offset by degrees below or<a name="line.406"></a>
+<FONT color="green">407</FONT>             * above the horizon of {@link #getSunset() sunset}.<a name="line.407"></a>
+<FONT color="green">408</FONT>             * <a name="line.408"></a>
+<FONT color="green">409</FONT>             * @param offsetZenith<a name="line.409"></a>
+<FONT color="green">410</FONT>             *            the degrees after {@link #getSunset()} to use in the<a name="line.410"></a>
+<FONT color="green">411</FONT>             *            calculation. For time before sunset use negative numbers.<a name="line.411"></a>
+<FONT color="green">412</FONT>             * @return The {@link java.util.Date}of the offset after (or before)<a name="line.412"></a>
+<FONT color="green">413</FONT>             *         {@link #getSunset()}. If the calculation can't be computed such<a name="line.413"></a>
+<FONT color="green">414</FONT>             *         as in the Arctic Circle where there is at least one day a year<a name="line.414"></a>
+<FONT color="green">415</FONT>             *         where the sun does not rise, and one where it does not set, a<a name="line.415"></a>
+<FONT color="green">416</FONT>             *         null will be returned. See detailed explanation on top of the<a name="line.416"></a>
+<FONT color="green">417</FONT>             *         page.<a name="line.417"></a>
+<FONT color="green">418</FONT>             */<a name="line.418"></a>
+<FONT color="green">419</FONT>            public Date getSunsetOffsetByDegrees(double offsetZenith) {<a name="line.419"></a>
+<FONT color="green">420</FONT>                    double sunset = getUTCSunset(offsetZenith);<a name="line.420"></a>
+<FONT color="green">421</FONT>                    if (Double.isNaN(sunset)) {<a name="line.421"></a>
+<FONT color="green">422</FONT>                            return null;<a name="line.422"></a>
+<FONT color="green">423</FONT>                    } else {<a name="line.423"></a>
+<FONT color="green">424</FONT>                            return getAdjustedSunsetDate(getDateFromTime(sunset),<a name="line.424"></a>
+<FONT color="green">425</FONT>                                            getSunriseOffsetByDegrees(offsetZenith));<a name="line.425"></a>
+<FONT color="green">426</FONT>                    }<a name="line.426"></a>
 <FONT color="green">427</FONT>            }<a name="line.427"></a>
 <FONT color="green">428</FONT>    <a name="line.428"></a>
 <FONT color="green">429</FONT>            /**<a name="line.429"></a>
-<FONT color="green">430</FONT>             * Method that returns the sunrise in UTC time without correction for time<a name="line.430"></a>
-<FONT color="green">431</FONT>             * zone offset from GMT and without using daylight savings time.<a name="line.431"></a>
-<FONT color="green">432</FONT>             * <a name="line.432"></a>
-<FONT color="green">433</FONT>             * @param zenith<a name="line.433"></a>
-<FONT color="green">434</FONT>             *            the degrees below the horizon. For time after sunrise use<a name="line.434"></a>
-<FONT color="green">435</FONT>             *            negative numbers.<a name="line.435"></a>
-<FONT color="green">436</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.436"></a>
-<FONT color="green">437</FONT>             *         calculation can not be computed {@link Double#NaN} will be<a name="line.437"></a>
-<FONT color="green">438</FONT>             *         returned.<a name="line.438"></a>
-<FONT color="green">439</FONT>             */<a name="line.439"></a>
-<FONT color="green">440</FONT>            public double getUTCSunrise(double zenith) {<a name="line.440"></a>
-<FONT color="green">441</FONT>                    return getAstronomicalCalculator().getUTCSunrise(this, zenith, true);<a name="line.441"></a>
-<FONT color="green">442</FONT>            }<a name="line.442"></a>
-<FONT color="green">443</FONT>    <a name="line.443"></a>
-<FONT color="green">444</FONT>            /**<a name="line.444"></a>
-<FONT color="green">445</FONT>             * Method that returns the sunrise in UTC time without correction for time<a name="line.445"></a>
-<FONT color="green">446</FONT>             * zone offset from GMT and without using daylight savings time. Non-sunrise<a name="line.446"></a>
-<FONT color="green">447</FONT>             * and sunset calculations such as dawn and dusk, depend on the amount of<a name="line.447"></a>
-<FONT color="green">448</FONT>             * visible light, something that is not affected by elevation. This method<a name="line.448"></a>
-<FONT color="green">449</FONT>             * returns UTC sunrise calculated at sea level. This forms the base for dawn<a name="line.449"></a>
-<FONT color="green">450</FONT>             * calculations that are calculated as a dip below the horizon before<a name="line.450"></a>
-<FONT color="green">451</FONT>             * sunrise.<a name="line.451"></a>
-<FONT color="green">452</FONT>             * <a name="line.452"></a>
-<FONT color="green">453</FONT>             * @param zenith<a name="line.453"></a>
-<FONT color="green">454</FONT>             *            the degrees below the horizon. For time after sunrise use<a name="line.454"></a>
-<FONT color="green">455</FONT>             *            negative numbers.<a name="line.455"></a>
-<FONT color="green">456</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.456"></a>
-<FONT color="green">457</FONT>             *         calculation can not be computed {@link Double#NaN} will be<a name="line.457"></a>
-<FONT color="green">458</FONT>             *         returned.<a name="line.458"></a>
-<FONT color="green">459</FONT>             * @see AstronomicalCalendar#getUTCSunrise<a name="line.459"></a>
-<FONT color="green">460</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.460"></a>
-<FONT color="green">461</FONT>             */<a name="line.461"></a>
-<FONT color="green">462</FONT>            public double getUTCSeaLevelSunrise(double zenith) {<a name="line.462"></a>
-<FONT color="green">463</FONT>                    return getAstronomicalCalculator().getUTCSunrise(this, zenith, false);<a name="line.463"></a>
-<FONT color="green">464</FONT>            }<a name="line.464"></a>
-<FONT color="green">465</FONT>    <a name="line.465"></a>
-<FONT color="green">466</FONT>            /**<a name="line.466"></a>
-<FONT color="green">467</FONT>             * Method that returns the sunset in UTC time without correction for time<a name="line.467"></a>
-<FONT color="green">468</FONT>             * zone offset from GMT and without using daylight savings time.<a name="line.468"></a>
-<FONT color="green">469</FONT>             * <a name="line.469"></a>
-<FONT color="green">470</FONT>             * @param zenith<a name="line.470"></a>
-<FONT color="green">471</FONT>             *            the degrees below the horizon. For time after before sunset<a name="line.471"></a>
-<FONT color="green">472</FONT>             *            use negative numbers.<a name="line.472"></a>
-<FONT color="green">473</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.473"></a>
-<FONT color="green">474</FONT>             *         calculation can not be computed {@link Double#NaN} will be<a name="line.474"></a>
-<FONT color="green">475</FONT>             *         returned.<a name="line.475"></a>
-<FONT color="green">476</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.476"></a>
-<FONT color="green">477</FONT>             */<a name="line.477"></a>
-<FONT color="green">478</FONT>            public double getUTCSunset(double zenith) {<a name="line.478"></a>
-<FONT color="green">479</FONT>                    return getAstronomicalCalculator().getUTCSunset(this, zenith, true);<a name="line.479"></a>
-<FONT color="green">480</FONT>            }<a name="line.480"></a>
-<FONT color="green">481</FONT>    <a name="line.481"></a>
-<FONT color="green">482</FONT>            /**<a name="line.482"></a>
-<FONT color="green">483</FONT>             * Method that returns the sunset in UTC time without correction for<a name="line.483"></a>
-<FONT color="green">484</FONT>             * elevation, time zone offset from GMT and without using daylight savings<a name="line.484"></a>
-<FONT color="green">485</FONT>             * time. Non-sunrise and sunset calculations such as dawn and dusk, depend<a name="line.485"></a>
-<FONT color="green">486</FONT>             * on the amount of visible light, something that is not affected by<a name="line.486"></a>
-<FONT color="green">487</FONT>             * elevation. This method returns UTC sunset calculated at sea level. This<a name="line.487"></a>
-<FONT color="green">488</FONT>             * forms the base for dusk calculations that are calculated as a dip below<a name="line.488"></a>
-<FONT color="green">489</FONT>             * the horizon after sunset.<a name="line.489"></a>
-<FONT color="green">490</FONT>             * <a name="line.490"></a>
-<FONT color="green">491</FONT>             * @param zenith<a name="line.491"></a>
-<FONT color="green">492</FONT>             *            the degrees below the horizon. For time before sunset use<a name="line.492"></a>
-<FONT color="green">493</FONT>             *            negative numbers.<a name="line.493"></a>
-<FONT color="green">494</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.494"></a>
-<FONT color="green">495</FONT>             *         calculation can not be computed {@link Double#NaN} will be<a name="line.495"></a>
-<FONT color="green">496</FONT>             *         returned.<a name="line.496"></a>
-<FONT color="green">497</FONT>             * @see AstronomicalCalendar#getUTCSunset<a name="line.497"></a>
-<FONT color="green">498</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunrise<a name="line.498"></a>
-<FONT color="green">499</FONT>             */<a name="line.499"></a>
-<FONT color="green">500</FONT>            public double getUTCSeaLevelSunset(double zenith) {<a name="line.500"></a>
-<FONT color="green">501</FONT>                    return getAstronomicalCalculator().getUTCSunset(this, zenith, false);<a name="line.501"></a>
-<FONT color="green">502</FONT>            }<a name="line.502"></a>
-<FONT color="green">503</FONT>    <a name="line.503"></a>
-<FONT color="green">504</FONT>            /**<a name="line.504"></a>
-<FONT color="green">505</FONT>             * A method that adds time zone offset and daylight savings time to the raw<a name="line.505"></a>
-<FONT color="green">506</FONT>             * UTC time.<a name="line.506"></a>
-<FONT color="green">507</FONT>             * <a name="line.507"></a>
-<FONT color="green">508</FONT>             * @param time<a name="line.508"></a>
-<FONT color="green">509</FONT>             *            The UTC time to be adjusted.<a name="line.509"></a>
-<FONT color="green">510</FONT>             * @return The time adjusted for the time zone offset and daylight savings<a name="line.510"></a>
-<FONT color="green">511</FONT>             *         time.<a name="line.511"></a>
-<FONT color="green">512</FONT>             */<a name="line.512"></a>
-<FONT color="green">513</FONT>            private double getOffsetTime(double time) {<a name="line.513"></a>
-<FONT color="green">514</FONT>                    boolean dst = getCalendar().getTimeZone().inDaylightTime(<a name="line.514"></a>
-<FONT color="green">515</FONT>                                    getCalendar().getTime());<a name="line.515"></a>
-<FONT color="green">516</FONT>                    double dstOffset = 0;<a name="line.516"></a>
-<FONT color="green">517</FONT>                    // be nice to Newfies and use a double<a name="line.517"></a>
-<FONT color="green">518</FONT>                    double gmtOffset = getCalendar().getTimeZone().getRawOffset()<a name="line.518"></a>
-<FONT color="green">519</FONT>                                    / (60 * MINUTE_MILLIS);<a name="line.519"></a>
-<FONT color="green">520</FONT>                    if (dst) {<a name="line.520"></a>
-<FONT color="green">521</FONT>                            dstOffset = getCalendar().getTimeZone().getDSTSavings()<a name="line.521"></a>
-<FONT color="green">522</FONT>                                            / (60 * MINUTE_MILLIS);<a name="line.522"></a>
-<FONT color="green">523</FONT>                    }<a name="line.523"></a>
-<FONT color="green">524</FONT>                    return time + gmtOffset + dstOffset;<a name="line.524"></a>
-<FONT color="green">525</FONT>            }<a name="line.525"></a>
-<FONT color="green">526</FONT>    <a name="line.526"></a>
-<FONT color="green">527</FONT>            /**<a name="line.527"></a>
-<FONT color="green">528</FONT>             * Method to return a temporal (solar) hour. The day from sunrise to sunset<a name="line.528"></a>
-<FONT color="green">529</FONT>             * is split into 12 equal parts with each one being a temporal hour.<a name="line.529"></a>
-<FONT color="green">530</FONT>             * <a name="line.530"></a>
-<FONT color="green">531</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of a temporal hour. If<a name="line.531"></a>
-<FONT color="green">532</FONT>             *         the calculation can not be computed {@link Long#MIN_VALUE} will<a name="line.532"></a>
-<FONT color="green">533</FONT>             *         be returned.<a name="line.533"></a>
-<FONT color="green">534</FONT>             */<a name="line.534"></a>
-<FONT color="green">535</FONT>            public long getTemporalHour() {<a name="line.535"></a>
-<FONT color="green">536</FONT>                    return getTemporalHour(getSunrise(), getSunset());<a name="line.536"></a>
-<FONT color="green">537</FONT>            }<a name="line.537"></a>
-<FONT color="green">538</FONT>    <a name="line.538"></a>
-<FONT color="green">539</FONT>            /**<a name="line.539"></a>
-<FONT color="green">540</FONT>             * Utility method that will allow the calculation of a temporal (solar) hour<a name="line.540"></a>
-<FONT color="green">541</FONT>             * based on the sunrise and sunset passed to this method.<a name="line.541"></a>
-<FONT color="green">542</FONT>             * <a name="line.542"></a>
-<FONT color="green">543</FONT>             * @param sunrise<a name="line.543"></a>
-<FONT color="green">544</FONT>             *            The start of the day.<a name="line.544"></a>
-<FONT color="green">545</FONT>             * @param sunset<a name="line.545"></a>
-<FONT color="green">546</FONT>             *            The end of the day.<a name="line.546"></a>
-<FONT color="green">547</FONT>             * @see #getTemporalHour()<a name="line.547"></a>
-<FONT color="green">548</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of the temporal hour.<a name="line.548"></a>
-<FONT color="green">549</FONT>             *         If the calculation can not be computed {@link Long#MIN_VALUE}<a name="line.549"></a>
-<FONT color="green">550</FONT>             *         will be returned.<a name="line.550"></a>
-<FONT color="green">551</FONT>             */<a name="line.551"></a>
-<FONT color="green">552</FONT>            public long getTemporalHour(Date sunrise, Date sunset) {<a name="line.552"></a>
-<FONT color="green">553</FONT>                    if (sunrise == null || sunset == null) {<a name="line.553"></a>
-<FONT color="green">554</FONT>                            return Long.MIN_VALUE;<a name="line.554"></a>
-<FONT color="green">555</FONT>                    }<a name="line.555"></a>
-<FONT color="green">556</FONT>                    return (sunset.getTime() - sunrise.getTime()) / 12;<a name="line.556"></a>
-<FONT color="green">557</FONT>            }<a name="line.557"></a>
-<FONT color="green">558</FONT>    <a name="line.558"></a>
-<FONT color="green">559</FONT>            /**<a name="line.559"></a>
-<FONT color="green">560</FONT>             * A method that returns sundial or solar noon. It occurs when the Sun is &lt;a<a name="line.560"></a>
-<FONT color="green">561</FONT>             * href="http://en.wikipedia.org/wiki/Transit_%28astronomy%29"&gt;transitting&lt;/a&gt;<a name="line.561"></a>
-<FONT color="green">562</FONT>             * the &lt;a<a name="line.562"></a>
-<FONT color="green">563</FONT>             * href="http://en.wikipedia.org/wiki/Meridian_%28astronomy%29"&gt;celestial<a name="line.563"></a>
-<FONT color="green">564</FONT>             * meridian&lt;/a&gt;. In this class it is calculated as halfway between sunrise<a name="line.564"></a>
-<FONT color="green">565</FONT>             * and sunset, which can be slightly off the real transit time due to the<a name="line.565"></a>
-<FONT color="green">566</FONT>             * lengthening or shortening day.<a name="line.566"></a>
-<FONT color="green">567</FONT>             * <a name="line.567"></a>
-<FONT color="green">568</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing Sun's transit. If the<a name="line.568"></a>
-<FONT color="green">569</FONT>             *         calculation can not be computed null will be returned.<a name="line.569"></a>
-<FONT color="green">570</FONT>             */<a name="line.570"></a>
-<FONT color="green">571</FONT>            public Date getSunTransit() {<a name="line.571"></a>
-<FONT color="green">572</FONT>                    return getTimeOffset(getSunrise(), getTemporalHour() * 6);<a name="line.572"></a>
-<FONT color="green">573</FONT>            }<a name="line.573"></a>
-<FONT color="green">574</FONT>    <a name="line.574"></a>
-<FONT color="green">575</FONT>            /**<a name="line.575"></a>
-<FONT color="green">576</FONT>             * A method that returns a &lt;code&gt;Date&lt;/code&gt; from the time passed in<a name="line.576"></a>
-<FONT color="green">577</FONT>             * <a name="line.577"></a>
-<FONT color="green">578</FONT>             * @param time<a name="line.578"></a>
-<FONT color="green">579</FONT>             *            The time to be set as the time for the &lt;code&gt;Date&lt;/code&gt;.<a name="line.579"></a>
-<FONT color="green">580</FONT>             *            The time expected is in the format: 18.75 for 6:45:00 PM<a name="line.580"></a>
-<FONT color="green">581</FONT>             * @return The Date.<a name="line.581"></a>
-<FONT color="green">582</FONT>             */<a name="line.582"></a>
-<FONT color="green">583</FONT>            protected Date getDateFromTime(double time) {<a name="line.583"></a>
-<FONT color="green">584</FONT>                    if (Double.isNaN(time)) {<a name="line.584"></a>
-<FONT color="green">585</FONT>                            return null;<a name="line.585"></a>
-<FONT color="green">586</FONT>                    }<a name="line.586"></a>
-<FONT color="green">587</FONT>                    time = getOffsetTime(time);<a name="line.587"></a>
-<FONT color="green">588</FONT>                    time = (time + 240) % 24; // the calculators sometimes return a double<a name="line.588"></a>
-<FONT color="green">589</FONT>                    // that is negative or slightly greater than 24<a name="line.589"></a>
-<FONT color="green">590</FONT>                    Calendar cal = new GregorianCalendar();<a name="line.590"></a>
-<FONT color="green">591</FONT>                    cal.clear();<a name="line.591"></a>
-<FONT color="green">592</FONT>                    cal.set(Calendar.YEAR, getCalendar().get(Calendar.YEAR));<a name="line.592"></a>
-<FONT color="green">593</FONT>                    cal.set(Calendar.MONTH, getCalendar().get(Calendar.MONTH));<a name="line.593"></a>
-<FONT color="green">594</FONT>                    cal<a name="line.594"></a>
-<FONT color="green">595</FONT>                                    .set(Calendar.DAY_OF_MONTH, getCalendar().get(<a name="line.595"></a>
-<FONT color="green">596</FONT>                                                    Calendar.DAY_OF_MONTH));<a name="line.596"></a>
-<FONT color="green">597</FONT>    <a name="line.597"></a>
-<FONT color="green">598</FONT>                    int hours = (int) time; // cut off minutes<a name="line.598"></a>
-<FONT color="green">599</FONT>    <a name="line.599"></a>
-<FONT color="green">600</FONT>                    time -= hours;<a name="line.600"></a>
-<FONT color="green">601</FONT>                    int minutes = (int) (time *= 60);<a name="line.601"></a>
-<FONT color="green">602</FONT>                    time -= minutes;<a name="line.602"></a>
-<FONT color="green">603</FONT>                    int seconds = (int) (time *= 60);<a name="line.603"></a>
-<FONT color="green">604</FONT>                    time -= seconds; // milliseconds<a name="line.604"></a>
-<FONT color="green">605</FONT>    <a name="line.605"></a>
-<FONT color="green">606</FONT>                    cal.set(Calendar.HOUR_OF_DAY, hours);<a name="line.606"></a>
-<FONT color="green">607</FONT>                    cal.set(Calendar.MINUTE, minutes);<a name="line.607"></a>
-<FONT color="green">608</FONT>                    cal.set(Calendar.SECOND, seconds);<a name="line.608"></a>
-<FONT color="green">609</FONT>                    cal.set(Calendar.MILLISECOND, (int) (time * 1000));<a name="line.609"></a>
-<FONT color="green">610</FONT>                    return cal.getTime();<a name="line.610"></a>
-<FONT color="green">611</FONT>            }<a name="line.611"></a>
-<FONT color="green">612</FONT>    <a name="line.612"></a>
-<FONT color="green">613</FONT>            /**<a name="line.613"></a>
-<FONT color="green">614</FONT>             * Will return the dip below the horizon before sunrise that matches the<a name="line.614"></a>
-<FONT color="green">615</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.615"></a>
-<FONT color="green">616</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.616"></a>
-<FONT color="green">617</FONT>             * 16.1&amp;deg;<a name="line.617"></a>
-<FONT color="green">618</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.618"></a>
-<FONT color="green">619</FONT>             * TODO: Improve efficiency.<a name="line.619"></a>
-<FONT color="green">620</FONT>             * @param minutes<a name="line.620"></a>
-<FONT color="green">621</FONT>             *            offset<a name="line.621"></a>
-<FONT color="green">622</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.622"></a>
-<FONT color="green">623</FONT>             *         equinox in Jerusalem at sea level.<a name="line.623"></a>
-<FONT color="green">624</FONT>             */<a name="line.624"></a>
-<FONT color="green">625</FONT>            public double getSunriseSolarDipFromOffset(double minutes) {<a name="line.625"></a>
-<FONT color="green">626</FONT>                    Date offsetByDegrees = getSeaLevelSunrise();<a name="line.626"></a>
-<FONT color="green">627</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunrise(), -(minutes * MINUTE_MILLIS));<a name="line.627"></a>
-<FONT color="green">628</FONT>    <a name="line.628"></a>
-<FONT color="green">629</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.629"></a>
-<FONT color="green">630</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.630"></a>
-<FONT color="green">631</FONT>                    while (offsetByDegrees == null<a name="line.631"></a>
-<FONT color="green">632</FONT>                                    || offsetByDegrees.getTime() &gt; offsetByTime.getTime()) {<a name="line.632"></a>
-<FONT color="green">633</FONT>                            degrees = degrees.add(incrementor);<a name="line.633"></a>
-<FONT color="green">634</FONT>                            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH    + degrees.doubleValue());<a name="line.634"></a>
-<FONT color="green">635</FONT>                    }<a name="line.635"></a>
-<FONT color="green">636</FONT>                    return degrees.doubleValue();<a name="line.636"></a>
-<FONT color="green">637</FONT>            }<a name="line.637"></a>
-<FONT color="green">638</FONT>            <a name="line.638"></a>
-<FONT color="green">639</FONT>            /**<a name="line.639"></a>
-<FONT color="green">640</FONT>             * Will return the dip below the horizon after sunset that matches the<a name="line.640"></a>
-<FONT color="green">641</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.641"></a>
-<FONT color="green">642</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.642"></a>
-<FONT color="green">643</FONT>             * 16.1&amp;deg;<a name="line.643"></a>
-<FONT color="green">644</FONT>             * Please note that this method is very slow and inefficient and should NEVER be used in a loop.<a name="line.644"></a>
-<FONT color="green">645</FONT>             * &lt;em&gt;&lt;b&gt;TODO:&lt;/b&gt;&lt;/em&gt; Improve efficiency.<a name="line.645"></a>
-<FONT color="green">646</FONT>             * @param minutes offset<a name="line.646"></a>
-<FONT color="green">647</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.647"></a>
-<FONT color="green">648</FONT>             *         equinox in Jerusalem at sea level.<a name="line.648"></a>
-<FONT color="green">649</FONT>             * @see #getSunriseSolarDipFromOffset(double)<a name="line.649"></a>
-<FONT color="green">650</FONT>             */<a name="line.650"></a>
-<FONT color="green">651</FONT>            public double getSunsetSolarDipFromOffset(double minutes) {<a name="line.651"></a>
-<FONT color="green">652</FONT>                    Date offsetByDegrees = getSeaLevelSunset();<a name="line.652"></a>
-<FONT color="green">653</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunset(), minutes * MINUTE_MILLIS);<a name="line.653"></a>
-<FONT color="green">654</FONT>    <a name="line.654"></a>
-<FONT color="green">655</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.655"></a>
-<FONT color="green">656</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.656"></a>
-<FONT color="green">657</FONT>                    while (offsetByDegrees == null<a name="line.657"></a>
-<FONT color="green">658</FONT>                                    || offsetByDegrees.getTime() &lt; offsetByTime.getTime()) {<a name="line.658"></a>
-<FONT color="green">659</FONT>                            degrees = degrees.add(incrementor);<a name="line.659"></a>
-<FONT color="green">660</FONT>                            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH     + degrees.doubleValue());<a name="line.660"></a>
-<FONT color="green">661</FONT>                    }<a name="line.661"></a>
-<FONT color="green">662</FONT>                    return degrees.doubleValue();<a name="line.662"></a>
-<FONT color="green">663</FONT>            }<a name="line.663"></a>
-<FONT color="green">664</FONT>    <a name="line.664"></a>
-<FONT color="green">665</FONT>            /**<a name="line.665"></a>
-<FONT color="green">666</FONT>             * @return an XML formatted representation of the class. It returns the<a name="line.666"></a>
-<FONT color="green">667</FONT>             *         default output of the<a name="line.667"></a>
-<FONT color="green">668</FONT>             *         {@link net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar) toXML}<a name="line.668"></a>
-<FONT color="green">669</FONT>             *         method.<a name="line.669"></a>
-<FONT color="green">670</FONT>             * @see net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)<a name="line.670"></a>
-<FONT color="green">671</FONT>             * @see java.lang.Object#toString()<a name="line.671"></a>
-<FONT color="green">672</FONT>             */<a name="line.672"></a>
-<FONT color="green">673</FONT>            public String toString() {<a name="line.673"></a>
-<FONT color="green">674</FONT>                    return ZmanimFormatter.toXML(this);<a name="line.674"></a>
-<FONT color="green">675</FONT>            }<a name="line.675"></a>
-<FONT color="green">676</FONT>    <a name="line.676"></a>
-<FONT color="green">677</FONT>            /**<a name="line.677"></a>
-<FONT color="green">678</FONT>             * @see java.lang.Object#equals(Object)<a name="line.678"></a>
-<FONT color="green">679</FONT>             */<a name="line.679"></a>
-<FONT color="green">680</FONT>            public boolean equals(Object object) {<a name="line.680"></a>
-<FONT color="green">681</FONT>                    if (this == object)<a name="line.681"></a>
-<FONT color="green">682</FONT>                            return true;<a name="line.682"></a>
-<FONT color="green">683</FONT>                    if (!(object instanceof AstronomicalCalendar))<a name="line.683"></a>
-<FONT color="green">684</FONT>                            return false;<a name="line.684"></a>
-<FONT color="green">685</FONT>                    AstronomicalCalendar aCal = (AstronomicalCalendar) object;<a name="line.685"></a>
-<FONT color="green">686</FONT>                    return getCalendar().equals(aCal.getCalendar())<a name="line.686"></a>
-<FONT color="green">687</FONT>                                    &amp;&amp; getGeoLocation().equals(aCal.getGeoLocation())<a name="line.687"></a>
-<FONT color="green">688</FONT>                                    &amp;&amp; getAstronomicalCalculator().equals(<a name="line.688"></a>
-<FONT color="green">689</FONT>                                                    aCal.getAstronomicalCalculator());<a name="line.689"></a>
-<FONT color="green">690</FONT>            }<a name="line.690"></a>
-<FONT color="green">691</FONT>    <a name="line.691"></a>
-<FONT color="green">692</FONT>            /**<a name="line.692"></a>
-<FONT color="green">693</FONT>             * @see java.lang.Object#hashCode()<a name="line.693"></a>
-<FONT color="green">694</FONT>             */<a name="line.694"></a>
-<FONT color="green">695</FONT>            public int hashCode() {<a name="line.695"></a>
-<FONT color="green">696</FONT>                    int result = 17;<a name="line.696"></a>
-<FONT color="green">697</FONT>                    result = 37 * result + getClass().hashCode(); // needed or this and subclasses will return identical hash<a name="line.697"></a>
-<FONT color="green">698</FONT>                    result += 37 * result + getCalendar().hashCode();<a name="line.698"></a>
-<FONT color="green">699</FONT>                    result += 37 * result + getGeoLocation().hashCode();<a name="line.699"></a>
-<FONT color="green">700</FONT>                    result += 37 * result + getAstronomicalCalculator().hashCode();<a name="line.700"></a>
-<FONT color="green">701</FONT>                    return result;<a name="line.701"></a>
-<FONT color="green">702</FONT>            }<a name="line.702"></a>
-<FONT color="green">703</FONT>    <a name="line.703"></a>
-<FONT color="green">704</FONT>            /**<a name="line.704"></a>
-<FONT color="green">705</FONT>             * A method that returns the currently set {@link GeoLocation} that contains<a name="line.705"></a>
-<FONT color="green">706</FONT>             * location information used for the astronomical calculations.<a name="line.706"></a>
-<FONT color="green">707</FONT>             * <a name="line.707"></a>
-<FONT color="green">708</FONT>             * @return Returns the geoLocation.<a name="line.708"></a>
-<FONT color="green">709</FONT>             */<a name="line.709"></a>
-<FONT color="green">710</FONT>            public GeoLocation getGeoLocation() {<a name="line.710"></a>
-<FONT color="green">711</FONT>                    return geoLocation;<a name="line.711"></a>
-<FONT color="green">712</FONT>            }<a name="line.712"></a>
-<FONT color="green">713</FONT>    <a name="line.713"></a>
-<FONT color="green">714</FONT>            /**<a name="line.714"></a>
-<FONT color="green">715</FONT>             * Set the {@link GeoLocation} to be used for astronomical calculations.<a name="line.715"></a>
-<FONT color="green">716</FONT>             * <a name="line.716"></a>
-<FONT color="green">717</FONT>             * @param geoLocation<a name="line.717"></a>
-<FONT color="green">718</FONT>             *            The geoLocation to set.<a name="line.718"></a>
-<FONT color="green">719</FONT>             */<a name="line.719"></a>
-<FONT color="green">720</FONT>            public void setGeoLocation(GeoLocation geoLocation) {<a name="line.720"></a>
-<FONT color="green">721</FONT>                    this.geoLocation = geoLocation;<a name="line.721"></a>
-<FONT color="green">722</FONT>                    // if not set the output will be in the original timezone. The call<a name="line.722"></a>
-<FONT color="green">723</FONT>                    // below is also in the constructor<a name="line.723"></a>
-<FONT color="green">724</FONT>                    getCalendar().setTimeZone(geoLocation.getTimeZone());<a name="line.724"></a>
-<FONT color="green">725</FONT>            }<a name="line.725"></a>
-<FONT color="green">726</FONT>    <a name="line.726"></a>
-<FONT color="green">727</FONT>            /**<a name="line.727"></a>
-<FONT color="green">728</FONT>             * A method to return the current AstronomicalCalculator set.<a name="line.728"></a>
-<FONT color="green">729</FONT>             * <a name="line.729"></a>
-<FONT color="green">730</FONT>             * @return Returns the astronimicalCalculator.<a name="line.730"></a>
-<FONT color="green">731</FONT>             * @see #setAstronomicalCalculator(AstronomicalCalculator)<a name="line.731"></a>
-<FONT color="green">732</FONT>             */<a name="line.732"></a>
-<FONT color="green">733</FONT>            public AstronomicalCalculator getAstronomicalCalculator() {<a name="line.733"></a>
-<FONT color="green">734</FONT>                    return astronomicalCalculator;<a name="line.734"></a>
-<FONT color="green">735</FONT>            }<a name="line.735"></a>
-<FONT color="green">736</FONT>    <a name="line.736"></a>
-<FONT color="green">737</FONT>            /**<a name="line.737"></a>
-<FONT color="green">738</FONT>             * A method to set the {@link AstronomicalCalculator} used for astronomical<a name="line.738"></a>
-<FONT color="green">739</FONT>             * calculations. The Zmanim package ships with a number of different<a name="line.739"></a>
-<FONT color="green">740</FONT>             * implementations of the &lt;code&gt;abstract&lt;/code&gt;<a name="line.740"></a>
-<FONT color="green">741</FONT>             * {@link AstronomicalCalculator} based on different algorithms, including<a name="line.741"></a>
-<FONT color="green">742</FONT>             * {@link net.sourceforge.zmanim.util.SunTimesCalculator one implementation}<a name="line.742"></a>
-<FONT color="green">743</FONT>             * based on the &lt;a href = "http://aa.usno.navy.mil/"&gt;US Naval Observatory's&lt;/a&gt;<a name="line.743"></a>
-<FONT color="green">744</FONT>             * algorithm, and<a name="line.744"></a>
-<FONT color="green">745</FONT>             * {@link net.sourceforge.zmanim.util.JSuntimeCalculator another} based on<a name="line.745"></a>
-<FONT color="green">746</FONT>             * &lt;a href=""http://noaa.gov"&gt;NOAA's&lt;/a&gt; algorithm. This allows easy<a name="line.746"></a>
-<FONT color="green">747</FONT>             * runtime switching and comparison of different algorithms.<a name="line.747"></a>
-<FONT color="green">748</FONT>             * <a name="line.748"></a>
-<FONT color="green">749</FONT>             * @param astronomicalCalculator<a name="line.749"></a>
-<FONT color="green">750</FONT>             *            The astronimicalCalculator to set.<a name="line.750"></a>
-<FONT color="green">751</FONT>             */<a name="line.751"></a>
-<FONT color="green">752</FONT>            public void setAstronomicalCalculator(<a name="line.752"></a>
-<FONT color="green">753</FONT>                            AstronomicalCalculator astronomicalCalculator) {<a name="line.753"></a>
-<FONT color="green">754</FONT>                    this.astronomicalCalculator = astronomicalCalculator;<a name="line.754"></a>
-<FONT color="green">755</FONT>            }<a name="line.755"></a>
-<FONT color="green">756</FONT>    <a name="line.756"></a>
-<FONT color="green">757</FONT>            /**<a name="line.757"></a>
-<FONT color="green">758</FONT>             * returns the Calendar object encapsulated in this class.<a name="line.758"></a>
-<FONT color="green">759</FONT>             * <a name="line.759"></a>
-<FONT color="green">760</FONT>             * @return Returns the calendar.<a name="line.760"></a>
-<FONT color="green">761</FONT>             */<a name="line.761"></a>
-<FONT color="green">762</FONT>            public Calendar getCalendar() {<a name="line.762"></a>
-<FONT color="green">763</FONT>                    return calendar;<a name="line.763"></a>
-<FONT color="green">764</FONT>            }<a name="line.764"></a>
-<FONT color="green">765</FONT>    <a name="line.765"></a>
-<FONT color="green">766</FONT>            /**<a name="line.766"></a>
-<FONT color="green">767</FONT>             * @param calendar<a name="line.767"></a>
-<FONT color="green">768</FONT>             *            The calendar to set.<a name="line.768"></a>
-<FONT color="green">769</FONT>             */<a name="line.769"></a>
-<FONT color="green">770</FONT>            public void setCalendar(Calendar calendar) {<a name="line.770"></a>
-<FONT color="green">771</FONT>                    this.calendar = calendar;<a name="line.771"></a>
-<FONT color="green">772</FONT>                    if (getGeoLocation() != null) {// set the timezone if possible<a name="line.772"></a>
-<FONT color="green">773</FONT>                            // Always set the Calendar's timezone to match the GeoLocation<a name="line.773"></a>
-<FONT color="green">774</FONT>                            // TimeZone<a name="line.774"></a>
-<FONT color="green">775</FONT>                            getCalendar().setTimeZone(getGeoLocation().getTimeZone());<a name="line.775"></a>
-<FONT color="green">776</FONT>                    }<a name="line.776"></a>
-<FONT color="green">777</FONT>            }<a name="line.777"></a>
-<FONT color="green">778</FONT>    <a name="line.778"></a>
-<FONT color="green">779</FONT>            /**<a name="line.779"></a>
-<FONT color="green">780</FONT>             * A method that creates a &lt;a<a name="line.780"></a>
-<FONT color="green">781</FONT>             * href="http://en.wikipedia.org/wiki/Object_copy#Deep_copy"&gt;deep copy&lt;/a&gt;<a name="line.781"></a>
-<FONT color="green">782</FONT>             * of the object. &lt;br /&gt;<a name="line.782"></a>
-<FONT color="green">783</FONT>             * &lt;b&gt;Note:&lt;/b&gt; If the {@link java.util.TimeZone} in the cloned<a name="line.783"></a>
-<FONT color="green">784</FONT>             * {@link net.sourceforge.zmanim.util.GeoLocation} will be changed from the<a name="line.784"></a>
-<FONT color="green">785</FONT>             * original, it is critical that<a name="line.785"></a>
-<FONT color="green">786</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.{@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)}<a name="line.786"></a>
-<FONT color="green">787</FONT>             * be called in order for the AstronomicalCalendar to output times in the<a name="line.787"></a>
-<FONT color="green">788</FONT>             * expected offset after being cloned.<a name="line.788"></a>
-<FONT color="green">789</FONT>             * <a name="line.789"></a>
-<FONT color="green">790</FONT>             * @see java.lang.Object#clone()<a name="line.790"></a>
-<FONT color="green">791</FONT>             * @since 1.1<a name="line.791"></a>
-<FONT color="green">792</FONT>             */<a name="line.792"></a>
-<FONT color="green">793</FONT>            public Object clone() {<a name="line.793"></a>
-<FONT color="green">794</FONT>                    AstronomicalCalendar clone = null;<a name="line.794"></a>
-<FONT color="green">795</FONT>                    try {<a name="line.795"></a>
-<FONT color="green">796</FONT>                            clone = (AstronomicalCalendar) super.clone();<a name="line.796"></a>
-<FONT color="green">797</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.797"></a>
-<FONT color="green">798</FONT>                            System.out<a name="line.798"></a>
-<FONT color="green">799</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.799"></a>
-<FONT color="green">800</FONT>                    }<a name="line.800"></a>
-<FONT color="green">801</FONT>                    clone.setGeoLocation((GeoLocation) getGeoLocation().clone());<a name="line.801"></a>
-<FONT color="green">802</FONT>                    clone.setCalendar((Calendar) getCalendar().clone());<a name="line.802"></a>
-<FONT color="green">803</FONT>                    clone<a name="line.803"></a>
-<FONT color="green">804</FONT>                                    .setAstronomicalCalculator((AstronomicalCalculator) getAstronomicalCalculator()<a name="line.804"></a>
-<FONT color="green">805</FONT>                                                    .clone());<a name="line.805"></a>
-<FONT color="green">806</FONT>                    return clone;<a name="line.806"></a>
-<FONT color="green">807</FONT>            }<a name="line.807"></a>
-<FONT color="green">808</FONT>    }<a name="line.808"></a>
+<FONT color="green">430</FONT>             * Default constructor will set a default {@link GeoLocation#GeoLocation()},<a name="line.430"></a>
+<FONT color="green">431</FONT>             * a default {@link AstronomicalCalculator#getDefault()<a name="line.431"></a>
+<FONT color="green">432</FONT>             * AstronomicalCalculator} and default the calendar to the current date.<a name="line.432"></a>
+<FONT color="green">433</FONT>             */<a name="line.433"></a>
+<FONT color="green">434</FONT>            public AstronomicalCalendar() {<a name="line.434"></a>
+<FONT color="green">435</FONT>                    this(new GeoLocation());<a name="line.435"></a>
+<FONT color="green">436</FONT>            }<a name="line.436"></a>
+<FONT color="green">437</FONT>    <a name="line.437"></a>
+<FONT color="green">438</FONT>            /**<a name="line.438"></a>
+<FONT color="green">439</FONT>             * A constructor that takes in as a parameter geolocation information<a name="line.439"></a>
+<FONT color="green">440</FONT>             * <a name="line.440"></a>
+<FONT color="green">441</FONT>             * @param geoLocation<a name="line.441"></a>
+<FONT color="green">442</FONT>             *            The location information used for astronomical calculating sun<a name="line.442"></a>
+<FONT color="green">443</FONT>             *            times.<a name="line.443"></a>
+<FONT color="green">444</FONT>             */<a name="line.444"></a>
+<FONT color="green">445</FONT>            public AstronomicalCalendar(GeoLocation geoLocation) {<a name="line.445"></a>
+<FONT color="green">446</FONT>                    setCalendar(Calendar.getInstance(geoLocation.getTimeZone()));<a name="line.446"></a>
+<FONT color="green">447</FONT>                    setGeoLocation(geoLocation);// duplicate call<a name="line.447"></a>
+<FONT color="green">448</FONT>                    setAstronomicalCalculator(AstronomicalCalculator.getDefault());<a name="line.448"></a>
+<FONT color="green">449</FONT>            }<a name="line.449"></a>
+<FONT color="green">450</FONT>    <a name="line.450"></a>
+<FONT color="green">451</FONT>            /**<a name="line.451"></a>
+<FONT color="green">452</FONT>             * Method that returns the sunrise in UTC time without correction for time<a name="line.452"></a>
+<FONT color="green">453</FONT>             * zone offset from GMT and without using daylight savings time.<a name="line.453"></a>
+<FONT color="green">454</FONT>             * <a name="line.454"></a>
+<FONT color="green">455</FONT>             * @param zenith<a name="line.455"></a>
+<FONT color="green">456</FONT>             *            the degrees below the horizon. For time after sunrise use<a name="line.456"></a>
+<FONT color="green">457</FONT>             *            negative numbers.<a name="line.457"></a>
+<FONT color="green">458</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.458"></a>
+<FONT color="green">459</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.459"></a>
+<FONT color="green">460</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.460"></a>
+<FONT color="green">461</FONT>             *         one where it does not set, {@link Double#NaN} will be returned.<a name="line.461"></a>
+<FONT color="green">462</FONT>             */<a name="line.462"></a>
+<FONT color="green">463</FONT>            public double getUTCSunrise(double zenith) {<a name="line.463"></a>
+<FONT color="green">464</FONT>                    return getAstronomicalCalculator().getUTCSunrise(this, zenith, true);<a name="line.464"></a>
+<FONT color="green">465</FONT>            }<a name="line.465"></a>
+<FONT color="green">466</FONT>    <a name="line.466"></a>
+<FONT color="green">467</FONT>            /**<a name="line.467"></a>
+<FONT color="green">468</FONT>             * Method that returns the sunrise in UTC time without correction for time<a name="line.468"></a>
+<FONT color="green">469</FONT>             * zone offset from GMT and without using daylight savings time. Non-sunrise<a name="line.469"></a>
+<FONT color="green">470</FONT>             * and sunset calculations such as dawn and dusk, depend on the amount of<a name="line.470"></a>
+<FONT color="green">471</FONT>             * visible light, something that is not affected by elevation. This method<a name="line.471"></a>
+<FONT color="green">472</FONT>             * returns UTC sunrise calculated at sea level. This forms the base for dawn<a name="line.472"></a>
+<FONT color="green">473</FONT>             * calculations that are calculated as a dip below the horizon before<a name="line.473"></a>
+<FONT color="green">474</FONT>             * sunrise.<a name="line.474"></a>
+<FONT color="green">475</FONT>             * <a name="line.475"></a>
+<FONT color="green">476</FONT>             * @param zenith<a name="line.476"></a>
+<FONT color="green">477</FONT>             *            the degrees below the horizon. For time after sunrise use<a name="line.477"></a>
+<FONT color="green">478</FONT>             *            negative numbers.<a name="line.478"></a>
+<FONT color="green">479</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.479"></a>
+<FONT color="green">480</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.480"></a>
+<FONT color="green">481</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.481"></a>
+<FONT color="green">482</FONT>             *         one where it does not set, {@link Double#NaN} will be returned.<a name="line.482"></a>
+<FONT color="green">483</FONT>             *         See detailed explanation on top of the page.<a name="line.483"></a>
+<FONT color="green">484</FONT>             * @see AstronomicalCalendar#getUTCSunrise<a name="line.484"></a>
+<FONT color="green">485</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.485"></a>
+<FONT color="green">486</FONT>             */<a name="line.486"></a>
+<FONT color="green">487</FONT>            public double getUTCSeaLevelSunrise(double zenith) {<a name="line.487"></a>
+<FONT color="green">488</FONT>                    return getAstronomicalCalculator().getUTCSunrise(this, zenith, false);<a name="line.488"></a>
+<FONT color="green">489</FONT>            }<a name="line.489"></a>
+<FONT color="green">490</FONT>    <a name="line.490"></a>
+<FONT color="green">491</FONT>            /**<a name="line.491"></a>
+<FONT color="green">492</FONT>             * Method that returns the sunset in UTC time without correction for time<a name="line.492"></a>
+<FONT color="green">493</FONT>             * zone offset from GMT and without using daylight savings time.<a name="line.493"></a>
+<FONT color="green">494</FONT>             * <a name="line.494"></a>
+<FONT color="green">495</FONT>             * @param zenith<a name="line.495"></a>
+<FONT color="green">496</FONT>             *            the degrees below the horizon. For time after before sunset<a name="line.496"></a>
+<FONT color="green">497</FONT>             *            use negative numbers.<a name="line.497"></a>
+<FONT color="green">498</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.498"></a>
+<FONT color="green">499</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.499"></a>
+<FONT color="green">500</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.500"></a>
+<FONT color="green">501</FONT>             *         one where it does not set, {@link Double#NaN} will be returned.<a name="line.501"></a>
+<FONT color="green">502</FONT>             *         See detailed explanation on top of the page.<a name="line.502"></a>
+<FONT color="green">503</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunset<a name="line.503"></a>
+<FONT color="green">504</FONT>             */<a name="line.504"></a>
+<FONT color="green">505</FONT>            public double getUTCSunset(double zenith) {<a name="line.505"></a>
+<FONT color="green">506</FONT>                    return getAstronomicalCalculator().getUTCSunset(this, zenith, true);<a name="line.506"></a>
+<FONT color="green">507</FONT>            }<a name="line.507"></a>
+<FONT color="green">508</FONT>    <a name="line.508"></a>
+<FONT color="green">509</FONT>            /**<a name="line.509"></a>
+<FONT color="green">510</FONT>             * Method that returns the sunset in UTC time without correction for<a name="line.510"></a>
+<FONT color="green">511</FONT>             * elevation, time zone offset from GMT and without using daylight savings<a name="line.511"></a>
+<FONT color="green">512</FONT>             * time. Non-sunrise and sunset calculations such as dawn and dusk, depend<a name="line.512"></a>
+<FONT color="green">513</FONT>             * on the amount of visible light, something that is not affected by<a name="line.513"></a>
+<FONT color="green">514</FONT>             * elevation. This method returns UTC sunset calculated at sea level. This<a name="line.514"></a>
+<FONT color="green">515</FONT>             * forms the base for dusk calculations that are calculated as a dip below<a name="line.515"></a>
+<FONT color="green">516</FONT>             * the horizon after sunset.<a name="line.516"></a>
+<FONT color="green">517</FONT>             * <a name="line.517"></a>
+<FONT color="green">518</FONT>             * @param zenith<a name="line.518"></a>
+<FONT color="green">519</FONT>             *            the degrees below the horizon. For time before sunset use<a name="line.519"></a>
+<FONT color="green">520</FONT>             *            negative numbers.<a name="line.520"></a>
+<FONT color="green">521</FONT>             * @return The time in the format: 18.75 for 18:45:00 UTC/GMT. If the<a name="line.521"></a>
+<FONT color="green">522</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.522"></a>
+<FONT color="green">523</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.523"></a>
+<FONT color="green">524</FONT>             *         one where it does not set, {@link Double#NaN} will be returned.<a name="line.524"></a>
+<FONT color="green">525</FONT>             *         See detailed explanation on top of the page.<a name="line.525"></a>
+<FONT color="green">526</FONT>             * @see AstronomicalCalendar#getUTCSunset<a name="line.526"></a>
+<FONT color="green">527</FONT>             * @see AstronomicalCalendar#getUTCSeaLevelSunrise<a name="line.527"></a>
+<FONT color="green">528</FONT>             */<a name="line.528"></a>
+<FONT color="green">529</FONT>            public double getUTCSeaLevelSunset(double zenith) {<a name="line.529"></a>
+<FONT color="green">530</FONT>                    return getAstronomicalCalculator().getUTCSunset(this, zenith, false);<a name="line.530"></a>
+<FONT color="green">531</FONT>            }<a name="line.531"></a>
+<FONT color="green">532</FONT>    <a name="line.532"></a>
+<FONT color="green">533</FONT>            /**<a name="line.533"></a>
+<FONT color="green">534</FONT>             * A method that adds time zone offset and daylight savings time to the raw<a name="line.534"></a>
+<FONT color="green">535</FONT>             * UTC time.<a name="line.535"></a>
+<FONT color="green">536</FONT>             * <a name="line.536"></a>
+<FONT color="green">537</FONT>             * @param time<a name="line.537"></a>
+<FONT color="green">538</FONT>             *            The UTC time to be adjusted.<a name="line.538"></a>
+<FONT color="green">539</FONT>             * @return The time adjusted for the time zone offset and daylight savings<a name="line.539"></a>
+<FONT color="green">540</FONT>             *         time.<a name="line.540"></a>
+<FONT color="green">541</FONT>             */<a name="line.541"></a>
+<FONT color="green">542</FONT>            private double getOffsetTime(double time) {<a name="line.542"></a>
+<FONT color="green">543</FONT>                    boolean dst = getCalendar().getTimeZone().inDaylightTime(<a name="line.543"></a>
+<FONT color="green">544</FONT>                                    getCalendar().getTime());<a name="line.544"></a>
+<FONT color="green">545</FONT>                    double dstOffset = 0;<a name="line.545"></a>
+<FONT color="green">546</FONT>                    // be nice to Newfies and use a double<a name="line.546"></a>
+<FONT color="green">547</FONT>                    double gmtOffset = getCalendar().getTimeZone().getRawOffset()<a name="line.547"></a>
+<FONT color="green">548</FONT>                                    / (60 * MINUTE_MILLIS);<a name="line.548"></a>
+<FONT color="green">549</FONT>                    if (dst) {<a name="line.549"></a>
+<FONT color="green">550</FONT>                            dstOffset = getCalendar().getTimeZone().getDSTSavings()<a name="line.550"></a>
+<FONT color="green">551</FONT>                                            / (60 * MINUTE_MILLIS);<a name="line.551"></a>
+<FONT color="green">552</FONT>                    }<a name="line.552"></a>
+<FONT color="green">553</FONT>                    return time + gmtOffset + dstOffset;<a name="line.553"></a>
+<FONT color="green">554</FONT>            }<a name="line.554"></a>
+<FONT color="green">555</FONT>    <a name="line.555"></a>
+<FONT color="green">556</FONT>            /**<a name="line.556"></a>
+<FONT color="green">557</FONT>             * Method to return a temporal (solar) hour. The day from sunrise to sunset<a name="line.557"></a>
+<FONT color="green">558</FONT>             * is split into 12 equal parts with each one being a temporal hour.<a name="line.558"></a>
+<FONT color="green">559</FONT>             * <a name="line.559"></a>
+<FONT color="green">560</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of a temporal hour. If<a name="line.560"></a>
+<FONT color="green">561</FONT>             *         the calculation can't be computed (see explanation on top of the<a name="line.561"></a>
+<FONT color="green">562</FONT>             *         page), {@link Long#MIN_VALUE} will be returned.<a name="line.562"></a>
+<FONT color="green">563</FONT>             */<a name="line.563"></a>
+<FONT color="green">564</FONT>            public long getTemporalHour() {<a name="line.564"></a>
+<FONT color="green">565</FONT>                    return getTemporalHour(getSunrise(), getSunset());<a name="line.565"></a>
+<FONT color="green">566</FONT>            }<a name="line.566"></a>
+<FONT color="green">567</FONT>    <a name="line.567"></a>
+<FONT color="green">568</FONT>            /**<a name="line.568"></a>
+<FONT color="green">569</FONT>             * Utility method that will allow the calculation of a temporal (solar) hour<a name="line.569"></a>
+<FONT color="green">570</FONT>             * based on the sunrise and sunset passed to this method.<a name="line.570"></a>
+<FONT color="green">571</FONT>             * <a name="line.571"></a>
+<FONT color="green">572</FONT>             * @param sunrise<a name="line.572"></a>
+<FONT color="green">573</FONT>             *            The start of the day.<a name="line.573"></a>
+<FONT color="green">574</FONT>             * @param sunset<a name="line.574"></a>
+<FONT color="green">575</FONT>             *            The end of the day.<a name="line.575"></a>
+<FONT color="green">576</FONT>             * @see #getTemporalHour()<a name="line.576"></a>
+<FONT color="green">577</FONT>             * @return the &lt;code&gt;long&lt;/code&gt; millisecond length of the temporal hour. If<a name="line.577"></a>
+<FONT color="green">578</FONT>             *         the calculation can't be computed (see explanation on top of the<a name="line.578"></a>
+<FONT color="green">579</FONT>             *         page) {@link Long#MIN_VALUE} will be returned.<a name="line.579"></a>
+<FONT color="green">580</FONT>             */<a name="line.580"></a>
+<FONT color="green">581</FONT>            public long getTemporalHour(Date sunrise, Date sunset) {<a name="line.581"></a>
+<FONT color="green">582</FONT>                    if (sunrise == null || sunset == null) {<a name="line.582"></a>
+<FONT color="green">583</FONT>                            return Long.MIN_VALUE;<a name="line.583"></a>
+<FONT color="green">584</FONT>                    }<a name="line.584"></a>
+<FONT color="green">585</FONT>                    return (sunset.getTime() - sunrise.getTime()) / 12;<a name="line.585"></a>
+<FONT color="green">586</FONT>            }<a name="line.586"></a>
+<FONT color="green">587</FONT>    <a name="line.587"></a>
+<FONT color="green">588</FONT>            /**<a name="line.588"></a>
+<FONT color="green">589</FONT>             * A method that returns sundial or solar noon. It occurs when the Sun is &lt;a<a name="line.589"></a>
+<FONT color="green">590</FONT>             * href<a name="line.590"></a>
+<FONT color="green">591</FONT>             * ="http://en.wikipedia.org/wiki/Transit_%28astronomy%29"&gt;transitting&lt;/a&gt;<a name="line.591"></a>
+<FONT color="green">592</FONT>             * the &lt;a<a name="line.592"></a>
+<FONT color="green">593</FONT>             * href="http://en.wikipedia.org/wiki/Meridian_%28astronomy%29"&gt;celestial<a name="line.593"></a>
+<FONT color="green">594</FONT>             * meridian&lt;/a&gt;. In this class it is calculated as halfway between sunrise<a name="line.594"></a>
+<FONT color="green">595</FONT>             * and sunset, which can be slightly off the real transit time due to the<a name="line.595"></a>
+<FONT color="green">596</FONT>             * lengthening or shortening day.<a name="line.596"></a>
+<FONT color="green">597</FONT>             * <a name="line.597"></a>
+<FONT color="green">598</FONT>             * @return the &lt;code&gt;Date&lt;/code&gt; representing Sun's transit. If the<a name="line.598"></a>
+<FONT color="green">599</FONT>             *         calculation can't be computed such as in the Arctic Circle where<a name="line.599"></a>
+<FONT color="green">600</FONT>             *         there is at least one day a year where the sun does not rise, and<a name="line.600"></a>
+<FONT color="green">601</FONT>             *         one where it does not set, null will be returned.<a name="line.601"></a>
+<FONT color="green">602</FONT>             */<a name="line.602"></a>
+<FONT color="green">603</FONT>            public Date getSunTransit() {<a name="line.603"></a>
+<FONT color="green">604</FONT>                    return getTimeOffset(getSunrise(), getTemporalHour() * 6);<a name="line.604"></a>
+<FONT color="green">605</FONT>            }<a name="line.605"></a>
+<FONT color="green">606</FONT>    <a name="line.606"></a>
+<FONT color="green">607</FONT>            /**<a name="line.607"></a>
+<FONT color="green">608</FONT>             * A method that returns a &lt;code&gt;Date&lt;/code&gt; from the time passed in<a name="line.608"></a>
+<FONT color="green">609</FONT>             * <a name="line.609"></a>
+<FONT color="green">610</FONT>             * @param time<a name="line.610"></a>
+<FONT color="green">611</FONT>             *            The time to be set as the time for the &lt;code&gt;Date&lt;/code&gt;. The<a name="line.611"></a>
+<FONT color="green">612</FONT>             *            time expected is in the format: 18.75 for 6:45:00 PM<a name="line.612"></a>
+<FONT color="green">613</FONT>             * @return The Date.<a name="line.613"></a>
+<FONT color="green">614</FONT>             */<a name="line.614"></a>
+<FONT color="green">615</FONT>            protected Date getDateFromTime(double time) {<a name="line.615"></a>
+<FONT color="green">616</FONT>                    if (Double.isNaN(time)) {<a name="line.616"></a>
+<FONT color="green">617</FONT>                            return null;<a name="line.617"></a>
+<FONT color="green">618</FONT>                    }<a name="line.618"></a>
+<FONT color="green">619</FONT>                    time = getOffsetTime(time);<a name="line.619"></a>
+<FONT color="green">620</FONT>                    time = (time + 240) % 24; // the calculators sometimes return a double<a name="line.620"></a>
+<FONT color="green">621</FONT>                    // that is negative or slightly greater than 24<a name="line.621"></a>
+<FONT color="green">622</FONT>                    Calendar cal = Calendar.getInstance();<a name="line.622"></a>
+<FONT color="green">623</FONT>                    cal.clear();<a name="line.623"></a>
+<FONT color="green">624</FONT>                    cal.set(Calendar.YEAR, getCalendar().get(Calendar.YEAR));<a name="line.624"></a>
+<FONT color="green">625</FONT>                    cal.set(Calendar.MONTH, getCalendar().get(Calendar.MONTH));<a name="line.625"></a>
+<FONT color="green">626</FONT>                    cal.set(Calendar.DAY_OF_MONTH, getCalendar().get(Calendar.DAY_OF_MONTH));<a name="line.626"></a>
+<FONT color="green">627</FONT>    <a name="line.627"></a>
+<FONT color="green">628</FONT>                    int hours = (int) time; // cut off minutes<a name="line.628"></a>
+<FONT color="green">629</FONT>    <a name="line.629"></a>
+<FONT color="green">630</FONT>                    time -= hours;<a name="line.630"></a>
+<FONT color="green">631</FONT>                    int minutes = (int) (time *= 60);<a name="line.631"></a>
+<FONT color="green">632</FONT>                    time -= minutes;<a name="line.632"></a>
+<FONT color="green">633</FONT>                    int seconds = (int) (time *= 60);<a name="line.633"></a>
+<FONT color="green">634</FONT>                    time -= seconds; // milliseconds<a name="line.634"></a>
+<FONT color="green">635</FONT>    <a name="line.635"></a>
+<FONT color="green">636</FONT>                    cal.set(Calendar.HOUR_OF_DAY, hours);<a name="line.636"></a>
+<FONT color="green">637</FONT>                    cal.set(Calendar.MINUTE, minutes);<a name="line.637"></a>
+<FONT color="green">638</FONT>                    cal.set(Calendar.SECOND, seconds);<a name="line.638"></a>
+<FONT color="green">639</FONT>                    cal.set(Calendar.MILLISECOND, (int) (time * 1000));<a name="line.639"></a>
+<FONT color="green">640</FONT>                    return cal.getTime();<a name="line.640"></a>
+<FONT color="green">641</FONT>            }<a name="line.641"></a>
+<FONT color="green">642</FONT>    <a name="line.642"></a>
+<FONT color="green">643</FONT>            /**<a name="line.643"></a>
+<FONT color="green">644</FONT>             * Will return the dip below the horizon before sunrise that matches the<a name="line.644"></a>
+<FONT color="green">645</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.645"></a>
+<FONT color="green">646</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.646"></a>
+<FONT color="green">647</FONT>             * 16.1&amp;deg; Please note that this method is very slow and inefficient and<a name="line.647"></a>
+<FONT color="green">648</FONT>             * should NEVER be used in a loop. &lt;em&gt;&lt;b&gt;TODO:&lt;/b&gt;&lt;/em&gt; Improve efficiency.<a name="line.648"></a>
+<FONT color="green">649</FONT>             * <a name="line.649"></a>
+<FONT color="green">650</FONT>             * @param minutes<a name="line.650"></a>
+<FONT color="green">651</FONT>             *            offset<a name="line.651"></a>
+<FONT color="green">652</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.652"></a>
+<FONT color="green">653</FONT>             *         equinox in Jerusalem at sea level.<a name="line.653"></a>
+<FONT color="green">654</FONT>             * @see #getSunsetSolarDipFromOffset(double)<a name="line.654"></a>
+<FONT color="green">655</FONT>             */<a name="line.655"></a>
+<FONT color="green">656</FONT>            public double getSunriseSolarDipFromOffset(double minutes) {<a name="line.656"></a>
+<FONT color="green">657</FONT>                    Date offsetByDegrees = getSeaLevelSunrise();<a name="line.657"></a>
+<FONT color="green">658</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunrise(),<a name="line.658"></a>
+<FONT color="green">659</FONT>                                    -(minutes * MINUTE_MILLIS));<a name="line.659"></a>
+<FONT color="green">660</FONT>    <a name="line.660"></a>
+<FONT color="green">661</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.661"></a>
+<FONT color="green">662</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.662"></a>
+<FONT color="green">663</FONT>                    while (offsetByDegrees == null<a name="line.663"></a>
+<FONT color="green">664</FONT>                                    || offsetByDegrees.getTime() &gt; offsetByTime.getTime()) {<a name="line.664"></a>
+<FONT color="green">665</FONT>                            degrees = degrees.add(incrementor);<a name="line.665"></a>
+<FONT color="green">666</FONT>                            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH<a name="line.666"></a>
+<FONT color="green">667</FONT>                                            + degrees.doubleValue());<a name="line.667"></a>
+<FONT color="green">668</FONT>                    }<a name="line.668"></a>
+<FONT color="green">669</FONT>                    return degrees.doubleValue();<a name="line.669"></a>
+<FONT color="green">670</FONT>            }<a name="line.670"></a>
+<FONT color="green">671</FONT>    <a name="line.671"></a>
+<FONT color="green">672</FONT>            /**<a name="line.672"></a>
+<FONT color="green">673</FONT>             * Will return the dip below the horizon after sunset that matches the<a name="line.673"></a>
+<FONT color="green">674</FONT>             * offset minutes on passed in. For example passing in 72 minutes for a<a name="line.674"></a>
+<FONT color="green">675</FONT>             * calendar set to the equinox in Jerusalem returns a value close to<a name="line.675"></a>
+<FONT color="green">676</FONT>             * 16.1&amp;deg; Please note that this method is very slow and inefficient and<a name="line.676"></a>
+<FONT color="green">677</FONT>             * should NEVER be used in a loop. &lt;em&gt;&lt;b&gt;TODO:&lt;/b&gt;&lt;/em&gt; Improve efficiency.<a name="line.677"></a>
+<FONT color="green">678</FONT>             * <a name="line.678"></a>
+<FONT color="green">679</FONT>             * @param minutes<a name="line.679"></a>
+<FONT color="green">680</FONT>             *            offset<a name="line.680"></a>
+<FONT color="green">681</FONT>             * @return the degrees below the horizon that match the offset on the<a name="line.681"></a>
+<FONT color="green">682</FONT>             *         equinox in Jerusalem at sea level.<a name="line.682"></a>
+<FONT color="green">683</FONT>             * @see #getSunriseSolarDipFromOffset(double)<a name="line.683"></a>
+<FONT color="green">684</FONT>             */<a name="line.684"></a>
+<FONT color="green">685</FONT>            public double getSunsetSolarDipFromOffset(double minutes) {<a name="line.685"></a>
+<FONT color="green">686</FONT>                    Date offsetByDegrees = getSeaLevelSunset();<a name="line.686"></a>
+<FONT color="green">687</FONT>                    Date offsetByTime = getTimeOffset(getSeaLevelSunset(), minutes<a name="line.687"></a>
+<FONT color="green">688</FONT>                                    * MINUTE_MILLIS);<a name="line.688"></a>
+<FONT color="green">689</FONT>    <a name="line.689"></a>
+<FONT color="green">690</FONT>                    java.math.BigDecimal degrees = new java.math.BigDecimal(0);<a name="line.690"></a>
+<FONT color="green">691</FONT>                    java.math.BigDecimal incrementor = new java.math.BigDecimal("0.0001");<a name="line.691"></a>
+<FONT color="green">692</FONT>                    while (offsetByDegrees == null<a name="line.692"></a>
+<FONT color="green">693</FONT>                                    || offsetByDegrees.getTime() &lt; offsetByTime.getTime()) {<a name="line.693"></a>
+<FONT color="green">694</FONT>                            degrees = degrees.add(incrementor);<a name="line.694"></a>
+<FONT color="green">695</FONT>                            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH<a name="line.695"></a>
+<FONT color="green">696</FONT>                                            + degrees.doubleValue());<a name="line.696"></a>
+<FONT color="green">697</FONT>                    }<a name="line.697"></a>
+<FONT color="green">698</FONT>                    return degrees.doubleValue();<a name="line.698"></a>
+<FONT color="green">699</FONT>            }<a name="line.699"></a>
+<FONT color="green">700</FONT>    <a name="line.700"></a>
+<FONT color="green">701</FONT>            /**<a name="line.701"></a>
+<FONT color="green">702</FONT>             * @return an XML formatted representation of the class. It returns the<a name="line.702"></a>
+<FONT color="green">703</FONT>             *         default output of the<a name="line.703"></a>
+<FONT color="green">704</FONT>             *         {@link net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)<a name="line.704"></a>
+<FONT color="green">705</FONT>             *         toXML} method.<a name="line.705"></a>
+<FONT color="green">706</FONT>             * @see net.sourceforge.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)<a name="line.706"></a>
+<FONT color="green">707</FONT>             * @see java.lang.Object#toString()<a name="line.707"></a>
+<FONT color="green">708</FONT>             */<a name="line.708"></a>
+<FONT color="green">709</FONT>            public String toString() {<a name="line.709"></a>
+<FONT color="green">710</FONT>                    return ZmanimFormatter.toXML(this);<a name="line.710"></a>
+<FONT color="green">711</FONT>            }<a name="line.711"></a>
+<FONT color="green">712</FONT>    <a name="line.712"></a>
+<FONT color="green">713</FONT>            /**<a name="line.713"></a>
+<FONT color="green">714</FONT>             * @see java.lang.Object#equals(Object)<a name="line.714"></a>
+<FONT color="green">715</FONT>             */<a name="line.715"></a>
+<FONT color="green">716</FONT>            public boolean equals(Object object) {<a name="line.716"></a>
+<FONT color="green">717</FONT>                    if (this == object)<a name="line.717"></a>
+<FONT color="green">718</FONT>                            return true;<a name="line.718"></a>
+<FONT color="green">719</FONT>                    if (!(object instanceof AstronomicalCalendar))<a name="line.719"></a>
+<FONT color="green">720</FONT>                            return false;<a name="line.720"></a>
+<FONT color="green">721</FONT>                    AstronomicalCalendar aCal = (AstronomicalCalendar) object;<a name="line.721"></a>
+<FONT color="green">722</FONT>                    return getCalendar().equals(aCal.getCalendar())<a name="line.722"></a>
+<FONT color="green">723</FONT>                                    &amp;&amp; getGeoLocation().equals(aCal.getGeoLocation())<a name="line.723"></a>
+<FONT color="green">724</FONT>                                    &amp;&amp; getAstronomicalCalculator().equals(<a name="line.724"></a>
+<FONT color="green">725</FONT>                                                    aCal.getAstronomicalCalculator());<a name="line.725"></a>
+<FONT color="green">726</FONT>            }<a name="line.726"></a>
+<FONT color="green">727</FONT>    <a name="line.727"></a>
+<FONT color="green">728</FONT>            /**<a name="line.728"></a>
+<FONT color="green">729</FONT>             * @see java.lang.Object#hashCode()<a name="line.729"></a>
+<FONT color="green">730</FONT>             */<a name="line.730"></a>
+<FONT color="green">731</FONT>            public int hashCode() {<a name="line.731"></a>
+<FONT color="green">732</FONT>                    int result = 17;<a name="line.732"></a>
+<FONT color="green">733</FONT>                    result = 37 * result + getClass().hashCode(); // needed or this and<a name="line.733"></a>
+<FONT color="green">734</FONT>                                                                                                                    // subclasses will<a name="line.734"></a>
+<FONT color="green">735</FONT>                                                                                                                    // return identical hash<a name="line.735"></a>
+<FONT color="green">736</FONT>                    result += 37 * result + getCalendar().hashCode();<a name="line.736"></a>
+<FONT color="green">737</FONT>                    result += 37 * result + getGeoLocation().hashCode();<a name="line.737"></a>
+<FONT color="green">738</FONT>                    result += 37 * result + getAstronomicalCalculator().hashCode();<a name="line.738"></a>
+<FONT color="green">739</FONT>                    return result;<a name="line.739"></a>
+<FONT color="green">740</FONT>            }<a name="line.740"></a>
+<FONT color="green">741</FONT>    <a name="line.741"></a>
+<FONT color="green">742</FONT>            /**<a name="line.742"></a>
+<FONT color="green">743</FONT>             * A method that returns the currently set {@link GeoLocation} that contains<a name="line.743"></a>
+<FONT color="green">744</FONT>             * location information used for the astronomical calculations.<a name="line.744"></a>
+<FONT color="green">745</FONT>             * <a name="line.745"></a>
+<FONT color="green">746</FONT>             * @return Returns the geoLocation.<a name="line.746"></a>
+<FONT color="green">747</FONT>             */<a name="line.747"></a>
+<FONT color="green">748</FONT>            public GeoLocation getGeoLocation() {<a name="line.748"></a>
+<FONT color="green">749</FONT>                    return geoLocation;<a name="line.749"></a>
+<FONT color="green">750</FONT>            }<a name="line.750"></a>
+<FONT color="green">751</FONT>    <a name="line.751"></a>
+<FONT color="green">752</FONT>            /**<a name="line.752"></a>
+<FONT color="green">753</FONT>             * Set the {@link GeoLocation} to be used for astronomical calculations.<a name="line.753"></a>
+<FONT color="green">754</FONT>             * <a name="line.754"></a>
+<FONT color="green">755</FONT>             * @param geoLocation<a name="line.755"></a>
+<FONT color="green">756</FONT>             *            The geoLocation to set.<a name="line.756"></a>
+<FONT color="green">757</FONT>             */<a name="line.757"></a>
+<FONT color="green">758</FONT>            public void setGeoLocation(GeoLocation geoLocation) {<a name="line.758"></a>
+<FONT color="green">759</FONT>                    this.geoLocation = geoLocation;<a name="line.759"></a>
+<FONT color="green">760</FONT>                    // if not set the output will be in the original timezone. The call<a name="line.760"></a>
+<FONT color="green">761</FONT>                    // below is also in the constructor<a name="line.761"></a>
+<FONT color="green">762</FONT>                    getCalendar().setTimeZone(geoLocation.getTimeZone());<a name="line.762"></a>
+<FONT color="green">763</FONT>            }<a name="line.763"></a>
+<FONT color="green">764</FONT>    <a name="line.764"></a>
+<FONT color="green">765</FONT>            /**<a name="line.765"></a>
+<FONT color="green">766</FONT>             * A method to return the current AstronomicalCalculator set.<a name="line.766"></a>
+<FONT color="green">767</FONT>             * <a name="line.767"></a>
+<FONT color="green">768</FONT>             * @return Returns the astronimicalCalculator.<a name="line.768"></a>
+<FONT color="green">769</FONT>             * @see #setAstronomicalCalculator(AstronomicalCalculator)<a name="line.769"></a>
+<FONT color="green">770</FONT>             */<a name="line.770"></a>
+<FONT color="green">771</FONT>            public AstronomicalCalculator getAstronomicalCalculator() {<a name="line.771"></a>
+<FONT color="green">772</FONT>                    return astronomicalCalculator;<a name="line.772"></a>
+<FONT color="green">773</FONT>            }<a name="line.773"></a>
+<FONT color="green">774</FONT>    <a name="line.774"></a>
+<FONT color="green">775</FONT>            /**<a name="line.775"></a>
+<FONT color="green">776</FONT>             * A method to set the {@link AstronomicalCalculator} used for astronomical<a name="line.776"></a>
+<FONT color="green">777</FONT>             * calculations. The Zmanim package ships with a number of different<a name="line.777"></a>
+<FONT color="green">778</FONT>             * implementations of the &lt;code&gt;abstract&lt;/code&gt;<a name="line.778"></a>
+<FONT color="green">779</FONT>             * {@link AstronomicalCalculator} based on different algorithms, including<a name="line.779"></a>
+<FONT color="green">780</FONT>             * {@link net.sourceforge.zmanim.util.SunTimesCalculator one implementation}<a name="line.780"></a>
+<FONT color="green">781</FONT>             * based on the &lt;a href = "http://aa.usno.navy.mil/"&gt;US Naval<a name="line.781"></a>
+<FONT color="green">782</FONT>             * Observatory's&lt;/a&gt; algorithm, and<a name="line.782"></a>
+<FONT color="green">783</FONT>             * {@link net.sourceforge.zmanim.util.JSuntimeCalculator another} based on<a name="line.783"></a>
+<FONT color="green">784</FONT>             * &lt;a href=""http://noaa.gov"&gt;NOAA's&lt;/a&gt; algorithm. This allows easy runtime<a name="line.784"></a>
+<FONT color="green">785</FONT>             * switching and comparison of different algorithms.<a name="line.785"></a>
+<FONT color="green">786</FONT>             * <a name="line.786"></a>
+<FONT color="green">787</FONT>             * @param astronomicalCalculator<a name="line.787"></a>
+<FONT color="green">788</FONT>             *            The astronimicalCalculator to set.<a name="line.788"></a>
+<FONT color="green">789</FONT>             */<a name="line.789"></a>
+<FONT color="green">790</FONT>            public void setAstronomicalCalculator(<a name="line.790"></a>
+<FONT color="green">791</FONT>                            AstronomicalCalculator astronomicalCalculator) {<a name="line.791"></a>
+<FONT color="green">792</FONT>                    this.astronomicalCalculator = astronomicalCalculator;<a name="line.792"></a>
+<FONT color="green">793</FONT>            }<a name="line.793"></a>
+<FONT color="green">794</FONT>    <a name="line.794"></a>
+<FONT color="green">795</FONT>            /**<a name="line.795"></a>
+<FONT color="green">796</FONT>             * returns the Calendar object encapsulated in this class.<a name="line.796"></a>
+<FONT color="green">797</FONT>             * <a name="line.797"></a>
+<FONT color="green">798</FONT>             * @return Returns the calendar.<a name="line.798"></a>
+<FONT color="green">799</FONT>             */<a name="line.799"></a>
+<FONT color="green">800</FONT>            public Calendar getCalendar() {<a name="line.800"></a>
+<FONT color="green">801</FONT>                    return calendar;<a name="line.801"></a>
+<FONT color="green">802</FONT>            }<a name="line.802"></a>
+<FONT color="green">803</FONT>    <a name="line.803"></a>
+<FONT color="green">804</FONT>            /**<a name="line.804"></a>
+<FONT color="green">805</FONT>             * @param calendar<a name="line.805"></a>
+<FONT color="green">806</FONT>             *            The calendar to set.<a name="line.806"></a>
+<FONT color="green">807</FONT>             */<a name="line.807"></a>
+<FONT color="green">808</FONT>            public void setCalendar(Calendar calendar) {<a name="line.808"></a>
+<FONT color="green">809</FONT>                    this.calendar = calendar;<a name="line.809"></a>
+<FONT color="green">810</FONT>                    if (getGeoLocation() != null) {// set the timezone if possible<a name="line.810"></a>
+<FONT color="green">811</FONT>                            // Always set the Calendar's timezone to match the GeoLocation<a name="line.811"></a>
+<FONT color="green">812</FONT>                            // TimeZone<a name="line.812"></a>
+<FONT color="green">813</FONT>                            getCalendar().setTimeZone(getGeoLocation().getTimeZone());<a name="line.813"></a>
+<FONT color="green">814</FONT>                    }<a name="line.814"></a>
+<FONT color="green">815</FONT>            }<a name="line.815"></a>
+<FONT color="green">816</FONT>    <a name="line.816"></a>
+<FONT color="green">817</FONT>            /**<a name="line.817"></a>
+<FONT color="green">818</FONT>             * A method that creates a &lt;a<a name="line.818"></a>
+<FONT color="green">819</FONT>             * href="http://en.wikipedia.org/wiki/Object_copy#Deep_copy"&gt;deep copy&lt;/a&gt;<a name="line.819"></a>
+<FONT color="green">820</FONT>             * of the object. &lt;br /&gt;<a name="line.820"></a>
+<FONT color="green">821</FONT>             * &lt;b&gt;Note:&lt;/b&gt; If the {@link java.util.TimeZone} in the cloned<a name="line.821"></a>
+<FONT color="green">822</FONT>             * {@link net.sourceforge.zmanim.util.GeoLocation} will be changed from the<a name="line.822"></a>
+<FONT color="green">823</FONT>             * original, it is critical that<a name="line.823"></a>
+<FONT color="green">824</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getCalendar()}.<a name="line.824"></a>
+<FONT color="green">825</FONT>             * {@link java.util.Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)} be<a name="line.825"></a>
+<FONT color="green">826</FONT>             * called in order for the AstronomicalCalendar to output times in the<a name="line.826"></a>
+<FONT color="green">827</FONT>             * expected offset after being cloned.<a name="line.827"></a>
+<FONT color="green">828</FONT>             * <a name="line.828"></a>
+<FONT color="green">829</FONT>             * @see java.lang.Object#clone()<a name="line.829"></a>
+<FONT color="green">830</FONT>             * @since 1.1<a name="line.830"></a>
+<FONT color="green">831</FONT>             */<a name="line.831"></a>
+<FONT color="green">832</FONT>            public Object clone() {<a name="line.832"></a>
+<FONT color="green">833</FONT>                    AstronomicalCalendar clone = null;<a name="line.833"></a>
+<FONT color="green">834</FONT>                    try {<a name="line.834"></a>
+<FONT color="green">835</FONT>                            clone = (AstronomicalCalendar) super.clone();<a name="line.835"></a>
+<FONT color="green">836</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.836"></a>
+<FONT color="green">837</FONT>                            System.out<a name="line.837"></a>
+<FONT color="green">838</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.838"></a>
+<FONT color="green">839</FONT>                    }<a name="line.839"></a>
+<FONT color="green">840</FONT>                    clone.setGeoLocation((GeoLocation) getGeoLocation().clone());<a name="line.840"></a>
+<FONT color="green">841</FONT>                    clone.setCalendar((Calendar) getCalendar().clone());<a name="line.841"></a>
+<FONT color="green">842</FONT>                    clone.setAstronomicalCalculator((AstronomicalCalculator) getAstronomicalCalculator()<a name="line.842"></a>
+<FONT color="green">843</FONT>                                    .clone());<a name="line.843"></a>
+<FONT color="green">844</FONT>                    return clone;<a name="line.844"></a>
+<FONT color="green">845</FONT>            }<a name="line.845"></a>
+<FONT color="green">846</FONT>    }<a name="line.846"></a>
 
 
 

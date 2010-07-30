@@ -1,16 +1,16 @@
 /*
  * Zmanim Java API
- * Copyright (C) 2004-2008 Eliyahu Hershfeld
+ * Copyright (C) 2004-2010 Eliyahu Hershfeld
  *
- * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with this program; if
+ * You should have received a copy of the GNU Lesser General Public License along with this program; if
  * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html
  */
@@ -25,10 +25,11 @@ import net.sourceforge.zmanim.AstronomicalCalendar;
  * This implementation is a port of the C++ algorithm written by Ken Bloom for
  * the sourceforge.net <a href="http://sourceforge.net/projects/zmanim/">Zmanim</a>
  * project. Ken's algorithm is based on the US Naval Almanac algorithm. Added to
- * Ken's code is adjustment of the zenith to account for elevation.
+ * Ken's code is adjustment of the zenith to account for elevation. Originally released
+ * under the GPL, it has been released under the LGPL as of April 8, 2010.
  *
- * @author &copy; Ken Bloom 2003 - 2004
- * @author &copy; Eliyahu Hershfeld 2004 - 2008
+ * @author &copy; Chanoch (Ken) Bloom 2003 - 2004
+ * @author &copy; Eliyahu Hershfeld 2004 - 2010
  * @version 1.1
  */
 public class ZmanimCalculator extends AstronomicalCalculator {
