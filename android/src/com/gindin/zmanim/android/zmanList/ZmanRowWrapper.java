@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.zmanList;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
-import com.gindin.util.debug.DebugUtils;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
@@ -96,7 +96,7 @@ public abstract class ZmanRowWrapper {
 			}
 			catch ( Exception e ) {
 				final Zman zman = zmans[ 0 ];
-				DebugUtils.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; ", e );
+				LogUtils.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; ", e );
 			}
 
 			return formatted;

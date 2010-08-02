@@ -6,7 +6,7 @@ package com.gindin.zmanim.android;
 
 import android.os.AsyncTask;
 import com.gindin.util.LocationHandler;
-import com.gindin.util.debug.DebugUtils;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 
 import android.app.*;
@@ -69,7 +69,7 @@ public class ZmanimActivity
 
 		super.onCreate( savedInstanceState );
 
-		DebugUtils.startSession( this );
+		LogUtils.startSession( this );
 
 		setContentView( R.layout.main );
 
@@ -107,7 +107,7 @@ public class ZmanimActivity
 				ICUAndroidBridge.create( getAssets() );
 
 				locationHandler = new ZmanimLocation( ZmanimActivity.this );
-				DebugUtils.setLocation( locationHandler );
+				LogUtils.setLocation( locationHandler );
 
 				return null;
 			}
@@ -138,7 +138,7 @@ public class ZmanimActivity
 
 		cleanupCalendarListeners();
 
-		DebugUtils.endSession( this );
+		LogUtils.endSession( this );
 		
 		super.onDestroy();
 	}

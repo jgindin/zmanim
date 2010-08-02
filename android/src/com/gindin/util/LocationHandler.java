@@ -159,10 +159,10 @@ public class LocationHandler {
 			protected String doInBackground( Location... locations ) {
 
 				String locationString;
+				final double latitude = location.getLatitude();
+				final double longitude = location.getLongitude();
 
 				try {
-					final double latitude = location.getLatitude();
-					final double longitude = location.getLongitude();
 					final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
 
 					if ( ( null != addresses ) && !addresses.isEmpty() ) {
@@ -175,9 +175,11 @@ public class LocationHandler {
 					}
 				}
 				catch ( IOException e ) {
-					locationString = "";
+					//noinspection AutoBoxing
+					locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
 				}
 
+				LogUtils.logEvent( "newLocation", "latitude: " + latitude, "longitude: " + longitude, "location: " + locationString );
 				return locationString;
 			}
 		};

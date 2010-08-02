@@ -99,6 +99,9 @@
 	</path>
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
 
+	<property file="flurry.properties"/>
+
+
 	<target name="tool-availability">
 		<available resource="org/tigris/subversion/svnant/svnantlib.xml"
 		           classpathref="svnant.classpath"
@@ -175,7 +178,17 @@
 				- No, because files which we're dynamically changing (based on the version) will be changed...
 		-->
 		<delete dir="bin"/>
+
+		<!-- Insert the flurry key -->
+		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
+
+		<!-- Call back to the "real" Android build file to do the actual building... -->
 		<antcall target="release"/>
+
+		<!-- Restore the flurry key placeholder -->
+		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE" /> 
+
+
 		<echo>Done building ${out-unsigned-package}.</echo>
 
 		<input

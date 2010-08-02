@@ -24,7 +24,9 @@ public class ZmanimLocation {
 
 	static {
 		SEATTLE = new Location( "hard-coded" );
+		//noinspection MagicNumber
 		SEATTLE.setLatitude( 47.554163 );
+		//noinspection MagicNumber
 		SEATTLE.setLongitude( -122.257919 );
 		SEATTLE.setAltitude( 0.0 );
 		SEATTLE.setTime( System.currentTimeMillis() );
@@ -45,6 +47,7 @@ public class ZmanimLocation {
 	private final LocationHandler.Listener                    locationListener;
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	public ZmanimLocation(
 		Context context
 	) {
@@ -56,7 +59,7 @@ public class ZmanimLocation {
 
 		locationListener = new LocationHandler.Listener() {
 			public void onLocationChanged(
-				Location newLocation,
+				Location  newLocation,
 				String    locationName
 			) {
 				lastKnownLocation.setLocationName( locationName );
@@ -69,7 +72,6 @@ public class ZmanimLocation {
 				}
 
 				lastKnownLocation.setElevation( altitude );
-
 				fireLocationChanged();
 			}
 

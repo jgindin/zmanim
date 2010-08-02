@@ -2,29 +2,30 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.util.debug;
+package com.gindin.util;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.gindin.zmanim.android.ZmanimLocation;
-import com.gindin.util.Version;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Wraps our usage of the Flurry analytics agent.
  */
-public class DebugUtils {
+public class LogUtils {
 
 
 	/** Remember where we are. */
 	private static ZmanimLocation                             location;
 
 
-	private DebugUtils() {
+	private LogUtils() {
 	}
 
 
@@ -33,7 +34,7 @@ public class DebugUtils {
 	) {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onStartSession( context, "HDK5S96L5E7C638N91S1" );
+			FlurryAgent.onStartSession( context, "FLURRY_KEY_GOES_HERE" );
 		}
 		else {
 			// Just so we *KNOW* we're dealing with a dev version...
@@ -73,7 +74,7 @@ public class DebugUtils {
 		ZmanimLocation location
 	) {
 
-		DebugUtils.location = location;
+		LogUtils.location = location;
 	}
 
 
@@ -107,6 +108,36 @@ public class DebugUtils {
 	}
 
 
+	public static void logEvent(
+		String      eventName,
+	  String ...  messages
+	) {
+
+		if ( !Version.isDevelopment() ) {
+
+			Map<String,String> messageMap = new HashMap<String, String>();
+			if ( null != messages ) {
+				for ( int index = 0; index < messages.length; index++ ) {
+					messageMap.put( "Msg" + index, messages[ index ] );
+				}
+			}
+
+			FlurryAgent.onEvent( eventName, messageMap );
+		}
+		else {
+
+			StringBuffer message = new StringBuffer();
+			if ( null != messages ) {
+				for ( String msg : messages ) {
+					message.append( msg ).append( "; " );
+				}
+			}
+
+			Log.i( eventName, message.toString() );
+		}
+	}
+
+
 	private static String cleanMessage( String message ) {
 
 		String cleaned = message.replace( "com.gindin.zmanim.android.zmanList", "c.g.z.a.z" );
@@ -120,4 +151,4 @@ public class DebugUtils {
 	}
 
 
-}  // End of DebugUtils class
+}  // End of LogUtils class
