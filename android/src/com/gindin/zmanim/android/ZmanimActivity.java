@@ -181,7 +181,7 @@ public class ZmanimActivity
 				super.onPostExecute( geoLocation );
 
 				buildHeader( geoLocation );
-				buildFooter( geoLocation );
+				buildFooter();
 
 				// We just need a display...don't need to hold on to it...
 				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
@@ -216,24 +216,22 @@ public class ZmanimActivity
 		);
 
 
-		// TODO: Listen for 'clicks' indicating the user wants to change their location.
-//		final View locationField = findViewById( R.id.location );
-//		locationField.setOnClickListener(
-//			new View.OnClickListener() {
-//				public void onClick( View view ) {
-//					showDialog( R.id.location );
-//				}
-//			}
-//		);
+		// Listen for 'clicks' indicating the user wants to change their location.
+		final View locationField = findViewById( R.id.location );
+		locationField.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick( View view ) {
+					locationHandler.onClickLocation();
+				}
+			}
+		);
 
 		// Update the header
 		updateHeader();
 	}
 
 
-	private void buildFooter(
-		GeoLocation location
-	) {
+	private void buildFooter() {
 
 		updateField( R.id.messages, "" );
 		//displayDebugMessages();
@@ -370,13 +368,13 @@ public class ZmanimActivity
 				return createSecularDatePickerDialog();
 
 			case R.id.location:
-				return createLocationSelectionDialog();
+				return locationHandler.createLocationSelectionDialog();
 
 			case R.id.about:
-				return createSimpleDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );
+				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );
 
 			case R.id.help:
-				return createSimpleDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
+				return createHtmlTextDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
 
 			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
 				return createEnableLocationSourcesDialog();
@@ -386,7 +384,7 @@ public class ZmanimActivity
 	}
 
 
-	private Dialog createSimpleDialog(
+	private Dialog createHtmlTextDialog(
 		int   titleResource,
 	  int   layoutResource,
 	  int   webviewId,
@@ -405,12 +403,6 @@ public class ZmanimActivity
 
 		builder.setView( layout );
 		return builder.create();
-	}
-
-
-	private Dialog createLocationSelectionDialog() {
-		// TODO: Just for testing...
-		return null;
 	}
 
 
@@ -507,18 +499,6 @@ public class ZmanimActivity
 	private void moveToPrevDay() {
 
 		zmanimCalendar.previousDay();
-	}
-
-
-	private void moveToNextMonth() {
-
-		zmanimCalendar.nextMonth();
-	}
-
-
-	private void moveToPrevMonth() {
-
-		zmanimCalendar.previousMonth();
 	}
 
 

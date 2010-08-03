@@ -4,9 +4,12 @@
 
 package com.gindin.zmanim.android;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.location.Location;
 import com.gindin.util.LocationHandler;
+import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 import net.sourceforge.zmanim.util.GeoLocation;
 
@@ -38,30 +41,38 @@ public class ZmanimLocation {
 	/** Minimum distance we want to elapse before we check for a new location. 2000 meters. */
 	public static final float                                 MIN_LOCATION_UPDATE_DISTANCE = 2000;
 
+	private final Activity                                    activity;
+
 	private final LocationHandler                             locationHandler;
 
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
-	private GeoLocation                                       lastKnownLocation;
+	private CurrentLocation                                   lastKnownLocation;
 
 	private final LocationHandler.Listener                    locationListener;
 
 
+
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public ZmanimLocation(
-		Context context
+		Activity activity
 	) {
 
-		lastKnownLocation  = new GeoLocation( "Seattle", SEATTLE.getLatitude(), SEATTLE.getLongitude(),
+		this.activity = activity;
+
+		lastKnownLocation  = new CurrentLocation( "Seattle", SEATTLE.getLatitude(), SEATTLE.getLongitude(),
 			SEATTLE.getAltitude(), TimeZone.getDefault() );
 
-		locationHandler = new LocationHandler( context, MIN_LOCATION_UPDATE_INTERVAL, MIN_LOCATION_UPDATE_DISTANCE );
+		locationHandler = new LocationHandler( activity, MIN_LOCATION_UPDATE_INTERVAL, MIN_LOCATION_UPDATE_DISTANCE );
 
 		locationListener = new LocationHandler.Listener() {
 			public void onLocationChanged(
 				Location  newLocation,
-				String    locationName
+				String    locationName,
+				String    providerName
 			) {
+
+				lastKnownLocation.setProviderName( providerName );
 				lastKnownLocation.setLocationName( locationName );
 				lastKnownLocation.setLatitude( newLocation.getLatitude() );
 				lastKnownLocation.setLongitude( newLocation.getLongitude() );
@@ -124,6 +135,25 @@ public class ZmanimLocation {
 	}
 
 
+	public void onClickLocation() {
+
+		// So...the activity notifies us, we then ask it to show a given dialog, which it will wind up
+		//  asking us to display....
+		activity.showDialog( R.id.location );
+	}
+
+
+	public Dialog createLocationSelectionDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder( activity );
+		builder.setTitle( "Current Location" );
+		builder.setMessage( lastKnownLocation.toString() );
+
+		return builder.create();
+	}
+
+
+
 	public GeoLocation getLastKnownLocation() {
 		return lastKnownLocation;
 	}
@@ -134,7 +164,11 @@ public class ZmanimLocation {
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	private void fireLocationChanged() {
+
+		LogUtils.logEvent( "newLocation", "latitude: " + lastKnownLocation.getLatitude(),
+			"longitude: " + lastKnownLocation.getLongitude(), "location: " + lastKnownLocation.getLocationName() );
 
 		for ( Listener listener : listeners ) {
 			listener.locationChanged( lastKnownLocation );
@@ -157,5 +191,49 @@ public class ZmanimLocation {
 		void error( LocationHandler.Error error );
 	}
 
+	
+	private static class CurrentLocation
+		extends GeoLocation {
+		
+		private String                                          providerName;
+
+
+		CurrentLocation(
+			String    locationName,
+			double    latitude,
+			double    longitude,
+			double    altitude,
+			TimeZone  timeZone
+		) {
+
+			super( locationName, latitude, longitude, altitude, timeZone );
+		}
+
+
+		public void setProviderName( String providerName ) {
+			this.providerName = providerName;
+		}
+
+
+		@Override
+		public String toString() {
+
+			@SuppressWarnings( { "MagicNumber" } )
+			final int millisInHour = 1000 * 60 * 60;
+
+			StringBuffer sb = new StringBuffer();
+			sb.append("Location Name:\t").append(getLocationName());
+			sb.append("\nLatitude:\t").append(getLatitude()).append(" deg");
+			sb.append("\nLongitude:\t").append(getLongitude()).append(" deg");
+			sb.append("\nElevation:\t").append(getElevation()).append(" Meters");
+			sb.append("\nTZ Name:\t").append(getTimeZone().getID());
+			sb.append("\nTZ GMT Offset:\t").append( getTimeZone().getRawOffset() / millisInHour );
+			sb.append("\nTZ DST Offset:\t").append( getTimeZone().getDSTSavings() / millisInHour );
+			sb.append("\nProvider:\t").append( providerName );
+
+			return sb.toString();
+		}
+	}
+	
 
 }  // End of ZmanimLocation class

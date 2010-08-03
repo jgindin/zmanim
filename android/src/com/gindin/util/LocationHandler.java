@@ -30,7 +30,7 @@ public class LocationHandler {
 
 	private final LocationManager                             locationManager;
 
-	private final AndroidLocationListener                     locationListener = new AndroidLocationListener();
+	private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
 
 	private final Formatter                                   rawLatitudeLongitudeFormatter = new Formatter();
 
@@ -106,13 +106,15 @@ public class LocationHandler {
 		for ( int i = providers.size() - 1; i >= 0; i-- ) {
 
 			final String providerName = providers.get( i );
-			locationManager.requestLocationUpdates( providerName, minUpdateInterval, minUpdateDistance, locationListener );
+			AndroidLocationListener listener = new AndroidLocationListener( providerName );
+			locationListeners.add( listener );
+			locationManager.requestLocationUpdates( providerName, minUpdateInterval, minUpdateDistance, listener );
 
 			if ( !foundLocation ) {
 				Location location = locationManager.getLastKnownLocation( providerName );
 				if ( null != location ) {
 					foundLocation = true;
-					fireNewLocation( location );
+					fireNewLocation( location, providerName );
 				}
 			}
 		}
@@ -126,7 +128,9 @@ public class LocationHandler {
 
 	private void stopListeningToLocation() {
 
-		locationManager.removeUpdates( locationListener );
+		for ( AndroidLocationListener listener : locationListeners ) {
+			locationManager.removeUpdates( listener );
+		}
 	}
 
 
@@ -150,7 +154,8 @@ public class LocationHandler {
 
 
 	private synchronized void fireNewLocation(
-		final Location location
+		final Location  location,
+		final String    providerName
 	) {
 
 
@@ -179,7 +184,6 @@ public class LocationHandler {
 					locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
 				}
 
-				LogUtils.logEvent( "newLocation", "latitude: " + latitude, "longitude: " + longitude, "location: " + locationString );
 				return locationString;
 			}
 		};
@@ -195,7 +199,7 @@ public class LocationHandler {
 
 
 		for ( Listener listener : listeners ) {
-			listener.onLocationChanged( location, geoLocation );
+			listener.onLocationChanged( location, geoLocation, providerName );
 		}
 	}
 
@@ -210,8 +214,16 @@ public class LocationHandler {
 
 	private class AndroidLocationListener implements LocationListener {
 
+		public final String                                     providerName;
+
+
+		public AndroidLocationListener( String providerName ) {
+			this.providerName = providerName;
+		}
+
+
 		public void onLocationChanged( Location location ) {
-			fireNewLocation( location );
+			fireNewLocation( location, providerName );
 		}
 
 
@@ -239,7 +251,11 @@ public class LocationHandler {
 
 	public interface Listener {
 
-		public void onLocationChanged( Location newLocation, String locationName );
+		public void onLocationChanged(
+			Location  newLocation,
+			String    locationName,
+			String    providerName
+		);
 
 		public void onError( Error error );
 	}
