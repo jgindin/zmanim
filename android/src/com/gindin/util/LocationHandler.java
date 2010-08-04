@@ -4,21 +4,21 @@
 
 package com.gindin.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
 
 /**
  * Abstracts dealing with the Android LocationManager.
  */
 public class LocationHandler {
 
+	private final Activity                                    activity;
 
 	private final long                                        minUpdateInterval;
 
@@ -34,19 +34,22 @@ public class LocationHandler {
 
 	private final Formatter                                   rawLatitudeLongitudeFormatter = new Formatter();
 
+	private CancelFirstFixesTimer                             cancelFirstFixesTimer = null;
+
 
 
 	public LocationHandler(
-		Context   context,
+		Activity  activity,
 	  long      minUpdateInterval,
 	  float     minUpdateDistance
 	) {
+		this.activity = activity;
 
 		this.minUpdateInterval = minUpdateInterval;
 		this.minUpdateDistance = minUpdateDistance;
 
-		locationManager = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
-		geocoder = new Geocoder( context );
+		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
+		geocoder = new Geocoder( activity );
 	}
 
 
@@ -92,45 +95,59 @@ public class LocationHandler {
 	}
 
 
+	void onReceivedFix() {
+
+		cancelFirstFixesTimer.cancel();
+		for ( AndroidLocationListener listener : locationListeners ) {
+			listener.cancelFirstFix();
+		}
+		
+	}
+
+	void onFailedToGetAnyFixes() {
+
+		for ( AndroidLocationListener listener : locationListeners ) {
+			listener.cancelFirstFix();
+		}
+
+		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
+		fireOnError( Error.CANNOT_DETERMINE_LOCATION );
+	}
+
+
 	private void startListeningToLocations() {
 
 		if ( !isLocationEnabled() ) {
 			return;
 		}
 
+		if ( null != cancelFirstFixesTimer ) {
+			cancelFirstFixesTimer.cancel();
+		}
+		cancelFirstFixesTimer = new CancelFirstFixesTimer();
+
 		// I'm going to listen to whatever providers might be available.
 		// Loop over the array backwards, presumably because the more accurate providers are last?
 		// This code was basically taken from: http://www.androidsnippets.org/snippets/21/
-		boolean foundLocation = false;
 		final List<String> providers = locationManager.getProviders( true );
 		for ( int i = providers.size() - 1; i >= 0; i-- ) {
 
 			final String providerName = providers.get( i );
 			AndroidLocationListener listener = new AndroidLocationListener( providerName );
 			locationListeners.add( listener );
-			locationManager.requestLocationUpdates( providerName, minUpdateInterval, minUpdateDistance, listener );
-
-			if ( !foundLocation ) {
-				Location location = locationManager.getLastKnownLocation( providerName );
-				if ( null != location ) {
-					foundLocation = true;
-					fireNewLocation( location, providerName );
-				}
-			}
 		}
-
-		if ( !foundLocation ) {
-			fireOnError( Error.CANNOT_DETERMINE_LOCATION );
-		}
-
 	}
 
 
 	private void stopListeningToLocation() {
 
+		cancelFirstFixesTimer.cancel();
+
 		for ( AndroidLocationListener listener : locationListeners ) {
-			locationManager.removeUpdates( listener );
+			listener.cancel();
 		}
+
+		locationListeners.clear();
 	}
 
 
@@ -212,17 +229,28 @@ public class LocationHandler {
 	}
 
 
+	/**
+	 * Listens to location changes for a given provider.
+	 */
 	private class AndroidLocationListener implements LocationListener {
 
 		public final String                                     providerName;
 
+		public boolean                                          firstFix = true;
 
-		public AndroidLocationListener( String providerName ) {
+
+		public AndroidLocationListener(
+			String providerName
+		) {
+
 			this.providerName = providerName;
+			locationManager.requestLocationUpdates( providerName, 0, 0, this );
 		}
 
 
 		public void onLocationChanged( Location location ) {
+
+			onReceivedFix();
 			fireNewLocation( location, providerName );
 		}
 
@@ -240,7 +268,64 @@ public class LocationHandler {
 		public void onProviderDisabled( String provider ) {
 			// Not used
 		}
-	}
+
+
+		public void cancel() {
+			locationManager.removeUpdates( this );
+		}
+
+		public void cancelFirstFix() {
+
+			if ( firstFix ) {
+				firstFix = false;
+				locationManager.requestLocationUpdates( providerName, minUpdateInterval, minUpdateDistance, this );
+			}
+		}
+
+	} // End of AndroidLocationListener
+
+
+
+	/**
+	 * If this timer's task actually gets to run, then that means it took too long to get a fix on our location. So, we'll
+	 *  fallback to whatever we can get.
+	 */
+	private class CancelFirstFixesTimer
+		extends Timer {
+
+		/** Max time to wait for SOMEONE to cancel us. */
+		private static final int                                  WAIT_FOR_FIRST_FIX_DELAY = 20000;
+
+		CancelFirstFixesTimer() {
+			super( true );
+			start();
+		}
+
+
+		private void start() {
+
+			TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+
+					// Looks like if we don't invoke the callback on the UI thread, then things don't work
+					//  so well...
+					activity.runOnUiThread(
+						new Runnable() {
+							public void run() {
+								onFailedToGetAnyFixes();
+							}
+						}
+					);
+				}
+			};
+
+			schedule( task, WAIT_FOR_FIRST_FIX_DELAY );
+		}
+
+	} // End of CancelFirstFixesTimer
+
+
 
 
 	public static enum Error {

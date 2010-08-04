@@ -84,13 +84,13 @@ public class ZmanimActivity
 					loading.setMessage( "Updating With New Location..." );
 					loading.show();
 				}
-				rebuildUI( newLocation );
+				rebuildUI( newLocation, null );
 				loading.dismiss();
 			}
 
 
 			public void error( LocationHandler.Error error ) {
-				handleLocationError( error );
+				rebuildUI( null, error );
 				loading.dismiss();
 			}
 		};
@@ -164,24 +164,30 @@ public class ZmanimActivity
 
 
 	private void rebuildUI(
-		GeoLocation location
+		final GeoLocation           location,
+	  final LocationHandler.Error error
 	) {
 
-		AsyncTask<GeoLocation, Void, GeoLocation> buildUITask = new AsyncTask<GeoLocation, Void, GeoLocation>() {
+		AsyncTask<Void, Void, Void> buildUITask = new AsyncTask<Void, Void, Void>() {
 			@Override
-			protected GeoLocation doInBackground( GeoLocation... geoLocation ) {
+			protected Void doInBackground( Void... v ) {
 
-				zmanimCalendar = new HebrewZmanimCalendar( geoLocation[0], timeFormatter, secularDateFormatter );
-				return geoLocation[0];
+				zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+				return null;
 			}
 
 
 			@Override
-			protected void onPostExecute( GeoLocation geoLocation ) {
-				super.onPostExecute( geoLocation );
+			protected void onPostExecute( Void v ) {
+				super.onPostExecute( v );
 
-				buildHeader( geoLocation );
-				buildFooter();
+				buildHeader( location );
+				buildFooter( error );
+
+				if ( null == location ) {
+					zmanimCalendarListener = null;
+					return;
+				}
 
 				// We just need a display...don't need to hold on to it...
 				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
@@ -194,16 +200,14 @@ public class ZmanimActivity
 				zmanimCalendar.addListener( zmanimCalendarListener );
 			}
 		};
-		buildUITask.execute( location );
 
+		buildUITask.execute();
 	}
 
 
 	private void buildHeader(
 		GeoLocation location
 	) {
-
-		updateField( R.id.location, location.getLocationName() );
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
 		final View secularDate = findViewById( R.id.secular_date );
@@ -215,26 +219,45 @@ public class ZmanimActivity
 			}
 		);
 
+		final String locationName;
 
-		// Listen for 'clicks' indicating the user wants to change their location.
-		final View locationField = findViewById( R.id.location );
-		locationField.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View view ) {
-					locationHandler.onClickLocation();
+		if ( null == location ) {
+			locationName = getResources().getString( R.string.unknown_location );
+		}
+		else {
+
+			locationName = location.getLocationName();
+
+			// Listen for 'clicks' indicating the user wants to change their location.
+			final View locationField = findViewById( R.id.location );
+			locationField.setOnClickListener(
+				new View.OnClickListener() {
+					public void onClick( View view ) {
+						locationHandler.onClickLocation();
+					}
 				}
-			}
-		);
+			);
+		}
+
+		updateField( R.id.location, locationName );
 
 		// Update the header
 		updateHeader();
 	}
 
 
-	private void buildFooter() {
+	private void buildFooter(
+		final LocationHandler.Error error
+	) {
 
-		updateField( R.id.messages, "" );
-		//displayDebugMessages();
+
+		if ( null == error ) {
+			updateField( R.id.messages, "" );
+			//displayDebugMessages();
+		}
+		else {
+			handleLocationError( error );
+		}
 	}
 
 
@@ -249,35 +272,49 @@ public class ZmanimActivity
 
 		// Now...why is it we couldn't determine our location?
 		String extra = "";
+		final View.OnClickListener clickListener;
 		switch ( error ) {
 
 			case NO_LOCATION_MANAGER_SERVICE:
 				// This is just weird...
 				extra = "No location manager??? Internal error...";
+				clickListener = null;
 				break;
 
 			case CANNOT_DETERMINE_LOCATION:
 				extra = getResources().getString( R.string.cannot_determine_location );
+				clickListener = new View.OnClickListener() {
+					public void onClick( View view ) {
+						// TODO: Might want something different here???
+						showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
+					}
+				};
 				break;
 
 			case NO_PROVIDERS:
 				// Well, gosh..looks like the user hasn't turned on location management!
 				extra = getResources().getString( R.string.no_location_management );
-
-				View messages = findViewById( R.id.messages );
-				messages.setOnClickListener(
-					new View.OnClickListener() {
-						public void onClick( View view ) {
-							showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
-						}
+				clickListener = new View.OnClickListener() {
+					public void onClick( View view ) {
+						showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
 					}
-				);
+				};
 				break;
+
+			default:
+				// Seems necessary to have a default case, even though we've specified all the cases, so that the
+				//  clickListener gets initialized.
+				clickListener = null;
 		}
 
 		errorMessage = errorMessage + " <u>" + extra + "</u>";
-
 		updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
+
+		if ( null != clickListener ) {
+			View messages = findViewById( R.id.messages );
+			messages.setOnClickListener( clickListener );
+		}
+
 	}
 
 

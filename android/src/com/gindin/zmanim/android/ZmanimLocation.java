@@ -20,6 +20,11 @@ import java.util.TimeZone;
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
  * API.
+ *
+ * TODO: Allow user to choose how to select location:
+ *        1. Auto
+ *        2. Manually enter city, state (with optional street, etc...)
+ *        3. Google Map (see http://code.google.com/android/add-ons/google-apis/mapkey.html, http://code.google.com/android/add-ons/google-apis/reference/index.html)
  */
 public class ZmanimLocation {
 

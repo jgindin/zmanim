@@ -194,4 +194,48 @@ class HebrewDateFormatter {
 		return date.toString();
 	}
 
+
+	public String formatSecularDate(
+		HebrewCalendar calendar
+	) {
+
+		final StringBuffer date = new StringBuffer();
+		switch ( calendar.get( Calendar.DAY_OF_WEEK ) ) {
+			case Calendar.SUNDAY:
+				date.append( "Sun" );
+				break;
+
+			case Calendar.MONDAY:
+				date.append( "Mon" );
+				break;
+
+			case Calendar.TUESDAY:
+				date.append( "Tue" );
+				break;
+
+			case Calendar.WEDNESDAY:
+				date.append( "Wed" );
+				break;
+
+			case Calendar.THURSDAY:
+				date.append( "Thur" );
+				break;
+
+			case Calendar.FRIDAY:
+				date.append( "Fri" );
+				break;
+
+			case Calendar.SATURDAY:
+				date.append( "Shabbat" );
+				break;
+
+		}
+
+		date.append( ", " );
+		date.append( secularDateFormatter.format( calendar.getTime() ) );
+
+		return date.toString();
+	}
+
+
 }  // End of HebrewDateFormatter class

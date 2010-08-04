@@ -50,7 +50,15 @@ public class HebrewZmanimCalendar {
 		DateFormat  secularDateFormatter
 	) {
 
-		this.zmanimCalendar = new ZmanimCalendar( location );
+		// There are cases where we don't have / aren't able to get a location. In such a case, most of
+		//  this class is useless, but hey...we can still provide the date.
+		if ( null != location ) {
+			this.zmanimCalendar = new ZmanimCalendar( location );
+		}
+		else {
+			zmanimCalendar = null;
+		}
+
 		this.dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
 		this.zmanimFactory = new ZmanimFactory( this );
 	}
@@ -102,7 +110,12 @@ public class HebrewZmanimCalendar {
 
 	public String formatSecularDate() {
 
-		return dateFormatter.formatSecularDate( zmanimCalendar.getCalendar() );
+		if ( null == zmanimCalendar ) {
+			return dateFormatter.formatSecularDate( hebrewCalendar );
+		}
+		else {
+			return dateFormatter.formatSecularDate( zmanimCalendar.getCalendar() );
+		}
 	}
 
 
@@ -135,20 +148,6 @@ public class HebrewZmanimCalendar {
 
 
 	/**
-	 * Moves the calendar to the next month after where it is currently set, attempting to keep
-	 *  the day of the month the same. Appropriate wrapping will be applied.
-	 *<p>
-	 * Operates on the secular date.
-	 */
-	public void nextMonth() {
-
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.MONTH, 1 );
-		syncToSecularCalendar( calendar );
-	}
-
-
-	/**
 	 * Moves the calendar to the day before where it is currently set.
 	 *<p>
 	 * Operates on the secular date.
@@ -157,20 +156,6 @@ public class HebrewZmanimCalendar {
 
 		final Calendar calendar = zmanimCalendar.getCalendar();
 		calendar.add( Calendar.DATE, -1 );
-		syncToSecularCalendar( calendar );
-	}
-
-
-	/**
-	 * Moves the calendar to the month before where it is currently set, attempting to keep
-	 *  the day of the month the same. Appropriate wrapping will be applied.
-	 *<p>
-	 * Operates on the secular date.
-	 */
-	public void previousMonth() {
-
-		final Calendar calendar = zmanimCalendar.getCalendar();
-		calendar.add( Calendar.MONTH, -1 );
 		syncToSecularCalendar( calendar );
 	}
 
@@ -311,20 +296,6 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	@SuppressWarnings( { "UnnecessaryBoxing" } )
-	public boolean showHavdalah() {
-
-		//noinspection UnnecessaryUnboxing
-		return adjustHebrewDateIfNecessary(
-			new HebrewDateAdjustedCallback<Boolean>() {
-				public Boolean dateAdjusted( boolean adjustmentWasRequired ) {
-					return Boolean.valueOf( hebrewCalendar.showHavdalah() );
-				}
-			}
-		).booleanValue();
-	}
-
-
 	private boolean isSetForToday() {
 
 		// Make sure we're using the most up-to-date time.
@@ -374,7 +345,15 @@ public class HebrewZmanimCalendar {
 		HebrewDateAdjustedCallback<T> callback
 	) {
 
-		boolean adjusted = isTodayAfterSunset();
+		boolean adjusted;
+
+		if ( null == zmanimCalendar ) {
+			adjusted = false;
+		}
+		else {
+			adjusted = isTodayAfterSunset();
+		}
+
 		if ( adjusted ) {
 			hebrewCalendar.add( Calendar.DATE, 1 );
 		}
@@ -386,7 +365,6 @@ public class HebrewZmanimCalendar {
 		}
 
 		return retVal;
-
 	}
 
 
