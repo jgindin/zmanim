@@ -15,6 +15,7 @@ import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
@@ -218,6 +219,11 @@ public class ZmanimLocation {
 		private static int                                      MILLIS_IN_HOUR = 60 * 60 * 1000;
 
 		private String                                          providerName;
+
+
+		private CurrentLocation() {
+			setTimeZone( TimeZone.getDefault() );
+		}
 
 
 		public void setProviderName( String providerName ) {
