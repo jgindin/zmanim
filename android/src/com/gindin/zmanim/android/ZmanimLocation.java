@@ -15,7 +15,6 @@ import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
@@ -28,23 +27,6 @@ import java.util.TimeZone;
  */
 public class ZmanimLocation {
 
-	private static final Location                             SEATTLE;
-
-	static {
-		SEATTLE = new Location( "hard-coded" );
-		//noinspection MagicNumber
-		SEATTLE.setLatitude( 47.554163 );
-		//noinspection MagicNumber
-		SEATTLE.setLongitude( -122.257919 );
-		SEATTLE.setAltitude( 0.0 );
-		SEATTLE.setTime( System.currentTimeMillis() );
-	}
-
-	/** Minimum amount of time we want to elapse before we check for a new location. 30 minutes. */
-	public static final long                                  MIN_LOCATION_UPDATE_INTERVAL = 30 * 60 * 1000;
-
-	/** Minimum distance we want to elapse before we check for a new location. 2000 meters. */
-	public static final float                                 MIN_LOCATION_UPDATE_DISTANCE = 2000;
 
 	private final Activity                                    activity;
 
@@ -52,23 +34,19 @@ public class ZmanimLocation {
 
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
-	private CurrentLocation                                   lastKnownLocation;
+	private final CurrentLocation                             lastKnownLocation = new CurrentLocation();
 
 	private final LocationHandler.Listener                    locationListener;
 
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
 	public ZmanimLocation(
 		Activity activity
 	) {
 
 		this.activity = activity;
 
-		lastKnownLocation  = new CurrentLocation( "Seattle", SEATTLE.getLatitude(), SEATTLE.getLongitude(),
-			SEATTLE.getAltitude(), TimeZone.getDefault() );
-
-		locationHandler = new LocationHandler( activity, MIN_LOCATION_UPDATE_INTERVAL, MIN_LOCATION_UPDATE_DISTANCE );
+		locationHandler = new LocationHandler( activity );
 
 		locationListener = new LocationHandler.Listener() {
 			public void onLocationChanged(
@@ -77,23 +55,20 @@ public class ZmanimLocation {
 				String    providerName
 			) {
 
-				lastKnownLocation.setProviderName( providerName );
-				lastKnownLocation.setLocationName( locationName );
-				lastKnownLocation.setLatitude( newLocation.getLatitude() );
-				lastKnownLocation.setLongitude( newLocation.getLongitude() );
-
-				double altitude = newLocation.getAltitude();
-				if ( !newLocation.hasAltitude() || ( altitude < 0 ) ) {
-					altitude = 0.0;
-				}
-
-				lastKnownLocation.setElevation( altitude );
-				fireLocationChanged();
+				CurrentLocation location = updateLastKnownLocation( newLocation, locationName, providerName );
+				fireLocationChanged( location );
 			}
 
 
-			public void onError( LocationHandler.Error error ) {
-				fireError( error );
+			public void onError(
+				LocationHandler.Error error,
+				Location              oldLocation,
+				String                locationName,
+				String                providerName
+			) {
+
+				CurrentLocation location = updateLastKnownLocation( oldLocation, locationName, providerName );
+				fireError( error, location );
 			}
 		};
 	}
@@ -170,21 +145,57 @@ public class ZmanimLocation {
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private void fireLocationChanged() {
+	private CurrentLocation updateLastKnownLocation(
+		Location  newLocation,
+		String    locationName,
+		String    providerName
+	) {
 
-		LogUtils.logEvent( "newLocation", "latitude: " + lastKnownLocation.getLatitude(),
-			"longitude: " + lastKnownLocation.getLongitude(), "location: " + lastKnownLocation.getLocationName() );
+
+		// Can be null if we don't actually have a new location...
+		if ( null == newLocation ) {
+			return null;
+		}
+		else {
+			lastKnownLocation.setProviderName( providerName );
+			lastKnownLocation.setLocationName( locationName );
+			lastKnownLocation.setLatitude( newLocation.getLatitude() );
+			lastKnownLocation.setLongitude( newLocation.getLongitude() );
+
+			double altitude = newLocation.getAltitude();
+			if ( !newLocation.hasAltitude() || ( altitude < 0 ) ) {
+				altitude = 0.0;
+			}
+
+			lastKnownLocation.setElevation( altitude );
+		}
+
+		return lastKnownLocation;
+	}
+
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
+	private void fireLocationChanged(
+		CurrentLocation location
+	) {
+
+		LogUtils.logEvent( "newLocation", "latitude: " + location.getLatitude(),
+			"longitude: " + location.getLongitude(), "location: " + location.getLocationName() );
 
 		for ( Listener listener : listeners ) {
-			listener.locationChanged( lastKnownLocation );
+			listener.locationChanged( location );
 		}
 	}
 
 
-	private void fireError( LocationHandler.Error error ) {
+	private void fireError(
+		LocationHandler.Error error,
+		CurrentLocation       location
+	) {
 
 		for ( Listener listener : listeners ) {
-			listener.error( error );
+			listener.error( error, location );
 		}
 	}
 
@@ -193,26 +204,20 @@ public class ZmanimLocation {
 
 		void locationChanged( GeoLocation newLocation );
 
-		void error( LocationHandler.Error error );
+		void error(
+			LocationHandler.Error error,
+			GeoLocation lastKnownLocation
+		);
 	}
 
 	
 	private static class CurrentLocation
 		extends GeoLocation {
-		
+
+		@SuppressWarnings( { "MagicNumber" } )
+		private static int                                      MILLIS_IN_HOUR = 60 * 60 * 1000;
+
 		private String                                          providerName;
-
-
-		CurrentLocation(
-			String    locationName,
-			double    latitude,
-			double    longitude,
-			double    altitude,
-			TimeZone  timeZone
-		) {
-
-			super( locationName, latitude, longitude, altitude, timeZone );
-		}
 
 
 		public void setProviderName( String providerName ) {
@@ -223,17 +228,14 @@ public class ZmanimLocation {
 		@Override
 		public String toString() {
 
-			@SuppressWarnings( { "MagicNumber" } )
-			final int millisInHour = 1000 * 60 * 60;
-
 			StringBuffer sb = new StringBuffer();
 			sb.append("Location Name:\t").append(getLocationName());
 			sb.append("\nLatitude:\t").append(getLatitude()).append(" deg");
 			sb.append("\nLongitude:\t").append(getLongitude()).append(" deg");
 			sb.append("\nElevation:\t").append(getElevation()).append(" Meters");
 			sb.append("\nTZ Name:\t").append(getTimeZone().getID());
-			sb.append("\nTZ GMT Offset:\t").append( getTimeZone().getRawOffset() / millisInHour );
-			sb.append("\nTZ DST Offset:\t").append( getTimeZone().getDSTSavings() / millisInHour );
+			sb.append("\nTZ GMT Offset:\t").append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
+			sb.append("\nTZ DST Offset:\t").append( getTimeZone().getDSTSavings() / MILLIS_IN_HOUR );
 			sb.append("\nProvider:\t").append( providerName );
 
 			return sb.toString();

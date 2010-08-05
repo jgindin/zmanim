@@ -20,10 +20,6 @@ public class LocationHandler {
 
 	private final Activity                                    activity;
 
-	private final long                                        minUpdateInterval;
-
-	private final float                                       minUpdateDistance;
-
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
 	private final Geocoder                                    geocoder;
@@ -39,14 +35,9 @@ public class LocationHandler {
 
 
 	public LocationHandler(
-		Activity  activity,
-	  long      minUpdateInterval,
-	  float     minUpdateDistance
+		Activity activity
 	) {
 		this.activity = activity;
-
-		this.minUpdateInterval = minUpdateInterval;
-		this.minUpdateDistance = minUpdateDistance;
 
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
 		geocoder = new Geocoder( activity );
@@ -90,19 +81,25 @@ public class LocationHandler {
 
 
 	public void reset() {
+
 		stopListeningToLocation();
 		startListeningToLocations();
 	}
 
 
-	void onReceivedFix() {
+	void onReceivedFix(
+		final Location  location,
+		final String    providerName
+	) {
 
 		cancelFirstFixesTimer.cancel();
 		for ( AndroidLocationListener listener : locationListeners ) {
 			listener.cancelFirstFix();
 		}
-		
+
+		fireNewLocation( location, providerName );
 	}
+
 
 	void onFailedToGetAnyFixes() {
 
@@ -141,7 +138,9 @@ public class LocationHandler {
 
 	private void stopListeningToLocation() {
 
-		cancelFirstFixesTimer.cancel();
+		if ( null != cancelFirstFixesTimer ) {
+			cancelFirstFixesTimer.cancel();
+		}
 
 		for ( AndroidLocationListener listener : locationListeners ) {
 			listener.cancel();
@@ -158,8 +157,8 @@ public class LocationHandler {
 			return false;
 		}
 
-		final boolean networkProviderEnabled = locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER );
-		final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+		final boolean networkProviderEnabled = isProviderEnabled( LocationManager.NETWORK_PROVIDER );
+		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
 
 		if ( !networkProviderEnabled && !gpsProviderEnabled ) {
 			fireOnError( Error.NO_PROVIDERS );
@@ -170,11 +169,85 @@ public class LocationHandler {
 	}
 
 
+	private boolean isProviderEnabled(
+		String provider
+	) {
+		return locationManager.isProviderEnabled( provider );
+	}
+
+
+	private Location getLastKnownLocation() {
+
+		Location gpsLocation = null;
+		if ( isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+			gpsLocation = locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER );
+		}
+
+		Location networkLocation = null;
+		if ( isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
+			networkLocation = locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
+		}
+
+		// Which one to use?
+		Location lastLocation;
+		if ( ( null != gpsLocation ) && ( null != networkLocation ) ) {
+			if ( gpsLocation.getTime() > networkLocation.getTime() ) {
+				lastLocation = gpsLocation;
+			}
+			else {
+				lastLocation = networkLocation;
+			}
+		}
+		else if ( null != gpsLocation ) {
+			lastLocation = gpsLocation;
+		}
+		else {
+			lastLocation = networkLocation;
+		}
+
+		return lastLocation;
+	}
+
+
 	private synchronized void fireNewLocation(
 		final Location  location,
 		final String    providerName
 	) {
 
+		String geoLocation = lookupLocationName( location );
+
+		for ( Listener listener : listeners ) {
+			listener.onLocationChanged( location, geoLocation, providerName );
+		}
+	}
+
+
+	private synchronized void fireOnError( Error error ) {
+
+		Location oldLocation = getLastKnownLocation();
+		String oldLocationName = lookupLocationName( oldLocation );
+
+		final String provider;
+		if ( null != oldLocation ) {
+			provider = oldLocation.getProvider();
+		}
+		else {
+			provider = "";
+		}
+
+		for ( Listener listener : listeners ) {
+			listener.onError( error, oldLocation, oldLocationName, provider );
+		}
+	}
+
+
+	private String lookupLocationName(
+		final Location location
+	) {
+
+		if ( null == location ) {
+			return "";
+		}
 
 		AsyncTask<Location, Void, String> getGeoLocationTask = new AsyncTask<Location, Void, String>() {
 			@Override
@@ -213,19 +286,7 @@ public class LocationHandler {
 		catch ( Exception e ) {
 			geoLocation = null;
 		}
-
-
-		for ( Listener listener : listeners ) {
-			listener.onLocationChanged( location, geoLocation, providerName );
-		}
-	}
-
-
-	private synchronized void fireOnError( Error error ) {
-
-		for ( Listener listener : listeners ) {
-			listener.onError( error );
-		}
+		return geoLocation;
 	}
 
 
@@ -234,24 +295,49 @@ public class LocationHandler {
 	 */
 	private class AndroidLocationListener implements LocationListener {
 
+		private static final int                                MILLIS_PER_MINUTE = 60 * 1000;
+
 		public final String                                     providerName;
 
-		public boolean                                          firstFix = true;
+		private final long                                      minUpdateInterval;
+
+		private final float                                     minUpdateDistance;
+
+		private boolean                                         firstFix = true;
 
 
-		public AndroidLocationListener(
-			String providerName
+		protected AndroidLocationListener(
+			String  providerName
 		) {
 
 			this.providerName = providerName;
+
+			if ( LocationManager.GPS_PROVIDER.equals( providerName ) ) {
+
+				// GPS is expensive...don't check very often...
+				//noinspection MagicNumber
+				this.minUpdateInterval = 20 * MILLIS_PER_MINUTE;
+			}
+			else if ( LocationManager.NETWORK_PROVIDER.equals( providerName ) ) {
+
+				// Network is cheap; check every 5 minutes.
+				this.minUpdateInterval = 5 * MILLIS_PER_MINUTE;
+			}
+			else {
+
+				// We don't know what this provider is...assume it's moderately expensive.
+				this.minUpdateInterval = 10 * MILLIS_PER_MINUTE;
+			}
+
+			// We're limiting our checks by time, not distance.
+			this.minUpdateDistance = 0;
 			locationManager.requestLocationUpdates( providerName, 0, 0, this );
 		}
 
 
 		public void onLocationChanged( Location location ) {
 
-			onReceivedFix();
-			fireNewLocation( location, providerName );
+			onReceivedFix( location, providerName );
 		}
 
 
@@ -283,7 +369,6 @@ public class LocationHandler {
 		}
 
 	} // End of AndroidLocationListener
-
 
 
 	/**
@@ -342,7 +427,12 @@ public class LocationHandler {
 			String    providerName
 		);
 
-		public void onError( Error error );
+		public void onError(
+			Error     error,
+			Location  oldLocation,
+			String    locationName,
+			String    providerName
+		);
 	}
 
 

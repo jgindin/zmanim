@@ -60,6 +60,9 @@ public class ZmanimActivity
 
 	private ZmanimLocation.Listener                           locationListener;
 
+	/** We use a progress dialog to let the user know we're working. */
+	private ProgressDialog                                    determiningLocationDialog;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -73,25 +76,28 @@ public class ZmanimActivity
 
 		setContentView( R.layout.main );
 
-		final ProgressDialog loading = new ProgressDialog( this );
-		loading.setIndeterminate( true );
-		loading.setMessage( "Determining location..." );
-		loading.show();
+		determiningLocationDialog = new ProgressDialog( this );
+		determiningLocationDialog.setIndeterminate( true );
+		determiningLocationDialog.setMessage( "Determining location..." );
+		determiningLocationDialog.show();
 
 		locationListener = new ZmanimLocation.Listener() {
 			public void locationChanged( GeoLocation newLocation ) {
-				if ( !loading.isShowing() ) {
-					loading.setMessage( "Updating With New Location..." );
-					loading.show();
+				if ( !determiningLocationDialog.isShowing() ) {
+					determiningLocationDialog.setMessage( "Updating With New Location..." );
+					determiningLocationDialog.show();
 				}
 				rebuildUI( newLocation, null );
-				loading.dismiss();
+				determiningLocationDialog.dismiss();
 			}
 
 
-			public void error( LocationHandler.Error error ) {
-				rebuildUI( null, error );
-				loading.dismiss();
+			public void error(
+				LocationHandler.Error error,
+				GeoLocation           lastKnownLocation
+			) {
+				rebuildUI( lastKnownLocation, error );
+				determiningLocationDialog.dismiss();
 			}
 		};
 
@@ -156,6 +162,8 @@ public class ZmanimActivity
 		switch ( requestCode ) {
 
 			case REQUEST_ENABLE_LOCATION_SOURCES:
+				determiningLocationDialog.setMessage( "Determining location..." );
+				determiningLocationDialog.show();
 				cleanupCalendarListeners();
 				locationHandler.reset();
 				break;
@@ -283,12 +291,10 @@ public class ZmanimActivity
 
 			case CANNOT_DETERMINE_LOCATION:
 				extra = getResources().getString( R.string.cannot_determine_location );
-				clickListener = new View.OnClickListener() {
-					public void onClick( View view ) {
-						// TODO: Might want something different here???
-						showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
-					}
-				};
+				// TODO: Need to add click listener that will invoke a dialog allowing the user to:
+				//  1. try obtaining location again; or
+				//  2. manually specify where the are
+				clickListener = null;
 				break;
 
 			case NO_PROVIDERS:
@@ -307,14 +313,18 @@ public class ZmanimActivity
 				clickListener = null;
 		}
 
-		errorMessage = errorMessage + " <u>" + extra + "</u>";
-		updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
 
-		if ( null != clickListener ) {
+		if ( null == clickListener ) {
+			errorMessage = errorMessage + extra;
+		}
+		else {
+			errorMessage = errorMessage + " <u>" + extra + "</u>";
+
 			View messages = findViewById( R.id.messages );
 			messages.setOnClickListener( clickListener );
 		}
 
+		updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
 	}
 
 
