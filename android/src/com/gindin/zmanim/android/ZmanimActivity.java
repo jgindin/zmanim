@@ -25,6 +25,7 @@ import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Entry point to the Android application which displays zmanim.
@@ -82,7 +83,7 @@ public class ZmanimActivity
 		determiningLocationDialog.show();
 
 		locationListener = new ZmanimLocationHandler.Listener() {
-			public void locationChanged( GeoLocation newLocation ) {
+			public void locationChanged( ZmanimLocation newLocation ) {
 				if ( !determiningLocationDialog.isShowing() ) {
 					determiningLocationDialog.setMessage( "Updating With New Location..." );
 					determiningLocationDialog.show();
@@ -94,7 +95,7 @@ public class ZmanimActivity
 
 			public void error(
 				LocationHandler.Error error,
-				GeoLocation           lastKnownLocation
+				ZmanimLocation        lastKnownLocation
 			) {
 				rebuildUI( lastKnownLocation, error );
 				determiningLocationDialog.dismiss();
@@ -172,7 +173,7 @@ public class ZmanimActivity
 
 
 	private void rebuildUI(
-		final GeoLocation           location,
+		final ZmanimLocation        location,
 	  final LocationHandler.Error error
 	) {
 
@@ -190,7 +191,7 @@ public class ZmanimActivity
 				super.onPostExecute( v );
 
 				buildHeader( location );
-				buildFooter( error );
+				buildFooter( location, error );
 
 				if ( null == location ) {
 					zmanimCalendarListener = null;
@@ -255,6 +256,7 @@ public class ZmanimActivity
 
 
 	private void buildFooter(
+		ZmanimLocation              location,
 		final LocationHandler.Error error
 	) {
 
@@ -264,12 +266,13 @@ public class ZmanimActivity
 			//displayDebugMessages();
 		}
 		else {
-			handleLocationError( error );
+			handleLocationError( location, error );
 		}
 	}
 
 
 	private void handleLocationError(
+		ZmanimLocation        location,
 		LocationHandler.Error error
 	) {
 
@@ -291,6 +294,11 @@ public class ZmanimActivity
 
 			case CANNOT_DETERMINE_LOCATION:
 				extra = getResources().getString( R.string.cannot_determine_location );
+
+				if ( null != location ) {
+					extra += " " + getResources().getString( R.string.last_location_time, new Date( location.locationTime ) ); 
+				}
+
 				// TODO: Need to add click listener that will invoke a dialog allowing the user to:
 				//  1. try obtaining location again; or
 				//  2. manually specify where the are

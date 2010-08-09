@@ -88,8 +88,7 @@ public class LocationHandler {
 
 
 	void onReceivedFix(
-		final Location  location,
-		final String    providerName
+		final Location location
 	) {
 
 		cancelFirstFixesTimer.cancel();
@@ -97,7 +96,7 @@ public class LocationHandler {
 			listener.cancelFirstFix();
 		}
 
-		fireNewLocation( location, providerName );
+		fireNewLocation( location );
 	}
 
 
@@ -210,14 +209,13 @@ public class LocationHandler {
 
 
 	private synchronized void fireNewLocation(
-		final Location  location,
-		final String    providerName
+		final Location location
 	) {
 
 		String geoLocation = lookupLocationName( location );
 
 		for ( Listener listener : listeners ) {
-			listener.onLocationChanged( location, geoLocation, providerName );
+			listener.onLocationChanged( location, geoLocation );
 		}
 	}
 
@@ -227,16 +225,8 @@ public class LocationHandler {
 		Location oldLocation = getLastKnownLocation();
 		String oldLocationName = lookupLocationName( oldLocation );
 
-		final String provider;
-		if ( null != oldLocation ) {
-			provider = oldLocation.getProvider();
-		}
-		else {
-			provider = "";
-		}
-
 		for ( Listener listener : listeners ) {
-			listener.onError( error, oldLocation, oldLocationName, provider );
+			listener.onError( error, oldLocation, oldLocationName );
 		}
 	}
 
@@ -337,7 +327,7 @@ public class LocationHandler {
 
 		public void onLocationChanged( Location location ) {
 
-			onReceivedFix( location, providerName );
+			onReceivedFix( location );
 		}
 
 
@@ -423,15 +413,13 @@ public class LocationHandler {
 
 		public void onLocationChanged(
 			Location  newLocation,
-			String    locationName,
-			String    providerName
+			String    locationName
 		);
 
 		public void onError(
 			Error     error,
 			Location  oldLocation,
-			String    locationName,
-			String    providerName
+			String    locationName
 		);
 	}
 

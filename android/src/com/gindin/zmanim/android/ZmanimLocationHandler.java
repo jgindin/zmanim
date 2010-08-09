@@ -15,7 +15,6 @@ import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
@@ -35,9 +34,9 @@ public class ZmanimLocationHandler {
 
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
-	private final CurrentLocation                             lastKnownLocation = new CurrentLocation();
-
 	private final LocationHandler.Listener                    locationListener;
+
+	private ZmanimLocation                                    lastKnownLocation = null;
 
 
 
@@ -51,12 +50,11 @@ public class ZmanimLocationHandler {
 
 		locationListener = new LocationHandler.Listener() {
 			public void onLocationChanged(
-				Location  newLocation,
-				String    locationName,
-				String    providerName
+				Location newLocation,
+				String locationName
 			) {
 
-				CurrentLocation location = updateLastKnownLocation( newLocation, locationName, providerName );
+				ZmanimLocation location = updateLastKnownLocation( newLocation, locationName );
 				fireLocationChanged( location );
 			}
 
@@ -64,11 +62,10 @@ public class ZmanimLocationHandler {
 			public void onError(
 				LocationHandler.Error error,
 				Location              oldLocation,
-				String                locationName,
-				String                providerName
+				String                locationName
 			) {
 
-				CurrentLocation location = updateLastKnownLocation( oldLocation, locationName, providerName );
+				ZmanimLocation location = updateLastKnownLocation( oldLocation, locationName );
 				fireError( error, location );
 			}
 		};
@@ -146,29 +143,17 @@ public class ZmanimLocationHandler {
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private CurrentLocation updateLastKnownLocation(
+	private ZmanimLocation updateLastKnownLocation(
 		Location  newLocation,
-		String    locationName,
-		String    providerName
+		String    locationName
 	) {
-
 
 		// Can be null if we don't actually have a new location...
 		if ( null == newLocation ) {
 			return null;
 		}
 		else {
-			lastKnownLocation.setProviderName( providerName );
-			lastKnownLocation.setLocationName( locationName );
-			lastKnownLocation.setLatitude( newLocation.getLatitude() );
-			lastKnownLocation.setLongitude( newLocation.getLongitude() );
-
-			double altitude = newLocation.getAltitude();
-			if ( !newLocation.hasAltitude() || ( altitude < 0 ) ) {
-				altitude = 0.0;
-			}
-
-			lastKnownLocation.setElevation( altitude );
+			lastKnownLocation = new ZmanimLocation( newLocation, locationName );
 		}
 
 		return lastKnownLocation;
@@ -178,7 +163,7 @@ public class ZmanimLocationHandler {
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void fireLocationChanged(
-		CurrentLocation location
+		ZmanimLocation location
 	) {
 
 		LogUtils.logEvent( "newLocation", "latitude: " + location.getLatitude(),
@@ -192,7 +177,7 @@ public class ZmanimLocationHandler {
 
 	private void fireError(
 		LocationHandler.Error error,
-		CurrentLocation       location
+		ZmanimLocation        location
 	) {
 
 		for ( Listener listener : listeners ) {
@@ -203,50 +188,13 @@ public class ZmanimLocationHandler {
 
 	public interface Listener {
 
-		void locationChanged( GeoLocation newLocation );
+		void locationChanged( ZmanimLocation newLocation );
 
 		void error(
 			LocationHandler.Error error,
-			GeoLocation lastKnownLocation
+			ZmanimLocation        lastKnownLocation
 		);
 	}
 
-	
-	private static class CurrentLocation
-		extends GeoLocation {
-
-		@SuppressWarnings( { "MagicNumber" } )
-		private static int                                      MILLIS_IN_HOUR = 60 * 60 * 1000;
-
-		private String                                          providerName;
-
-
-		private CurrentLocation() {
-			setTimeZone( TimeZone.getDefault() );
-		}
-
-
-		public void setProviderName( String providerName ) {
-			this.providerName = providerName;
-		}
-
-
-		@Override
-		public String toString() {
-
-			StringBuffer sb = new StringBuffer();
-			sb.append("Location Name:\t").append(getLocationName());
-			sb.append("\nLatitude:\t").append(getLatitude()).append(" deg");
-			sb.append("\nLongitude:\t").append(getLongitude()).append(" deg");
-			sb.append("\nElevation:\t").append(getElevation()).append(" Meters");
-			sb.append("\nTZ Name:\t").append(getTimeZone().getID());
-			sb.append("\nTZ GMT Offset:\t").append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
-			sb.append("\nTZ DST Offset:\t").append( getTimeZone().getDSTSavings() / MILLIS_IN_HOUR );
-			sb.append("\nProvider:\t").append( providerName );
-
-			return sb.toString();
-		}
-	}
-	
 
 }  // End of ZmanimLocation class
