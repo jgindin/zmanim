@@ -8,7 +8,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
-import com.gindin.zmanim.android.ZmanimLocation;
+import com.gindin.zmanim.android.ZmanimLocationHandler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,7 +22,7 @@ public class LogUtils {
 
 
 	/** Remember where we are. */
-	private static ZmanimLocation                             location;
+	private static ZmanimLocationHandler                      locationHandler;
 
 
 	private LogUtils() {
@@ -71,10 +71,10 @@ public class LogUtils {
 
 
 	public static void setLocation(
-		ZmanimLocation location
+		ZmanimLocationHandler locationHandler
 	) {
 
-		LogUtils.location = location;
+		LogUtils.locationHandler = locationHandler;
 	}
 
 
@@ -84,7 +84,7 @@ public class LogUtils {
 	) {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onError( errorID, message, location.getLastKnownLocation().toString() );
+			FlurryAgent.onError( errorID, message, locationHandler.getLastKnownLocation().toString() );
 		}
 		else {
 			Log.e( errorID, message );

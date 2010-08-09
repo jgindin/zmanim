@@ -26,7 +26,7 @@ import java.util.TimeZone;
  *        2. Manually enter city, state (with optional street, etc...)
  *        3. Google Map (see http://code.google.com/android/add-ons/google-apis/mapkey.html, http://code.google.com/android/add-ons/google-apis/reference/index.html)
  */
-public class ZmanimLocation {
+public class ZmanimLocationHandler {
 
 
 	private final Activity                                    activity;
@@ -41,7 +41,7 @@ public class ZmanimLocation {
 
 
 
-	public ZmanimLocation(
+	public ZmanimLocationHandler(
 		Activity activity
 	) {
 

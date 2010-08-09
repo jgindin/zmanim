@@ -108,7 +108,7 @@ public class LocationHandler {
 		}
 
 		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-		fireOnError( Error.CANNOT_DETERMINE_LOCATION );
+		fireError( Error.CANNOT_DETERMINE_LOCATION );
 	}
 
 
@@ -153,7 +153,7 @@ public class LocationHandler {
 	private boolean isLocationEnabled() {
 
 		if ( null == locationManager ) {
-			fireOnError( Error.NO_LOCATION_MANAGER_SERVICE );
+			fireError( Error.NO_LOCATION_MANAGER_SERVICE );
 			return false;
 		}
 
@@ -161,7 +161,7 @@ public class LocationHandler {
 		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
 
 		if ( !networkProviderEnabled && !gpsProviderEnabled ) {
-			fireOnError( Error.NO_PROVIDERS );
+			fireError( Error.NO_PROVIDERS );
 			return false;
 		}
 
@@ -222,7 +222,7 @@ public class LocationHandler {
 	}
 
 
-	private synchronized void fireOnError( Error error ) {
+	private synchronized void fireError( Error error ) {
 
 		Location oldLocation = getLastKnownLocation();
 		String oldLocationName = lookupLocationName( oldLocation );

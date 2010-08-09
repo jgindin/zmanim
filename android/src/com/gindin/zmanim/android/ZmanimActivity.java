@@ -56,9 +56,9 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FieldCanBeLocal" } )
 	private DateFormat                                        secularDateFormatter;
 
-	private ZmanimLocation                                    locationHandler;
+	private ZmanimLocationHandler                             locationHandler;
 
-	private ZmanimLocation.Listener                           locationListener;
+	private ZmanimLocationHandler.Listener                    locationListener;
 
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
@@ -81,7 +81,7 @@ public class ZmanimActivity
 		determiningLocationDialog.setMessage( "Determining location..." );
 		determiningLocationDialog.show();
 
-		locationListener = new ZmanimLocation.Listener() {
+		locationListener = new ZmanimLocationHandler.Listener() {
 			public void locationChanged( GeoLocation newLocation ) {
 				if ( !determiningLocationDialog.isShowing() ) {
 					determiningLocationDialog.setMessage( "Updating With New Location..." );
@@ -112,7 +112,7 @@ public class ZmanimActivity
 
 				ICUAndroidBridge.create( getAssets() );
 
-				locationHandler = new ZmanimLocation( ZmanimActivity.this );
+				locationHandler = new ZmanimLocationHandler( ZmanimActivity.this );
 				LogUtils.setLocation( locationHandler );
 
 				return null;
