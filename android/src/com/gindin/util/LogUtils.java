@@ -70,7 +70,7 @@ public class LogUtils {
 
 
 
-	public static void setLocation(
+	public static void setLocationHandler(
 		ZmanimLocationHandler locationHandler
 	) {
 

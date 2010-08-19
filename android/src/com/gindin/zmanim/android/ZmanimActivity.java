@@ -109,12 +109,12 @@ public class ZmanimActivity
 				timeFormatter = android.text.format.DateFormat.getTimeFormat( ZmanimActivity.this );
 				secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( ZmanimActivity.this );
 
-				setupListeners();
+				setupViewListeners();
 
 				ICUAndroidBridge.create( getAssets() );
 
 				locationHandler = new ZmanimLocationHandler( ZmanimActivity.this );
-				LogUtils.setLocation( locationHandler );
+				LogUtils.setLocationHandler( locationHandler );
 
 				return null;
 			}
@@ -353,7 +353,7 @@ public class ZmanimActivity
 	}
 
 
-	private void setupListeners() {
+	private void setupViewListeners() {
 
 		// Handle gestures. In our case, we're listening for swiping left, right, up & down...
 		View.OnTouchListener touchListener = new View.OnTouchListener() {

@@ -6,6 +6,7 @@ package com.gindin.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,19 +19,38 @@ import java.util.*;
  */
 public class LocationHandler {
 
+	private static final int                                  MIN_UPDATE_INTERVAL_MINUTES = 20 * 60 * 1000;
+
+
 	private final Activity                                    activity;
 
+	/** Who's listening for our events? */
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
 	private final Geocoder                                    geocoder;
 
 	private final LocationManager                             locationManager;
 
+	/** We have one listener for every location provider. */
 	private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
 
 	private final Formatter                                   rawLatitudeLongitudeFormatter = new Formatter();
 
+	/**
+	 * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
+	 *  Ideally we'd store the Location object in a Bundle, but it doesn't seem possible to get a Bundle
+	 *  except when the app is being shutdown or restarted.
+	 */
+	private final LastFixedLocationFactory                    lastFixedLocationFactory;
+
+	/**
+	 * We need to wait for "some time" before giving up on all the location providers. So, when any of the location
+	 *  providers give us a fix, we cancel this timer. If it expires, then we'll fire an error.
+	 */
 	private CancelFirstFixesTimer                             cancelFirstFixesTimer = null;
+
+	/** Used so that we can decide if a new location is enough of a change to warrant firing an event. */
+	private Location                                          ourLastFix = null;
 
 
 
@@ -41,9 +61,10 @@ public class LocationHandler {
 
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
 		geocoder = new Geocoder( activity );
+
+		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( "ZmanimLocation", Context.MODE_PRIVATE ) );
+		ourLastFix = lastFixedLocationFactory.get();
 	}
-
-
 
 
 	public synchronized void addListener( Listener l ) {
@@ -96,7 +117,36 @@ public class LocationHandler {
 			listener.cancelFirstFix();
 		}
 
-		fireNewLocation( location );
+		// Did we ever get a fix before? If so, is this new fix a significant enough change to warrant firing an
+		//  event?
+		boolean needToFire = false;
+		if ( null == ourLastFix ) {
+			needToFire = true;
+		}
+		else {
+
+			// First, check the time. If the time is more than 5 minutes,
+			final long lastFixTime = ourLastFix.getTime();
+			final long thisFixTime = location.getTime();
+
+			if ( thisFixTime - lastFixTime > MIN_UPDATE_INTERVAL_MINUTES ) {
+				needToFire = true;
+			}
+			else {
+				// Maybe our new fix is GPS, which is more accurate?
+				boolean lastFixWasGps =  LocationManager.GPS_PROVIDER.equals( ourLastFix.getProvider() );
+				boolean thisFixIsGps = LocationManager.GPS_PROVIDER.equals( location.getProvider() );
+
+				if ( thisFixIsGps && !lastFixWasGps ) {
+					needToFire = true;
+				}
+			}
+		}
+
+		if ( needToFire ) {
+			fireNewLocation( location );
+		}
+
 	}
 
 
@@ -120,7 +170,9 @@ public class LocationHandler {
 		if ( null != cancelFirstFixesTimer ) {
 			cancelFirstFixesTimer.cancel();
 		}
-		cancelFirstFixesTimer = new CancelFirstFixesTimer();
+
+		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
+		cancelFirstFixesTimer = new CancelFirstFixesTimer( gpsProviderEnabled );
 
 		// I'm going to listen to whatever providers might be available.
 		// Loop over the array backwards, presumably because the more accurate providers are last?
@@ -200,8 +252,12 @@ public class LocationHandler {
 		else if ( null != gpsLocation ) {
 			lastLocation = gpsLocation;
 		}
-		else {
+		else if ( null != networkLocation ) {
 			lastLocation = networkLocation;
+		}
+		else {
+			// The location of last resort...
+			lastLocation = ourLastFix;
 		}
 
 		return lastLocation;
@@ -217,6 +273,8 @@ public class LocationHandler {
 		for ( Listener listener : listeners ) {
 			listener.onLocationChanged( location, geoLocation );
 		}
+
+		lastFixedLocationFactory.save( location );
 	}
 
 
@@ -228,6 +286,8 @@ public class LocationHandler {
 		for ( Listener listener : listeners ) {
 			listener.onError( error, oldLocation, oldLocationName );
 		}
+
+		lastFixedLocationFactory.save( oldLocation );
 	}
 
 
@@ -280,18 +340,13 @@ public class LocationHandler {
 	}
 
 
+
 	/**
 	 * Listens to location changes for a given provider.
 	 */
 	private class AndroidLocationListener implements LocationListener {
 
-		private static final int                                MILLIS_PER_MINUTE = 60 * 1000;
-
 		public final String                                     providerName;
-
-		private final long                                      minUpdateInterval;
-
-		private final float                                     minUpdateDistance;
 
 		private boolean                                         firstFix = true;
 
@@ -302,25 +357,7 @@ public class LocationHandler {
 
 			this.providerName = providerName;
 
-			if ( LocationManager.GPS_PROVIDER.equals( providerName ) ) {
-
-				// GPS is expensive...don't check very often...
-				//noinspection MagicNumber
-				this.minUpdateInterval = 20 * MILLIS_PER_MINUTE;
-			}
-			else if ( LocationManager.NETWORK_PROVIDER.equals( providerName ) ) {
-
-				// Network is cheap; check every 5 minutes.
-				this.minUpdateInterval = 5 * MILLIS_PER_MINUTE;
-			}
-			else {
-
-				// We don't know what this provider is...assume it's moderately expensive.
-				this.minUpdateInterval = 10 * MILLIS_PER_MINUTE;
-			}
-
-			// We're limiting our checks by time, not distance.
-			this.minUpdateDistance = 0;
+			// This first update we want RIGHT NOW!!!!
 			locationManager.requestLocationUpdates( providerName, 0, 0, this );
 		}
 
@@ -354,7 +391,11 @@ public class LocationHandler {
 
 			if ( firstFix ) {
 				firstFix = false;
-				locationManager.requestLocationUpdates( providerName, minUpdateInterval, minUpdateDistance, this );
+
+				// Doesn't seem to be much use in checking too often. And, we're interested in time-based
+				//  updates, not distance based. Though, I admit, distance makes more sense, this is easier
+				//  to test...
+				locationManager.requestLocationUpdates( providerName, MIN_UPDATE_INTERVAL_MINUTES, 0.0f, this );
 			}
 		}
 
@@ -369,15 +410,32 @@ public class LocationHandler {
 		extends Timer {
 
 		/** Max time to wait for SOMEONE to cancel us. */
-		private static final int                                  WAIT_FOR_FIRST_FIX_DELAY = 20000;
+		private static final int                                WAIT_FOR_FIRST_NETWORK_FIX_DELAY = 3000;
+		private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 20000;
 
-		CancelFirstFixesTimer() {
+
+		CancelFirstFixesTimer(
+			boolean waitingForGpsProvider
+		) {
+
 			super( true );
-			start();
+
+			// If we're waiting on GPS, then we need a longer delay...
+			int maxDelay;
+			if ( waitingForGpsProvider ) {
+				maxDelay = WAIT_FOR_FIRST_GPS_FIX_DELAY;
+			}
+			else {
+				maxDelay = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
+			}
+
+			start( maxDelay );
 		}
 
 
-		private void start() {
+		private void start(
+			int maxDelay
+		) {
 
 			TimerTask task = new TimerTask() {
 				@Override
@@ -395,12 +453,103 @@ public class LocationHandler {
 				}
 			};
 
-			schedule( task, WAIT_FOR_FIRST_FIX_DELAY );
+			schedule( task, maxDelay );
 		}
 
 	} // End of CancelFirstFixesTimer
 
 
+	private static class LastFixedLocationFactory {
+
+		private static final String                               HAS_ACCURACY = "lastFixHasAccuracy";
+		private static final String                               ACCURACY = "lastFixAccuracy";
+		private static final String                               HAS_ALTITUDE = "lastfixHasAltitude";
+		private static final String                               ALTITUDE = "lastfixAltitude";
+		private static final String                               HAS_BEARING = "lastfixHasBearing";
+		private static final String                               BEARING = "lastfixBearing";
+		private static final String                               LATITUDE = "lastfixLatitude";
+		private static final String                               LONGITUDE = "lastfixLongitude";
+		private static final String                               PROVIDER_NAME = "lastFixProviderName";
+		private static final String                               HAS_SPEED = "lastfixHasSpeed";
+		private static final String                               SPEED = "lastfixSpeed";
+		private static final String                               TIME = "lastfixTime";
+
+
+		/** Stores data that we need between invocations. */
+		private final SharedPreferences                           preferences;
+
+
+		LastFixedLocationFactory( SharedPreferences preferences ) {
+			this.preferences = preferences;
+		}
+
+
+		Location get() {
+
+			String lastFixProviderName = preferences.getString( PROVIDER_NAME, null );
+			if ( null == lastFixProviderName ) {
+				return null;
+			}
+
+			Location lastLocation = new Location( lastFixProviderName );
+			if ( preferences.getBoolean( HAS_ACCURACY, false ) ) {
+				lastLocation.setAccuracy( preferences.getFloat( ACCURACY, 0.0f ) );
+			}
+
+			if ( preferences.getBoolean( HAS_ALTITUDE, false ) ) {
+				lastLocation.setAltitude( Double.parseDouble( preferences.getString( ALTITUDE, "0" ) ) );
+			}
+
+			if ( preferences.getBoolean( HAS_BEARING, false ) ) {
+				lastLocation.setBearing( preferences.getFloat( BEARING, 0.0f ) );
+			}
+
+			lastLocation.setLatitude( Double.parseDouble( preferences.getString( LATITUDE, "0" ) ) );
+			lastLocation.setLongitude( Double.parseDouble( preferences.getString( LONGITUDE, "0" ) ) );
+
+			if ( preferences.getBoolean( HAS_SPEED, false ) ) {
+				lastLocation.setSpeed( preferences.getFloat( SPEED, 0.0f ) );
+			}
+
+			lastLocation.setTime( preferences.getLong( TIME, 0 ) );
+
+			return lastLocation;
+		}
+
+
+		void save(
+			Location location
+		) {
+
+			if ( null == location ) {
+				return;
+			}
+
+			final SharedPreferences.Editor editor = preferences.edit();
+
+			editor.putBoolean( HAS_ACCURACY, location.hasAccuracy() );
+			editor.putFloat( ACCURACY, location.getAccuracy() );
+
+			editor.putBoolean( HAS_ALTITUDE, location.hasAltitude() );
+			editor.putString( ALTITUDE, Double.toString( location.getAltitude() ) );
+
+			editor.putBoolean( HAS_BEARING, location.hasBearing() );
+			editor.putFloat( BEARING, location.getBearing() );
+
+			editor.putString( LATITUDE, Double.toString( location.getLatitude() ) );
+			editor.putString( LONGITUDE, Double.toString( location.getLongitude() ) );
+
+			editor.putString( PROVIDER_NAME, location.getProvider() );
+
+			editor.putBoolean( HAS_SPEED, location.hasSpeed() );
+			editor.putFloat( SPEED, location.getSpeed() );
+
+			editor.putLong( TIME, location.getTime() );
+
+			editor.commit();
+		}
+
+	}
 
 
 	public static enum Error {
