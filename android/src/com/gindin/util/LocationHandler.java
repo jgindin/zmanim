@@ -63,47 +63,48 @@ public class LocationHandler {
 		geocoder = new Geocoder( activity );
 
 		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( "ZmanimLocation", Context.MODE_PRIVATE ) );
-		ourLastFix = lastFixedLocationFactory.get();
 	}
 
 
-	public synchronized void addListener( Listener l ) {
+	public synchronized void addListener( Listener listener ) {
 
-		if ( listeners.contains( l ) ) {
+		if ( listeners.contains( listener ) ) {
 			if ( Version.isDevelopment() ) {
 				throw new IllegalArgumentException( "Listener already listening!" );
 			}
 		}
 		else {
-			listeners.add( l );
-		}
+			listeners.add( listener );
 
-		if ( 1 == listeners.size() ) {
-			startListeningToLocations();
-		}
-	}
-
-
-	public synchronized void removeListener( Listener l ) {
-
-		if ( !listeners.contains( l ) ) {
-			if ( Version.isDevelopment() ) {
-				throw new IllegalArgumentException( "Listener isn't listening!" );
+			if ( 1 == listeners.size() ) {
+				startListeningToLocations();
 			}
 		}
-		else {
-			listeners.remove( l );
-		}
+	}
 
-		if ( listeners.isEmpty() ) {
-			stopListeningToLocation();
+
+	public synchronized void removeListener( Listener listener ) {
+
+		if ( listeners.contains( listener ) ) {
+			listeners.remove( listener );
+
+			if ( listeners.isEmpty() ) {
+				stopListeningToLocations();
+			}
+		}
+		else if ( Version.isDevelopment() ) {
+			throw new IllegalArgumentException( "Listener isn't listening!" );
 		}
 	}
 
 
-	public void reset() {
+	/**
+	 * Intended to be called when someone has reason to believe that the set of available location providers
+	 *  has changed significantly enough that we ought to requery them all.
+	 */
+	public void onLocationProvidersChanged() {
 
-		stopListeningToLocation();
+		stopListeningToLocations();
 		startListeningToLocations();
 	}
 
@@ -111,6 +112,8 @@ public class LocationHandler {
 	void onReceivedFix(
 		final Location location
 	) {
+
+		
 
 		cancelFirstFixesTimer.cancel();
 		for ( AndroidLocationListener listener : locationListeners ) {
@@ -171,23 +174,22 @@ public class LocationHandler {
 			cancelFirstFixesTimer.cancel();
 		}
 
+		// Now, kick off a timer such that if the timer expires, we're going to assume we can't get any
+		//  location fix... Start this BEFORE any listeners get added in case one of the listeners returns
+		//  a fix right away...
 		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
 		cancelFirstFixesTimer = new CancelFirstFixesTimer( gpsProviderEnabled );
 
 		// I'm going to listen to whatever providers might be available.
-		// Loop over the array backwards, presumably because the more accurate providers are last?
-		// This code was basically taken from: http://www.androidsnippets.org/snippets/21/
 		final List<String> providers = locationManager.getProviders( true );
-		for ( int i = providers.size() - 1; i >= 0; i-- ) {
-
-			final String providerName = providers.get( i );
-			AndroidLocationListener listener = new AndroidLocationListener( providerName );
+		for ( String provider : providers ) {
+			AndroidLocationListener listener = new AndroidLocationListener( provider );
 			locationListeners.add( listener );
 		}
 	}
 
 
-	private void stopListeningToLocation() {
+	private void stopListeningToLocations() {
 
 		if ( null != cancelFirstFixesTimer ) {
 			cancelFirstFixesTimer.cancel();
@@ -257,6 +259,7 @@ public class LocationHandler {
 		}
 		else {
 			// The location of last resort...
+			ourLastFix = lastFixedLocationFactory.get();
 			lastLocation = ourLastFix;
 		}
 
@@ -344,7 +347,8 @@ public class LocationHandler {
 	/**
 	 * Listens to location changes for a given provider.
 	 */
-	private class AndroidLocationListener implements LocationListener {
+	private class AndroidLocationListener
+		implements LocationListener {
 
 		public final String                                     providerName;
 
@@ -421,20 +425,20 @@ public class LocationHandler {
 			super( true );
 
 			// If we're waiting on GPS, then we need a longer delay...
-			int maxDelay;
+			int timeToWaitForFix;
 			if ( waitingForGpsProvider ) {
-				maxDelay = WAIT_FOR_FIRST_GPS_FIX_DELAY;
+				timeToWaitForFix = WAIT_FOR_FIRST_GPS_FIX_DELAY;
 			}
 			else {
-				maxDelay = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
+				timeToWaitForFix = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
 			}
 
-			start( maxDelay );
+			start( timeToWaitForFix );
 		}
 
 
 		private void start(
-			int maxDelay
+			int timeToWaitForFix
 		) {
 
 			TimerTask task = new TimerTask() {
@@ -453,7 +457,7 @@ public class LocationHandler {
 				}
 			};
 
-			schedule( task, maxDelay );
+			schedule( task, timeToWaitForFix );
 		}
 
 	} // End of CancelFirstFixesTimer

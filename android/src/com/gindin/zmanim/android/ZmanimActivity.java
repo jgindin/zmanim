@@ -137,6 +137,31 @@ public class ZmanimActivity
 	}
 
 
+	// TODO: Need to cleanup in onPause and restart when we get onResume.
+	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
+	//    onCreate
+	//      onRestart
+	//      onStart
+	//        onResume
+	//        onPause
+	//      onStop
+	//    onDestroy
+	//
+	// Specifically, http://www.screaming-penguin.com/node/7746 says that if you have an indeterminate dialog showing
+	//  it must get cleaned up in the onPause, or else it will leak.
+
+	@Override
+	protected void onPause() {
+		super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+	}
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+	}
+
+
 	@Override
 	protected void onDestroy() {
 
@@ -166,7 +191,7 @@ public class ZmanimActivity
 				determiningLocationDialog.setMessage( "Determining location..." );
 				determiningLocationDialog.show();
 				cleanupCalendarListeners();
-				locationHandler.reset();
+				locationHandler.onLocationProvidersChanged();
 				break;
 		}
 	}

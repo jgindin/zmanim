@@ -75,8 +75,22 @@ public class ZmanimLocationHandler {
 	public void onDestroy() {
 
 		if ( !listeners.isEmpty() ) {
-			listeners.clear();
-			locationHandler.removeListener( locationListener );
+
+			final List<Listener> copy = listeners;
+			for ( Listener listener : copy ) {
+				removeListener( listener );
+			}
+
+			if ( !listeners.isEmpty() ) {
+
+				// If we get here, things are in bad shape, but we can still remove our listener from
+				//  the location handler...
+				locationHandler.removeListener( locationListener );
+
+				if ( Version.isDevelopment() ) {
+					throw new IllegalStateException( "Should have removed all listeners. Still have " + listeners.size() );
+				}
+			}
 		}
 	}
 
@@ -85,14 +99,17 @@ public class ZmanimLocationHandler {
 		Listener  listener
 	) {
 
-		if ( Version.isDevelopment() ) {
-			assert !listeners.contains( listener );
+		if ( listeners.contains( listener ) ) {
+			if ( Version.isDevelopment() ) {
+				throw new IllegalArgumentException( "Listener already listening!" );
+			}
 		}
+		else {
+			listeners.add( listener );
 
-		listeners.add( listener );
-
-		if ( 1 == listeners.size() ) {
-			locationHandler.addListener( locationListener );
+			if ( 1 == listeners.size() ) {
+				locationHandler.addListener( locationListener );
+			}
 		}
 	}
 
@@ -101,14 +118,15 @@ public class ZmanimLocationHandler {
 		Listener listener
 	) {
 
-		if ( Version.isDevelopment() ) {
-			assert listeners.contains( listener );
+		if ( listeners.contains( listener ) ) {
+			listeners.remove( listener );
+
+			if ( listeners.isEmpty() ) {
+				locationHandler.removeListener( locationListener );
+			}
 		}
-
-		listeners.remove( listener );
-
-		if ( listeners.isEmpty() ) {
-			locationHandler.removeListener( locationListener );
+		else if ( Version.isDevelopment() ) {
+			throw new IllegalArgumentException( "Listener isn't listening!" );
 		}
 	}
 
@@ -137,8 +155,16 @@ public class ZmanimLocationHandler {
 	}
 
 
-	public void reset() {
-		locationHandler.reset();
+	/**
+	 * Intended to be called when someone has reason to believe that the set of available location providers
+	 *  has changed significantly enough that we ought to requery them all.
+	 */
+	public void onLocationProvidersChanged() {
+
+		// We don't need to muck with our listener nor do we change anything about anyone who's listening to
+		//  us...just pass this through.
+		// TODO: When we support "static" locations, we'll not want to pass this on...
+		locationHandler.onLocationProvidersChanged();
 	}
 
 
