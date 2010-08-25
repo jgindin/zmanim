@@ -124,17 +124,16 @@ public class LogUtils {
 
 			FlurryAgent.onEvent( eventName, messageMap );
 		}
-		else {
 
-			StringBuffer message = new StringBuffer();
-			if ( null != messages ) {
-				for ( String msg : messages ) {
-					message.append( msg ).append( "; " );
-				}
+		
+		StringBuffer message = new StringBuffer();
+		if ( null != messages ) {
+			for ( String msg : messages ) {
+				message.append( msg ).append( "; " );
 			}
-
-			Log.i( eventName, message.toString() );
 		}
+
+		Log.i( eventName, message.toString() );
 	}
 
 
