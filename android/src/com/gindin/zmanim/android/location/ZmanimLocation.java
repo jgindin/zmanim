@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.location;
 
 import android.location.Location;
 import net.sourceforge.zmanim.util.GeoLocation;
@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- *
+ * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the
+ *  zmanim app.
  */
 public class ZmanimLocation
 	extends GeoLocation {

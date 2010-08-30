@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.util;
+package com.gindin.zmanim.android.location;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,24 +17,16 @@ import java.util.*;
 /**
  * Abstracts dealing with the Android LocationManager.
  */
-public class LocationHandler {
+class DynamicLocationHandler 
+	extends LocationHandler {
 
 	private static final int                                  MIN_UPDATE_INTERVAL_MINUTES = 20 * 60 * 1000;
 
-
-	private final Activity                                    activity;
-
-	/** Who's listening for our events? */
-	private final List<Listener>                              listeners = new ArrayList<Listener>();
-
-	private final Geocoder                                    geocoder;
 
 	private final LocationManager                             locationManager;
 
 	/** We have one listener for every location provider. */
 	private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
-
-	private final Formatter                                   rawLatitudeLongitudeFormatter = new Formatter();
 
 	/**
 	 * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
@@ -54,47 +46,45 @@ public class LocationHandler {
 
 
 
-	public LocationHandler(
+	public DynamicLocationHandler(
 		Activity activity
 	) {
-		this.activity = activity;
+
+		super( activity );
 
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
-		geocoder = new Geocoder( activity );
 
 		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( "ZmanimLocation", Context.MODE_PRIVATE ) );
 	}
 
 
-	public synchronized void addListener( Listener listener ) {
+	@Override
+	public synchronized boolean addListener( Listener listener ) {
 
-		if ( listeners.contains( listener ) ) {
-			if ( Version.isDevelopment() ) {
-				throw new IllegalArgumentException( "Listener already listening!" );
-			}
-		}
-		else {
-			listeners.add( listener );
-
+		if ( super.addListener( listener ) ) {
 			if ( 1 == listeners.size() ) {
 				startListeningToLocations();
 			}
+
+			return true;
 		}
+
+		return false;
 	}
 
 
-	public synchronized void removeListener( Listener listener ) {
-
-		if ( listeners.contains( listener ) ) {
-			listeners.remove( listener );
-
+	@Override
+	public synchronized boolean removeListener( Listener listener ) {
+		
+		if ( super.removeListener( listener ) ) {
 			if ( listeners.isEmpty() ) {
 				stopListeningToLocations();
 			}
+
+			return true;
 		}
-		else if ( Version.isDevelopment() ) {
-			throw new IllegalArgumentException( "Listener isn't listening!" );
-		}
+
+		return false;
 	}
 
 
@@ -109,11 +99,68 @@ public class LocationHandler {
 	}
 
 
-	void onReceivedFix(
+	@Override
+	protected Location getLastKnownLocation() {
+
+		Location gpsLocation = null;
+		if ( isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+			gpsLocation = locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER );
+		}
+
+		Location networkLocation = null;
+		if ( isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
+			networkLocation = locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
+		}
+
+		// Which one to use?
+		Location lastLocation;
+		if ( ( null != gpsLocation ) && ( null != networkLocation ) ) {
+			if ( gpsLocation.getTime() > networkLocation.getTime() ) {
+				lastLocation = gpsLocation;
+			}
+			else {
+				lastLocation = networkLocation;
+			}
+		}
+		else if ( null != gpsLocation ) {
+			lastLocation = gpsLocation;
+		}
+		else if ( null != networkLocation ) {
+			lastLocation = networkLocation;
+		}
+		else {
+			// The location of last resort...
+			ourLastFix = lastFixedLocationFactory.get();
+			lastLocation = ourLastFix;
+		}
+
+		return lastLocation;
+	}
+
+
+	@Override
+	protected synchronized void fireNewLocation(
 		final Location location
 	) {
 
-		
+		super.fireNewLocation( location );
+		lastFixedLocationFactory.save( location );
+	}
+
+
+	@Override
+	protected synchronized void fireError( Error error ) {
+
+		Location oldLocation = getLastKnownLocation();
+
+		super.fireError( error );
+		lastFixedLocationFactory.save( oldLocation );
+	}
+
+	
+	void onReceivedFix(
+		final Location location
+	) {
 
 		cancelFirstFixesTimer.cancel();
 		for ( AndroidLocationListener listener : locationListeners ) {
@@ -229,133 +276,23 @@ public class LocationHandler {
 	}
 
 
-	private Location getLastKnownLocation() {
-
-		Location gpsLocation = null;
-		if ( isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-			gpsLocation = locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER );
-		}
-
-		Location networkLocation = null;
-		if ( isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
-			networkLocation = locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
-		}
-
-		// Which one to use?
-		Location lastLocation;
-		if ( ( null != gpsLocation ) && ( null != networkLocation ) ) {
-			if ( gpsLocation.getTime() > networkLocation.getTime() ) {
-				lastLocation = gpsLocation;
-			}
-			else {
-				lastLocation = networkLocation;
-			}
-		}
-		else if ( null != gpsLocation ) {
-			lastLocation = gpsLocation;
-		}
-		else if ( null != networkLocation ) {
-			lastLocation = networkLocation;
-		}
-		else {
-			// The location of last resort...
-			ourLastFix = lastFixedLocationFactory.get();
-			lastLocation = ourLastFix;
-		}
-
-		return lastLocation;
-	}
-
-
-	private synchronized void fireNewLocation(
-		final Location location
-	) {
-
-		String geoLocation = lookupLocationName( location );
-
-		for ( Listener listener : listeners ) {
-			listener.onLocationChanged( location, geoLocation );
-		}
-
-		lastFixedLocationFactory.save( location );
-	}
-
-
-	private synchronized void fireError( Error error ) {
-
-		Location oldLocation = getLastKnownLocation();
-		String oldLocationName = lookupLocationName( oldLocation );
-
-		for ( Listener listener : listeners ) {
-			listener.onError( error, oldLocation, oldLocationName );
-		}
-
-		lastFixedLocationFactory.save( oldLocation );
-	}
-
-
-	private String lookupLocationName(
-		final Location location
-	) {
-
-		if ( null == location ) {
-			return "";
-		}
-
-		AsyncTask<Location, Void, String> getGeoLocationTask = new AsyncTask<Location, Void, String>() {
-			@Override
-			protected String doInBackground( Location... locations ) {
-
-				String locationString;
-				final double latitude = location.getLatitude();
-				final double longitude = location.getLongitude();
-
-				try {
-					final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
-
-					if ( ( null != addresses ) && !addresses.isEmpty() ) {
-						final Address address = addresses.get( 0 );
-						locationString = address.getLocality() + ", " + address.getAdminArea();
-					}
-					else {
-						//noinspection AutoBoxing
-						locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
-					}
-				}
-				catch ( IOException e ) {
-					//noinspection AutoBoxing
-					locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
-				}
-
-				return locationString;
-			}
-		};
-
-		getGeoLocationTask.execute( location );
-		String geoLocation;
-		try {
-			geoLocation = getGeoLocationTask.get();
-		}
-		catch ( Exception e ) {
-			geoLocation = null;
-		}
-		return geoLocation;
-	}
-
-
-
 	/**
 	 * Listens to location changes for a given provider.
 	 */
 	private class AndroidLocationListener
 		implements LocationListener {
 
+		/**
+		 * Who provides the location updates for this listener? Common identifiers are taken from the
+		 *  LocationManager class, e.g., LocationManager.NETWORK_PROVIDER or LocationManager.GPS_PROVIDER.
+		 */
 		public final String                                     providerName;
 
+		/** Have we recieved our first location fix yet? */
 		private boolean                                         firstFix = true;
 
 
-		protected AndroidLocationListener(
+		AndroidLocationListener(
 			String  providerName
 		) {
 
@@ -367,23 +304,7 @@ public class LocationHandler {
 
 
 		public void onLocationChanged( Location location ) {
-
 			onReceivedFix( location );
-		}
-
-
-		public void onStatusChanged( String provider, int status, Bundle extras ) {
-			// Not used
-		}
-
-
-		public void onProviderEnabled( String provider ) {
-			// Not used
-		}
-
-
-		public void onProviderDisabled( String provider ) {
-			// Not used
 		}
 
 
@@ -391,7 +312,8 @@ public class LocationHandler {
 			locationManager.removeUpdates( this );
 		}
 
-		public void cancelFirstFix() {
+
+		void cancelFirstFix() {
 
 			if ( firstFix ) {
 				firstFix = false;
@@ -399,8 +321,24 @@ public class LocationHandler {
 				// Doesn't seem to be much use in checking too often. And, we're interested in time-based
 				//  updates, not distance based. Though, I admit, distance makes more sense, this is easier
 				//  to test...
+				cancel();
 				locationManager.requestLocationUpdates( providerName, MIN_UPDATE_INTERVAL_MINUTES, 0.0f, this );
 			}
+		}
+
+
+		public void onStatusChanged( String provider, int status, Bundle extras ) {
+			// Inherited from LocationListener...Not used
+		}
+
+
+		public void onProviderEnabled( String provider ) {
+			// Inherited from LocationListener...Not used
+		}
+
+
+		public void onProviderDisabled( String provider ) {
+			// Inherited from LocationListener...Not used
 		}
 
 	} // End of AndroidLocationListener
@@ -556,25 +494,4 @@ public class LocationHandler {
 	}
 
 
-	public static enum Error {
-		NO_LOCATION_MANAGER_SERVICE,
-		NO_PROVIDERS,
-		CANNOT_DETERMINE_LOCATION
-	}
-
-	public interface Listener {
-
-		public void onLocationChanged(
-			Location  newLocation,
-			String    locationName
-		);
-
-		public void onError(
-			Error     error,
-			Location  oldLocation,
-			String    locationName
-		);
-	}
-
-
-}  // End of LocationHandler class
+}  // End of DynamicLocationHandler class

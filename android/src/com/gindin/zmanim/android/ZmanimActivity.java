@@ -4,14 +4,18 @@
 
 package com.gindin.zmanim.android;
 
-import android.os.AsyncTask;
-import com.gindin.util.LocationHandler;
 import com.gindin.util.LogUtils;
+import com.gindin.zmanim.android.location.LocationHandler;
+import com.gindin.zmanim.android.location.ZmanimLocation;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.ibm.icu.ICUAndroidBridge;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -20,8 +24,6 @@ import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.ibm.icu.ICUAndroidBridge;
-import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -57,9 +59,9 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FieldCanBeLocal" } )
 	private DateFormat                                        secularDateFormatter;
 
-	private ZmanimLocationHandler                             locationHandler;
+	private ZmanimLocationManager                             locationManager;
 
-	private ZmanimLocationHandler.Listener                    locationListener;
+	private ZmanimLocationManager.Listener                    locationListener;
 
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
@@ -82,7 +84,7 @@ public class ZmanimActivity
 		determiningLocationDialog.setMessage( "Determining location..." );
 		determiningLocationDialog.show();
 
-		locationListener = new ZmanimLocationHandler.Listener() {
+		locationListener = new ZmanimLocationManager.Listener() {
 			public void locationChanged( ZmanimLocation newLocation ) {
 				if ( !determiningLocationDialog.isShowing() ) {
 					determiningLocationDialog.setMessage( "Updating With New Location..." );
@@ -113,8 +115,8 @@ public class ZmanimActivity
 
 				ICUAndroidBridge.create( getAssets() );
 
-				locationHandler = new ZmanimLocationHandler( ZmanimActivity.this );
-				LogUtils.setLocationHandler( locationHandler );
+				locationManager = new ZmanimLocationManager( ZmanimActivity.this );
+				LogUtils.setLocationHandler( locationManager );
 
 				return null;
 			}
@@ -129,7 +131,7 @@ public class ZmanimActivity
 				gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
 
 				// Now start listening for location changes...
-				locationHandler.addListener( locationListener );
+				locationManager.addListener( locationListener );
 			}
 		};
 		initUITask.execute( (Void)null );
@@ -152,21 +154,21 @@ public class ZmanimActivity
 
 	@Override
 	protected void onPause() {
-		super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+		super.onPause();
 	}
 
 
 	@Override
 	protected void onResume() {
-		super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+		super.onResume();
 	}
 
 
 	@Override
 	protected void onDestroy() {
 
-		locationHandler.removeListener( locationListener );
-		locationHandler.onDestroy();
+		locationManager.removeListener( locationListener );
+		locationManager.onDestroy();
 
 		cleanupCalendarListeners();
 
@@ -191,7 +193,7 @@ public class ZmanimActivity
 				determiningLocationDialog.setMessage( "Determining location..." );
 				determiningLocationDialog.show();
 				cleanupCalendarListeners();
-				locationHandler.onLocationProvidersChanged();
+				locationManager.onLocationProvidersChanged();
 				break;
 		}
 	}
@@ -267,7 +269,7 @@ public class ZmanimActivity
 			locationField.setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick( View view ) {
-						locationHandler.onClickLocation();
+						locationManager.onClickLocation();
 					}
 				}
 			);
@@ -448,7 +450,7 @@ public class ZmanimActivity
 				return createSecularDatePickerDialog();
 
 			case R.id.location:
-				return locationHandler.createLocationSelectionDialog();
+				return locationManager.createLocationSelectionDialog();
 
 			case R.id.about:
 				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );

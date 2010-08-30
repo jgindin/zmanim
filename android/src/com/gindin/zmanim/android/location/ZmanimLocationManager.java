@@ -2,16 +2,17 @@
  * Copyright (c) 2009. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.location;
+
+import com.gindin.util.LogUtils;
+import com.gindin.util.Version;
+import com.gindin.zmanim.android.R;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.location.Location;
-import com.gindin.util.LocationHandler;
-import com.gindin.util.LogUtils;
-import com.gindin.util.Version;
-import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,30 +26,30 @@ import java.util.List;
  *        2. Manually enter city, state (with optional street, etc...)
  *        3. Google Map (see http://code.google.com/android/add-ons/google-apis/mapkey.html, http://code.google.com/android/add-ons/google-apis/reference/index.html)
  */
-public class ZmanimLocationHandler {
+public class ZmanimLocationManager {
 
 
 	private final Activity                                    activity;
 
-	private final LocationHandler                             locationHandler;
+	private final DynamicLocationHandler                      dynamicLocationHandler;
+
+	private final DynamicLocationHandler.Listener             dynamicLocationListener;
 
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
-
-	private final LocationHandler.Listener                    locationListener;
 
 	private ZmanimLocation                                    lastKnownLocation = null;
 
 
 
-	public ZmanimLocationHandler(
+	public ZmanimLocationManager(
 		Activity activity
 	) {
 
 		this.activity = activity;
 
-		locationHandler = new LocationHandler( activity );
+		dynamicLocationHandler = new DynamicLocationHandler( activity );
 
-		locationListener = new LocationHandler.Listener() {
+		dynamicLocationListener = new DynamicLocationHandler.Listener() {
 			public void onLocationChanged(
 				Location newLocation,
 				String locationName
@@ -85,7 +86,7 @@ public class ZmanimLocationHandler {
 
 				// If we get here, things are in bad shape, but we can still remove our listener from
 				//  the location handler...
-				locationHandler.removeListener( locationListener );
+				dynamicLocationHandler.removeListener( dynamicLocationListener );
 
 				if ( Version.isDevelopment() ) {
 					throw new IllegalStateException( "Should have removed all listeners. Still have " + listeners.size() );
@@ -108,7 +109,7 @@ public class ZmanimLocationHandler {
 			listeners.add( listener );
 
 			if ( 1 == listeners.size() ) {
-				locationHandler.addListener( locationListener );
+				dynamicLocationHandler.addListener( dynamicLocationListener );
 			}
 		}
 	}
@@ -122,7 +123,7 @@ public class ZmanimLocationHandler {
 			listeners.remove( listener );
 
 			if ( listeners.isEmpty() ) {
-				locationHandler.removeListener( locationListener );
+				dynamicLocationHandler.removeListener( dynamicLocationListener );
 			}
 		}
 		else if ( Version.isDevelopment() ) {
@@ -164,7 +165,7 @@ public class ZmanimLocationHandler {
 		// We don't need to muck with our listener nor do we change anything about anyone who's listening to
 		//  us...just pass this through.
 		// TODO: When we support "static" locations, we'll not want to pass this on...
-		locationHandler.onLocationProvidersChanged();
+		dynamicLocationHandler.onLocationProvidersChanged();
 	}
 
 

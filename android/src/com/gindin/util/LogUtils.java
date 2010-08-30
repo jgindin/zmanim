@@ -4,11 +4,12 @@
 
 package com.gindin.util;
 
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
-import com.gindin.zmanim.android.ZmanimLocationHandler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,7 +23,7 @@ public class LogUtils {
 
 
 	/** Remember where we are. */
-	private static ZmanimLocationHandler                      locationHandler;
+	private static ZmanimLocationManager                      locationManager;
 
 
 	private LogUtils() {
@@ -71,10 +72,10 @@ public class LogUtils {
 
 
 	public static void setLocationHandler(
-		ZmanimLocationHandler locationHandler
+		ZmanimLocationManager locationManager
 	) {
 
-		LogUtils.locationHandler = locationHandler;
+		LogUtils.locationManager = locationManager;
 	}
 
 
@@ -84,7 +85,7 @@ public class LogUtils {
 	) {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onError( errorID, message, locationHandler.getLastKnownLocation().toString() );
+			FlurryAgent.onError( errorID, message, locationManager.getLastKnownLocation().toString() );
 		}
 		else {
 			Log.e( errorID, message );
