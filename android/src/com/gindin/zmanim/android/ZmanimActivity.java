@@ -261,19 +261,13 @@ public class ZmanimActivity
 			locationName = getResources().getString( R.string.unknown_location );
 		}
 		else {
-
 			locationName = location.getLocationName();
-
-			// Listen for 'clicks' indicating the user wants to change their location.
-			final View locationField = findViewById( R.id.location );
-			locationField.setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick( View view ) {
-						locationManager.onClickLocation();
-					}
-				}
-			);
 		}
+
+		// Notify the location manager of the field that contains the current location.
+		final View locationField = findViewById( R.id.location );
+		locationManager.setLocationField( locationField );
+
 
 		updateField( R.id.location, locationName );
 
@@ -448,9 +442,6 @@ public class ZmanimActivity
 		switch ( dialogID ) {
 			case R.id.secular_date:
 				return createSecularDatePickerDialog();
-
-			case R.id.location:
-				return locationManager.createLocationSelectionDialog();
 
 			case R.id.about:
 				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );

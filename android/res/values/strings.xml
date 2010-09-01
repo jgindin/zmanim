@@ -18,6 +18,7 @@
 	<string name="Havdalah">Havdalah</string>
 	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
 
+	<string name="about_menu">About</string>
 	<string name="about_header">About Zmanim</string>
 	<string name="about_text">
 		&lt;div style=%22font-size: 80%25;%22&gt;
@@ -25,7 +26,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.237
+				Version 2.239-DEV
 				(CodeVersion 52)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -39,6 +40,7 @@
 		&lt;/div&gt;
 	</string>
 
+	<string name="help_menu">Help</string>
 	<string name="help_header">Zmanim Help</string>
 	<string name="help_text">
 		&lt;h4&gt;Changing Zmanim&lt;/h4&gt;
@@ -81,5 +83,25 @@
 	<string name="cannot_determine_location">Using last known location.</string>
 	<string name="last_location_time"> (%s)</string>
 	<string name="unknown_location">Unknown Location</string>
+
+
+	<string name="dynamic_location">Dynamic Location</string>
+	<string name="dynamic_position_pref_title">Use My Location</string>
+	<string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
+	<string name="prefer_gps_pref_title">Always Use GPS</string>
+	<string name="prefer_gps_pref_summary">If enabled and GPS is turned on, GPS will be used even if network location is available.</string>
+	<string name="static_location">Specify Your Location</string>
+	<string name="use_static_location_pref_title">Use Specified Place</string>
+	<string name="use_static_location_pref_summary">If enabled, zmanim will be calculated for the location you enter below. (Requires network connectivity.)</string>
+	<string name="static_location_pref_title">Place Name</string>
+	<string name="static_location_pref_summary">E.g., 5217 South Brandon Street, Seattle, WA 98118</string>
+	<string name="lat_long_location">Use Latitude &amp; Longitude</string>
+	<string name="use_latitude_longitued_pref_title">Use Specified Latitude &amp; Longitude</string>
+	<string name="use_latitude_longitued_pref_summary">If enabled, zmanim will be calculated for the latitude and longitude. (Network not required.) </string>
+	<string name="use_latitude_pref_title">Latitude</string>
+	<string name="use_latitude_pref_summary">Degrees</string>
+	<string name="use_longitude_pref_title">Longitude</string>
+	<string name="use_longitude_pref_summary">Degrees</string>
+
 
 </resources>

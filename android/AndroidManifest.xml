@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="52"
-  android:versionName="2.237"
+  android:versionName="2.239-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>
@@ -21,6 +21,12 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
+		<activity
+			android:name=".prefs.EditLocationPreferences"
+			android:label=".EditLocationPrefs"
+		/>
+
 	</application>
 
 	<!--

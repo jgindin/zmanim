@@ -4,9 +4,11 @@
 
 package com.gindin.zmanim.android.location;
 
+import android.content.Intent;
+import android.view.View;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
-import com.gindin.zmanim.android.R;
+import com.gindin.zmanim.android.prefs.EditLocationPreferences;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import android.app.Activity;
@@ -96,6 +98,33 @@ public class ZmanimLocationManager {
 	}
 
 
+	public void setLocationField(
+		View locationField
+	) {
+
+		// TODO: Do we need to hold onto the field so that if it gets changed, we can remove listeners?
+
+		locationField.setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick( View view ) {
+					changeLocation();
+				}
+			}
+		);
+
+		locationField.setOnLongClickListener(
+			new View.OnLongClickListener() {
+				public boolean onLongClick( View view ) {
+					showLocationDetails();
+					return true;
+				}
+			}
+		);
+
+	}
+
+
+
 	public void addListener(
 		Listener  listener
 	) {
@@ -132,21 +161,26 @@ public class ZmanimLocationManager {
 	}
 
 
-	public void onClickLocation() {
+	/**
+	 * Invoked when the user has gestured that they want to change their location or how we determine their location.
+	 */
+	private void changeLocation() {
 
-		// So...the activity notifies us, we then ask it to show a given dialog, which it will wind up
-		//  asking us to display....
-		activity.showDialog( R.id.location );
+		activity.startActivity( new Intent( activity, EditLocationPreferences.class ) );
 	}
 
 
-	public Dialog createLocationSelectionDialog() {
+	/**
+	 * Invoked when the user gestures that they want some really detailed info about their current location.
+	 */
+	private void showLocationDetails() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( activity );
 		builder.setTitle( "Current Location" );
 		builder.setMessage( lastKnownLocation.toString() );
 
-		return builder.create();
+		final AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 
@@ -211,6 +245,7 @@ public class ZmanimLocationManager {
 			listener.error( error, location );
 		}
 	}
+
 
 
 	public interface Listener {

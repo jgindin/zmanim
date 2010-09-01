@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:orderingFromXml="true">
+	<PreferenceCategory
+		android:title="@string/dynamic_location"
+	  android:orderingFromXml="true"
+	>
+
+		<CheckBoxPreference
+			android:key="useDynamicPosition"
+		  android:title="@string/dynamic_position_pref_title"
+		  android:summary="@string/dynaic_position_pref_summary"
+		  android:checked="true"
+		/>
+		<CheckBoxPreference
+			android:key="preferGPS"
+		  android:title="@string/prefer_gps_pref_title"
+		  android:summary="@string/prefer_gps_pref_summary"
+		  android:dependency="useDynamicPosition"
+		/>
+	</PreferenceCategory>
+
+
+	<PreferenceCategory
+		android:title="@string/static_location"
+	  android:orderingFromXml="true"
+	>
+
+		<CheckBoxPreference
+			android:key="useStaticLocation"
+		  android:title="@string/use_static_location_pref_title"
+		  android:summary="@string/use_static_location_pref_summary"
+		/>
+		<EditTextPreference
+			android:key="staticLocation"
+		  android:title="@string/static_location_pref_title"
+		  android:summary="@string/static_location_pref_summary"
+		  android:dependency="useStaticLocation"
+		/>
+	</PreferenceCategory>
+
+
+	<PreferenceCategory
+		android:title="@string/lat_long_location"
+	  android:orderingFromXml="true"
+	>
+
+		<CheckBoxPreference
+			android:key="useLatLong"
+		  android:title="@string/use_latitude_longitued_pref_title"
+		  android:summary="@string/use_latitude_longitued_pref_summary" 
+		/>
+		<EditTextPreference
+			android:key="latitude"
+		  android:title="@string/use_latitude_pref_title"
+		  android:summary="@string/use_latitude_pref_summary"
+		  android:dependency="useLatLong"
+		/>
+		<EditTextPreference
+			android:key="longitude"
+		  android:title="@string/use_longitude_pref_title"
+		  android:summary="@string/use_longitude_pref_summary"
+		  android:dependency="useLatLong"
+		/>
+
+	</PreferenceCategory>
+
+</PreferenceScreen>
