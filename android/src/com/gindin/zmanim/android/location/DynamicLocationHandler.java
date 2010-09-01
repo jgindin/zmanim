@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.*;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import java.io.IOException;
