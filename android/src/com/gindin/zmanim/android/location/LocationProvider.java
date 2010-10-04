@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Base class for our various location handlers.
  */
-public abstract class LocationHandler {
+abstract class LocationProvider {
 
 	protected final Activity                                  activity;
 
@@ -33,7 +33,7 @@ public abstract class LocationHandler {
 	protected final Formatter                                 rawLatitudeLongitudeFormatter = new Formatter();
 
 
-	protected LocationHandler(
+	protected LocationProvider(
 		Activity activity
 	) {
 		geocoder = new Geocoder( activity );
@@ -42,11 +42,27 @@ public abstract class LocationHandler {
 
 
 	/**
+	 * Called by the ZmanimLocationManager when it has reason to believe that the set of available location providers
+	 *  has changed significantly enough that we ought to requery them all.
+	 */
+	public abstract void onLocationProvidersChanged();
+
+
+	/**
 	 * Derived class must implement to return the last location it knows about.
 	 *
 	 * @return The last location this handler knew about, or null if it never knew about anywhere.
 	 */
 	protected abstract Location getLastKnownLocation();
+
+
+	/**
+	 * Called when this location provider is going away.
+	 */
+	protected void onDestroy() {
+
+		listeners.clear();
+	}
 
 
 	public synchronized boolean addListener( Listener listener ) {
@@ -91,7 +107,9 @@ public abstract class LocationHandler {
 	}
 
 
-	protected synchronized void fireError( Error error ) {
+	protected synchronized void fireError(
+		LocationError error
+	) {
 
 		Location oldLocation = getLastKnownLocation();
 		String oldLocationName = lookupLocationName( oldLocation );
@@ -152,23 +170,17 @@ public abstract class LocationHandler {
 	}
 
 
-	public static enum Error {
-		NO_LOCATION_MANAGER_SERVICE,
-		NO_PROVIDERS,
-		CANNOT_DETERMINE_LOCATION
-	}
-
 	public interface Listener {
 
 		public void onLocationChanged(
-			Location newLocation,
+			Location  newLocation,
 			String    locationName
 		);
 
 		public void onError(
-			Error     error,
-			Location  oldLocation,
-			String    locationName
+			LocationError error,
+			Location      oldLocation,
+			String        locationName
 		);
 	}
-}  // End of LocationHandler class
+}  // End of LocationProvider class

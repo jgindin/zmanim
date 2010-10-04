@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
-import com.gindin.zmanim.android.location.LocationHandler;
+import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
@@ -76,6 +76,7 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
+		AppUpgrader.handle( this );
 
 		setContentView( R.layout.main );
 
@@ -96,8 +97,8 @@ public class ZmanimActivity
 
 
 			public void error(
-				LocationHandler.Error error,
-				ZmanimLocation        lastKnownLocation
+				LocationError   error,
+				ZmanimLocation  lastKnownLocation
 			) {
 				rebuildUI( lastKnownLocation, error );
 				determiningLocationDialog.dismiss();
@@ -201,7 +202,7 @@ public class ZmanimActivity
 
 	private void rebuildUI(
 		final ZmanimLocation        location,
-	  final LocationHandler.Error error
+	  final LocationError error
 	) {
 
 		AsyncTask<Void, Void, Void> buildUITask = new AsyncTask<Void, Void, Void>() {
@@ -278,7 +279,7 @@ public class ZmanimActivity
 
 	private void buildFooter(
 		ZmanimLocation              location,
-		final LocationHandler.Error error
+		final LocationError error
 	) {
 
 
@@ -293,8 +294,8 @@ public class ZmanimActivity
 
 
 	private void handleLocationError(
-		ZmanimLocation        location,
-		LocationHandler.Error error
+		ZmanimLocation  location,
+		LocationError   error
 	) {
 
 		String errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
@@ -305,13 +306,14 @@ public class ZmanimActivity
 		// Now...why is it we couldn't determine our location?
 		String extra = "";
 		final View.OnClickListener clickListener;
-		switch ( error ) {
+		switch ( error.errorCode ) {
 
 			case NO_LOCATION_MANAGER_SERVICE:
 				// This is just weird...
 				extra = "No location manager??? Internal error...";
 				clickListener = null;
 				break;
+
 
 			case CANNOT_DETERMINE_LOCATION:
 				extra = getResources().getString( R.string.cannot_determine_location );
@@ -326,6 +328,7 @@ public class ZmanimActivity
 				clickListener = null;
 				break;
 
+			
 			case NO_PROVIDERS:
 				// Well, gosh..looks like the user hasn't turned on location management!
 				extra = getResources().getString( R.string.no_location_management );
@@ -335,6 +338,13 @@ public class ZmanimActivity
 					}
 				};
 				break;
+
+
+			case BAD_INPUT:
+				extra = error.message;
+				clickListener = null;
+				break;
+
 
 			default:
 				// Seems necessary to have a default case, even though we've specified all the cases, so that the

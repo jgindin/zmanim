@@ -96,6 +96,6 @@ public final class R {
         public static final int zmanim_selector=0x7f050017;
     }
     public static final class xml {
-        public static final int location_preferences=0x7f040000;
+        public static final int location_provider_prefs=0x7f040000;
     }
 }

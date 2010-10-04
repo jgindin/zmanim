@@ -13,7 +13,7 @@ import com.gindin.zmanim.android.R;
 /**
  * Activity which is invoked when the user wants to edit their preferences around determining location.
  */
-public class EditLocationPreferences
+public class EditLocationProviderPreferences
 	extends PreferenceActivity {
 
 	private boolean                                           handlingPrefChange = false;
@@ -23,7 +23,7 @@ public class EditLocationPreferences
 	public void onCreate( Bundle savedInstanceState ) {
 
 		super.onCreate( savedInstanceState );
-		addPreferencesFromResource( R.xml.location_preferences );
+		addPreferencesFromResource( R.xml.location_provider_prefs );
 
 		configureDependencies();
 	}
@@ -31,9 +31,9 @@ public class EditLocationPreferences
 
 	private void configureDependencies() {
 
-		final CheckBoxPreference useDynamicPos = (CheckBoxPreference)findPreference( "useDynamicPosition" );
-		final CheckBoxPreference useStaticLocation = (CheckBoxPreference)findPreference( "useStaticLocation" );
-		final CheckBoxPreference useLatLong = (CheckBoxPreference)findPreference( "useLatLong" );
+		final CheckBoxPreference useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.providerType );
+		final CheckBoxPreference useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.providerType );
+		final CheckBoxPreference useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.providerType );
 
 		Preference.OnPreferenceChangeListener prefChangeListener = new Preference.OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(
@@ -77,4 +77,4 @@ public class EditLocationPreferences
 		useLatLong.setOnPreferenceChangeListener( prefChangeListener );
 	}
 
-}  // End of EditLocationPreferences class
+}  // End of EditLocationProviderPreferences class

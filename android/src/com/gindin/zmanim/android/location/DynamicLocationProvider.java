@@ -9,15 +9,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.*;
 import android.os.Bundle;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
  * Abstracts dealing with the Android LocationManager.
  */
-class DynamicLocationHandler 
-	extends LocationHandler {
+class DynamicLocationProvider
+	extends LocationProvider {
 
 	private static final int                                  MIN_UPDATE_INTERVAL_MINUTES = 20 * 60 * 1000;
 
@@ -45,7 +45,7 @@ class DynamicLocationHandler
 
 
 
-	public DynamicLocationHandler(
+	public DynamicLocationProvider(
 		Activity activity
 	) {
 
@@ -53,7 +53,7 @@ class DynamicLocationHandler
 
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
 
-		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( "ZmanimLocation", Context.MODE_PRIVATE ) );
+		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( ZmanimPrefs.LAST_LOCATION.name, Context.MODE_PRIVATE ) );
 	}
 
 
@@ -91,10 +91,19 @@ class DynamicLocationHandler
 	 * Intended to be called when someone has reason to believe that the set of available location providers
 	 *  has changed significantly enough that we ought to requery them all.
 	 */
+	@Override
 	public void onLocationProvidersChanged() {
 
 		stopListeningToLocations();
 		startListeningToLocations();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+
+		stopListeningToLocations();
+		super.onDestroy();
 	}
 
 
@@ -148,7 +157,9 @@ class DynamicLocationHandler
 
 
 	@Override
-	protected synchronized void fireError( Error error ) {
+	protected synchronized void fireError(
+		LocationError error
+	) {
 
 		Location oldLocation = getLastKnownLocation();
 
@@ -206,7 +217,7 @@ class DynamicLocationHandler
 		}
 
 		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-		fireError( Error.CANNOT_DETERMINE_LOCATION );
+		fireError( new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) );
 	}
 
 
@@ -252,7 +263,7 @@ class DynamicLocationHandler
 	private boolean isLocationEnabled() {
 
 		if ( null == locationManager ) {
-			fireError( Error.NO_LOCATION_MANAGER_SERVICE );
+			fireError( new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
 			return false;
 		}
 
@@ -260,7 +271,7 @@ class DynamicLocationHandler
 		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
 
 		if ( !networkProviderEnabled && !gpsProviderEnabled ) {
-			fireError( Error.NO_PROVIDERS );
+			fireError( new LocationError( LocationError.Code.NO_PROVIDERS ) );
 			return false;
 		}
 
@@ -493,4 +504,4 @@ class DynamicLocationHandler
 	}
 
 
-}  // End of DynamicLocationHandler class
+}  // End of DynamicLocationProvider class

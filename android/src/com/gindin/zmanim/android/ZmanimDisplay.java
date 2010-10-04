@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
@@ -55,7 +56,7 @@ class ZmanimDisplay {
 			}
 		);
 
-		preferences = listActivity.getSharedPreferences( "ZmanimSelection", Context.MODE_PRIVATE );
+		preferences = listActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name, Context.MODE_PRIVATE );
 
 		listActivity.setListAdapter( getListAdapter() );
 	}
