@@ -5,11 +5,14 @@
 package com.gindin.zmanim.android.location;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import com.gindin.util.Version;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,12 +35,18 @@ abstract class LocationProvider {
 	/** Nicely formats raw latitude & longitude when we can't resolve it to a location name. */
 	protected final Formatter                                 rawLatitudeLongitudeFormatter = new Formatter();
 
+	/** Everyone wants to see what preferences have been set. */
+	protected final SharedPreferences                         locationManagementPrefs;
+
 
 	protected LocationProvider(
 		Activity activity
 	) {
-		geocoder = new Geocoder( activity );
+
 		this.activity = activity;
+
+		geocoder = new Geocoder( activity );
+		locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
 	}
 
 
@@ -65,6 +74,13 @@ abstract class LocationProvider {
 	}
 
 
+	/**
+	 * Adds the specified listener to receive notifications of location changes.
+	 *
+	 * @param listener the new listener
+	 *
+	 * @return true if the listener was actually added, false if not (e.g., it's already a listener)
+	 */
 	public synchronized boolean addListener( Listener listener ) {
 
 		if ( listeners.contains( listener ) ) {
@@ -81,6 +97,13 @@ abstract class LocationProvider {
 	}
 
 
+	/**
+	 * Removes the specified listener so that it will no longer recieve location change notifications.
+	 *
+	 * @param listener the listener
+	 *
+	 * @return true if the listener was actually removed, false if not (e.g., it wasn't a listener)
+	 */
 	public synchronized boolean removeListener( Listener listener ) {
 
 		if ( listeners.contains( listener ) ) {

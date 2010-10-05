@@ -4,14 +4,23 @@
   ~ Copyright (c) 2010. Jay R. Gindin
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:orderingFromXml="true">
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orderingFromXml="true"
+>
+
 	<PreferenceCategory
 		android:title="@string/dynamic_location"
 	  android:orderingFromXml="true"
 	>
 
+		<!--
+			See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,
+			DYNAMIC_POSITION, STATIC_POSITION, LATITUDE_LONGITUDE_POSITION.
+		-->
+
 		<CheckBoxPreference
-			android:key="useDynamicPosition"
+			android:key="DYNAMIC_POSITION"
 		  android:title="@string/dynamic_position_pref_title"
 		  android:summary="@string/dynaic_position_pref_summary"
 		  android:checked="true"
@@ -20,7 +29,7 @@
 			android:key="preferGPS"
 		  android:title="@string/prefer_gps_pref_title"
 		  android:summary="@string/prefer_gps_pref_summary"
-		  android:dependency="useDynamicPosition"
+		  android:dependency="DYNAMIC_POSITION"
 		/>
 	</PreferenceCategory>
 
@@ -31,7 +40,7 @@
 	>
 
 		<CheckBoxPreference
-			android:key="useStaticLocation"
+			android:key="STATIC_POSITION"
 		  android:title="@string/use_static_location_pref_title"
 		  android:summary="@string/use_static_location_pref_summary"
 		/>
@@ -39,7 +48,7 @@
 			android:key="staticLocation"
 		  android:title="@string/static_location_pref_title"
 		  android:summary="@string/static_location_pref_summary"
-		  android:dependency="useStaticLocation"
+		  android:dependency="STATIC_POSITION"
 		/>
 	</PreferenceCategory>
 
@@ -50,21 +59,21 @@
 	>
 
 		<CheckBoxPreference
-			android:key="useLatLong"
+			android:key="LATITUDE_LONGITUDE_POSITION"
 		  android:title="@string/use_latitude_longitued_pref_title"
 		  android:summary="@string/use_latitude_longitued_pref_summary" 
 		/>
 		<EditTextPreference
-			android:key="latitude"
+			android:key="LATITUDE"
 		  android:title="@string/use_latitude_pref_title"
 		  android:summary="@string/use_latitude_pref_summary"
-		  android:dependency="useLatLong"
+		  android:dependency="LATITUDE_LONGITUDE_POSITION"
 		/>
 		<EditTextPreference
-			android:key="longitude"
+			android:key="LONGITUDE"
 		  android:title="@string/use_longitude_pref_title"
 		  android:summary="@string/use_longitude_pref_summary"
-		  android:dependency="useLatLong"
+		  android:dependency="LATITUDE_LONGITUDE_POSITION"
 		/>
 
 	</PreferenceCategory>

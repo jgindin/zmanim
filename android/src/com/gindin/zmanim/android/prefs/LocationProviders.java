@@ -9,44 +9,21 @@ package com.gindin.zmanim.android.prefs;
 public enum LocationProviders {
 
 	/** Indicates the user wants us to find their location every time. */
-	DYNAMIC_POSITION( "useDynamicPosition" ),
+	DYNAMIC_POSITION,
 
 	/** The user has given us an address (or at least enough data from one) to figure out where they are. */
-	STATIC_POSITION( "useStaticLocation" ),
+	STATIC_POSITION,
 
 	/** The user has pinpointed their location. */
-	LATITUDE_LONGITUDE_POSITION( "useLatLong" );
+	LATITUDE_LONGITUDE_POSITION;
 
 
 
-	public static LocationProviders fromProviderType(
-		String providerType
-	) {
+	/** Options specific to the static position provider. */
+	public static enum StaticPositionOptions {
 
-		if ( DYNAMIC_POSITION.providerType.equals( providerType ) ) {
-			return DYNAMIC_POSITION;
-		}
-
-		if ( STATIC_POSITION.providerType.equals( providerType ) ) {
-			return STATIC_POSITION;
-		}
-
-		if ( LATITUDE_LONGITUDE_POSITION.providerType.equals( providerType ) ) {
-			return LATITUDE_LONGITUDE_POSITION;
-		}
-
-		return null;
-	}
-
-
-	public final String                                       providerType;
-
-
-	private LocationProviders(
-		String providerType
-	) {
-
-		this.providerType = providerType;
+		LATITUDE,
+		LONGITUDE
 	}
 
 } // End of LocationProviders enum

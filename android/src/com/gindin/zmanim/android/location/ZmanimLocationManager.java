@@ -49,9 +49,25 @@ public class ZmanimLocationManager {
 	/** We need to listen to the provider for changes, which we then forward on to our listeners. */
 	private final LocationProvider.Listener                   locationListener;
 
+	/** When the user clicks on the location, they're indicating they want to change it. */
+	private final View.OnClickListener                        locationClickListener = new View.OnClickListener() {
+		public void onClick( View view ) {
+			changeLocation();
+		}
+	};
+
+	/** When the user long-clicks on the location, they're indicating they want to see some details about it. */
+	private final View.OnLongClickListener                    locationLongClickListener = new View.OnLongClickListener() {
+			public boolean onLongClick( View view ) {
+				showLocationDetails();
+				return true;
+			}
+		};
+
 	/** Uh, where's the last place we knew we were? */
 	private ZmanimLocation                                    lastKnownLocation = null;
 
+	private View locationField;
 
 
 	public ZmanimLocationManager(
@@ -82,12 +98,9 @@ public class ZmanimLocationManager {
 			}
 		};
 
-		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
 		locationProviderChangeListener = createLocationProviderChangeListener();
+		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
 		prefs.registerOnSharedPreferenceChangeListener( locationProviderChangeListener );
-
-		// Force a provider to be created...
-		startInitialProvider( prefs );
 	}
 
 
@@ -116,6 +129,8 @@ public class ZmanimLocationManager {
 		}
 
 		locationProvider.onDestroy();
+
+		clearLocationFieldListeners();
 	}
 
 
@@ -123,25 +138,14 @@ public class ZmanimLocationManager {
 		View locationField
 	) {
 
-		// TODO: Do we need to hold onto the field so that if it gets changed, we can remove listeners?
+		if ( null != this.locationField ) {
+			clearLocationFieldListeners();
+		}
 
-		locationField.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View view ) {
-					changeLocation();
-				}
-			}
-		);
+		this.locationField = locationField;
 
-		locationField.setOnLongClickListener(
-			new View.OnLongClickListener() {
-				public boolean onLongClick( View view ) {
-					showLocationDetails();
-					return true;
-				}
-			}
-		);
-
+		locationField.setOnClickListener( locationClickListener );
+		locationField.setOnLongClickListener( locationLongClickListener );
 	}
 
 
@@ -159,7 +163,8 @@ public class ZmanimLocationManager {
 			listeners.add( listener );
 
 			if ( 1 == listeners.size() ) {
-				locationProvider.addListener( locationListener );
+				// Force a provider to be created...
+				startInitialProvider();
 			}
 		}
 	}
@@ -182,36 +187,54 @@ public class ZmanimLocationManager {
 	}
 
 
-	private void startInitialProvider(
-		SharedPreferences prefs
-	) {
+	public GeoLocation getLastKnownLocation() {
+		return lastKnownLocation;
+	}
 
-		boolean useThis = prefs.getBoolean( LocationProviders.DYNAMIC_POSITION.providerType, false );
+
+	/**
+	 * Intended to be called when someone has reason to believe that the set of available location providers
+	 *  has changed significantly enough that we ought to requery them all.
+	 */
+	public void onLocationProvidersChanged() {
+
+		// We don't need to muck with our listener nor do we change anything about anyone who's listening to
+		//  us...just pass this through.
+		locationProvider.onLocationProvidersChanged();
+	}
+
+
+	private void startInitialProvider() {
+
+		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
+
+		boolean useThis = prefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
 		if ( useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.providerType );
+			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.name() );
 		}
 		else {
 
-			useThis = prefs.getBoolean( LocationProviders.STATIC_POSITION.providerType, false );
+			useThis = prefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
 			if ( useThis ) {
-				locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.STATIC_POSITION.providerType );
+				locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.STATIC_POSITION.name() );
 			}
 			else {
 
-				useThis = prefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.providerType, false );
+				useThis = prefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
 				if ( useThis ) {
-					locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.LATITUDE_LONGITUDE_POSITION.providerType );
+					locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
 				}
 			}
 		}
 
 		// Didn't find anything? Use dynamic positioning...
 		if ( !useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.providerType );
+			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.name() );
 		}
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	private SharedPreferences.OnSharedPreferenceChangeListener createLocationProviderChangeListener() {
 
 		return new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -220,13 +243,17 @@ public class ZmanimLocationManager {
 				String            prefKey
 			) {
 
-				LocationProviders newProvider = LocationProviders.fromProviderType( prefKey );
-				if ( null == newProvider ) {
+				LocationProviders newProvider = null;
+				try {
+					newProvider = LocationProviders.valueOf( prefKey );
+				}
+				catch ( IllegalArgumentException e ) {
 					// Nope...not a provider type...
 					return;
 				}
 
 				if ( null != locationProvider ) {
+					locationProvider.removeListener( locationListener );
 					locationProvider.onDestroy();
 				}
 
@@ -236,12 +263,19 @@ public class ZmanimLocationManager {
 						break;
 
 					case STATIC_POSITION:
+						locationProvider = new StaticLocationProvider( activity );
 						break;
 
 					case LATITUDE_LONGITUDE_POSITION:
 						locationProvider = new LatitudeLongitudeLocationProvider( activity );
 						break;
+
+					default:
+						// TODO: Should probably log something here...
+						return;
 				}
+
+				locationProvider.addListener( locationListener );
 			}
 		};
 	}
@@ -253,6 +287,13 @@ public class ZmanimLocationManager {
 	private void changeLocation() {
 
 		activity.startActivity( new Intent( activity, EditLocationProviderPreferences.class ) );
+	}
+
+
+	private void clearLocationFieldListeners() {
+
+		locationField.setOnClickListener( null );
+		locationField.setOnLongClickListener( null );
 	}
 
 
@@ -269,23 +310,6 @@ public class ZmanimLocationManager {
 		dialog.show();
 	}
 
-
-
-	public GeoLocation getLastKnownLocation() {
-		return lastKnownLocation;
-	}
-
-
-	/**
-	 * Intended to be called when someone has reason to believe that the set of available location providers
-	 *  has changed significantly enough that we ought to requery them all.
-	 */
-	public void onLocationProvidersChanged() {
-
-		// We don't need to muck with our listener nor do we change anything about anyone who's listening to
-		//  us...just pass this through.
-		locationProvider.onLocationProvidersChanged();
-	}
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="52"
-  android:versionName="2.240-DEV"
+  android:versionName="2.241-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>

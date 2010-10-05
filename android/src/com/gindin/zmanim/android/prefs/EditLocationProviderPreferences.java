@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.prefs;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import com.gindin.zmanim.android.R;
@@ -23,6 +24,7 @@ public class EditLocationProviderPreferences
 	public void onCreate( Bundle savedInstanceState ) {
 
 		super.onCreate( savedInstanceState );
+		getPreferenceManager().setSharedPreferencesName( ZmanimPrefs.LOCATION_MANAGEMENT.name );
 		addPreferencesFromResource( R.xml.location_provider_prefs );
 
 		configureDependencies();
@@ -31,9 +33,13 @@ public class EditLocationProviderPreferences
 
 	private void configureDependencies() {
 
-		final CheckBoxPreference useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.providerType );
-		final CheckBoxPreference useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.providerType );
-		final CheckBoxPreference useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.providerType );
+		final CheckBoxPreference useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.name() );
+		final CheckBoxPreference useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
+		final CheckBoxPreference useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
+
+		final EditTextPreference latitude = (EditTextPreference)findPreference( LocationProviders.StaticPositionOptions.LATITUDE.name() );
+		final EditTextPreference longitude = (EditTextPreference)findPreference( LocationProviders.StaticPositionOptions.LONGITUDE.name() );
+
 
 		Preference.OnPreferenceChangeListener prefChangeListener = new Preference.OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(
@@ -60,7 +66,12 @@ public class EditLocationProviderPreferences
 					else if ( useLatLong == preference ) {
 						useDynamicPos.setChecked( false );
 						useStaticLocation.setChecked( false );
-
+					}
+					else if ( latitude == preference ) {
+						latitude.setSummary( newValue.toString() );
+					}
+					else if ( longitude == preference ) {
+						longitude.setSummary( newValue.toString() );
 					}
 				}
 				finally {
@@ -75,6 +86,8 @@ public class EditLocationProviderPreferences
 		useDynamicPos.setOnPreferenceChangeListener( prefChangeListener );
 		useStaticLocation.setOnPreferenceChangeListener( prefChangeListener );
 		useLatLong.setOnPreferenceChangeListener( prefChangeListener );
+		latitude.setOnPreferenceChangeListener( prefChangeListener );
+		longitude.setOnPreferenceChangeListener( prefChangeListener );
 	}
 
 }  // End of EditLocationProviderPreferences class
