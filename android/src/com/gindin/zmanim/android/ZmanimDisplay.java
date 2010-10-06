@@ -56,7 +56,7 @@ class ZmanimDisplay {
 			}
 		);
 
-		preferences = listActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name, Context.MODE_PRIVATE );
+		preferences = listActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		listActivity.setListAdapter( getListAdapter() );
 	}

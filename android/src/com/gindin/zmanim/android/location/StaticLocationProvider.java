@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android.location;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.location.Location;
 
 /**
@@ -14,8 +15,11 @@ class StaticLocationProvider
 	extends LocationProvider {
 
 
-	StaticLocationProvider( Activity activity ) {
-		super( activity );
+	StaticLocationProvider(
+		Activity          activity,
+		SharedPreferences locationManagementPrefs
+	) {
+		super( activity, locationManagementPrefs );
 	}
 
 
@@ -32,14 +36,20 @@ class StaticLocationProvider
 
 
 	@Override
+	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
+		return null;
+	}
+
+
+	@Override
 	protected Location getLastKnownLocation() {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return null;
 	}
 
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();    //To change body of overridden methods use File | Settings | File Templates.
+		super.onDestroy();
 	}
 
 }  // End of StaticLocationProvider class

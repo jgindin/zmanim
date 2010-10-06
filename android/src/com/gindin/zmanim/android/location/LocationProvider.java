@@ -5,14 +5,12 @@
 package com.gindin.zmanim.android.location;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import com.gindin.util.Version;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,16 +36,29 @@ abstract class LocationProvider {
 	/** Everyone wants to see what preferences have been set. */
 	protected final SharedPreferences                         locationManagementPrefs;
 
+	/** Listen for the user changing where they want to be. */
+	protected final SharedPreferences.OnSharedPreferenceChangeListener locationManagementPrefsListener;
+
 
 	protected LocationProvider(
-		Activity activity
+		Activity          activity,
+		SharedPreferences locationManagementPrefs
 	) {
 
 		this.activity = activity;
+		this.locationManagementPrefs = locationManagementPrefs;
 
 		geocoder = new Geocoder( activity );
-		locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
+		locationManagementPrefsListener = createLocationManagementPrefsListener();
 	}
+
+
+	/**
+	 * Common mechanism to get setup for listening to location management preference changes.
+	 *
+	 * @return the change listener.
+	 */
+	protected abstract SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener();
 
 
 	/**
@@ -71,6 +82,9 @@ abstract class LocationProvider {
 	protected void onDestroy() {
 
 		listeners.clear();
+		if ( null != locationManagementPrefsListener ) {
+			locationManagementPrefs.unregisterOnSharedPreferenceChangeListener( locationManagementPrefsListener );
+		}
 	}
 
 
@@ -92,6 +106,7 @@ abstract class LocationProvider {
 		}
 		else {
 			listeners.add( listener );
+			locationManagementPrefs.registerOnSharedPreferenceChangeListener( locationManagementPrefsListener );
 			return true;
 		}
 	}

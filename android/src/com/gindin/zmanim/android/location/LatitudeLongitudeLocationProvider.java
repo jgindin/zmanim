@@ -19,19 +19,16 @@ class LatitudeLongitudeLocationProvider
 	/** The location represented by this provider. */
 	private final Location                                    ourLocation = new Location( "zmanim latitude & longitude" );
 
-	/** Listen for the user changing where they want to be. */
-	private final SharedPreferences.OnSharedPreferenceChangeListener preferredLocationListener;
 
+	LatitudeLongitudeLocationProvider(
+		Activity          activity,
+		SharedPreferences locationManagementPrefs
+	) {
 
-
-	LatitudeLongitudeLocationProvider( Activity activity ) {
-
-		super( activity );
+		super( activity, locationManagementPrefs );
 
 		updateLatitudeFromPrefs();
 		updateLongitudeFromPrefs();
-
-		preferredLocationListener = createPreferredLocationListener();
 	}
 
 
@@ -48,14 +45,6 @@ class LatitudeLongitudeLocationProvider
 
 
 	@Override
-	protected void onDestroy() {
-
-		locationManagementPrefs.unregisterOnSharedPreferenceChangeListener( preferredLocationListener );
-		super.onDestroy();
-	}
-
-
-	@Override
 	public boolean addListener( Listener listener ) {
 
 		if ( super.addListener( listener ) ) {
@@ -67,7 +56,8 @@ class LatitudeLongitudeLocationProvider
 	}
 
 
-	private SharedPreferences.OnSharedPreferenceChangeListener createPreferredLocationListener() {
+	@Override
+	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
 
 		return new SharedPreferences.OnSharedPreferenceChangeListener() {
 			public void onSharedPreferenceChanged(

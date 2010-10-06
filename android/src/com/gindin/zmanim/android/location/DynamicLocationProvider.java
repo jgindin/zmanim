@@ -45,15 +45,16 @@ class DynamicLocationProvider
 
 
 
-	public DynamicLocationProvider(
-		Activity activity
+	DynamicLocationProvider(
+		Activity          activity,
+		SharedPreferences locationManagementPrefs
 	) {
 
-		super( activity );
+		super( activity, locationManagementPrefs );
 
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
 
-		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( ZmanimPrefs.LAST_LOCATION.name, Context.MODE_PRIVATE ) );
+		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( ZmanimPrefs.LAST_LOCATION.name(), Context.MODE_PRIVATE ) );
 	}
 
 
@@ -104,6 +105,14 @@ class DynamicLocationProvider
 
 		stopListeningToLocations();
 		super.onDestroy();
+	}
+
+
+	@Override
+	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
+
+		// We don't (currently) need to listen to location preference changes.
+		return null;
 	}
 
 

@@ -43,6 +43,9 @@ public class ZmanimLocationManager {
 	/** These are the folks who need to know when the location changes. */
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
+	/** Everyone wants to see what preferences have been set. */
+	private final SharedPreferences                           locationManagementPrefs;
+
 	/** We have to listen to prefs changes to know when the user has decided to change how we're supposed to determine the location. */
 	private final SharedPreferences.OnSharedPreferenceChangeListener locationProviderChangeListener;
 
@@ -75,6 +78,7 @@ public class ZmanimLocationManager {
 	) {
 
 		this.activity = activity;
+		locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
 		locationListener = new DynamicLocationProvider.Listener() {
 			public void onLocationChanged(
@@ -99,15 +103,13 @@ public class ZmanimLocationManager {
 		};
 
 		locationProviderChangeListener = createLocationProviderChangeListener();
-		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
-		prefs.registerOnSharedPreferenceChangeListener( locationProviderChangeListener );
+		locationManagementPrefs.registerOnSharedPreferenceChangeListener( locationProviderChangeListener );
 	}
 
 
 	public void onDestroy() {
 
-		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
-		prefs.unregisterOnSharedPreferenceChangeListener( locationProviderChangeListener );
+		locationManagementPrefs.unregisterOnSharedPreferenceChangeListener( locationProviderChangeListener );
 
 		if ( !listeners.isEmpty() ) {
 
@@ -206,30 +208,29 @@ public class ZmanimLocationManager {
 
 	private void startInitialProvider() {
 
-		SharedPreferences prefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name, Context.MODE_PRIVATE );
-
-		boolean useThis = prefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+		boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
 		if ( useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.name() );
+			locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.DYNAMIC_POSITION.name() );
 		}
 		else {
 
-			useThis = prefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
+			useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
 			if ( useThis ) {
-				locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.STATIC_POSITION.name() );
+				locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.STATIC_POSITION.name() );
 			}
 			else {
 
-				useThis = prefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
+				useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
 				if ( useThis ) {
-					locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
+					locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
 				}
 			}
 		}
 
-		// Didn't find anything? Use dynamic positioning...
+		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
 		if ( !useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( prefs, LocationProviders.DYNAMIC_POSITION.name() );
+			locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.DYNAMIC_POSITION.name() );
+			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
 		}
 	}
 
@@ -243,12 +244,17 @@ public class ZmanimLocationManager {
 				String            prefKey
 			) {
 
-				LocationProviders newProvider = null;
+				LocationProviders newProvider;
 				try {
 					newProvider = LocationProviders.valueOf( prefKey );
 				}
 				catch ( IllegalArgumentException e ) {
 					// Nope...not a provider type...
+					return;
+				}
+
+				// OK...is this provider being enabled?
+				if ( !sharedPreferences.getBoolean( prefKey, false ) ) {
 					return;
 				}
 
@@ -259,15 +265,15 @@ public class ZmanimLocationManager {
 
 				switch ( newProvider ) {
 					case DYNAMIC_POSITION:
-						locationProvider = new DynamicLocationProvider( activity );
+						locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
 						break;
 
 					case STATIC_POSITION:
-						locationProvider = new StaticLocationProvider( activity );
+						locationProvider = new StaticLocationProvider( activity, locationManagementPrefs );
 						break;
 
 					case LATITUDE_LONGITUDE_POSITION:
-						locationProvider = new LatitudeLongitudeLocationProvider( activity );
+						locationProvider = new LatitudeLongitudeLocationProvider( activity, locationManagementPrefs );
 						break;
 
 					default:

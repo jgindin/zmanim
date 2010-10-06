@@ -10,24 +10,15 @@ package com.gindin.zmanim.android.prefs;
 public enum ZmanimPrefs {
 
 	/** Tracks info about the last known version of the app that was run. Might be better to use the database... */ 
-	VERSION( "Version" ),
+	VERSION,
 
 	/** Used to track which zmanim the user has selected to use. */
-	ZMANIM_SELECTION( "ZmanimSelection" ),
+	ZMANIM_SELECTION,
 
 	/** Used for storing the last known location. Might be better to use the database... */
-	LAST_LOCATION( "ZmanimLocation" ),
+	LAST_LOCATION,
 
-	LOCATION_MANAGEMENT( "ZmanimLocationManagement" );
-
-	public final String                                       name;
-
-
-	private ZmanimPrefs(
-		String  name
-	) {
-
-		this.name = name;
-	}
+	/** Preferences related to which location provider to use, and the choices about those providers made by the user. */
+	LOCATION_MANAGEMENT
 
 }  // End of ZmanimPrefs class
