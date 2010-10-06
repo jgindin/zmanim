@@ -7,6 +7,7 @@ package com.gindin.zmanim.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
@@ -30,7 +31,12 @@ class AppUpgrader {
 		int lastKnownCodeVersion = prefs.getInt( LAST_KNOWN_CODE_VERSION, -1 );
 
 		if ( thisCodeVersion > lastKnownCodeVersion ) {
-			doUpgrade( zmanimActivity, thisCodeVersion, lastKnownCodeVersion );
+			try {
+				doUpgrade( zmanimActivity, thisCodeVersion, lastKnownCodeVersion );
+			}
+			catch ( Throwable e ) {
+				LogUtils.logError( "doUpgrade", "ver: " + thisCodeVersion + " old: " + lastKnownCodeVersion, e );
+			}
 		}
 
 		final SharedPreferences.Editor editor = prefs.edit();
