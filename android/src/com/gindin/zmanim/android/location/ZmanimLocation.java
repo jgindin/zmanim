@@ -28,16 +28,6 @@ public class ZmanimLocation
 	public final float                                        accuracy;
 
 
-	public ZmanimLocation() {
-
-		providerName = null;
-		locationTime = 0;
-		accuracy = -1;
-
-		setTimeZone();
-	}
-
-
 	public ZmanimLocation(
 		Location  newLocation,
 		String    locationName
