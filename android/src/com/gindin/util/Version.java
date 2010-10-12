@@ -13,7 +13,7 @@ public class Version {
 	public static final int androidCodeVersion = 53;
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final String androidVersionName = "2.245-DEV";
+	public static final String androidVersionName = "2.246-DEV";
 
 
 	public static boolean isDevelopment() {

@@ -15,6 +15,10 @@ import com.gindin.zmanim.android.R;
 
 /**
  * Activity which is invoked when the user wants to edit their preferences around determining location.
+ *
+ * TODO:
+ *  1. Add new pref: Use system time zone?
+ *  2. If false, enable a picker that allows user to set the timezone
  */
 public class EditLocationProviderPreferences
 	extends PreferenceActivity {
@@ -24,6 +28,8 @@ public class EditLocationProviderPreferences
 	private EditTextPreference                                latitude;
 
 	private EditTextPreference                                longitude;
+
+	private EditTextPreference                                place;
 
 
 
@@ -36,8 +42,9 @@ public class EditLocationProviderPreferences
 		getPreferenceManager().setSharedPreferencesName( ZmanimPrefs.LOCATION_MANAGEMENT.name() );
 		addPreferencesFromResource( R.xml.location_provider_prefs );
 
-		latitude = (EditTextPreference)findPreference( LocationProviders.StaticPositionOptions.LATITUDE.name() );
-		longitude = (EditTextPreference)findPreference( LocationProviders.StaticPositionOptions.LONGITUDE.name() );
+		place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
+		latitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
+		longitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
 
 		configureDependencies();
 
@@ -74,15 +81,18 @@ public class EditLocationProviderPreferences
 						useDynamicPos.setChecked( false );
 						useLatLong.setChecked( false );
 					}
+					else if ( place == preference ) {
+						updateSummary( place, newValue.toString(), "" );
+					}
 					else if ( useLatLong == preference ) {
 						useDynamicPos.setChecked( false );
 						useStaticLocation.setChecked( false );
 					}
 					else if ( latitude == preference ) {
-						updateSummary( latitude, newValue.toString(), EditLocationProviderPreferences.this.getString( R.string.use_latitude_pref_summary ) );
+						updateSummary( latitude, newValue.toString(), getString( R.string.use_latitude_pref_summary ) );
 					}
 					else if ( longitude == preference ) {
-						updateSummary( longitude, newValue.toString(), EditLocationProviderPreferences.this.getString( R.string.use_longitude_pref_summary ) );
+						updateSummary( longitude, newValue.toString(), getString( R.string.use_longitude_pref_summary ) );
 					}
 				}
 				finally {
@@ -97,6 +107,7 @@ public class EditLocationProviderPreferences
 		useDynamicPos.setOnPreferenceChangeListener( prefChangeListener );
 		useStaticLocation.setOnPreferenceChangeListener( prefChangeListener );
 		useLatLong.setOnPreferenceChangeListener( prefChangeListener );
+		place.setOnPreferenceChangeListener( prefChangeListener );
 		latitude.setOnPreferenceChangeListener( prefChangeListener );
 		longitude.setOnPreferenceChangeListener( prefChangeListener );
 	}
@@ -106,12 +117,17 @@ public class EditLocationProviderPreferences
 
 		SharedPreferences prefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
-		String latitudeDegrees = prefs.getString( LocationProviders.StaticPositionOptions.LATITUDE.name(), "-1" );
+		String placeName = prefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
+		if ( placeName.length() > 0 ) {
+			updateSummary( place, placeName, "" );
+		}
+
+		String latitudeDegrees = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "-1" );
 		if ( !"-1".equals( latitudeDegrees ) ) {
 			updateSummary( latitude, latitudeDegrees, getString( R.string.use_latitude_pref_summary ) );
 		}
 
-		String longitudeDegrees = prefs.getString( LocationProviders.StaticPositionOptions.LONGITUDE.name(), "-1" );
+		String longitudeDegrees = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "-1" );
 		if ( !"-1".equals( latitudeDegrees ) ) {
 			updateSummary( longitude, longitudeDegrees, getString( R.string.use_longitude_pref_summary ) );
 		}

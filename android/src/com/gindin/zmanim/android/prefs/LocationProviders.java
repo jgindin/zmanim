@@ -19,11 +19,17 @@ public enum LocationProviders {
 
 
 
-	/** Options specific to the static position provider. */
-	public static enum StaticPositionOptions {
+	/** Options specific to the LatitudeLongitudeLocationProvider. */
+	public static enum LatitudeLongitudeProviderOptions {
 
 		LATITUDE,
 		LONGITUDE
+	}
+
+
+	/** Options specific to the StaticLocationProvider. */
+	public static enum StaticProviderOptions {
+		PLACE
 	}
 
 } // End of LocationProviders enum

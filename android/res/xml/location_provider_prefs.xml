@@ -46,7 +46,7 @@
 		  android:summary="@string/use_static_location_pref_summary"
 		/>
 		<EditTextPreference
-			android:key="staticLocation"
+			android:key="PLACE"
 		  android:title="@string/static_location_pref_title"
 		  android:summary="@string/static_location_pref_summary"
 		  android:dependency="STATIC_POSITION"
