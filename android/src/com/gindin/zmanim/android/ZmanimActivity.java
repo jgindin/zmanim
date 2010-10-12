@@ -433,6 +433,10 @@ public class ZmanimActivity
 
 		int id = item.getItemId();
 		switch ( id ) {
+			case R.id.location_prefs:
+				locationManager.editLocationPrefs();
+				return true;
+
 			case R.id.about:
 				showDialog( id );
 				return true;

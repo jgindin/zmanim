@@ -26,8 +26,8 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.244-DEV
-				(CodeVersion 52)
+				Version 2.245-DEV
+				(CodeVersion 53)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
@@ -85,6 +85,7 @@
 	<string name="unknown_location">Unknown Location</string>
 
 
+	<string name="location_prefs">Location</string>
 	<string name="edit_location_prefs_title">Edit Location Preferences</string>
 	<string name="dynamic_location">Dynamic Location</string>
 	<string name="dynamic_position_pref_title">Use My Location</string>

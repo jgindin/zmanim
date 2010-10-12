@@ -55,7 +55,7 @@ public class ZmanimLocationManager {
 	/** When the user clicks on the location, they're indicating they want to change it. */
 	private final View.OnClickListener                        locationClickListener = new View.OnClickListener() {
 		public void onClick( View view ) {
-			changeLocation();
+			editLocationPrefs();
 		}
 	};
 
@@ -290,7 +290,7 @@ public class ZmanimLocationManager {
 	/**
 	 * Invoked when the user has gestured that they want to change their location or how we determine their location.
 	 */
-	private void changeLocation() {
+	public void editLocationPrefs() {
 
 		activity.startActivity( new Intent( activity, EditLocationProviderPreferences.class ) );
 	}
