@@ -26,7 +26,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.247-DEV
+				Version 2.248-DEV
 				(CodeVersion 53)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -91,19 +91,22 @@
 	<string name="dynamic_position_pref_title">Use My Location</string>
 	<string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
 	<string name="prefer_gps_pref_title">Always Use GPS</string>
-	<string name="prefer_gps_pref_summary">If enabled and GPS is turned on, GPS will be used even if network location is available.</string>
+	<string name="prefer_gps_pref_summary">If GPS is turned on, it will be preferred over network location.</string>
 	<string name="static_location">Specify Your Location</string>
 	<string name="use_static_location_pref_title">Use Specified Place</string>
-	<string name="use_static_location_pref_summary">If enabled, zmanim will be calculated for the location you enter below. (Requires network connectivity.)</string>
+	<string name="use_static_location_pref_summary">Calculate zmanim for a location. (Requires network.)</string>
 	<string name="static_location_pref_title">Place</string>
 	<string name="static_location_pref_summary">E.g., seattle or 98118</string>
 	<string name="lat_long_location">Use Latitude &amp; Longitude</string>
 	<string name="use_latitude_longitued_pref_title">Use Specified Latitude &amp; Longitude</string>
-	<string name="use_latitude_longitued_pref_summary">If enabled, zmanim will be calculated for the latitude and longitude. (Network not required.) </string>
+	<string name="use_latitude_longitued_pref_summary">Calculate zmanim for a latitude and longitude. (No network) </string>
 	<string name="use_latitude_pref_title">Latitude</string>
 	<string name="use_latitude_pref_summary">Degrees</string>
 	<string name="use_longitude_pref_title">Longitude</string>
 	<string name="use_longitude_pref_summary">Degrees</string>
+	<string name="time_zone_setting">Time Zone</string>
+	<string name="select_time_zone">Select Time Zone</string>
+	<string name="select_time_zone_summary">Which time zone? (Always fall back to the system time zone.)</string>
 
 
 </resources>

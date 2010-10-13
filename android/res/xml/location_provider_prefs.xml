@@ -79,4 +79,17 @@
 
 	</PreferenceCategory>
 
+	<PreferenceCategory
+		android:title="@string/time_zone_setting"
+	  android:orderingFromXml="true"
+	>
+		<!-- Values are populated dynamically -->
+		<ListPreference
+			android:key="TIME_ZONE"
+		  android:title="@string/select_time_zone"
+		  android:summary="@string/select_time_zone_summary"
+	  />
+
+	</PreferenceCategory>
+
 </PreferenceScreen>

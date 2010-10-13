@@ -6,12 +6,12 @@ package com.gindin.zmanim.android.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
+import android.preference.*;
 import com.gindin.zmanim.android.R;
+
+import java.util.TimeZone;
 
 /**
  * Activity which is invoked when the user wants to edit their preferences around determining location.
@@ -31,6 +31,7 @@ public class EditLocationProviderPreferences
 	private EditTextPreference                                latitude;
 	private EditTextPreference                                longitude;
 	private EditTextPreference                                place;
+	private ListPreference                                    timeZones;
 
 	protected SharedPreferences                               prefs;
 
@@ -54,8 +55,10 @@ public class EditLocationProviderPreferences
 		place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
 		latitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
 		longitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
+		timeZones = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE.name() );
 
 		configureDependencies();
+		configureTimeZones();
 
 		if ( useDynamicPos.isChecked() ) {
 			dynamicProviderSelected();
@@ -145,6 +148,38 @@ public class EditLocationProviderPreferences
 		place.setOnPreferenceChangeListener( prefChangeListener );
 		latitude.setOnPreferenceChangeListener( prefChangeListener );
 		longitude.setOnPreferenceChangeListener( prefChangeListener );
+	}
+
+
+	private void configureTimeZones() {
+
+		timeZones.setEntries( new CharSequence[] { "N/A" } );
+		timeZones.setEntryValues( new CharSequence[] { "-- Loading --" } );
+		timeZones.setEnabled( false );
+
+		AsyncTask<Void, Void, String[]> lookupTimeZones = new AsyncTask<Void, Void, String[]>() {
+			@Override
+			protected String[] doInBackground( Void... voids ) {
+
+				final String[] timeZoneIDs = TimeZone.getAvailableIDs();
+				return timeZoneIDs;
+			}
+
+
+			@Override
+			protected void onPostExecute( String[] timeZoneIDs ) {
+
+				super.onPostExecute( timeZoneIDs );
+
+				timeZones.setEntries( timeZoneIDs );
+				timeZones.setEntryValues( timeZoneIDs );
+				timeZones.setEnabled( true );
+
+				// TODO: Select the right one.
+			}
+		};
+
+		lookupTimeZones.execute( (Void)null );
 	}
 
 

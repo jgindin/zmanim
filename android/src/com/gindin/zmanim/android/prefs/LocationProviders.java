@@ -32,4 +32,9 @@ public enum LocationProviders {
 		PLACE
 	}
 
+
+	public static enum TimeZoneOptions {
+		TIME_ZONE
+	}
+
 } // End of LocationProviders enum

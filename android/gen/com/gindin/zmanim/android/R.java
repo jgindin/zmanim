@@ -80,9 +80,12 @@ public final class R {
         public static final int no_location_management=0x7f05001c;
         public static final int prefer_gps_pref_summary=0x7f050026;
         public static final int prefer_gps_pref_title=0x7f050025;
+        public static final int select_time_zone=0x7f050034;
+        public static final int select_time_zone_summary=0x7f050035;
         public static final int static_location=0x7f050027;
         public static final int static_location_pref_summary=0x7f05002b;
         public static final int static_location_pref_title=0x7f05002a;
+        public static final int time_zone_setting=0x7f050033;
         public static final int unable_to_determine_location_button=0x7f05001a;
         public static final int unable_to_determine_location_error=0x7f05001b;
         public static final int unable_to_determine_location_header=0x7f050018;
