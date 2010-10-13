@@ -26,7 +26,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.246-DEV
+				Version 2.247-DEV
 				(CodeVersion 53)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -95,8 +95,8 @@
 	<string name="static_location">Specify Your Location</string>
 	<string name="use_static_location_pref_title">Use Specified Place</string>
 	<string name="use_static_location_pref_summary">If enabled, zmanim will be calculated for the location you enter below. (Requires network connectivity.)</string>
-	<string name="static_location_pref_title">Place Name</string>
-	<string name="static_location_pref_summary">E.g., 5217 South Brandon Street, Seattle, WA 98118</string>
+	<string name="static_location_pref_title">Place</string>
+	<string name="static_location_pref_summary">E.g., seattle or 98118</string>
 	<string name="lat_long_location">Use Latitude &amp; Longitude</string>
 	<string name="use_latitude_longitued_pref_title">Use Specified Latitude &amp; Longitude</string>
 	<string name="use_latitude_longitued_pref_summary">If enabled, zmanim will be calculated for the latitude and longitude. (Network not required.) </string>

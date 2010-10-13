@@ -25,11 +25,14 @@ public class EditLocationProviderPreferences
 
 	private boolean                                           handlingPrefChange = false;
 
+	private CheckBoxPreference                                useDynamicPos;
+	private CheckBoxPreference                                useStaticLocation;
+	private CheckBoxPreference                                useLatLong;
 	private EditTextPreference                                latitude;
-
 	private EditTextPreference                                longitude;
-
 	private EditTextPreference                                place;
+
+	protected SharedPreferences                               prefs;
 
 
 
@@ -42,24 +45,39 @@ public class EditLocationProviderPreferences
 		getPreferenceManager().setSharedPreferencesName( ZmanimPrefs.LOCATION_MANAGEMENT.name() );
 		addPreferencesFromResource( R.xml.location_provider_prefs );
 
+		prefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+
+
+		useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.name() );
+		useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
+		useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
 		place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
 		latitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
 		longitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
 
 		configureDependencies();
 
-		initializeSummaries();
+		if ( useDynamicPos.isChecked() ) {
+			dynamicProviderSelected();
+		}
+		else if ( useStaticLocation.isChecked() ) {
+			staticProviderSelected();
+		}
+		else if ( useLatLong.isChecked() ) {
+			latLongProviderSelected();
+		}
+		else {
+			// No preference set? Set the dynamic...
+			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+		}
 	}
 
 
 	private void configureDependencies() {
 
-		final CheckBoxPreference useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.name() );
-		final CheckBoxPreference useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
-		final CheckBoxPreference useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
-
-
 		Preference.OnPreferenceChangeListener prefChangeListener = new Preference.OnPreferenceChangeListener() {
+
+			@SuppressWarnings( { "UnnecessaryUnboxing" } )
 			public boolean onPreferenceChange(
 				Preference  preference,
 				Object      newValue
@@ -73,20 +91,37 @@ public class EditLocationProviderPreferences
 
 				try {
 
+					// TODO: I'm trying to make the checkboxes behave like radio buttons. However, neither setting the
+					//  preference value nor setting the field to be checked seems to actually make the checkbox stay
+					//  checked.
+
 					if ( useDynamicPos == preference ) {
-						useStaticLocation.setChecked( false );
-						useLatLong.setChecked( false );
+
+						if ( ((Boolean)newValue).booleanValue() ) {
+							dynamicProviderSelected();
+						}
+						else {
+							prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+						}
 					}
 					else if ( useStaticLocation == preference ) {
-						useDynamicPos.setChecked( false );
-						useLatLong.setChecked( false );
+						if ( ((Boolean)newValue).booleanValue() ) {
+							staticProviderSelected();
+						}
+						else {
+							prefs.edit().putBoolean( LocationProviders.STATIC_POSITION.name(), true ).commit();
+						}
+					}
+					else if ( useLatLong == preference ) {
+						if ( ((Boolean)newValue).booleanValue() ) {
+							latLongProviderSelected();
+						}
+						else {
+							prefs.edit().putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true ).commit();
+						}
 					}
 					else if ( place == preference ) {
 						updateSummary( place, newValue.toString(), "" );
-					}
-					else if ( useLatLong == preference ) {
-						useDynamicPos.setChecked( false );
-						useStaticLocation.setChecked( false );
 					}
 					else if ( latitude == preference ) {
 						updateSummary( latitude, newValue.toString(), getString( R.string.use_latitude_pref_summary ) );
@@ -113,14 +148,33 @@ public class EditLocationProviderPreferences
 	}
 
 
-	private void initializeSummaries() {
+	private void dynamicProviderSelected() {
 
-		SharedPreferences prefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		useStaticLocation.setChecked( false );
+		useLatLong.setChecked( false );
+		updateSummary( place, "", getString( R.string.static_location_pref_summary ) );
+		updateSummary( latitude, "", getString( R.string.use_latitude_pref_summary ) );
+		updateSummary( longitude, "", getString( R.string.use_longitude_pref_summary ) );
+	}
+
+
+	private void staticProviderSelected() {
+
+		useDynamicPos.setChecked( false );
+		useLatLong.setChecked( false );
+		updateSummary( latitude, "", getString( R.string.use_latitude_pref_summary ) );
+		updateSummary( longitude, "", getString( R.string.use_longitude_pref_summary ) );
 
 		String placeName = prefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
-		if ( placeName.length() > 0 ) {
-			updateSummary( place, placeName, "" );
-		}
+		updateSummary( place, placeName, "" );
+	}
+
+
+	private void latLongProviderSelected() {
+
+		useDynamicPos.setChecked( false );
+		useStaticLocation.setChecked( false );
+		updateSummary( place, "", getString( R.string.static_location_pref_summary ) );
 
 		String latitudeDegrees = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "-1" );
 		if ( !"-1".equals( latitudeDegrees ) ) {
@@ -132,6 +186,8 @@ public class EditLocationProviderPreferences
 			updateSummary( longitude, longitudeDegrees, getString( R.string.use_longitude_pref_summary ) );
 		}
 	}
+
+
 
 
 	private void updateSummary(
