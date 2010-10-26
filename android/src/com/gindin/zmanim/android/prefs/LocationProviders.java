@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2010. Jay R. Gindin
  */
+
 package com.gindin.zmanim.android.prefs;
 
 /**
@@ -34,7 +35,9 @@ public enum LocationProviders {
 
 
 	public static enum TimeZoneOptions {
-		TIME_ZONE
+		OVERRIDE_SYSTEM_TIME_ZONE,
+		TIME_ZONE_AREA,
+		TIME_ZONE_LOCALE
 	}
 
 } // End of LocationProviders enum

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009. Jay R. Gindin
+ * Copyright (c) 2010. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location;
@@ -21,6 +21,7 @@ import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
@@ -318,7 +319,6 @@ public class ZmanimLocationManager {
 
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
 	private ZmanimLocation updateLastKnownLocation(
 		Location  newLocation,
 		String    locationName
@@ -329,10 +329,36 @@ public class ZmanimLocationManager {
 			return null;
 		}
 		else {
-			lastKnownLocation = new ZmanimLocation( newLocation, locationName );
+
+			TimeZone timeZone = getTimeZoneFromPrefs();
+			lastKnownLocation = new ZmanimLocation( newLocation, locationName, timeZone );
 		}
 
 		return lastKnownLocation;
+	}
+
+
+	/**
+	 * @return The timezone specified by the user in the preferences, or null if we're to use the system time zone.
+	 */
+	private TimeZone getTimeZoneFromPrefs() {
+
+		if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
+			return null;
+		}
+
+		final String timeZoneArea = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+		if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
+			return null;
+		}
+
+		final String timeZoneLocale = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+		if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
+			return null;
+		}
+
+
+		return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
 	}
 
 

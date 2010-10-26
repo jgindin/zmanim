@@ -30,7 +30,8 @@ public class ZmanimLocation
 
 	public ZmanimLocation(
 		Location  newLocation,
-		String    locationName
+		String    locationName,
+		TimeZone  timeZone
 	) {
 
 		providerName = newLocation.getProvider();
@@ -53,7 +54,15 @@ public class ZmanimLocation
 		}
 
 		setElevation( altitude );
-		setTimeZone();
+
+		// If we don't set a time zone, then it defaults to GMT...
+		if ( null == timeZone ) {
+			setTimeZone( TimeZone.getDefault() );
+		}
+		else {
+			setTimeZone( timeZone );
+		}
+
 	}
 
 
@@ -76,14 +85,6 @@ public class ZmanimLocation
 		sb.append( "\nAccuacy:\t" ).append( accuracy );
 
 		return sb.toString();
-	}
-
-
-
-	private void setTimeZone() {
-
-		// If we don't set a time zone, then it defaults to GMT...
-		setTimeZone( TimeZone.getDefault() );
 	}
 
 }  // End of ZmanimLocation class

@@ -83,11 +83,25 @@
 		android:title="@string/time_zone_setting"
 	  android:orderingFromXml="true"
 	>
+
+		<CheckBoxPreference
+			android:key="OVERRIDE_SYSTEM_TIME_ZONE"
+		  android:title="@string/override_system_time_zone"
+		  android:summary="@string/override_system_time_zone_summary"
+		/>
+
 		<!-- Values are populated dynamically -->
 		<ListPreference
-			android:key="TIME_ZONE"
-		  android:title="@string/select_time_zone"
-		  android:summary="@string/select_time_zone_summary"
+			android:key="TIME_ZONE_AREA"
+		  android:title="@string/time_zone_area"
+		  android:summary="@string/time_zone_area_summary"
+		  android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
+	  />
+		<ListPreference
+			android:key="TIME_ZONE_LOCALE"
+		  android:title="@string/time_zone_locale"
+		  android:summary="@string/time_zone_locale_summary"
+		  android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
 	  />
 
 	</PreferenceCategory>

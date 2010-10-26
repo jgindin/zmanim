@@ -11,14 +11,10 @@ import android.os.Bundle;
 import android.preference.*;
 import com.gindin.zmanim.android.R;
 
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Activity which is invoked when the user wants to edit their preferences around determining location.
- *
- * TODO:
- *  1. Add new pref: Use system time zone?
- *  2. If false, enable a picker that allows user to set the timezone
  */
 public class EditLocationProviderPreferences
 	extends PreferenceActivity {
@@ -31,9 +27,19 @@ public class EditLocationProviderPreferences
 	private EditTextPreference                                latitude;
 	private EditTextPreference                                longitude;
 	private EditTextPreference                                place;
-	private ListPreference                                    timeZones;
+
+	/**
+	 * We split the time zones (e.g., "America/Los_Angeles") into two separate strings to make it easier
+	 *  to find what you're looking for.
+	 */
+	private CheckBoxPreference                                overrideSystemTimeZone;
+	private ListPreference                                    timeZoneAreas;
+	private ListPreference                                    timeZoneLocales;
 
 	protected SharedPreferences                               prefs;
+
+	/** Only want to build this map once. */
+	private static final Map<String, List<String>>            timeZoneAreasToLocales = new HashMap<String, List<String>>();
 
 
 
@@ -55,7 +61,9 @@ public class EditLocationProviderPreferences
 		place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
 		latitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
 		longitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
-		timeZones = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE.name() );
+		overrideSystemTimeZone = (CheckBoxPreference)findPreference( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name() );
+		timeZoneAreas = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name() );
+		timeZoneLocales = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name() );
 
 		configureDependencies();
 		configureTimeZones();
@@ -132,6 +140,16 @@ public class EditLocationProviderPreferences
 					else if ( longitude == preference ) {
 						updateSummary( longitude, newValue.toString(), getString( R.string.use_longitude_pref_summary ) );
 					}
+					else if ( overrideSystemTimeZone == preference ) {
+						overridingSystemTimeZone( ((Boolean)newValue).booleanValue() );
+					}
+					else if ( timeZoneAreas == preference ) {
+						updateSummary( timeZoneAreas, "", newValue.toString() );
+						updateLocaleSelector();
+					}
+					else if ( timeZoneLocales == preference ) {
+						updateSummary( timeZoneLocales, "", newValue.toString() );
+					}
 				}
 				finally {
 					handlingPrefChange = false;
@@ -148,34 +166,73 @@ public class EditLocationProviderPreferences
 		place.setOnPreferenceChangeListener( prefChangeListener );
 		latitude.setOnPreferenceChangeListener( prefChangeListener );
 		longitude.setOnPreferenceChangeListener( prefChangeListener );
+		overrideSystemTimeZone.setOnPreferenceChangeListener( prefChangeListener );
+		timeZoneAreas.setOnPreferenceChangeListener( prefChangeListener );
+		timeZoneLocales.setOnPreferenceChangeListener( prefChangeListener );
 	}
 
 
 	private void configureTimeZones() {
 
-		timeZones.setEntries( new CharSequence[] { "N/A" } );
-		timeZones.setEntryValues( new CharSequence[] { "-- Loading --" } );
-		timeZones.setEnabled( false );
+		timeZoneAreas.setEntries( new CharSequence[] { "N/A" } );
+		timeZoneAreas.setEntryValues( new CharSequence[] { "-- Loading --" } );
+		timeZoneAreas.setEnabled( false );
 
-		AsyncTask<Void, Void, String[]> lookupTimeZones = new AsyncTask<Void, Void, String[]>() {
+		AsyncTask<Void, Void, Map<String, List<String>>> lookupTimeZones = new AsyncTask<Void, Void, Map<String, List<String>>>() {
 			@Override
-			protected String[] doInBackground( Void... voids ) {
+			protected Map<String, List<String>> doInBackground( Void... voids ) {
+
+				if ( !timeZoneAreasToLocales.isEmpty() ) {
+					return timeZoneAreasToLocales;
+				}
 
 				final String[] timeZoneIDs = TimeZone.getAvailableIDs();
-				return timeZoneIDs;
+				for ( String timeZoneID : timeZoneIDs ) {
+
+					int slash = timeZoneID.indexOf( "/" );
+					if ( -1 == slash ) {
+						continue;
+					}
+
+					String area = timeZoneID.substring( 0, slash );
+					String locale = timeZoneID.substring( slash + 1 );
+					List<String> locales = timeZoneAreasToLocales.get( area );
+					if ( null == locales ) {
+						locales = new ArrayList<String>();
+						timeZoneAreasToLocales.put( area, locales );
+					}
+					locales.add( locale );
+				}
+
+				return timeZoneAreasToLocales;
 			}
 
 
 			@Override
-			protected void onPostExecute( String[] timeZoneIDs ) {
+			protected void onPostExecute( Map<String, List<String>> timeZoneAreasToLocales ) {
 
-				super.onPostExecute( timeZoneIDs );
+				super.onPostExecute( timeZoneAreasToLocales );
 
-				timeZones.setEntries( timeZoneIDs );
-				timeZones.setEntryValues( timeZoneIDs );
-				timeZones.setEnabled( true );
+				// Only enable if the user has said to override the system time zone AND we have sufficient info...
+				boolean shouldEnable = overrideSystemTimeZone.isChecked();
 
-				// TODO: Select the right one.
+				final Set<String> keys = timeZoneAreasToLocales.keySet();
+				final String[] areaNames = keys.toArray( new String[ keys.size() ] );
+				Arrays.sort( areaNames );
+
+				timeZoneAreas.setEntries( areaNames );
+				timeZoneAreas.setEntryValues( areaNames );
+
+				final String selectedArea = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+				if ( null == selectedArea ) {
+					shouldEnable = false;
+				}
+				else {
+					updateLocaleSelector();
+				}
+
+				timeZoneAreas.setEnabled( shouldEnable );
+				timeZoneLocales.setEnabled( shouldEnable );
 			}
 		};
 
@@ -223,6 +280,45 @@ public class EditLocationProviderPreferences
 	}
 
 
+	private void overridingSystemTimeZone(
+		boolean override
+	) {
+
+		String area = null;
+		String locale = null;
+
+		if ( override ) {
+			area = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+			locale = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+		}
+
+		if ( null == area ) {
+			area = getString( R.string.time_zone_area_summary );
+			locale = getString( R.string.time_zone_locale_summary );
+		}
+
+		updateSummary( timeZoneAreas, "", area );
+		updateSummary( timeZoneLocales, "", locale );
+	}
+
+
+	private void updateLocaleSelector() {
+
+		final String selectedArea = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+		final String[] localeNames;
+		if ( null != selectedArea ) {
+			final List<String> locales = timeZoneAreasToLocales.get( selectedArea );
+			localeNames = locales.toArray( new String[ locales.size() ] );
+			Arrays.sort( localeNames );
+		}
+		else {
+			localeNames = new String[] { "--No Area Selected--" };
+			timeZoneLocales.setEnabled( false );
+		}
+
+		timeZoneLocales.setEntries( localeNames );
+		timeZoneLocales.setEntryValues( localeNames );
+	}
 
 
 	private void updateSummary(

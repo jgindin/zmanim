@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
 <resources>
 	<string name="app_name">Zmanim</string>
 	<string name="Alot">Alot (Dawn)</string>
@@ -26,7 +30,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.248-DEV
+				Version 2.249-DEV
 				(CodeVersion 53)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -105,8 +109,12 @@
 	<string name="use_longitude_pref_title">Longitude</string>
 	<string name="use_longitude_pref_summary">Degrees</string>
 	<string name="time_zone_setting">Time Zone</string>
-	<string name="select_time_zone">Select Time Zone</string>
-	<string name="select_time_zone_summary">Which time zone? (Always fall back to the system time zone.)</string>
+	<string name="override_system_time_zone">Use Custom Time Zone?</string>
+	<string name="override_system_time_zone_summary">Ignores the system time zone for calculations.</string>
+	<string name="time_zone_area">Select Time Zone</string>
+	<string name="time_zone_area_summary">What area? (E.g., "America")</string>
+	<string name="time_zone_locale">Select Time Zone Locale</string>
+	<string name="time_zone_locale_summary">Which locale? (E.g., "Los Angeles")</string>
 
 
 </resources>

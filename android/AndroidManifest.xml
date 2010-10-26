@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="53"
-  android:versionName="2.248-DEV"
+  android:versionName="2.249-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>
