@@ -135,6 +135,16 @@ abstract class LocationProvider {
 	}
 
 
+	protected synchronized void fireLocationProgress(
+		String  message
+	) {
+
+		for ( Listener listener : listeners ) {
+			listener.onProgress( message );
+		}
+	}
+
+
 	protected synchronized void fireNewLocation(
 		final Location location
 	) {
@@ -185,13 +195,17 @@ abstract class LocationProvider {
 						locationString = address.getLocality() + ", " + address.getAdminArea();
 					}
 					else {
-						//noinspection AutoBoxing
-						locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
+						synchronized ( rawLatitudeLongitudeFormatter ) {
+							//noinspection AutoBoxing
+							locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
+						}
 					}
 				}
 				catch ( IOException e ) {
-					//noinspection AutoBoxing
-					locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
+					synchronized ( rawLatitudeLongitudeFormatter ) {
+						//noinspection AutoBoxing
+						locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
+					}
 				}
 
 				return locationString;
@@ -245,6 +259,10 @@ abstract class LocationProvider {
 			LocationError error,
 			Location      oldLocation,
 			String        locationName
+		);
+
+		void onProgress(
+			String message
 		);
 	}
 }  // End of LocationProvider class

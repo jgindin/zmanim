@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.*;
 import android.os.Bundle;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 import java.util.*;
@@ -43,6 +44,8 @@ class DynamicLocationProvider
 	/** Used so that we can decide if a new location is enough of a change to warrant firing an event. */
 	private Location                                          ourLastFix = null;
 
+	/** Do we prefer to receive GPS fixes over other providers? */
+	private boolean                                           preferGPS;
 
 
 	DynamicLocationProvider(
@@ -55,6 +58,7 @@ class DynamicLocationProvider
 		locationManager = (LocationManager)activity.getSystemService( Context.LOCATION_SERVICE );
 
 		lastFixedLocationFactory = new LastFixedLocationFactory( activity.getSharedPreferences( ZmanimPrefs.LAST_LOCATION.name(), Context.MODE_PRIVATE ) );
+		preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
 	}
 
 
@@ -111,8 +115,23 @@ class DynamicLocationProvider
 	@Override
 	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
 
-		// We don't (currently) need to listen to location preference changes.
-		return null;
+		return new SharedPreferences.OnSharedPreferenceChangeListener() {
+			public void onSharedPreferenceChanged(
+				SharedPreferences sharedPreferences,
+				String            prefKey
+			) {
+
+				if ( LocationProviders.DynamicProviderOptions.PREFER_GPS.name().equals( prefKey ) ) {
+					boolean didWePreferGPS = preferGPS;
+					preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
+
+					// If the user is now saying they really want GPS location, go ahead and re-request our location.
+					if ( !didWePreferGPS && preferGPS ) {
+						onLocationProvidersChanged();
+					}
+				}
+			}
+		};
 	}
 
 
@@ -160,6 +179,8 @@ class DynamicLocationProvider
 		final Location location
 	) {
 
+		ourLastFix = location;
+
 		super.fireNewLocation( location );
 		lastFixedLocationFactory.save( location );
 	}
@@ -178,12 +199,24 @@ class DynamicLocationProvider
 
 	
 	void onReceivedFix(
-		final Location location
+		final Location                location,
+		final AndroidLocationListener source
 	) {
 
+		// We've got a fix we can use, even if it turns out to not be from our preferred method. Make sure
+		//  we don't time out and claim to have failed...
 		cancelFirstFixesTimer.cancel();
-		for ( AndroidLocationListener listener : locationListeners ) {
-			listener.cancelFirstFix();
+
+
+		// Now, there's a few cases here:
+		//  1. We don't care how we get a fix: Tell all the location listeners to stop their first fix
+		//  2. We prefer GPS, but this isn't: Let the location listeners continue trying to get their first fix
+		//  3. We prefer GPS and this is it:  Tell all the location listeners to stop their first fix
+		if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) ) {
+
+			for ( AndroidLocationListener listener : locationListeners ) {
+				listener.cancelFirstFix();
+			}
 		}
 
 		// Did we ever get a fix before? If so, is this new fix a significant enough change to warrant firing an
@@ -194,11 +227,11 @@ class DynamicLocationProvider
 		}
 		else {
 
-			// First, check the time. If the time is more than 5 minutes,
+			// First, check the time. If the time is more than our min update, then sure...go ahead and notify everyone.
 			final long lastFixTime = ourLastFix.getTime();
 			final long thisFixTime = location.getTime();
 
-			if ( thisFixTime - lastFixTime > MIN_UPDATE_INTERVAL_MINUTES ) {
+			if ( ( thisFixTime - lastFixTime ) > MIN_UPDATE_INTERVAL_MINUTES ) {
 				needToFire = true;
 			}
 			else {
@@ -235,6 +268,8 @@ class DynamicLocationProvider
 		if ( !isLocationEnabled() ) {
 			return;
 		}
+
+		fireLocationProgress( "Waiting for location update..." );
 
 		if ( null != cancelFirstFixesTimer ) {
 			cancelFirstFixesTimer.cancel();
@@ -322,8 +357,12 @@ class DynamicLocationProvider
 		}
 
 
-		public void onLocationChanged( Location location ) {
-			onReceivedFix( location );
+		public void onLocationChanged(
+			Location location
+		) {
+
+			cancelFirstFix();
+			onReceivedFix( location, this );
 		}
 
 
@@ -347,7 +386,14 @@ class DynamicLocationProvider
 
 
 		public void onStatusChanged( String provider, int status, Bundle extras ) {
+
 			// Inherited from LocationListener...Not used
+//			StringBuffer message = new StringBuffer( "StatusChanged for " + provider );
+//			for ( String s : extras.keySet() ) {
+//				message.append( s ).append( " = " ).append( extras.get( s ) );
+//			}
+//
+//			LogUtils.logEvent( "onStatusChanged", message.toString() );
 		}
 
 

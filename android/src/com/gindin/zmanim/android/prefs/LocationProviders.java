@@ -19,6 +19,13 @@ public enum LocationProviders {
 	LATITUDE_LONGITUDE_POSITION;
 
 
+	/** Options specific to the DynamicLocationProvider. */
+	public static enum DynamicProviderOptions {
+
+		/** Should we prefer a GPS location, even when other providers are available? */
+		PREFER_GPS
+	}
+
 
 	/** Options specific to the LatitudeLongitudeLocationProvider. */
 	public static enum LatitudeLongitudeProviderOptions {

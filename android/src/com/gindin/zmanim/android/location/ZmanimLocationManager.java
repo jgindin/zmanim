@@ -82,9 +82,17 @@ public class ZmanimLocationManager {
 		locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
 		locationListener = new DynamicLocationProvider.Listener() {
+
+			public void onProgress(
+				String message
+			) {
+				fireProgress( message );
+			}
+
+
 			public void onLocationChanged(
-				Location newLocation,
-				String locationName
+				Location  newLocation,
+				String    locationName
 			) {
 
 				ZmanimLocation location = updateLastKnownLocation( newLocation, locationName );
@@ -362,6 +370,15 @@ public class ZmanimLocationManager {
 	}
 
 
+	private void fireProgress(
+		String message
+	) {
+
+		for ( Listener listener : listeners ) {
+			listener.onProgress( message );
+		}
+	}
+
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void fireLocationChanged(
@@ -396,6 +413,10 @@ public class ZmanimLocationManager {
 		void error(
 			LocationError   error,
 			ZmanimLocation  lastKnownLocation
+		);
+
+		void onProgress(
+			String message
 		);
 	}
 

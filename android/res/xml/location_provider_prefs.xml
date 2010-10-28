@@ -27,7 +27,7 @@
 		  android:checked="true"
 		/>
 		<CheckBoxPreference
-			android:key="preferGPS"
+			android:key="PREFER_GPS"
 		  android:title="@string/prefer_gps_pref_title"
 		  android:summary="@string/prefer_gps_pref_summary"
 		  android:dependency="DYNAMIC_POSITION"

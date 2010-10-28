@@ -30,8 +30,8 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.249-DEV
-				(CodeVersion 53)
+				Version 2.250
+				(CodeVersion 59)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
@@ -94,7 +94,7 @@
 	<string name="dynamic_location">Dynamic Location</string>
 	<string name="dynamic_position_pref_title">Use My Location</string>
 	<string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
-	<string name="prefer_gps_pref_title">Always Use GPS</string>
+	<string name="prefer_gps_pref_title">Prefer GPS</string>
 	<string name="prefer_gps_pref_summary">If GPS is turned on, it will be preferred over network location.</string>
 	<string name="static_location">Specify Your Location</string>
 	<string name="use_static_location_pref_title">Use Specified Place</string>

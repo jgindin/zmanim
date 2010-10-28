@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009. Jay R. Gindin
+ * Copyright (c) 2010. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -86,13 +86,17 @@ public class ZmanimActivity
 		determiningLocationDialog.show();
 
 		locationListener = new ZmanimLocationManager.Listener() {
-			public void locationChanged( ZmanimLocation newLocation ) {
+
+			public void onProgress( String message ) {
+				determiningLocationDialog.setMessage( message );
 				if ( !determiningLocationDialog.isShowing() ) {
-					determiningLocationDialog.setMessage( "Updating With New Location..." );
 					determiningLocationDialog.show();
 				}
+			}
+
+
+			public void locationChanged( ZmanimLocation newLocation ) {
 				rebuildUI( newLocation, null );
-				determiningLocationDialog.dismiss();
 			}
 
 
@@ -101,7 +105,6 @@ public class ZmanimActivity
 				ZmanimLocation  lastKnownLocation
 			) {
 				rebuildUI( lastKnownLocation, error );
-				determiningLocationDialog.dismiss();
 			}
 		};
 
@@ -201,9 +204,14 @@ public class ZmanimActivity
 
 
 	private void rebuildUI(
-		final ZmanimLocation        location,
-	  final LocationError error
+		final ZmanimLocation  location,
+	  final LocationError   error
 	) {
+
+		determiningLocationDialog.setMessage( "Updating with new location..." );
+		if ( !determiningLocationDialog.isShowing() ) {
+			determiningLocationDialog.show();
+		}
 
 		AsyncTask<Void, Void, Void> buildUITask = new AsyncTask<Void, Void, Void>() {
 			@Override
@@ -216,25 +224,32 @@ public class ZmanimActivity
 
 			@Override
 			protected void onPostExecute( Void v ) {
-				super.onPostExecute( v );
 
-				buildHeader( location );
-				buildFooter( location, error );
+				try {
+					super.onPostExecute( v );
 
-				if ( null == location ) {
-					zmanimCalendarListener = null;
-					return;
+					buildHeader( location );
+					buildFooter( location, error );
+
+					if ( null == location ) {
+						zmanimCalendarListener = null;
+						return;
+					}
+
+					// We just need a display...don't need to hold on to it...
+					new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
+
+					zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
+						public void dateChanged() {
+							updateHeader();
+						}
+					};
+					zmanimCalendar.addListener( zmanimCalendarListener );
+				}
+				finally {
+					determiningLocationDialog.dismiss();
 				}
 
-				// We just need a display...don't need to hold on to it...
-				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
-
-				zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
-					public void dateChanged() {
-						updateHeader();
-					}
-				};
-				zmanimCalendar.addListener( zmanimCalendarListener );
 			}
 		};
 
