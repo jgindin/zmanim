@@ -416,9 +416,11 @@ class DynamicLocationProvider
 	private class CancelFirstFixesTimer
 		extends Timer {
 
-		/** Max time to wait for SOMEONE to cancel us. */
-		private static final int                                WAIT_FOR_FIRST_NETWORK_FIX_DELAY = 3000;
-		private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 20000;
+		/** Max time to wait for SOMEONE to cancel us when we're using only the network. */
+		private static final int                                WAIT_FOR_FIRST_NETWORK_FIX_DELAY = 10000;
+
+		/** Max time to wait for SOMEONE to cancel us when we have access to GPS. */
+		private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 30000;
 
 
 		CancelFirstFixesTimer(
