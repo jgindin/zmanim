@@ -15,7 +15,6 @@ import com.gindin.zmanim.android.prefs.LocationProviders;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
 /**
@@ -31,14 +30,11 @@ abstract class LocationProvider {
 	/** Translates from latitude & longitude to a location name, and vice-versa. */
 	protected final Geocoder                                  geocoder;
 
-	/** Nicely formats raw latitude & longitude when we can't resolve it to a location name. */
-	protected final Formatter                                 rawLatitudeLongitudeFormatter = new Formatter();
-
 	/** Everyone wants to see what preferences have been set. */
 	protected final SharedPreferences                         locationManagementPrefs;
 
 	/** Listen for the user changing where they want to be. */
-	protected final SharedPreferences.OnSharedPreferenceChangeListener locationManagementPrefsListener;
+	private final SharedPreferences.OnSharedPreferenceChangeListener locationManagementPrefsListener;
 
 
 	protected LocationProvider(
@@ -195,17 +191,13 @@ abstract class LocationProvider {
 						locationString = address.getLocality() + ", " + address.getAdminArea();
 					}
 					else {
-						synchronized ( rawLatitudeLongitudeFormatter ) {
-							//noinspection AutoBoxing
-							locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
-						}
+						//noinspection AutoBoxing
+						locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
 					}
 				}
 				catch ( IOException e ) {
-					synchronized ( rawLatitudeLongitudeFormatter ) {
-						//noinspection AutoBoxing
-						locationString = rawLatitudeLongitudeFormatter.format( "%.1f lat %.1f long", latitude, longitude ).toString();
-					}
+					//noinspection AutoBoxing
+					locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
 				}
 
 				return locationString;
