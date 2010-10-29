@@ -66,6 +66,12 @@ public class ZmanimActivity
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
 
+	/**
+	 * Task used to build the UI. While we're in the process of (re)building the UI, this will be set. As soon as
+	 *  we're done, it's reset to null.
+	 */
+	private AsyncTask<Void, Void, Void>                       buildUITask = null;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -194,7 +200,7 @@ public class ZmanimActivity
 		switch ( requestCode ) {
 
 			case REQUEST_ENABLE_LOCATION_SOURCES:
-				determiningLocationDialog.setMessage( "Determining location..." );
+				determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 				determiningLocationDialog.show();
 				cleanupCalendarListeners();
 				locationManager.onLocationProvidersChanged();
@@ -208,52 +214,13 @@ public class ZmanimActivity
 	  final LocationError   error
 	) {
 
-		determiningLocationDialog.setMessage( "Updating with new location..." );
-		if ( !determiningLocationDialog.isShowing() ) {
-			determiningLocationDialog.show();
+		if ( null != buildUITask ) {
+			buildUITask.cancel( false );
 		}
 
-		AsyncTask<Void, Void, Void> buildUITask = new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground( Void... v ) {
-
-				zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
-				return null;
-			}
-
-
-			@Override
-			protected void onPostExecute( Void v ) {
-
-				try {
-					super.onPostExecute( v );
-
-					buildHeader( location );
-					buildFooter( location, error );
-
-					if ( null == location ) {
-						zmanimCalendarListener = null;
-						return;
-					}
-
-					// We just need a display...don't need to hold on to it...
-					new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
-
-					zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
-						public void dateChanged() {
-							updateHeader();
-						}
-					};
-					zmanimCalendar.addListener( zmanimCalendarListener );
-				}
-				finally {
-					determiningLocationDialog.dismiss();
-				}
-
-			}
-		};
-
+		buildUITask = new BuildUIAsyncTask( location, error );
 		buildUITask.execute();
+
 	}
 
 
@@ -644,4 +611,83 @@ public class ZmanimActivity
 
 	}
 
+
+	/**
+	 * Task used for rebuilding the UI.
+	 */
+	private class BuildUIAsyncTask
+		extends AsyncTask<Void, Void, Void> {
+
+		private final ZmanimLocation                            location;
+
+		private final LocationError                             error;
+
+
+		public BuildUIAsyncTask(
+			ZmanimLocation  location,
+			LocationError   error
+		) {
+			this.location = location;
+			this.error = error;
+		}
+
+
+		@Override
+		protected void onPreExecute() {
+			
+			super.onPreExecute();
+
+			determiningLocationDialog.setMessage( getString( R.string.updating_with_new_location ) );
+			if ( !determiningLocationDialog.isShowing() ) {
+				determiningLocationDialog.show();
+			}
+		}
+
+
+		@Override
+		protected Void doInBackground( Void... v ) {
+
+			zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute( Void v ) {
+
+			try {
+				super.onPostExecute( v );
+
+				if ( isCancelled() ) {
+					// I guess someone else is coming along with a new request to build the UI...
+					return;
+				}
+				
+				buildHeader( location );
+				buildFooter( location, error );
+
+				if ( null == location ) {
+					zmanimCalendarListener = null;
+					return;
+				}
+
+				// We just need a display...don't need to hold on to it...
+				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
+
+				zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
+					public void dateChanged() {
+						updateHeader();
+					}
+				};
+				zmanimCalendar.addListener( zmanimCalendarListener );
+			}
+			finally {
+
+				// Make sure to clean up!
+				determiningLocationDialog.dismiss();
+				buildUITask = null;
+			}
+
+		}
+	}
 }  // End of ZmanimActivity class

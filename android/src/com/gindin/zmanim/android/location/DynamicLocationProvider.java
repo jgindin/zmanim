@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.*;
 import android.os.Bundle;
+import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
@@ -126,7 +127,7 @@ class DynamicLocationProvider
 					preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
 
 					// If the user is now saying they really want GPS location, go ahead and re-request our location.
-					if ( !didWePreferGPS && preferGPS ) {
+					if ( !didWePreferGPS && preferGPS && isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
 						onLocationProvidersChanged();
 					}
 				}
@@ -269,7 +270,7 @@ class DynamicLocationProvider
 			return;
 		}
 
-		fireLocationProgress( "Waiting for location update..." );
+		fireLocationProgress( activity.getString( R.string.waiting_for_location_update ) );
 
 		if ( null != cancelFirstFixesTimer ) {
 			cancelFirstFixesTimer.cancel();
