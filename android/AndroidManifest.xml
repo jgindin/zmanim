@@ -6,7 +6,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="59"
-  android:versionName="2.254-DEV"
+  android:versionName="2.255-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>
@@ -29,6 +29,10 @@
 		<activity
 			android:name=".prefs.EditLocationProviderPreferences"
 			android:label=".EditLocationPrefs"
+		/>
+		<activity
+			android:name=".prefs.PersonalPreferences"
+			android:label="Personal Preferences"
 		/>
 
 	</application>

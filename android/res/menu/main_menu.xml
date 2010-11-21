@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
 		android:id="@+id/location_prefs"
 	  android:title="@string/location_prefs"
 	  android:icon="@android:drawable/ic_menu_mylocation"
+	/>
+	<item
+		android:id="@+id/personal_prefs"
+	  android:title="@string/personal_prefs"
+	  android:icon="@android:drawable/ic_menu_preferences"
 	/>
 	<item
 		android:id="@+id/about"

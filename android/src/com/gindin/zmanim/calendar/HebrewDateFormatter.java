@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2010. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.calendar;
 
 import com.gindin.zmanim.times.Zman;
@@ -11,7 +15,7 @@ import java.util.Date;
 /**
  * Just a simple, hard-coded formatting of the dates.
  */
-class HebrewDateFormatter {
+public class HebrewDateFormatter {
 
 
 	/** Used to format the zmanim times that get displayed. */
@@ -24,14 +28,19 @@ class HebrewDateFormatter {
 	private final ZmanRounder                                 zmanRounder;
 
 	public HebrewDateFormatter(
-		DateFormat timeFormatter,
-		DateFormat secularDateFormatter
+		boolean showSeconds
 	) {
 
-		this.timeFormatter = timeFormatter;
-		this.secularDateFormatter = secularDateFormatter;
+		if ( showSeconds ) {
+			timeFormatter = DateFormat.getTimeInstance( DateFormat.MEDIUM );
+			zmanRounder = null;
+		}
+		else {
+			timeFormatter = DateFormat.getTimeInstance( DateFormat.SHORT );
+			zmanRounder = new ZmanRounder();
+		}
 
-		zmanRounder = new ZmanRounder();
+		secularDateFormatter = DateFormat.getDateInstance( DateFormat.MEDIUM );
 	}
 
 
@@ -46,26 +55,28 @@ class HebrewDateFormatter {
 			return "N/A";
 		}
 
-		// Some of the zman types we need to do some rounding so that we avoid a situation of showing
-		//  a time that can mislead someone into missing their mitzvah...
-		switch ( zman.type ) {
+		if ( null != zmanRounder ) {
+			// Some of the zman types we need to do some rounding so that we avoid a situation of showing
+			//  a time that can mislead someone into missing their mitzvah...
+			switch ( zman.type ) {
 
-			case Alot:
-			case Talit:
-			case Hanetz:
-			case TzaitHachocavim:
-				time = zmanRounder.roundToLatestMinute( time );
-				break;
+				case Alot:
+				case Talit:
+				case Hanetz:
+				case TzaitHachocavim:
+					time = zmanRounder.roundToLatestMinute( time );
+					break;
 
-			case SofZmanShema:
-			case SofZmanTefila:
-			case MinchaGedola:
-			case MinchaKetana:
-			case PlagHaMincha:
-			case CandleLighting:
-			case LatestMincha:
-				time = zmanRounder.roundToEarliestMinute( time );
-				break;
+				case SofZmanShema:
+				case SofZmanTefila:
+				case MinchaGedola:
+				case MinchaKetana:
+				case PlagHaMincha:
+				case CandleLighting:
+				case LatestMincha:
+					time = zmanRounder.roundToEarliestMinute( time );
+					break;
+			}
 		}
 
 		synchronized ( this ) {

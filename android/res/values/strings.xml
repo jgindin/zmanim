@@ -30,7 +30,7 @@
 
 			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
 			&lt;br&gt;
-				Version 2.254-DEV
+				Version 2.255-DEV
 				(CodeVersion 59)
 			&lt;/br&gt;
 			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
@@ -119,5 +119,9 @@
 	<string name="determining_location">"Determining location..."</string>
 	<string name="waiting_for_location_update">Waiting for location update...</string>
 	<string name="updating_with_new_location">"Updating with new location..."</string>
+
+	<string name="personal_prefs">Preferences</string>
+	<string name="show_seconds_pref_title">Show Exact Zmanim</string>
+	<string name="show_seconds_pref_summary">Don't round the zmanim times to the nearest minute.</string>
 
 </resources>

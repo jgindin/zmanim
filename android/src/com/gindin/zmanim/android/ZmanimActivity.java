@@ -4,10 +4,15 @@
 
 package com.gindin.zmanim.android;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.calendar.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
 import net.sourceforge.zmanim.util.GeoLocation;
@@ -25,7 +30,6 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -44,14 +48,6 @@ public class ZmanimActivity
 	private GestureDetector                                   gestureDetector;
 
 	private HebrewZmanimCalendar.Listener                     zmanimCalendarListener;
-
-	/** The format for the times that we're going to display. */
-	@SuppressWarnings( { "FieldCanBeLocal" } )
-	private DateFormat                                        timeFormatter;
-
-	/** The format for the secular dates that we're going to display. */
-	@SuppressWarnings( { "FieldCanBeLocal" } )
-	private DateFormat                                        secularDateFormatter;
 
 	private ZmanimLocationManager                             locationManager;
 
@@ -111,9 +107,6 @@ public class ZmanimActivity
 		AsyncTask<Void, Void, Void> initUITask = new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground( Void... voids ) {
-
-				timeFormatter = android.text.format.DateFormat.getTimeFormat( ZmanimActivity.this );
-				secularDateFormatter = android.text.format.DateFormat.getMediumDateFormat( ZmanimActivity.this );
 
 				setupViewListeners();
 
@@ -182,6 +175,7 @@ public class ZmanimActivity
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	@Override
 	protected void onActivityResult(
 		int requestCode,
@@ -204,6 +198,10 @@ public class ZmanimActivity
 
 			case EDIT_LOCATION_PREFERENCES:
 				locationManager.locationPreferencesChanged();
+				break;
+
+			case PERSONAL_PREFERENCS:
+				rebuildUI( locationManager.getLastKnownLocation(), null );
 				break;
 		}
 	}
@@ -415,6 +413,11 @@ public class ZmanimActivity
 
 		int id = item.getItemId();
 		switch ( id ) {
+
+			case R.id.personal_prefs:
+				startActivityForResult( new Intent( this, PersonalPreferences.class ), Activities.PERSONAL_PREFERENCS.ordinal() );
+				break;
+
 			case R.id.location_prefs:
 				locationManager.editLocationPrefs();
 				return true;
@@ -647,7 +650,10 @@ public class ZmanimActivity
 		@Override
 		protected Void doInBackground( Void... v ) {
 
-			zmanimCalendar = new HebrewZmanimCalendar( location, timeFormatter, secularDateFormatter );
+			final SharedPreferences prefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+			boolean showSeconds = prefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
+			final HebrewDateFormatter formatter = new HebrewDateFormatter( showSeconds );
+			zmanimCalendar = new HebrewZmanimCalendar( location, formatter );
 			return null;
 		}
 

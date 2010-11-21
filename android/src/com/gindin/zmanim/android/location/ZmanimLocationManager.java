@@ -14,7 +14,6 @@ import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import net.sourceforge.zmanim.util.GeoLocation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -187,7 +186,7 @@ public class ZmanimLocationManager {
 	}
 
 
-	public GeoLocation getLastKnownLocation() {
+	public ZmanimLocation getLastKnownLocation() {
 		return lastKnownLocation;
 	}
 

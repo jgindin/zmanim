@@ -19,6 +19,9 @@ public enum ZmanimPrefs {
 	LAST_LOCATION,
 
 	/** Preferences related to which location provider to use, and the choices about those providers made by the user. */
-	LOCATION_MANAGEMENT
+	LOCATION_MANAGEMENT,
+
+	/** General preferences */
+	PERSONAL
 
 }  // End of ZmanimPrefs class

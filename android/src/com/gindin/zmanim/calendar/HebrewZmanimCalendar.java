@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009. Jay R. Gindin
+ * Copyright (c) 2010. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
@@ -9,7 +9,6 @@ import com.gindin.zmanim.times.Zmanim;
 import com.gindin.zmanim.times.ZmanimFactory;
 import net.sourceforge.zmanim.util.GeoLocation;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,9 +44,8 @@ public class HebrewZmanimCalendar {
 
 
 	public HebrewZmanimCalendar(
-		GeoLocation location,
-		DateFormat  timeFormatter,
-		DateFormat  secularDateFormatter
+		GeoLocation         location,
+		HebrewDateFormatter dateFormatter
 	) {
 
 		// There are cases where we don't have / aren't able to get a location. In such a case, most of
@@ -59,7 +57,7 @@ public class HebrewZmanimCalendar {
 			zmanimCalendar = null;
 		}
 
-		this.dateFormatter = new HebrewDateFormatter( timeFormatter, secularDateFormatter );
+		this.dateFormatter = dateFormatter;
 		this.zmanimFactory = new ZmanimFactory( this );
 	}
 
@@ -347,12 +345,7 @@ public class HebrewZmanimCalendar {
 
 		boolean adjusted;
 
-		if ( null == zmanimCalendar ) {
-			adjusted = false;
-		}
-		else {
-			adjusted = isTodayAfterSunset();
-		}
+		adjusted = ( null != zmanimCalendar ) && isTodayAfterSunset();
 
 		if ( adjusted ) {
 			hebrewCalendar.add( Calendar.DATE, 1 );

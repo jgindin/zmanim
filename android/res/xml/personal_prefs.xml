@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orderingFromXml="true"
+  android:title="@string/personal_prefs"
+>
+
+	<!--
+		See the com.gindin.zmanim.android.prefs.PersonalPrefernces.Prefs enum, which corresponds to the keys (e.g.,
+		SHOW_SECONDS).
+	-->
+
+	<CheckBoxPreference
+		android:key="SHOW_SECONDS"
+	  android:title="@string/show_seconds_pref_title"
+	  android:summary="@string/show_seconds_pref_summary"
+	  android:checked="true"
+	/>
+
+
+</PreferenceScreen>
