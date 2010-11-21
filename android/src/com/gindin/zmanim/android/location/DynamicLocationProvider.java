@@ -190,7 +190,10 @@ class DynamicLocationProvider
 		//  1. We don't care how we get a fix: Tell all the location listeners to stop their first fix
 		//  2. We prefer GPS, but this isn't: Let the location listeners continue trying to get their first fix
 		//  3. We prefer GPS and this is it:  Tell all the location listeners to stop their first fix
-		if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) ) {
+		//  4. We prefer GPS, but it isn't turned on: Tell all the location listeners to stop their first fix
+		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
+
+		if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) || !gpsProviderEnabled ) {
 
 			for ( AndroidLocationListener listener : locationListeners ) {
 				listener.cancelFirstFix();
