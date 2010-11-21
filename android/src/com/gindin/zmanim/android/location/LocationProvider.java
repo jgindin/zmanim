@@ -11,7 +11,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import com.gindin.util.Version;
-import com.gindin.zmanim.android.prefs.LocationProviders;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,8 +32,6 @@ abstract class LocationProvider {
 	/** Everyone wants to see what preferences have been set. */
 	protected final SharedPreferences                         locationManagementPrefs;
 
-	/** Listen for the user changing where they want to be. */
-	private final SharedPreferences.OnSharedPreferenceChangeListener locationManagementPrefsListener;
 
 
 	protected LocationProvider(
@@ -46,17 +43,7 @@ abstract class LocationProvider {
 		this.locationManagementPrefs = locationManagementPrefs;
 
 		geocoder = new Geocoder( activity );
-		final SharedPreferences.OnSharedPreferenceChangeListener changeListener = createLocationManagementPrefsListener();
-		locationManagementPrefsListener = createWrappingLocationProviderChangeListener( changeListener );
 	}
-
-
-	/**
-	 * Common mechanism to get setup for listening to location management preference changes.
-	 *
-	 * @return the change listener.
-	 */
-	protected abstract SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener();
 
 
 	/**
@@ -80,9 +67,6 @@ abstract class LocationProvider {
 	protected void onDestroy() {
 
 		listeners.clear();
-		if ( null != locationManagementPrefsListener ) {
-			locationManagementPrefs.unregisterOnSharedPreferenceChangeListener( locationManagementPrefsListener );
-		}
 	}
 
 
@@ -104,7 +88,6 @@ abstract class LocationProvider {
 		}
 		else {
 			listeners.add( listener );
-			locationManagementPrefs.registerOnSharedPreferenceChangeListener( locationManagementPrefsListener );
 			return true;
 		}
 	}
@@ -213,30 +196,6 @@ abstract class LocationProvider {
 			geoLocation = null;
 		}
 		return geoLocation;
-	}
-
-
-	private SharedPreferences.OnSharedPreferenceChangeListener createWrappingLocationProviderChangeListener(
-		final SharedPreferences.OnSharedPreferenceChangeListener changeListener
-	) {
-
-		return new SharedPreferences.OnSharedPreferenceChangeListener() {
-			public void onSharedPreferenceChanged(
-				SharedPreferences sharedPreferences,
-				String            prefKey
-			) {
-
-				changeListener.onSharedPreferenceChanged( sharedPreferences, prefKey );
-
-				// Maybe it was the time zone that changed? If so, that's like a location change...
-				if ( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name().equals( prefKey ) ||
-						 LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name().equals( prefKey ) ||
-						 LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name().equals( prefKey ) ) {
-
-					fireNewLocation( getLastKnownLocation() );
-				}
-			}
-		};
 	}
 
 

@@ -57,34 +57,6 @@ class LatitudeLongitudeLocationProvider
 	}
 
 
-	@Override
-	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
-
-		return new SharedPreferences.OnSharedPreferenceChangeListener() {
-			public void onSharedPreferenceChanged(
-				SharedPreferences sharedPreferences,
-				String            prefKey
-			) {
-
-				boolean fireEvent = false;
-
-				if ( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name().equals( prefKey ) ) {
-					updateLatitudeFromPrefs();
-					fireEvent = true;
-				}
-				else if ( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name().equals( prefKey ) ) {
-					updateLongitudeFromPrefs();
-					fireEvent = true;
-				}
-
-				if ( fireEvent ) {
-					fireNewLocation( ourLocation );
-				}
-			}
-		};
-	}
-	
-
 	private void updateLatitudeFromPrefs() {
 
 		String latitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "0" );

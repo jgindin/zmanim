@@ -56,30 +56,6 @@ class StaticLocationProvider
 
 
 	@Override
-	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
-
-		return new SharedPreferences.OnSharedPreferenceChangeListener() {
-			public void onSharedPreferenceChanged(
-				SharedPreferences sharedPreferences,
-				String            prefKey
-			) {
-
-				boolean fireEvent = false;
-
-				if ( LocationProviders.StaticProviderOptions.PLACE.name().equals( prefKey ) ) {
-					updateLocationFromPlace();
-					fireEvent = true;
-				}
-
-				if ( fireEvent ) {
-					fireNewLocation( ourLocation );
-				}
-			}
-		};
-	}
-
-
-	@Override
 	protected Location getLastKnownLocation() {
 		return ourLocation;
 	}

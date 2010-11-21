@@ -114,29 +114,6 @@ class DynamicLocationProvider
 
 
 	@Override
-	protected SharedPreferences.OnSharedPreferenceChangeListener createLocationManagementPrefsListener() {
-
-		return new SharedPreferences.OnSharedPreferenceChangeListener() {
-			public void onSharedPreferenceChanged(
-				SharedPreferences sharedPreferences,
-				String            prefKey
-			) {
-
-				if ( LocationProviders.DynamicProviderOptions.PREFER_GPS.name().equals( prefKey ) ) {
-					boolean didWePreferGPS = preferGPS;
-					preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
-
-					// If the user is now saying they really want GPS location, go ahead and re-request our location.
-					if ( !didWePreferGPS && preferGPS && isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-						onLocationProvidersChanged();
-					}
-				}
-			}
-		};
-	}
-
-
-	@Override
 	protected Location getLastKnownLocation() {
 
 		Location gpsLocation = null;

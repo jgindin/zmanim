@@ -37,12 +37,6 @@ public class ZmanimActivity
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
-	/**
-	 * In case there are no location sources enabled, we'll make a request to the intent that will allow the
-	 *  user to turn something on.
-	 */
-	private static final int                                  REQUEST_ENABLE_LOCATION_SOURCES = 0;
-
 	/** The calendar we use for displaying everything. */
 	private HebrewZmanimCalendar                              zmanimCalendar;
 
@@ -197,13 +191,19 @@ public class ZmanimActivity
 
 		super.onActivityResult( requestCode, resultCode, data );
 
-		switch ( requestCode ) {
+		Activities activity = Activities.values()[ requestCode ];
 
-			case REQUEST_ENABLE_LOCATION_SOURCES:
+		switch ( activity ) {
+
+			case ENABLE_LOCATION_SERVICES:
 				determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 				determiningLocationDialog.show();
 				cleanupCalendarListeners();
 				locationManager.onLocationProvidersChanged();
+				break;
+
+			case EDIT_LOCATION_PREFERENCES:
+				locationManager.locationPreferencesChanged();
 				break;
 		}
 	}
@@ -518,7 +518,7 @@ public class ZmanimActivity
 					// Launch the correct settings screen for the user. Saw this example from:
 					//  http://stackoverflow.com/questions/623225/android-go-to-settings-screen
 					startActivityForResult( new Intent( android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS ),
-						REQUEST_ENABLE_LOCATION_SOURCES );
+						Activities.ENABLE_LOCATION_SERVICES.ordinal() );
 				}
 			}
 		);

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
+import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
@@ -19,17 +20,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.location.Location;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
  * API.
  *
  * TODO: Allow user to choose how to select location:
- *        1. Auto
- *        2. Manually enter city, state (with optional street, etc...)
  *        3. Google Map (see http://code.google.com/android/add-ons/google-apis/mapkey.html, http://code.google.com/android/add-ons/google-apis/reference/index.html)
  */
 public class ZmanimLocationManager {
@@ -46,9 +43,6 @@ public class ZmanimLocationManager {
 
 	/** Everyone wants to see what preferences have been set. */
 	private final SharedPreferences                           locationManagementPrefs;
-
-	/** We have to listen to prefs changes to know when the user has decided to change how we're supposed to determine the location. */
-	private final SharedPreferences.OnSharedPreferenceChangeListener locationProviderChangeListener;
 
 	/** We need to listen to the provider for changes, which we then forward on to our listeners. */
 	private final LocationProvider.Listener                   locationListener;
@@ -110,15 +104,10 @@ public class ZmanimLocationManager {
 				fireError( error, location );
 			}
 		};
-
-		locationProviderChangeListener = createLocationProviderChangeListener();
-		locationManagementPrefs.registerOnSharedPreferenceChangeListener( locationProviderChangeListener );
 	}
 
 
 	public void onDestroy() {
-
-		locationManagementPrefs.unregisterOnSharedPreferenceChangeListener( locationProviderChangeListener );
 
 		if ( !listeners.isEmpty() ) {
 
@@ -215,93 +204,62 @@ public class ZmanimLocationManager {
 	}
 
 
+	/**
+	 * Invoked when the user has gestured that they want to change their location or how we determine their location.
+	 */
+	public void editLocationPrefs() {
+
+		activity.startActivityForResult( new Intent( activity, EditLocationProviderPreferences.class ), Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
+	}
+
+
+	/**
+	 * Called after the user has changed some preferences regarding location. Always comes after we request the activity
+	 *   to be displayed from within editLocationPrefs().
+	 */
+	public void locationPreferencesChanged() {
+
+		// We could try to be smart and clever by capturing the prefs before the location prefs were invoked. However,
+		//  that is just way too much work. It's not like we expect users to be doing this all the time...
+		startInitialProvider();
+	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
 	private void startInitialProvider() {
+
+		if ( null != locationProvider ) {
+			locationProvider.removeListener( locationListener );
+			locationProvider.onDestroy();
+		}
+
 
 		boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
 		if ( useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.DYNAMIC_POSITION.name() );
+			locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
 		}
 		else {
 
 			useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
 			if ( useThis ) {
-				locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.STATIC_POSITION.name() );
+				locationProvider = new StaticLocationProvider( activity, locationManagementPrefs );
 			}
 			else {
 
 				useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
 				if ( useThis ) {
-					locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
+					locationProvider = new LatitudeLongitudeLocationProvider( activity, locationManagementPrefs );
 				}
 			}
 		}
 
 		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
 		if ( !useThis ) {
-			locationProviderChangeListener.onSharedPreferenceChanged( locationManagementPrefs, LocationProviders.DYNAMIC_POSITION.name() );
+			locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
 			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
 		}
-	}
 
-
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private SharedPreferences.OnSharedPreferenceChangeListener createLocationProviderChangeListener() {
-
-		return new SharedPreferences.OnSharedPreferenceChangeListener() {
-			public void onSharedPreferenceChanged(
-				SharedPreferences sharedPreferences,
-				String            prefKey
-			) {
-
-				LocationProviders newProvider;
-				try {
-					newProvider = LocationProviders.valueOf( prefKey );
-				}
-				catch ( IllegalArgumentException e ) {
-					// Nope...not a provider type...
-					return;
-				}
-
-				// OK...is this provider being enabled?
-				if ( !sharedPreferences.getBoolean( prefKey, false ) ) {
-					return;
-				}
-
-				if ( null != locationProvider ) {
-					locationProvider.removeListener( locationListener );
-					locationProvider.onDestroy();
-				}
-
-				switch ( newProvider ) {
-					case DYNAMIC_POSITION:
-						locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
-						break;
-
-					case STATIC_POSITION:
-						locationProvider = new StaticLocationProvider( activity, locationManagementPrefs );
-						break;
-
-					case LATITUDE_LONGITUDE_POSITION:
-						locationProvider = new LatitudeLongitudeLocationProvider( activity, locationManagementPrefs );
-						break;
-
-					default:
-						// TODO: Should probably log something here...
-						return;
-				}
-
-				locationProvider.addListener( locationListener );
-			}
-		};
-	}
-
-
-	/**
-	 * Invoked when the user has gestured that they want to change their location or how we determine their location.
-	 */
-	public void editLocationPrefs() {
-
-		activity.startActivity( new Intent( activity, EditLocationProviderPreferences.class ) );
+		locationProvider.addListener( locationListener );
 	}
 
 
