@@ -33,7 +33,7 @@
 				Version 2.257-DEV
 				(CodeVersion 59)
 			&lt;/br&gt;
-			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;android-zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
+			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;Zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
 			&lt;br&gt;
 				This project is made possible by using the following libraries:
 				&lt;ul&gt;
@@ -52,13 +52,26 @@
 			&lt;ul&gt;
 				&lt;li&gt;Click on the zman you want to change&lt;/li&gt;
 				&lt;li&gt;In the resulting dialog, click on the desired calculation&lt;/li&gt;
-				&lt;li&gt;The dialog will go away, and that choice will be remembered every time you run android-zmanim.&lt;/li&gt;
+				&lt;li&gt;The dialog will go away, and that choice will be remembered every time you run Zmanim.&lt;/li&gt;
 			&lt;/ul&gt;
 		&lt;/span&gt;
 		&lt;h4&gt;Changing Dates&lt;/h4&gt;
-		&lt;div style=%22font-size: 80%25;%22&gt;
-			Click on the secular date in the upper left-hand corner to get a date selector.
-		&lt;/div&gt;
+		&lt;span style=%22font-size: 80%25;%22&gt;
+			&lt;ul&gt;
+				&lt;li&gt;Swipe right-to-left to move to the previous day; swipe left-to-right to move to the next day.&lt;/li&gt;
+				&lt;li&gt;Click on the secular date in the upper left-hand corner to get a date selector.&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/span&gt;
+		&lt;h4&gt;Changing Locations&lt;/h4&gt;
+		&lt;span style=%22font-size: 80%25;%22&gt;
+			Click the 'menu' button and choose Location. Options include:
+			&lt;ul&gt;
+				&lt;li&gt;"Use My Location" to have Zmanim do its best to use your current location. Does not require internet connectivity.&lt;/li&gt;
+				&lt;li&gt;"Use Specified Place" to enter a particular location. Requires internet connectivity to lookup the actual location.&lt;/li&gt;
+				&lt;li&gt;"Use Specified Latitude &amp; Longitude" to use a particular location, but without requiring any network connectivity.&lt;/li&gt;
+			&lt;/ul&gt;
+			You can also select a particular time zone to use, if you want to see the times other than the time zone of your device.
+		&lt;/span&gt;
 	</string>
 
 	<string name="zmanim_selector">Select Zman: </string> 
