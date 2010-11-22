@@ -184,6 +184,22 @@ class TzaitHachocavim
 			}
 		);
 
+		zmanim.add(
+			new Zman( "Seattle - EB", "Based on the Rhodesli Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHachocavim ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaitEzraBessaroth();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Seattle - SBH", "Based on the Turkish Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHachocavim ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaitSephardicBikurHolim();
+				}
+			}
+		);
+
 		return zmanim;
 	}
 }  // End of TzaitHachocavim class

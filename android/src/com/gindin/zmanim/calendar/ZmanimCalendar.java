@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009. Jay R. Gindin
+ * Copyright (c) 2010. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
@@ -44,6 +44,20 @@ public class ZmanimCalendar
 	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF = 13;
 
 	private static final int                                  MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL = 26;
+
+
+	/**
+	 * In Seattle, the Sephardic community which descends from the Island of Rhodes considers Shabbat to be
+	 *  out 45 minutes after sunset.
+	 */
+	private static final int                                  MINUTES_AFTER_SUNSET_FOR_EB_TZAIT = 45;
+
+	/**
+	 * In Seattle, the Sephardic community which descends from the Turkey considers Shabbat to be
+	 *  out 42 minutes after sunset.
+	 */
+	private static final int                                  MINUTES_AFTER_SUNSET_FOR_SBH_TZAIT = 42;
+
 
 	/**
 	 * How many milliseconds in a minute?
@@ -90,6 +104,16 @@ public class ZmanimCalendar
 	 */
 	public Date getLatestMinchaBenSion() {
 		return getTimeOffset( getSunset(), MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL * MINUTE_MILLIS);
+	}
+
+
+	public Date getTzaitEzraBessaroth() {
+		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_EB_TZAIT * MINUTE_MILLIS );
+	}
+
+
+	public Date getTzaitSephardicBikurHolim() {
+		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_SBH_TZAIT * MINUTE_MILLIS );
 	}
 
 }  // End of ZmanimCalendar class
