@@ -124,7 +124,7 @@ public abstract class Zmanim {
 		CandleLighting( "Candle Lighting", "" ),
 		Shkia( "Shkia", "Sunset" ),
 		LatestMincha( "Latest Mincha", "" ),
-		TzaitHachocavim( "Tzait Hachocavim", "Nightfall" );
+		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" );
 
 		/** Name of the set of zmanim. E.g., "Sof Zman Shema" */
 		public final String                                       name;

@@ -13,17 +13,17 @@ import java.util.List;
 /**
  *
  */
-class TzaitHachocavim
+class TzaitHacochavim
 	extends Zmanim {
 
 	private static final String                               DEFAULT_ZMAN_NAME = "8.5 deg";
 
 
-	TzaitHachocavim(
+	TzaitHacochavim(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
-		super( Type.TzaitHachocavim, buildZmanim( zmanimCalendar ) );
+		super( Type.TzaitHacochavim, buildZmanim( zmanimCalendar ) );
 	}
 
 
@@ -41,7 +41,7 @@ class TzaitHachocavim
 
 
 		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 8.5 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 8.5 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHacochavim, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais();
 				}
@@ -49,7 +49,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 120 Minutes", "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "MG'A 120 Minutes", "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120();
 				}
@@ -57,7 +57,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 120 Minutes Zmaniyot", "120 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "GR'A 120 Minutes Zmaniyot", "120 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120Zmanis();
 				}
@@ -65,7 +65,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "16.1 deg", "When the sun is 16.1 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "16.1 deg", "When the sun is 16.1 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais16Point1Degrees();
 				}
@@ -73,7 +73,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "18 deg", "When the sun is 18 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "18 deg", "When the sun is 18 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais18Degrees();
 				}
@@ -81,7 +81,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "19.8 deg", "When the sun is 19.8 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "19.8 deg", "When the sun is 19.8 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais19Point8Degrees();
 				}
@@ -89,7 +89,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "26 deg", "When the sun is 26 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "26 deg", "When the sun is 26 degrees below the western geometric horizon after sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais26Degrees();
 				}
@@ -97,7 +97,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Chavas Yair and Divray Malkiel", "Based on the time to walk 4 Mil at 15 minutes/Mil.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Chavas Yair and Divray Malkiel", "Based on the time to walk 4 Mil at 15 minutes/Mil.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais60();
 				}
@@ -105,7 +105,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Rambam / Rabainu Tam", "Based on the time to walk 4 Mil at 18 minutes/Mil.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Rambam / Rabainu Tam", "Based on the time to walk 4 Mil at 18 minutes/Mil.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais72();
 				}
@@ -113,7 +113,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "72 Minutes Zmaniyot", "Calculated as 72 minutes zmaniyot, or 1/10th of the day after sea level sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "72 Minutes Zmaniyot", "Calculated as 72 minutes zmaniyot, or 1/10th of the day after sea level sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais72Zmanis();
 				}
@@ -121,7 +121,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "MG'A 90 Minutes", "Based on the time to walk 5 Mil at 18 minutes/Mil.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "MG'A 90 Minutes", "Based on the time to walk 5 Mil at 18 minutes/Mil.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais90();
 				}
@@ -129,7 +129,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 90 Minutes Zmaniyot", "90 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "GR'A 90 Minutes Zmaniyot", "90 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais90Zmanis();
 				}
@@ -137,7 +137,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "96 Minutes", "96 minutes after sea level sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "96 Minutes", "96 minutes after sea level sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais96();
 				}
@@ -145,7 +145,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "GR'A 96 Minutes Zmaniyot", "96 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "GR'A 96 Minutes Zmaniyot", "96 minutes zmaniyot after sea level sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais96Zmanis();
 				}
@@ -153,7 +153,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Chacham Yosef Harari-Raful", "Usually calculated as 40 minutes after sunset.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Chacham Yosef Harari-Raful", "Usually calculated as 40 minutes after sunset.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisAteretTorah();
 				}
@@ -161,7 +161,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 5.95 deg", "Based on the sun's position at 5.95 degrees below the western horizon.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Geonim 5.95 deg", "Based on the sun's position at 5.95 degrees below the western horizon.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim5Point95Degrees();
 				}
@@ -169,7 +169,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 7.083 deg", "Based on the sun's position at 7.083 degrees below the western horizon.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Geonim 7.083 deg", "Based on the sun's position at 7.083 degrees below the western horizon.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim7Point083Degrees();
 				}
@@ -177,7 +177,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Geonim 8.5 deg", "Based on the sun's position at 8.5 degrees below the western horizon.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Geonim 8.5 deg", "Based on the sun's position at 8.5 degrees below the western horizon.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim8Point5Degrees();
 				}
@@ -185,7 +185,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Seattle - EB", "Based on the Rhodesli Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Seattle - EB", "Based on the Rhodesli Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaitEzraBessaroth();
 				}
@@ -193,7 +193,7 @@ class TzaitHachocavim
 		);
 
 		zmanim.add(
-			new Zman( "Seattle - SBH", "Based on the Turkish Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHachocavim ) {
+			new Zman( "Seattle - SBH", "Based on the Turkish Seattle Sephardic community's tradition.", Zmanim.Type.TzaitHacochavim ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaitSephardicBikurHolim();
 				}
@@ -202,4 +202,4 @@ class TzaitHachocavim
 
 		return zmanim;
 	}
-}  // End of TzaitHachocavim class
+}  // End of TzaitHacochavim class

@@ -91,7 +91,7 @@ class ZmanimDisplay {
 
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Shkia );
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.LatestMincha );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHachocavim );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHacochavim );
 
 		return new ListAdapter( listActivity, zmanimToDisplay );
 	}

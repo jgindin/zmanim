@@ -102,8 +102,8 @@ public class ZmanimFactory {
 					zmanim = new Talit( zmanimCalendar );
 					break;
 
-				case TzaitHachocavim:
-					zmanim = new TzaitHachocavim( zmanimCalendar );
+				case TzaitHacochavim:
+					zmanim = new TzaitHacochavim( zmanimCalendar );
 					break;
 			}
 
