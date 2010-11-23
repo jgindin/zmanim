@@ -81,6 +81,9 @@ public class EditLocationProviderPreferences
 			// No preference set? Set the dynamic...
 			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
 		}
+
+		
+		overridingSystemTimeZone( overrideSystemTimeZone.isChecked() );
 	}
 
 
@@ -290,6 +293,18 @@ public class EditLocationProviderPreferences
 		if ( override ) {
 			area = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
 			locale = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+
+			// We want these enabled, but if there's no entries (yet) then they'll get enabled after we're done
+			//  filling them in...
+			final CharSequence[] timeZoneAreaEntries = timeZoneAreas.getEntries();
+			if ( ( null != timeZoneAreaEntries ) && timeZoneAreaEntries.length > 1 ) {
+				timeZoneAreas.setEnabled( true );
+				updateLocaleSelector();
+			}
+		}
+		else {
+			timeZoneAreas.setEnabled( false );
+			timeZoneLocales.setEnabled( false );
 		}
 
 		if ( null == area ) {
@@ -310,6 +325,7 @@ public class EditLocationProviderPreferences
 			final List<String> locales = timeZoneAreasToLocales.get( selectedArea );
 			localeNames = locales.toArray( new String[ locales.size() ] );
 			Arrays.sort( localeNames );
+			timeZoneLocales.setEnabled( true );
 		}
 		else {
 			localeNames = new String[] { "--No Area Selected--" };
