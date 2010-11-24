@@ -38,8 +38,11 @@ public class EditLocationProviderPreferences
 
 	protected SharedPreferences                               prefs;
 
-	/** Only want to build this map once. */
-	private static final Map<String, List<String>>            timeZoneAreasToLocales = new HashMap<String, List<String>>();
+	/**
+	 * Only want to build this map once. Using a TreeMap so that the time zones get sorted upon addition,
+	 *  and we don't have to do it again..
+	 */
+	private static final Map<String, List<String>>            timeZoneAreasToLocales = new TreeMap<String, List<String>>();
 
 
 
@@ -148,7 +151,7 @@ public class EditLocationProviderPreferences
 					}
 					else if ( timeZoneAreas == preference ) {
 						updateSummary( timeZoneAreas, "", newValue.toString() );
-						updateLocaleSelector();
+						updateLocaleSelector( newValue.toString() );
 					}
 					else if ( timeZoneLocales == preference ) {
 						updateSummary( timeZoneLocales, "", newValue.toString() );
@@ -207,6 +210,11 @@ public class EditLocationProviderPreferences
 					locales.add( locale );
 				}
 
+				// Sort the locales now so we don't have to do it later...
+				for ( Map.Entry<String, List<String>> entry : timeZoneAreasToLocales.entrySet() ) {
+					Collections.sort( entry.getValue() );
+				}
+
 				return timeZoneAreasToLocales;
 			}
 
@@ -221,7 +229,6 @@ public class EditLocationProviderPreferences
 
 				final Set<String> keys = timeZoneAreasToLocales.keySet();
 				final String[] areaNames = keys.toArray( new String[ keys.size() ] );
-				Arrays.sort( areaNames );
 
 				timeZoneAreas.setEntries( areaNames );
 				timeZoneAreas.setEntryValues( areaNames );
@@ -231,7 +238,7 @@ public class EditLocationProviderPreferences
 					shouldEnable = false;
 				}
 				else {
-					updateLocaleSelector();
+					updateLocaleSelector( selectedArea );
 				}
 
 				timeZoneAreas.setEnabled( shouldEnable );
@@ -299,7 +306,7 @@ public class EditLocationProviderPreferences
 			final CharSequence[] timeZoneAreaEntries = timeZoneAreas.getEntries();
 			if ( ( null != timeZoneAreaEntries ) && timeZoneAreaEntries.length > 1 ) {
 				timeZoneAreas.setEnabled( true );
-				updateLocaleSelector();
+				updateLocaleSelector( area );
 			}
 		}
 		else {
@@ -317,15 +324,17 @@ public class EditLocationProviderPreferences
 	}
 
 
-	private void updateLocaleSelector() {
+	private void updateLocaleSelector( String timeZoneArea ) {
 
-		final String selectedArea = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
 		final String[] localeNames;
-		if ( null != selectedArea ) {
-			final List<String> locales = timeZoneAreasToLocales.get( selectedArea );
+		if ( null != timeZoneArea ) {
+			final List<String> locales = timeZoneAreasToLocales.get( timeZoneArea );
 			localeNames = locales.toArray( new String[ locales.size() ] );
-			Arrays.sort( localeNames );
 			timeZoneLocales.setEnabled( true );
+
+			if ( !locales.contains( timeZoneLocales.getValue() ) ) {
+				updateSummary( timeZoneLocales, "", getString( R.string.time_zone_locale_summary ) );
+			}
 		}
 		else {
 			localeNames = new String[] { "--No Area Selected--" };
