@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ZmanimDisplay" default="build-install">
+<!--
+  ~ Copyright (c) 2010. Jay R. Gindin
+  -->
+
+<project name="ZmanimDisplay" default="release-install">
 
 	<!-- The local.properties file is created and updated by the 'android' tool.
 					 It contain the path to the SDK. It should *NOT* be checked in in Version
@@ -123,9 +127,20 @@
 	-->
 	<target name="update-version" depends="get-svn-state">
 
-		<condition property="version" value="2.${svn.status.committed.max}" else="2.${svn.status.committed.max}-DEV">
+		<property file="version.number"/>
+		<property file="build.number"/>
+
+		<condition property="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}" else="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV">
 			<isset property="release_build" />
 		</condition>
+
+		<echo>
+			version.major = ${version.major}
+			version.minor = ${version.minor}
+			build.number  = ${build.number}
+
+			version       = ${version}
+		</echo>
 
 
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
@@ -139,34 +154,27 @@
 	<!--
 		Takes care of updating the android:versionCode attribute so that we never screw that up.
 	-->
-	<target name="update-release-version" depends="update-version">
+	<target name="update-release-version">
 
-		<echo>Updating internal build number...</echo>
+		<!-- Update the stuff that we update when we're preparing for a release, then update the version itself. -->
+		<echo>Updating version number...</echo>
 		<buildnumber file="build.number"/>
-		<echo>New build.number = ${build.number}</echo>
+
+		<propertyfile file="version.number" comment="Zmanim Version">
+			<entry key="version.minor" type="int" default="0" operation="+"/>
+			<entry key="version.date" type="date" value="now"/>
+		</propertyfile>
+
+		<antcall target="update-version"/>
+
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
-		<replaceregexp file="res/values/strings.xml" match='\(CodeVersion(.*)' replace='(CodeVersion ${build.number})'/>
 		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
 
 	</target>
 
 
-	<!--
-		When performing a build for a new release, this target does it all:
-		  * Builds the APK
-		  * Signs the APK
-		  * Aligns the APK
-	-->
-	<target name="build-release">
+	<target name="build-setup">
 
-		<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
-		<property name="zipalign" value="${android-tools}/zipalign${exe}" />
-		<property name="adb" value="${android-tools}/adb${exe}"/>
-		<property name="key.store" value="jay-gindin-android-apps.keystore"/>
-		<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
-		<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
-		<property name="out-release-package" value="${out-folder}/${ant.project.name}-release-${version}.apk"/>
-		
 		<echo>
 			repository.url=${svn.status.repository.url}
 			committed.max=${svn.status.committed.max}
@@ -177,7 +185,37 @@
 			If modified, then fail!??!!
 				- No, because files which we're dynamically changing (based on the version) will be changed...
 		-->
-		<delete dir="bin"/>
+		<delete dir="bin"/>	</target>
+
+
+	<target name="build-debug" depends="build-setup">
+
+		<property name="out-debug-package" value="${out-folder}/${ant.project.name}-debug.apk"/>
+		
+		<!-- Call back to the "real" Android build file to do the actual building... -->
+		<antcall target="debug"/>
+		<echo>Done building ${out-debug-package}.</echo>
+
+
+
+	</target>
+
+
+	<!--
+		When performing a build for a new release, this target does it all:
+		  * Builds the APK
+		  * Signs the APK
+		  * Aligns the APK
+	-->
+	<target name="build-release" depends="build-setup">
+
+		<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
+		<property name="zipalign" value="${android-tools}/zipalign${exe}" />
+		<property name="adb" value="${android-tools}/adb${exe}"/>
+		<property name="key.store" value="jay-gindin-android-apps.keystore"/>
+		<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
+		<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
+		<property name="out-release-package" value="${out-folder}/${ant.project.name}-release-${version}.apk"/>
 
 		<!-- Insert the flurry key -->
 		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
@@ -222,13 +260,13 @@
 	<!--
 		Copies the .apk to an ACTUAL device that is plugged into the USB.
 	-->
-	<target name="install">
-		<echo>Installing ${out-release-package}...</echo>
+	<target name="usb-install">
+		<echo>Installing ${apk-to-install}...</echo>
 		<exec executable="${adb}" failonerror="true">
 			<arg value="-d"/>
 			<arg value="install"/>
 			<arg value="-r"/>
-			<arg path="${out-release-package}"/>
+			<arg path="${apk-to-install}"/>
 		</exec>
 	</target>
 
@@ -246,9 +284,22 @@
 		When performing a build for a new release, this target will get everything versioned and built properly,
 			and will then deploy it to a locally attached device.
 	-->
-	<target name="build-install" depends="setup-for-release,update-release-version,build-release,install">
+	<target name="release-install" depends="setup-for-release,update-release-version,build-release">
+
+		<property name="apk-to-install" value="${out-release-package}"/>
+		<antcall target="usb-install"/>
+
 	</target>
 
 
-	
+	<!--
+		Gets a debug build made and deployed.
+	-->
+	<target name="debug-install" depends="build-debug">
+
+		<property name="apk-to-install" value="${out-debug-package}"/>
+		<antcall target="usb-install"/>
+
+	</target>
+
 </project>
