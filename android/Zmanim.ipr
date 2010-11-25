@@ -11,7 +11,7 @@
       <maximumHeapSize value="128" />
       <maximumStackSize value="2" />
       <properties />
-      <executeOn event="beforeCompilation" target="update-version" />
+      <executeOn event="beforeCompilation" target="replace_version_placeholders" />
     </buildFile>
   </component>
   <component name="BuildJarProjectSettings">

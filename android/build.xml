@@ -125,7 +125,7 @@
 	<!--
 		Takes care of updating the user-visible version string.
 	-->
-	<target name="update-version" depends="get-svn-state">
+	<target name="set-version" depends="get-svn-state">
 
 		<property file="version.number"/>
 		<property file="build.number"/>
@@ -142,21 +142,15 @@
 			version       = ${version}
 		</echo>
 
-
-		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
-		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
-
 	</target>
 
 
 	<!--
-		Takes care of updating the android:versionCode attribute so that we never screw that up.
+		Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
+			minor version number.
 	-->
 	<target name="update-release-version">
 
-		<!-- Update the stuff that we update when we're preparing for a release, then update the version itself. -->
 		<echo>Updating version number...</echo>
 		<buildnumber file="build.number"/>
 
@@ -165,9 +159,18 @@
 			<entry key="version.date" type="date" value="now"/>
 		</propertyfile>
 
-		<antcall target="update-version"/>
+	</target>
 
+
+	<target name="replace_version_placeholders" depends="set-version">
+
+		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
+		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
+
+		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
+
+		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
 		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
 
 	</target>
@@ -185,7 +188,8 @@
 			If modified, then fail!??!!
 				- No, because files which we're dynamically changing (based on the version) will be changed...
 		-->
-		<delete dir="bin"/>	</target>
+		<delete dir="bin"/>
+	</target>
 
 
 	<target name="build-debug" depends="build-setup">
@@ -206,7 +210,7 @@
 		  * Builds the APK
 		  * Signs the APK
 		  * Aligns the APK
-	-->
+	-->                                      
 	<target name="build-release" depends="build-setup">
 
 		<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
@@ -284,7 +288,7 @@
 		When performing a build for a new release, this target will get everything versioned and built properly,
 			and will then deploy it to a locally attached device.
 	-->
-	<target name="release-install" depends="setup-for-release,update-release-version,build-release">
+	<target name="release-install" depends="setup-for-release,update-release-version,replace_version_placeholders,build-release">
 
 		<property name="apk-to-install" value="${out-release-package}"/>
 		<antcall target="usb-install"/>
@@ -295,7 +299,7 @@
 	<!--
 		Gets a debug build made and deployed.
 	-->
-	<target name="debug-install" depends="build-debug">
+	<target name="debug-install" depends="replace_version_placeholders,build-debug">
 
 		<property name="apk-to-install" value="${out-debug-package}"/>
 		<antcall target="usb-install"/>
