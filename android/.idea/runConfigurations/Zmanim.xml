@@ -3,8 +3,8 @@
     <module name="Zmanim" />
     <option name="ACTIVITY_CLASS" value="com.gindin.zmanim.android.ZmanimActivity" />
     <option name="MODE" value="specific_activity" />
-    <option name="CHOOSE_DEVICE_MANUALLY" value="false" />
-    <option name="PREFERRED_AVD" value="basic_1.6" />
+    <option name="CHOOSE_DEVICE_MANUALLY" value="true" />
+    <option name="PREFERRED_AVD" value="" />
     <option name="COMMAND_LINE" value="" />
     <option name="WIPE_USER_DATA" value="false" />
     <option name="DISABLE_BOOT_ANIMATION" value="false" />

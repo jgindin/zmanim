@@ -20,9 +20,8 @@
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
       <entry name="?*.ftl" />
-      <entry name="?*.res" />
     </wildcardResourcePatterns>
-    <annotationProcessing enabled="false" useClasspath="true" generatedDirName="generated" />
+    <annotationProcessing enabled="false" useClasspath="true" />
   </component>
   <component name="EclipseCompilerSettings">
     <option name="DEBUGGING_INFO" value="true" />
