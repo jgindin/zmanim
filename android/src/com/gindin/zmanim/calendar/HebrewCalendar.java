@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009. Jay R. Gindin
+ * Copyright (c) 2010. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
@@ -12,9 +12,6 @@ import java.util.Date;
  */
 public class HebrewCalendar 
 	extends com.ibm.icu.util.HebrewCalendar {
-
-	/** Indicates the getDayOfOmer() is not returning a day that is part of the omer. */
-	public static final int                                   NOT_COUNTING_OMER = -1;
 
 
 	/**
@@ -79,7 +76,7 @@ public class HebrewCalendar
 
 		for ( JewishHoliday jewishHoliday : JewishHoliday.JEWISH_HOLIDAYS ) {
 			if ( jewishHoliday.isOn( this ) ) {
-				return jewishHoliday;
+				return jewishHoliday.getForDate( this );
 			}
 
 			if ( jewishHoliday.isErev( this ) ) {
@@ -96,7 +93,7 @@ public class HebrewCalendar
 
 		for ( JewishHoliday jewishHoliday : JewishHoliday.ARBA_TAANIOT ) {
 			if ( jewishHoliday.isOn( this ) ) {
-				return jewishHoliday;
+				return jewishHoliday.getForDate( this );
 			}
 
 			if ( jewishHoliday.isErev( this ) ) {
@@ -106,7 +103,80 @@ public class HebrewCalendar
 
 		return null;
 	}
-	
+
+
+	/**
+	 * We treat Rosh Chodesh as a holiday too.
+	 *
+	 * @return the Rosh Chodesh holiday, or null if this isn't a Rosh Chodesh.
+	 */
+	@SuppressWarnings( { "FeatureEnvy" } )
+	public JewishHoliday isTodayRoshChodesh() {
+
+		JewishHoliday[] roshChodeshim;
+
+		switch ( getYearType() ) {
+			case Haser:
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_HASER;
+				break;
+
+			case Qesidrah:
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_QESIDRAH;
+				break;
+
+			case Shalem:
+				roshChodeshim = JewishHoliday.ROSH_CHODESH_SHALEM;
+				break;
+
+			default:
+				return null;
+		}
+
+
+		for ( JewishHoliday roshChodesh : roshChodeshim ) {
+			if ( roshChodesh.isOn( this ) ) {
+				return roshChodesh.getForDate( this );
+			}
+
+			if ( roshChodesh.isErev( this ) ) {
+				return JewishHoliday.createErevOf( roshChodesh );
+			}
+		}
+
+		if ( isLeapYear() ) {
+			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_LEAP;
+		}
+		else {
+			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_REGULAR;
+		}
+
+		for ( JewishHoliday roshChodesh : roshChodeshim ) {
+			if ( roshChodesh.isOn( this ) ) {
+				return roshChodesh.getForDate( this );
+			}
+
+			if ( roshChodesh.isErev( this ) ) {
+				return JewishHoliday.createErevOf( roshChodesh );
+			}
+		}
+
+		return null;
+	}
+
+
+	public JewishHoliday isTodayInTheOmer() {
+
+		for ( JewishHoliday jewishHoliday : JewishHoliday.OMER ) {
+			if ( jewishHoliday.isOn( this ) ) {
+				return jewishHoliday.getForDate( this );
+			}
+
+			// Explicitly NOT checking erev...
+		}
+
+		return null;
+	}
+
 
 	public boolean showCandlelighting() {
 
@@ -140,93 +210,6 @@ public class HebrewCalendar
 		}
 
 		return show;
-	}
-
-
-	/**
-	 * We treat Rosh Chodesh as a holiday too.
-	 *
-	 * @return the Rosh Chodesh holiday, or null if this isn't a Rosh Chodesh.
-	 */
-	@SuppressWarnings( { "FeatureEnvy" } )
-	public JewishHoliday isRoshChodesh() {
-
-		JewishHoliday[] roshChodeshim;
-
-		switch ( getYearType() ) {
-			case Haser:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_HASER;
-				break;
-
-			case Qesidrah:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_QESIDRAH;
-				break;
-
-			case Shalem:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_SHALEM;
-				break;
-
-			default:
-				return null;
-		}
-
-
-		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( this ) ) {
-				return roshChodesh;
-			}
-
-			if ( roshChodesh.isErev( this ) ) {
-				return JewishHoliday.createErevOf( roshChodesh );
-			}
-		}
-
-		if ( isLeapYear() ) {
-			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_LEAP;
-		}
-		else {
-			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_REGULAR;
-		}
-
-		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( this ) ) {
-				return roshChodesh;
-			}
-
-			if ( roshChodesh.isErev( this ) ) {
-				return JewishHoliday.createErevOf( roshChodesh );
-			}
-		}
-
-		return null;
-	}
-
-
-	/**
-	 * @return -1 if today is not part of the omer; the daily count, otherwise.
-	 */
-	public int getDayOfOmer() {
-
-		final int month = get( MONTH );
-		final int day = get( DAY_OF_MONTH );
-
-		if ( NISAN == month ) {
-			if ( day > 15 ) {
-				return day - 15;
-			}
-		}
-		else if ( IYAR == month ) {
-			// Only counting the omer for the last 15 days of Nisan.
-			return 15 + day;
-		}
-		else if ( SIVAN == month ) {
-			if ( day < 6 ) {
-				// Only counting the omer for the last 15 days of Nisan,, 29 days Iyar, and only counting for the first 5 days of Sivan.
-				return 15 + 29 + day; 
-			}
-		}
-
-		return NOT_COUNTING_OMER;
 	}
 
 

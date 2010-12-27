@@ -203,42 +203,43 @@ public class HebrewZmanimCalendar {
 	}
 
 
+	@SuppressWarnings( { "FeatureEnvy" } )
 	public String getTodaysDescription() {
 
 		StringBuffer description = new StringBuffer();
 		JewishHoliday holiday = isTodayAHoliday();
 		if ( null != holiday ) {
-			description.append( holiday.name );
+			description.append( holiday.getDescription() );
 		}
 
-		holiday = isRoshChodesh();
+		holiday = isTodayRoshChodesh();
 		if ( null != holiday ) {
 			if ( 0 == description.length() ) {
-				description.append( holiday.name );
+				description.append( holiday.getDescription() );
 			}
 			else {
-				description.append( " / " ).append( holiday.name );
+				description.append( " / " ).append( holiday.getDescription() );
+			}
+		}
+
+		holiday = isTodayInTheOmer();
+		if ( null != holiday ) {
+			if ( 0 == description.length() ) {
+				description.append( holiday.getDescription() );
+			}
+			else {
+				description.append( " / " ).append( holiday.getDescription() );
 			}
 		}
 
 		if ( 0 == description.length() ) {
 			holiday = isTodayATaanit();
 			if ( null != holiday ) {
-				description.append( holiday.name );
+				description.append( holiday.getDescription() );
 			}
 		}
 
-		final int omer = hebrewCalendar.getDayOfOmer();
-		if ( HebrewCalendar.NOT_COUNTING_OMER != omer ) {
-
-			if ( 0 != description.length() ) {
-				description.append( " / " );
-			}
-
-			description.append( "Omer Count: " ).append( omer ); 
-		}
-
-		return description.toString(); 
+		return description.toString();
 	}
 
 
@@ -269,16 +270,30 @@ public class HebrewZmanimCalendar {
 		);
 	}
 
-	public JewishHoliday isRoshChodesh() {
+
+	public JewishHoliday isTodayRoshChodesh() {
 
 		return adjustHebrewDateIfNecessary(
 			new HebrewDateAdjustedCallback<JewishHoliday>() {
 				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
-					return hebrewCalendar.isRoshChodesh();
+					return hebrewCalendar.isTodayRoshChodesh();
 				}
 			}
 		);
 	}
+
+
+	public JewishHoliday isTodayInTheOmer() {
+
+		return adjustHebrewDateIfNecessary(
+			new HebrewDateAdjustedCallback<JewishHoliday>() {
+				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+					return hebrewCalendar.isTodayInTheOmer();
+				}
+			}
+		);
+	}
+
 
 	@SuppressWarnings( { "UnnecessaryBoxing" } )
 	public boolean showCandlelighting() {

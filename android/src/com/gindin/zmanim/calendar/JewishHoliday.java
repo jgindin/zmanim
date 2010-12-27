@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2010. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.calendar;
 
 
@@ -10,33 +14,33 @@ package com.gindin.zmanim.calendar;
 @SuppressWarnings( { "MagicNumber" } )
 public class JewishHoliday {
 
-	private static JewishHoliday ROSH_HASHANAH    = new RoshHashana();
-	private static JewishHoliday YOM_KIPPUR       = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
-	private static JewishHoliday SUKKOT           = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
-	private static JewishHoliday HOSHANAH_RABBAH  = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
-	private static JewishHoliday SHEMINI_ATZERET  = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
-	private static JewishHoliday SIMCHAT_TORAH    = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
-	private static JewishHoliday HANUKKAH         = new JewishHoliday( HebrewCalendar.KISLEV, 25, 8,   "Hanukkah" );
-	private static JewishHoliday TU_BSHEVAT       = new Observance( HebrewCalendar.SHEVAT,    15,      "Tu B'Shevat" );
-	private static JewishHoliday PURIM_KATAN      = new PurimKatan();
-	private static JewishHoliday PURIM            = new Observance( HebrewCalendar.ADAR,      14,      "Purim" );
-	private static JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR,      15,      "Shushan Purim" );
-	private static JewishHoliday PASSOVER         = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
-	private static JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN,     27,      "Yom Hashoah" );
-	private static JewishHoliday YOM_HAZIKARON    = new Observance( HebrewCalendar.IYAR,       4,      "Yom Hazikaron" );
-	private static JewishHoliday YOM_HAATZMAUT    = new Observance( HebrewCalendar.IYAR,       5,      "Yom Ha'Atzmaut" );
-	private static JewishHoliday PESACH_SHEINI    = new Observance( HebrewCalendar.IYAR,      14,      "Pesach Sheini" );
-	private static JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR,      18,      "Lag B'Omer" );
-	private static JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,      28,      "Yom Yerushalayim" );
-	private static JewishHoliday SHAVUOT          = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
-	private static JewishHoliday TISHA_BAV        = new Observance( HebrewCalendar.AV,         9,      "Fast of Tisha B'Av" );
-	private static JewishHoliday TU_BAV           = new Observance( HebrewCalendar.AV,        15,      "Tu B'Av" );
+	private static final JewishHoliday ROSH_HASHANAH    = new RoshHashana();
+	private static final JewishHoliday YOM_KIPPUR       = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
+	private static final JewishHoliday SUKKOT           = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
+	private static final JewishHoliday HOSHANAH_RABBAH  = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
+	private static final JewishHoliday SHEMINI_ATZERET  = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
+	private static final JewishHoliday SIMCHAT_TORAH    = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
+	private static final JewishHoliday HANUKKAH         = new Hanukkah();
+	private static final JewishHoliday TU_BSHEVAT       = new Observance(    HebrewCalendar.SHEVAT, 15,      "Tu B'Shevat" );
+	private static final JewishHoliday PURIM_KATAN      = new PurimKatan();
+	private static final JewishHoliday PURIM            = new Observance( HebrewCalendar.ADAR,      14,      "Purim" );
+	private static final JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR,      15,      "Shushan Purim" );
+	private static final JewishHoliday PASSOVER         = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
+	private static final JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN,     27,      "Yom Hashoah" );
+	private static final JewishHoliday YOM_HAZIKARON    = new Observance( HebrewCalendar.IYAR,       4,      "Yom Hazikaron" );
+	private static final JewishHoliday YOM_HAATZMAUT    = new Observance( HebrewCalendar.IYAR,       5,      "Yom Ha'Atzmaut" );
+	private static final JewishHoliday PESACH_SHEINI    = new Observance( HebrewCalendar.IYAR,      14,      "Pesach Sheini" );
+	private static final JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR,      18,      "Lag B'Omer" );
+	private static final JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,      28,      "Yom Yerushalayim" );
+	private static final JewishHoliday SHAVUOT          = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
+	private static final JewishHoliday TISHA_BAV        = new Observance( HebrewCalendar.AV,         9,      "Fast of Tisha B'Av" );
+	private static final JewishHoliday TU_BAV           = new Observance( HebrewCalendar.AV,        15,      "Tu B'Av" );
 
 	/**
 	 * Set of the holidays. We're not using the com.ibm.icu.util.JewishHoliday.getHolidays() because the
 	 *  list declared in com.ibm.icu.impl.data.HolidayBundle_iw_IL is sadly lacking.
 	 */
-	public static JewishHoliday[] JEWISH_HOLIDAYS = {
+	public static final JewishHoliday[] JEWISH_HOLIDAYS = {
 		JewishHoliday.ROSH_HASHANAH,      JewishHoliday.YOM_KIPPUR,         JewishHoliday.SUKKOT,
 		JewishHoliday.HOSHANAH_RABBAH,    JewishHoliday.SHEMINI_ATZERET,    JewishHoliday.SIMCHAT_TORAH,
 		JewishHoliday.HANUKKAH,           JewishHoliday.TU_BSHEVAT,         JewishHoliday.PURIM_KATAN,
@@ -47,14 +51,26 @@ public class JewishHoliday {
 	};
 
 
-	private static JewishHoliday GEDALIAH        = new DayTimeTaanit( HebrewCalendar.TISHRI,  3,      "Gedaliah" );
-	private static JewishHoliday TEVET_10        = new DayTimeTaanit( HebrewCalendar.TEVET,  10,      "Tevet 10" );
-	private static JewishHoliday ESTHER          = new TaanitEsther();
-	private static JewishHoliday TAMMUZ_17       = new DayTimeTaanit( HebrewCalendar.TAMUZ,  17,      "Tammuz 17" );
+	private static final JewishHoliday GEDALIAH        = new DayTimeTaanit( HebrewCalendar.TISHRI,  3,      "Gedaliah" );
+	private static final JewishHoliday TEVET_10        = new DayTimeTaanit( HebrewCalendar.TEVET,  10,      "Tevet 10" );
+	private static final JewishHoliday ESTHER          = new TaanitEsther();
+	private static final JewishHoliday TAMMUZ_17       = new DayTimeTaanit( HebrewCalendar.TAMUZ,  17,      "Tammuz 17" );
 
-	public static JewishHoliday[] ARBA_TAANIOT = {
+	public static final JewishHoliday[] ARBA_TAANIOT = {
 		JewishHoliday.GEDALIAH,           JewishHoliday.TEVET_10,           JewishHoliday.ESTHER,
 		JewishHoliday.TAMMUZ_17
+	};
+
+
+	/**
+	 * The omer count shows up as a "holiday".
+	 */
+	private static final JewishHoliday NISAN_OMER = new NisanOmer();
+	private static final JewishHoliday IYAR_OMER = new IyarOmer();
+	private static final JewishHoliday SIVAN_OMER = new SivanOmer();
+
+	public static  final JewishHoliday[] OMER = {
+		NISAN_OMER, IYAR_OMER, SIVAN_OMER
 	};
 	
 	private static final JewishHoliday ROSH_CHODESH_NISAN   = new RoshChodesh( HebrewCalendar.NISAN,   1, 1, "Nisan" );
@@ -116,7 +132,7 @@ public class JewishHoliday {
 	}
 
 	
-	public final String                                       name;
+	private final String                                      name;
 	
 	protected final int                                       month;
 	protected final int                                       date;
@@ -145,6 +161,38 @@ public class JewishHoliday {
 	}
 
 
+	/**
+	 * @param hebrewCalendar The date we want a 'version' of this holiday for.
+	 *
+	 * @return a version of this holiday, specific for the specified date.
+	 *  NOTE: Many implementations will just return themselves, as there is nothing special about them that changes
+	 *    based on the date.
+	 */
+	public JewishHoliday getForDate(
+		HebrewCalendar hebrewCalendar
+	) {
+
+		// Nothing about this is dependent upon the date...
+		return this;
+	}
+
+
+	/**
+	 * @return the name of this holiday.
+	 */
+	public String getName() {
+		return name;
+	}
+
+
+	/**
+	 * @return a short description of the holiday; usually just the name, but could be different (e.g., "Hanukkah 3").
+	 */
+	public String getDescription() {
+		return name;
+	}
+
+
 	public static JewishHoliday createErevOf(
 		JewishHoliday holiday
 	) {
@@ -156,6 +204,10 @@ public class JewishHoliday {
 	public boolean isOn(
 		HebrewCalendar dateToTest
 	) {
+
+		if ( null == dateToTest ) {
+			return false;
+		}
 
 		calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
 		if ( isSameDate( dateToTest, calendar ) ) {
@@ -189,7 +241,7 @@ public class JewishHoliday {
 	}
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
+	@SuppressWarnings( { "FeatureEnvy", "RedundantIfStatement" } )
 	protected static boolean isSameDate(
 		HebrewCalendar cal1,
 	  HebrewCalendar cal2
@@ -217,7 +269,7 @@ public class JewishHoliday {
 	private static class Erev
 		extends JewishHoliday {
 
-		private final boolean showCandles;
+		private final boolean                                   showCandles;
 
 		private Erev(
 			JewishHoliday holiday
@@ -424,5 +476,187 @@ public class JewishHoliday {
 		}
 	}
 
+
+	/**
+	 * For those observances where we want a different description based on which day of the observance it is.
+	 *  E.g., "Hanukkah 3", or "Omer 22".
+	 */
+	private static class DatedObservance
+		extends Observance {
+
+		private final HebrewCalendar                            forDate;
+
+		DatedObservance(
+			int             month,
+			int             date,
+			int             length,
+			String          name,
+			HebrewCalendar  forDate
+		) {
+			super( month, date, length, name  );
+			this.forDate = forDate;
+		}
+
+
+		@Override
+		public String getDescription() {
+			String description = super.getDescription();
+
+			if ( null == forDate ) {
+				return description;
+			}
+
+			calendar.set( forDate.get( HebrewCalendar.YEAR ), month, date );
+			if ( isSameDate( forDate, calendar ) ) {
+				return description + " " + ( 1 + getCountOffset() );
+			}
+
+			for ( int i = 1; i < length; i++ ) {
+
+				calendar.add( HebrewCalendar.DATE, 1 );
+				if ( isSameDate( forDate, calendar ) ) {
+					return description + " " + ( i + 1 + getCountOffset() );
+				}
+			}
+
+			// Should not have been able to get here...
+			return description;
+		}
+
+
+		protected int getCountOffset() {
+			return 0;
+		}
+	}
+
+
+	/**
+	 * Special class for Hanukkah so that we can display which day of the holiday it is.
+	 */
+	private static class Hanukkah
+		extends DatedObservance {
+
+
+		Hanukkah() {
+			this( null );
+		}
+
+
+		Hanukkah(
+			HebrewCalendar forDate
+		) {
+
+			super( HebrewCalendar.KISLEV, 25, 8, "Hanukkah", forDate );
+		}
+
+
+		@Override
+		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
+			return new Hanukkah( hebrewCalendar );
+		}
+	}
+
+
+	private static abstract class Omer<T extends Omer>
+		extends DatedObservance {
+
+
+		Omer(
+			int             month,
+			int             date,
+			int             length,
+			HebrewCalendar  forDate
+		) {
+			super( month, date, length, "Omer", forDate );
+		}
+
+
+		@Override
+		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
+			return newOmerForDate( hebrewCalendar );
+		}
+
+
+		protected abstract T newOmerForDate( HebrewCalendar hebrewCalendar );
+	}
+
+
+	private static class NisanOmer
+		extends Omer<NisanOmer> {
+
+		NisanOmer() {
+			this( null );
+		}
+
+		NisanOmer(
+			HebrewCalendar forDate
+		) {
+			super( HebrewCalendar.NISAN, 16, 14, forDate );
+		}
+
+
+		@Override
+		protected NisanOmer newOmerForDate( HebrewCalendar hebrewCalendar ) {
+			return new NisanOmer( hebrewCalendar );
+		}
+	}
+
+
+	private static class IyarOmer
+		extends Omer<IyarOmer> {
+
+		IyarOmer() {
+			this( null );
+		}
+
+
+		IyarOmer(
+			HebrewCalendar forDate
+		) {
+			super( HebrewCalendar.IYAR, 1, 29, forDate );
+		}
+
+
+		@Override
+		protected int getCountOffset() {
+			// Already counted the omer for the last 15 days of Nisan.
+			return 15;
+		}
+
+
+		@Override
+		protected IyarOmer newOmerForDate( HebrewCalendar hebrewCalendar ) {
+			return new IyarOmer( hebrewCalendar );
+		}
+	}
+
+
+	private static class SivanOmer
+		extends Omer<SivanOmer> {
+
+		SivanOmer() {
+			this( null );
+		}
+
+
+		SivanOmer(
+			HebrewCalendar forDate
+		) {
+			super( HebrewCalendar.SIVAN, 1, 5, forDate );
+		}
+
+
+		@Override
+		protected int getCountOffset() {
+			// Already counted the omer for the last 15 days of Nisan and all of Iyar.
+			return 15 + 29;
+		}
+
+
+		@Override
+		protected SivanOmer newOmerForDate( HebrewCalendar hebrewCalendar ) {
+			return new SivanOmer( hebrewCalendar );
+		}
+	}
 
 }  // End of JewishHoliday class
