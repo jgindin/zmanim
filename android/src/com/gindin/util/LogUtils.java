@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.util;
@@ -87,9 +87,8 @@ public class LogUtils {
 		if ( !Version.isDevelopment() ) {
 			FlurryAgent.onError( errorID, message, locationManager.getLastKnownLocation().toString() );
 		}
-		else {
-			Log.e( errorID, message );
-		}
+
+		Log.e( errorID, message );
 	}
 
 
