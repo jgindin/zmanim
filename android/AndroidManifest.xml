@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2010. Jay R. Gindin
+  ~ Copyright (c) 2011. Jay R. Gindin
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
-	android:versionCode="65"
-  android:versionName="3.2.65.264"
+	android:versionCode="66"
+  android:versionName="3.2.66.275-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2010. Jay R. Gindin
+  ~ Copyright (c) 2011. Jay R. Gindin
   -->
 
 <resources>
@@ -20,75 +20,17 @@
 	<string name="Mincha">Latest Mincha</string>
 	<string name="Tzait">Tzait Hacochavim (Nightfall)</string>
 	<string name="Havdalah">Havdalah</string>
-	<string name="ShaahZmanit">Sha'ah Zmanit (Halachic Hour)</string>
+	<string name="ShaahZmanit">Sha\'ah Zmanit (Halachic Hour)</string>
 
 	<string name="about_menu">About</string>
 	<string name="about_header">About Zmanim</string>
-	<string name="about_text">
-		&lt;div style=%22font-size: 80%25;%22&gt;
-			&lt;br&gt;Copyright (C) 2009-2010 Jay R. Gindin&lt;/br&gt;
-
-			<!-- VERSION STUFF MUST BE PROPERLY PLACED AND FORMATTED FOR THE DYNAMIC TEXT REPLACEMENT!!! -->
-			&lt;br&gt;
-				Version 3.2.65.264
-			&lt;/br&gt;
-			&lt;br&gt;See &lt;a href='http://code.google.com/p/android-zmanim'&gt;Zmanim&lt;/a&gt; for full details, version change lists, and bug tracking.&lt;/br&gt;
-			&lt;br&gt;
-				This project is made possible by using the following libraries:
-				&lt;ul&gt;
-					&lt;li&gt;Zmanim API calculation engine from http://www.kosherjava.com: Copyright (C) 2004-2010 Eliyahu Hershfeld&lt;/li&gt;
-					&lt;li&gt;ICU4J from http://site.icu-project.org/home: Copyright (c) 1995-2009 International Business Machines Corporation and others&lt;/li&gt;
-				&lt;/ul&gt;
-			&lt;/br&gt;
-		&lt;/div&gt;
-	</string>
 
 	<string name="help_menu">Help</string>
 	<string name="help_header">Zmanim Help</string>
-	<string name="help_text">
-		&lt;h4&gt;Changing Zmanim&lt;/h4&gt;
-		&lt;span style=%22font-size: 80%25;%22&gt;
-			&lt;ul&gt;
-				&lt;li&gt;Click on the zman you want to change&lt;/li&gt;
-				&lt;li&gt;In the resulting dialog, click on the desired calculation&lt;/li&gt;
-				&lt;li&gt;The dialog will go away, and that choice will be remembered every time you run Zmanim.&lt;/li&gt;
-			&lt;/ul&gt;
-		&lt;/span&gt;
-		&lt;h4&gt;Changing Dates&lt;/h4&gt;
-		&lt;span style=%22font-size: 80%25;%22&gt;
-			&lt;ul&gt;
-				&lt;li&gt;Swipe right-to-left to move to the previous day; swipe left-to-right to move to the next day.&lt;/li&gt;
-				&lt;li&gt;Click on the secular date in the upper left-hand corner to get a date selector.&lt;/li&gt;
-			&lt;/ul&gt;
-		&lt;/span&gt;
-		&lt;h4&gt;Changing Locations&lt;/h4&gt;
-		&lt;span style=%22font-size: 80%25;%22&gt;
-			Click the 'menu' button and choose Location. Options include:
-			&lt;ul&gt;
-				&lt;li&gt;"Use My Location" to have Zmanim do its best to use your current location. Does not require internet connectivity.&lt;/li&gt;
-				&lt;li&gt;"Use Specified Place" to enter a particular location. Requires internet connectivity to lookup the actual location.&lt;/li&gt;
-				&lt;li&gt;"Use Specified Latitude &amp; Longitude" to use a particular location, but without requiring any network connectivity.&lt;/li&gt;
-			&lt;/ul&gt;
-			You can also select a particular time zone to use, if you want to see the times other than the time zone of your device.
-		&lt;/span&gt;
-	</string>
 
 	<string name="zmanim_selector">Select Zman: </string> 
 
 	<string name="unable_to_determine_location_header">Enable Location</string>
-	<string name="unable_to_determine_location_text">
-		&lt;div style=%22font-size: 80%25;%22&gt;
-		&lt;p&gt;
-			Zmanim is unable to determine your location because no location sources have been enabled.
-		&lt;/p&gt;
-		&lt;p&gt;
-			Clicking the "Enable" button below will open the "Security &amp; Location" screen, where you can turn on either "Use wireless networks" or "Enable GPS satellites".
-		&lt;/p&gt;
-		&lt;p&gt;
-			Generally, your location can be determined just by enabling the wireless network location source, though sometimes it may be necessary to enable GPS.
-		&lt;/p&gt;
-		&lt;/div&gt;
-	</string>
 
 	<string name="unable_to_determine_location_button">
 		Enable

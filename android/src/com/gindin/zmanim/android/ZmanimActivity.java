@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -443,10 +443,10 @@ public class ZmanimActivity
 				return createSecularDatePickerDialog();
 
 			case R.id.about:
-				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text, R.string.about_text );
+				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text );
 
 			case R.id.help:
-				return createHtmlTextDialog( R.string.help_header, R.layout.help, R.id.help_text, R.string.help_text );
+				return createHtmlTextDialog( R.string.help_header, R.layout.help, R.id.help_text );
 
 			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
 				return createEnableLocationSourcesDialog();
@@ -459,8 +459,7 @@ public class ZmanimActivity
 	private Dialog createHtmlTextDialog(
 		int   titleResource,
 	  int   layoutResource,
-	  int   webviewId,
-	  int   textId
+	  int   webviewId
 	) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( this );
@@ -470,11 +469,30 @@ public class ZmanimActivity
 		View layout = inflater.inflate( layoutResource, null );
 
 		WebView helpText = (WebView)layout.findViewById( webviewId );
-		final String text = getResources().getString( textId );
-		helpText.loadData( text, "text/html", "utf-8" );
+		final String textLocation = getTextLocation( webviewId );
+		helpText.loadUrl( "file:///android_asset/" + textLocation );
 
 		builder.setView( layout );
 		return builder.create();
+	}
+
+
+	private String getTextLocation( int webviewId ) {
+
+
+		if ( R.id.help_text == webviewId ) {
+			return "com/gindin/zmanim/android/help.html";
+		}
+
+		if ( R.id.about_text == webviewId ) {
+			return "com/gindin/zmanim/android/about.html";
+		}
+
+		if ( R.id.enable_locations_text == webviewId ) {
+			return "com/gindin/zmanim/android/enable_locations.html";
+		}
+
+		return null;
 	}
 
 
@@ -505,11 +523,11 @@ public class ZmanimActivity
 		builder.setTitle( R.string.unable_to_determine_location_header );
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
-		View layout = inflater.inflate( R.layout.help, null );
+		View layout = inflater.inflate( R.layout.enable_locations, null );
 
-		WebView helpText = (WebView)layout.findViewById( R.id.help_text );
-		final String text = getResources().getString( R.string.unable_to_determine_location_text );
-		helpText.loadData( text, "text/html", "utf-8" );
+		WebView helpText = (WebView)layout.findViewById( R.id.enable_locations_text );
+		final String textLocation = getTextLocation( R.id.enable_locations_text );
+		helpText.loadUrl( "file:///android_asset/" + textLocation );
 
 		builder.setPositiveButton( R.string.unable_to_determine_location_button,
 			new DialogInterface.OnClickListener() {

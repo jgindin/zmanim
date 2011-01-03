@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2010. Jay R. Gindin
+  ~ Copyright (c) 2011. Jay R. Gindin
   -->
 
 <project name="ZmanimDisplay" default="release-install">
@@ -155,7 +155,8 @@
 		<buildnumber file="build.number"/>
 
 		<propertyfile file="version.number" comment="Zmanim Version">
-			<entry key="version.minor" type="int" default="0" operation="+"/>
+			<!-- Actually, I don't want to bump the minor version every time.... -->
+			<!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
 			<entry key="version.date" type="date" value="now"/>
 		</propertyfile>
 
@@ -168,7 +169,7 @@
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
 
-		<replaceregexp file="res/values/strings.xml" match='Version (.*)' replace='Version ${version}'/>
+		<replaceregexp file="assets/com/gindin/zmanim/android/about.html" match='Version (.*)' replace='Version ${version}'/>
 
 		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
 		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
