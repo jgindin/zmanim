@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2010. Jay R. Gindin
--->
+  ~ Copyright (c) 2011. Jay R. Gindin
+  -->
 
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/layout_root"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
 >
+	<TextView
+		android:id="@+id/zman_name"
+		android:textStyle="bold"
+		android:gravity="center"
+		android:layout_gravity="center_horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	  android:layout_alignParentTop="true"
+	/>
+
+	<TextView
+		android:id="@+id/zman_description"
+		android:gravity="center"
+		android:layout_gravity="center_horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	  android:layout_below="@id/zman_name"
+	/>
+
 	<ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
+		android:layout_alignParentBottom="true"
+		android:layout_below="@id/zman_description"
 		android:drawSelectorOnTop="false"
 	/>
 
-</LinearLayout>
+</RelativeLayout>

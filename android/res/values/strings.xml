@@ -28,7 +28,7 @@
 	<string name="help_menu">Help</string>
 	<string name="help_header">Zmanim Help</string>
 
-	<string name="zmanim_selector">Select Zman: </string> 
+	<string name="zmanim_selector">Select Zman</string>
 
 	<string name="unable_to_determine_location_header">Enable Location</string>
 

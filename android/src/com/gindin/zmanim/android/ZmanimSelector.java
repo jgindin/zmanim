@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -28,8 +28,11 @@ public class ZmanimSelector {
 	/** Let's only build our dialog once and re-use it... */
 	private final Dialog                                      dialog;
 
-	/** Resource to which we append the zmanim type being selected. */
-	private final String                                      baseTitle;
+	/** Where we can display the name of the zman being selected. */
+	private final TextView                                    name;
+
+	/** Where we can display the description of the zman. */
+	private final TextView                                    description;
 
 	/** Only one instance of the dialog means only one instance of the list... */
 	private final ListView                                    listView;
@@ -41,6 +44,7 @@ public class ZmanimSelector {
 	private SelectionCallback                                 typeSelectionCallback;
 
 
+
 	public ZmanimSelector(
 		Context               context,
 		HebrewZmanimCalendar  zmanimCalendar
@@ -49,8 +53,6 @@ public class ZmanimSelector {
 		this.context = context;
 		this.zmanimCalendar = zmanimCalendar;
 
-		baseTitle = context.getString( R.string.zmanim_selector );
-
 		AlertDialog.Builder builder = new AlertDialog.Builder( context );
 
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -58,6 +60,10 @@ public class ZmanimSelector {
 
 		builder.setView( layout );
 		dialog = builder.create();
+		dialog.setTitle( context.getString( R.string.zmanim_selector ) );
+
+		name = (TextView)layout.findViewById( R.id.zman_name );
+		description = (TextView)layout.findViewById( R.id.zman_description );
 
 		listView = (ListView)layout.findViewById( android.R.id.list );
 		listView.setOnItemClickListener(
@@ -94,9 +100,9 @@ public class ZmanimSelector {
 			}
 		};
 
+		name.setText( type.name );
+		description.setText( type.description );
 		listView.setAdapter( listAdapter );
-
-		dialog.setTitle( baseTitle + " " + type.name );
 
 		dialog.show();
 	}
