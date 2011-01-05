@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.times;
@@ -105,6 +105,9 @@ public class ZmanimFactory {
 				case TzaitHacochavim:
 					zmanim = new TzaitHacochavim( zmanimCalendar );
 					break;
+
+				case NightChatzot:
+					zmanim = new NightChatzot( zmanimCalendar );
 			}
 
 			typeToZmanimMap.put( type, zmanim );

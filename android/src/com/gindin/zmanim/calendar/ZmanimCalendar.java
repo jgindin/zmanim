@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
+
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -114,6 +116,26 @@ public class ZmanimCalendar
 
 	public Date getTzaitSephardicBikurHolim() {
 		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_SBH_TZAIT * MINUTE_MILLIS );
+	}
+
+
+	/**
+	 * Method to calculate the middle of the night as defined by the midpoint between sunset and sunrise.
+	 *
+	 * @return the <code>Date</code> representing the middle of the night. Will return null if either the
+	 *  sunset or sunrise cannot be calculated.
+	 */
+	public Date getNightChatzos() {
+
+		ZmanimCalendar clonedCal = (ZmanimCalendar)clone();
+		clonedCal.getCalendar().add( Calendar.DAY_OF_MONTH, 1);
+		Date sunset = getSunset();
+		Date sunrise = clonedCal.getSunrise();
+		if ( ( null == sunset ) || ( null == sunrise ) ) {
+			return null;
+		}
+
+		return getTimeOffset( sunset, ( sunrise.getTime() - sunset.getTime() ) / 2 );
 	}
 
 }  // End of ZmanimCalendar class

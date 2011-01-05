@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -92,6 +92,7 @@ class ZmanimDisplay {
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Shkia );
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.LatestMincha );
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHacochavim );
+		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.NightChatzot );
 
 		return new ListAdapter( listActivity, zmanimToDisplay );
 	}

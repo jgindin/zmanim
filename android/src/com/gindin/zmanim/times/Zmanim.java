@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.times;
@@ -115,16 +115,17 @@ public abstract class Zmanim {
 		Alot( "Alot Hashachar", "Dawn" ),
 		Talit( "Talit/Tefilin", "Earliest Time to don Talit and Tefilin" ),
 		Hanetz( "Hanetz", "Sunrise" ),
-		SofZmanShema( "Sof Zman Shema", "Latest Time for Shema" ),
-		SofZmanTefila( "Sof Zman Tefila", "Latest Time for Shacharit" ),
+		SofZmanShema( "Sof Zman Shema", "Latest time to finish Shema" ),
+		SofZmanTefila( "Sof Zman Tefila", "Latest time to finish Shacharit" ),
 		Chatzot( "Chatzot", "Mid-day" ),
-		MinchaGedola( "Mincha Gedola", "Earliest Mincha" ),
-		MinchaKetana( "Mincha Ketana", "Earliest Mincha (Rambam)" ),
-		PlagHaMincha( "Plag HaMincha", "Earliest Arvit" ),
-		CandleLighting( "Candle Lighting", "" ),
+		MinchaGedola( "Mincha Gedola", "Earliest time to start Mincha" ),
+		MinchaKetana( "Mincha Ketana", "Earliest time to start Mincha (Rambam)" ),
+		PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ),
+		CandleLighting( "Candle Lighting", "Earliest time candles can be lit" ),
 		Shkia( "Shkia", "Sunset" ),
-		LatestMincha( "Latest Mincha", "" ),
-		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" );
+		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ),
+		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ),
+		NightChatzot( "Chatzot", "Halachic Midnight" );
 
 		/** Name of the set of zmanim. E.g., "Sof Zman Shema" */
 		public final String                                       name;

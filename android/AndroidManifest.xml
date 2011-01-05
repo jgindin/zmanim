@@ -6,7 +6,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="66"
-  android:versionName="3.2.66.275-DEV"
+  android:versionName="3.3.66.277-DEV"
 >
 
 	<uses-sdk android:minSdkVersion="3"/>
