@@ -109,6 +109,8 @@ public abstract class Zmanim {
 
 	/**
 	 * Used for easier, programmatic access to the zmanim. Use these to get the actual zmanim for each zman.
+	 *<p>
+	 * Consider the explanations of the times at http://kehillatisrael.net/hcal/zmanim.html
 	 */
 	public enum Type {
 
@@ -123,6 +125,7 @@ public abstract class Zmanim {
 		PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ),
 		CandleLighting( "Candle Lighting", "Earliest time candles can be lit" ),
 		Shkia( "Shkia", "Sunset" ),
+		BeinHashmashot( "Bein Hashmashot", "Twilight" ),
 		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ),
 		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ),
 		NightChatzot( "Chatzot", "Halachic Midnight" );

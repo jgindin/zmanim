@@ -58,20 +58,24 @@ public class ZmanimFactory {
 					zmanim = new AlotHashachar( zmanimCalendar );
 					break;
 
-				case CandleLighting:
-					zmanim = new CandleLighting( zmanimCalendar );
-					break;
-
-				case Chatzot:
-					zmanim = new Chatzot( zmanimCalendar );
+				case Talit:
+					zmanim = new Talit( zmanimCalendar );
 					break;
 
 				case Hanetz:
 					zmanim = new Hanetz( zmanimCalendar );
 					break;
 
-				case LatestMincha:
-					zmanim = new LatestMincha( zmanimCalendar );
+				case SofZmanShema:
+					zmanim = new SofZmanShema( zmanimCalendar );
+					break;
+
+				case SofZmanTefila:
+					zmanim = new SofZmanTefila( zmanimCalendar );
+					break;
+
+				case Chatzot:
+					zmanim = new Chatzot( zmanimCalendar );
 					break;
 
 				case MinchaGedola:
@@ -86,20 +90,20 @@ public class ZmanimFactory {
 					zmanim = new PlagHaMincha( zmanimCalendar );
 					break;
 
+				case CandleLighting:
+					zmanim = new CandleLighting( zmanimCalendar );
+					break;
+
 				case Shkia:
 					zmanim = new Shkia( zmanimCalendar );
 					break;
 
-				case SofZmanShema:
-					zmanim = new SofZmanShema( zmanimCalendar );
+				case BeinHashmashot:
+					zmanim = new BeinHashmashot( zmanimCalendar );
 					break;
 
-				case SofZmanTefila:
-					zmanim = new SofZmanTefila( zmanimCalendar );
-					break;
-
-				case Talit:
-					zmanim = new Talit( zmanimCalendar );
+				case LatestMincha:
+					zmanim = new LatestMincha( zmanimCalendar );
 					break;
 
 				case TzaitHacochavim:
