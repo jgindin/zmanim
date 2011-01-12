@@ -37,6 +37,20 @@ public class PersonalPrefsManager {
 	}
 
 
+	@SuppressWarnings( { "MagicNumber" } )
+	public void onHandleUpgrade(
+		int             thisCodeVersion,
+		int             lastKnownCodeVersion
+	) {
+
+		if ( lastKnownCodeVersion <= 66 ) {
+			final SharedPreferences.Editor editor = personalPrefs.edit();
+			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), true );
+			editor.commit();
+		}
+	}
+
+
 	public void editPersonalPrefs() {
 
 		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.

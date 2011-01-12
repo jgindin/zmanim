@@ -98,6 +98,8 @@ public final class R {
         public static final int unable_to_determine_location_header=0x7f050016;
         public static final int unknown_location=0x7f05001c;
         public static final int updating_with_new_location=0x7f050039;
+        public static final int use_elevation_pref_summary=0x7f05003e;
+        public static final int use_elevation_pref_title=0x7f05003d;
         public static final int use_latitude_longitued_pref_summary=0x7f05002b;
         public static final int use_latitude_longitued_pref_title=0x7f05002a;
         public static final int use_latitude_pref_summary=0x7f05002d;

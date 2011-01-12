@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2010. Jay R. Gindin
+  ~ Copyright (c) 2011. Jay R. Gindin
   -->
 
 <PreferenceScreen
@@ -19,6 +19,13 @@
 		android:key="SHOW_SECONDS"
 	  android:title="@string/show_seconds_pref_title"
 	  android:summary="@string/show_seconds_pref_summary"
+	  android:checked="true"
+	/>
+
+	<CheckBoxPreference
+		android:key="USE_ELEVATION"
+	  android:title="@string/use_elevation_pref_title"
+	  android:summary="@string/use_elevation_pref_summary"
 	  android:checked="true"
 	/>
 

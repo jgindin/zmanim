@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
@@ -15,7 +15,8 @@ public class PersonalPreferences
 	extends PreferenceActivity {
 
 	public static enum Prefs {
-		SHOW_SECONDS
+		SHOW_SECONDS,
+		USE_ELEVATION
 	}
 
 

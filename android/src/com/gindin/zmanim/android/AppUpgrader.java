@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
+import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ class AppUpgrader {
 	private static final String                               LAST_KNOWN_CODE_VERSION = "lastKnownCodeVersion";
 
 	public static void handle(
-		Activity zmanimActivity
+		ZmanimActivity zmanimActivity
 	) {
 
 		// Compare our version to the the last known version and see if anything needs to be upgraded.
@@ -45,10 +45,11 @@ class AppUpgrader {
 	}
 
 
+	@SuppressWarnings( { "MagicNumber" } )
 	private static void doUpgrade(
-		Activity  activity,
-		int       thisCodeVersion,
-		int       lastKnownCodeVersion
+		ZmanimActivity  activity,
+		int             thisCodeVersion,
+		int             lastKnownCodeVersion
 	) {
 
 		if ( -1 == lastKnownCodeVersion ) {
@@ -76,6 +77,8 @@ class AppUpgrader {
 			}
 		}
 
+		PersonalPrefsManager personalPrefsManager = new PersonalPrefsManager( activity );
+		personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
 	}
 
 }  // End of AppUpgrader class

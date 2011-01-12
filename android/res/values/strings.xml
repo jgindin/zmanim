@@ -77,5 +77,7 @@
 	<string name="personal_prefs">Preferences</string>
 	<string name="show_seconds_pref_title">Show Exact Zmanim</string>
 	<string name="show_seconds_pref_summary">Will not round the zmanim times to the nearest minute.</string>
+	<string name="use_elevation_pref_title">Use Elevation</string>
+	<string name="use_elevation_pref_summary">Take elevation into account for zmanim calculations.</string>
 
 </resources>

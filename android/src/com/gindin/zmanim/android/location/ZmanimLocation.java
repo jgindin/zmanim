@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location;
@@ -63,6 +63,21 @@ public class ZmanimLocation
 			setTimeZone( timeZone );
 		}
 
+	}
+
+
+	public ZmanimLocation(
+		ZmanimLocation source
+	) {
+
+		providerName = source.providerName;
+		locationTime = source.locationTime;
+		accuracy = source.accuracy;
+		setLocationName( source.getLocationName() );
+		setLatitude( source.getLatitude() );
+		setLongitude( source.getLongitude() );
+		setElevation( source.getElevation() );
+		setTimeZone( source.getTimeZone() );
 	}
 
 
