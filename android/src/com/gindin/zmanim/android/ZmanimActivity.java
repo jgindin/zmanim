@@ -4,14 +4,12 @@
 
 package com.gindin.zmanim.android;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.calendar.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
@@ -53,6 +51,8 @@ public class ZmanimActivity
 
 	private ZmanimLocationManager.Listener                    locationListener;
 
+	private PersonalPrefsManager                              personalPrefsManager;
+
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
 
@@ -75,6 +75,8 @@ public class ZmanimActivity
 		AppUpgrader.handle( this );
 
 		setContentView( R.layout.main );
+
+		personalPrefsManager = new PersonalPrefsManager( this );
 
 		determiningLocationDialog = new ProgressDialog( this );
 		determiningLocationDialog.setIndeterminate( true );
@@ -133,6 +135,12 @@ public class ZmanimActivity
 		};
 		initUITask.execute( (Void)null );
 
+	}
+
+
+	public void rebuildUI() {
+
+		rebuildUI( locationManager.getLastKnownLocation(), null );
 	}
 
 
@@ -197,11 +205,11 @@ public class ZmanimActivity
 				break;
 
 			case EDIT_LOCATION_PREFERENCES:
-				locationManager.locationPreferencesChanged();
+				locationManager.locationPrefsChanged();
 				break;
 
 			case PERSONAL_PREFERENCS:
-				rebuildUI( locationManager.getLastKnownLocation(), null );
+				personalPrefsManager.personalPrefsChanged();
 				break;
 		}
 	}
@@ -415,7 +423,7 @@ public class ZmanimActivity
 		switch ( id ) {
 
 			case R.id.personal_prefs:
-				startActivityForResult( new Intent( this, PersonalPreferences.class ), Activities.PERSONAL_PREFERENCS.ordinal() );
+				personalPrefsManager.editPersonalPrefs();
 				break;
 
 			case R.id.location_prefs:
@@ -668,10 +676,15 @@ public class ZmanimActivity
 		@Override
 		protected Void doInBackground( Void... v ) {
 
-			final SharedPreferences prefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-			boolean showSeconds = prefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
+			boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 			final HebrewDateFormatter formatter = new HebrewDateFormatter( showSeconds );
-			zmanimCalendar = new HebrewZmanimCalendar( location, formatter );
+
+			Calendar secularDate = null;
+			if ( null != zmanimCalendar ) {
+				secularDate = zmanimCalendar.getSecularDate();
+			}
+
+			zmanimCalendar = new HebrewZmanimCalendar( location, formatter, secularDate );
 			return null;
 		}
 

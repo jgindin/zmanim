@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location;
@@ -64,7 +64,14 @@ public class ZmanimLocationManager {
 	/** Uh, where's the last place we knew we were? */
 	private ZmanimLocation                                    lastKnownLocation = null;
 
-	private View locationField;
+	/** This is where we display the user's location. */
+	private View                                              locationField;
+
+	/**
+	 * Prior to invoking the location configuration activity, tuck away the current prefs so that if
+	 *  the user doesn't make any changes, then we don't do anything upon return.
+ 	 */
+	private Map<String,?>                                     prefsBeforeEditing;
 
 
 	public ZmanimLocationManager(
@@ -208,6 +215,9 @@ public class ZmanimLocationManager {
 	 */
 	public void editLocationPrefs() {
 
+		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
+		prefsBeforeEditing = locationManagementPrefs.getAll();
+
 		activity.startActivityForResult( new Intent( activity, EditLocationProviderPreferences.class ), Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
 	}
 
@@ -216,11 +226,15 @@ public class ZmanimLocationManager {
 	 * Called after the user has changed some preferences regarding location. Always comes after we request the activity
 	 *   to be displayed from within editLocationPrefs().
 	 */
-	public void locationPreferencesChanged() {
+	public void locationPrefsChanged() {
 
-		// We could try to be smart and clever by capturing the prefs before the location prefs were invoked. However,
-		//  that is just way too much work. It's not like we expect users to be doing this all the time...
-		startInitialProvider();
+		final Map<String, ?> prefsAfterEditing = locationManagementPrefs.getAll();
+		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
+
+			startInitialProvider();
+		}
+
+		prefsBeforeEditing = null;
 	}
 
 

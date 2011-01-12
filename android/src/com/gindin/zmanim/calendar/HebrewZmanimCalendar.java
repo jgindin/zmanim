@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
 
+import com.gindin.zmanim.android.location.ZmanimLocation;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 import com.gindin.zmanim.times.ZmanimFactory;
@@ -59,6 +60,20 @@ public class HebrewZmanimCalendar {
 
 		this.dateFormatter = dateFormatter;
 		this.zmanimFactory = new ZmanimFactory( this );
+	}
+
+
+	public HebrewZmanimCalendar(
+		ZmanimLocation      location,
+		HebrewDateFormatter formatter,
+		Calendar            secularDate
+	) {
+
+		this( location, formatter );
+
+		if ( null != secularDate ) {
+			syncToSecularCalendar( secularDate, false );
+		}
 	}
 
 
@@ -188,12 +203,24 @@ public class HebrewZmanimCalendar {
 		Calendar calendar
 	) {
 
+		syncToSecularCalendar( calendar, true );
+	}
+
+
+	private void syncToSecularCalendar(
+		Calendar  calendar,
+	  boolean   fireEvents
+	) {
+
 		zmanimCalendar.setCalendar( calendar );
 		hebrewCalendar.setTime( calendar.getTime() );
 
-		for ( Listener listener : listeners ) {
-			listener.dateChanged();
+		if ( fireEvents ) {
+			for ( Listener listener : listeners ) {
+				listener.dateChanged();
+			}
 		}
+
 	}
 
 
