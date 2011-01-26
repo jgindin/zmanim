@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2011. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar;
@@ -367,6 +367,8 @@ public class JewishHoliday {
 
 	/**
 	 * Specialized because most fasts are just during the day.
+	 *<p>
+	 * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
 	 */
 	private static class DayTimeTaanit
 		extends Observance {
@@ -377,6 +379,54 @@ public class JewishHoliday {
 			String  name
 		) {
 			super( month, date, "Ta'anit " + name );
+		}
+
+
+		@Override
+		public boolean isOn( HebrewCalendar dateToTest ) {
+
+			// Wrong month? Then can't be!
+			if ( month != dateToTest.get( HebrewCalendar.MONTH ) ) {
+				return false;
+			}
+
+			int adjustment = getDateToUse( dateToTest );
+			calendar.add( HebrewCalendar.DATE, adjustment );
+
+			return isSameDate( dateToTest, calendar );
+		}
+
+
+		@Override
+		public boolean isErev( HebrewCalendar dateToTest ) {
+
+			// Wrong month? Then can't be!
+			if ( month != dateToTest.get( HebrewCalendar.MONTH ) ) {
+				return false;
+			}
+
+			int adjustment = getDateToUse( dateToTest );
+			calendar.add( HebrewCalendar.DATE, adjustment - 1 );
+
+			return isSameDate( dateToTest, calendar );
+		}
+
+
+		@SuppressWarnings( { "FeatureEnvy" } )
+		protected int getDateToUse( HebrewCalendar dateToTest ) {
+
+			// Update the calendar for the test...
+			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
+
+			// Cannot fall out on Shabbat! If this Shabbat, then move it to Sunday.
+			int adjustment = 0;
+
+			final int dayOfWeek = calendar.get( HebrewCalendar.DAY_OF_WEEK );
+			if ( HebrewCalendar.SATURDAY == dayOfWeek ) {
+				adjustment = 1;
+			}
+
+			return adjustment;
 		}
 
 	} // End of DayTimeTaanit
@@ -395,41 +445,11 @@ public class JewishHoliday {
 
 
 		@SuppressWarnings( { "FeatureEnvy" } )
-		@Override
-		public boolean isOn( HebrewCalendar dateToTest ) {
-
-			// Not Adar? Then it can't be ta'anit Esther!
-			if ( HebrewCalendar.ADAR != dateToTest.get( HebrewCalendar.MONTH ) ) {
-				return false;
-			}
-
-			int adjustment = getDateToUse( dateToTest );
-
-			calendar.add( HebrewCalendar.DATE, adjustment );
-			return isSameDate( dateToTest, calendar );
-		}
-
-
-		@Override
-		public boolean isErev( HebrewCalendar dateToTest ) {
-
-			// Not Adar? Then it can't be ta'anit Esther!
-			if ( HebrewCalendar.ADAR != dateToTest.get( HebrewCalendar.MONTH ) ) {
-				return false;
-			}
-
-			int adjustment = getDateToUse( dateToTest );
-			calendar.add( HebrewCalendar.DATE, adjustment - 1 );
-			
-			return isSameDate( dateToTest, calendar );
-		}
-
-
-		@SuppressWarnings( { "FeatureEnvy" } )
-		private int getDateToUse(
+		protected int getDateToUse(
 			HebrewCalendar dateToTest
 		) {
 
+			// Update the calendar for the test...
 			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
 
 			int adjustment = 0;
