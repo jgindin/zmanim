@@ -259,10 +259,13 @@ public class HebrewZmanimCalendar {
 			}
 		}
 
-		if ( 0 == description.length() ) {
-			holiday = isTodayATaanit();
-			if ( null != holiday ) {
+		holiday = isTodayATaanit();
+		if ( null != holiday ) {
+			if ( 0 == description.length() ) {
 				description.append( holiday.getDescription() );
+			}
+			else {
+				description.append( " / " ).append( holiday.getDescription() );
 			}
 		}
 
