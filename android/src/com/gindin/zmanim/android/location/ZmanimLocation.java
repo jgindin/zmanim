@@ -28,6 +28,22 @@ public class ZmanimLocation
 	public final float                                        accuracy;
 
 
+	/**
+	 * Default ctor for when we are unable to obtain any real location informatio.
+	 */
+	public ZmanimLocation() {
+
+		providerName = "Zmanim";
+		locationTime = System.currentTimeMillis();
+		accuracy = 0;
+		setLocationName( "Unknown" );
+		setLatitude( 47, 37, 0, "N" );
+		setLongitude( 122, 20, 0, "W" );
+		setElevation( 0.0 );
+		setTimeZone( TimeZone.getDefault() );
+	}
+
+
 	public ZmanimLocation(
 		Location  newLocation,
 		String    locationName,

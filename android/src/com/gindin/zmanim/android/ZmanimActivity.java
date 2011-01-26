@@ -657,6 +657,13 @@ public class ZmanimActivity
 			LocationError   error
 		) {
 
+			// In some error cases (where we've never before received a previous location) it could be possible that
+			//  the incoming location is null...
+			if ( null == location ) {
+				location = new ZmanimLocation();
+			}
+
+
 			// The user may not want to take elevation into account. Or, they may be used to other services
 			//  which don't take elevation into account and want to see if we're doing the right thing...
 			final boolean useElevation = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), true );
