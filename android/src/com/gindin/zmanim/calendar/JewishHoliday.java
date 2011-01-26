@@ -33,7 +33,7 @@ public class JewishHoliday {
 	private static final JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR,      18,      "Lag B'Omer" );
 	private static final JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,      28,      "Yom Yerushalayim" );
 	private static final JewishHoliday SHAVUOT          = new JewishHoliday( HebrewCalendar.SIVAN,   6,  2,  "Shavuot" );
-	private static final JewishHoliday TISHA_BAV        = new Observance( HebrewCalendar.AV,         9,      "Fast of Tisha B'Av" );
+	private static final JewishHoliday TISHA_BAV        = new DayTimeTaanit( HebrewCalendar.AV,      9,      "Tisha B'Av" );
 	private static final JewishHoliday TU_BAV           = new Observance( HebrewCalendar.AV,        15,      "Tu B'Av" );
 
 	/**
