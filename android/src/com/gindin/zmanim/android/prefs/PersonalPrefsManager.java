@@ -45,7 +45,7 @@ public class PersonalPrefsManager {
 
 		if ( lastKnownCodeVersion <= 66 ) {
 			final SharedPreferences.Editor editor = personalPrefs.edit();
-			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), true );
+			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
 			editor.commit();
 		}
 	}

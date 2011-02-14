@@ -666,7 +666,7 @@ public class ZmanimActivity
 
 			// The user may not want to take elevation into account. Or, they may be used to other services
 			//  which don't take elevation into account and want to see if we're doing the right thing...
-			final boolean useElevation = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), true );
+			final boolean useElevation = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
 			if ( !useElevation ) {
 
 				this.location = new ZmanimLocation( location );
