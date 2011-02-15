@@ -1,10 +1,9 @@
-//##header
 /*
- *******************************************************************************
- * Copyright (C) 2007-2009, International Business Machines Corporation and    *
- * others. All Rights Reserved.                                                *
- *******************************************************************************
+ * Copyright (c) 2011. Jay R. Gindin
  */
+
+//##header
+
 package com.ibm.icu.impl.duration;
 
 import java.text.FieldPosition;
@@ -46,15 +45,19 @@ public class BasicDurationFormat extends DurationFormat {
         }
 //#if defined(FOUNDATION10) || defined(J2SE13) || defined(J2SE14)
 //#else
-        if(checkXMLDuration) try {
-            if(object instanceof javax.xml.datatype.Duration) {
-                String res = formatDuration(object);
-                return toAppend.append(res);
-            }
-        } catch ( NoClassDefFoundError ncdfe ) {
-            System.err.println("Skipping XML capability");
-            checkXMLDuration = false; // don't try again
-        }
+
+// JRG: Commenting out code which has just now decided to start causing problems. No idea how I got away for
+//  a year+ without a problem...
+//
+//        if(checkXMLDuration) try {
+//            if(object instanceof javax.xml.datatype.Duration) {
+//                String res = formatDuration(object);
+//                return toAppend.append(res);
+//            }
+//        } catch ( NoClassDefFoundError ncdfe ) {
+//            System.err.println("Skipping XML capability");
+//            checkXMLDuration = false; // don't try again
+//        }
 //#endif
         throw new IllegalArgumentException("Cannot format given Object as a Duration");
 
@@ -104,84 +107,87 @@ public class BasicDurationFormat extends DurationFormat {
      * @return
      * @see http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/datatype/Duration.html
      */
-    public String formatDuration(Object obj) {
-        javax.xml.datatype.DatatypeConstants.Field inFields[] = { 
-                javax.xml.datatype.DatatypeConstants.YEARS,
-                javax.xml.datatype.DatatypeConstants.MONTHS,
-                javax.xml.datatype.DatatypeConstants.DAYS,
-                javax.xml.datatype.DatatypeConstants.HOURS,
-                javax.xml.datatype.DatatypeConstants.MINUTES,
-                javax.xml.datatype.DatatypeConstants.SECONDS,
-            };
-             TimeUnit outFields[] = { 
-                TimeUnit.YEAR,
-                TimeUnit.MONTH,
-                TimeUnit.DAY,
-                TimeUnit.HOUR,
-                TimeUnit.MINUTE,
-                TimeUnit.SECOND,
-            };
-
-        javax.xml.datatype.Duration inDuration = (javax.xml.datatype.Duration)obj;
-        Period p = null;
-        javax.xml.datatype.Duration duration = inDuration;
-        boolean inPast = false;
-        if(inDuration.getSign()<0) {
-            duration = inDuration.negate();
-            inPast = true;
-        }
-        // convert a Duration to a Period
-        boolean sawNonZero = false; // did we have a set, non-zero field?
-        for(int i=0;i<inFields.length;i++) {
-            if(duration.isSet(inFields[i])) {
-                Number n = duration.getField(inFields[i]);
-                if(n.intValue() == 0 && !sawNonZero) {
-                    continue; // ignore zero fields larger than the largest nonzero field
-                } else {
-                    sawNonZero = true;
-                }
-                float floatVal = n.floatValue();
-                // is there a 'secondary' unit to set?
-                TimeUnit alternateUnit = null;
-                float alternateVal = 0;
-                
-                // see if there is a fractional part
-                if(outFields[i]==TimeUnit.SECOND) {
-                    double fullSeconds = floatVal;
-                    double intSeconds = Math.floor(floatVal);
-                    double millis = (fullSeconds-intSeconds)*1000.0;
-                    if(millis > 0.0) {
-                        alternateUnit = TimeUnit.MILLISECOND;
-                        alternateVal=(float)millis;
-                        floatVal=(float)intSeconds;
-                    }
-                }
-                
-                if(p == null) {
-                    p = Period.at(floatVal, outFields[i]);
-                } else {
-                    p = p.and(floatVal, outFields[i]);
-                }
-                
-                if(alternateUnit != null) {
-                    p = p.and(alternateVal, alternateUnit); // add in MILLISECONDs
-                }
-            }
-        }
-        
-        if(p == null) {
-            // no fields set  = 0 seconds
-            return formatDurationFromNow(0);
-        } else {
-            if(inPast) {// was negated, above.
-                p = p.inPast();
-            } else {
-                p = p.inFuture();
-            }
-        }
-        
-        // now, format it.
-        return pformatter.format(p);
-    }
+// JRG: Commenting out code which has just now decided to start causing problems. No idea how I got away for
+//  a year+ without a problem...
+//
+//    public String formatDuration(Object obj) {
+//        javax.xml.datatype.DatatypeConstants.Field inFields[] = {
+//                javax.xml.datatype.DatatypeConstants.YEARS,
+//                javax.xml.datatype.DatatypeConstants.MONTHS,
+//                javax.xml.datatype.DatatypeConstants.DAYS,
+//                javax.xml.datatype.DatatypeConstants.HOURS,
+//                javax.xml.datatype.DatatypeConstants.MINUTES,
+//                javax.xml.datatype.DatatypeConstants.SECONDS,
+//            };
+//             TimeUnit outFields[] = {
+//                TimeUnit.YEAR,
+//                TimeUnit.MONTH,
+//                TimeUnit.DAY,
+//                TimeUnit.HOUR,
+//                TimeUnit.MINUTE,
+//                TimeUnit.SECOND,
+//            };
+//
+//        javax.xml.datatype.Duration inDuration = (javax.xml.datatype.Duration)obj;
+//        Period p = null;
+//        javax.xml.datatype.Duration duration = inDuration;
+//        boolean inPast = false;
+//        if(inDuration.getSign()<0) {
+//            duration = inDuration.negate();
+//            inPast = true;
+//        }
+//        // convert a Duration to a Period
+//        boolean sawNonZero = false; // did we have a set, non-zero field?
+//        for(int i=0;i<inFields.length;i++) {
+//            if(duration.isSet(inFields[i])) {
+//                Number n = duration.getField(inFields[i]);
+//                if(n.intValue() == 0 && !sawNonZero) {
+//                    continue; // ignore zero fields larger than the largest nonzero field
+//                } else {
+//                    sawNonZero = true;
+//                }
+//                float floatVal = n.floatValue();
+//                // is there a 'secondary' unit to set?
+//                TimeUnit alternateUnit = null;
+//                float alternateVal = 0;
+//
+//                // see if there is a fractional part
+//                if(outFields[i]==TimeUnit.SECOND) {
+//                    double fullSeconds = floatVal;
+//                    double intSeconds = Math.floor(floatVal);
+//                    double millis = (fullSeconds-intSeconds)*1000.0;
+//                    if(millis > 0.0) {
+//                        alternateUnit = TimeUnit.MILLISECOND;
+//                        alternateVal=(float)millis;
+//                        floatVal=(float)intSeconds;
+//                    }
+//                }
+//
+//                if(p == null) {
+//                    p = Period.at(floatVal, outFields[i]);
+//                } else {
+//                    p = p.and(floatVal, outFields[i]);
+//                }
+//
+//                if(alternateUnit != null) {
+//                    p = p.and(alternateVal, alternateUnit); // add in MILLISECONDs
+//                }
+//            }
+//        }
+//
+//        if(p == null) {
+//            // no fields set  = 0 seconds
+//            return formatDurationFromNow(0);
+//        } else {
+//            if(inPast) {// was negated, above.
+//                p = p.inPast();
+//            } else {
+//                p = p.inFuture();
+//            }
+//        }
+//
+//        // now, format it.
+//        return pformatter.format(p);
+//    }
 //#endif
 }
