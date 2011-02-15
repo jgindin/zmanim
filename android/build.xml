@@ -90,12 +90,13 @@
 		Copied the original -set-release-mode to add the dependencies necessary for Zmanim.
 	-->
 	<target name="release"
-		depends="zmanim-setup-for-release,zmanim-update-release-version,zmanim-replace-flurry-key-placeholders,-set-release-mode, -release-obfuscation-check, -package-release, -release-prompt-for-password, -release-nosign,zmanim-reset-flurry-key,install-release-to-device"
+		depends="zmanim-setup-for-release,zmanim-update-release-version,zmanim-replace-flurry-key-placeholders,-set-release-mode,-release-obfuscation-check,-package-release, -release-prompt-for-password, -release-nosign,zmanim-reset-flurry-key"
 	  if="has.keystore"
 	  description="Builds the application. The generated apk file must be signed before it is published.">
-	    <!-- Signs the APK -->
-	    <echo>Signing final apk...</echo>
-	    <signjar
+
+		<!-- Signs the APK -->
+		<echo>Signing final apk...</echo>
+		<signjar
 	            jar="${out.unsigned.file}"
 	            signedjar="${out.unaligned.file}"
 	            keystore="${key.store}"
@@ -104,10 +105,14 @@
 	            keypass="${key.alias.password}"
 	            verbose="${verbose}" />
 
-	    <!-- Zip aligns the APK -->
-	    <zipalign-helper in.package="${out.unaligned.file}"
+		<!-- Zip aligns the APK -->
+		<zipalign-helper in.package="${out.unaligned.file}"
 	                               out.package="${out.release.file}" />
-	    <echo>Release Package: ${out.release.file}</echo>
+		<echo>Release Package: ${out.release.file}</echo>
+
+		<!-- Get it installed (if we're supposed to) -->
+		<antcall target="install-release-to-device"/>
+
 	</target>
 
 
