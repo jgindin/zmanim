@@ -3,99 +3,141 @@
   ~ Copyright (c) 2011. Jay R. Gindin
   -->
 
-<project name="ZmanimDisplay" default="release-install">
+<project name="ZmanimDisplay">
 
-	<!-- The local.properties file is created and updated by the 'android' tool.
-					 It contain the path to the SDK. It should *NOT* be checked in in Version
-					 Control Systems. -->
-	<property file="local.properties"/>
 
-	<!-- The build.properties file can be created by you and is never touched
-					 by the 'android' tool. This is the place to change some of the default property values
-					 used by the Ant rules.
-					 Here are some properties you may want to change/update:
+	<!--
+		If this is set, then lot of additional stuff will get dumped out so you can see what's going on...
+	-->
+	<!--<property name="verbose" value="true" />-->
 
-					 application-package
-							 the name of your application package as defined in the manifest. Used by the
-							 'uninstall' rule.
-					 source-folder
-							 the name of the source folder. Default is 'src'.
-					 out-folder
-							 the name of the output folder. Default is 'bin'.
 
-					 Properties related to the SDK location or the project target should be updated
-						using the 'android' tool with the 'update' action.
+	<!--
+			The local.properties file is created and updated by the 'android' tool.
+      It contains the path to the SDK. It should *NOT* be checked into
+      Version Control Systems.
+	-->
+	<property file="local.properties" />
 
-					 This file is an integral part of the build system for your application and
-					 should be checked in in Version Control Systems.
+	<!--
+		The build.properties file can be created by you and is never touched
+		by the 'android' tool. This is the place to change some of the
+		default property values used by the Ant rules.
+		Here are some properties you may want to change/update:
 
-					 -->
-	<property file="build.properties"/>
+			source.dir
+					 The name of the source directory. Default is 'src'.
+			out.dir
+					 The name of the output directory. Default is 'bin'.
 
-	<!-- The default.properties file is created and updated by the 'android' tool, as well
-					 as ADT.
-					 This file is an integral part of the build system for your application and
-					 should be checked in in Version Control Systems. -->
-	<property file="default.properties"/>
+		Properties related to the SDK location or the project target should
+		be updated using the 'android' tool with the 'update' action.
 
-	<!-- Custom Android task to deal with the project target, and import the proper rules.
-						 This requires ant 1.6.0 or above. -->
+		This file is an integral part of the build system for your
+		application and should be checked into Version Control Systems.
+	-->
+	<property file="build.properties" />
+
+
+	<!--
+		The default.properties file is created and updated by the 'android'
+    tool, as well as ADT.
+    This file is an integral part of the build system for your
+    application and should be checked into Version Control Systems.
+	-->
+	<property file="default.properties" />
+
+
+	<!--
+		Custom Android task to deal with the project target, and import the
+		proper rules.
+    This requires ant 1.6.0 or above.
+  -->
 	<path id="android.antlibs">
 		<pathelement path="${sdk.dir}/tools/lib/anttasks.jar"/>
 		<pathelement path="${sdk.dir}/tools/lib/sdklib.jar"/>
 		<pathelement path="${sdk.dir}/tools/lib/androidprefs.jar"/>
-		<pathelement path="${sdk.dir}/tools/lib/apkbuilder.jar"/>
-		<pathelement path="${sdk.dir}/tools/lib/jarutils.jar"/>
 	</path>
 
 	<taskdef name="setup"
-	         classname="com.android.ant.SetupTask"
-	         classpathref="android.antlibs"/>
-
-	<!-- Execute the Android Setup task that will setup some properties specific to the target,
-					 and import the build rules files.
-
-					 The rules file is imported from
-							<SDK>/platforms/<target_platform>/templates/android_rules.xml
-
-					 To customize some build steps for your project:
-					 - copy the content of the main node <project> from android_rules.xml
-					 - paste it in this build.xml below the <setup /> task.
-					 - disable the import by changing the setup task below to <setup import="false" />
-
-					 This will ensure that the properties are setup correctly but that your customized
-					 build steps are used.
-			-->
-	<setup/>
+		classname="com.android.ant.SetupTask"
+	  classpathref="android.antlibs"/>
 
 
-	<!-- Convert this project's .class files into .dex files. -->
 	<!--
-		Uncomment this if need to see what class is causing a warning like:
-	    warning: Ignoring InnerClasses attribute for an anonymous inner class that doesn't come with an associated EnclosingMethod attribute. (This class was probably produced by a broken compiler.)
-		Note that the single "-" needs to be changed to to a double "-" in the "arg" statements. Unforutunately,
-		 ant gets unhappy with two "-" characters in a comment...
-	-->
-<!--
-	<target name="dex" depends="compile">
-	    <echo>Converting compiled files and external libraries into ${out-folder}/${dex-file}...</echo>
-			<echo>MEMEMEMEMEMEME</echo>
-	    <apply executable="${dx}" failonerror="true" parallel="true">
-	        <arg value="-dex" />
-			    <arg value="-verbose" />
-	        <arg value="-output=${intermediate-dex-location}" />
-	        <arg path="${out-classes-location}" />
-	        <fileset dir="${external-libs-folder}" includes="*.jar"/>
-	    </apply>
+		Extension targets. Uncomment the ones where you want to do custom work
+		in between standard targets
+	 -->
+	<target name="-pre-build" depends="replace-version-placeholders,show-svn-info">
 	</target>
--->
+
+
+	<target name="-pre-compile">
+	</target>
+
+	<!--
+		 This is typically used for code obfuscation. Compiled code location: ${out.classes.absolute.dir}
+		 If this is not done in place, override ${out.dex.input.absolute.dir}]
+	 -->
+	<target name="-post-compile">
+	</target>
+
+
+	<!--
+		This runs -package-release and -release-nosign first and then runs
+	  only if release-sign is true (set in -release-check, called by -release-no-sign)
+
+		Copied the original -set-release-mode to add the dependencies necessary for Zmanim.
+	-->
+	<target name="release"
+		depends="zmanim-setup-for-release,zmanim-update-release-version,zmanim-replace-flurry-key-placeholders,-set-release-mode, -release-obfuscation-check, -package-release, -release-prompt-for-password, -release-nosign,zmanim-reset-flurry-key,install-release-to-device"
+	  if="has.keystore"
+	  description="Builds the application. The generated apk file must be signed before it is published.">
+	    <!-- Signs the APK -->
+	    <echo>Signing final apk...</echo>
+	    <signjar
+	            jar="${out.unsigned.file}"
+	            signedjar="${out.unaligned.file}"
+	            keystore="${key.store}"
+	            storepass="${key.store.password}"
+	            alias="${key.alias}"
+	            keypass="${key.alias.password}"
+	            verbose="${verbose}" />
+
+	    <!-- Zip aligns the APK -->
+	    <zipalign-helper in.package="${out.unaligned.file}"
+	                               out.package="${out.release.file}" />
+	    <echo>Release Package: ${out.release.file}</echo>
+	</target>
+
+
+
+	<!--
+		Execute the Android Setup task that will setup some properties
+		specific to the target, and import the build rules files.
+
+		The rules file is imported from
+			<SDK>/platforms/<target_platform>/ant/ant_rules_r#.xml
+
+		To customize existing targets, there are two options:
+			- Customize only one target:
+				- copy/paste the target into this file, *before* the <setup> task.
+				- customize it to your needs.
+		  - Customize the whole script.
+				- copy/paste the content of the rules files (minus the top node)
+					into this file, *after* the <setup> task
+				- disable the import of the rules by changing the setup task
+					below to <setup import="false" />.
+				- customize to your needs.
+	-->
+  <setup />
 
 
 	<!--
 		BEGIN Customized targets
 	-->
 	<property name="svnant.javahl" value="false" />
-	<property name="svnant.svnkit" value="true" />	
+	<property name="svnant.svnkit" value="true" />
 	<path id="svnant.classpath">
 		<fileset dir="${svnant.lib.dir}">
 			<include name="**/*.jar"/>
@@ -106,19 +148,20 @@
 	<property file="flurry.properties"/>
 
 
-	<target name="tool-availability">
-		<available resource="org/tigris/subversion/svnant/svnantlib.xml"
-		           classpathref="svnant.classpath"
-		           property="available.svnant"
-			/>
-		<echo message="SVN-ANT is available = ${available.svnant}"/>
-	</target>
-
-
 	<target name="get-svn-state">
 		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
 			<wcversion path="." prefix="svn.status." />
 		</svn>
+	</target>
+
+
+
+	<target name="show-svn-info">
+		<echo>
+			repository.url=${svn.status.repository.url}
+			committed.max=${svn.status.committed.max}
+			modified=${svn.status.modified}
+		</echo>
 	</target>
 
 
@@ -149,7 +192,7 @@
 		Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
 			minor version number.
 	-->
-	<target name="update-release-version">
+	<target name="zmanim-update-release-version">
 
 		<echo>Updating version number...</echo>
 		<buildnumber file="build.number"/>
@@ -163,7 +206,7 @@
 	</target>
 
 
-	<target name="replace_version_placeholders" depends="set-version">
+	<target name="replace-version-placeholders" depends="set-version">
 
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
@@ -177,89 +220,53 @@
 	</target>
 
 
-	<target name="build-setup">
 
-		<echo>
-			repository.url=${svn.status.repository.url}
-			committed.max=${svn.status.committed.max}
-			modified=${svn.status.modified}
-		</echo>
-
-		<!--
-			If modified, then fail!??!!
-				- No, because files which we're dynamically changing (based on the version) will be changed...
-		-->
-		<delete dir="bin"/>
+	<!--
+	  We don't want to store our flurry key in the source code...after all, we're hosting the code in a public
+	  location! Instead, we write the code using a placeholder, and replace it here based on the contents of
+	  a file that is NEVER committed to svn...
+	-->
+	<target name="zmanim-replace-flurry-key-placeholders">
+		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
 	</target>
 
 
-	<target name="build-debug" depends="build-setup">
-
-		<property name="out-debug-package" value="${out-folder}/${ant.project.name}-debug.apk"/>
-		
-		<!-- Call back to the "real" Android build file to do the actual building... -->
-		<antcall target="debug"/>
-		<echo>Done building ${out-debug-package}.</echo>
+	<target name="zmanim-reset-flurry-key">
+		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE" />
+	</target>
 
 
+
+	<!--
+		Takes care to set the necessary properties such that everyone else knows we're doing a real release.
+	-->
+	<target name="zmanim-setup-for-release">
+		<!-- Set this property so that we do the right versioning for an actual release. -->
+		<property name="release_build" value="true"/>
+	</target>
+
+
+	<!--
+		Deploys a release build .apk to a locally attached device.
+	-->
+	<target name="install-release-to-device" if="install-zmanim">
+
+		<property name="apk-to-install" value="${out.release.file}"/>
+		<antcall target="usb-install"/>
 
 	</target>
 
 
 	<!--
-		When performing a build for a new release, this target does it all:
-		  * Builds the APK
-		  * Signs the APK
-		  * Aligns the APK
-	-->                                      
-	<target name="build-release" depends="build-setup">
+		Deploys a debug build .apk to a locally attached device.
+	-->
+	<target name="install-debug-to-device">
 
-		<!-- Much of this is because we're targeting Android 1.5, where the build rules aren't as sophisticated. -->
-		<property name="zipalign" value="${android-tools}/zipalign${exe}" />
-		<property name="adb" value="${android-tools}/adb${exe}"/>
-		<property name="key.store" value="jay-gindin-android-apps.keystore"/>
-		<property name="out-unsigned-package" value="${out-folder}/${ant.project.name}-unsigned.apk"/>
-		<property name="out-unaligned-package" value="${out-folder}/${ant.project.name}-unaligned.apk"/>
-		<property name="out-release-package" value="${out-folder}/${ant.project.name}-release-${version}.apk"/>
-
-		<!-- Insert the flurry key -->
-		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
-
-		<!-- Call back to the "real" Android build file to do the actual building... -->
-		<antcall target="release"/>
-
-		<!-- Restore the flurry key placeholder -->
-		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE" /> 
-
-
-		<echo>Done building ${out-unsigned-package}.</echo>
-
-		<input
-			message="Please enter keystore password (store: ${key.store}):"
-		  addproperty="key.store.password"/>
-
-
-		<echo>Signing package...</echo>
-		<signjar
-			verbose="true"
-			keystore="${key.store}"
-			storepass="${key.store.password}"
-			jar="${out-unsigned-package}"
-			signedjar="${out-unaligned-package}"
-			alias="android-app"
-		/>
-		<echo>Signed ${out-unaligned-package}</echo>
-
-		<echo>Running zip align on the final, signed JAR...</echo>
-		<exec executable="${zipalign}" failonerror="true">
-			<arg value="-f" />
-			<arg value="4" />
-			<arg path="${out-unaligned-package}" />
-			<arg path="${out-release-package}" />
-		</exec>
-		<echo>Release Package: ${out-release-package}</echo>
+		<property name="apk-to-install" value="${out.debug.file}"/>
+		<antcall target="usb-install"/>
 
 	</target>
+
 
 
 	<!--
@@ -273,38 +280,6 @@
 			<arg value="-r"/>
 			<arg path="${apk-to-install}"/>
 		</exec>
-	</target>
-
-
-	<!--
-		Takes care to set the necessary properties such that everyone else knows we're doing a real release.
-	-->
-	<target name="setup-for-release">
-		<!-- Set this property so that we do the right versioning for an actual release. -->
-		<property name="release_build" value="true"/>
-	</target>
-
-
-	<!--
-		When performing a build for a new release, this target will get everything versioned and built properly,
-			and will then deploy it to a locally attached device.
-	-->
-	<target name="release-install" depends="setup-for-release,update-release-version,replace_version_placeholders,build-release">
-
-		<property name="apk-to-install" value="${out-release-package}"/>
-		<antcall target="usb-install"/>
-
-	</target>
-
-
-	<!--
-		Gets a debug build made and deployed.
-	-->
-	<target name="debug-install" depends="replace_version_placeholders,build-debug">
-
-		<property name="apk-to-install" value="${out-debug-package}"/>
-		<antcall target="usb-install"/>
-
 	</target>
 
 </project>
