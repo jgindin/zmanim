@@ -10,13 +10,15 @@ package com.gindin.zmanim.calendar;
  * Represents a Jewish holiday. Not using the ICU4J HebrewHoliday class because I just couldn't figure out how
  *  to properly use the rules (especially the RangeDateRule) which would be necessary, given that when certain
  *  holidays fall out depends on what year.
+ *<p>
+ * For testing purposes, see http://en.wikipedia.org/wiki/Jewish_holidays_2000-2050.
  */
 @SuppressWarnings( { "MagicNumber" } )
 public class JewishHoliday {
 
 	private static final JewishHoliday ROSH_HASHANAH    = new RoshHashana();
 	private static final JewishHoliday YOM_KIPPUR       = new JewishHoliday( HebrewCalendar.TISHRI, 10,      "Yom Kippur" );
-	private static final JewishHoliday SUKKOT           = new JewishHoliday( HebrewCalendar.TISHRI, 15,  6,  "Sukkot" );
+	private static final JewishHoliday SUKKOT           = new Sukkot();
 	private static final JewishHoliday HOSHANAH_RABBAH  = new JewishHoliday( HebrewCalendar.TISHRI, 21,      "Hoshanah Rabbah" );
 	private static final JewishHoliday SHEMINI_ATZERET  = new JewishHoliday( HebrewCalendar.TISHRI, 22,      "Shemini Atzeret" );
 	private static final JewishHoliday SIMCHAT_TORAH    = new JewishHoliday( HebrewCalendar.TISHRI, 23,      "Simchat Torah" );
@@ -27,8 +29,8 @@ public class JewishHoliday {
 	private static final JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR,      15,      "Shushan Purim" );
 	private static final JewishHoliday PASSOVER         = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
 	private static final JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN,     27,      "Yom Hashoah" );
-	private static final JewishHoliday YOM_HAZIKARON    = new Observance( HebrewCalendar.IYAR,       4,      "Yom Hazikaron" );
-	private static final JewishHoliday YOM_HAATZMAUT    = new Observance( HebrewCalendar.IYAR,       5,      "Yom Ha'Atzmaut" );
+	private static final JewishHoliday YOM_HAZIKARON    = new YomHaZikaron();
+	private static final JewishHoliday YOM_HAATZMAUT    = new YomHaAtzmaut();
 	private static final JewishHoliday PESACH_SHEINI    = new Observance( HebrewCalendar.IYAR,      14,      "Pesach Sheini" );
 	private static final JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR,      18,      "Lag B'Omer" );
 	private static final JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR,      28,      "Yom Yerushalayim" );
@@ -366,19 +368,17 @@ public class JewishHoliday {
 
 
 	/**
-	 * Specialized because most fasts are just during the day.
-	 *<p>
-	 * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
+	 * Class to handle those observances which may have to shift dates to ensure they don't fall on certain days.
 	 */
-	private static class DayTimeTaanit
+	private abstract static class AdjustableObservance
 		extends Observance {
 
-		private DayTimeTaanit(
+		AdjustableObservance(
 			int     month,
 			int     date,
 			String  name
 		) {
-			super( month, date, "Ta'anit " + name );
+			super( month, date, name );
 		}
 
 
@@ -390,7 +390,7 @@ public class JewishHoliday {
 				return false;
 			}
 
-			int adjustment = getDateToUse( dateToTest );
+			int adjustment = getDateAdjustment( dateToTest );
 			calendar.add( HebrewCalendar.DATE, adjustment );
 
 			return isSameDate( dateToTest, calendar );
@@ -405,15 +405,125 @@ public class JewishHoliday {
 				return false;
 			}
 
-			int adjustment = getDateToUse( dateToTest );
+			int adjustment = getDateAdjustment( dateToTest );
 			calendar.add( HebrewCalendar.DATE, adjustment - 1 );
 
 			return isSameDate( dateToTest, calendar );
 		}
 
 
+		/**
+		 * Given the date to test, should any adjustments be made?
+		 *
+		 * @param dateToTest What date is being tested?
+		 * @return The number of days (positive OR negative) to adjust the date of the observance.
+		 */
+		protected abstract int getDateAdjustment( HebrewCalendar dateToTest );
+	}
+
+
+	/**
+	 * From Wikipedia:
+	 *
+	 * Yom Hazikaron is observed on the 4th day of the month of Iyar of the Hebrew calendar, always preceding the next
+	 *  day's celebrations of Israel Independence Day on the 5th day of Iyar, the anniversary of the Proclamation of the
+	 *  State of Israel in 1948. Both holidays may be observed one or two days earlier (the 3rd and 4th, or the 2nd and
+	 *  3rd, of Iyar) if the 5th happens to occur on a Friday or Saturday, the Shabbat. Similarly, both days are moved
+	 *  one day later if Yom Hazikaron would fall on Sunday.
+	 */
+	private static class YomHaZikaron
+		extends AdjustableObservance {
+
+		YomHaZikaron() {
+			super( HebrewCalendar.IYAR, 4, "Yom HaZikaron" );
+		}
+
+
 		@SuppressWarnings( { "FeatureEnvy" } )
-		protected int getDateToUse( HebrewCalendar dateToTest ) {
+		@Override
+		protected int getDateAdjustment( HebrewCalendar dateToTest ) {
+
+			// Update the calendar for the test...
+			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
+
+			// If Yom Ha'Atzmaut were to fall on:
+			//  Friday: move back 1 day
+			//  Shabbat: move back 2 days
+			//  Sunday: move forward 1 day
+			int adjustment = 0;
+
+			final int dayOfWeek = calendar.get( HebrewCalendar.DAY_OF_WEEK );
+			if ( HebrewCalendar.THURSDAY == dayOfWeek ) {
+				adjustment = -1;
+			}
+			else if ( HebrewCalendar.FRIDAY == dayOfWeek ) {
+				adjustment = -2;
+			}
+			else if ( HebrewCalendar.SUNDAY == dayOfWeek ) {
+				adjustment = 1;
+			}
+
+			return adjustment;
+		}
+	}
+
+
+	private static class YomHaAtzmaut
+		extends AdjustableObservance {
+
+		YomHaAtzmaut() {
+			super( HebrewCalendar.IYAR, 5, "Yom Ha'Atzmaut" );
+		}
+
+
+		@SuppressWarnings( { "FeatureEnvy" } )
+		@Override
+		protected int getDateAdjustment( HebrewCalendar dateToTest ) {
+
+			// Update the calendar for the test...
+			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
+
+			// If Yom Ha'Atzmaut were to fall on:
+			//  Friday: move back 1 day
+			//  Shabbat: move back 2 days
+			//  Sunday: move forward 1 day
+			int adjustment = 0;
+
+			final int dayOfWeek = calendar.get( HebrewCalendar.DAY_OF_WEEK );
+			if ( HebrewCalendar.FRIDAY == dayOfWeek ) {
+				adjustment = -1;
+			}
+			else if ( HebrewCalendar.SATURDAY == dayOfWeek ) {
+				adjustment = -2;
+			}
+			else if ( HebrewCalendar.MONDAY == dayOfWeek ) {
+				adjustment = 1;
+			}
+
+			return adjustment;
+		}
+	}
+
+
+	/**
+	 * Specialized because most fasts are just during the day.
+	 *<p>
+	 * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
+	 */
+	private static class DayTimeTaanit
+		extends AdjustableObservance {
+
+		private DayTimeTaanit(
+			int     month,
+			int     date,
+			String  name
+		) {
+			super( month, date, "Ta'anit " + name );
+		}
+
+
+		@SuppressWarnings( { "FeatureEnvy" } )
+		protected int getDateAdjustment( HebrewCalendar dateToTest ) {
 
 			// Update the calendar for the test...
 			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
@@ -445,9 +555,7 @@ public class JewishHoliday {
 
 
 		@SuppressWarnings( { "FeatureEnvy" } )
-		protected int getDateToUse(
-			HebrewCalendar dateToTest
-		) {
+		protected int getDateAdjustment( HebrewCalendar dateToTest ) {
 
 			// Update the calendar for the test...
 			calendar.set( dateToTest.get( HebrewCalendar.YEAR ), month, date );
@@ -573,6 +681,31 @@ public class JewishHoliday {
 		@Override
 		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
 			return new Hanukkah( hebrewCalendar );
+		}
+	}
+
+
+	/**
+	 * Special class for Sukkot so we can display which day of the holiday it is.
+	 */
+	private static class Sukkot
+		extends DatedObservance {
+
+		Sukkot() {
+			this( null );
+		}
+
+		Sukkot(
+			HebrewCalendar forDate
+		) {
+			// We say 6 days because the 7th is Shemini Atzeret and the 8th is Simchat Torah.
+			super( HebrewCalendar.TISHRI, 15, 6, "Sukkot", forDate );
+		}
+
+
+		@Override
+		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
+			return new Sukkot( hebrewCalendar );
 		}
 	}
 
