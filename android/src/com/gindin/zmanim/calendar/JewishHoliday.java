@@ -27,7 +27,7 @@ public class JewishHoliday {
 	private static final JewishHoliday PURIM_KATAN      = new PurimKatan();
 	private static final JewishHoliday PURIM            = new Observance( HebrewCalendar.ADAR,      14,      "Purim" );
 	private static final JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR,      15,      "Shushan Purim" );
-	private static final JewishHoliday PASSOVER         = new JewishHoliday( HebrewCalendar.NISAN,  15,  8,  "Pesach" );
+	private static final JewishHoliday PASSOVER         = new Pesach();
 	private static final JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN,     27,      "Yom Hashoah" );
 	private static final JewishHoliday YOM_HAZIKARON    = new YomHaZikaron();
 	private static final JewishHoliday YOM_HAATZMAUT    = new YomHaAtzmaut();
@@ -706,6 +706,28 @@ public class JewishHoliday {
 		@Override
 		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
 			return new Sukkot( hebrewCalendar );
+		}
+	}
+
+
+	/**
+	 * Special class for Pesach so we can display which day of the holiday it is.
+	 */
+	private static class Pesach
+		extends DatedObservance {
+
+		Pesach() {
+			this( null );
+		}
+
+		Pesach( HebrewCalendar forDate ) {
+			super( HebrewCalendar.NISAN, 15, 8, "Pesach", forDate );
+		}
+
+
+		@Override
+		public JewishHoliday getForDate( HebrewCalendar hebrewCalendar ) {
+			return new Pesach( hebrewCalendar );
 		}
 	}
 
