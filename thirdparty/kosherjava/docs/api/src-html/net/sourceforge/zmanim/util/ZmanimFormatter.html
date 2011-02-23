@@ -299,184 +299,202 @@
 <FONT color="green">296</FONT>             */<a name="line.296"></a>
 <FONT color="green">297</FONT>            public String formatXSDDurationTime(Time time) {<a name="line.297"></a>
 <FONT color="green">298</FONT>                    StringBuffer duration = new StringBuffer();<a name="line.298"></a>
-<FONT color="green">299</FONT>    <a name="line.299"></a>
-<FONT color="green">300</FONT>                    duration.append("P");<a name="line.300"></a>
-<FONT color="green">301</FONT>    <a name="line.301"></a>
-<FONT color="green">302</FONT>                    if (time.getHours() != 0 || time.getMinutes() != 0<a name="line.302"></a>
-<FONT color="green">303</FONT>                                    || time.getSeconds() != 0 || time.getMilliseconds() != 0) {<a name="line.303"></a>
-<FONT color="green">304</FONT>                            duration.append("T");<a name="line.304"></a>
-<FONT color="green">305</FONT>    <a name="line.305"></a>
-<FONT color="green">306</FONT>                            if (time.getHours() != 0)<a name="line.306"></a>
-<FONT color="green">307</FONT>                                    duration.append(time.getHours() + "H");<a name="line.307"></a>
-<FONT color="green">308</FONT>    <a name="line.308"></a>
-<FONT color="green">309</FONT>                            if (time.getMinutes() != 0)<a name="line.309"></a>
-<FONT color="green">310</FONT>                                    duration.append(time.getMinutes() + "M");<a name="line.310"></a>
-<FONT color="green">311</FONT>    <a name="line.311"></a>
-<FONT color="green">312</FONT>                            if (time.getSeconds() != 0 || time.getMilliseconds() != 0) {<a name="line.312"></a>
-<FONT color="green">313</FONT>                                    duration.append(time.getSeconds() + "."<a name="line.313"></a>
-<FONT color="green">314</FONT>                                                    + milliNF.format(time.getMilliseconds()));<a name="line.314"></a>
-<FONT color="green">315</FONT>                                    duration.append("S");<a name="line.315"></a>
-<FONT color="green">316</FONT>                            }<a name="line.316"></a>
-<FONT color="green">317</FONT>                            if (duration.length() == 1) // zero seconds<a name="line.317"></a>
-<FONT color="green">318</FONT>                                    duration.append("T0S");<a name="line.318"></a>
-<FONT color="green">319</FONT>                            if (time.isNegative())<a name="line.319"></a>
-<FONT color="green">320</FONT>                                    duration.insert(0, "-");<a name="line.320"></a>
-<FONT color="green">321</FONT>                    }<a name="line.321"></a>
-<FONT color="green">322</FONT>                    return duration.toString();<a name="line.322"></a>
-<FONT color="green">323</FONT>            }<a name="line.323"></a>
-<FONT color="green">324</FONT>            <a name="line.324"></a>
-<FONT color="green">325</FONT>            /**<a name="line.325"></a>
-<FONT color="green">326</FONT>             * A method that returns an XML formatted &lt;code&gt;String&lt;/code&gt; representing<a name="line.326"></a>
-<FONT color="green">327</FONT>             * the serialized &lt;code&gt;Object&lt;/code&gt;. The format used is:<a name="line.327"></a>
-<FONT color="green">328</FONT>             * <a name="line.328"></a>
-<FONT color="green">329</FONT>             * &lt;pre&gt;<a name="line.329"></a>
-<FONT color="green">330</FONT>             *  &amp;lt;AstronomicalTimes date=&amp;quot;1969-02-08&amp;quot; type=&amp;quot;net.sourceforge.zmanim.AstronomicalCalendar algorithm=&amp;quot;US Naval Almanac Algorithm&amp;quot; location=&amp;quot;Lakewood, NJ&amp;quot; latitude=&amp;quot;40.095965&amp;quot; longitude=&amp;quot;-74.22213&amp;quot; elevation=&amp;quot;31.0&amp;quot; timeZoneName=&amp;quot;Eastern Standard Time&amp;quot; timeZoneID=&amp;quot;America/New_York&amp;quot; timeZoneOffset=&amp;quot;-5&amp;quot;&amp;gt;<a name="line.330"></a>
-<FONT color="green">331</FONT>             *     &amp;lt;Sunrise&amp;gt;2007-02-18T06:45:27-05:00&amp;lt;/Sunrise&amp;gt;<a name="line.331"></a>
-<FONT color="green">332</FONT>             *     &amp;lt;TemporalHour&amp;gt;PT54M17.529S&amp;lt;/TemporalHour&amp;gt;<a name="line.332"></a>
-<FONT color="green">333</FONT>             *     ...<a name="line.333"></a>
-<FONT color="green">334</FONT>             *   &amp;lt;/AstronomicalTimes&amp;gt;<a name="line.334"></a>
-<FONT color="green">335</FONT>             * &lt;/pre&gt;<a name="line.335"></a>
-<FONT color="green">336</FONT>             * <a name="line.336"></a>
-<FONT color="green">337</FONT>             * Note that the output uses the &lt;a<a name="line.337"></a>
-<FONT color="green">338</FONT>             * href="http://www.w3.org/TR/xmlschema11-2/#dateTime"&gt;xsd:dateTime&lt;/a&gt;<a name="line.338"></a>
-<FONT color="green">339</FONT>             * format for times such as sunrise, and &lt;a<a name="line.339"></a>
-<FONT color="green">340</FONT>             * href="http://www.w3.org/TR/xmlschema11-2/#duration"&gt;xsd:duration&lt;/a&gt;<a name="line.340"></a>
-<FONT color="green">341</FONT>             * format for times that are a duration such as the length of a<a name="line.341"></a>
-<FONT color="green">342</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour() temporal hour}. The output of this method is<a name="line.342"></a>
-<FONT color="green">343</FONT>             * returned by the {@link #toString() toString} }.<a name="line.343"></a>
+<FONT color="green">299</FONT>                    if (time.getHours() != 0 || time.getMinutes() != 0<a name="line.299"></a>
+<FONT color="green">300</FONT>                                    || time.getSeconds() != 0 || time.getMilliseconds() != 0) {<a name="line.300"></a>
+<FONT color="green">301</FONT>                            duration.append("P");<a name="line.301"></a>
+<FONT color="green">302</FONT>                            duration.append("T");<a name="line.302"></a>
+<FONT color="green">303</FONT>    <a name="line.303"></a>
+<FONT color="green">304</FONT>                            if (time.getHours() != 0)<a name="line.304"></a>
+<FONT color="green">305</FONT>                                    duration.append(time.getHours() + "H");<a name="line.305"></a>
+<FONT color="green">306</FONT>    <a name="line.306"></a>
+<FONT color="green">307</FONT>                            if (time.getMinutes() != 0)<a name="line.307"></a>
+<FONT color="green">308</FONT>                                    duration.append(time.getMinutes() + "M");<a name="line.308"></a>
+<FONT color="green">309</FONT>    <a name="line.309"></a>
+<FONT color="green">310</FONT>                            if (time.getSeconds() != 0 || time.getMilliseconds() != 0) {<a name="line.310"></a>
+<FONT color="green">311</FONT>                                    duration.append(time.getSeconds() + "."<a name="line.311"></a>
+<FONT color="green">312</FONT>                                                    + milliNF.format(time.getMilliseconds()));<a name="line.312"></a>
+<FONT color="green">313</FONT>                                    duration.append("S");<a name="line.313"></a>
+<FONT color="green">314</FONT>                            }<a name="line.314"></a>
+<FONT color="green">315</FONT>                            if (duration.length() == 1) // zero seconds<a name="line.315"></a>
+<FONT color="green">316</FONT>                                    duration.append("T0S");<a name="line.316"></a>
+<FONT color="green">317</FONT>                            if (time.isNegative())<a name="line.317"></a>
+<FONT color="green">318</FONT>                                    duration.insert(0, "-");<a name="line.318"></a>
+<FONT color="green">319</FONT>                    }<a name="line.319"></a>
+<FONT color="green">320</FONT>                    return duration.toString();<a name="line.320"></a>
+<FONT color="green">321</FONT>            }<a name="line.321"></a>
+<FONT color="green">322</FONT>            <a name="line.322"></a>
+<FONT color="green">323</FONT>            /**<a name="line.323"></a>
+<FONT color="green">324</FONT>             * A method that returns an XML formatted &lt;code&gt;String&lt;/code&gt; representing<a name="line.324"></a>
+<FONT color="green">325</FONT>             * the serialized &lt;code&gt;Object&lt;/code&gt;. The format used is:<a name="line.325"></a>
+<FONT color="green">326</FONT>             * <a name="line.326"></a>
+<FONT color="green">327</FONT>             * &lt;pre&gt;<a name="line.327"></a>
+<FONT color="green">328</FONT>             *  &amp;lt;AstronomicalTimes date=&amp;quot;1969-02-08&amp;quot; type=&amp;quot;net.sourceforge.zmanim.AstronomicalCalendar algorithm=&amp;quot;US Naval Almanac Algorithm&amp;quot; location=&amp;quot;Lakewood, NJ&amp;quot; latitude=&amp;quot;40.095965&amp;quot; longitude=&amp;quot;-74.22213&amp;quot; elevation=&amp;quot;31.0&amp;quot; timeZoneName=&amp;quot;Eastern Standard Time&amp;quot; timeZoneID=&amp;quot;America/New_York&amp;quot; timeZoneOffset=&amp;quot;-5&amp;quot;&amp;gt;<a name="line.328"></a>
+<FONT color="green">329</FONT>             *     &amp;lt;Sunrise&amp;gt;2007-02-18T06:45:27-05:00&amp;lt;/Sunrise&amp;gt;<a name="line.329"></a>
+<FONT color="green">330</FONT>             *     &amp;lt;TemporalHour&amp;gt;PT54M17.529S&amp;lt;/TemporalHour&amp;gt;<a name="line.330"></a>
+<FONT color="green">331</FONT>             *     ...<a name="line.331"></a>
+<FONT color="green">332</FONT>             *   &amp;lt;/AstronomicalTimes&amp;gt;<a name="line.332"></a>
+<FONT color="green">333</FONT>             * &lt;/pre&gt;<a name="line.333"></a>
+<FONT color="green">334</FONT>             * <a name="line.334"></a>
+<FONT color="green">335</FONT>             * Note that the output uses the &lt;a<a name="line.335"></a>
+<FONT color="green">336</FONT>             * href="http://www.w3.org/TR/xmlschema11-2/#dateTime"&gt;xsd:dateTime&lt;/a&gt;<a name="line.336"></a>
+<FONT color="green">337</FONT>             * format for times such as sunrise, and &lt;a<a name="line.337"></a>
+<FONT color="green">338</FONT>             * href="http://www.w3.org/TR/xmlschema11-2/#duration"&gt;xsd:duration&lt;/a&gt;<a name="line.338"></a>
+<FONT color="green">339</FONT>             * format for times that are a duration such as the length of a<a name="line.339"></a>
+<FONT color="green">340</FONT>             * {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour() temporal hour}. The output of this method is<a name="line.340"></a>
+<FONT color="green">341</FONT>             * returned by the {@link #toString() toString} }.<a name="line.341"></a>
+<FONT color="green">342</FONT>             * <a name="line.342"></a>
+<FONT color="green">343</FONT>             * @return The XML formatted &lt;code&gt;String&lt;/code&gt;. The format will be:<a name="line.343"></a>
 <FONT color="green">344</FONT>             * <a name="line.344"></a>
-<FONT color="green">345</FONT>             * @return The XML formatted &lt;code&gt;String&lt;/code&gt;. The format will be:<a name="line.345"></a>
-<FONT color="green">346</FONT>             * <a name="line.346"></a>
-<FONT color="green">347</FONT>             * &lt;pre&gt;<a name="line.347"></a>
-<FONT color="green">348</FONT>             *  &amp;lt;AstronomicalTimes date=&amp;quot;1969-02-08&amp;quot; type=&amp;quot;net.sourceforge.zmanim.AstronomicalCalendar algorithm=&amp;quot;US Naval Almanac Algorithm&amp;quot; location=&amp;quot;Lakewood, NJ&amp;quot; latitude=&amp;quot;40.095965&amp;quot; longitude=&amp;quot;-74.22213&amp;quot; elevation=&amp;quot;31.0&amp;quot; timeZoneName=&amp;quot;Eastern Standard Time&amp;quot; timeZoneID=&amp;quot;America/New_York&amp;quot; timeZoneOffset=&amp;quot;-5&amp;quot;&amp;gt;<a name="line.348"></a>
-<FONT color="green">349</FONT>             *     &amp;lt;Sunrise&amp;gt;2007-02-18T06:45:27-05:00&amp;lt;/Sunrise&amp;gt;<a name="line.349"></a>
-<FONT color="green">350</FONT>             *     &amp;lt;TemporalHour&amp;gt;PT54M17.529S&amp;lt;/TemporalHour&amp;gt;<a name="line.350"></a>
-<FONT color="green">351</FONT>             *     ...<a name="line.351"></a>
-<FONT color="green">352</FONT>             *  &amp;lt;/AstronomicalTimes&amp;gt;<a name="line.352"></a>
-<FONT color="green">353</FONT>             * &lt;/pre&gt;<a name="line.353"></a>
-<FONT color="green">354</FONT>             * <a name="line.354"></a>
-<FONT color="green">355</FONT>             */<a name="line.355"></a>
-<FONT color="green">356</FONT>            public static String toXML(AstronomicalCalendar ac) {<a name="line.356"></a>
-<FONT color="green">357</FONT>                    ZmanimFormatter formatter = new ZmanimFormatter(<a name="line.357"></a>
-<FONT color="green">358</FONT>                                    ZmanimFormatter.XSD_DURATION_FORMAT, new SimpleDateFormat(<a name="line.358"></a>
-<FONT color="green">359</FONT>                                                    "yyyy-MM-dd'T'HH:mm:ss"));<a name="line.359"></a>
-<FONT color="green">360</FONT>                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");<a name="line.360"></a>
-<FONT color="green">361</FONT>                    String output = "&lt;";<a name="line.361"></a>
-<FONT color="green">362</FONT>                    if (ac.getClass().getName().endsWith("AstronomicalCalendar")) {<a name="line.362"></a>
-<FONT color="green">363</FONT>                            output += "AstronomicalTimes";<a name="line.363"></a>
-<FONT color="green">364</FONT>                    } else if (ac.getClass().getName().endsWith("ZmanimCalendar")) {<a name="line.364"></a>
-<FONT color="green">365</FONT>                            output += "Zmanim";<a name="line.365"></a>
-<FONT color="green">366</FONT>                    }<a name="line.366"></a>
-<FONT color="green">367</FONT>                    output += " date=\"" + df.format(ac.getCalendar().getTime()) + "\"";<a name="line.367"></a>
-<FONT color="green">368</FONT>                    output += " type=\"" + ac.getClass().getName() + "\"";<a name="line.368"></a>
-<FONT color="green">369</FONT>                    output += " algorithm=\""<a name="line.369"></a>
-<FONT color="green">370</FONT>                                    + ac.getAstronomicalCalculator().getCalculatorName() + "\"";<a name="line.370"></a>
-<FONT color="green">371</FONT>                    output += " location=\"" + ac.getGeoLocation().getLocationName() + "\"";<a name="line.371"></a>
-<FONT color="green">372</FONT>                    output += " latitude=\"" + ac.getGeoLocation().getLatitude() + "\"";<a name="line.372"></a>
-<FONT color="green">373</FONT>                    output += " longitude=\"" + ac.getGeoLocation().getLongitude() + "\"";<a name="line.373"></a>
-<FONT color="green">374</FONT>                    output += " elevation=\"" + ac.getGeoLocation().getElevation() + "\"";<a name="line.374"></a>
-<FONT color="green">375</FONT>                    output += " timeZoneName=\""<a name="line.375"></a>
-<FONT color="green">376</FONT>                                    + ac.getGeoLocation().getTimeZone().getDisplayName() + "\"";<a name="line.376"></a>
-<FONT color="green">377</FONT>                    output += " timeZoneID=\"" + ac.getGeoLocation().getTimeZone().getID()<a name="line.377"></a>
-<FONT color="green">378</FONT>                                    + "\"";<a name="line.378"></a>
-<FONT color="green">379</FONT>                    output += " timeZoneOffset=\""<a name="line.379"></a>
-<FONT color="green">380</FONT>                                    + (ac.getGeoLocation().getTimeZone().getOffset(<a name="line.380"></a>
-<FONT color="green">381</FONT>                                                    ac.getCalendar().getTimeInMillis()) / ((double)HOUR_MILLIS))<a name="line.381"></a>
-<FONT color="green">382</FONT>                                    + "\"";<a name="line.382"></a>
-<FONT color="green">383</FONT>    <a name="line.383"></a>
-<FONT color="green">384</FONT>                    output += "&gt;\n";<a name="line.384"></a>
-<FONT color="green">385</FONT>    <a name="line.385"></a>
-<FONT color="green">386</FONT>                    Method[] theMethods = ac.getClass().getMethods();<a name="line.386"></a>
-<FONT color="green">387</FONT>                    String tagName = "";<a name="line.387"></a>
-<FONT color="green">388</FONT>                    Object value = null;<a name="line.388"></a>
-<FONT color="green">389</FONT>                    List dateList = new ArrayList();<a name="line.389"></a>
-<FONT color="green">390</FONT>                    List durationList = new ArrayList();<a name="line.390"></a>
-<FONT color="green">391</FONT>                    List otherList = new ArrayList();<a name="line.391"></a>
-<FONT color="green">392</FONT>                    for (int i = 0; i &lt; theMethods.length; i++) {<a name="line.392"></a>
-<FONT color="green">393</FONT>                            if (includeMethod(theMethods[i])) {<a name="line.393"></a>
-<FONT color="green">394</FONT>                                    tagName = theMethods[i].getName().substring(3);<a name="line.394"></a>
-<FONT color="green">395</FONT>                                    //String returnType = theMethods[i].getReturnType().getName();<a name="line.395"></a>
-<FONT color="green">396</FONT>                                    try {<a name="line.396"></a>
-<FONT color="green">397</FONT>                                            value = theMethods[i].invoke(ac, (Object[]) null);<a name="line.397"></a>
-<FONT color="green">398</FONT>                                            if (value == null) {//FIXME: use reflection to determine what the return type is, not the value<a name="line.398"></a>
-<FONT color="green">399</FONT>                                                    otherList.add("&lt;" + tagName + "&gt;N/A&lt;/" + tagName + "&gt;");<a name="line.399"></a>
-<FONT color="green">400</FONT>                                            } else if (value instanceof Date) {<a name="line.400"></a>
-<FONT color="green">401</FONT>                                                    dateList.add(new Zman((Date) value, tagName));<a name="line.401"></a>
-<FONT color="green">402</FONT>                                            } else if (value instanceof Long) {// shaah zmanis<a name="line.402"></a>
-<FONT color="green">403</FONT>                                                    durationList.add(new Zman((int) ((Long) value)<a name="line.403"></a>
-<FONT color="green">404</FONT>                                                                    .longValue(), tagName));<a name="line.404"></a>
-<FONT color="green">405</FONT>                                            } else { // will probably never enter this block, but is<a name="line.405"></a>
-<FONT color="green">406</FONT>                                                    // present to be future proof<a name="line.406"></a>
-<FONT color="green">407</FONT>                                                    otherList.add("&lt;" + tagName + "&gt;" + value + "&lt;/"<a name="line.407"></a>
-<FONT color="green">408</FONT>                                                                    + tagName + "&gt;");<a name="line.408"></a>
-<FONT color="green">409</FONT>                                            }<a name="line.409"></a>
-<FONT color="green">410</FONT>                                    } catch (Exception e) {<a name="line.410"></a>
-<FONT color="green">411</FONT>                                            e.printStackTrace();<a name="line.411"></a>
-<FONT color="green">412</FONT>                                    }<a name="line.412"></a>
-<FONT color="green">413</FONT>                            }<a name="line.413"></a>
-<FONT color="green">414</FONT>                    }<a name="line.414"></a>
-<FONT color="green">415</FONT>                    Zman zman;<a name="line.415"></a>
-<FONT color="green">416</FONT>                    Collections.sort(dateList, Zman.DATE_ORDER);<a name="line.416"></a>
-<FONT color="green">417</FONT>                    for (int i = 0; i &lt; dateList.size(); i++) {<a name="line.417"></a>
-<FONT color="green">418</FONT>                            zman = (Zman) dateList.get(i);<a name="line.418"></a>
-<FONT color="green">419</FONT>                            output += "\t&lt;" + zman.getZmanLabel();<a name="line.419"></a>
-<FONT color="green">420</FONT>                            output += "&gt;";<a name="line.420"></a>
-<FONT color="green">421</FONT>                            output += formatter.formatDateTime(zman.getZman(), ac.getCalendar())<a name="line.421"></a>
-<FONT color="green">422</FONT>                                            + "&lt;/" + zman.getZmanLabel() + "&gt;\n";<a name="line.422"></a>
-<FONT color="green">423</FONT>                    }<a name="line.423"></a>
-<FONT color="green">424</FONT>                    Collections.sort(durationList, Zman.DURATION_ORDER);<a name="line.424"></a>
-<FONT color="green">425</FONT>                    for (int i = 0; i &lt; durationList.size(); i++) {<a name="line.425"></a>
-<FONT color="green">426</FONT>                            zman = (Zman) durationList.get(i);<a name="line.426"></a>
-<FONT color="green">427</FONT>                            output += "\t&lt;" + zman.getZmanLabel();<a name="line.427"></a>
-<FONT color="green">428</FONT>                            output += "&gt;";<a name="line.428"></a>
-<FONT color="green">429</FONT>                            output += formatter.format((int) zman.getDuration()) + "&lt;/"<a name="line.429"></a>
-<FONT color="green">430</FONT>                                            + zman.getZmanLabel() + "&gt;\n";<a name="line.430"></a>
-<FONT color="green">431</FONT>                    }<a name="line.431"></a>
-<FONT color="green">432</FONT>    <a name="line.432"></a>
-<FONT color="green">433</FONT>                    for (int i = 0; i &lt; otherList.size(); i++) {// will probably never enter<a name="line.433"></a>
-<FONT color="green">434</FONT>                            // this block<a name="line.434"></a>
-<FONT color="green">435</FONT>                            output += "\t" + otherList.get(i) + "\n";<a name="line.435"></a>
-<FONT color="green">436</FONT>                    }<a name="line.436"></a>
-<FONT color="green">437</FONT>    <a name="line.437"></a>
-<FONT color="green">438</FONT>                    if (ac.getClass().getName().endsWith("AstronomicalCalendar")) {<a name="line.438"></a>
-<FONT color="green">439</FONT>                            output += "&lt;/AstronomicalTimes&gt;";<a name="line.439"></a>
-<FONT color="green">440</FONT>                    } else if (ac.getClass().getName().endsWith("ZmanimCalendar")) {<a name="line.440"></a>
-<FONT color="green">441</FONT>                            output += "&lt;/Zmanim&gt;";<a name="line.441"></a>
-<FONT color="green">442</FONT>                    }<a name="line.442"></a>
-<FONT color="green">443</FONT>                    return output;<a name="line.443"></a>
-<FONT color="green">444</FONT>            }<a name="line.444"></a>
-<FONT color="green">445</FONT>            <a name="line.445"></a>
-<FONT color="green">446</FONT>            /**<a name="line.446"></a>
-<FONT color="green">447</FONT>             * Determines if a method should be output by the {@link #toXML(AstronomicalCalendar)}<a name="line.447"></a>
-<FONT color="green">448</FONT>             * <a name="line.448"></a>
-<FONT color="green">449</FONT>             * @param method<a name="line.449"></a>
-<FONT color="green">450</FONT>             * @return<a name="line.450"></a>
-<FONT color="green">451</FONT>             */<a name="line.451"></a>
-<FONT color="green">452</FONT>            private static boolean includeMethod(Method method) {<a name="line.452"></a>
-<FONT color="green">453</FONT>                    List methodWhiteList = new ArrayList();<a name="line.453"></a>
-<FONT color="green">454</FONT>                    // methodWhiteList.add("getName");<a name="line.454"></a>
-<FONT color="green">455</FONT>    <a name="line.455"></a>
-<FONT color="green">456</FONT>                    List methodBlackList = new ArrayList();<a name="line.456"></a>
-<FONT color="green">457</FONT>                    // methodBlackList.add("getGregorianChange");<a name="line.457"></a>
-<FONT color="green">458</FONT>    <a name="line.458"></a>
-<FONT color="green">459</FONT>                    if (methodWhiteList.contains(method.getName()))<a name="line.459"></a>
-<FONT color="green">460</FONT>                            return true;<a name="line.460"></a>
-<FONT color="green">461</FONT>                    if (methodBlackList.contains(method.getName()))<a name="line.461"></a>
-<FONT color="green">462</FONT>                            return false;<a name="line.462"></a>
-<FONT color="green">463</FONT>    <a name="line.463"></a>
-<FONT color="green">464</FONT>                    if (method.getParameterTypes().length &gt; 0)<a name="line.464"></a>
-<FONT color="green">465</FONT>                            return false; // Skip get methods with parameters since we do not<a name="line.465"></a>
-<FONT color="green">466</FONT>                    // know what value to pass<a name="line.466"></a>
-<FONT color="green">467</FONT>                    if (!method.getName().startsWith("get"))<a name="line.467"></a>
-<FONT color="green">468</FONT>                            return false;<a name="line.468"></a>
-<FONT color="green">469</FONT>    <a name="line.469"></a>
-<FONT color="green">470</FONT>                    if (method.getReturnType().getName().endsWith("Date")<a name="line.470"></a>
-<FONT color="green">471</FONT>                                    || method.getReturnType().getName().endsWith("long")) {<a name="line.471"></a>
-<FONT color="green">472</FONT>                            return true;<a name="line.472"></a>
-<FONT color="green">473</FONT>                    }<a name="line.473"></a>
-<FONT color="green">474</FONT>                    return false;<a name="line.474"></a>
-<FONT color="green">475</FONT>            }<a name="line.475"></a>
-<FONT color="green">476</FONT>    }<a name="line.476"></a>
+<FONT color="green">345</FONT>             * &lt;pre&gt;<a name="line.345"></a>
+<FONT color="green">346</FONT>             *  &amp;lt;AstronomicalTimes date=&amp;quot;1969-02-08&amp;quot; type=&amp;quot;net.sourceforge.zmanim.AstronomicalCalendar algorithm=&amp;quot;US Naval Almanac Algorithm&amp;quot; location=&amp;quot;Lakewood, NJ&amp;quot; latitude=&amp;quot;40.095965&amp;quot; longitude=&amp;quot;-74.22213&amp;quot; elevation=&amp;quot;31.0&amp;quot; timeZoneName=&amp;quot;Eastern Standard Time&amp;quot; timeZoneID=&amp;quot;America/New_York&amp;quot; timeZoneOffset=&amp;quot;-5&amp;quot;&amp;gt;<a name="line.346"></a>
+<FONT color="green">347</FONT>             *     &amp;lt;Sunrise&amp;gt;2007-02-18T06:45:27-05:00&amp;lt;/Sunrise&amp;gt;<a name="line.347"></a>
+<FONT color="green">348</FONT>             *     &amp;lt;TemporalHour&amp;gt;PT54M17.529S&amp;lt;/TemporalHour&amp;gt;<a name="line.348"></a>
+<FONT color="green">349</FONT>             *     ...<a name="line.349"></a>
+<FONT color="green">350</FONT>             *  &amp;lt;/AstronomicalTimes&amp;gt;<a name="line.350"></a>
+<FONT color="green">351</FONT>             * &lt;/pre&gt;<a name="line.351"></a>
+<FONT color="green">352</FONT>             * TODO: add proper schema, and support for nulls. XSD duration (for solar hours), should probably return nil and not P<a name="line.352"></a>
+<FONT color="green">353</FONT>             */<a name="line.353"></a>
+<FONT color="green">354</FONT>            public static String toXML(AstronomicalCalendar ac) {<a name="line.354"></a>
+<FONT color="green">355</FONT>                    ZmanimFormatter formatter = new ZmanimFormatter(<a name="line.355"></a>
+<FONT color="green">356</FONT>                                    ZmanimFormatter.XSD_DURATION_FORMAT, new SimpleDateFormat(<a name="line.356"></a>
+<FONT color="green">357</FONT>                                                    "yyyy-MM-dd'T'HH:mm:ss"));<a name="line.357"></a>
+<FONT color="green">358</FONT>                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");<a name="line.358"></a>
+<FONT color="green">359</FONT>                    <a name="line.359"></a>
+<FONT color="green">360</FONT>                    String output = "&lt;";<a name="line.360"></a>
+<FONT color="green">361</FONT>                    if (ac.getClass().getName().equals("net.sourceforge.zmanim.AstronomicalCalendar")) {<a name="line.361"></a>
+<FONT color="green">362</FONT>                            output += "AstronomicalTimes";<a name="line.362"></a>
+<FONT color="green">363</FONT>                            //TODO: use proper schema ref, and maybe build a real schema.<a name="line.363"></a>
+<FONT color="green">364</FONT>                            //output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";<a name="line.364"></a>
+<FONT color="green">365</FONT>                            //output += xsi:schemaLocation="http://www.kosherjava.com/zmanim astronomical.xsd"<a name="line.365"></a>
+<FONT color="green">366</FONT>                    } else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ComplexZmanimCalendar")) {<a name="line.366"></a>
+<FONT color="green">367</FONT>                            output += "Zmanim";<a name="line.367"></a>
+<FONT color="green">368</FONT>                            //TODO: use proper schema ref, and maybe build a real schema.<a name="line.368"></a>
+<FONT color="green">369</FONT>                            //output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";<a name="line.369"></a>
+<FONT color="green">370</FONT>                            //output += xsi:schemaLocation="http://www.kosherjava.com/zmanim zmanim.xsd"<a name="line.370"></a>
+<FONT color="green">371</FONT>                    } else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ZmanimCalendar")) {<a name="line.371"></a>
+<FONT color="green">372</FONT>                            output += "BasicZmanim";<a name="line.372"></a>
+<FONT color="green">373</FONT>                            //TODO: use proper schema ref, and maybe build a real schema.<a name="line.373"></a>
+<FONT color="green">374</FONT>                            //output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";<a name="line.374"></a>
+<FONT color="green">375</FONT>                            //output += xsi:schemaLocation="http://www.kosherjava.com/zmanim basicZmanim.xsd"<a name="line.375"></a>
+<FONT color="green">376</FONT>                    }  <a name="line.376"></a>
+<FONT color="green">377</FONT>                    output += " date=\"" + df.format(ac.getCalendar().getTime()) + "\"";<a name="line.377"></a>
+<FONT color="green">378</FONT>                    output += " type=\"" + ac.getClass().getName() + "\"";<a name="line.378"></a>
+<FONT color="green">379</FONT>                    output += " algorithm=\""<a name="line.379"></a>
+<FONT color="green">380</FONT>                                    + ac.getAstronomicalCalculator().getCalculatorName() + "\"";<a name="line.380"></a>
+<FONT color="green">381</FONT>                    output += " location=\"" + ac.getGeoLocation().getLocationName() + "\"";<a name="line.381"></a>
+<FONT color="green">382</FONT>                    output += " latitude=\"" + ac.getGeoLocation().getLatitude() + "\"";<a name="line.382"></a>
+<FONT color="green">383</FONT>                    output += " longitude=\"" + ac.getGeoLocation().getLongitude() + "\"";<a name="line.383"></a>
+<FONT color="green">384</FONT>                    output += " elevation=\"" + ac.getGeoLocation().getElevation() + "\"";<a name="line.384"></a>
+<FONT color="green">385</FONT>                    output += " timeZoneName=\""<a name="line.385"></a>
+<FONT color="green">386</FONT>                                    + ac.getGeoLocation().getTimeZone().getDisplayName() + "\"";<a name="line.386"></a>
+<FONT color="green">387</FONT>                    output += " timeZoneID=\"" + ac.getGeoLocation().getTimeZone().getID()<a name="line.387"></a>
+<FONT color="green">388</FONT>                                    + "\"";<a name="line.388"></a>
+<FONT color="green">389</FONT>                    output += " timeZoneOffset=\""<a name="line.389"></a>
+<FONT color="green">390</FONT>                                    + (ac.getGeoLocation().getTimeZone().getOffset(<a name="line.390"></a>
+<FONT color="green">391</FONT>                                                    ac.getCalendar().getTimeInMillis()) / ((double)HOUR_MILLIS))<a name="line.391"></a>
+<FONT color="green">392</FONT>                                    + "\"";<a name="line.392"></a>
+<FONT color="green">393</FONT>    <a name="line.393"></a>
+<FONT color="green">394</FONT>                    output += "&gt;\n";<a name="line.394"></a>
+<FONT color="green">395</FONT>    <a name="line.395"></a>
+<FONT color="green">396</FONT>                    Method[] theMethods = ac.getClass().getMethods();<a name="line.396"></a>
+<FONT color="green">397</FONT>                    String tagName = "";<a name="line.397"></a>
+<FONT color="green">398</FONT>                    Object value = null;<a name="line.398"></a>
+<FONT color="green">399</FONT>                    List dateList = new ArrayList();<a name="line.399"></a>
+<FONT color="green">400</FONT>                    List durationList = new ArrayList();<a name="line.400"></a>
+<FONT color="green">401</FONT>                    List otherList = new ArrayList();<a name="line.401"></a>
+<FONT color="green">402</FONT>                    for (int i = 0; i &lt; theMethods.length; i++) {<a name="line.402"></a>
+<FONT color="green">403</FONT>                            if (includeMethod(theMethods[i])) {<a name="line.403"></a>
+<FONT color="green">404</FONT>                                    tagName = theMethods[i].getName().substring(3);<a name="line.404"></a>
+<FONT color="green">405</FONT>                                    //String returnType = theMethods[i].getReturnType().getName();<a name="line.405"></a>
+<FONT color="green">406</FONT>                                    try {<a name="line.406"></a>
+<FONT color="green">407</FONT>                                            value = theMethods[i].invoke(ac, (Object[]) null);<a name="line.407"></a>
+<FONT color="green">408</FONT>                                            if (value == null) {//FIXME: use reflection to determine what the return type is, not the value<a name="line.408"></a>
+<FONT color="green">409</FONT>                                                    otherList.add("&lt;" + tagName + "&gt;N/A&lt;/" + tagName + "&gt;");<a name="line.409"></a>
+<FONT color="green">410</FONT>                                                    //TODO: instead of N/A, return proper nil.<a name="line.410"></a>
+<FONT color="green">411</FONT>                                                    //otherList.add("&lt;" + tagName + " xs:nil=\"true\" /&gt;");<a name="line.411"></a>
+<FONT color="green">412</FONT>                                            } else if (value instanceof Date) {<a name="line.412"></a>
+<FONT color="green">413</FONT>                                                    dateList.add(new Zman((Date) value, tagName));<a name="line.413"></a>
+<FONT color="green">414</FONT>                                            } else if (value instanceof Long || value instanceof Integer) {// shaah zmanis<a name="line.414"></a>
+<FONT color="green">415</FONT>                                                    if(((Long)value).longValue()== Long.MIN_VALUE){<a name="line.415"></a>
+<FONT color="green">416</FONT>                                                            otherList.add("&lt;" + tagName + "&gt;N/A&lt;/" + tagName + "&gt;");<a name="line.416"></a>
+<FONT color="green">417</FONT>                                                            //TODO: instead of N/A, return proper nil.<a name="line.417"></a>
+<FONT color="green">418</FONT>                                                            //otherList.add("&lt;" + tagName + " xs:nil=\"true\" /&gt;");<a name="line.418"></a>
+<FONT color="green">419</FONT>                                                    } else {<a name="line.419"></a>
+<FONT color="green">420</FONT>                                                            durationList.add(new Zman((int) ((Long) value).longValue(), tagName));<a name="line.420"></a>
+<FONT color="green">421</FONT>                                                    }<a name="line.421"></a>
+<FONT color="green">422</FONT>                                            } else { // will probably never enter this block, but is<a name="line.422"></a>
+<FONT color="green">423</FONT>                                                    // present to be future proof<a name="line.423"></a>
+<FONT color="green">424</FONT>                                                    otherList.add("&lt;" + tagName + "&gt;" + value + "&lt;/" + tagName + "&gt;");<a name="line.424"></a>
+<FONT color="green">425</FONT>                                            }<a name="line.425"></a>
+<FONT color="green">426</FONT>                                    } catch (Exception e) {<a name="line.426"></a>
+<FONT color="green">427</FONT>                                            e.printStackTrace();<a name="line.427"></a>
+<FONT color="green">428</FONT>                                    }<a name="line.428"></a>
+<FONT color="green">429</FONT>                            }<a name="line.429"></a>
+<FONT color="green">430</FONT>                    }<a name="line.430"></a>
+<FONT color="green">431</FONT>                    Zman zman;<a name="line.431"></a>
+<FONT color="green">432</FONT>                    Collections.sort(dateList, Zman.DATE_ORDER);<a name="line.432"></a>
+<FONT color="green">433</FONT>                    for (int i = 0; i &lt; dateList.size(); i++) {<a name="line.433"></a>
+<FONT color="green">434</FONT>                            zman = (Zman) dateList.get(i);<a name="line.434"></a>
+<FONT color="green">435</FONT>                            output += "\t&lt;" + zman.getZmanLabel();<a name="line.435"></a>
+<FONT color="green">436</FONT>                            output += "&gt;";<a name="line.436"></a>
+<FONT color="green">437</FONT>                            output += formatter.formatDateTime(zman.getZman(), ac.getCalendar())<a name="line.437"></a>
+<FONT color="green">438</FONT>                                            + "&lt;/" + zman.getZmanLabel() + "&gt;\n";<a name="line.438"></a>
+<FONT color="green">439</FONT>                    }<a name="line.439"></a>
+<FONT color="green">440</FONT>                    Collections.sort(durationList, Zman.DURATION_ORDER);<a name="line.440"></a>
+<FONT color="green">441</FONT>                    for (int i = 0; i &lt; durationList.size(); i++) {<a name="line.441"></a>
+<FONT color="green">442</FONT>                            zman = (Zman) durationList.get(i);<a name="line.442"></a>
+<FONT color="green">443</FONT>                            output += "\t&lt;" + zman.getZmanLabel();<a name="line.443"></a>
+<FONT color="green">444</FONT>                            output += "&gt;";<a name="line.444"></a>
+<FONT color="green">445</FONT>                            output += formatter.format((int) zman.getDuration()) + "&lt;/"<a name="line.445"></a>
+<FONT color="green">446</FONT>                                            + zman.getZmanLabel() + "&gt;\n";<a name="line.446"></a>
+<FONT color="green">447</FONT>                    }<a name="line.447"></a>
+<FONT color="green">448</FONT>    <a name="line.448"></a>
+<FONT color="green">449</FONT>                    for (int i = 0; i &lt; otherList.size(); i++) {// will probably never enter<a name="line.449"></a>
+<FONT color="green">450</FONT>                            // this block<a name="line.450"></a>
+<FONT color="green">451</FONT>                            output += "\t" + otherList.get(i) + "\n";<a name="line.451"></a>
+<FONT color="green">452</FONT>                    }<a name="line.452"></a>
+<FONT color="green">453</FONT>    <a name="line.453"></a>
+<FONT color="green">454</FONT>                    if (ac.getClass().getName().equals("net.sourceforge.zmanim.AstronomicalCalendar")) {<a name="line.454"></a>
+<FONT color="green">455</FONT>                            output += "&lt;/AstronomicalTimes&gt;";<a name="line.455"></a>
+<FONT color="green">456</FONT>                    } else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ComplexZmanimCalendar")) {<a name="line.456"></a>
+<FONT color="green">457</FONT>                            output += "&lt;/Zmanim&gt;";<a name="line.457"></a>
+<FONT color="green">458</FONT>                    } else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ZmanimCalendar")) {<a name="line.458"></a>
+<FONT color="green">459</FONT>                            output += "&lt;/Basic&gt;";<a name="line.459"></a>
+<FONT color="green">460</FONT>                    }<a name="line.460"></a>
+<FONT color="green">461</FONT>                    return output;<a name="line.461"></a>
+<FONT color="green">462</FONT>            }<a name="line.462"></a>
+<FONT color="green">463</FONT>            <a name="line.463"></a>
+<FONT color="green">464</FONT>            /**<a name="line.464"></a>
+<FONT color="green">465</FONT>             * Determines if a method should be output by the {@link #toXML(AstronomicalCalendar)}<a name="line.465"></a>
+<FONT color="green">466</FONT>             * <a name="line.466"></a>
+<FONT color="green">467</FONT>             * @param method<a name="line.467"></a>
+<FONT color="green">468</FONT>             * @return<a name="line.468"></a>
+<FONT color="green">469</FONT>             */<a name="line.469"></a>
+<FONT color="green">470</FONT>            private static boolean includeMethod(Method method) {<a name="line.470"></a>
+<FONT color="green">471</FONT>                    List methodWhiteList = new ArrayList();<a name="line.471"></a>
+<FONT color="green">472</FONT>                    // methodWhiteList.add("getName");<a name="line.472"></a>
+<FONT color="green">473</FONT>    <a name="line.473"></a>
+<FONT color="green">474</FONT>                    List methodBlackList = new ArrayList();<a name="line.474"></a>
+<FONT color="green">475</FONT>                    // methodBlackList.add("getGregorianChange");<a name="line.475"></a>
+<FONT color="green">476</FONT>    <a name="line.476"></a>
+<FONT color="green">477</FONT>                    if (methodWhiteList.contains(method.getName()))<a name="line.477"></a>
+<FONT color="green">478</FONT>                            return true;<a name="line.478"></a>
+<FONT color="green">479</FONT>                    if (methodBlackList.contains(method.getName()))<a name="line.479"></a>
+<FONT color="green">480</FONT>                            return false;<a name="line.480"></a>
+<FONT color="green">481</FONT>    <a name="line.481"></a>
+<FONT color="green">482</FONT>                    if (method.getParameterTypes().length &gt; 0)<a name="line.482"></a>
+<FONT color="green">483</FONT>                            return false; // Skip get methods with parameters since we do not<a name="line.483"></a>
+<FONT color="green">484</FONT>                    // know what value to pass<a name="line.484"></a>
+<FONT color="green">485</FONT>                    if (!method.getName().startsWith("get"))<a name="line.485"></a>
+<FONT color="green">486</FONT>                            return false;<a name="line.486"></a>
+<FONT color="green">487</FONT>    <a name="line.487"></a>
+<FONT color="green">488</FONT>                    if (method.getReturnType().getName().endsWith("Date")<a name="line.488"></a>
+<FONT color="green">489</FONT>                                    || method.getReturnType().getName().endsWith("long")) {<a name="line.489"></a>
+<FONT color="green">490</FONT>                            return true;<a name="line.490"></a>
+<FONT color="green">491</FONT>                    }<a name="line.491"></a>
+<FONT color="green">492</FONT>                    return false;<a name="line.492"></a>
+<FONT color="green">493</FONT>            }<a name="line.493"></a>
+<FONT color="green">494</FONT>    }<a name="line.494"></a>
 
 
 

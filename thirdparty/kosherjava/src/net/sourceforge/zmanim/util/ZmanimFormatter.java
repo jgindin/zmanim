@@ -296,11 +296,9 @@ public class ZmanimFormatter {
 	 */
 	public String formatXSDDurationTime(Time time) {
 		StringBuffer duration = new StringBuffer();
-
-		duration.append("P");
-
 		if (time.getHours() != 0 || time.getMinutes() != 0
 				|| time.getSeconds() != 0 || time.getMilliseconds() != 0) {
+			duration.append("P");
 			duration.append("T");
 
 			if (time.getHours() != 0)
@@ -351,19 +349,31 @@ public class ZmanimFormatter {
 	 *     ...
 	 *  &lt;/AstronomicalTimes&gt;
 	 * </pre>
-	 * 
+	 * TODO: add proper schema, and support for nulls. XSD duration (for solar hours), should probably return nil and not P
 	 */
 	public static String toXML(AstronomicalCalendar ac) {
 		ZmanimFormatter formatter = new ZmanimFormatter(
 				ZmanimFormatter.XSD_DURATION_FORMAT, new SimpleDateFormat(
 						"yyyy-MM-dd'T'HH:mm:ss"));
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
 		String output = "<";
-		if (ac.getClass().getName().endsWith("AstronomicalCalendar")) {
+		if (ac.getClass().getName().equals("net.sourceforge.zmanim.AstronomicalCalendar")) {
 			output += "AstronomicalTimes";
-		} else if (ac.getClass().getName().endsWith("ZmanimCalendar")) {
+			//TODO: use proper schema ref, and maybe build a real schema.
+			//output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";
+			//output += xsi:schemaLocation="http://www.kosherjava.com/zmanim astronomical.xsd"
+		} else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ComplexZmanimCalendar")) {
 			output += "Zmanim";
-		}
+			//TODO: use proper schema ref, and maybe build a real schema.
+			//output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";
+			//output += xsi:schemaLocation="http://www.kosherjava.com/zmanim zmanim.xsd"
+		} else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ZmanimCalendar")) {
+			output += "BasicZmanim";
+			//TODO: use proper schema ref, and maybe build a real schema.
+			//output += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";
+			//output += xsi:schemaLocation="http://www.kosherjava.com/zmanim basicZmanim.xsd"
+		}  
 		output += " date=\"" + df.format(ac.getCalendar().getTime()) + "\"";
 		output += " type=\"" + ac.getClass().getName() + "\"";
 		output += " algorithm=\""
@@ -397,15 +407,21 @@ public class ZmanimFormatter {
 					value = theMethods[i].invoke(ac, (Object[]) null);
 					if (value == null) {//FIXME: use reflection to determine what the return type is, not the value
 						otherList.add("<" + tagName + ">N/A</" + tagName + ">");
+						//TODO: instead of N/A, return proper nil.
+						//otherList.add("<" + tagName + " xs:nil=\"true\" />");
 					} else if (value instanceof Date) {
 						dateList.add(new Zman((Date) value, tagName));
-					} else if (value instanceof Long) {// shaah zmanis
-						durationList.add(new Zman((int) ((Long) value)
-								.longValue(), tagName));
+					} else if (value instanceof Long || value instanceof Integer) {// shaah zmanis
+						if(((Long)value).longValue()== Long.MIN_VALUE){
+							otherList.add("<" + tagName + ">N/A</" + tagName + ">");
+							//TODO: instead of N/A, return proper nil.
+							//otherList.add("<" + tagName + " xs:nil=\"true\" />");
+						} else {
+							durationList.add(new Zman((int) ((Long) value).longValue(), tagName));
+						}
 					} else { // will probably never enter this block, but is
 						// present to be future proof
-						otherList.add("<" + tagName + ">" + value + "</"
-								+ tagName + ">");
+						otherList.add("<" + tagName + ">" + value + "</" + tagName + ">");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -435,10 +451,12 @@ public class ZmanimFormatter {
 			output += "\t" + otherList.get(i) + "\n";
 		}
 
-		if (ac.getClass().getName().endsWith("AstronomicalCalendar")) {
+		if (ac.getClass().getName().equals("net.sourceforge.zmanim.AstronomicalCalendar")) {
 			output += "</AstronomicalTimes>";
-		} else if (ac.getClass().getName().endsWith("ZmanimCalendar")) {
+		} else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ComplexZmanimCalendar")) {
 			output += "</Zmanim>";
+		} else if (ac.getClass().getName().equals("net.sourceforge.zmanim.ZmanimCalendar")) {
+			output += "</Basic>";
 		}
 		return output;
 	}

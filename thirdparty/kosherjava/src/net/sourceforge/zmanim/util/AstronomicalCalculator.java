@@ -1,6 +1,6 @@
 /*
  * Zmanim Java API
- * Copyright (C) 2004-2008 Eliyahu Hershfeld
+ * Copyright (C) 2004-2010 Eliyahu Hershfeld
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 2 of the
@@ -23,7 +23,7 @@ import net.sourceforge.zmanim.AstronomicalCalendar;
  * the algorithm used to be changed at runtime, easily allowing comparison the
  * results of using different algorithms.
  *
- * @author &copy; Eliyahu Hershfeld 2004 - 2008
+ * @author &copy; Eliyahu Hershfeld 2004 - 2010
  * @version 1.1
  */
 public abstract class AstronomicalCalculator implements Cloneable {
@@ -56,7 +56,6 @@ public abstract class AstronomicalCalculator implements Cloneable {
 	 * @param calculatorName
 	 *            descriptive name of the algorithm.
 	 */
-//	public abstract void setCalculatorName(String calculatorName);
 
 	/**
 	 * A method that calculates UTC sunrise as well as any time based on an
@@ -113,7 +112,7 @@ public abstract class AstronomicalCalculator implements Cloneable {
 	 * elevation. Since a person at a higher elevation can see farther below the
 	 * horizon, the calculation for sunrise / sunset is calculated below the
 	 * horizon used at sea level. This is only used for sunrise and sunset and
-	 * not times above or below it such as
+	 * not times before or after it such as
 	 * {@link AstronomicalCalendar#getBeginNauticalTwilight() nautical twilight}
 	 * since those calculations are based on the level of available light at the
 	 * given dip below the horizon, something that is not affected by elevation,

@@ -3,7 +3,7 @@
 <PRE>
 <FONT color="green">001</FONT>    /*<a name="line.1"></a>
 <FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
-<FONT color="green">003</FONT>     * Copyright (C) 2004-2008 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2004-2010 Eliyahu Hershfeld<a name="line.3"></a>
 <FONT color="green">004</FONT>     *<a name="line.4"></a>
 <FONT color="green">005</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.5"></a>
 <FONT color="green">006</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.6"></a>
@@ -26,7 +26,7 @@
 <FONT color="green">023</FONT>     * the algorithm used to be changed at runtime, easily allowing comparison the<a name="line.23"></a>
 <FONT color="green">024</FONT>     * results of using different algorithms.<a name="line.24"></a>
 <FONT color="green">025</FONT>     *<a name="line.25"></a>
-<FONT color="green">026</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2008<a name="line.26"></a>
+<FONT color="green">026</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2004 - 2010<a name="line.26"></a>
 <FONT color="green">027</FONT>     * @version 1.1<a name="line.27"></a>
 <FONT color="green">028</FONT>     */<a name="line.28"></a>
 <FONT color="green">029</FONT>    public abstract class AstronomicalCalculator implements Cloneable {<a name="line.29"></a>
@@ -59,216 +59,215 @@
 <FONT color="green">056</FONT>             * @param calculatorName<a name="line.56"></a>
 <FONT color="green">057</FONT>             *            descriptive name of the algorithm.<a name="line.57"></a>
 <FONT color="green">058</FONT>             */<a name="line.58"></a>
-<FONT color="green">059</FONT>    //      public abstract void setCalculatorName(String calculatorName);<a name="line.59"></a>
-<FONT color="green">060</FONT>    <a name="line.60"></a>
-<FONT color="green">061</FONT>            /**<a name="line.61"></a>
-<FONT color="green">062</FONT>             * A method that calculates UTC sunrise as well as any time based on an<a name="line.62"></a>
-<FONT color="green">063</FONT>             * angle above or below sunrise. This abstract method is implemented by the<a name="line.63"></a>
-<FONT color="green">064</FONT>             * classes that extend this class.<a name="line.64"></a>
-<FONT color="green">065</FONT>             *<a name="line.65"></a>
-<FONT color="green">066</FONT>             * @param astronomicalCalendar<a name="line.66"></a>
-<FONT color="green">067</FONT>             *            Used to calculate day of year.<a name="line.67"></a>
-<FONT color="green">068</FONT>             * @param zenith<a name="line.68"></a>
-<FONT color="green">069</FONT>             *            the azimuth below the vertical zenith of 90 degrees. for<a name="line.69"></a>
-<FONT color="green">070</FONT>             *            sunrise typically the {@link #adjustZenith zenith} used for<a name="line.70"></a>
-<FONT color="green">071</FONT>             *            the calculation uses geometric zenith of 90&amp;deg; and<a name="line.71"></a>
-<FONT color="green">072</FONT>             *            {@link #adjustZenith adjusts} this slightly to account for<a name="line.72"></a>
-<FONT color="green">073</FONT>             *            solar refraction and the sun's radius. Another example would<a name="line.73"></a>
-<FONT color="green">074</FONT>             *            be {@link AstronomicalCalendar#getBeginNauticalTwilight()}<a name="line.74"></a>
-<FONT color="green">075</FONT>             *            that passes {@link AstronomicalCalendar#NAUTICAL_ZENITH} to<a name="line.75"></a>
-<FONT color="green">076</FONT>             *            this method.<a name="line.76"></a>
-<FONT color="green">077</FONT>             * @return The UTC time of sunrise in 24 hour format. 5:45:00 AM will return<a name="line.77"></a>
-<FONT color="green">078</FONT>             *         5.75.0. If an error was encountered in the calculation (expected<a name="line.78"></a>
-<FONT color="green">079</FONT>             *         behavior for some locations such as near the poles,<a name="line.79"></a>
-<FONT color="green">080</FONT>             *         {@link java.lang.Double.NaN} will be returned.<a name="line.80"></a>
-<FONT color="green">081</FONT>             */<a name="line.81"></a>
-<FONT color="green">082</FONT>            public abstract double getUTCSunrise(<a name="line.82"></a>
-<FONT color="green">083</FONT>                            AstronomicalCalendar astronomicalCalendar, double zenith,<a name="line.83"></a>
-<FONT color="green">084</FONT>                            boolean adjustForElevation);<a name="line.84"></a>
-<FONT color="green">085</FONT>    <a name="line.85"></a>
-<FONT color="green">086</FONT>            /**<a name="line.86"></a>
-<FONT color="green">087</FONT>             * A method that calculates UTC sunset as well as any time based on an angle<a name="line.87"></a>
-<FONT color="green">088</FONT>             * above or below sunset. This abstract method is implemented by the classes<a name="line.88"></a>
-<FONT color="green">089</FONT>             * that extend this class.<a name="line.89"></a>
-<FONT color="green">090</FONT>             *<a name="line.90"></a>
-<FONT color="green">091</FONT>             * @param astronomicalCalendar<a name="line.91"></a>
-<FONT color="green">092</FONT>             *            Used to calculate day of year.<a name="line.92"></a>
-<FONT color="green">093</FONT>             * @param zenith<a name="line.93"></a>
-<FONT color="green">094</FONT>             *            the azimuth below the vertical zenith of 90&amp;deg;. For sunset<a name="line.94"></a>
-<FONT color="green">095</FONT>             *            typically the {@link #adjustZenith zenith} used for the<a name="line.95"></a>
-<FONT color="green">096</FONT>             *            calculation uses geometric zenith of 90&amp;deg; and<a name="line.96"></a>
-<FONT color="green">097</FONT>             *            {@link #adjustZenith adjusts} this slightly to account for<a name="line.97"></a>
-<FONT color="green">098</FONT>             *            solar refraction and the sun's radius. Another example would<a name="line.98"></a>
-<FONT color="green">099</FONT>             *            be {@link AstronomicalCalendar#getEndNauticalTwilight()} that<a name="line.99"></a>
-<FONT color="green">100</FONT>             *            passes {@link AstronomicalCalendar#NAUTICAL_ZENITH} to this<a name="line.100"></a>
-<FONT color="green">101</FONT>             *            method.<a name="line.101"></a>
-<FONT color="green">102</FONT>             * @return The UTC time of sunset in 24 hour format. 5:45:00 AM will return<a name="line.102"></a>
-<FONT color="green">103</FONT>             *         5.75.0. If an error was encountered in the calculation (expected<a name="line.103"></a>
-<FONT color="green">104</FONT>             *         behavior for some locations such as near the poles,<a name="line.104"></a>
-<FONT color="green">105</FONT>             *         {@link java.lang.Double.NaN} will be returned.<a name="line.105"></a>
-<FONT color="green">106</FONT>             */<a name="line.106"></a>
-<FONT color="green">107</FONT>            public abstract double getUTCSunset(<a name="line.107"></a>
-<FONT color="green">108</FONT>                            AstronomicalCalendar astronomicalCalendar, double zenith,<a name="line.108"></a>
-<FONT color="green">109</FONT>                            boolean adjustForElevation);<a name="line.109"></a>
-<FONT color="green">110</FONT>    <a name="line.110"></a>
-<FONT color="green">111</FONT>            /**<a name="line.111"></a>
-<FONT color="green">112</FONT>             * Method to return the adjustment to the zenith required to account for the<a name="line.112"></a>
-<FONT color="green">113</FONT>             * elevation. Since a person at a higher elevation can see farther below the<a name="line.113"></a>
-<FONT color="green">114</FONT>             * horizon, the calculation for sunrise / sunset is calculated below the<a name="line.114"></a>
-<FONT color="green">115</FONT>             * horizon used at sea level. This is only used for sunrise and sunset and<a name="line.115"></a>
-<FONT color="green">116</FONT>             * not times above or below it such as<a name="line.116"></a>
-<FONT color="green">117</FONT>             * {@link AstronomicalCalendar#getBeginNauticalTwilight() nautical twilight}<a name="line.117"></a>
-<FONT color="green">118</FONT>             * since those calculations are based on the level of available light at the<a name="line.118"></a>
-<FONT color="green">119</FONT>             * given dip below the horizon, something that is not affected by elevation,<a name="line.119"></a>
-<FONT color="green">120</FONT>             * the adjustment should only made if the zenith == 90&amp;deg;<a name="line.120"></a>
-<FONT color="green">121</FONT>             * {@link #adjustZenith adjusted} for refraction and solar radius.&lt;br /&gt;<a name="line.121"></a>
-<FONT color="green">122</FONT>             * The algorithm used is:<a name="line.122"></a>
-<FONT color="green">123</FONT>             *<a name="line.123"></a>
-<FONT color="green">124</FONT>             * &lt;pre&gt;<a name="line.124"></a>
-<FONT color="green">125</FONT>             * elevationAdjustment = Math.toDegrees(Math.acos(earthRadiusInMeters<a name="line.125"></a>
-<FONT color="green">126</FONT>             *              / (earthRadiusInMeters + elevationMeters)));<a name="line.126"></a>
-<FONT color="green">127</FONT>             * &lt;/pre&gt;<a name="line.127"></a>
-<FONT color="green">128</FONT>             *<a name="line.128"></a>
-<FONT color="green">129</FONT>             * The source of this algorthitm is &lt;a<a name="line.129"></a>
-<FONT color="green">130</FONT>             * href="http://www.calendarists.com"&gt;Calendrical Calculations&lt;/a&gt; by<a name="line.130"></a>
-<FONT color="green">131</FONT>             * Edward M. Reingold and Nachum Dershowitz. An alternate algorithm that<a name="line.131"></a>
-<FONT color="green">132</FONT>             * produces an almost identical (but not accurate) result found in Ma'aglay<a name="line.132"></a>
-<FONT color="green">133</FONT>             * Tzedek by Moishe Kosower and other sources is:<a name="line.133"></a>
-<FONT color="green">134</FONT>             *<a name="line.134"></a>
-<FONT color="green">135</FONT>             * &lt;pre&gt;<a name="line.135"></a>
-<FONT color="green">136</FONT>             * elevationAdjustment = 0.0347 * Math.sqrt(elevationMeters);<a name="line.136"></a>
-<FONT color="green">137</FONT>             * &lt;/pre&gt;<a name="line.137"></a>
-<FONT color="green">138</FONT>             *<a name="line.138"></a>
-<FONT color="green">139</FONT>             * @param elevation<a name="line.139"></a>
-<FONT color="green">140</FONT>             *            elevation in Meters.<a name="line.140"></a>
-<FONT color="green">141</FONT>             * @return the adjusted zenith<a name="line.141"></a>
-<FONT color="green">142</FONT>             */<a name="line.142"></a>
-<FONT color="green">143</FONT>            double getElevationAdjustment(double elevation) {<a name="line.143"></a>
-<FONT color="green">144</FONT>                    double earthRadius = 6356.9;<a name="line.144"></a>
-<FONT color="green">145</FONT>                    // double elevationAdjustment = 0.0347 * Math.sqrt(elevation);<a name="line.145"></a>
-<FONT color="green">146</FONT>                    double elevationAdjustment = Math.toDegrees(Math.acos(earthRadius<a name="line.146"></a>
-<FONT color="green">147</FONT>                                    / (earthRadius + (elevation / 1000))));<a name="line.147"></a>
-<FONT color="green">148</FONT>                    return elevationAdjustment;<a name="line.148"></a>
-<FONT color="green">149</FONT>    <a name="line.149"></a>
-<FONT color="green">150</FONT>            }<a name="line.150"></a>
-<FONT color="green">151</FONT>    <a name="line.151"></a>
-<FONT color="green">152</FONT>            /**<a name="line.152"></a>
-<FONT color="green">153</FONT>             * Adjusts the zenith to account for solar refraction, solar radius and<a name="line.153"></a>
-<FONT color="green">154</FONT>             * elevation. The value for Sun's zenith and true rise/set Zenith (used in<a name="line.154"></a>
-<FONT color="green">155</FONT>             * this class and subclasses) is the angle that the center of the Sun makes<a name="line.155"></a>
-<FONT color="green">156</FONT>             * to a line perpendicular to the Earth's surface. If the Sun were a point<a name="line.156"></a>
-<FONT color="green">157</FONT>             * and the Earth were without an atmosphere, true sunset and sunrise would<a name="line.157"></a>
-<FONT color="green">158</FONT>             * correspond to a 90&amp;deg; zenith. Because the Sun is not a point, and<a name="line.158"></a>
-<FONT color="green">159</FONT>             * because the atmosphere refracts light, this 90&amp;deg; zenith does not, in<a name="line.159"></a>
-<FONT color="green">160</FONT>             * fact, correspond to true sunset or sunrise, instead the centre of the<a name="line.160"></a>
-<FONT color="green">161</FONT>             * Sun's disk must lie just below the horizon for the upper edge to be<a name="line.161"></a>
-<FONT color="green">162</FONT>             * obscured. This means that a zenith of just above 90&amp;deg; must be used.<a name="line.162"></a>
-<FONT color="green">163</FONT>             * The Sun subtends an angle of 16 minutes of arc (this can be changed via<a name="line.163"></a>
-<FONT color="green">164</FONT>             * the {@link #setSolarRadius(double)} method , and atmospheric refraction<a name="line.164"></a>
-<FONT color="green">165</FONT>             * accounts for 34 minutes or so (this can be changed via the<a name="line.165"></a>
-<FONT color="green">166</FONT>             * {@link #setRefraction(double)} method), giving a total of 50 arcminutes.<a name="line.166"></a>
-<FONT color="green">167</FONT>             * The total value for ZENITH is 90+(5/6) or 90.8333333&amp;deg; for true<a name="line.167"></a>
-<FONT color="green">168</FONT>             * sunrise/sunset. Since a person at an elevation can see blow the horizon<a name="line.168"></a>
-<FONT color="green">169</FONT>             * of a person at sea level, this will also adjust the zenith to account for<a name="line.169"></a>
-<FONT color="green">170</FONT>             * elevation if available.<a name="line.170"></a>
-<FONT color="green">171</FONT>             *<a name="line.171"></a>
-<FONT color="green">172</FONT>             * @return The zenith adjusted to include the<a name="line.172"></a>
-<FONT color="green">173</FONT>             *         {@link #getSolarRadius sun's radius},<a name="line.173"></a>
-<FONT color="green">174</FONT>             *         {@link #getRefraction refraction} and<a name="line.174"></a>
-<FONT color="green">175</FONT>             *         {@link #getElevationAdjustment elevation} adjustment.<a name="line.175"></a>
-<FONT color="green">176</FONT>             */<a name="line.176"></a>
-<FONT color="green">177</FONT>            double adjustZenith(double zenith, double elevation) {<a name="line.177"></a>
-<FONT color="green">178</FONT>                    if (zenith == AstronomicalCalendar.GEOMETRIC_ZENITH) {<a name="line.178"></a>
-<FONT color="green">179</FONT>                            zenith = zenith<a name="line.179"></a>
-<FONT color="green">180</FONT>                                            + (getSolarRadius() + getRefraction() + getElevationAdjustment(elevation));<a name="line.180"></a>
-<FONT color="green">181</FONT>                    }<a name="line.181"></a>
-<FONT color="green">182</FONT>    <a name="line.182"></a>
-<FONT color="green">183</FONT>                    return zenith;<a name="line.183"></a>
-<FONT color="green">184</FONT>            }<a name="line.184"></a>
-<FONT color="green">185</FONT>    <a name="line.185"></a>
-<FONT color="green">186</FONT>            /**<a name="line.186"></a>
-<FONT color="green">187</FONT>             * Method to get the refraction value to be used when calculating sunrise<a name="line.187"></a>
-<FONT color="green">188</FONT>             * and sunset. The default value is 34 arc minutes. The &lt;a<a name="line.188"></a>
-<FONT color="green">189</FONT>             * href="http://emr.cs.iit.edu/home/reingold/calendar-book/second-edition/errata.pdf"&gt;Errata<a name="line.189"></a>
-<FONT color="green">190</FONT>             * and Notes for Calendrical Calculations: The Millenium Eddition&lt;/a&gt; by<a name="line.190"></a>
-<FONT color="green">191</FONT>             * Edward M. Reingold and Nachum Dershowitz lists the actual average<a name="line.191"></a>
-<FONT color="green">192</FONT>             * refraction value as 34.478885263888294 or approximately 34' 29". The<a name="line.192"></a>
-<FONT color="green">193</FONT>             * refraction value as well as the solarRadius and elevation adjustment are<a name="line.193"></a>
-<FONT color="green">194</FONT>             * added to the zenith used to calculate sunrise and sunset.<a name="line.194"></a>
-<FONT color="green">195</FONT>             *<a name="line.195"></a>
-<FONT color="green">196</FONT>             * @return The refraction in arc minutes.<a name="line.196"></a>
-<FONT color="green">197</FONT>             */<a name="line.197"></a>
-<FONT color="green">198</FONT>            double getRefraction() {<a name="line.198"></a>
-<FONT color="green">199</FONT>                    return refraction;<a name="line.199"></a>
-<FONT color="green">200</FONT>            }<a name="line.200"></a>
-<FONT color="green">201</FONT>    <a name="line.201"></a>
-<FONT color="green">202</FONT>            /**<a name="line.202"></a>
-<FONT color="green">203</FONT>             * A method to allow overriding the default refraction of the calculator.<a name="line.203"></a>
-<FONT color="green">204</FONT>             * TODO: At some point in the future, an AtmosphericModel or Refraction<a name="line.204"></a>
-<FONT color="green">205</FONT>             * object that models the atmosphere of different locations might be used<a name="line.205"></a>
-<FONT color="green">206</FONT>             * for increased accuracy.<a name="line.206"></a>
-<FONT color="green">207</FONT>             *<a name="line.207"></a>
-<FONT color="green">208</FONT>             * @param refraction<a name="line.208"></a>
-<FONT color="green">209</FONT>             *            The refraction in arc minutes.<a name="line.209"></a>
-<FONT color="green">210</FONT>             * @see #getRefraction()<a name="line.210"></a>
-<FONT color="green">211</FONT>             */<a name="line.211"></a>
-<FONT color="green">212</FONT>            public void setRefraction(double refraction) {<a name="line.212"></a>
-<FONT color="green">213</FONT>                    this.refraction = refraction;<a name="line.213"></a>
-<FONT color="green">214</FONT>            }<a name="line.214"></a>
-<FONT color="green">215</FONT>    <a name="line.215"></a>
-<FONT color="green">216</FONT>            /**<a name="line.216"></a>
-<FONT color="green">217</FONT>             * Method to get the sun's radius. The default value is 16 arc minutes. The<a name="line.217"></a>
-<FONT color="green">218</FONT>             * sun's radius as it appears from earth is almost universally given as 16<a name="line.218"></a>
-<FONT color="green">219</FONT>             * arc minutes but in fact it differs by the time of the year. At the &lt;a<a name="line.219"></a>
-<FONT color="green">220</FONT>             * href="http://en.wikipedia.org/wiki/Perihelion"&gt;perihelion&lt;/a&gt; it has an<a name="line.220"></a>
-<FONT color="green">221</FONT>             * apparent radius of 16.293, while at the &lt;a<a name="line.221"></a>
-<FONT color="green">222</FONT>             * href="http://en.wikipedia.org/wiki/Aphelion"&gt;aphelion&lt;/a&gt; it has an<a name="line.222"></a>
-<FONT color="green">223</FONT>             * apparent radius of 15.755. There is little affect for most location, but<a name="line.223"></a>
-<FONT color="green">224</FONT>             * at high and low latitudes the difference becomes more apparent.<a name="line.224"></a>
-<FONT color="green">225</FONT>             * Calculations at the &lt;a href="http://www.rog.nmm.ac.uk"&gt;Royal Observatory,<a name="line.225"></a>
-<FONT color="green">226</FONT>             * Greenwich &lt;/a&gt; show only a 4.494 second difference between the perihelion<a name="line.226"></a>
-<FONT color="green">227</FONT>             * and aphelion radii, but moving into the arctic circle the difference<a name="line.227"></a>
-<FONT color="green">228</FONT>             * becomes more noticeable. Tests for Tromso, Norway (latitude 69.672312,<a name="line.228"></a>
-<FONT color="green">229</FONT>             * longitude 19.049787) show that on May 17, the rise of the midnight sun, a<a name="line.229"></a>
-<FONT color="green">230</FONT>             * 2 minute 23 second difference is observed between the perihelion and<a name="line.230"></a>
-<FONT color="green">231</FONT>             * aphelion radii using the USNO algorithm, but only 1 minute and 6 seconds<a name="line.231"></a>
-<FONT color="green">232</FONT>             * difference using the NOAA algorithm. Areas farther north show an even<a name="line.232"></a>
-<FONT color="green">233</FONT>             * greater difference. Note that these test are not real valid test cases<a name="line.233"></a>
-<FONT color="green">234</FONT>             * because they show the extreme difference on days that are not the<a name="line.234"></a>
-<FONT color="green">235</FONT>             * perihelion or aphelion, but are shown for illustrative purposes only.<a name="line.235"></a>
-<FONT color="green">236</FONT>             *<a name="line.236"></a>
-<FONT color="green">237</FONT>             * @return The sun's radius in arc minutes.<a name="line.237"></a>
-<FONT color="green">238</FONT>             */<a name="line.238"></a>
-<FONT color="green">239</FONT>            double getSolarRadius() {<a name="line.239"></a>
-<FONT color="green">240</FONT>                    return solarRadius;<a name="line.240"></a>
-<FONT color="green">241</FONT>            }<a name="line.241"></a>
-<FONT color="green">242</FONT>    <a name="line.242"></a>
-<FONT color="green">243</FONT>            /**<a name="line.243"></a>
-<FONT color="green">244</FONT>             * Method to set the sun's radius.<a name="line.244"></a>
-<FONT color="green">245</FONT>             *<a name="line.245"></a>
-<FONT color="green">246</FONT>             * @param solarRadius<a name="line.246"></a>
-<FONT color="green">247</FONT>             *            The sun's radius in arc minutes.<a name="line.247"></a>
-<FONT color="green">248</FONT>             * @see #getSolarRadius()<a name="line.248"></a>
-<FONT color="green">249</FONT>             */<a name="line.249"></a>
-<FONT color="green">250</FONT>            public void setSolarRadius(double solarRadius) {<a name="line.250"></a>
-<FONT color="green">251</FONT>                    this.solarRadius = solarRadius;<a name="line.251"></a>
-<FONT color="green">252</FONT>            }<a name="line.252"></a>
-<FONT color="green">253</FONT>    <a name="line.253"></a>
-<FONT color="green">254</FONT>            /**<a name="line.254"></a>
-<FONT color="green">255</FONT>             * @see java.lang.Object#clone()<a name="line.255"></a>
-<FONT color="green">256</FONT>             * @since 1.1<a name="line.256"></a>
-<FONT color="green">257</FONT>             */<a name="line.257"></a>
-<FONT color="green">258</FONT>            public Object clone() {<a name="line.258"></a>
-<FONT color="green">259</FONT>                    AstronomicalCalculator clone = null;<a name="line.259"></a>
-<FONT color="green">260</FONT>                    try {<a name="line.260"></a>
-<FONT color="green">261</FONT>                            clone = (AstronomicalCalculator)super.clone();<a name="line.261"></a>
-<FONT color="green">262</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.262"></a>
-<FONT color="green">263</FONT>                            System.out<a name="line.263"></a>
-<FONT color="green">264</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.264"></a>
-<FONT color="green">265</FONT>                    }<a name="line.265"></a>
-<FONT color="green">266</FONT>                    return clone;<a name="line.266"></a>
-<FONT color="green">267</FONT>            }<a name="line.267"></a>
-<FONT color="green">268</FONT>    }<a name="line.268"></a>
+<FONT color="green">059</FONT>    <a name="line.59"></a>
+<FONT color="green">060</FONT>            /**<a name="line.60"></a>
+<FONT color="green">061</FONT>             * A method that calculates UTC sunrise as well as any time based on an<a name="line.61"></a>
+<FONT color="green">062</FONT>             * angle above or below sunrise. This abstract method is implemented by the<a name="line.62"></a>
+<FONT color="green">063</FONT>             * classes that extend this class.<a name="line.63"></a>
+<FONT color="green">064</FONT>             *<a name="line.64"></a>
+<FONT color="green">065</FONT>             * @param astronomicalCalendar<a name="line.65"></a>
+<FONT color="green">066</FONT>             *            Used to calculate day of year.<a name="line.66"></a>
+<FONT color="green">067</FONT>             * @param zenith<a name="line.67"></a>
+<FONT color="green">068</FONT>             *            the azimuth below the vertical zenith of 90 degrees. for<a name="line.68"></a>
+<FONT color="green">069</FONT>             *            sunrise typically the {@link #adjustZenith zenith} used for<a name="line.69"></a>
+<FONT color="green">070</FONT>             *            the calculation uses geometric zenith of 90&amp;deg; and<a name="line.70"></a>
+<FONT color="green">071</FONT>             *            {@link #adjustZenith adjusts} this slightly to account for<a name="line.71"></a>
+<FONT color="green">072</FONT>             *            solar refraction and the sun's radius. Another example would<a name="line.72"></a>
+<FONT color="green">073</FONT>             *            be {@link AstronomicalCalendar#getBeginNauticalTwilight()}<a name="line.73"></a>
+<FONT color="green">074</FONT>             *            that passes {@link AstronomicalCalendar#NAUTICAL_ZENITH} to<a name="line.74"></a>
+<FONT color="green">075</FONT>             *            this method.<a name="line.75"></a>
+<FONT color="green">076</FONT>             * @return The UTC time of sunrise in 24 hour format. 5:45:00 AM will return<a name="line.76"></a>
+<FONT color="green">077</FONT>             *         5.75.0. If an error was encountered in the calculation (expected<a name="line.77"></a>
+<FONT color="green">078</FONT>             *         behavior for some locations such as near the poles,<a name="line.78"></a>
+<FONT color="green">079</FONT>             *         {@link java.lang.Double.NaN} will be returned.<a name="line.79"></a>
+<FONT color="green">080</FONT>             */<a name="line.80"></a>
+<FONT color="green">081</FONT>            public abstract double getUTCSunrise(<a name="line.81"></a>
+<FONT color="green">082</FONT>                            AstronomicalCalendar astronomicalCalendar, double zenith,<a name="line.82"></a>
+<FONT color="green">083</FONT>                            boolean adjustForElevation);<a name="line.83"></a>
+<FONT color="green">084</FONT>    <a name="line.84"></a>
+<FONT color="green">085</FONT>            /**<a name="line.85"></a>
+<FONT color="green">086</FONT>             * A method that calculates UTC sunset as well as any time based on an angle<a name="line.86"></a>
+<FONT color="green">087</FONT>             * above or below sunset. This abstract method is implemented by the classes<a name="line.87"></a>
+<FONT color="green">088</FONT>             * that extend this class.<a name="line.88"></a>
+<FONT color="green">089</FONT>             *<a name="line.89"></a>
+<FONT color="green">090</FONT>             * @param astronomicalCalendar<a name="line.90"></a>
+<FONT color="green">091</FONT>             *            Used to calculate day of year.<a name="line.91"></a>
+<FONT color="green">092</FONT>             * @param zenith<a name="line.92"></a>
+<FONT color="green">093</FONT>             *            the azimuth below the vertical zenith of 90&amp;deg;. For sunset<a name="line.93"></a>
+<FONT color="green">094</FONT>             *            typically the {@link #adjustZenith zenith} used for the<a name="line.94"></a>
+<FONT color="green">095</FONT>             *            calculation uses geometric zenith of 90&amp;deg; and<a name="line.95"></a>
+<FONT color="green">096</FONT>             *            {@link #adjustZenith adjusts} this slightly to account for<a name="line.96"></a>
+<FONT color="green">097</FONT>             *            solar refraction and the sun's radius. Another example would<a name="line.97"></a>
+<FONT color="green">098</FONT>             *            be {@link AstronomicalCalendar#getEndNauticalTwilight()} that<a name="line.98"></a>
+<FONT color="green">099</FONT>             *            passes {@link AstronomicalCalendar#NAUTICAL_ZENITH} to this<a name="line.99"></a>
+<FONT color="green">100</FONT>             *            method.<a name="line.100"></a>
+<FONT color="green">101</FONT>             * @return The UTC time of sunset in 24 hour format. 5:45:00 AM will return<a name="line.101"></a>
+<FONT color="green">102</FONT>             *         5.75.0. If an error was encountered in the calculation (expected<a name="line.102"></a>
+<FONT color="green">103</FONT>             *         behavior for some locations such as near the poles,<a name="line.103"></a>
+<FONT color="green">104</FONT>             *         {@link java.lang.Double.NaN} will be returned.<a name="line.104"></a>
+<FONT color="green">105</FONT>             */<a name="line.105"></a>
+<FONT color="green">106</FONT>            public abstract double getUTCSunset(<a name="line.106"></a>
+<FONT color="green">107</FONT>                            AstronomicalCalendar astronomicalCalendar, double zenith,<a name="line.107"></a>
+<FONT color="green">108</FONT>                            boolean adjustForElevation);<a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>            /**<a name="line.110"></a>
+<FONT color="green">111</FONT>             * Method to return the adjustment to the zenith required to account for the<a name="line.111"></a>
+<FONT color="green">112</FONT>             * elevation. Since a person at a higher elevation can see farther below the<a name="line.112"></a>
+<FONT color="green">113</FONT>             * horizon, the calculation for sunrise / sunset is calculated below the<a name="line.113"></a>
+<FONT color="green">114</FONT>             * horizon used at sea level. This is only used for sunrise and sunset and<a name="line.114"></a>
+<FONT color="green">115</FONT>             * not times before or after it such as<a name="line.115"></a>
+<FONT color="green">116</FONT>             * {@link AstronomicalCalendar#getBeginNauticalTwilight() nautical twilight}<a name="line.116"></a>
+<FONT color="green">117</FONT>             * since those calculations are based on the level of available light at the<a name="line.117"></a>
+<FONT color="green">118</FONT>             * given dip below the horizon, something that is not affected by elevation,<a name="line.118"></a>
+<FONT color="green">119</FONT>             * the adjustment should only made if the zenith == 90&amp;deg;<a name="line.119"></a>
+<FONT color="green">120</FONT>             * {@link #adjustZenith adjusted} for refraction and solar radius.&lt;br /&gt;<a name="line.120"></a>
+<FONT color="green">121</FONT>             * The algorithm used is:<a name="line.121"></a>
+<FONT color="green">122</FONT>             *<a name="line.122"></a>
+<FONT color="green">123</FONT>             * &lt;pre&gt;<a name="line.123"></a>
+<FONT color="green">124</FONT>             * elevationAdjustment = Math.toDegrees(Math.acos(earthRadiusInMeters<a name="line.124"></a>
+<FONT color="green">125</FONT>             *              / (earthRadiusInMeters + elevationMeters)));<a name="line.125"></a>
+<FONT color="green">126</FONT>             * &lt;/pre&gt;<a name="line.126"></a>
+<FONT color="green">127</FONT>             *<a name="line.127"></a>
+<FONT color="green">128</FONT>             * The source of this algorthitm is &lt;a<a name="line.128"></a>
+<FONT color="green">129</FONT>             * href="http://www.calendarists.com"&gt;Calendrical Calculations&lt;/a&gt; by<a name="line.129"></a>
+<FONT color="green">130</FONT>             * Edward M. Reingold and Nachum Dershowitz. An alternate algorithm that<a name="line.130"></a>
+<FONT color="green">131</FONT>             * produces an almost identical (but not accurate) result found in Ma'aglay<a name="line.131"></a>
+<FONT color="green">132</FONT>             * Tzedek by Moishe Kosower and other sources is:<a name="line.132"></a>
+<FONT color="green">133</FONT>             *<a name="line.133"></a>
+<FONT color="green">134</FONT>             * &lt;pre&gt;<a name="line.134"></a>
+<FONT color="green">135</FONT>             * elevationAdjustment = 0.0347 * Math.sqrt(elevationMeters);<a name="line.135"></a>
+<FONT color="green">136</FONT>             * &lt;/pre&gt;<a name="line.136"></a>
+<FONT color="green">137</FONT>             *<a name="line.137"></a>
+<FONT color="green">138</FONT>             * @param elevation<a name="line.138"></a>
+<FONT color="green">139</FONT>             *            elevation in Meters.<a name="line.139"></a>
+<FONT color="green">140</FONT>             * @return the adjusted zenith<a name="line.140"></a>
+<FONT color="green">141</FONT>             */<a name="line.141"></a>
+<FONT color="green">142</FONT>            double getElevationAdjustment(double elevation) {<a name="line.142"></a>
+<FONT color="green">143</FONT>                    double earthRadius = 6356.9;<a name="line.143"></a>
+<FONT color="green">144</FONT>                    // double elevationAdjustment = 0.0347 * Math.sqrt(elevation);<a name="line.144"></a>
+<FONT color="green">145</FONT>                    double elevationAdjustment = Math.toDegrees(Math.acos(earthRadius<a name="line.145"></a>
+<FONT color="green">146</FONT>                                    / (earthRadius + (elevation / 1000))));<a name="line.146"></a>
+<FONT color="green">147</FONT>                    return elevationAdjustment;<a name="line.147"></a>
+<FONT color="green">148</FONT>    <a name="line.148"></a>
+<FONT color="green">149</FONT>            }<a name="line.149"></a>
+<FONT color="green">150</FONT>    <a name="line.150"></a>
+<FONT color="green">151</FONT>            /**<a name="line.151"></a>
+<FONT color="green">152</FONT>             * Adjusts the zenith to account for solar refraction, solar radius and<a name="line.152"></a>
+<FONT color="green">153</FONT>             * elevation. The value for Sun's zenith and true rise/set Zenith (used in<a name="line.153"></a>
+<FONT color="green">154</FONT>             * this class and subclasses) is the angle that the center of the Sun makes<a name="line.154"></a>
+<FONT color="green">155</FONT>             * to a line perpendicular to the Earth's surface. If the Sun were a point<a name="line.155"></a>
+<FONT color="green">156</FONT>             * and the Earth were without an atmosphere, true sunset and sunrise would<a name="line.156"></a>
+<FONT color="green">157</FONT>             * correspond to a 90&amp;deg; zenith. Because the Sun is not a point, and<a name="line.157"></a>
+<FONT color="green">158</FONT>             * because the atmosphere refracts light, this 90&amp;deg; zenith does not, in<a name="line.158"></a>
+<FONT color="green">159</FONT>             * fact, correspond to true sunset or sunrise, instead the centre of the<a name="line.159"></a>
+<FONT color="green">160</FONT>             * Sun's disk must lie just below the horizon for the upper edge to be<a name="line.160"></a>
+<FONT color="green">161</FONT>             * obscured. This means that a zenith of just above 90&amp;deg; must be used.<a name="line.161"></a>
+<FONT color="green">162</FONT>             * The Sun subtends an angle of 16 minutes of arc (this can be changed via<a name="line.162"></a>
+<FONT color="green">163</FONT>             * the {@link #setSolarRadius(double)} method , and atmospheric refraction<a name="line.163"></a>
+<FONT color="green">164</FONT>             * accounts for 34 minutes or so (this can be changed via the<a name="line.164"></a>
+<FONT color="green">165</FONT>             * {@link #setRefraction(double)} method), giving a total of 50 arcminutes.<a name="line.165"></a>
+<FONT color="green">166</FONT>             * The total value for ZENITH is 90+(5/6) or 90.8333333&amp;deg; for true<a name="line.166"></a>
+<FONT color="green">167</FONT>             * sunrise/sunset. Since a person at an elevation can see blow the horizon<a name="line.167"></a>
+<FONT color="green">168</FONT>             * of a person at sea level, this will also adjust the zenith to account for<a name="line.168"></a>
+<FONT color="green">169</FONT>             * elevation if available.<a name="line.169"></a>
+<FONT color="green">170</FONT>             *<a name="line.170"></a>
+<FONT color="green">171</FONT>             * @return The zenith adjusted to include the<a name="line.171"></a>
+<FONT color="green">172</FONT>             *         {@link #getSolarRadius sun's radius},<a name="line.172"></a>
+<FONT color="green">173</FONT>             *         {@link #getRefraction refraction} and<a name="line.173"></a>
+<FONT color="green">174</FONT>             *         {@link #getElevationAdjustment elevation} adjustment.<a name="line.174"></a>
+<FONT color="green">175</FONT>             */<a name="line.175"></a>
+<FONT color="green">176</FONT>            double adjustZenith(double zenith, double elevation) {<a name="line.176"></a>
+<FONT color="green">177</FONT>                    if (zenith == AstronomicalCalendar.GEOMETRIC_ZENITH) {<a name="line.177"></a>
+<FONT color="green">178</FONT>                            zenith = zenith<a name="line.178"></a>
+<FONT color="green">179</FONT>                                            + (getSolarRadius() + getRefraction() + getElevationAdjustment(elevation));<a name="line.179"></a>
+<FONT color="green">180</FONT>                    }<a name="line.180"></a>
+<FONT color="green">181</FONT>    <a name="line.181"></a>
+<FONT color="green">182</FONT>                    return zenith;<a name="line.182"></a>
+<FONT color="green">183</FONT>            }<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>            /**<a name="line.185"></a>
+<FONT color="green">186</FONT>             * Method to get the refraction value to be used when calculating sunrise<a name="line.186"></a>
+<FONT color="green">187</FONT>             * and sunset. The default value is 34 arc minutes. The &lt;a<a name="line.187"></a>
+<FONT color="green">188</FONT>             * href="http://emr.cs.iit.edu/home/reingold/calendar-book/second-edition/errata.pdf"&gt;Errata<a name="line.188"></a>
+<FONT color="green">189</FONT>             * and Notes for Calendrical Calculations: The Millenium Eddition&lt;/a&gt; by<a name="line.189"></a>
+<FONT color="green">190</FONT>             * Edward M. Reingold and Nachum Dershowitz lists the actual average<a name="line.190"></a>
+<FONT color="green">191</FONT>             * refraction value as 34.478885263888294 or approximately 34' 29". The<a name="line.191"></a>
+<FONT color="green">192</FONT>             * refraction value as well as the solarRadius and elevation adjustment are<a name="line.192"></a>
+<FONT color="green">193</FONT>             * added to the zenith used to calculate sunrise and sunset.<a name="line.193"></a>
+<FONT color="green">194</FONT>             *<a name="line.194"></a>
+<FONT color="green">195</FONT>             * @return The refraction in arc minutes.<a name="line.195"></a>
+<FONT color="green">196</FONT>             */<a name="line.196"></a>
+<FONT color="green">197</FONT>            double getRefraction() {<a name="line.197"></a>
+<FONT color="green">198</FONT>                    return refraction;<a name="line.198"></a>
+<FONT color="green">199</FONT>            }<a name="line.199"></a>
+<FONT color="green">200</FONT>    <a name="line.200"></a>
+<FONT color="green">201</FONT>            /**<a name="line.201"></a>
+<FONT color="green">202</FONT>             * A method to allow overriding the default refraction of the calculator.<a name="line.202"></a>
+<FONT color="green">203</FONT>             * TODO: At some point in the future, an AtmosphericModel or Refraction<a name="line.203"></a>
+<FONT color="green">204</FONT>             * object that models the atmosphere of different locations might be used<a name="line.204"></a>
+<FONT color="green">205</FONT>             * for increased accuracy.<a name="line.205"></a>
+<FONT color="green">206</FONT>             *<a name="line.206"></a>
+<FONT color="green">207</FONT>             * @param refraction<a name="line.207"></a>
+<FONT color="green">208</FONT>             *            The refraction in arc minutes.<a name="line.208"></a>
+<FONT color="green">209</FONT>             * @see #getRefraction()<a name="line.209"></a>
+<FONT color="green">210</FONT>             */<a name="line.210"></a>
+<FONT color="green">211</FONT>            public void setRefraction(double refraction) {<a name="line.211"></a>
+<FONT color="green">212</FONT>                    this.refraction = refraction;<a name="line.212"></a>
+<FONT color="green">213</FONT>            }<a name="line.213"></a>
+<FONT color="green">214</FONT>    <a name="line.214"></a>
+<FONT color="green">215</FONT>            /**<a name="line.215"></a>
+<FONT color="green">216</FONT>             * Method to get the sun's radius. The default value is 16 arc minutes. The<a name="line.216"></a>
+<FONT color="green">217</FONT>             * sun's radius as it appears from earth is almost universally given as 16<a name="line.217"></a>
+<FONT color="green">218</FONT>             * arc minutes but in fact it differs by the time of the year. At the &lt;a<a name="line.218"></a>
+<FONT color="green">219</FONT>             * href="http://en.wikipedia.org/wiki/Perihelion"&gt;perihelion&lt;/a&gt; it has an<a name="line.219"></a>
+<FONT color="green">220</FONT>             * apparent radius of 16.293, while at the &lt;a<a name="line.220"></a>
+<FONT color="green">221</FONT>             * href="http://en.wikipedia.org/wiki/Aphelion"&gt;aphelion&lt;/a&gt; it has an<a name="line.221"></a>
+<FONT color="green">222</FONT>             * apparent radius of 15.755. There is little affect for most location, but<a name="line.222"></a>
+<FONT color="green">223</FONT>             * at high and low latitudes the difference becomes more apparent.<a name="line.223"></a>
+<FONT color="green">224</FONT>             * Calculations at the &lt;a href="http://www.rog.nmm.ac.uk"&gt;Royal Observatory,<a name="line.224"></a>
+<FONT color="green">225</FONT>             * Greenwich &lt;/a&gt; show only a 4.494 second difference between the perihelion<a name="line.225"></a>
+<FONT color="green">226</FONT>             * and aphelion radii, but moving into the arctic circle the difference<a name="line.226"></a>
+<FONT color="green">227</FONT>             * becomes more noticeable. Tests for Tromso, Norway (latitude 69.672312,<a name="line.227"></a>
+<FONT color="green">228</FONT>             * longitude 19.049787) show that on May 17, the rise of the midnight sun, a<a name="line.228"></a>
+<FONT color="green">229</FONT>             * 2 minute 23 second difference is observed between the perihelion and<a name="line.229"></a>
+<FONT color="green">230</FONT>             * aphelion radii using the USNO algorithm, but only 1 minute and 6 seconds<a name="line.230"></a>
+<FONT color="green">231</FONT>             * difference using the NOAA algorithm. Areas farther north show an even<a name="line.231"></a>
+<FONT color="green">232</FONT>             * greater difference. Note that these test are not real valid test cases<a name="line.232"></a>
+<FONT color="green">233</FONT>             * because they show the extreme difference on days that are not the<a name="line.233"></a>
+<FONT color="green">234</FONT>             * perihelion or aphelion, but are shown for illustrative purposes only.<a name="line.234"></a>
+<FONT color="green">235</FONT>             *<a name="line.235"></a>
+<FONT color="green">236</FONT>             * @return The sun's radius in arc minutes.<a name="line.236"></a>
+<FONT color="green">237</FONT>             */<a name="line.237"></a>
+<FONT color="green">238</FONT>            double getSolarRadius() {<a name="line.238"></a>
+<FONT color="green">239</FONT>                    return solarRadius;<a name="line.239"></a>
+<FONT color="green">240</FONT>            }<a name="line.240"></a>
+<FONT color="green">241</FONT>    <a name="line.241"></a>
+<FONT color="green">242</FONT>            /**<a name="line.242"></a>
+<FONT color="green">243</FONT>             * Method to set the sun's radius.<a name="line.243"></a>
+<FONT color="green">244</FONT>             *<a name="line.244"></a>
+<FONT color="green">245</FONT>             * @param solarRadius<a name="line.245"></a>
+<FONT color="green">246</FONT>             *            The sun's radius in arc minutes.<a name="line.246"></a>
+<FONT color="green">247</FONT>             * @see #getSolarRadius()<a name="line.247"></a>
+<FONT color="green">248</FONT>             */<a name="line.248"></a>
+<FONT color="green">249</FONT>            public void setSolarRadius(double solarRadius) {<a name="line.249"></a>
+<FONT color="green">250</FONT>                    this.solarRadius = solarRadius;<a name="line.250"></a>
+<FONT color="green">251</FONT>            }<a name="line.251"></a>
+<FONT color="green">252</FONT>    <a name="line.252"></a>
+<FONT color="green">253</FONT>            /**<a name="line.253"></a>
+<FONT color="green">254</FONT>             * @see java.lang.Object#clone()<a name="line.254"></a>
+<FONT color="green">255</FONT>             * @since 1.1<a name="line.255"></a>
+<FONT color="green">256</FONT>             */<a name="line.256"></a>
+<FONT color="green">257</FONT>            public Object clone() {<a name="line.257"></a>
+<FONT color="green">258</FONT>                    AstronomicalCalculator clone = null;<a name="line.258"></a>
+<FONT color="green">259</FONT>                    try {<a name="line.259"></a>
+<FONT color="green">260</FONT>                            clone = (AstronomicalCalculator)super.clone();<a name="line.260"></a>
+<FONT color="green">261</FONT>                    } catch (CloneNotSupportedException cnse) {<a name="line.261"></a>
+<FONT color="green">262</FONT>                            System.out<a name="line.262"></a>
+<FONT color="green">263</FONT>                                            .print("Required by the compiler. Should never be reached since we implement clone()");<a name="line.263"></a>
+<FONT color="green">264</FONT>                    }<a name="line.264"></a>
+<FONT color="green">265</FONT>                    return clone;<a name="line.265"></a>
+<FONT color="green">266</FONT>            }<a name="line.266"></a>
+<FONT color="green">267</FONT>    }<a name="line.267"></a>
 
 
 

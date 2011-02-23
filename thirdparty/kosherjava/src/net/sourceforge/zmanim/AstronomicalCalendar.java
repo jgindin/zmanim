@@ -132,11 +132,13 @@ public class AstronomicalCalendar implements Cloneable {
 
 	/**
 	 * The getSunrise method Returns a <code>Date</code> representing the
-	 * sunrise time. The zenith used for the calculation uses
-	 * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&deg;. This is adjusted
-	 * by the {@link AstronomicalCalculator} that adds approximately 50/60 of a
-	 * degree to account for 34 archminutes of refraction and 16 archminutes for
-	 * the sun's radius for a total of
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double) elevation
+	 * adjusted} sunrise time. The zenith used for the calculation uses
+	 * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&deg; plus
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double)}. This is
+	 * adjusted by the {@link AstronomicalCalculator} to add approximately 50/60
+	 * of a degree to account for 34 archminutes of refraction and 16
+	 * archminutes for the sun's radius for a total of
 	 * {@link AstronomicalCalculator#adjustZenith 90.83333&deg;}. See
 	 * documentation for the specific implementation of the
 	 * {@link AstronomicalCalculator} that you are using.
@@ -147,6 +149,8 @@ public class AstronomicalCalendar implements Cloneable {
 	 *         one where it does not set, a null will be returned. See detailed
 	 *         explanation on top of the page.
 	 * @see AstronomicalCalculator#adjustZenith
+	 * @see #getSeaLevelSunrise()
+	 * @see AstronomicalCalendar#getUTCSunrise
 	 */
 	public Date getSunrise() {
 		double sunrise = getUTCSunrise(GEOMETRIC_ZENITH);
@@ -158,12 +162,13 @@ public class AstronomicalCalendar implements Cloneable {
 	}
 
 	/**
-	 * Method that returns the sunrise without correction for elevation.
-	 * Non-sunrise and sunset calculations such as dawn and dusk, depend on the
-	 * amount of visible light, something that is not affected by elevation.
-	 * This method returns sunrise calculated at sea level. This forms the base
-	 * for dawn calculations that are calculated as a dip below the horizon
-	 * before sunrise.
+	 * Method that returns the sunrise without
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double) elevation
+	 * adjustment}. Non-sunrise and sunset calculations such as dawn and dusk,
+	 * depend on the amount of visible light, something that is not affected by
+	 * elevation. This method returns sunrise calculated at sea level. This
+	 * forms the base for dawn calculations that are calculated as a dip below
+	 * the horizon before sunrise.
 	 * 
 	 * @return the <code>Date</code> representing the exact sea-level sunrise
 	 *         time. If the calculation can't be computed such as in the Arctic
@@ -172,6 +177,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 *         See detailed explanation on top of the page.
 	 * @see AstronomicalCalendar#getSunrise
 	 * @see AstronomicalCalendar#getUTCSeaLevelSunrise
+	 * @see #getSeaLevelSunset()
 	 */
 	public Date getSeaLevelSunrise() {
 		double sunrise = getUTCSeaLevelSunrise(GEOMETRIC_ZENITH);
@@ -222,13 +228,16 @@ public class AstronomicalCalendar implements Cloneable {
 	}
 
 	/**
-	 * The getSunset method Returns a <code>Date</code> representing the sunset
-	 * time. The zenith used for the calculation uses {@link #GEOMETRIC_ZENITH
-	 * geometric zenith} of 90&deg;. This is adjusted by the
-	 * {@link AstronomicalCalculator} that adds approximately 50/60 of a degree
-	 * to account for 34 archminutes of refraction and 16 archminutes for the
-	 * sun's radius for a total of {@link AstronomicalCalculator#adjustZenith
-	 * 90.83333&deg;}. See documentation for the specific implementation of the
+	 * The getSunset method Returns a <code>Date</code> representing the
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double) elevation
+	 * adjusted} sunset time. The zenith used for the calculation uses
+	 * {@link #GEOMETRIC_ZENITH geometric zenith} of 90&deg; plus
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double)}. This is
+	 * adjusted by the {@link AstronomicalCalculator} to add approximately 50/60
+	 * of a degree to account for 34 archminutes of refraction and 16
+	 * archminutes for the sun's radius for a total of
+	 * {@link AstronomicalCalculator#adjustZenith 90.83333&deg;}. See
+	 * documentation for the specific implementation of the
 	 * {@link AstronomicalCalculator} that you are using. Note: In certain cases
 	 * the calculates sunset will occur before sunrise. This will typically
 	 * happen when a timezone other than the local timezone is used (calculating
@@ -241,6 +250,8 @@ public class AstronomicalCalendar implements Cloneable {
 	 *         one where it does not set, a null will be returned. See detailed
 	 *         explanation on top of the page.
 	 * @see AstronomicalCalculator#adjustZenith
+	 * @see #getSeaLevelSunset()
+	 * @see AstronomicalCalendar#getUTCSunset
 	 */
 	public Date getSunset() {
 		double sunset = getUTCSunset(GEOMETRIC_ZENITH);
@@ -280,12 +291,13 @@ public class AstronomicalCalendar implements Cloneable {
 	}
 
 	/**
-	 * Method that returns the sunset without correction for elevation.
-	 * Non-sunrise and sunset calculations such as dawn and dusk, depend on the
-	 * amount of visible light, something that is not affected by elevation.
-	 * This method returns sunset calculated at sea level. This forms the base
-	 * for dusk calculations that are calculated as a dip below the horizon
-	 * after sunset.
+	 * Method that returns the sunset without
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double) elevation
+	 * adjustment}. Non-sunrise and sunset calculations such as dawn and dusk,
+	 * depend on the amount of visible light, something that is not affected by
+	 * elevation. This method returns sunset calculated at sea level. This forms
+	 * the base for dusk calculations that are calculated as a dip below the
+	 * horizon after sunset.
 	 * 
 	 * @return the <code>Date</code> representing the exact sea-level sunset
 	 *         time. If the calculation can't be computed such as in the Arctic
@@ -293,7 +305,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 *         not rise, and one where it does not set, a null will be returned.
 	 *         See detailed explanation on top of the page.
 	 * @see AstronomicalCalendar#getSunset
-	 * @see AstronomicalCalendar#getUTCSeaLevelSunset
+	 * @see AstronomicalCalendar#getUTCSeaLevelSunset 2see {@link #getSunset()}
 	 */
 	public Date getSeaLevelSunset() {
 		double sunset = getUTCSeaLevelSunset(GEOMETRIC_ZENITH);
@@ -554,8 +566,15 @@ public class AstronomicalCalendar implements Cloneable {
 	}
 
 	/**
-	 * Method to return a temporal (solar) hour. The day from sunrise to sunset
-	 * is split into 12 equal parts with each one being a temporal hour.
+	 * Method to return an
+	 * {@link AstronomicalCalculator#getElevationAdjustment(double) elevation
+	 * adjusted} temporal (solar) hour. The day from {@link #getSunrise()
+	 * sunrise} to {@link #getSunset() sunset} is split into 12 equal parts with
+	 * each one being a temporal hour.
+	 * 
+	 * @see #getSunrise()
+	 * @see #getSunset()
+	 * @see #getTemporalHour(Date, Date)
 	 * 
 	 * @return the <code>long</code> millisecond length of a temporal hour. If
 	 *         the calculation can't be computed (see explanation on top of the
@@ -567,7 +586,10 @@ public class AstronomicalCalendar implements Cloneable {
 
 	/**
 	 * Utility method that will allow the calculation of a temporal (solar) hour
-	 * based on the sunrise and sunset passed to this method.
+	 * based on the sunrise and sunset passed to this method. An example of the
+	 * use of this method would be the calculation of a non-elevation adjusted
+	 * temporal hour by passing in {@link #getSeaLevelSunrise() sea level
+	 * sunrise} and {@link #getSeaLevelSunset() sea level sunset}.
 	 * 
 	 * @param sunrise
 	 *            The start of the day.

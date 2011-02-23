@@ -933,7 +933,7 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 * {@link #GEOMETRIC_ZENITH geometric zenith} (90&deg;). This calculation is
 	 * used for calculating <em>misheyakir</em> according to some opinions. This
 	 * calculation is based on the position of the sun 52 minutes before
-	 * {@link #getSunrise sunrise}in Jerusalem in the equinox which calculates
+	 * {@link #getSunrise sunrise} in Jerusalem in the equinox which calculates
 	 * to 11.5&deg; below {@link #GEOMETRIC_ZENITH geometric zenith}
 	 * 
 	 * @return the <code>Date</code> of misheyakir. If the calculation can't be
@@ -954,7 +954,7 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 * {@link #GEOMETRIC_ZENITH geometric zenith} (90&deg;). This calculation is
 	 * used for calculating <em>misheyakir</em> according to some opinions. This
 	 * calculation is based on the position of the sun 48 minutes before
-	 * {@link #getSunrise sunrise}in Jerusalem in the equinox which calculates
+	 * {@link #getSunrise sunrise} in Jerusalem in the equinox which calculates
 	 * to 11&deg; below {@link #GEOMETRIC_ZENITH geometric zenith}
 	 * 
 	 * @return If the calculation can't be computed such as northern and

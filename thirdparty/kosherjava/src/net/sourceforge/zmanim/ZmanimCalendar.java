@@ -397,23 +397,34 @@ public class ZmanimCalendar extends AstronomicalCalendar {
 	 * {@link #getTemporalHour(Date, Date) temporal hour}) according to the
 	 * opinion of the <em>GR"A</em> and the <em>Baal Hatanya</em>. This
 	 * calculation divides the day based on the opinion of the <em>GR"A</em> and
-	 * the <em>Baal Hatanya</em> that the day runs from {@link #getSunrise()
-	 * sunrise} to {@link #getSunset sunset}. The calculations are based on a
-	 * day from {@link #getSeaLevelSunrise() sea level sunrise} to
+	 * the <em>Baal Hatanya</em> that the day runs from
+	 * {@link #getSeaLevelSunrise() sunrise} to {@link #getSeaLevelSunrise
+	 * sunset}. The calculations are based on a day from
+	 * {@link #getSeaLevelSunrise() sea level sunrise} to
 	 * {@link #getSeaLevelSunset() sea level sunset}. The day is split into 12
 	 * equal parts each part with each one being a <em>shaah zmanis</em>. This
 	 * method is similar to {@link #getTemporalHour}, but all calculations are
-	 * based on a sealevel sunrise and sunset. For additional information, see
-	 * Zmanim Kehilchasam, 2nd Edition by Rabbi Dovid Yehuda Burstein,
-	 * Jerusalem, 2007.
+	 * based on a sealevel sunrise and sunset. For an explanation as to why
+	 * elevation is not included in this calculation, see Zmanim Kehilchasam 2nd
+	 * Edition by Rabbi Dovid Yehuda Burstein, Jerusalem, 2007. the explanation
+	 * and detailed sources for not using elevation for anything besides sunrise
+	 * and sunset can be found in <a
+	 * href="http://www.worldcat.org/oclc/659793988">Zmanim Kehilchasam (second
+	 * edition published in 2007)</a> by Rabbi Dovid Yehuda Bursztyn chapter 2
+	 * (pages 186-187).
 	 * 
 	 * @return the <code>long</code> millisecond length of a
-	 *         <em>shaah zmanis</em>. If the calculation can't be computed such
-	 *         as in the Arctic Circle where there is at least one day a year
-	 *         where the sun does not rise, and one where it does not set,
-	 *         {@link Long#MIN_VALUE} will be returned. See detailed explanation on
-	 *         top of the {@link AstronomicalCalendar} documentation.
+	 *         <em>shaah zmanis</em> calculated from
+	 *         {@link #getSeaLevelSunrise() sea level sunrise} to
+	 *         {@link #getSeaLevelSunset sea level sunset}. If the calculation
+	 *         can't be computed such as in the Arctic Circle where there is at
+	 *         least one day a year where the sun does not rise, and one where
+	 *         it does not set, {@link Long#MIN_VALUE} will be returned. See
+	 *         detailed explanation on top of the {@link AstronomicalCalendar}
+	 *         documentation.
 	 * @see #getTemporalHour(Date, Date)
+	 * @see #getSeaLevelSunrise()
+	 * @see #getSeaLevelSunset()
 	 */
 	public long getShaahZmanisGra() {
 		return getTemporalHour(getSeaLevelSunrise(), getSeaLevelSunset());

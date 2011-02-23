@@ -1,0 +1,179 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Zmanim Java API<a name="line.2"></a>
+<FONT color="green">003</FONT>     * Copyright (C) 2011 Eliyahu Hershfeld<a name="line.3"></a>
+<FONT color="green">004</FONT>     * Copyright (C) September 2002 Avrom Finkelstien <a name="line.4"></a>
+<FONT color="green">005</FONT>     *<a name="line.5"></a>
+<FONT color="green">006</FONT>     * This program is free software; you can redistribute it and/or modify it under the terms of the<a name="line.6"></a>
+<FONT color="green">007</FONT>     * GNU General Public License as published by the Free Software Foundation; either version 2 of the<a name="line.7"></a>
+<FONT color="green">008</FONT>     * License, or (at your option) any later version.<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without<a name="line.10"></a>
+<FONT color="green">011</FONT>     * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU<a name="line.11"></a>
+<FONT color="green">012</FONT>     * General Public License for more details.<a name="line.12"></a>
+<FONT color="green">013</FONT>     *<a name="line.13"></a>
+<FONT color="green">014</FONT>     * You should have received a copy of the GNU General Public License along with this program; if<a name="line.14"></a>
+<FONT color="green">015</FONT>     * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA<a name="line.15"></a>
+<FONT color="green">016</FONT>     * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    package net.sourceforge.zmanim.hebrewcalendar;<a name="line.18"></a>
+<FONT color="green">019</FONT>    <a name="line.19"></a>
+<FONT color="green">020</FONT>    /**<a name="line.20"></a>
+<FONT color="green">021</FONT>     * The HebrewDateFormatter class formats a {@link HebrewDate}.<a name="line.21"></a>
+<FONT color="green">022</FONT>     * <a name="line.22"></a>
+<FONT color="green">023</FONT>     * This class is part of a refactoring of &lt;a<a name="line.23"></a>
+<FONT color="green">024</FONT>     * href="http://www.facebook.com/avromf"&gt;Avrom Finkelstien's&lt;/a&gt; HebrewDate<a name="line.24"></a>
+<FONT color="green">025</FONT>     * class that removes formatting code from the core HebrewDate class.<a name="line.25"></a>
+<FONT color="green">026</FONT>     * TODO: add additional formatting options including Hebrew formatting support.<a name="line.26"></a>
+<FONT color="green">027</FONT>     * <a name="line.27"></a>
+<FONT color="green">028</FONT>     * @see java.util.Date<a name="line.28"></a>
+<FONT color="green">029</FONT>     * @see java.util.Calendar<a name="line.29"></a>
+<FONT color="green">030</FONT>     * @author &amp;copy; Avrom Finkelstien 2002<a name="line.30"></a>
+<FONT color="green">031</FONT>     * @author &amp;copy; Eliyahu Hershfeld 2011<a name="line.31"></a>
+<FONT color="green">032</FONT>     * @version 0.1<a name="line.32"></a>
+<FONT color="green">033</FONT>     */<a name="line.33"></a>
+<FONT color="green">034</FONT>    public class HebrewDateFormatter {<a name="line.34"></a>
+<FONT color="green">035</FONT>            private static final String[] hebrewMonths = { "Nissan", "Iyar", "Sivan",<a name="line.35"></a>
+<FONT color="green">036</FONT>                            "Tamuz", "Av", "Elul", "Tishrei", "Cheshvan", "Kislev", "Teves",<a name="line.36"></a>
+<FONT color="green">037</FONT>                            "Shevat", "Adar", "Adar II" };<a name="line.37"></a>
+<FONT color="green">038</FONT>            <a name="line.38"></a>
+<FONT color="green">039</FONT>            // parsha names in both Ashkenazi and Sephardi pronunciation<a name="line.39"></a>
+<FONT color="green">040</FONT>            // Somewhat redundant (don't you think?)<a name="line.40"></a>
+<FONT color="green">041</FONT>    //      private static final String[][] Prounouncewdparshios = { { "Bereshit", "Bereshis" },<a name="line.41"></a>
+<FONT color="green">042</FONT>    //                      { "Noach", "Noach" }, { "Lech-Lecha", "Lech-Lecha" },<a name="line.42"></a>
+<FONT color="green">043</FONT>    //                      { "Vayera", "Vayera" }, { "Chayei Sara", "Chayei Sara" },<a name="line.43"></a>
+<FONT color="green">044</FONT>    //                      { "Toldot", "Toldos" }, { "Vayetzei", "Vayetzei" },<a name="line.44"></a>
+<FONT color="green">045</FONT>    //                      { "Vayishlach", "Vayishlach" }, { "Vayeshev", "Vayeshev" },<a name="line.45"></a>
+<FONT color="green">046</FONT>    //                      { "Miketz", "Miketz" }, { "Vayigash", "Vayigash" },<a name="line.46"></a>
+<FONT color="green">047</FONT>    //                      { "Vayechi", "Vayechi" }, { "Shemot", "Shemos" },<a name="line.47"></a>
+<FONT color="green">048</FONT>    //                      { "Vaera", "Vaera" }, { "Bo", "Bo" }, { "Beshalach", "Beshalach" },<a name="line.48"></a>
+<FONT color="green">049</FONT>    //                      { "Yitro", "Yisro" }, { "Mishpatim", "Mishpatim" },<a name="line.49"></a>
+<FONT color="green">050</FONT>    //                      { "Terumah", "Terumah" }, { "Tetzaveh", "Tetzaveh" },<a name="line.50"></a>
+<FONT color="green">051</FONT>    //                      { "Ki Tisa", "Ki Sisa" }, { "Vayakhel", "Vayakhel" },<a name="line.51"></a>
+<FONT color="green">052</FONT>    //                      { "Pekudei", "Pekudei" }, { "Vayikra", "Vayikra" },<a name="line.52"></a>
+<FONT color="green">053</FONT>    //                      { "Tzav", "Tzav" }, { "Shmini", "Shmini" }, { "Tazria", "Sazria" },<a name="line.53"></a>
+<FONT color="green">054</FONT>    //                      { "Metzora", "Metzora" }, { "Achrei Mot", "Achrei Mos" },<a name="line.54"></a>
+<FONT color="green">055</FONT>    //                      { "Kedoshim", "Kedoshim" }, { "Emor", "Emor" },<a name="line.55"></a>
+<FONT color="green">056</FONT>    //                      { "Behar", "Behar" }, { "Bechukotai", "Bechukosai" },<a name="line.56"></a>
+<FONT color="green">057</FONT>    //                      { "Bamidbar", "Bamidbar" }, { "Nasso", "Nasso" },<a name="line.57"></a>
+<FONT color="green">058</FONT>    //                      { "Beha'alotcha", "Beha'aloscha" }, { "Sh'lach", "Sh'lach" },<a name="line.58"></a>
+<FONT color="green">059</FONT>    //                      { "Korach", "Korach" }, { "Chukat", "Chukas" },<a name="line.59"></a>
+<FONT color="green">060</FONT>    //                      { "Balak", "Balak" }, { "Pinchas", "Pinchas" },<a name="line.60"></a>
+<FONT color="green">061</FONT>    //                      { "Matot", "Matos" }, { "Masei", "Masei" },<a name="line.61"></a>
+<FONT color="green">062</FONT>    //                      { "Devarim", "Devarim" }, { "Vaetchanan", "Vaeschanan" },<a name="line.62"></a>
+<FONT color="green">063</FONT>    //                      { "Eikev", "Eikev" }, { "Re'eh", "Re'eh" },<a name="line.63"></a>
+<FONT color="green">064</FONT>    //                      { "Shoftim", "Shoftim" }, { "Ki Teitzei", "Ki Seitzei" },<a name="line.64"></a>
+<FONT color="green">065</FONT>    //                      { "Ki Tavo", "Ki Savo" }, { "Nitzavim", "Nitzavim" },<a name="line.65"></a>
+<FONT color="green">066</FONT>    //                      { "Vayeilech", "Vayeilech" }, { "Ha'Azinu", "Ha'Azinu" },<a name="line.66"></a>
+<FONT color="green">067</FONT>    //                      { "Vayakhel Pekudei", "Vayakhel Pekudei" },<a name="line.67"></a>
+<FONT color="green">068</FONT>    //                      { "Tazria Metzora", "Sazria Metzora" },<a name="line.68"></a>
+<FONT color="green">069</FONT>    //                      { "Achrei Mot Kedoshim", "Achrei Mos Kedoshim" },<a name="line.69"></a>
+<FONT color="green">070</FONT>    //                      { "Behar Bechukotai", "Behar Bechukosai" },<a name="line.70"></a>
+<FONT color="green">071</FONT>    //                      { "Chukat Balak", "Chukas Balak" },<a name="line.71"></a>
+<FONT color="green">072</FONT>    //                      { "Matot Masei", "Matos Masei" },<a name="line.72"></a>
+<FONT color="green">073</FONT>    //                      { "Nitzavim Vayeilech", "Nitzavim Vayeilech" } };<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>            /**<a name="line.75"></a>
+<FONT color="green">076</FONT>             * Returns a string containing the Hebrew date in the form,<a name="line.76"></a>
+<FONT color="green">077</FONT>             * "day Month, year" e.g. "21 Shevat, 5729"<a name="line.77"></a>
+<FONT color="green">078</FONT>             */<a name="line.78"></a>
+<FONT color="green">079</FONT>            public static String getHebrewDateAsString(HebrewDate hd) {<a name="line.79"></a>
+<FONT color="green">080</FONT>                    return hd.getHebrewDayOfMonth() + " " + getHebrewMonthAsString(hd) + ", " + hd.getHebrewYear();<a name="line.80"></a>
+<FONT color="green">081</FONT>            }<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>            /**<a name="line.83"></a>
+<FONT color="green">084</FONT>             * returns a string of the current Hebrew month such as "Tishrei".<a name="line.84"></a>
+<FONT color="green">085</FONT>             */<a name="line.85"></a>
+<FONT color="green">086</FONT>            public static String getHebrewMonthAsString(HebrewDate hd) {<a name="line.86"></a>
+<FONT color="green">087</FONT>                    // if it is a leap year and 12th month //<a name="line.87"></a>
+<FONT color="green">088</FONT>                    if (HebrewDate.isHebrewLeapYear(hd.getHebrewYear()) &amp;&amp; hd.getHebrewMonth() == 12) {<a name="line.88"></a>
+<FONT color="green">089</FONT>                            return "Adar I";<a name="line.89"></a>
+<FONT color="green">090</FONT>                    } else {<a name="line.90"></a>
+<FONT color="green">091</FONT>                            return hebrewMonths[hd.getHebrewMonth() - 1];<a name="line.91"></a>
+<FONT color="green">092</FONT>                    }<a name="line.92"></a>
+<FONT color="green">093</FONT>            }<a name="line.93"></a>
+<FONT color="green">094</FONT>            <a name="line.94"></a>
+<FONT color="green">095</FONT>            /**<a name="line.95"></a>
+<FONT color="green">096</FONT>             * returns a String of the Omer day in the form "Omer X" or "Lag B'Omer" or<a name="line.96"></a>
+<FONT color="green">097</FONT>             * an empty string if there is no Omer this day.<a name="line.97"></a>
+<FONT color="green">098</FONT>             * FIXME - Is this method really required?<a name="line.98"></a>
+<FONT color="green">099</FONT>             */<a name="line.99"></a>
+<FONT color="green">100</FONT>            public static String getOmerAsString(HebrewDate hd) {<a name="line.100"></a>
+<FONT color="green">101</FONT>                    int omer = hd.getOmer();<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>                    // if not Omer day //<a name="line.103"></a>
+<FONT color="green">104</FONT>                    if (omer == 0) {<a name="line.104"></a>
+<FONT color="green">105</FONT>                            return "";<a name="line.105"></a>
+<FONT color="green">106</FONT>    <a name="line.106"></a>
+<FONT color="green">107</FONT>                    } else if (omer == 33) { // if lag b'omer<a name="line.107"></a>
+<FONT color="green">108</FONT>                            return "Lag B'Omer";<a name="line.108"></a>
+<FONT color="green">109</FONT>                    } else {<a name="line.109"></a>
+<FONT color="green">110</FONT>                            return "Omer " + omer;<a name="line.110"></a>
+<FONT color="green">111</FONT>                    }<a name="line.111"></a>
+<FONT color="green">112</FONT>            }<a name="line.112"></a>
+<FONT color="green">113</FONT>    }<a name="line.113"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
