@@ -1,19 +1,5 @@
 /*
- * Zmanim Java API
- * Copyright (C) 2011 Eliyahu Hershfeld
- * Copyright (C) September 2002 Avrom Finkelstien 
- *
- * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program; if
- * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html
+ * Copyright (c) 2011. Jay R. Gindin
  */
 package net.sourceforge.zmanim.hebrewcalendar;
 
@@ -183,7 +169,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * returns the last month of a given Hebrew year. This would be 12 on a non
 	 * leap-year or 13 on a leap-year.
 	 */
-	public int getLastMonthOfHebrewYear(int year) {
+	public static int getLastMonthOfHebrewYear(int year) {
 		if (isHebrewLeapYear(year)) {
 			return 13;
 		} else {
@@ -196,7 +182,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * Hebrew calendar to the mean conjunction of Tishri of Hebrew year.
 	 * ND+ER
 	 */
-	private int getHebrewCalendarElapsedDays(int year) {
+	private static int getHebrewCalendarElapsedDays(int year) {
 
 		int monthsElapsed = (235 * ((year - 1) / 19)) // Months in complete
 														// cycles so far
@@ -235,7 +221,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * Returns the number of days in a Hebrew year.
 	 * ND+ER
 	 */
-	private int getDaysInHebrewYear(int year) {
+	private static int getDaysInHebrewYear(int year) {
 		return ((getHebrewCalendarElapsedDays(year + 1)) - (getHebrewCalendarElapsedDays(year)));
 	}
 
@@ -243,7 +229,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * Returns true if Cheshvan is long in Hebrew year.
 	 * ND+ER
 	 */
-	public boolean isCheshvanLong(int year) {
+	public static boolean isCheshvanLong(int year) {
 		if ((getDaysInHebrewYear(year) % 10) == 5) {
 			return true;
 		} else {
@@ -259,7 +245,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * Returns true if Kislev is short in Hebrew year.
 	 * ND+ER
 	 */
-	public boolean isKislevShort(int year) {
+	public static boolean isKislevShort(int year) {
 		if ((getDaysInHebrewYear(year) % 10) == 3) {
 			return true;
 		} else {
@@ -273,7 +259,7 @@ public class HebrewDate implements Comparable, Cloneable {
 	/**
 	 * Returns last day of a Hebrew month for a given month and year.
 	 */
-	public int getLastDayOfHebrewMonth(int month, int year) {
+	public static int getLastDayOfHebrewMonth(int month, int year) {
 		if ((month == 2) || (month == 4) || (month == 6)
 				|| ((month == 8) && !(isCheshvanLong(year)))
 				|| ((month == 9) && isKislevShort(year)) || (month == 10)
