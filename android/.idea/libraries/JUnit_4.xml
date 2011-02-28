@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="JUnit 4">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../thirdparty/junit" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../thirdparty/junit/junit4.8.2.zip!/junit4.8.2" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../thirdparty/junit/junit4.8.2.zip!/junit4.8.2" />
+      <root url="jar://$PROJECT_DIR$/../thirdparty/junit/junit4.8.2.zip!/junit4.8.2/temp.hamcrest.source" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../thirdparty/junit" recursive="false" />
+  </library>
+</component>
