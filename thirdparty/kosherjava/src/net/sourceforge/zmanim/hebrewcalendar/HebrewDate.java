@@ -35,13 +35,16 @@ import java.util.*;
  * code. it was adapted to the KosherJava Zmanim API with simplification of the
  * non-core code. The original algorithms were untouched.
  * 
- * Some of Avrom's original C++ code was translated from <a
- * href="http://emr.cs.uiuc.edu/~reingold/calendar.C">C/C++ code</a> in <a
- * href="http://www.calendarists.com">Calendrical Calculations</a> by Nachum
- * Dershowitz and Edward M. Reingold, Software-- Practice & Experience, vol. 20,
- * no. 9 (September, 1990), pp. 899- 928. Any method with the mark "ND+ER"
- * indicates that the method was taken from this source with minor
+ * Some of Avrom's original C++ code was translated or taken from other C/C++
+ * code in <a href="http://www.calendarists.com">Calendrical Calculations</a> by
+ * Nachum Dershowitz and Edward M. Reingold, Software-- Practice & Experience,
+ * vol. 20, no. 9 (September, 1990), pp. 899- 928. Any method with the mark
+ * "ND+ER" indicates that the method was taken from this source with minor
  * modifications.
+ * 
+ * Available at <a href="http://www.calendarists.com">www.calendarists.com</a>
+ * (<a href="http://emr.cs.uiuc.edu/~reingold/calendar.C">Original C++
+ * source</a>).
  * 
  * The methods used to obtain the parsha were derived from the source code of <a
  * href="http://www.sadinoff.com/hebcal/">HebCal</a> by Danny Sadinoff and JCal
@@ -54,7 +57,7 @@ import java.util.*;
  * @see java.util.Calendar
  * @author &copy; Avrom Finkelstien 2002
  * @author &copy; Eliyahu Hershfeld 2011
- * @version 0.2.1
+ * @version 0.1
  */
 public class HebrewDate implements Comparable, Cloneable {
 	private static final int HEBREW_EPOCH = -1373429;
@@ -73,7 +76,7 @@ public class HebrewDate implements Comparable, Cloneable {
 
 	/**
 	 * Use the formatting class for formatting Ashkenazi VS Sephardi English
-	 * transliteration. Using the default will use the Ashkenazi pronounciation.
+	 * transliteration.
 	 */
 	private static final String[] parshios = { "Bereshis", "Noach",
 			"Lech Lecha", "Vayera", "Chayei Sara", "Toldos", "Vayetzei",
@@ -91,19 +94,14 @@ public class HebrewDate implements Comparable, Cloneable {
 	private boolean inIsrael = false;
 
 	/**
-	 * Returns the number of days in a given month in a given year.
-	 * 
-	 * @param month
-	 *            the month
-	 * @param year
-	 *            the year (only impacts February)
-	 * @return the number of days in the month in the given year
+	 * Returns the number of days in a given month.
+	 * ND+ER
 	 */
-	private static int getLastDayOfGregorianMonth(int month, int year) {
+	public int getLastDayOfGregorianMonth(int month) {
 		switch (month) {
 		case 2:
-			if ((((year % 4) == 0) && ((year % 100) != 0))
-					|| ((year % 400) == 0)) {
+			if ((((gregorianYear % 4) == 0) && ((gregorianYear % 100) != 0))
+					|| ((gregorianYear % 400) == 0)) {
 				return 29;
 			} else {
 				return 28;
@@ -119,56 +117,44 @@ public class HebrewDate implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Returns the number of days in a given month for the current year.
-	 * 
-	 * @param month
-	 *            the month
-	 * @return the number of days in the month
-	 */
-	private int getLastDayOfGregorianMonth(int month) {
-		return getLastDayOfGregorianMonth(month, gregorianYear);
-	}
-
-	/**
-	 * Computes the Gregorian date from the absolute date. ND+ER
+	 * Computes the Gregorian date from the absolute date.
+	 * ND+ER
 	 */
 	private void absDateToDate() {
-		// Search forward year by year from approximate year
+		// Search forward year by year from approximate year//
 		gregorianYear = gregorianAbsDate / 366;
-		while (gregorianAbsDate >= gregorianDateToAbsDate(1, 1,
-				gregorianYear + 1)) {
+		while (gregorianAbsDate >= dateToAbsDate(1, 1, gregorianYear + 1)) {
 			gregorianYear++;
 		}
-		// Search forward month by month from January
+		// Search forward month by month from January//
 		gregorianMonth = 1;
-		while (gregorianAbsDate > gregorianDateToAbsDate(gregorianMonth,
+		while (gregorianAbsDate > dateToAbsDate(gregorianMonth,
 				getLastDayOfGregorianMonth(gregorianMonth), gregorianYear)) {
 			gregorianMonth++;
 		}
 		gregorianDayOfMonth = gregorianAbsDate
-				- gregorianDateToAbsDate(gregorianMonth, 1, gregorianYear) + 1;
+				- dateToAbsDate(gregorianMonth, 1, gregorianYear) + 1;
 	}
 
 	/**
-	 * Returns the absolute date (days since January 1, 0001 on the Gregorian
-	 * calendar).
-	 * 
-	 * @return the number of days since January 1, 1
+	 * Returns the absolute date (days on the gregorian since Januray 1, 1)
 	 */
-	private int getAbsDate() {
+	public int getAbsDate() {
 		return gregorianAbsDate;
 	}
 
 	/**
-	 * Computes the absolute date from the Gregorian date. ND+ER
+	 * Computes the absolute date from the Gregorian date. Default is
+	 * current date.
+	 * ND+ER
 	 */
-	private static int gregorianDateToAbsDate(int month, int day, int year) {
+	private int dateToAbsDate(int month, int date, int year) {
 
 		for (int m = month - 1; m > 0; m--) {
-			// days in prior months of the year
-			day = day + getLastDayOfGregorianMonth(m, year);
+			// days in prior months this year
+			date = date + getLastDayOfGregorianMonth(m);
 		}
-		return (day // days this year //
+		return (date // days this year //
 				+ 365 * (year - 1) // days in previous years ignoring leap days
 				+ (year - 1) / 4 // Julian leap days before this year...
 				- (year - 1) / 100 // ...minus prior century years...
@@ -187,18 +173,31 @@ public class HebrewDate implements Comparable, Cloneable {
 	}
 
 	/**
+	 * returns true if the current Hebrew year is a leap year.
+	 */
+	public boolean isHebrewLeapYear2() {
+		return isHebrewLeapYear(hebrewYear);
+	}
+
+	/**
 	 * returns the last month of a given Hebrew year. This would be 12 on a non
 	 * leap-year or 13 on a leap-year.
 	 */
 	public static int getLastMonthOfHebrewYear(int year) {
-		return isHebrewLeapYear(year) ? 13 : 12;
+		if (isHebrewLeapYear(year)) {
+			return 13;
+		} else {
+			return 12;
+		}
 	}
 
 	/**
-	 * Number of days elapsed from the Sunday prior to the start of the Hebrew
-	 * calendar to the mean conjunction of Tishri of Hebrew year. ND+ER
+	 * Number of days elapsed from the Sunday prior to the start of the
+	 * Hebrew calendar to the mean conjunction of Tishri of Hebrew year.
+	 * ND+ER
 	 */
 	private static int getHebrewCalendarElapsedDays(int year) {
+
 		int monthsElapsed = (235 * ((year - 1) / 19)) // Months in complete
 														// cycles so far
 				+ (12 * ((year - 1) % 19)) // Regular months in this cycle
@@ -215,16 +214,14 @@ public class HebrewDate implements Comparable, Cloneable {
 														// or later...
 				&& !isHebrewLeapYear(year)) // ...of a common year,
 				|| (((conjunctionDay % 7) == 1) // ...or is on a Monday at...
-						&& (conjunctionParts >= 16789) // 15 hours, 589 parts or
-														// later...
+						&& (conjunctionParts >= 16789) // 15 hours, 589 parts or later...
 				&& (isHebrewLeapYear(year - 1)))) { // at the end of a leap year
 			// Then postpone Rosh HaShanah one day//
 			alternativeDay = conjunctionDay + 1;
 		} else {
 			alternativeDay = conjunctionDay;
 		}
-		if (((alternativeDay % 7) == 0)// If Rosh HaShanah would occur on
-										// Sunday,
+		if (((alternativeDay % 7) == 0)// If Rosh HaShanah would occur on Sunday,
 				|| ((alternativeDay % 7) == 3) // or Wednesday,
 				|| ((alternativeDay % 7) == 5)) { // or Friday
 			// Then postpone it one (more) day
@@ -235,15 +232,16 @@ public class HebrewDate implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Returns the number of days in a Hebrew year. ND+ER
+	 * Returns the number of days in a Hebrew year.
+	 * ND+ER
 	 */
 	private static int getDaysInHebrewYear(int year) {
-		return getHebrewCalendarElapsedDays(year + 1)
-				- getHebrewCalendarElapsedDays(year);
+		return ((getHebrewCalendarElapsedDays(year + 1)) - (getHebrewCalendarElapsedDays(year)));
 	}
 
 	/**
-	 * Returns true if Cheshvan is long in Hebrew year. ND+ER
+	 * Returns true if Cheshvan is long in Hebrew year.
+	 * ND+ER
 	 */
 	public static boolean isCheshvanLong(int year) {
 		if ((getDaysInHebrewYear(year) % 10) == 5) {
@@ -252,13 +250,25 @@ public class HebrewDate implements Comparable, Cloneable {
 			return false;
 		}
 	}
+//	public boolean isCheshvanLong() {
+//		return isCheshvanLong(hebrewYear);
+//	}
+
 
 	/**
-	 * Returns true if Kislev is short in Hebrew year. ND+ER
+	 * Returns true if Kislev is short in Hebrew year.
+	 * ND+ER
 	 */
 	public static boolean isKislevShort(int year) {
-		return getDaysInHebrewYear(year) % 10 == 3 ? true : false;
+		if ((getDaysInHebrewYear(year) % 10) == 3) {
+			return true;
+		} else {
+			return false;
+		}
 	}
+//	public boolean isKislevShort2() {
+//		return isKislevShort(hebrewYear);
+//	}
 
 	/**
 	 * Returns last day of a Hebrew month for a given month and year.
@@ -267,8 +277,7 @@ public class HebrewDate implements Comparable, Cloneable {
 		if ((month == 2) || (month == 4) || (month == 6)
 				|| ((month == 8) && !(isCheshvanLong(year)))
 				|| ((month == 9) && isKislevShort(year)) || (month == 10)
-				|| ((month == 12) && !(isHebrewLeapYear(year)))
-				|| (month == 13)) {
+				|| ((month == 12) && !(isHebrewLeapYear(year))) || (month == 13)) {
 			return 29;
 		} else {
 			return 30;
@@ -276,83 +285,61 @@ public class HebrewDate implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Computes the Hebrew date from the absolute date. ND+ER
+	 * ND+ER Computes the Hebrew date from the absolute date.
 	 */
 	private void absDateToHebrewDate() {
-		// Approximation from below
-		hebrewYear = (gregorianAbsDate + HEBREW_EPOCH) / 366;
-		// Search forward for year from the approximation
+		hebrewYear = (gregorianAbsDate + HEBREW_EPOCH) / 366; // Approximation
+																// from
+		// below.//
+		// Search forward for year from the approximation.//
 		while (gregorianAbsDate >= hebrewDateToAbsDate(7, 1, hebrewYear + 1)) {
 			hebrewYear++;
 		}
-		// Search forward for month from either Tishri or Nisan.
+		// Search forward for month from either Tishri or Nisan.//
 		if (gregorianAbsDate < hebrewDateToAbsDate(1, 1, hebrewYear)) {
-			hebrewMonth = 7;// Start at Tishri
+			hebrewMonth = 7;// Start at Tishri //
 		} else {
-			hebrewMonth = 1;// Start at Nisan
+			hebrewMonth = 1;// Start at Nisan //
 		}
 		while (gregorianAbsDate > hebrewDateToAbsDate(hebrewMonth,
 				getLastDayOfHebrewMonth(hebrewMonth, hebrewYear), hebrewYear)) {
 			hebrewMonth++;
 		}
-		// Calculate the day by subtraction
+		// Calculate the day by subtraction.//
 		hebrewDay = gregorianAbsDate
 				- hebrewDateToAbsDate(hebrewMonth, 1, hebrewYear) + 1;
 	}
 
 	/**
-	 * Computes the absolute date of Hebrew date. Default is current Hebrew
-	 * date. ND+ER
+	 * ND+ER Computes the absolute date of Hebrew date. Default is current
+	 * Hebrew date.
 	 */
-	// private int hebrewDateToAbsDateBROKEN(int month, int date, int year) {
-	// int m;
-	//
-	// // Before Tishri, so add days in prior months//
-	// if (month < 7) {
-	// // this year before and after Nisan.//
-	// for (m = 7; m <= getLastMonthOfHebrewYear(hebrewYear); m++) {
-	// date = date + getLastDayOfHebrewMonth(m, year);
-	// }
-	// for (m = 1; m < month; m++) {
-	// date = date + getLastDayOfHebrewMonth(m, year);
-	// }
-	// } else { // Add days in prior months this year//
-	// for (m = 7; m < month; m++) {
-	// date = date + getLastDayOfHebrewMonth(m, year);
-	// }
-	// }
-	// // Days in prior years + Days elapsed before absolute date 1
-	// return (date + getHebrewCalendarElapsedDays(year) + HEBREW_EPOCH);
-	// }
-
-	/**
-	 * returns the absolute date of Hebrew date. ND+ER
-	 */
-	private static int hebrewDateToAbsDate(int month, int day, int year) {
+	private int hebrewDateToAbsDate(int month, int date, int year) {
 		int m;
-		// Before Tishri, so add days in prior months
+
+		// Before Tishri, so add days in prior months//
 		if (month < 7) {
-			// this year before and after Nisan.
-			for (m = 7; m <= getLastMonthOfHebrewYear(year); m++) {
-				day = day + getLastDayOfHebrewMonth(m, year);
+			// this year before and after Nisan.//
+			for (m = 7; m <= getLastMonthOfHebrewYear(hebrewYear); m++) {
+				date = date + getLastDayOfHebrewMonth(m, year);
 			}
 			for (m = 1; m < month; m++) {
-				day = day + getLastDayOfHebrewMonth(m, year);
+				date = date + getLastDayOfHebrewMonth(m, year);
 			}
-		} else { // Add days in prior months this year
+		} else { // Add days in prior months this year//
 			for (m = 7; m < month; m++) {
-				day = day + getLastDayOfHebrewMonth(m, year);
+				date = date + getLastDayOfHebrewMonth(m, year);
 			}
 		}
 		// Days in prior years + Days elapsed before absolute date 1
-		return (day + getHebrewCalendarElapsedDays(year) + HEBREW_EPOCH);
+		return (date + getHebrewCalendarElapsedDays(year) + HEBREW_EPOCH);
 	}
 
 	/**
-	 * Creates a Hebrew date based on a Gregorian date (month, day, year)
+	 * Creates a Hebrew date based on gregorian date (month, day, year)
 	 */
-	public HebrewDate(int gregorianMonth, int gregorianDay, int gregorianYear) {
-		setGregorianDate(gregorianMonth, gregorianDay, gregorianYear);
+	public HebrewDate(int month, int date, int year) {
+		setGregorianDate(month, date, year);
 	}
 
 	/**
@@ -396,32 +383,21 @@ public class HebrewDate implements Comparable, Cloneable {
 		gregorianDayOfMonth = cal.get(Calendar.DATE);
 		gregorianYear = cal.get(Calendar.YEAR);
 
-		// init the hebrew date
-		gregorianAbsDate = gregorianDateToAbsDate(gregorianMonth,
-				gregorianDayOfMonth, gregorianYear);
+		// init the hebrew date //
+		gregorianAbsDate = dateToAbsDate(gregorianMonth, gregorianDayOfMonth,
+				gregorianYear);
 		absDateToHebrewDate();
 
-		// set day of week
+		// set day of week //
 		dayOfWeek = Math.abs(gregorianAbsDate % 7) + 1;
 	}
 
 	/**
-	 * Sets the Gregorian Date, and updates the Hebrew date accordingly.
-	 * Confusingly unlike the Java Calendar where January has the value of
-	 * 0,This expects a 1 for January this uses a
-	 * 
-	 * @param month
-	 *            the Gregorian month. Unlike the Java Calendar where January
-	 *            has the value of 0,This expects a 1 for January
-	 * @param day
-	 *            the Gregorian day of month. If this is > the number of days in
-	 *            the month/year, the last valid date of the month will be set
-	 * @param year
-	 *            the Gregorian year
+	 * Sets the Gregorian Date, and updates the Hebrew date accordingly
 	 */
 	public void setGregorianDate(int month, int day, int year) {
 		// precondition should be 1->12 anyways, but just in case... //
-		if (month > 12 || month < 1) {
+		if (month > 12 || month < 0) {
 			throw new IllegalArgumentException(
 					"The Gregorian month has to be between 1 - 12. " + month
 							+ " is invalid.");
@@ -433,9 +409,9 @@ public class HebrewDate implements Comparable, Cloneable {
 		}
 
 		// make sure date is a valid date for the given month, if not, set to
-		// last day of month
-		if (day > getLastDayOfGregorianMonth(month, year)) {
-			day = getLastDayOfGregorianMonth(month, year);
+		// last day of month //
+		if (day > getLastDayOfGregorianMonth(month)) {
+			day = getLastDayOfGregorianMonth(month);
 		}
 		if (year < 0) {
 			throw new IllegalArgumentException(
@@ -447,8 +423,8 @@ public class HebrewDate implements Comparable, Cloneable {
 		gregorianYear = year;
 
 		// init the Hebrew date
-		gregorianAbsDate = gregorianDateToAbsDate(gregorianMonth,
-				gregorianDayOfMonth, gregorianYear);
+		gregorianAbsDate = dateToAbsDate(gregorianMonth, gregorianDayOfMonth,
+				gregorianYear);
 		absDateToHebrewDate();
 
 		// set day of week
@@ -456,18 +432,9 @@ public class HebrewDate implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Sets the Hebrew Date and updates the Gregorian date accordingly.
-	 * 
-	 * @param month
-	 *            the Hebrew month starting with Nisan. Nisan expects a value of
-	 *            1 etc till Adar with a value of 12. For a leap year, 13 will
-	 *            be the expected value for Adar II.
-	 * @param day
-	 *            the Hebrew day of month. valid values are 1-30. If the day of
-	 *            month is set to 30 for a month that only has 29 days, the day
-	 *            will be set as 29.
-	 * @param year
-	 *            the Hebrew year. The year can't be negative
+	 * Sets the Hebrew Date, and updates the Gregorian date accordingly. If the
+	 * day of month is set to 30 for a month that only has 29 days, the day will
+	 * be set as 29.
 	 */
 	public void setHebrewDate(int month, int day, int year) {
 		if (month < 1 || month > getLastMonthOfHebrewYear(year)) {
@@ -545,9 +512,9 @@ public class HebrewDate implements Comparable, Cloneable {
 	 * dates accordingly.
 	 */
 	public void forward() {
-		// Change Gregorian date
+		// Change Gregorian date //
 		if (gregorianDayOfMonth == getLastDayOfGregorianMonth(gregorianMonth)) {
-			// if last day of year
+			// if last day of year //
 			if (gregorianMonth == 12) {
 				gregorianYear++;
 				gregorianMonth = 1;
@@ -560,15 +527,20 @@ public class HebrewDate implements Comparable, Cloneable {
 			gregorianDayOfMonth++;
 		}
 
-		// Change Hebrew Date
+		// Change Hebrew Date //
 		if (hebrewDay == getLastDayOfHebrewMonth(hebrewMonth, hebrewYear)) {
 			// if it last day of elul (i.e. last day of hebrew year)//
 			if (hebrewMonth == 6) {
 				hebrewYear++;
 				hebrewMonth++;
 				hebrewDay = 1;
-			} else if (hebrewMonth == getLastMonthOfHebrewYear(hebrewYear)) {
-				// if it is the last day of Adar, or Adar II as case may be
+			} else if (hebrewMonth == getLastMonthOfHebrewYear(hebrewYear)) { // if it is
+																	// the last
+																	// day of
+																	// Adar, or
+																	// Adar II
+																	// as case
+																	// may be
 				hebrewMonth = 1;
 				hebrewDay = 1;
 			} else {
@@ -997,7 +969,7 @@ public class HebrewDate implements Comparable, Cloneable {
 			-1, 25, 54, 55, 30, 56, 33, 34, 35, 36, 37, 38, 39, 40, 58, 43, 44,
 			45, 46, 47, 48, 49, 59 };
 
-	private static final int[] Mon_long = // split
+	private static final int[] Mon_long = // split //
 	{ 51, 52, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 			18, 19, 20, 53, 23, 24, -1, 25, 54, 55, 30, 56, 33, -1, 34, 35, 36,
 			37, 57, 40, 58, 43, 44, 45, 46, 47, 48, 49, 59 };
@@ -1061,11 +1033,9 @@ public class HebrewDate implements Comparable, Cloneable {
 	 */
 	public String getParsha() {
 
-		// if today is not Shabbos, then there is no normal parsha reading. If
-		// commented our will return LAST week's parsha for a non shabbos
-		if (getDayOfWeek() != 7) {
-			return "";
-		}
+		// if today is not Shabbos, then there is no normal parsha reading
+		// if (getDayOfWeek() != 7)
+		// return "";
 
 		// kvia = whether a Hebrew year is short/regular/long (0/1/2)
 		// roshHashana = Rosh Hashana of this Hebrew year
@@ -1080,12 +1050,12 @@ public class HebrewDate implements Comparable, Cloneable {
 		int index;
 		// create a clone of this date
 		HebrewDate roshHashana = (HebrewDate) this.clone();
-		// try {
-		// set it to Rosh Hashana of this year
-		roshHashana.setHebrewDate(7, 1, hebrewYear);
-		// } catch (IllegalArgumentException e) {
-		// e.printStackTrace();
-		// }
+		try {
+			// set it to Rosh Hashana of this year
+			roshHashana.setHebrewDate(7, 1, hebrewYear);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
 
 		// get day Rosh Hashana was on
 		roshHashanaDay = roshHashana.getDayOfWeek();
@@ -1157,44 +1127,25 @@ public class HebrewDate implements Comparable, Cloneable {
 			}
 		}
 		// if something goes wrong
-		if (array == null) {
+		if (array == null)
 			throw new RuntimeException(
-					"Unable to claculate the parsha. No index array matched any of the known types for the date: "
-							+ toString());
-		}
+					"Was not able to set the index array to any of the known types."); // FIXME
+																						// -
+																						// Clearer
+																						// message
+																						// required
+
 		// get index from array
 		index = array[week];
 
 		// If no Parsha this week
-		if (index == -1) {
+		if (index == -1)
 			return "";
-		}
-		if (index == -1) {
-			index = array[week + 1]; // attempt to check next week -
-										// Experimental code that does not work
-										// for the last week of the year or in
-										// cases where there are 2 shabbosim in
-										// a row, but better than nothing.
-			// without a parsha
-			if (index == -1) {
-				return "";
-				// index=0;//FIXME sets Beraishis for Pesach 2012 where the
-				// first days is a shabbos and there are 2 shabbosim in a row
-				// without a parsha
-			}
-		}
 
 		// if parsha this week
-		// else {
-		// if (getDayOfWeek() != 7){//in weekday return next shabbos's parsha
-		// System.out.print(" index=" + index + " ");
-		// return parshios[index + 1];
-		// this code returns odd data for yom tov. See parshas kedoshim display
-		// for 2011 for example. It will also break for Sept 25, 2011 where it
-		// goes one beyong the index of Nitzavim-Vayelech
-		// }
-		return parshios[index];
-		// }
+		else {
+			return parshios[index];
+		}
 	}
 
 	/** Create a copy of this date. */
