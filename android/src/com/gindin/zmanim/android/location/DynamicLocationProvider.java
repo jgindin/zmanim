@@ -17,6 +17,38 @@ import java.util.*;
 
 /**
  * Abstracts dealing with the Android LocationManager.
+ *<p>
+ * The way this works is as follows:
+ *  - We know about two different Android location providers: Network and GPS
+ *  - It is possible, though not likely, for network to not be enabled
+ *  - It is likely that GPS won't be enabled.
+ *<p>
+ * The user may have indicated that they prefer to use GPS location, in which case if we're able to get a GPS fix,
+ *  that location must take precedence. However, just because they *prefer* GPS, doesn't mean that we won't use
+ *  some other mechanism if we're not able to get a GPS fix.
+ *<p>
+ * When the first listener is added, we will make sure that we have either the network OR GPS provider enabled.
+ *  If neither are enabled, we need to error out...
+ *  Otherwise, ask all available providers to get us a fix. If the first provider we get a response from is:
+ *    <ul>
+ *      <li>the network, and the user doesn't care about GPS, tell other providers to stop, and let our listeners
+ *          know we've got a location.
+ *      <li>the network, but the user prefers GPS:
+ *        <ul>
+ *          <li>If the GPS provider isn't enabled, then tell other providers to stop, and let our listeners know we've got a location.
+ *          <li>Otherwise, continue waiting for the GPS provider
+ *        </ul>
+ *      <li>GPS, then tell all the other providers to stop, and let our listeners know we've got a location.
+ *
+ *<p>
+ * Once we have a location, we really don't need to bother getting updates. Really. I doubt that anyone is going to run
+ *  this app long enough to move far enough that it would make a difference. Flurry shows the median session length
+ *  as about 30 seconds...
+ *
+ *<p>
+ *  The last bit of info to know relates to the "continue waiting for the GPS provider" comment above. When we start
+ *    asking the location providers for a fix, we kick off a timer. If that time actually expires, then if we did receive
+ *    a fix from some other location provider, we'll use that. Otherwise, we'll fire an error.
  */
 class DynamicLocationProvider
 	extends LocationProvider {
@@ -38,9 +70,9 @@ class DynamicLocationProvider
 
 	/**
 	 * We need to wait for "some time" before giving up on all the location providers. So, when any of the location
-	 *  providers give us a fix, we cancel this timer. If it expires, then we'll fire an error.
+	 *  providers give us a fix, we cancel this timer. If it expires, then it will cause us to fire an error.
 	 */
-	private CancelFirstFixesTimer                             cancelFirstFixesTimer = null;
+	private WaitingForLocationTimer                           waitingForLocationTimer = null;
 
 	/** Used so that we can decide if a new location is enough of a change to warrant firing an event. */
 	private Location                                          ourLastFix = null;
@@ -63,36 +95,6 @@ class DynamicLocationProvider
 	}
 
 
-	@Override
-	public synchronized boolean addListener( Listener listener ) {
-
-		if ( super.addListener( listener ) ) {
-			if ( 1 == listeners.size() ) {
-				startListeningToLocations();
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-
-	@Override
-	public synchronized boolean removeListener( Listener listener ) {
-		
-		if ( super.removeListener( listener ) ) {
-			if ( listeners.isEmpty() ) {
-				stopListeningToLocations();
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-
 	/**
 	 * Intended to be called when someone has reason to believe that the set of available location providers
 	 *  has changed significantly enough that we ought to requery them all.
@@ -110,6 +112,30 @@ class DynamicLocationProvider
 
 		stopListeningToLocations();
 		super.onDestroy();
+	}
+
+
+	@Override
+	protected void listenerAdded(
+		Listener  listener,
+		boolean   isFirst
+	) {
+
+		if ( isFirst ) {
+			startListeningToLocations();
+		}
+	}
+
+
+	@Override
+	protected void listenerRemoved(
+		Listener  listener,
+		boolean   wasLast
+	) {
+
+		if ( wasLast ) {
+			stopListeningToLocations();
+		}
 	}
 
 
@@ -183,7 +209,7 @@ class DynamicLocationProvider
 
 		// We've got a fix we can use, even if it turns out to not be from our preferred method. Make sure
 		//  we don't time out and claim to have failed...
-		cancelFirstFixesTimer.cancel();
+		waitingForLocationTimer.cancel();
 
 
 		// Now, there's a few cases here:
@@ -196,7 +222,7 @@ class DynamicLocationProvider
 		if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) || !gpsProviderEnabled ) {
 
 			for ( AndroidLocationListener listener : locationListeners ) {
-				listener.cancelFirstFix();
+				listener.cancel();
 			}
 		}
 
@@ -236,7 +262,7 @@ class DynamicLocationProvider
 	void onFailedToGetAnyFixes() {
 
 		for ( AndroidLocationListener listener : locationListeners ) {
-			listener.cancelFirstFix();
+			listener.cancel();
 		}
 
 		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
@@ -250,17 +276,19 @@ class DynamicLocationProvider
 			return;
 		}
 
-		fireLocationProgress( activity.getString( R.string.waiting_for_location_update ) );
-
-		if ( null != cancelFirstFixesTimer ) {
-			cancelFirstFixesTimer.cancel();
+		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
+		//  decide to fire...
+		if ( null != waitingForLocationTimer ) {
+			waitingForLocationTimer.cancel();
 		}
+
+		fireLocationProgress( activity.getString( R.string.waiting_for_location_update ) );
 
 		// Now, kick off a timer such that if the timer expires, we're going to assume we can't get any
 		//  location fix... Start this BEFORE any listeners get added in case one of the listeners returns
 		//  a fix right away...
 		final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
-		cancelFirstFixesTimer = new CancelFirstFixesTimer( gpsProviderEnabled );
+		waitingForLocationTimer = new WaitingForLocationTimer( gpsProviderEnabled );
 
 		// I'm going to listen to whatever providers might be available.
 		final List<String> providers = locationManager.getProviders( true );
@@ -273,8 +301,10 @@ class DynamicLocationProvider
 
 	private void stopListeningToLocations() {
 
-		if ( null != cancelFirstFixesTimer ) {
-			cancelFirstFixesTimer.cancel();
+		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
+		//  decide to fire...
+		if ( null != waitingForLocationTimer ) {
+			waitingForLocationTimer.cancel();
 		}
 
 		for ( AndroidLocationListener listener : locationListeners ) {
@@ -323,9 +353,6 @@ class DynamicLocationProvider
 		 */
 		public final String                                     providerName;
 
-		/** Have we recieved our first location fix yet? */
-		private boolean                                         firstFix = true;
-
 
 		AndroidLocationListener(
 			String  providerName
@@ -342,27 +369,13 @@ class DynamicLocationProvider
 			Location location
 		) {
 
-			cancelFirstFix();
+			cancel();
 			onReceivedFix( location, this );
 		}
 
 
 		public void cancel() {
 			locationManager.removeUpdates( this );
-		}
-
-
-		void cancelFirstFix() {
-
-			if ( firstFix ) {
-				firstFix = false;
-
-				// Doesn't seem to be much use in checking too often. And, we're interested in time-based
-				//  updates, not distance based. Though, I admit, distance makes more sense, this is easier
-				//  to test...
-				cancel();
-				locationManager.requestLocationUpdates( providerName, MIN_UPDATE_INTERVAL_MINUTES, 0.0f, this );
-			}
 		}
 
 
@@ -394,7 +407,7 @@ class DynamicLocationProvider
 	 * If this timer's task actually gets to run, then that means it took too long to get a fix on our location. So, we'll
 	 *  fallback to whatever we can get.
 	 */
-	private class CancelFirstFixesTimer
+	private class WaitingForLocationTimer
 		extends Timer {
 
 		/** Max time to wait for SOMEONE to cancel us when we're using only the network. */
@@ -404,7 +417,7 @@ class DynamicLocationProvider
 		private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 30000;
 
 
-		CancelFirstFixesTimer(
+		WaitingForLocationTimer(
 			boolean waitingForGpsProvider
 		) {
 
@@ -446,7 +459,7 @@ class DynamicLocationProvider
 			schedule( task, timeToWaitForFix );
 		}
 
-	} // End of CancelFirstFixesTimer
+	} // End of WaitingForLocationTimer
 
 
 	private static class LastFixedLocationFactory {

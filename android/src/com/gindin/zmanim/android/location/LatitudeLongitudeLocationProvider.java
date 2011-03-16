@@ -45,15 +45,22 @@ class LatitudeLongitudeLocationProvider
 
 
 	@Override
-	public boolean addListener( Listener listener ) {
+	protected void listenerAdded(
+		Listener  listener,
+		boolean   isFirst
+	) {
 
-		if ( super.addListener( listener ) ) {
-			// Don't want to fireNewLocation because that would notify *everyone*...
-			listener.onLocationChanged( ourLocation, lookupLocationName( ourLocation ) );
-			return true;
-		}
+		// Don't want to fireNewLocation because that would notify *everyone*...
+		listener.onLocationChanged( ourLocation, lookupLocationName( ourLocation ) );
+	}
 
-		return false;
+
+	@Override
+	protected void listenerRemoved(
+		Listener  listener,
+		boolean   wasLast
+	) {
+		// nothing to do
 	}
 
 

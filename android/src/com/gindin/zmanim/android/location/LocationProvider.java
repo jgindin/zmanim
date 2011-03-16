@@ -18,13 +18,19 @@ import java.util.List;
 
 /**
  * Base class for our various location handlers.
+ *<p>
+ * Derived classes should wait until the first listener is added before trying to do anything with any location
+ *  acquisition. And, once the final listener is removed, any necessary clean up needs to be performed.
+ *<p>
+ * Once a location has been determined, fireNewLocation() is to be called, which will take care of notifying
+ *  all the registered listeners.
  */
 abstract class LocationProvider {
 
 	protected final Activity                                  activity;
 
 	/** Who's listening for our events? */
-	protected final List<Listener>                            listeners = new ArrayList<Listener>();
+	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
 	/** Translates from latitude & longitude to a location name, and vice-versa. */
 	protected final Geocoder                                  geocoder;
@@ -74,21 +80,17 @@ abstract class LocationProvider {
 	 * Adds the specified listener to receive notifications of location changes.
 	 *
 	 * @param listener the new listener
-	 *
-	 * @return true if the listener was actually added, false if not (e.g., it's already a listener)
 	 */
-	public synchronized boolean addListener( Listener listener ) {
+	public final synchronized void addListener( Listener listener ) {
 
 		if ( listeners.contains( listener ) ) {
 			if ( Version.isDevelopment() ) {
 				throw new IllegalArgumentException( "Listener already listening!" );
 			}
-
-			return false;
 		}
 		else {
 			listeners.add( listener );
-			return true;
+			listenerAdded( listener, ( 1 == listeners.size() ) );
 		}
 	}
 
@@ -97,21 +99,40 @@ abstract class LocationProvider {
 	 * Removes the specified listener so that it will no longer recieve location change notifications.
 	 *
 	 * @param listener the listener
-	 *
-	 * @return true if the listener was actually removed, false if not (e.g., it wasn't a listener)
 	 */
-	public synchronized boolean removeListener( Listener listener ) {
+	public final synchronized void removeListener( Listener listener ) {
 
 		if ( listeners.contains( listener ) ) {
 			listeners.remove( listener );
-			return true;
+			listenerRemoved( listener, listeners.isEmpty() );
 		}
 		else if ( Version.isDevelopment() ) {
 			throw new IllegalArgumentException( "Listener isn't listening!" );
 		}
-
-		return false;
 	}
+
+
+	/**
+	 * Called after a new listener has been added to our collection of listeners.
+	 *
+	 * @param listener the listener just added
+	 * @param isFirst indicates if this is the first listener added
+	 */
+	protected abstract void listenerAdded(
+		Listener  listener,
+		boolean   isFirst
+	);
+
+	/**
+	 * Called after a listener has been removed from our collection of listeners.
+	 *
+	 * @param listener the listener just removed
+	 * @param wasLast indicates if this was the last listener, and no one is listening any more
+	 */
+	protected abstract void listenerRemoved(
+		Listener  listener,
+		boolean   wasLast
+	);
 
 
 	protected synchronized void fireLocationProgress(

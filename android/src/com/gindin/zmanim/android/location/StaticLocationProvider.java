@@ -43,15 +43,21 @@ class StaticLocationProvider
 
 
 	@Override
-	public boolean addListener( Listener listener ) {
+	protected void listenerAdded(
+		Listener  listener,
+		boolean   isFirst
+	) {
+		// Don't want to fireNewLocation because that would notify *everyone*...
+		listener.onLocationChanged( ourLocation, lookupLocationName( ourLocation ) );
+	}
 
-		if ( super.addListener( listener ) ) {
-			// Don't want to fireNewLocation because that would notify *everyone*...
-			listener.onLocationChanged( ourLocation, lookupLocationName( ourLocation ) );
-			return true;
-		}
 
-		return false;
+	@Override
+	protected void listenerRemoved(
+		Listener  listener,
+		boolean   wasLast
+	) {
+		// Nothing to do
 	}
 
 
