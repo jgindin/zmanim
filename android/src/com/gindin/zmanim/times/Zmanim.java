@@ -123,7 +123,7 @@ public abstract class Zmanim {
 		MinchaGedola( "Mincha Gedola", "Earliest time to start Mincha" ),
 		MinchaKetana( "Mincha Ketana", "Earliest time to start Mincha (Rambam)" ),
 		PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ),
-		CandleLighting( "Candle Lighting", "Earliest time candles can be lit" ),
+		CandleLighting( "Candle Lighting", "When candles should be lit" ),
 		Shkia( "Shkia", "Sunset" ),
 		BeinHashmashot( "Bein Hashmashot", "Twilight" ),
 		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ),

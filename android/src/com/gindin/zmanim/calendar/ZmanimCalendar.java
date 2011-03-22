@@ -120,6 +120,17 @@ public class ZmanimCalendar
 
 
 	/**
+	 * Calculates candle lighting times. Used rather than setting the offset and asking for the candle lighting
+	 *  in the base class because that won't be thread safe.
+	 *
+	 * @param minutesBeforeShkia How many minutes prior to Shkia should candle lighting be calculated?
+	 * @return the <code>Date</code> representing candle lighting.
+	 */
+	public Date getCandleLighting( int minutesBeforeShkia ) {
+		return getTimeOffset(getSunset(), - minutesBeforeShkia * MINUTE_MILLIS);
+	}
+
+	/**
 	 * Method to calculate the middle of the night as defined by the midpoint between sunset and sunrise.
 	 *
 	 * @return the <code>Date</code> representing the middle of the night. Will return null if either the
