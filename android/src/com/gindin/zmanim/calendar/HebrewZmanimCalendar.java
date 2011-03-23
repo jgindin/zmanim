@@ -339,6 +339,20 @@ public class HebrewZmanimCalendar {
 	}
 
 
+	public boolean showHavdalah() {
+
+		//noinspection UnnecessaryUnboxing
+		return adjustHebrewDateIfNecessary(
+			new HebrewDateAdjustedCallback<Boolean>() {
+				public Boolean dateAdjusted( boolean adjustmentWasRequired ) {
+					//noinspection UnnecessaryBoxing
+					return Boolean.valueOf( hebrewCalendar.showHavdalah() );
+				}
+			}
+		).booleanValue();
+	}
+
+
 	private boolean isSetForToday() {
 
 		// Make sure we're using the most up-to-date time.

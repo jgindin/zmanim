@@ -9,7 +9,7 @@ import android.preference.PreferenceActivity;
 import com.gindin.zmanim.android.R;
 
 /**
- *
+ * Activity for editing personal preferences.
  */
 public class PersonalPreferences
 	extends PreferenceActivity {

@@ -72,6 +72,17 @@ class ZmanimDisplay {
 			numZmanim--;
 		}
 
+		final boolean showHavdalah = zmanimCalendar.showHavdalah();
+		if ( !showHavdalah ) {
+			numZmanim--;
+		}
+
+		final boolean showEndOfFast = ( null != zmanimCalendar.isTodayATaanit() );
+		if ( !showEndOfFast ) {
+			numZmanim--;
+		}
+
+
 		Zman[] zmanimToDisplay = new Zman[ numZmanim ];
 
 		int index = 0;
@@ -92,7 +103,17 @@ class ZmanimDisplay {
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Shkia );
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.LatestMincha );
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.BeinHashmashot );
+
+		if ( showEndOfFast ) {
+			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.FastEnd );
+		}
+
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHacochavim );
+
+		if ( showHavdalah ) {
+			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.ShabbatEnd );
+		}
+
 		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.NightChatzot );
 
 		return new ListAdapter( listActivity, zmanimToDisplay );

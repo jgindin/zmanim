@@ -63,7 +63,9 @@ public class HebrewDateFormatter {
 				case Alot:
 				case Talit:
 				case Hanetz:
+				case FastEnd:
 				case TzaitHacochavim:
+				case ShabbatEnd:
 					time = zmanRounder.roundToLatestMinute( time );
 					break;
 

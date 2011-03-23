@@ -119,6 +119,11 @@ public class ZmanimCalendar
 	}
 
 
+	public Date getEndOfFast( int minutesAfterShkia ) {
+		return getTimeOffset( getSeaLevelSunset(), minutesAfterShkia * MINUTE_MILLIS );
+	}
+
+
 	/**
 	 * Calculates candle lighting times. Used rather than setting the offset and asking for the candle lighting
 	 *  in the base class because that won't be thread safe.

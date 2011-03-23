@@ -10,6 +10,7 @@ import com.gindin.zmanim.android.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
+import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.calendar.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.ibm.icu.ICUAndroidBridge;
@@ -53,6 +54,9 @@ public class ZmanimActivity
 
 	private PersonalPrefsManager                              personalPrefsManager;
 
+	private ZmanimSelectionPrefsManager                       zmanimSelectionPrefsManager;
+
+
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
 
@@ -72,11 +76,12 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
-		AppUpgrader.handle( this );
-
-		setContentView( R.layout.main );
 
 		personalPrefsManager = new PersonalPrefsManager( this );
+
+		AppUpgrader.handle( this, personalPrefsManager, new ZmanimSelectionPrefsManager( this ) );
+
+		setContentView( R.layout.main );
 
 		determiningLocationDialog = new ProgressDialog( this );
 		determiningLocationDialog.setIndeterminate( true );
@@ -423,7 +428,7 @@ public class ZmanimActivity
 		switch ( id ) {
 
 			case R.id.personal_prefs:
-				personalPrefsManager.editPersonalPrefs();
+				personalPrefsManager.editPrefs();
 				break;
 
 			case R.id.location_prefs:

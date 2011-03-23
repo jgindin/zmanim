@@ -106,8 +106,16 @@ public class ZmanimFactory {
 					zmanim = new LatestMincha( zmanimCalendar );
 					break;
 
+				case FastEnd:
+					zmanim = new FastEnds( zmanimCalendar );
+					break;
+
 				case TzaitHacochavim:
 					zmanim = new TzaitHacochavim( zmanimCalendar );
+					break;
+
+				case ShabbatEnd:
+					zmanim = new ShabbatEnds( zmanimCalendar );
 					break;
 
 				case NightChatzot:

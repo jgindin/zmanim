@@ -127,7 +127,9 @@ public abstract class Zmanim {
 		Shkia( "Shkia", "Sunset" ),
 		BeinHashmashot( "Bein Hashmashot", "Twilight" ),
 		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ),
+		FastEnd( "Fast Ends", "Earliest end of fast days" ),
 		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ),
+		ShabbatEnd( "Shabbat Ends", "Earliest end of Shabbat" ),
 		NightChatzot( "Chatzot", "Halachic Midnight" );
 
 		/** Name of the set of zmanim. E.g., "Sof Zman Shema" */
