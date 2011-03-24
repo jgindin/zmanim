@@ -60,11 +60,18 @@ public class ZmanimActivity
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
 
+
+	/**
+	 * Task used to initialize the UI for the first time. Once we're done this will be null.
+	 */
+	private AsyncTask<Void, Void, Void>                       activityInitTask;
+
 	/**
 	 * Task used to build the UI. While we're in the process of (re)building the UI, this will be set. As soon as
 	 *  we're done, it's reset to null.
 	 */
 	private AsyncTask<Void, Void, Void>                       buildUITask = null;
+
 
 
 	/** Called when the activity is first created. */
@@ -86,7 +93,6 @@ public class ZmanimActivity
 		determiningLocationDialog = new ProgressDialog( this );
 		determiningLocationDialog.setIndeterminate( true );
 		determiningLocationDialog.setMessage( "Determining location..." );
-		determiningLocationDialog.show();
 
 		locationListener = new ZmanimLocationManager.Listener() {
 
@@ -111,35 +117,8 @@ public class ZmanimActivity
 			}
 		};
 
-		AsyncTask<Void, Void, Void> initUITask = new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground( Void... voids ) {
-
-				setupViewListeners();
-
-				ICUAndroidBridge.create( getAssets() );
-
-				locationManager = new ZmanimLocationManager( ZmanimActivity.this );
-				LogUtils.setLocationHandler( locationManager );
-
-				return null;
-			}
-
-
-			@Override
-			protected void onPostExecute( Void aVoid ) {
-				super.onPostExecute( aVoid );
-
-				// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
-				// Note that it *must* be run on the UI thread...
-				gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
-
-				// Now start listening for location changes...
-				locationManager.addListener( locationListener );
-			}
-		};
-		initUITask.execute( (Void)null );
-
+		activityInitTask = new ActivityInitializationTask();
+		activityInitTask.execute( (Void)null );
 	}
 
 
@@ -164,13 +143,22 @@ public class ZmanimActivity
 
 	@Override
 	protected void onPause() {
+
+		locationManager.onPause();
+		determiningLocationDialog.dismiss();
 		super.onPause();
 	}
 
 
 	@Override
 	protected void onResume() {
+
 		super.onResume();
+
+		// If we're still initializing the UI, then there's nothing to do..
+		if ( null == activityInitTask ) {
+			locationManager.onResume();
+		}
 	}
 
 
@@ -751,4 +739,49 @@ public class ZmanimActivity
 
 		}
 	}
+
+
+	/**
+	 * Task used for initial creation of the activity
+	 */
+	private class ActivityInitializationTask
+		extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			determiningLocationDialog.show();
+		}
+
+
+		@Override
+		protected Void doInBackground( Void... voids ) {
+
+			setupViewListeners();
+
+			ICUAndroidBridge.create( getAssets() );
+
+			locationManager = new ZmanimLocationManager( ZmanimActivity.this );
+			LogUtils.setLocationHandler( locationManager );
+
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute( Void aVoid ) {
+			super.onPostExecute( aVoid );
+
+			// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+			// Note that it *must* be run on the UI thread...
+			gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
+
+			// Now start listening for location changes...
+			locationManager.addListener( locationListener );
+
+			// This is how we know that this is done.
+			activityInitTask = null;
+		}
+	}
+
 }  // End of ZmanimActivity class

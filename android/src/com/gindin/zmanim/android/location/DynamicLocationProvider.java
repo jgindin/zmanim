@@ -108,7 +108,28 @@ class DynamicLocationProvider
 
 
 	@Override
-	protected void onDestroy() {
+	public void onPause() {
+		super.onPause();
+		stopListeningToLocations();
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// TODO: If we ever want to get periodic updates, then this won't work. Instead, we'll need to do something
+		//        where we *always* call startListeningToLocations(), but without it firing any update just yet.
+		//        As it is, for now, once we get a fix we never bother to update again during the lifetime of the
+		//        app, so we're OK.
+		if ( null == ourLastFix ) {
+			startListeningToLocations();
+		}
+	}
+
+
+	@Override
+	public void onDestroy() {
 
 		stopListeningToLocations();
 		super.onDestroy();
@@ -195,10 +216,9 @@ class DynamicLocationProvider
 		LocationError error
 	) {
 
-		Location oldLocation = getLastKnownLocation();
+		ourLastFix = getLastKnownLocation();
 
 		super.fireError( error );
-		lastFixedLocationFactory.save( oldLocation );
 	}
 
 	
@@ -261,6 +281,8 @@ class DynamicLocationProvider
 
 	void onFailedToGetAnyFixes() {
 
+		cancelWaitingForLocationTimer();
+
 		for ( AndroidLocationListener listener : locationListeners ) {
 			listener.cancel();
 		}
@@ -278,9 +300,7 @@ class DynamicLocationProvider
 
 		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
 		//  decide to fire...
-		if ( null != waitingForLocationTimer ) {
-			waitingForLocationTimer.cancel();
-		}
+		cancelWaitingForLocationTimer();
 
 		fireLocationProgress( activity.getString( R.string.waiting_for_location_update ) );
 
@@ -303,15 +323,22 @@ class DynamicLocationProvider
 
 		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
 		//  decide to fire...
-		if ( null != waitingForLocationTimer ) {
-			waitingForLocationTimer.cancel();
-		}
+		cancelWaitingForLocationTimer();
 
 		for ( AndroidLocationListener listener : locationListeners ) {
 			listener.cancel();
 		}
 
 		locationListeners.clear();
+	}
+
+
+	private void cancelWaitingForLocationTimer() {
+
+		if ( null != waitingForLocationTimer ) {
+			waitingForLocationTimer.cancel();
+			waitingForLocationTimer = null;
+		}
 	}
 
 

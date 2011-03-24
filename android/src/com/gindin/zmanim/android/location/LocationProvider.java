@@ -68,9 +68,25 @@ abstract class LocationProvider {
 
 
 	/**
+	 * Called when we're to pause in providing location information.
+	 */
+	public void onPause() {
+		// Nothing by default
+	}
+
+
+	/**
+	 * Called to resume providing location information.
+	 */
+	public void onResume() {
+		// Nothing by default
+	}
+
+
+	/**
 	 * Called when this location provider is going away.
 	 */
-	protected void onDestroy() {
+	public void onDestroy() {
 
 		listeners.clear();
 	}

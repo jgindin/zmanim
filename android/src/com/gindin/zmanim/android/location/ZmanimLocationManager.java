@@ -113,6 +113,23 @@ public class ZmanimLocationManager {
 	}
 
 
+	/**
+	 * Called when the activity is paused, and so we must temporarily stop anything to do with
+	 *  acquiring locations or handling location updates.
+	 */
+	public void onPause() {
+		locationProvider.onPause();
+	}
+
+
+	/**
+	 * Called after onPause() once the activity has restarted.
+	 */
+	public void onResume() {
+		locationProvider.onResume();
+	}
+
+
 	public void onDestroy() {
 
 		if ( !listeners.isEmpty() ) {
@@ -374,7 +391,6 @@ public class ZmanimLocationManager {
 			listener.error( error, location );
 		}
 	}
-
 
 
 	public interface Listener {
