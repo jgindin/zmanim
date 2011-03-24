@@ -185,6 +185,46 @@ class TzaitHacochavim
 		);
 
 		zmanim.add(
+			new Zman( "Geonim 3.65 deg", "Based on the sun's position at 3.65 degrees below the western horizon.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaisGeonim3Point65Degrees();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Geonim 4.37 deg", "Based on the sun's position at 4.37 degrees below the western horizon.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaisGeonim4Point37Degrees();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Geonim 4.61 deg", "Based on the sun's position at 4.61 degrees below the western horizon.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaisGeonim4Point61Degrees();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Geonim 4.8 deg", "Based on the sun's position at 4.8 degrees below the western horizon.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaisGeonim4Point8Degrees();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Geonim 5.88 deg", "Based on the sun's position at 5.88 degrees below the western horizon.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaisGeonim5Point88Degrees();
+				}
+			}
+		);
+
+		zmanim.add(
 			new Zman( "Geonim 5.95 deg", "Based on the sun's position at 5.95 degrees below the western horizon.", zmanType ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzaisGeonim5Point95Degrees();
