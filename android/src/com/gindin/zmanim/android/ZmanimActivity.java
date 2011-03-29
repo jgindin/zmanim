@@ -54,8 +54,6 @@ public class ZmanimActivity
 
 	private PersonalPrefsManager                              personalPrefsManager;
 
-	private ZmanimSelectionPrefsManager                       zmanimSelectionPrefsManager;
-
 
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
@@ -72,6 +70,35 @@ public class ZmanimActivity
 	 */
 	private AsyncTask<Void, Void, Void>                       buildUITask = null;
 
+
+	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
+	//    onCreate
+	//      onRestart
+	//      onStart
+	//        onResume
+	//        onPause
+	//      onStop
+	//    onDestroy
+	//
+	// The entire lifetime of an activity happens between the first call to onCreate(Bundle) through to a single final
+	//  call to onDestroy(). An activity will do all setup of "global" state in onCreate(), and release all remaining
+	//  resources in onDestroy(). For example, if it has a thread running in the background to download data from the
+	//  network, it may create that thread in onCreate() and then stop the thread in onDestroy().
+	//
+	// The visible lifetime of an activity happens between a call to onStart() until a corresponding call to onStop().
+	//  During this time the user can see the activity on-screen, though it may not be in the foreground and interacting
+	//  with the user. Between these two methods you can maintain resources that are needed to show the activity to the
+	//  user. For example, you can register a BroadcastReceiver in onStart() to monitor for changes that impact your UI,
+	//  and unregister it in onStop() when the user an no longer see what you are displaying. The onStart() and onStop()
+	//  methods can be called multiple times, as the activity becomes visible and hidden to the user.
+	//
+	// The foreground lifetime of an activity happens between a call to onResume() until a corresponding call to onPause().
+	//  During this time the activity is in front of all other activities and interacting with the user. An activity can
+	//  frequently go between the resumed and paused states -- for example when the device goes to sleep, when an activity
+	//  result is delivered, when a new intent is delivered -- so the code in these methods should be fairly lightweight.
+	//
+	// Specifically, http://www.screaming-penguin.com/node/7746 says that if you have an indeterminate dialog showing
+	//  it must get cleaned up in the onPause, or else it will leak.
 
 
 	/** Called when the activity is first created. */
@@ -122,51 +149,56 @@ public class ZmanimActivity
 	}
 
 
-	public void rebuildUI() {
+	@Override
+	protected void onStart() {
+		super.onStart();
 
-		rebuildUI( locationManager.getLastKnownLocation(), null );
+		// If we're still initializing the UI, then there's nothing to do..
+		if ( null == activityInitTask ) {
+			locationManager.onStart();
+		}
 	}
 
 
-	// TODO: Need to cleanup in onPause and restart when we get onResume.
-	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
-	//    onCreate
-	//      onRestart
-	//      onStart
-	//        onResume
-	//        onPause
-	//      onStop
-	//    onDestroy
-	//
-	// Specifically, http://www.screaming-penguin.com/node/7746 says that if you have an indeterminate dialog showing
-	//  it must get cleaned up in the onPause, or else it will leak.
-
 	@Override
-	protected void onPause() {
-
-		locationManager.onPause();
-		determiningLocationDialog.dismiss();
-		super.onPause();
+	protected void onRestart() {
+		super.onRestart();
 	}
 
 
 	@Override
 	protected void onResume() {
-
 		super.onResume();
+	}
 
-		// If we're still initializing the UI, then there's nothing to do..
-		if ( null == activityInitTask ) {
-			locationManager.onResume();
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+
+	@Override
+	protected void onStop() {
+
+		// Might be null if we get stopped before we're fully started...
+		if ( null != locationManager ) {
+			locationManager.onStop();
 		}
+
+		determiningLocationDialog.dismiss();
+		super.onStop();
 	}
 
 
 	@Override
 	protected void onDestroy() {
 
-		locationManager.removeListener( locationListener );
-		locationManager.onDestroy();
+		// Might be null if we got stopped before we were fully started...
+		if ( null != locationManager ) {
+			locationManager.removeListener( locationListener );
+			locationManager.onDestroy();
+		}
 
 		cleanupCalendarListeners();
 
@@ -205,6 +237,11 @@ public class ZmanimActivity
 				personalPrefsManager.personalPrefsChanged();
 				break;
 		}
+	}
+
+
+	public void rebuildUI() {
+		rebuildUI( locationManager.getLastKnownLocation(), null );
 	}
 
 

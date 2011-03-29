@@ -70,7 +70,7 @@ abstract class LocationProvider {
 	/**
 	 * Called when we're to pause in providing location information.
 	 */
-	public void onPause() {
+	public void onStop() {
 		// Nothing by default
 	}
 
@@ -78,7 +78,7 @@ abstract class LocationProvider {
 	/**
 	 * Called to resume providing location information.
 	 */
-	public void onResume() {
+	public void onStart() {
 		// Nothing by default
 	}
 

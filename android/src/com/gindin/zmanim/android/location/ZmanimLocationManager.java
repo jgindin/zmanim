@@ -117,16 +117,16 @@ public class ZmanimLocationManager {
 	 * Called when the activity is paused, and so we must temporarily stop anything to do with
 	 *  acquiring locations or handling location updates.
 	 */
-	public void onPause() {
-		locationProvider.onPause();
+	public void onStop() {
+		locationProvider.onStop();
 	}
 
 
 	/**
 	 * Called after onPause() once the activity has restarted.
 	 */
-	public void onResume() {
-		locationProvider.onResume();
+	public void onStart() {
+		locationProvider.onStart();
 	}
 
 
@@ -179,7 +179,7 @@ public class ZmanimLocationManager {
 
 		if ( listeners.contains( listener ) ) {
 			if ( Version.isDevelopment() ) {
-				throw new IllegalArgumentException( "Listener already listening!" );
+				LogUtils.logError( "ZmanimLocationManager::addListener", "Listener already listening!", new Throwable() );
 			}
 		}
 		else {
@@ -205,7 +205,7 @@ public class ZmanimLocationManager {
 			}
 		}
 		else if ( Version.isDevelopment() ) {
-			throw new IllegalArgumentException( "Listener isn't listening!" );
+			LogUtils.logError( "ZmanimLocationManager::removeListener", "Listener wasn't listening!", new Throwable() );
 		}
 	}
 

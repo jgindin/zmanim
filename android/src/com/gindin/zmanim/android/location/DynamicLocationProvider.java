@@ -108,15 +108,15 @@ class DynamicLocationProvider
 
 
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
 		stopListeningToLocations();
 	}
 
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 
 		// TODO: If we ever want to get periodic updates, then this won't work. Instead, we'll need to do something
 		//        where we *always* call startListeningToLocations(), but without it firing any update just yet.
