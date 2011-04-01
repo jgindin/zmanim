@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.calendar;
 
-import java.util.Date;
+import com.gindin.zmanim.calendar.holiday.*;
 
 /**
  * Adds support for determining additional information about the current day, including whether or not
@@ -74,13 +74,16 @@ public class HebrewCalendar
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isTodayAHoliday() {
 
-		for ( JewishHoliday jewishHoliday : JewishHoliday.JEWISH_HOLIDAYS ) {
-			if ( jewishHoliday.isOn( this ) ) {
-				return jewishHoliday.getForDate( this );
+		for ( JewishHoliday jewishHoliday : Holidays.JEWISH_HOLIDAYS ) {
+
+			final JewishHoliday holiday = jewishHoliday.isOn( this );
+			if ( null != holiday ) {
+				return holiday;
 			}
 
-			if ( jewishHoliday.isErev( this ) ) {
-				return JewishHoliday.createErevOf( jewishHoliday );
+			final JewishHoliday erev = jewishHoliday.isErev( this );
+			if ( null != erev ) {
+				return erev;
 			}
 		}
 
@@ -91,13 +94,16 @@ public class HebrewCalendar
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isTodayATaanit() {
 
-		for ( JewishHoliday jewishHoliday : JewishHoliday.ARBA_TAANIOT ) {
-			if ( jewishHoliday.isOn( this ) ) {
-				return jewishHoliday.getForDate( this );
+		for ( Taanit taanit : Taanit.TAANIOT ) {
+
+			final JewishHoliday holiday = taanit.isOn( this );
+			if ( null != holiday ) {
+				return holiday;
 			}
 
-			if ( jewishHoliday.isErev( this ) ) {
-				return JewishHoliday.createErevOf( jewishHoliday );
+			final JewishHoliday erev = taanit.isErev( this );
+			if ( null != erev ) {
+				return erev;
 			}
 		}
 
@@ -113,19 +119,19 @@ public class HebrewCalendar
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishHoliday isTodayRoshChodesh() {
 
-		JewishHoliday[] roshChodeshim;
+		RoshChodesh[] roshChodeshim;
 
 		switch ( getYearType() ) {
 			case Haser:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_HASER;
+				roshChodeshim = RoshChodesh.ROSH_CHODESH_HASER;
 				break;
 
 			case Qesidrah:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_QESIDRAH;
+				roshChodeshim = RoshChodesh.ROSH_CHODESH_QESIDRAH;
 				break;
 
 			case Shalem:
-				roshChodeshim = JewishHoliday.ROSH_CHODESH_SHALEM;
+				roshChodeshim = RoshChodesh.ROSH_CHODESH_SHALEM;
 				break;
 
 			default:
@@ -133,30 +139,35 @@ public class HebrewCalendar
 		}
 
 
-		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( this ) ) {
-				return roshChodesh.getForDate( this );
+		for ( RoshChodesh roshChodesh : roshChodeshim ) {
+
+			final JewishHoliday holiday = roshChodesh.isOn( this );
+			if ( null != holiday ) {
+				return holiday;
 			}
 
-			if ( roshChodesh.isErev( this ) ) {
-				return JewishHoliday.createErevOf( roshChodesh );
+			final JewishHoliday erev = roshChodesh.isErev( this );
+			if ( null != erev ) {
+				return erev;
 			}
 		}
 
 		if ( isLeapYear() ) {
-			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_LEAP;
+			roshChodeshim = RoshChodesh.ROSH_CHODESH_ADAR_LEAP;
 		}
 		else {
-			roshChodeshim = JewishHoliday.ROSH_CHODESH_ADAR_REGULAR;
+			roshChodeshim = RoshChodesh.ROSH_CHODESH_ADAR_REGULAR;
 		}
 
-		for ( JewishHoliday roshChodesh : roshChodeshim ) {
-			if ( roshChodesh.isOn( this ) ) {
-				return roshChodesh.getForDate( this );
+		for ( RoshChodesh roshChodesh : roshChodeshim ) {
+			final JewishHoliday holiday = roshChodesh.isOn( this );
+			if ( null != holiday ) {
+				return holiday;
 			}
 
-			if ( roshChodesh.isErev( this ) ) {
-				return JewishHoliday.createErevOf( roshChodesh );
+			final JewishHoliday erev = roshChodesh.isErev( this );
+			if ( null != erev ) {
+				return erev;
 			}
 		}
 
@@ -166,9 +177,11 @@ public class HebrewCalendar
 
 	public JewishHoliday isTodayInTheOmer() {
 
-		for ( JewishHoliday jewishHoliday : JewishHoliday.OMER ) {
-			if ( jewishHoliday.isOn( this ) ) {
-				return jewishHoliday.getForDate( this );
+		for ( Omer omer : Omer.OMER ) {
+
+			final JewishHoliday holiday = omer.isOn( this );
+			if ( null != holiday ) {
+				return holiday;
 			}
 
 			// Explicitly NOT checking erev...
@@ -180,12 +193,18 @@ public class HebrewCalendar
 
 	public boolean showCandlelighting() {
 
+		boolean show = false;
+
 		JewishHoliday todaysHoliday = isTodayAHoliday();
 		if ( null != todaysHoliday ) {
-			return todaysHoliday.showCandlelighting();
+			show = todaysHoliday.showCandlelighting();
 		}
 
-		return FRIDAY == get( DAY_OF_WEEK );
+		if ( !show ) {
+			show = ( FRIDAY == get( DAY_OF_WEEK ) );
+		}
+
+		return show;
 	}
 
 
@@ -193,16 +212,11 @@ public class HebrewCalendar
 
 		boolean show = false;
 
-		// Is today a holiday, but not tomorrow?
-		if ( null != isTodayAHoliday() ) {
-
-			Date today = getTime();
-			add( DATE, 1 );
-			if ( null == isTodayAHoliday() ) {
-				show = true;
-			}
-
-			setTime( today );
+		// Is today a holiday, but not tomorrow? Make sure that it's a holiday for which we need to show Havadalah,
+		//  and not, say, Chol HaMoed...
+		final JewishHoliday todaysHoliday = isTodayAHoliday();
+		if ( null != todaysHoliday ) {
+			show = todaysHoliday.showHavdalah();
 		}
 
 		if ( !show ) {

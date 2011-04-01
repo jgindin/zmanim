@@ -5,6 +5,7 @@
 package com.gindin.zmanim.calendar;
 
 import com.gindin.zmanim.android.location.ZmanimLocation;
+import com.gindin.zmanim.calendar.holiday.JewishHoliday;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 import com.gindin.zmanim.times.ZmanimFactory;
