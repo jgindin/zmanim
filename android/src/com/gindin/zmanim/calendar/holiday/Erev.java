@@ -4,10 +4,12 @@
 
 package com.gindin.zmanim.calendar.holiday;
 
+import com.gindin.zmanim.calendar.HebrewCalendar;
+
 /**
  * Used by the isErev() method to create a 'placeholder'.
  */
-class Erev
+public class Erev
 	extends JewishHoliday {
 
 	private final boolean                                   showCandles;
@@ -31,13 +33,20 @@ class Erev
 
 	@Override
 	public boolean showHavdalah() {
-		// We're erev...can't be Havdalah!
+		// We're erev...can't be Havdalah unless it's also motzae Shabbat!
 		return false;
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf() {
+	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
+		// Makes no sense!
+		return null;
+	}
+
+
+	@Override
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
 		// Makes no sense!
 		return null;
 	}

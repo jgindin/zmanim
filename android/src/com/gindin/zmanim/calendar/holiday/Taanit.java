@@ -21,7 +21,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  */
 @SuppressWarnings( { "MagicNumber" } )
 public class Taanit
-	extends AdjustableDateHoliday {
+	extends AdjustableDateObservance {
 
 	private static final Taanit                               GEDALIAH  = new Taanit( HebrewCalendar.TISHRI,  3,      "Gedaliah" );
 	private static final Taanit                               TEVET_10  = new Taanit( HebrewCalendar.TEVET,  10,      "Tevet 10" );
@@ -58,25 +58,6 @@ public class Taanit
 
 		return adjustment;
 	}
-
-
-	@Override
-	public boolean showCandlelighting() {
-		return false;
-	}
-
-
-	@Override
-	public boolean showHavdalah() {
-		return false;
-	}
-
-
-	@Override
-	protected JewishHoliday createErevOf() {
-		return new Erev( this, false );
-	}
-
 
 
 	/**

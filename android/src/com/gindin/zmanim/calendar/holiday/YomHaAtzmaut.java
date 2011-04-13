@@ -10,28 +10,10 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 *
 */
 class YomHaAtzmaut
-	extends AdjustableDateHoliday {
+	extends AdjustableDateObservance {
 
 	YomHaAtzmaut() {
 		super( HebrewCalendar.IYAR, 5, "Yom Ha'Atzmaut" );
-	}
-
-
-	@Override
-	public boolean showCandlelighting() {
-		return false;
-	}
-
-
-	@Override
-	public boolean showHavdalah() {
-		return false;
-	}
-
-
-	@Override
-	protected JewishHoliday createErevOf() {
-		return new Erev( this, false );
 	}
 
 

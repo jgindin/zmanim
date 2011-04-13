@@ -4,10 +4,12 @@
 
 package com.gindin.zmanim.calendar.holiday;
 
+import com.gindin.zmanim.calendar.HebrewCalendar;
+
 /**
  * A single-day "holiday" which does not require candle lighting or havdalah.
  */
-class Observance
+abstract class Observance
 	extends JewishHoliday {
 
 	Observance(
@@ -32,7 +34,15 @@ class Observance
 
 
 	@Override
-	protected JewishHoliday createErevOf() {
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+		// By default, there's no need for a special instance.
+		return this;
+	}
+
+
+	@Override
+	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, false );
 	}
+
 }  // End of Observance class

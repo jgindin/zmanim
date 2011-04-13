@@ -13,14 +13,14 @@ public class Holidays {
 
 	// Nissan
 	private static final JewishHoliday PESACH           = new Pesach();
-	private static final JewishHoliday YOM_HASHOAH      = new Observance( HebrewCalendar.NISAN, 27, "Yom Hashoah" );
+	private static final JewishHoliday YOM_HASHOAH      = new FixedDateObservance( HebrewCalendar.NISAN, 27, "Yom Hashoah" );
 
 	// Iyar
 	private static final JewishHoliday YOM_HAZIKARON    = new YomHaZikaron();
 	private static final JewishHoliday YOM_HAATZMAUT    = new YomHaAtzmaut();
-	private static final JewishHoliday PESACH_SHEINI    = new Observance( HebrewCalendar.IYAR, 14, "Pesach Sheini" );
-	private static final JewishHoliday LAG_BOMER        = new Observance( HebrewCalendar.IYAR, 18, "Lag B'Omer" );
-	private static final JewishHoliday YOM_YERUSHALAYIM = new Observance( HebrewCalendar.IYAR, 28, "Yom Yerushalayim" );
+	private static final JewishHoliday PESACH_SHEINI    = new FixedDateObservance( HebrewCalendar.IYAR, 14, "Pesach Sheini" );
+	private static final JewishHoliday LAG_BOMER        = new FixedDateObservance( HebrewCalendar.IYAR, 18, "Lag B'Omer" );
+	private static final JewishHoliday YOM_YERUSHALAYIM = new FixedDateObservance( HebrewCalendar.IYAR, 28, "Yom Yerushalayim" );
 
 	// Sivan
 	private static final JewishHoliday SHAVUOT          = new Shavuot();
@@ -28,7 +28,7 @@ public class Holidays {
 	// Tamuz
 
 	// Av
-	private static final JewishHoliday TU_BAV           = new Observance( HebrewCalendar.AV, 15, "Tu B'Av" );
+	private static final JewishHoliday TU_BAV           = new FixedDateObservance( HebrewCalendar.AV, 15, "Tu B'Av" );
 
 	// Elul
 
@@ -48,12 +48,12 @@ public class Holidays {
 	// Tevet
 
 	// Shevat
-	private static final JewishHoliday TU_BSHEVAT       = new Observance( HebrewCalendar.SHEVAT, 15, "Tu B'Shevat" );
+	private static final JewishHoliday TU_BSHEVAT       = new FixedDateObservance( HebrewCalendar.SHEVAT, 15, "Tu B'Shevat" );
 
 	// Adar
 	private static final JewishHoliday PURIM_KATAN      = new PurimKatan();
-	private static final JewishHoliday PURIM            = new Observance( HebrewCalendar.ADAR, 14, "Purim" );
-	private static final JewishHoliday SHUSHAN_PURIM    = new Observance( HebrewCalendar.ADAR, 15, "Shushan Purim" );
+	private static final JewishHoliday PURIM            = new FixedDateObservance( HebrewCalendar.ADAR, 14, "Purim" );
+	private static final JewishHoliday SHUSHAN_PURIM    = new FixedDateObservance( HebrewCalendar.ADAR, 15, "Shushan Purim" );
 
 
 	/**

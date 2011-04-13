@@ -17,8 +17,19 @@ class YomKippur
 	}
 
 
+	YomKippur( HebrewCalendar forDate ) {
+		super( HebrewCalendar.TISHRI, 10, "Yom Kippur", forDate );
+	}
+
+
 	@Override
-	protected  JewishHoliday createErevOf() {
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+		return new YomKippur( forDate );
+	}
+
+
+	@Override
+	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, true );
 	}
 

@@ -16,28 +16,10 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *  one day later if Yom Hazikaron would fall on Sunday.
  */
 class YomHaZikaron
-	extends AdjustableDateHoliday {
+	extends AdjustableDateObservance {
 
 	YomHaZikaron() {
 		super( HebrewCalendar.IYAR, 4, "Yom HaZikaron" );
-	}
-
-
-	@Override
-	public boolean showCandlelighting() {
-		return false;
-	}
-
-
-	@Override
-	public boolean showHavdalah() {
-		return false;
-	}
-
-
-	@Override
-	protected JewishHoliday createErevOf() {
-		return new Erev( this, false );
 	}
 
 

@@ -16,8 +16,6 @@ abstract class MultiDayHoliday
 	extends JewishHoliday {
 
 
-	protected final HebrewCalendar                          forDate;
-
 	private final int                                       length;
 
 
@@ -30,9 +28,8 @@ abstract class MultiDayHoliday
 		HebrewCalendar  forDate
 	) {
 
-		super( month, date, name );
+		super( month, date, name, forDate );
 		this.length = length;
-		this.forDate = forDate;
 	}
 
 
@@ -78,6 +75,18 @@ abstract class MultiDayHoliday
 		}
 
 		return holiday;
+	}
+
+
+	@Override
+	public boolean showCandlelighting() {
+		return isShabbat();
+	}
+
+
+	@Override
+	public boolean showHavdalah() {
+		return isMotzaeShabbat();
 	}
 
 

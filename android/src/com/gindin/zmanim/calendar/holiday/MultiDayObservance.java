@@ -9,7 +9,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 /**
  * A multi-day "holiday" which does not require candles or havdalah.
  */
-class MultiDayObservance
+abstract class MultiDayObservance
 	extends MultiDayHoliday {
 
 	MultiDayObservance(
@@ -25,18 +25,22 @@ class MultiDayObservance
 
 	@Override
 	public boolean showCandlelighting() {
-		return false;
+
+		// Could be Shabbat...
+		return super.showCandlelighting();
 	}
 
 
 	@Override
 	public boolean showHavdalah() {
-		return false;
+
+		// Could be Motzae Shabbat...
+		return super.showHavdalah();
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf() {
+	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, false );
 	}
 }  // End of MultiDayObservance class

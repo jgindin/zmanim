@@ -9,7 +9,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 /**
  * Specialized for Rosh Hashana, because when we try to check for Erev, the years will be different...
  */
-class RoshHashana
+public class RoshHashana
 	extends MultiDayHoliday {
 
 	RoshHashana() {
@@ -35,7 +35,7 @@ class RoshHashana
 		calendar.add( HebrewCalendar.YEAR, 1 );
 
 		if ( isSameDate( dateToTest, calendar ) ) {
-			return createForDate( dateToTest );
+			return createErevOf( dateToTest );
 		}
 
 		return null;
@@ -43,7 +43,13 @@ class RoshHashana
 
 
 	@Override
-	protected  JewishHoliday createErevOf() {
+	protected JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+		return new RoshHashana( hebrewCalendar );
+	}
+
+
+	@Override
+	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, true );
 	}
 
@@ -59,7 +65,7 @@ class RoshHashana
 
 		// Only light candles on the 1st of Tishri.
 		int day = forDate.get( HebrewCalendar.DATE );
-		return 1 == day;
+		return ( 1 == day ) || isShabbat();
 	}
 
 
@@ -74,6 +80,6 @@ class RoshHashana
 
 		// 2nd of Tishri we show Havdalah.
 		int day = forDate.get( HebrewCalendar.DATE );
-		return 2 == day;
+		return ( 2 == day ) && !isShabbat();
 	}
 }

@@ -9,10 +9,10 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 /**
  * Class to handle those observances which may have to shift dates to ensure they don't fall on certain days.
  */
-abstract class AdjustableDateHoliday
-	extends JewishHoliday {
+abstract class AdjustableDateObservance
+	extends Observance {
 
-	AdjustableDateHoliday(
+	AdjustableDateObservance(
 		int month,
 		int date,
 		String name
@@ -52,7 +52,7 @@ abstract class AdjustableDateHoliday
 		calendar.add( HebrewCalendar.DATE, adjustment - 1 );
 
 		if ( isSameDate( dateToTest, calendar ) ) {
-			return createErevOf();
+			return createErevOf( dateToTest );
 		}
 
 		return null;

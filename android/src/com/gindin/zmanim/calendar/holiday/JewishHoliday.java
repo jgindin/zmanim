@@ -32,15 +32,28 @@ public abstract class JewishHoliday {
 	protected final int                                       month;
 	protected final int                                       date;
 
+	/** What date was this holiday specifically constructed for? Maybe null to indicate a generic instance. */
+	protected final HebrewCalendar                            forDate;
 
-	public JewishHoliday(
-		int     month,
-		int     date,
-	  String  name
+
+	protected JewishHoliday(
+		int             month,
+		int             date,
+		String          name
+	) {
+		this( month, date, name, null );
+	}
+
+	protected JewishHoliday(
+		int             month,
+		int             date,
+		String          name,
+		HebrewCalendar  forDate
 	) {
 		this.month = month;
 		this.date = date;
 		this.name = name;
+		this.forDate = forDate;
 	}
 
 
@@ -97,7 +110,7 @@ public abstract class JewishHoliday {
 		calendar.add( HebrewCalendar.DATE, -1 );
 
 		if ( isSameDate( dateToTest, calendar ) ) {
-			return createErevOf();
+			return createErevOf( dateToTest );
 		}
 
 		return null;
@@ -121,25 +134,40 @@ public abstract class JewishHoliday {
 
 
 	/**
-	 * @param hebrewCalendar The date we want a 'version' of this holiday for.
+	 * @param forDate The date we want a 'version' of this holiday for.
 	 *
 	 * @return a version of this holiday, specific for the specified date.
 	 *  NOTE: Many implementations will just return themselves, as there is nothing special about them that changes
 	 *    based on the date.
 	 */
-	protected JewishHoliday createForDate(
-		HebrewCalendar hebrewCalendar
-	) {
-
-		// Nothing about this is dependent upon the date...
-		return this;
-	}
+	protected abstract JewishHoliday createForDate( HebrewCalendar forDate );
 
 
 	/**
+	 * @param forDate The date we want a 'version' of this erev holiday for.
 	 * @return a "holiday" to represent the day before this holiday.
 	 */
-	protected abstract JewishHoliday createErevOf();
+	protected abstract JewishHoliday createErevOf( HebrewCalendar forDate );
+
+
+	protected final boolean isShabbat() {
+		//noinspection SimplifiableIfStatement
+		if ( null == forDate ) {
+			return false;
+		}
+
+		return ( HebrewCalendar.FRIDAY == forDate.get( HebrewCalendar.DAY_OF_WEEK ) );
+	}
+
+
+	protected final boolean isMotzaeShabbat() {
+		//noinspection SimplifiableIfStatement
+		if ( null == forDate ) {
+			return false;
+		}
+
+		return ( HebrewCalendar.SATURDAY == forDate.get( HebrewCalendar.DAY_OF_WEEK ) );
+	}
 
 
 	@SuppressWarnings( { "FeatureEnvy", "RedundantIfStatement" } )
@@ -162,6 +190,5 @@ public abstract class JewishHoliday {
 
 		return true;
 	}
-
 
 }  // End of JewishHoliday class

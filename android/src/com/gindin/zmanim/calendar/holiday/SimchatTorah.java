@@ -13,12 +13,25 @@ class SimchatTorah
 	extends JewishHoliday {
 
 	SimchatTorah() {
-		super( HebrewCalendar.TISHRI, 23, "Simchat Torah" );
+		super( HebrewCalendar.TISHRI, 23, "Simchat Torah", null );
+	}
+
+
+	SimchatTorah(
+		HebrewCalendar forDate
+	) {
+		super( HebrewCalendar.TISHRI, 23, "Simchat Torah", forDate );
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf() {
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+		return new SimchatTorah( forDate );
+	}
+
+
+	@Override
+	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, true );
 	}
 
@@ -31,6 +44,6 @@ class SimchatTorah
 
 	@Override
 	public boolean showHavdalah() {
-		return true;
+		return !isShabbat();
 	}
 }

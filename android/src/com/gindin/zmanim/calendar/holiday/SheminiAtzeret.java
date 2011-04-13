@@ -18,7 +18,13 @@ class SheminiAtzeret
 
 
 	@Override
-	protected  JewishHoliday createErevOf() {
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+		return new SheminiAtzeret();
+	}
+
+
+	@Override
+	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
 		return new Erev( this, true );
 	}
 

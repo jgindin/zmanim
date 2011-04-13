@@ -72,4 +72,11 @@ public class RoshChodesh
 		super( month, date, length, "Rosh Chodesh " + name, null );
 	}
 
+
+	@Override
+	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+		// No need for a separate instance
+		return this;
+	}
+
 } // End of RoshChodesh class
