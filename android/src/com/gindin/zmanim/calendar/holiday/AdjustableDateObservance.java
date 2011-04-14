@@ -22,7 +22,7 @@ abstract class AdjustableDateObservance
 
 
 	@Override
-	public JewishHoliday isOn( HebrewCalendar dateToTest ) {
+	public JewishDay isOn( HebrewCalendar dateToTest ) {
 
 		// Wrong month? Then can't be!
 		if ( month != dateToTest.get( HebrewCalendar.MONTH ) ) {
@@ -41,7 +41,7 @@ abstract class AdjustableDateObservance
 
 
 	@Override
-	public JewishHoliday isErev( HebrewCalendar dateToTest ) {
+	public JewishDay isErev( HebrewCalendar dateToTest ) {
 
 		// Wrong month? Then can't be!
 		if ( month != dateToTest.get( HebrewCalendar.MONTH ) ) {

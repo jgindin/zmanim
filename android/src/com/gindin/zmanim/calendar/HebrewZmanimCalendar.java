@@ -5,7 +5,7 @@
 package com.gindin.zmanim.calendar;
 
 import com.gindin.zmanim.android.location.ZmanimLocation;
-import com.gindin.zmanim.calendar.holiday.JewishHoliday;
+import com.gindin.zmanim.calendar.holiday.JewishDay;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 import com.gindin.zmanim.times.ZmanimFactory;
@@ -235,38 +235,38 @@ public class HebrewZmanimCalendar {
 	public String getTodaysDescription() {
 
 		StringBuffer description = new StringBuffer();
-		JewishHoliday holiday = isTodayAHoliday();
-		if ( null != holiday ) {
-			description.append( holiday.getDescription() );
+		JewishDay day = isTodayAHoliday();
+		if ( null != day ) {
+			description.append( day.getDescription() );
 		}
 
-		holiday = isTodayRoshChodesh();
-		if ( null != holiday ) {
+		day = isTodayRoshChodesh();
+		if ( null != day ) {
 			if ( 0 == description.length() ) {
-				description.append( holiday.getDescription() );
+				description.append( day.getDescription() );
 			}
 			else {
-				description.append( " / " ).append( holiday.getDescription() );
-			}
-		}
-
-		holiday = isTodayInTheOmer();
-		if ( null != holiday ) {
-			if ( 0 == description.length() ) {
-				description.append( holiday.getDescription() );
-			}
-			else {
-				description.append( " / " ).append( holiday.getDescription() );
+				description.append( " / " ).append( day.getDescription() );
 			}
 		}
 
-		holiday = isTodayATaanit();
-		if ( null != holiday ) {
+		day = isTodayInTheOmer();
+		if ( null != day ) {
 			if ( 0 == description.length() ) {
-				description.append( holiday.getDescription() );
+				description.append( day.getDescription() );
 			}
 			else {
-				description.append( " / " ).append( holiday.getDescription() );
+				description.append( " / " ).append( day.getDescription() );
+			}
+		}
+
+		day = isTodayATaanit();
+		if ( null != day ) {
+			if ( 0 == description.length() ) {
+				description.append( day.getDescription() );
+			}
+			else {
+				description.append( " / " ).append( day.getDescription() );
 			}
 		}
 
@@ -274,11 +274,11 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	public JewishHoliday isTodayAHoliday() {
+	private JewishDay isTodayAHoliday() {
 
 		return adjustHebrewDateIfNecessary(
-			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+			new HebrewDateAdjustedCallback<JewishDay>() {
+				public JewishDay dateAdjusted( boolean adjustmentWasRequired ) {
 					return hebrewCalendar.isTodayAHoliday();
 				}
 			}
@@ -286,11 +286,12 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	public JewishHoliday isTodayATaanit() {
+	// TODO: Make private -- get this info from the Day
+	public JewishDay isTodayATaanit() {
 
 		return adjustHebrewDateIfNecessary(
-			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+			new HebrewDateAdjustedCallback<JewishDay>() {
+				public JewishDay dateAdjusted( boolean adjustmentWasRequired ) {
 
 					if ( !adjustmentWasRequired ) {
 						return hebrewCalendar.isTodayATaanit();
@@ -302,11 +303,11 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	public JewishHoliday isTodayRoshChodesh() {
+	private JewishDay isTodayRoshChodesh() {
 
 		return adjustHebrewDateIfNecessary(
-			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+			new HebrewDateAdjustedCallback<JewishDay>() {
+				public JewishDay dateAdjusted( boolean adjustmentWasRequired ) {
 					return hebrewCalendar.isTodayRoshChodesh();
 				}
 			}
@@ -314,11 +315,11 @@ public class HebrewZmanimCalendar {
 	}
 
 
-	public JewishHoliday isTodayInTheOmer() {
+	private JewishDay isTodayInTheOmer() {
 
 		return adjustHebrewDateIfNecessary(
-			new HebrewDateAdjustedCallback<JewishHoliday>() {
-				public JewishHoliday dateAdjusted( boolean adjustmentWasRequired ) {
+			new HebrewDateAdjustedCallback<JewishDay>() {
+				public JewishDay dateAdjusted( boolean adjustmentWasRequired ) {
 					return hebrewCalendar.isTodayInTheOmer();
 				}
 			}
@@ -326,6 +327,7 @@ public class HebrewZmanimCalendar {
 	}
 
 
+	// TODO: Make private -- get this info from the Day
 	@SuppressWarnings( { "UnnecessaryBoxing" } )
 	public boolean showCandlelighting() {
 
@@ -340,6 +342,7 @@ public class HebrewZmanimCalendar {
 	}
 
 
+	// TODO: Make private -- get this info from the Day
 	public boolean showHavdalah() {
 
 		//noinspection UnnecessaryUnboxing

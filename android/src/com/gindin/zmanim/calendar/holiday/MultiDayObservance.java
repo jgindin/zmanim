@@ -40,7 +40,7 @@ abstract class MultiDayObservance
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, false );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, false );
 	}
 }  // End of MultiDayObservance class

@@ -8,13 +8,12 @@ package com.gindin.zmanim.calendar.holiday;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 
 /**
- * Represents a Jewish holiday. By 'holiday', I don't mean just Yom Tov...rather it's any and
- *  all Jewish observances.
+ * Represents a day in the Jewish calendar.
  *<p>
  * For testing purposes, see http://en.wikipedia.org/wiki/Jewish_holidays_2000-2050.
  */
 @SuppressWarnings( { "MagicNumber" } )
-public abstract class JewishHoliday {
+public abstract class JewishDay {
 
 
 	/** Have one instance we use for checking. */
@@ -36,15 +35,15 @@ public abstract class JewishHoliday {
 	protected final HebrewCalendar                            forDate;
 
 
-	protected JewishHoliday(
-		int             month,
-		int             date,
-		String          name
+	protected JewishDay(
+		int     month,
+		int     date,
+		String  name
 	) {
 		this( month, date, name, null );
 	}
 
-	protected JewishHoliday(
+	protected JewishDay(
 		int             month,
 		int             date,
 		String          name,
@@ -79,7 +78,7 @@ public abstract class JewishHoliday {
 	 * @param dateToTest what date are we being asked about?
 	 * @return true if this holiday falls on the specified date; false otherwise.
 	 */
-	public JewishHoliday isOn(
+	public JewishDay isOn(
 		HebrewCalendar dateToTest
 	) {
 
@@ -102,7 +101,7 @@ public abstract class JewishHoliday {
 	 * @param dateToTest what date are we being asked about?
 	 * @return true if this holiday starts on the evening of the specified date; false otherwise.
 	 */
-	public JewishHoliday isErev(
+	public JewishDay isErev(
 		HebrewCalendar dateToTest
 	) {
 
@@ -122,7 +121,9 @@ public abstract class JewishHoliday {
 	 *
 	 * @return true if candles are lit for this holiday; false otherwise
 	 */
-	public abstract boolean showCandlelighting();
+	public boolean showCandlelighting() {
+		return isShabbat();
+	}
 
 
 	/**
@@ -130,7 +131,9 @@ public abstract class JewishHoliday {
 	 *
 	 * @return true if havdalah is observed; false otherwise
 	 */
-	public abstract boolean showHavdalah();
+	public boolean showHavdalah() {
+		return isMotzaeShabbat();
+	}
 
 
 	/**
@@ -140,14 +143,14 @@ public abstract class JewishHoliday {
 	 *  NOTE: Many implementations will just return themselves, as there is nothing special about them that changes
 	 *    based on the date.
 	 */
-	protected abstract JewishHoliday createForDate( HebrewCalendar forDate );
+	protected abstract JewishDay createForDate( HebrewCalendar forDate );
 
 
 	/**
 	 * @param forDate The date we want a 'version' of this erev holiday for.
 	 * @return a "holiday" to represent the day before this holiday.
 	 */
-	protected abstract JewishHoliday createErevOf( HebrewCalendar forDate );
+	protected abstract JewishDay createErevOf( HebrewCalendar forDate );
 
 
 	protected final boolean isShabbat() {
@@ -191,4 +194,4 @@ public abstract class JewishHoliday {
 		return true;
 	}
 
-}  // End of JewishHoliday class
+}  // End of JewishDay class

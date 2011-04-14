@@ -10,7 +10,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *
  */
 class SimchatTorah
-	extends JewishHoliday {
+	extends Holiday {
 
 	SimchatTorah() {
 		super( HebrewCalendar.TISHRI, 23, "Simchat Torah", null );
@@ -25,20 +25,21 @@ class SimchatTorah
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		return new SimchatTorah( forDate );
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 
 	@Override
 	public boolean showCandlelighting() {
-		return true;
+		// We light candles the night before.
+		return isShabbat();
 	}
 
 

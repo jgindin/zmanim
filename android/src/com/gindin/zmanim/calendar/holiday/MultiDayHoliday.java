@@ -13,7 +13,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *  E.g., "Hanukkah 3", or "Omer 22".
  */
 abstract class MultiDayHoliday
-	extends JewishHoliday {
+	extends JewishDay {
 
 
 	private final int                                       length;
@@ -60,33 +60,21 @@ abstract class MultiDayHoliday
 
 
 	@Override
-	public JewishHoliday isOn( HebrewCalendar dateToTest ) {
+	public JewishDay isOn( HebrewCalendar dateToTest ) {
 
-		JewishHoliday holiday = super.isOn( dateToTest );
-		if ( null == holiday ) {
+		JewishDay day = super.isOn( dateToTest );
+		if ( null == day ) {
 
 			for ( int i = 1; i < length; i++ ) {
 
 				calendar.add( HebrewCalendar.DATE, 1 );
 				if ( isSameDate( dateToTest, calendar ) ) {
-					holiday = createForDate( dateToTest );
+					day = createForDate( dateToTest );
 				}
 			}
 		}
 
-		return holiday;
-	}
-
-
-	@Override
-	public boolean showCandlelighting() {
-		return isShabbat();
-	}
-
-
-	@Override
-	public boolean showHavdalah() {
-		return isMotzaeShabbat();
+		return day;
 	}
 
 

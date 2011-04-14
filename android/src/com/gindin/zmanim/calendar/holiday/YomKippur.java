@@ -10,7 +10,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *
  */
 class YomKippur
-	extends JewishHoliday {
+	extends Holiday {
 
 	YomKippur() {
 		super( HebrewCalendar.TISHRI, 10, "Yom Kippur" );
@@ -23,20 +23,21 @@ class YomKippur
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		return new YomKippur( forDate );
 	}
 
 
 	@Override
-	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 
 	@Override
 	public boolean showCandlelighting() {
-		return true;
+		// We light candles the night before.
+		return false;
 	}
 
 

@@ -17,7 +17,7 @@ class PurimKatan
 
 
 	@Override
-	public JewishHoliday isOn( HebrewCalendar dateToTest ) {
+	public JewishDay isOn( HebrewCalendar dateToTest ) {
 
 		// Not a leap year? Then this "holiday" doesn't exist...
 		if ( !dateToTest.isLeapYear() ) {
@@ -29,7 +29,7 @@ class PurimKatan
 
 
 	@Override
-	public JewishHoliday isErev( HebrewCalendar dateToTest ) {
+	public JewishDay isErev( HebrewCalendar dateToTest ) {
 
 		// Not a leap year? Then this "holiday" doesn't exist...
 		if ( !dateToTest.isLeapYear() ) {

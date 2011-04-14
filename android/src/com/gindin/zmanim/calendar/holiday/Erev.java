@@ -10,17 +10,18 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  * Used by the isErev() method to create a 'placeholder'.
  */
 public class Erev
-	extends JewishHoliday {
+	extends JewishDay {
 
 	private final boolean                                   showCandles;
 
 
-	Erev(
-		JewishHoliday holiday,
-		boolean       showCandles
+	public Erev(
+		JewishDay       day,
+		HebrewCalendar  forDate,
+		boolean         showCandles
 	) {
 
-		super( holiday.month, holiday.date, "Erev " + holiday.getName() );
+		super( day.month, day.date, "Erev " + day.getName(), forDate );
 		this.showCandles = showCandles;
 	}
 
@@ -34,19 +35,19 @@ public class Erev
 	@Override
 	public boolean showHavdalah() {
 		// We're erev...can't be Havdalah unless it's also motzae Shabbat!
-		return false;
+		return isMotzaeShabbat();
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
 		// Makes no sense!
 		return null;
 	}
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		// Makes no sense!
 		return null;
 	}

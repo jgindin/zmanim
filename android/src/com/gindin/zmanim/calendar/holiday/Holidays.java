@@ -12,54 +12,54 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 public class Holidays {
 
 	// Nissan
-	private static final JewishHoliday PESACH           = new Pesach();
-	private static final JewishHoliday YOM_HASHOAH      = new FixedDateObservance( HebrewCalendar.NISAN, 27, "Yom Hashoah" );
+	private static final JewishDay PESACH           = new Pesach();
+	private static final JewishDay YOM_HASHOAH      = new FixedDateObservance( HebrewCalendar.NISAN, 27, "Yom Hashoah" );
 
 	// Iyar
-	private static final JewishHoliday YOM_HAZIKARON    = new YomHaZikaron();
-	private static final JewishHoliday YOM_HAATZMAUT    = new YomHaAtzmaut();
-	private static final JewishHoliday PESACH_SHEINI    = new FixedDateObservance( HebrewCalendar.IYAR, 14, "Pesach Sheini" );
-	private static final JewishHoliday LAG_BOMER        = new FixedDateObservance( HebrewCalendar.IYAR, 18, "Lag B'Omer" );
-	private static final JewishHoliday YOM_YERUSHALAYIM = new FixedDateObservance( HebrewCalendar.IYAR, 28, "Yom Yerushalayim" );
+	private static final JewishDay YOM_HAZIKARON    = new YomHaZikaron();
+	private static final JewishDay YOM_HAATZMAUT    = new YomHaAtzmaut();
+	private static final JewishDay PESACH_SHEINI    = new FixedDateObservance( HebrewCalendar.IYAR, 14, "Pesach Sheini" );
+	private static final JewishDay LAG_BOMER        = new FixedDateObservance( HebrewCalendar.IYAR, 18, "Lag B'Omer" );
+	private static final JewishDay YOM_YERUSHALAYIM = new FixedDateObservance( HebrewCalendar.IYAR, 28, "Yom Yerushalayim" );
 
 	// Sivan
-	private static final JewishHoliday SHAVUOT          = new Shavuot();
+	private static final JewishDay SHAVUOT          = new Shavuot();
 
 	// Tamuz
 
 	// Av
-	private static final JewishHoliday TU_BAV           = new FixedDateObservance( HebrewCalendar.AV, 15, "Tu B'Av" );
+	private static final JewishDay TU_BAV           = new FixedDateObservance( HebrewCalendar.AV, 15, "Tu B'Av" );
 
 	// Elul
 
 	// Tishri
-	private static final JewishHoliday ROSH_HASHANAH    = new RoshHashana();
-	private static final JewishHoliday YOM_KIPPUR       = new YomKippur();
-	private static final JewishHoliday SUKKOT           = new Sukkot();
-	private static final JewishHoliday HOSHANAH_RABBAH  = new HoshanahRabbah();
-	private static final JewishHoliday SHEMINI_ATZERET  = new SheminiAtzeret();
-	private static final JewishHoliday SIMCHAT_TORAH    = new SimchatTorah();
+	private static final JewishDay ROSH_HASHANAH    = new RoshHashana();
+	private static final JewishDay YOM_KIPPUR       = new YomKippur();
+	private static final JewishDay SUKKOT           = new Sukkot();
+	private static final JewishDay HOSHANAH_RABBAH  = new HoshanahRabbah();
+	private static final JewishDay SHEMINI_ATZERET  = new SheminiAtzeret();
+	private static final JewishDay SIMCHAT_TORAH    = new SimchatTorah();
 
 	// Heshvan
 
 	// Kislev
-	private static final JewishHoliday HANUKKAH         = new Hanukkah();
+	private static final JewishDay HANUKKAH         = new Hanukkah();
 
 	// Tevet
 
 	// Shevat
-	private static final JewishHoliday TU_BSHEVAT       = new FixedDateObservance( HebrewCalendar.SHEVAT, 15, "Tu B'Shevat" );
+	private static final JewishDay TU_BSHEVAT       = new FixedDateObservance( HebrewCalendar.SHEVAT, 15, "Tu B'Shevat" );
 
 	// Adar
-	private static final JewishHoliday PURIM_KATAN      = new PurimKatan();
-	private static final JewishHoliday PURIM            = new FixedDateObservance( HebrewCalendar.ADAR, 14, "Purim" );
-	private static final JewishHoliday SHUSHAN_PURIM    = new FixedDateObservance( HebrewCalendar.ADAR, 15, "Shushan Purim" );
+	private static final JewishDay PURIM_KATAN      = new PurimKatan();
+	private static final JewishDay PURIM            = new FixedDateObservance( HebrewCalendar.ADAR, 14, "Purim" );
+	private static final JewishDay SHUSHAN_PURIM    = new FixedDateObservance( HebrewCalendar.ADAR, 15, "Shushan Purim" );
 
 
 	/**
 	 * Set of the holidays.
 	 */
-	public static final JewishHoliday[] JEWISH_HOLIDAYS = {
+	public static final JewishDay[] JEWISH_HOLIDAYS = {
 		ROSH_HASHANAH,          YOM_KIPPUR,       SUKKOT,
 		HOSHANAH_RABBAH,        SHEMINI_ATZERET,  SIMCHAT_TORAH,
 		HANUKKAH,               TU_BSHEVAT,       PURIM_KATAN,

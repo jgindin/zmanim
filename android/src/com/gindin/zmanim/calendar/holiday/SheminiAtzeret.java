@@ -10,7 +10,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *
  */
 class SheminiAtzeret
-	extends JewishHoliday {
+	extends Holiday {
 
 	SheminiAtzeret() {
 		super( HebrewCalendar.TISHRI, 22, "Shemini Atzeret" );
@@ -18,14 +18,14 @@ class SheminiAtzeret
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		return new SheminiAtzeret();
 	}
 
 
 	@Override
-	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 
@@ -35,9 +35,4 @@ class SheminiAtzeret
 		return false;
 	}
 
-
-	@Override
-	public boolean showCandlelighting() {
-		return true;
-	}
 }

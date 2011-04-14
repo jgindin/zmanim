@@ -28,7 +28,7 @@ class Hanukkah
 
 
 	@Override
-	public JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+	public JewishDay createForDate( HebrewCalendar hebrewCalendar ) {
 		return new Hanukkah( hebrewCalendar );
 	}
 

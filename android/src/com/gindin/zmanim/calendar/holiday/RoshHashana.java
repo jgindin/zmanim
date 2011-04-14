@@ -25,7 +25,7 @@ public class RoshHashana
 
 
 	@Override
-	public JewishHoliday isErev( HebrewCalendar dateToTest ) {
+	public JewishDay isErev( HebrewCalendar dateToTest ) {
 
 		// Basically the same as the base class, but when we're actually checking for Erev Rosh Hashana,
 		//  the date to test will be, e.g., "29 Elul 5770". When we subtract a day from our day (1 Tishri),
@@ -43,14 +43,14 @@ public class RoshHashana
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+	protected JewishDay createForDate( HebrewCalendar hebrewCalendar ) {
 		return new RoshHashana( hebrewCalendar );
 	}
 
 
 	@Override
-	protected  JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 

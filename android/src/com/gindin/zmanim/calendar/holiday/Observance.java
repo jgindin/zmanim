@@ -10,7 +10,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  * A single-day "holiday" which does not require candle lighting or havdalah.
  */
 abstract class Observance
-	extends JewishHoliday {
+	extends JewishDay {
 
 	Observance(
 		int month,
@@ -34,15 +34,15 @@ abstract class Observance
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar forDate ) {
+	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		// By default, there's no need for a special instance.
 		return this;
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, false );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, false );
 	}
 
 }  // End of Observance class

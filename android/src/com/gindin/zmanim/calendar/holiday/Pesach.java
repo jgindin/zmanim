@@ -24,15 +24,15 @@ class Pesach
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+	protected JewishDay createForDate( HebrewCalendar hebrewCalendar ) {
 
 		return new Pesach( hebrewCalendar );
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 

@@ -34,7 +34,7 @@ public abstract class Omer<T extends Omer>
 
 
 	@Override
-	public JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+	public JewishDay createForDate( HebrewCalendar hebrewCalendar ) {
 		return newOmerForDate( hebrewCalendar );
 	}
 

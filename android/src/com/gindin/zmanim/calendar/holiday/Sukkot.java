@@ -26,14 +26,14 @@ class Sukkot
 
 
 	@Override
-	protected JewishHoliday createForDate( HebrewCalendar hebrewCalendar ) {
+	protected JewishDay createForDate( HebrewCalendar hebrewCalendar ) {
 		return new Sukkot( hebrewCalendar );
 	}
 
 
 	@Override
-	protected JewishHoliday createErevOf( HebrewCalendar forDate ) {
-		return new Erev( this, true );
+	protected JewishDay createErevOf( HebrewCalendar forDate ) {
+		return new Erev( this, forDate, true );
 	}
 
 
@@ -61,6 +61,6 @@ class Sukkot
 		assert HebrewCalendar.TISHRI == forDate.get( HebrewCalendar.MONTH );
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
 
-		return ( 16 == dayOfMonth ) && !isShabbat();
+		return ( ( 16 == dayOfMonth ) && !isShabbat() ) || isMotzaeShabbat();
 	}
 }

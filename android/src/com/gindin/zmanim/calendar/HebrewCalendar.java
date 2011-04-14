@@ -71,17 +71,66 @@ public class HebrewCalendar
 	private static final int                                  SHALEM_REGULAR_LENGTH = 355;
 	private static final int                                  SHALEM_LEAP_LENGTH = 385;
 
+
+	/**
+	 * @return Obtain a representation of the current day, or null if there's nothing "special" about today.
+	 */
+	public JewishDay getToday() {
+
+
+		// Today could be a combination of things, so we look at each and then combine as necessary.
+		JewishDay holiday     = isTodayAHoliday();
+		JewishDay taanit      = isTodayATaanit();
+		JewishDay roshChodesh = isTodayRoshChodesh();
+		JewishDay omer        = isTodayInTheOmer();
+
+		JewishDay today = null;
+		if ( null != holiday ) {
+			today = holiday;
+		}
+
+		if ( null != taanit ) {
+			if ( null == today ) {
+				today = taanit;
+			}
+			else {
+				today = new AggregateDay( today, taanit );
+			}
+		}
+
+		if ( null != roshChodesh ) {
+			if ( null == today ) {
+				today = roshChodesh;
+			}
+			else {
+				today = new AggregateDay( today, roshChodesh );
+			}
+		}
+
+		if ( null != omer ) {
+			if ( null == today ) {
+				today = omer;
+			}
+			else {
+				today = new AggregateDay( today, omer );
+			}
+		}
+
+
+		return today;
+	}
+
 	@SuppressWarnings( { "FeatureEnvy" } )
-	public JewishHoliday isTodayAHoliday() {
+	public JewishDay isTodayAHoliday() {
 
-		for ( JewishHoliday jewishHoliday : Holidays.JEWISH_HOLIDAYS ) {
+		for ( JewishDay jewishDay : Holidays.JEWISH_HOLIDAYS ) {
 
-			final JewishHoliday holiday = jewishHoliday.isOn( this );
-			if ( null != holiday ) {
-				return holiday;
+			final JewishDay day = jewishDay.isOn( this );
+			if ( null != day ) {
+				return day;
 			}
 
-			final JewishHoliday erev = jewishHoliday.isErev( this );
+			final JewishDay erev = jewishDay.isErev( this );
 			if ( null != erev ) {
 				return erev;
 			}
@@ -92,16 +141,16 @@ public class HebrewCalendar
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	public JewishHoliday isTodayATaanit() {
+	public JewishDay isTodayATaanit() {
 
 		for ( Taanit taanit : Taanit.TAANIOT ) {
 
-			final JewishHoliday holiday = taanit.isOn( this );
-			if ( null != holiday ) {
-				return holiday;
+			final JewishDay day = taanit.isOn( this );
+			if ( null != day ) {
+				return day;
 			}
 
-			final JewishHoliday erev = taanit.isErev( this );
+			final JewishDay erev = taanit.isErev( this );
 			if ( null != erev ) {
 				return erev;
 			}
@@ -117,7 +166,7 @@ public class HebrewCalendar
 	 * @return the Rosh Chodesh holiday, or null if this isn't a Rosh Chodesh.
 	 */
 	@SuppressWarnings( { "FeatureEnvy" } )
-	public JewishHoliday isTodayRoshChodesh() {
+	public JewishDay isTodayRoshChodesh() {
 
 		RoshChodesh[] roshChodeshim;
 
@@ -141,12 +190,12 @@ public class HebrewCalendar
 
 		for ( RoshChodesh roshChodesh : roshChodeshim ) {
 
-			final JewishHoliday holiday = roshChodesh.isOn( this );
-			if ( null != holiday ) {
-				return holiday;
+			final JewishDay day = roshChodesh.isOn( this );
+			if ( null != day ) {
+				return day;
 			}
 
-			final JewishHoliday erev = roshChodesh.isErev( this );
+			final JewishDay erev = roshChodesh.isErev( this );
 			if ( null != erev ) {
 				return erev;
 			}
@@ -160,12 +209,12 @@ public class HebrewCalendar
 		}
 
 		for ( RoshChodesh roshChodesh : roshChodeshim ) {
-			final JewishHoliday holiday = roshChodesh.isOn( this );
-			if ( null != holiday ) {
-				return holiday;
+			final JewishDay day = roshChodesh.isOn( this );
+			if ( null != day ) {
+				return day;
 			}
 
-			final JewishHoliday erev = roshChodesh.isErev( this );
+			final JewishDay erev = roshChodesh.isErev( this );
 			if ( null != erev ) {
 				return erev;
 			}
@@ -175,13 +224,13 @@ public class HebrewCalendar
 	}
 
 
-	public JewishHoliday isTodayInTheOmer() {
+	public JewishDay isTodayInTheOmer() {
 
 		for ( Omer omer : Omer.OMER ) {
 
-			final JewishHoliday holiday = omer.isOn( this );
-			if ( null != holiday ) {
-				return holiday;
+			final JewishDay day = omer.isOn( this );
+			if ( null != day ) {
+				return day;
 			}
 
 			// Explicitly NOT checking erev...
@@ -195,9 +244,9 @@ public class HebrewCalendar
 
 		boolean show = false;
 
-		JewishHoliday todaysHoliday = isTodayAHoliday();
-		if ( null != todaysHoliday ) {
-			show = todaysHoliday.showCandlelighting();
+		JewishDay todaysDay = isTodayAHoliday();
+		if ( null != todaysDay ) {
+			show = todaysDay.showCandlelighting();
 		}
 
 		if ( !show ) {
@@ -214,9 +263,9 @@ public class HebrewCalendar
 
 		// Is today a holiday, but not tomorrow? Make sure that it's a holiday for which we need to show Havadalah,
 		//  and not, say, Chol HaMoed...
-		final JewishHoliday todaysHoliday = isTodayAHoliday();
-		if ( null != todaysHoliday ) {
-			show = todaysHoliday.showHavdalah();
+		final JewishDay todaysDay = isTodayAHoliday();
+		if ( null != todaysDay ) {
+			show = todaysDay.showHavdalah();
 		}
 
 		if ( !show ) {
@@ -257,6 +306,64 @@ public class HebrewCalendar
 		// Shalem is the longest of the regular lenth years...
 		return yearLength > SHALEM_REGULAR_LENGTH;
 	}
-	
-	
+
+
+	/**
+	 * Used when one day is, for example, Rosh Chodesh and a day of the Omer...
+	 */
+	private static class AggregateDay
+		extends JewishDay {
+
+		private final JewishDay                                 firstDay;
+		private final JewishDay                                 secondDay;
+
+
+		AggregateDay(
+			JewishDay firstDay,
+			JewishDay secondDay
+		) {
+			// Just something that'll quickly clue is in that something's wrong if we see these values...
+			super( 0, 0, "" );
+
+			this.firstDay = firstDay;
+			this.secondDay = secondDay;
+		}
+
+
+		@Override
+		protected JewishDay createForDate( HebrewCalendar forDate ) {
+			return this;
+		}
+
+
+		@Override
+		protected JewishDay createErevOf( HebrewCalendar forDate ) {
+			return new Erev( this, forDate, showCandlelighting() );
+		}
+
+
+		@Override
+		public String getName() {
+			return firstDay.getName() + " / " + secondDay.getName();
+		}
+
+
+		@Override
+		public String getDescription() {
+			return firstDay.getDescription() + " / " + secondDay.getDescription();
+		}
+
+
+		@Override
+		public boolean showCandlelighting() {
+			return firstDay.showCandlelighting() || secondDay.showCandlelighting();
+		}
+
+
+		@Override
+		public boolean showHavdalah() {
+			return firstDay.showHavdalah() || secondDay.showHavdalah();
+		}
+	}
+
 }  // End of HebrewCalendar class
