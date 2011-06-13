@@ -364,6 +364,48 @@ public class HebrewCalendar
 		public boolean showHavdalah() {
 			return firstDay.showHavdalah() || secondDay.showHavdalah();
 		}
+
+
+		@Override
+		public Erev isErev() {
+			if ( null != firstDay.isErev() ) {
+				return firstDay.isErev();
+			}
+
+			if ( null != secondDay.isErev() ) {
+				return secondDay.isErev();
+			}
+
+			return null;
+		}
+
+
+		@Override
+		public MultiDayHoliday isMultiDay() {
+			if ( null != firstDay.isMultiDay() ) {
+				return firstDay.isMultiDay();
+			}
+
+			if ( null != secondDay.isMultiDay() ) {
+				return secondDay.isMultiDay();
+			}
+
+			return null;
+		}
+
+
+		@Override
+		public RoshChodesh isRoshChodesh() {
+			if ( null != firstDay.isRoshChodesh() ) {
+				return firstDay.isRoshChodesh();
+			}
+
+			if ( null != secondDay.isRoshChodesh() ) {
+				return secondDay.isRoshChodesh();
+			}
+
+			return null;
+		}
 	}
 
 }  // End of HebrewCalendar class

@@ -74,6 +74,14 @@ public class RoshChodesh
 
 
 	@Override
+	public RoshChodesh isRoshChodesh() {
+
+		// By definition!
+		return this;
+	}
+
+
+	@Override
 	protected JewishDay createForDate( HebrewCalendar forDate ) {
 		// No need for a separate instance
 		return this;

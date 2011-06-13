@@ -10,13 +10,19 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 /**
  * Represents a day in the Jewish calendar.
  *<p>
+ * This class IS NOT THREAD SAFE!!!
+ *<p>
  * For testing purposes, see http://en.wikipedia.org/wiki/Jewish_holidays_2000-2050.
  */
-@SuppressWarnings( { "MagicNumber" } )
+@SuppressWarnings( { "MagicNumber", "ClassReferencesSubclass" } )
 public abstract class JewishDay {
 
 
-	/** Have one instance we use for checking. */
+	/**
+	 * Have one instance we use for checking.
+	 *<p>
+	 * NOTE: This limits the usages of this class (and subclasses) such that it is NOT thread-safe!!!
+	 */
 	protected static final HebrewCalendar                     calendar = new HebrewCalendar();
 
 
@@ -96,10 +102,40 @@ public abstract class JewishDay {
 
 
 	/**
+	 * Is today erev something?
+	 *
+	 * @return The erev if it is, null otherwise.
+	 */
+	public Erev isErev() {
+		return null;
+	}
+
+
+	/**
+	 * Is today part of a multi-day observance?
+	 *
+	 * @return the multi-day observance if today is; null otherwise.
+	 */
+	public MultiDayHoliday isMultiDay() {
+		return null;
+	}
+
+
+	/**
+	 * Is today a Rosh Chodesh?
+	 *
+	 * @return null if today is not a rosh chodesh.
+	 */
+	public RoshChodesh isRoshChodesh() {
+		return null;
+	}
+
+
+	/**
 	 * Does this holiday start tonight?
 	 *
 	 * @param dateToTest what date are we being asked about?
-	 * @return true if this holiday starts on the evening of the specified date; false otherwise.
+	 * @return A JewishDay to represent the Erev of the upcoming holiday, or null if not an erev anything.
 	 */
 	public JewishDay isErev(
 		HebrewCalendar dateToTest

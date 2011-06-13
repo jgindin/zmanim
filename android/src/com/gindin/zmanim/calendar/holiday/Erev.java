@@ -51,4 +51,11 @@ public class Erev
 		// Makes no sense!
 		return null;
 	}
+
+
+	@Override
+	public Erev isErev() {
+		// By definition!
+		return this;
+	}
 }

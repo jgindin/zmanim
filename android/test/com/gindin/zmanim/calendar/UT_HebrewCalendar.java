@@ -4,10 +4,7 @@
 
 package com.gindin.zmanim.calendar;
 
-import com.gindin.zmanim.calendar.holiday.Erev;
-import com.gindin.zmanim.calendar.holiday.JewishDay;
-import com.gindin.zmanim.calendar.holiday.RoshHashana;
-import com.gindin.zmanim.calendar.holiday.Taanit;
+import com.gindin.zmanim.calendar.holiday.*;
 import org.junit.*;
 
 /**
@@ -63,11 +60,11 @@ public class UT_HebrewCalendar {
 		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );
 		JewishDay today = calendar.getToday();
 		Assert.assertNotNull( today );
-		Assert.assertTrue( today instanceof Erev );
+		Assert.assertNotNull( today.isErev() );
 		Assert.assertTrue( today.showCandlelighting() );
 		Assert.assertFalse( today.showHavdalah() );
 
-		// 1st of Tishri
+		// 1st of Tishri  -- Now in 5771
 		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );
 		today = calendar.getToday();
 		Assert.assertNotNull( today );
@@ -87,7 +84,7 @@ public class UT_HebrewCalendar {
 		// 3rd of Tishri -- Shabbat, so it can't be a fast day
 		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );
 		today = calendar.getToday();
-		Assert.assertTrue( today instanceof Erev );
+		Assert.assertNotNull( today.isErev() );
 		Assert.assertFalse( today.showCandlelighting() );
 		Assert.assertTrue( today.showHavdalah() );
 
@@ -101,7 +98,7 @@ public class UT_HebrewCalendar {
 		// Yom Kippur
 		calendar.set( HebrewCalendar.DAY_OF_MONTH, 9 );
 		today = calendar.getToday();
-		Assert.assertTrue( today instanceof Erev );
+		Assert.assertNotNull( today.isErev() );
 		Assert.assertTrue( today.showCandlelighting() );
 		Assert.assertFalse( today.showHavdalah() );
 
@@ -111,9 +108,11 @@ public class UT_HebrewCalendar {
 		Assert.assertTrue( today.showHavdalah() );
 
 		// Sukkot
+		// TODO: Test the getDayOf() and isMultiDay() here too!!!
+
 		calendar.set( HebrewCalendar.DAY_OF_MONTH, 14 );
 		today = calendar.getToday();
-		Assert.assertTrue( today instanceof Erev );
+		Assert.assertNotNull( today.isErev() );
 		Assert.assertTrue( today.showCandlelighting() );
 		Assert.assertFalse( today.showHavdalah() );
 
@@ -164,7 +163,74 @@ public class UT_HebrewCalendar {
 
 
 		// Chanukah
+		calendar.set( HebrewCalendar.MONTH, HebrewCalendar.KISLEV );
+		calendar.set( HebrewCalendar.DAY_OF_MONTH, 23 );
+		assertTodayIsNothing();
 
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 24th
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isErev() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 25th
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 1 == today.isMultiDay().getDayOf() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 26th
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );   // Shabbat
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 2 == today.isMultiDay().getDayOf() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 27th
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertTrue( today.showHavdalah() );          // Motzae Shabbat
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 3 == today.isMultiDay().getDayOf() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 28th
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 4 == today.isMultiDay().getDayOf() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 29th
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 5 == today.isMultiDay().getDayOf() );
+		Assert.assertNotNull( today.isErev() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 30th -- Also Rosh Chodesh Tevet
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 6 == today.isMultiDay().getDayOf() );
+		Assert.assertNotNull( today.isRoshChodesh() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 1st of Tevet -- Also Rosh Chodesh Tevet
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 7 == today.isMultiDay().getDayOf() );
+		Assert.assertNotNull( today.isRoshChodesh() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 2nd of Tevet
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNotNull( today.isMultiDay() );
+		Assert.assertTrue( 8 == today.isMultiDay().getDayOf() );
 
 		// Purim
 
@@ -183,6 +249,7 @@ public class UT_HebrewCalendar {
 	}
 
 
+	// TODO: Make sure there's a test that we don't show Havdalah when a Chag falls on Shabbat & Sunday
 
 
 	private void assertTodayIsNothing() {

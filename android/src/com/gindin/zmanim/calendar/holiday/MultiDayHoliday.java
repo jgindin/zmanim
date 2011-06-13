@@ -12,7 +12,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  * For those observances where we want a different description based on which day of the observance it is.
  *  E.g., "Hanukkah 3", or "Omer 22".
  */
-abstract class MultiDayHoliday
+public abstract class MultiDayHoliday
 	extends JewishDay {
 
 
@@ -41,17 +41,9 @@ abstract class MultiDayHoliday
 			return description;
 		}
 
-		calendar.set( forDate.get( HebrewCalendar.YEAR ), month, date );
-		if ( isSameDate( forDate, calendar ) ) {
-			return description + " " + ( 1 + getCountOffset() );
-		}
-
-		for ( int i = 1; i < length; i++ ) {
-
-			calendar.add( HebrewCalendar.DATE, 1 );
-			if ( isSameDate( forDate, calendar ) ) {
-				return description + " " + ( i + 1 + getCountOffset() );
-			}
+		int dayOf = getDayOf();
+		if ( dayOf > 0 ) {
+			return description + " " + getDayOf();
 		}
 
 		// Should not have been able to get here...
@@ -75,6 +67,41 @@ abstract class MultiDayHoliday
 		}
 
 		return day;
+	}
+
+
+	@Override
+	public MultiDayHoliday isMultiDay() {
+
+		// By definition!
+		return this;
+	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
+	public int getDayOf() {
+
+		if ( null == forDate ) {
+			assert false;
+			return -1;
+		}
+
+		calendar.set( forDate.get( HebrewCalendar.YEAR ), month, date );
+		if ( isSameDate( forDate, calendar ) ) {
+			return ( 1 + getCountOffset() );
+		}
+
+		for ( int i = 1; i < length; i++ ) {
+
+			calendar.add( HebrewCalendar.DATE, 1 );
+			if ( isSameDate( forDate, calendar ) ) {
+				return ( i + 1 + getCountOffset() );
+			}
+		}
+
+		// Better not get here!
+		assert false : forDate.toString();
+		return -1;
 	}
 
 
