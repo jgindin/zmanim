@@ -13,6 +13,7 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.calendar.holiday.JewishDay;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
 
@@ -77,7 +78,9 @@ class ZmanimDisplay {
 			numZmanim--;
 		}
 
-		final boolean showEndOfFast = ( null != zmanimCalendar.isTodayATaanit() );
+		// TODO: This is a bit whacked...if it's a ta'anit, then it's a ta'anit! Erev ta'anit IS NOT the ta'anit...
+		final JewishDay today = zmanimCalendar.isTodayATaanit();
+		final boolean showEndOfFast = ( null != today ) && ( null == today.isErev() );
 		if ( !showEndOfFast ) {
 			numZmanim--;
 		}
