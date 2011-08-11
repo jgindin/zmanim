@@ -42,6 +42,12 @@ public class Taanit
 	}
 
 
+	@Override
+	public boolean isTaanit() {
+		return true;
+	}
+
+
 	@SuppressWarnings( { "FeatureEnvy" } )
 	protected int getDateAdjustment( HebrewCalendar dateToTest ) {
 

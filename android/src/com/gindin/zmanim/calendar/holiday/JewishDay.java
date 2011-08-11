@@ -131,6 +131,11 @@ public abstract class JewishDay {
 	}
 
 
+	public boolean isTaanit() {
+		return false;
+	}
+
+
 	/**
 	 * Does this holiday start tonight?
 	 *
