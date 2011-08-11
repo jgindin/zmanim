@@ -46,7 +46,7 @@ class Shavuot
 
 		// Only light candles on the 6th.
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
-		return ( 6 == dayOfMonth ) || isShabbat();
+		return ( 6 == dayOfMonth ) || isErevShabbat();
 	}
 
 
@@ -61,6 +61,6 @@ class Shavuot
 
 		// Only have Havdalah on the 7th
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
-		return ( 7 == dayOfMonth ) && !isShabbat();
+		return ( 7 == dayOfMonth ) && !isErevShabbat();
 	}
 }

@@ -77,16 +77,25 @@ public class HebrewCalendar
 	 */
 	public JewishDay getToday() {
 
-
 		// Today could be a combination of things, so we look at each and then combine as necessary.
+		JewishDay shabbat     = isTodayShabbat();
 		JewishDay holiday     = isTodayAHoliday();
 		JewishDay taanit      = isTodayATaanit();
 		JewishDay roshChodesh = isTodayRoshChodesh();
 		JewishDay omer        = isTodayInTheOmer();
 
 		JewishDay today = null;
+		if ( null != shabbat ) {
+			today = shabbat;
+		}
+
 		if ( null != holiday ) {
-			today = holiday;
+			if ( null == today ) {
+				today = holiday;
+			}
+			else {
+				today = new AggregateDay( today, holiday );
+			}
 		}
 
 		if ( null != taanit ) {
@@ -119,6 +128,16 @@ public class HebrewCalendar
 
 		return today;
 	}
+
+
+	private JewishDay isTodayShabbat() {
+		if ( JewishDay.isShabbat( this ) ) {
+			return new Shabbat( this );
+		}
+
+		return null;
+	}
+
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	public JewishDay isTodayAHoliday() {
@@ -405,6 +424,46 @@ public class HebrewCalendar
 			}
 
 			return null;
+		}
+
+
+		@Override
+		public boolean isTaanit() {
+			return firstDay.isTaanit() || secondDay.isTaanit();
+		}
+
+
+		@Override
+		public boolean isShabbat() {
+			return firstDay.isShabbat() || secondDay.isShabbat();
+		}
+	}
+
+
+	private static class Shabbat extends Holiday {
+
+		private Shabbat(
+			HebrewCalendar  forDate
+		) {
+			super( forDate.get( HebrewCalendar.MONTH ), forDate.get( HebrewCalendar.DATE ), "Shabbat", forDate );
+		}
+
+
+		@Override
+		protected JewishDay createForDate( HebrewCalendar forDate ) {
+			return new Shabbat( forDate );
+		}
+
+
+		@Override
+		protected JewishDay createErevOf( HebrewCalendar forDate ) {
+			return new Erev( this, forDate, true );
+		}
+
+
+		@Override
+		public boolean showCandlelighting() {
+			return false;
 		}
 	}
 

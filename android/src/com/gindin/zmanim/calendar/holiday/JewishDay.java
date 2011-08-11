@@ -163,7 +163,7 @@ public abstract class JewishDay {
 	 * @return true if candles are lit for this holiday; false otherwise
 	 */
 	public boolean showCandlelighting() {
-		return isShabbat();
+		return isErevShabbat();
 	}
 
 
@@ -173,7 +173,7 @@ public abstract class JewishDay {
 	 * @return true if havdalah is observed; false otherwise
 	 */
 	public boolean showHavdalah() {
-		return isMotzaeShabbat();
+		return isShabbat();
 	}
 
 
@@ -194,23 +194,33 @@ public abstract class JewishDay {
 	protected abstract JewishDay createErevOf( HebrewCalendar forDate );
 
 
-	protected final boolean isShabbat() {
-		//noinspection SimplifiableIfStatement
-		if ( null == forDate ) {
-			return false;
-		}
-
-		return ( HebrewCalendar.FRIDAY == forDate.get( HebrewCalendar.DAY_OF_WEEK ) );
+	public final boolean isErevShabbat() {
+		return isErevShabbat( forDate );
 	}
 
 
-	protected final boolean isMotzaeShabbat() {
+	public static boolean isErevShabbat( HebrewCalendar date ) {
 		//noinspection SimplifiableIfStatement
-		if ( null == forDate ) {
+		if ( null == date ) {
 			return false;
 		}
 
-		return ( HebrewCalendar.SATURDAY == forDate.get( HebrewCalendar.DAY_OF_WEEK ) );
+		return ( HebrewCalendar.FRIDAY == date.get( HebrewCalendar.DAY_OF_WEEK ) );
+	}
+
+
+	public boolean isShabbat() {
+		return isShabbat( forDate );
+	}
+
+
+	public static boolean isShabbat( HebrewCalendar date ) {
+		//noinspection SimplifiableIfStatement
+		if ( null == date ) {
+			return false;
+		}
+
+		return ( HebrewCalendar.SATURDAY == date.get( HebrewCalendar.DAY_OF_WEEK ) );
 	}
 
 

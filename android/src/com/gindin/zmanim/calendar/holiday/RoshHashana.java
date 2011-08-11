@@ -65,7 +65,7 @@ public class RoshHashana
 
 		// Only light candles on the 1st of Tishri.
 		int day = forDate.get( HebrewCalendar.DATE );
-		return ( 1 == day ) || isShabbat();
+		return ( 1 == day ) || isErevShabbat();
 	}
 
 
@@ -80,6 +80,6 @@ public class RoshHashana
 
 		// 2nd of Tishri we show Havdalah.
 		int day = forDate.get( HebrewCalendar.DATE );
-		return ( 2 == day ) && !isShabbat();
+		return ( 2 == day ) && !isErevShabbat();
 	}
 }

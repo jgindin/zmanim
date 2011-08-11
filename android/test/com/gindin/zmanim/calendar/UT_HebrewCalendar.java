@@ -233,18 +233,126 @@ public class UT_HebrewCalendar {
 		Assert.assertTrue( 8 == today.isMultiDay().getDayOf() );
 
 		// Purim
+		calendar.set( HebrewCalendar.MONTH, HebrewCalendar.ADAR_1 );   // This is a leap year...so test out Adar I, then Adar II
+		calendar.set( HebrewCalendar.DAY_OF_MONTH, 13 );
+		today = calendar.getToday();
+		Assert.assertNotNull( today.isErev() );
+		Assert.assertEquals( "Erev Purim Katan", today.getName() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 14th...Purim Katan
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertEquals( "Purim Katan", today.getName() );
+
+		calendar.set( HebrewCalendar.MONTH, HebrewCalendar.ADAR ); // Ta'anit Esther is pulled back this year...
+		calendar.set( HebrewCalendar.DAY_OF_MONTH, 10 );
+		today = calendar.getToday();
+		Assert.assertNotNull( today.isErev() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 11th...Ta'anit Esther
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertTrue( today.isTaanit() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 2 );     // 13th...Normally this is where Ta'anit Esther would fall...it's Shabbat...
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertTrue( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertFalse( today.isTaanit() );
+		Assert.assertNotNull( today.isErev() );
+		Assert.assertTrue( today.getName().contains( "Erev Purim" ) );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 14th...Purim
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertEquals( "Purim", today.getName() );
 
 
 		// Pesach
+		calendar.set( HebrewCalendar.MONTH, HebrewCalendar.NISAN );
+		calendar.set( HebrewCalendar.DAY_OF_MONTH, 14 );            // Ta'anit Bechorot
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );            // It's also Erev Pesach!
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertTrue( today.isTaanit() );
+		Assert.assertNotNull( today.isErev() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 15th... 1st day of Pesach!
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 16th... 2nd day of Pesach!
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertTrue( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 17th... 3rd day of Pesach!
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 18th... 4th day of Pesach, and Erev Shabbat
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 19th... 5th day of Pesach and Shabbat
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertTrue( today.showHavdalah() );
+		Assert.assertTrue( today.isShabbat() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 20th... 6th day of Pesach!
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 21st... 7th day of Pesach!
+		today = calendar.getToday();
+		Assert.assertTrue( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 22nd... 8th day of Pesach!
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertTrue( today.showHavdalah() );
 
 
-		// Omer -- test that candles & havdalah show up
+		// Omer -- test that candles & havdalah show up for Shabbat, but not others
 
 
 		// Shavuot
 
 
-		//
+		// Tisha B'Av -- saw a bug where we were showing "Fast Ends" on Erev....
+		calendar.set( HebrewCalendar.MONTH, HebrewCalendar.AV );
+		calendar.set( HebrewCalendar.DAY_OF_MONTH, 7 );
+		assertTodayIsNothing();
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 8th of Av
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertNotNull( today.isErev() );
+		Assert.assertFalse( today.isTaanit() );
+
+		calendar.add( HebrewCalendar.DAY_OF_MONTH, 1 );     // 9th of Av
+		today = calendar.getToday();
+		Assert.assertFalse( today.showCandlelighting() );
+		Assert.assertFalse( today.showHavdalah() );
+		Assert.assertNull( today.isMultiDay() );
+		Assert.assertNull( today.isErev() );
+		Assert.assertTrue( today.isTaanit() );
 
 	}
 

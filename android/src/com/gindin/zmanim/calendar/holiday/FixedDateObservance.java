@@ -4,8 +4,6 @@
 
 package com.gindin.zmanim.calendar.holiday;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
-
 /**
  *
  */

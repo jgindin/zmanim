@@ -11,6 +11,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
  *  - Gedaliah
  *  - 10 Tevet
  *  - Esther
+ *  - 14 Nissan (Bechorot -- firstborn)
  *  - 17 Tammuz
  *  - Tisha B'Av
  *
@@ -26,10 +27,11 @@ public class Taanit
 	private static final Taanit                               GEDALIAH  = new Taanit( HebrewCalendar.TISHRI,  3,      "Gedaliah" );
 	private static final Taanit                               TEVET_10  = new Taanit( HebrewCalendar.TEVET,  10,      "Tevet 10" );
 	private static final Taanit                               ESTHER    = new TaanitEsther();
+	private static final Taanit                               BECHOROT  = new Taanit( HebrewCalendar.NISAN,  14,      "Bechorot" );
 	private static final Taanit                               TAMMUZ_17 = new Taanit( HebrewCalendar.TAMUZ,  17,      "Tammuz 17" );
 	private static final Taanit                               TISHA_BAV = new Taanit( HebrewCalendar.AV,      9,      "Tisha B'Av" );
 
-	public static final Taanit[]                              TAANIOT = { GEDALIAH, TEVET_10, ESTHER, TAMMUZ_17, TISHA_BAV };
+	public static final Taanit[]                              TAANIOT = { GEDALIAH, TEVET_10, ESTHER, BECHOROT, TAMMUZ_17, TISHA_BAV };
 
 
 

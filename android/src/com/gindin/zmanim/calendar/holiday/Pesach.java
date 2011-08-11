@@ -46,7 +46,7 @@ class Pesach
 		assert HebrewCalendar.NISAN == forDate.get( HebrewCalendar.MONTH );
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
 
-		return ( 15 == dayOfMonth ) || ( 21 == dayOfMonth ) || super.isShabbat();
+		return ( 15 == dayOfMonth ) || ( 20 == dayOfMonth ) || ( 21 == dayOfMonth ) || super.isErevShabbat();
 	}
 
 
@@ -63,7 +63,7 @@ class Pesach
 		// Just because it's the end of the holiday, if it's Friday, then we won't want to show Havdalah...
 		boolean showForHoliday = ( 16 == dayOfMonth ) || ( 22 == dayOfMonth );
 
-		return showForHoliday && !isShabbat();
+		return showForHoliday && !isErevShabbat();
 	}
 
 }

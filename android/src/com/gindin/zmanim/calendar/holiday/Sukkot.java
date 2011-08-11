@@ -47,7 +47,7 @@ class Sukkot
 		assert HebrewCalendar.TISHRI == forDate.get( HebrewCalendar.MONTH );
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
 
-		return ( 15 == dayOfMonth ) || isShabbat();
+		return ( 15 == dayOfMonth ) || isErevShabbat();
 	}
 
 
@@ -61,6 +61,6 @@ class Sukkot
 		assert HebrewCalendar.TISHRI == forDate.get( HebrewCalendar.MONTH );
 		int dayOfMonth = forDate.get( HebrewCalendar.DATE );
 
-		return ( ( 16 == dayOfMonth ) && !isShabbat() ) || isMotzaeShabbat();
+		return ( ( 16 == dayOfMonth ) && !isErevShabbat() ) || isShabbat();
 	}
 }

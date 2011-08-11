@@ -35,7 +35,7 @@ public class Erev
 	@Override
 	public boolean showHavdalah() {
 		// We're erev...can't be Havdalah unless it's also motzae Shabbat!
-		return isMotzaeShabbat();
+		return isShabbat();
 	}
 
 

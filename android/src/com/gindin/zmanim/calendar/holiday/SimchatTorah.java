@@ -39,12 +39,12 @@ class SimchatTorah
 	@Override
 	public boolean showCandlelighting() {
 		// We light candles the night before.
-		return isShabbat();
+		return isErevShabbat();
 	}
 
 
 	@Override
 	public boolean showHavdalah() {
-		return !isShabbat();
+		return !isErevShabbat();
 	}
 }
