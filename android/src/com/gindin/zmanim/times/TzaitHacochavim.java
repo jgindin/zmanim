@@ -23,7 +23,8 @@ class TzaitHacochavim
 		final ZmanimCalendar zmanimCalendar
 	) {
 
-		this( Type.TzaitHacochavim, zmanimCalendar, null );
+		this( Type.TzaitHacochavim, zmanimCalendar,
+			mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalendar ), buildExtraTzaitZmanim( Type.TzaitHacochavim, zmanimCalendar ) ) );
 	}
 
 
@@ -32,7 +33,7 @@ class TzaitHacochavim
 		final ZmanimCalendar  zmanimCalendar,
 		List<Zman>            additionalZmanim
 	) {
-		super( type, mergeZmanimLists( buildZmanim( type, zmanimCalendar ), additionalZmanim ) );
+		super( type, mergeZmanimLists( buildStandardTzaitZmanim( type, zmanimCalendar ), additionalZmanim ) );
 	}
 
 
@@ -42,7 +43,7 @@ class TzaitHacochavim
 	}
 
 
-	private static List<Zman> mergeZmanimLists(
+	protected static List<Zman> mergeZmanimLists(
 		List<Zman> firstList,
 		List<Zman> secondList
 	) {
@@ -56,7 +57,7 @@ class TzaitHacochavim
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private static List<Zman> buildZmanim(
+	protected static List<Zman> buildStandardTzaitZmanim(
 		final Type            zmanType,
 		final ZmanimCalendar  zmanimCalendar
 	) {
@@ -250,4 +251,33 @@ class TzaitHacochavim
 
 		return zmanim;
 	}
+
+
+	@SuppressWarnings( { "FeatureEnvy" } )
+	protected static List<Zman> buildExtraTzaitZmanim(
+		final Type            zmanType,
+		final ZmanimCalendar  zmanimCalendar
+	) {
+
+		List<Zman>  zmanim = new ArrayList<Zman>();
+
+		zmanim.add(
+			new Zman( "Seattle - SBH", "Based on the Turkish Seattle Sephardic community's tradition (42 minutes).", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaitSephardicBikurHolim();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Seattle - EB", "Based on the Rhodesli Seattle Sephardic community's tradition (45 minutes).", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzaitEzraBessaroth();
+				}
+			}
+		);
+
+		return zmanim;
+	}
+
 }  // End of TzaitHacochavim class

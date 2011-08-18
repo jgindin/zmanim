@@ -12,22 +12,22 @@ import java.util.List;
 
 
 /**
- *
+ * Used for allowing the user to see when a full-day fast ends.
  */
 class FastEnds
 	extends TzaitHacochavim {
-
 
 	FastEnds(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
-		super( Type.FastEnd, zmanimCalendar, buildZmanim( zmanimCalendar ) );
+		super( Type.FastEnd, zmanimCalendar,
+			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalendar ), buildFastEndsZmanim( zmanimCalendar ) ) );
 	}
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private static List<Zman> buildZmanim(
+	private static List<Zman> buildFastEndsZmanim(
 		final ZmanimCalendar  zmanimCalendar
 	) {
 
