@@ -5,6 +5,7 @@
 package com.gindin.zmanim.times;
 
 import com.gindin.zmanim.calendar.ZmanimCalendar;
+import net.sourceforge.zmanim.AstronomicalCalendar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,14 +67,6 @@ class TzaitHacochavim
 
 
 		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 8.5 degrees below the western geometric horizon after sunset.", zmanType, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalendar.getTzais();
-				}
-			}
-		);
-
-		zmanim.add(
 			new Zman( "MG'A 120 Minutes", "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.", zmanType ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120();
@@ -85,6 +78,30 @@ class TzaitHacochavim
 			new Zman( "GR'A 120 Minutes Zmaniyot", "120 minutes zmaniyot after sea level sunset.", zmanType ) {
 				@Override protected Date calculate() {
 					return zmanimCalendar.getTzais120Zmanis();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "3.5 deg", "When the sun is 3.5 degrees below the western geometric horizon after sunset.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getSunsetOffsetByDegrees( AstronomicalCalendar.GEOMETRIC_ZENITH + 3.5 );
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "6.5 deg", "When the sun is 6.5 degrees below the western geometric horizon after sunset.", zmanType ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getSunsetOffsetByDegrees( AstronomicalCalendar.GEOMETRIC_ZENITH + 6.5 );
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 8.5 degrees below the western geometric horizon after sunset.", zmanType, false ) {
+				@Override protected Date calculate() {
+					return zmanimCalendar.getTzais();
 				}
 			}
 		);
