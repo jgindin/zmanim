@@ -32,7 +32,7 @@
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
     </content>
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="project" />
-    <orderEntry type="jdk" jdkName="Android 1.5 Google APIs" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android 2.3.1 Google APIs" jdkType="Android SDK" />
     <orderEntry type="library" scope="TEST" name="ICU4J" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flurry" level="project" />
