@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
 import java.io.IOException;
@@ -80,6 +81,7 @@ class StaticLocationProvider
 						return geocoder.getFromLocationName( places[ 0 ], 5 );
 					}
 					catch ( IOException e ) {
+						LogUtils.logError( "StaticLocationProvider::updateLocationFromPlace", "IOE getting from location name", e );
 						return null;
 					}
 				}

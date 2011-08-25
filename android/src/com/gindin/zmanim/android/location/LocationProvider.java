@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 
 import java.io.IOException;
@@ -218,6 +219,7 @@ abstract class LocationProvider {
 				catch ( IOException e ) {
 					//noinspection AutoBoxing
 					locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
+					LogUtils.logError( "LocationProvider::lookupLocationName", "IOE getting location", e );
 				}
 
 				return locationString;
