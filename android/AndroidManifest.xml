@@ -6,7 +6,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="98"
-  android:versionName="3.4.98.335-DEV"
+  android:versionName="3.4.98.337-DEV"
+  android:installLocation="auto"
 >
 
 	<!-- In order for the supports-screens to work right, we have to specify the target SDK of at least 11. -->
