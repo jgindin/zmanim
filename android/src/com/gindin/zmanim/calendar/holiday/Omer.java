@@ -52,7 +52,7 @@ public abstract class Omer<T extends Omer>
 		NisanOmer(
 			HebrewCalendar forDate
 		) {
-			super( HebrewCalendar.NISAN, 16, 14, forDate );
+			super( HebrewCalendar.NISAN, 16, 15, forDate );
 		}
 
 
