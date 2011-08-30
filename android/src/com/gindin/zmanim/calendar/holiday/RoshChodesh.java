@@ -20,7 +20,7 @@ public class RoshChodesh
 	private static final RoshChodesh ROSH_CHODESH_ELUL    = new RoshChodesh( HebrewCalendar.AV,     30, 2, "Elul" );
 	// Don't bother...this is Rosh Hashana...
 	//private static final RoshChodesh ROSH_CHODESH_TISHRI  = new RoshChodesh( HebrewCalendar.ELUL,   30, 2, "Tishri" );
-	private static final RoshChodesh ROSH_CHODESH_HESHVAN = new RoshChodesh( HebrewCalendar.HESHVAN, 1, 1, "Heshvan" );
+	private static final RoshChodesh ROSH_CHODESH_HESHVAN = new RoshChodesh( HebrewCalendar.TISHRI, 30, 2, "Heshvan" );
 	private static final RoshChodesh ROSH_CHODESH_KISLEV  = new RoshChodesh( HebrewCalendar.KISLEV,  1, 1, "Kislev" );
 	private static final RoshChodesh ROSH_CHODESH_TEVET   = new RoshChodesh( HebrewCalendar.TEVET,   1, 1, "Tevet" );
 	private static final RoshChodesh ROSH_CHODESH_SHEVAT  = new RoshChodesh( HebrewCalendar.SHEVAT,  1, 1, "Shevat" );
