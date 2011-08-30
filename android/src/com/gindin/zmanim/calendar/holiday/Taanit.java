@@ -25,7 +25,7 @@ public class Taanit
 	extends AdjustableDateObservance {
 
 	private static final Taanit                               GEDALIAH  = new Taanit( HebrewCalendar.TISHRI,  3,      "Gedaliah" );
-	private static final Taanit                               TEVET_10  = new Taanit( HebrewCalendar.TEVET,  10,      "Tevet 10" );
+	private static final Taanit                               TEVET_10  = new Tevet10();
 	private static final Taanit                               ESTHER    = new TaanitEsther();
 	private static final Taanit                               BECHOROT  = new Taanit( HebrewCalendar.NISAN,  14,      "Bechorot" );
 	private static final Taanit                               TAMMUZ_17 = new Taanit( HebrewCalendar.TAMUZ,  17,      "Tammuz 17" );
@@ -64,7 +64,36 @@ public class Taanit
 			adjustment = 1;
 		}
 
+		if ( !canFallOnFriday() ) {
+			if ( HebrewCalendar.FRIDAY == dayOfWeek ) {
+				adjustment = -1;
+			}
+		}
+
 		return adjustment;
+	}
+
+
+	protected boolean canFallOnFriday() {
+		return false;
+	}
+
+
+	/**
+	 * Special class because this fast, unlike the others, can fall out on a Friday.
+	 */
+	private static class Tevet10
+		extends Taanit {
+
+		Tevet10() {
+			super( HebrewCalendar.TEVET, 10, "Tevet 10" );
+		}
+
+
+		@Override
+		protected boolean canFallOnFriday() {
+			return true;
+		}
 	}
 
 
