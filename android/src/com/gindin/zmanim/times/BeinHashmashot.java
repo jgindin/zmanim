@@ -39,7 +39,7 @@ public class BeinHashmashot
 		zmanim.add(
 			new Zman( "13 Degrees", "Based on Rabainu Tam's calculation as the time the sun is 13° below geometric zenith (90°).", Zmanim.Type.BeinHashmashot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getBainHasmashosRT13Degrees();
+					return zmanimCalendar.getBainHasmashosRT13Point24Degrees();
 				}
 			}
 		);

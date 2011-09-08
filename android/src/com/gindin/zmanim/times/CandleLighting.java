@@ -43,7 +43,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Standard Candle lighting", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandelLighting();
+					return zmanimCalendar.getCandleLighting();
 				}
 			}
 		);
