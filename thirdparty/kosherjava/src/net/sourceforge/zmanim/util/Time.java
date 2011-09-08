@@ -1,29 +1,28 @@
 /*
  * Zmanim Java API
- * Copyright (C) 2004-2007 Eliyahu Hershfeld
+ * Copyright (C) 2004-2011 Eliyahu Hershfeld
  *
- * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program; if
- * not, write to the Free Software Foundation, Inc. 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA or connect to: http://www.fsf.org/copyleft/gpl.html
+ * This library is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
+ * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
 package net.sourceforge.zmanim.util;
 
+import java.util.TimeZone;
+
 /**
- * A class that represents a numeric time. Times that represent a time of day
- * are stored as {@link java.util.Date}s in this API. The time class is used to
- * represent numeric time such as the time in hours, minutes, seconds and
- * milliseconds of a
- * {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour() temporal hour}.
- *
- * @author &copy; Eliyahu Hershfeld 2004 - 2007
+ * A class that represents a numeric time. Times that represent a time of day are stored as {@link java.util.Date}s in
+ * this API. The time class is used to represent numeric time such as the time in hours, minutes, seconds and
+ * milliseconds of a {@link net.sourceforge.zmanim.AstronomicalCalendar#getTemporalHour() temporal hour}.
+ * 
+ * @author &copy; Eliyahu Hershfeld 2004 - 2011
  * @version 0.9.0
  */
 public class Time {
@@ -55,26 +54,28 @@ public class Time {
 	}
 
 	public Time(int millis) {
-		if(millis < 0){
-			isNegative = true;
-			millis = Math.abs(millis);
+		int adjustedMillis = millis;
+		if (adjustedMillis < 0) {
+			this.isNegative = true;
+			adjustedMillis = Math.abs(adjustedMillis);
 		}
-		hours = millis / HOUR_MILLIS;
-		millis = millis - hours * HOUR_MILLIS;
+		this.hours = adjustedMillis / HOUR_MILLIS;
+		adjustedMillis = adjustedMillis - this.hours * HOUR_MILLIS;
 
-		minutes = millis / MINUTE_MILLIS;
-		millis = millis - minutes * MINUTE_MILLIS;
+		this.minutes = adjustedMillis / MINUTE_MILLIS;
+		adjustedMillis = adjustedMillis - this.minutes * MINUTE_MILLIS;
 
-		seconds = millis / SECOND_MILLIS;
-		millis = millis - seconds * SECOND_MILLIS;
+		this.seconds = adjustedMillis / SECOND_MILLIS;
+		adjustedMillis = adjustedMillis - this.seconds * SECOND_MILLIS;
 
-		milliseconds = millis;
+		this.milliseconds = adjustedMillis;
 	}
 
-	public boolean isNegative(){
-		return isNegative;
+	public boolean isNegative() {
+		return this.isNegative;
 	}
-	public void setIsNegative(boolean isNegative){
+
+	public void setIsNegative(boolean isNegative) {
 		this.isNegative = isNegative;
 	}
 
@@ -82,7 +83,7 @@ public class Time {
 	 * @return Returns the hour.
 	 */
 	public int getHours() {
-		return hours;
+		return this.hours;
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class Time {
 	 * @return Returns the minutes.
 	 */
 	public int getMinutes() {
-		return minutes;
+		return this.minutes;
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class Time {
 	 * @return Returns the seconds.
 	 */
 	public int getSeconds() {
-		return seconds;
+		return this.seconds;
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class Time {
 	 * @return Returns the milliseconds.
 	 */
 	public int getMilliseconds() {
-		return milliseconds;
+		return this.milliseconds;
 	}
 
 	/**
@@ -139,11 +140,11 @@ public class Time {
 	}
 
 	public double getTime() {
-		return hours * HOUR_MILLIS + minutes * MINUTE_MILLIS + seconds
-				* SECOND_MILLIS + milliseconds;
+		return this.hours * HOUR_MILLIS + this.minutes * MINUTE_MILLIS + this.seconds * SECOND_MILLIS
+				+ this.milliseconds;
 	}
 
 	public String toString() {
-		return new ZmanimFormatter().format(this);
+		return new ZmanimFormatter(TimeZone.getTimeZone("UTC")).format(this);
 	}
 }
