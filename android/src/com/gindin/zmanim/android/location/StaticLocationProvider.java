@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
@@ -97,9 +98,15 @@ class StaticLocationProvider
 			}
 
 			if ( ( null != addresses ) && !addresses.isEmpty() ) {
+				final Address address = addresses.get( 0 );
+
 				ourLocation.setTime( System.currentTimeMillis() );
-				ourLocation.setLongitude( addresses.get( 0 ).getLongitude() );
-				ourLocation.setLatitude( addresses.get( 0 ).getLatitude() );
+				ourLocation.setLongitude( address.getLongitude() );
+				ourLocation.setLatitude( address.getLatitude() );
+
+				Bundle extras = new Bundle();
+				extras.putParcelable( ADDRESS, address );
+				ourLocation.setExtras( extras );
 			}
 		}
 		else {

@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 
@@ -27,6 +28,12 @@ import java.util.List;
  *  all the registered listeners.
  */
 abstract class LocationProvider {
+
+	/**
+	 * If we've already looked up the location information, then we'll store the Address that we got back in the
+	 *  extras associated with the location.
+	 */
+	protected static final String                             ADDRESS = "address";
 
 	protected final Activity                                  activity;
 
@@ -196,33 +203,37 @@ abstract class LocationProvider {
 			return "";
 		}
 
+		final Bundle extras = location.getExtras();
+		if ( null != extras ) {
+			final Address address = extras.getParcelable( ADDRESS );
+			return addressToLocationName( location, address );
+		}
+
+
 		AsyncTask<Location, Void, String> getGeoLocationTask = new AsyncTask<Location, Void, String>() {
 			@Override
 			protected String doInBackground( Location... locations ) {
 
-				String locationString;
 				final double latitude = location.getLatitude();
 				final double longitude = location.getLongitude();
 
+				Address address;
 				try {
 					final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
 
 					if ( ( null != addresses ) && !addresses.isEmpty() ) {
-						final Address address = addresses.get( 0 );
-						locationString = address.getLocality() + ", " + address.getAdminArea();
+						address = addresses.get( 0 );
 					}
 					else {
-						//noinspection AutoBoxing
-						locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
+						address = null;
 					}
 				}
 				catch ( IOException e ) {
-					//noinspection AutoBoxing
-					locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
+					address = null;
 					LogUtils.logError( "LocationProvider::lookupLocationName", "IOE getting location", e );
 				}
 
-				return locationString;
+				return addressToLocationName( location, address );
 			}
 		};
 
@@ -235,6 +246,58 @@ abstract class LocationProvider {
 			geoLocation = null;
 		}
 		return geoLocation;
+	}
+
+
+	private String addressToLocationName( Location location, Address address ) {
+
+		String locationString = null;
+
+		if ( null != address ) {
+			final String adminArea = address.getAdminArea();
+			final String locality = address.getLocality();
+			final String postalCode = address.getPostalCode();
+			final int maxAddressLineIndex = address.getMaxAddressLineIndex();
+			final String country = address.getCountryName();
+
+			// There are cases where locality is null. No kiddin'...if you use the StaticLocationProvider, and choose
+			//  "Brooklyn, New York", the locality comes back null. Go figure...
+			//  (Well, that is the case, except that when the StaticLocationProvider goes to look up what the location is
+			//    it now stores the returned Address as the Extras in the Location. And, for some reason, *that* Address
+			//    comes back properly. Oh well...)
+			if ( ( null != locality ) && ( null != adminArea ) ) {
+				locationString = locality + ", " + adminArea;
+			}
+			else if ( ( null == locality ) && ( -1 != maxAddressLineIndex ) && ( null != postalCode ) ) {
+				// Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
+				for ( int index = 0; index < maxAddressLineIndex; index++ ) {
+					String addrLine = address.getAddressLine( index );
+					if ( null == addrLine ) continue;
+
+					if ( addrLine.contains( postalCode ) ) {
+						locationString = addrLine.substring( 0, addrLine.indexOf( postalCode ) );
+						break;
+					}
+				}
+			}
+			else if ( ( null != locality ) && ( null != country ) ) {
+				locationString = locality + ", " + country;
+			}
+			else if ( null != locality ) {
+				locationString = locality;
+			}
+		}
+
+		// Final fallback...if we got nothing then just use the lat & long...
+		if ( null == locationString ) {
+			final double latitude = location.getLatitude();
+			final double longitude = location.getLongitude();
+
+			//noinspection AutoBoxing
+			locationString = String.format( "%.1f lat %.1f long", latitude, longitude );
+		}
+
+		return locationString;
 	}
 
 

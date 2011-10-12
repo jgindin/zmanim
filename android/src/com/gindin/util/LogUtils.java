@@ -137,14 +137,36 @@ public class LogUtils {
 	}
 
 
+	/**
+	 * The idea here is that flurry messages are short. Really short. So, don't waste space with well-known
+	 *  strings that don't offer value. Especially when trying to figure out what an exception was...
+	 *
+	 * @param message The message that needs to get cleaned up & shortened.
+	 *
+	 * @return The 'cleaned' version of the input.
+	 */
 	private static String cleanMessage( String message ) {
 
 		String cleaned = message.replace( "com.gindin.zmanim.android.zmanList", "c.g.z.a.z" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.android", "c.g.z.a" );
+		cleaned = cleaned.replace( "com.gindin.zmanim.android.location", "c.g.z.a.l" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.calendar", "c.g.z.c" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.times", "c.g.z.t" );
+		cleaned = cleaned.replace( "com.gindin.zmanim", "c.g.z" );
+		cleaned = cleaned.replace( "com.gindin.util", "c.g.u" );
+		cleaned = cleaned.replace( "com.gindin", "c.g" );
+
+		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerSetException", "j.u.c.FT$S.iSE" );
+		cleaned = cleaned.replace( "java.util.concurrent", "j.u.c" );
 		cleaned = cleaned.replace( "java.util", "j.u" );
 		cleaned = cleaned.replace( "java.lang.NullPointerException", "NPE" );
+		cleaned = cleaned.replace( "java.lang.RuntimeException", "RE" );
+		cleaned = cleaned.replace( "java.lang", "j.l" );
+
+		cleaned = cleaned.replace( "android.os.AsyncTask", "a.o.AT" );
+		cleaned = cleaned.replace( "android.os", "a.o" );
+
+		cleaned = cleaned.replace( "An error occured while executing", "Error" );
 
 		return cleaned;
 	}
