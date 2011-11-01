@@ -14,7 +14,6 @@ import android.os.Bundle;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,7 +205,11 @@ abstract class LocationProvider {
 		final Bundle extras = location.getExtras();
 		if ( null != extras ) {
 			final Address address = extras.getParcelable( ADDRESS );
-			return addressToLocationName( location, address );
+
+			// Even if there are extras, that doesn't mean there's our address in there...
+			if ( null != address ) {
+				return addressToLocationName( location, address );
+			}
 		}
 
 
@@ -228,9 +231,9 @@ abstract class LocationProvider {
 						address = null;
 					}
 				}
-				catch ( IOException e ) {
+				catch ( Exception e ) {
 					address = null;
-					LogUtils.logError( "LocationProvider::lookupLocationName", "IOE getting location", e );
+					LogUtils.logError( "LP::lookupLocationName", "", e );
 				}
 
 				return addressToLocationName( location, address );

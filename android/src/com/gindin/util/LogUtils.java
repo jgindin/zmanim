@@ -79,7 +79,7 @@ public class LogUtils {
 	}
 
 
-	public static void logError(
+	private static void logError(
 		String errorID,
 	  String message
 	) {
@@ -157,11 +157,13 @@ public class LogUtils {
 		cleaned = cleaned.replace( "com.gindin", "c.g" );
 
 		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerSetException", "j.u.c.FT$S.iSE" );
+    cleaned = cleaned.replace( "java.util.concurrent.FutureTask.setException", "j.u.c.FT.sE" );
 		cleaned = cleaned.replace( "java.util.concurrent", "j.u.c" );
 		cleaned = cleaned.replace( "java.util", "j.u" );
 		cleaned = cleaned.replace( "java.lang.NullPointerException", "NPE" );
 		cleaned = cleaned.replace( "java.lang.RuntimeException", "RE" );
 		cleaned = cleaned.replace( "java.lang", "j.l" );
+		cleaned = cleaned.replace( "java.", "j." );
 
 		cleaned = cleaned.replace( "android.os.AsyncTask", "a.o.AT" );
 		cleaned = cleaned.replace( "android.os", "a.o" );
