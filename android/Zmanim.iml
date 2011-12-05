@@ -19,6 +19,7 @@
         <option name="LIBRARY_PROJECT" value="false" />
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="true" />
         <option name="GENERATE_UNSIGNED_APK" value="false" />
+        <option name="CUSTOM_DEBUG_KEYSTORE_PATH" value="" />
       </configuration>
     </facet>
   </component>
@@ -36,7 +37,6 @@
     <orderEntry type="library" scope="TEST" name="ICU4J" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flurry" level="project" />
-    <orderEntry type="library" name="KosherJava" level="project" />
   </component>
 </module>
 

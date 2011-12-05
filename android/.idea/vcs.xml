@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
-    <mapping directory="$PROJECT_DIR$/../../../../kosherjava/trunk" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../thirdparty/kosherjava" vcs="svn" />
   </component>
 </project>
 
