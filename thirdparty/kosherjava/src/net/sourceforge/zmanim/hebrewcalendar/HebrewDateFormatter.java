@@ -29,13 +29,14 @@ import java.text.SimpleDateFormat;
  * <li>&#x5D4;&#x5F3; &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;</li>
  * <li>&#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DA;&#x5F3;</li>
  * </ul>
- * 
- * @see net.sourceforge.zmanim.hebrewcalendar.JewishDate
- * @see net.sourceforge.zmanim.hebrewcalendar.JewishCalendar
- * 
+ *
+ * @see JewishDate
+ * @see JewishCalendar
+ *
  * @author &copy; Eliyahu Hershfeld 2011
  * @version 0.3
  */
+@SuppressWarnings( { "FeatureEnvy" } )
 public class HebrewDateFormatter {
 	private boolean hebrewFormat = false;
 	private boolean useLonghebrewYears = false;
@@ -197,9 +198,12 @@ public class HebrewDateFormatter {
 				month = 1;
 			}
 		}
+
+		jewishCalendar = jewishCalendar.clone();
+		jewishCalendar.setJewishMonth( month );
 		formattedRoshChodesh = hebrewFormat ? hebrewHolidays[JewishCalendar.ROSH_CHODESH]
 				: transliteratedHolidays[JewishCalendar.ROSH_CHODESH];
-		formattedRoshChodesh += " " + formatMonth(jewishCalendar.getJewishYear(), month);
+		formattedRoshChodesh += " " + formatMonth(jewishCalendar);
 		return formattedRoshChodesh;
 	}
 
@@ -517,35 +521,18 @@ public class HebrewDateFormatter {
 	 * @see #setTransliteratedMonthList(String[])
 	 */
 	public String formatMonth(JewishDate jewishDate) {
-//		if (isHebrewFormat()) {
-//			if (jewishDate.isJewishLeapYear() && jewishDate.getJewishMonth() == JewishDate.ADAR) {
-//				return hebrewMonths[13] + (useGershGershayim ? GERESH : ""); // return Adar I, not Adar in a leap year
-//			} else if (jewishDate.isJewishLeapYear() && jewishDate.getJewishMonth() == JewishDate.ADAR_II) {
-//				return hebrewMonths[12] + (useGershGershayim ? GERESH : "");
-//			} else {
-//				return hebrewMonths[jewishDate.getJewishMonth() - 1];
-//			}
-//		} else {
-//			if (jewishDate.isJewishLeapYear() && jewishDate.getJewishMonth() == JewishDate.ADAR) {
-//				return transliteratedMonths[13]; // return Adar I, not Adar in a leap year
-//			} else {
-//				return transliteratedMonths[jewishDate.getJewishMonth() - 1];
-//			}
-//		}
-		return formatMonth(jewishDate.getJewishYear(), jewishDate.getJewishMonth());
-	}
-	
-	private String formatMonth(int year, int month){
+		final int month = jewishDate.getJewishMonth();
+
 		if (isHebrewFormat()) {
-			if (JewishDate.isJewishLeapYear(year) && month == JewishDate.ADAR) {
+			if (jewishDate.isJewishLeapYear() && month == JewishDate.ADAR) {
 				return hebrewMonths[13] + (useGershGershayim ? GERESH : ""); // return Adar I, not Adar in a leap year
-			} else if (JewishDate.isJewishLeapYear(year) && month == JewishDate.ADAR_II) {
+			} else if (jewishDate.isJewishLeapYear() && month == JewishDate.ADAR_II) {
 				return hebrewMonths[12] + (useGershGershayim ? GERESH : "");
 			} else {
 				return hebrewMonths[month - 1];
 			}
 		} else {
-			if (JewishDate.isJewishLeapYear(year) && month == JewishDate.ADAR) {
+			if (jewishDate.isJewishLeapYear() && month == JewishDate.ADAR) {
 				return transliteratedMonths[13]; // return Adar I, not Adar in a leap year
 			} else {
 				return transliteratedMonths[month - 1];
@@ -620,6 +607,7 @@ public class HebrewDateFormatter {
 	 */
 	public String getFormattedKviah(int jewishYear) {
 		JewishDate jewishDate = new JewishDate(jewishYear, JewishDate.TISHREI, 1); // set date to Rosh Hashana
+		int kviah = jewishDate.getCheshvanKislevKviah();
 		int kviah = JewishDate.getCheshvanKislevKviah(jewishYear);
 		int roshHashanaDayOfweek = jewishDate.getDayOfWeek();
 		String returnValue = formatHebrewNumber(roshHashanaDayOfweek);

@@ -357,16 +357,6 @@ public class JewishCalendar extends JewishDate {
 	}
 
 	/**
-	 * Returns a String of the Jewish holiday or fast day for the current day, or a null if there is no holiday for this
-	 * day. Has no "modern" holidays.
-	 * 
-	 * @return A String containing the holiday name or an empty string if it is not a holiday.
-	 */
-	public String getYomTov() {
-		return new HebrewDateFormatter().formatYomTov(this);
-	}
-
-	/**
 	 * Returns true if the current day is Yom Tov. The method returns false for Chanukah, Erev Yom tov and fast days.
 	 * 
 	 * @return true if the current day is a Yom Tov
@@ -511,33 +501,6 @@ public class JewishCalendar extends JewishDate {
 			17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, -1, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
 			43, 44, 45, 46, 47, 48, 49, 59 };
 
-	/**
-	 * Returns a string of the current parsha(ios) transliterated into Latin chars using Ashkenazi pronunciation. The
-	 * {@link HebrewDateFormatter#formatParsha(JewishCalendar)} offers various formatting options for the Parsha.
-	 * 
-	 * @return the current parsha(ios) transliterated into Latin chars
-	 * @see HebrewDateFormatter#formatParsha(JewishCalendar)
-	 */
-	public String getParsha() {
-		return new HebrewDateFormatter().formatParsha(this);
-	}
-
-	/**
-	 * Returns the kviah in the traditional 3 letter Hebrew format where the first letter represents the day of week of
-	 * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ({@link JewishDate#SHELAIMIM
-	 * Shelaimim} , {@link JewishDate#KESIDRAN Kesidran} or {@link JewishDate#CHASERIM Chaserim}) and the 3rd letter
-	 * represents the day of week of Pesach. For example 5729 (1969) would return &#x5D1;&#x5E9;&#x5D4; (Rosh Hashana on
-	 * Monday, Shelaimim, and Pesach on Thursday), while 5771 (2011) would return &#x5D4;&#x5E9;&#x5D2; (Rosh Hashana on
-	 * Thursday, Shelaimim, and Pesach on Tuesday).
-	 * 
-	 * @param jewishYear
-	 *            the Jewish year
-	 * @return the Hebrew String such as &#x5D1;&#x5E9;&#x5D4; for 5729 (1969) and &#x5D4;&#x5E9;&#x5D2; for 5771
-	 *         (2011).
-	 */
-	public static String getKviah(int jewishYear) {
-		return new HebrewDateFormatter().getFormattedKviah(jewishYear);
-	}
 
 	/**
 	 * Returns a the index of today's parsha(ios) or a -1 if there is none. To get the name of the Parsha, use the
@@ -566,7 +529,7 @@ public class JewishCalendar extends JewishDate {
 		// week= current week in Jewish calendar from Rosh Hashana
 		// array= the correct index array for this Jewish year
 		// index= the index number of the parsha name
-		int kvia = JewishDate.getCheshvanKislevKviah(getJewishYear());
+		int kvia = getCheshvanKislevKviah();
 		int roshHashanaDay;
 		int week;
 		int[] array = null;
@@ -706,16 +669,10 @@ public class JewishCalendar extends JewishDate {
 	 * intentionally uses standard time and not dailight savings time. Java will implicitly format the time to the
 	 * default (or set) Timezone.
 	 * 
-	 * @param jewishYear
-	 *            the Jewish year.
-	 * @param jewishMonth
-	 *            the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-	 *            constants {@link #NISSAN} ... {@link #ADAR} (or {@link #ADAR_II} for a leap year Adar II) to avoid any
-	 *            confusion.
 	 * @return the Date representing the moment of the molad in Yerushalayim standard time (GMT + 2)
 	 */
-	public static Date getMoladAsDate(int jewishYear, int jewishMonth) {
-		JewishDate molad = JewishDate.getMolad(jewishYear, jewishMonth);
+	public Date getMoladAsDate() {
+		JewishDate molad = getMolad();
 		String locationName = "Jerusalem, Israel";
 
 		double latitude = 31.778; // Har Habayis latitude
@@ -742,16 +699,10 @@ public class JewishCalendar extends JewishDate {
 	 * {@link net.sourceforge.zmanim.ZmanimCalendar#getTzais72() Tzais} after to the time if the zman is between Alos
 	 * and Tzais.
 	 * 
-	 * @param jewishYear
-	 *            the Jewish year.
-	 * @param jewishMonth
-	 *            the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-	 *            constants {@link #NISSAN} ... {@link #ADAR} (or {@link #ADAR_II} for a leap year Adar II) to avoid any
-	 *            confusion.
 	 * @return the Date representing the moment 3 days after the molad.
 	 */
-	public static Date getTchilasZmanKidushLevana3Days(int jewishYear, int jewishMonth) {
-		Date molad = getMoladAsDate(jewishYear, jewishMonth);
+	public Date getTchilasZmanKidushLevana3Days() {
+		Date molad = getMoladAsDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(molad);
 		cal.add(Calendar.HOUR, 72); // 3 days after the molad
@@ -765,16 +716,10 @@ public class JewishCalendar extends JewishDate {
 	 * even if it is during the day. It should return the {@link net.sourceforge.zmanim.ZmanimCalendar#getTzais72()
 	 * Tzais} after to the time if the zman is between Alos and Tzais.
 	 * 
-	 * @param jewishYear
-	 *            the Jewish year.
-	 * @param jewishMonth
-	 *            the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-	 *            constants {@link #NISSAN} ... {@link #ADAR} (or {@link #ADAR_II} for a leap year Adar II) to avoid any
-	 *            confusion.
 	 * @return the Date representing the moment 7 days after the molad.
 	 */
-	public static Date getTchilasZmanKidushLevana7Days(int jewishYear, int jewishMonth) {
-		Date molad = getMoladAsDate(jewishYear, jewishMonth);
+	public Date getTchilasZmanKidushLevana7Days() {
+		Date molad = getMoladAsDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(molad);
 		cal.add(Calendar.HOUR, 168); // 7 days after the molad
@@ -789,17 +734,11 @@ public class JewishCalendar extends JewishDate {
 	 * even if it is during the day. It should return the {@link net.sourceforge.zmanim.ZmanimCalendar#getAlos72() Alos}
 	 * prior to the time if the zman is between Alos and Tzais.
 	 * 
-	 * @param jewishYear
-	 *            the Jewish year.
-	 * @param jewishMonth
-	 *            the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-	 *            constants {@link #NISSAN} ... {@link #ADAR} (or {@link #ADAR_II} for a leap year Adar II) to avoid any
-	 *            confusion.
 	 * @return the Date representing the moment halfway between molad and molad.
-	 * @see #getSofZmanKidushLevana15Days(int, int)
+	 * @see #getSofZmanKidushLevana15Days()
 	 */
-	public static Date getSofZmanKidushLevanaBetweenMoldos(int jewishYear, int jewishMonth) {
-		Date molad = getMoladAsDate(jewishYear, jewishMonth);
+	public Date getSofZmanKidushLevanaBetweenMoldos() {
+		Date molad = getMoladAsDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(molad);
 		// add half the time between molad and molad (half of 29 days, 12 hours and 793 chalakim (44 minutes, 3.3
@@ -817,24 +756,18 @@ public class JewishCalendar extends JewishDate {
 	 * in the Shulchan Aruch (Orach Chaim 426). It should be noted that some opinions hold that the
 	 * <http://en.wikipedia.org/wiki/Moses_Isserles">Rema</a> who brings down the opinion of the <a
 	 * href="http://en.wikipedia.org/wiki/Yaakov_ben_Moshe_Levi_Moelin">Maharil's</a> of calculating
-	 * {@link #getSofZmanKidushLevanaBetweenMoldos(int, int) half way between molad and mold} is of the opinion that
+	 * {@link #getSofZmanKidushLevanaBetweenMoldos() half way between molad and mold} is of the opinion that
 	 * Mechaber agrees to his opinion. Also see the Aruch Hashulchan. For additional details on the subject, See Rabbi
 	 * Dovid Heber's very detailed writeup in Siman Daled (chapter 4) of <a
 	 * href="http://www.worldcat.org/oclc/461326125">Shaarei Zmanim</a>. TODO: Currently returns the time even if it is
 	 * during the day. It should return the {@link net.sourceforge.zmanim.ZmanimCalendar#getAlos72() Alos} prior to the
 	 * time if the zman is between Alos and Tzais.
 	 * 
-	 * @param jewishYear
-	 *            the Jewish year.
-	 * @param jewishMonth
-	 *            the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-	 *            constants {@link #NISSAN} ... {@link #ADAR} (or {@link #ADAR_II} for a leap year Adar II) to avoid any
-	 *            confusion.
 	 * @return the Date representing the moment 15 days after the molad.
-	 * @see #getSofZmanKidushLevanaBetweenMoldos(int, int)
+	 * @see #getSofZmanKidushLevanaBetweenMoldos()
 	 */
-	public static Date getSofZmanKidushLevana15Days(int jewishYear, int jewishMonth) {
-		Date molad = getMoladAsDate(jewishYear, jewishMonth);
+	public Date getSofZmanKidushLevana15Days() {
+		Date molad = getMoladAsDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(molad);
 		cal.add(Calendar.DAY_OF_YEAR, 15); // 15 days after the molad
@@ -849,11 +782,11 @@ public class JewishCalendar extends JewishDate {
 	 * @return the daf as a {@link Daf}
 	 */
 	public Daf getDafYomiBavli() {
-		return YomiCalculator.getDafYomiBavli(getTime());
+		return YomiCalculator.getDafYomiBavli(this);
 	}
 
 	/**
-	 * @see java.lang.Object#equals(Object)
+	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -867,12 +800,18 @@ public class JewishCalendar extends JewishDate {
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * @see Object#hashCode()
 	 */
 	public int hashCode() {
 		int result = 17;
 		result = 37 * result + getClass().hashCode(); // needed or this and subclasses will return identical hash
 		result += 37 * result + getAbsDate() + (getInIsrael() ? 1 : 3);
 		return result;
+	}
+
+
+	@Override
+	public JewishCalendar clone() {
+		return (JewishCalendar)super.clone();
 	}
 }
