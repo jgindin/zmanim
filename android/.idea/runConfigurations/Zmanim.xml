@@ -1,14 +1,10 @@
-<!--
-  ~ Copyright (c) 2011. Jay R. Gindin
-  -->
-
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Zmanim" type="AndroidRunConfigurationType" factoryName="Android Application">
     <module name="Zmanim" />
     <option name="ACTIVITY_CLASS" value="com.gindin.zmanim.android.ZmanimActivity" />
     <option name="MODE" value="specific_activity" />
     <option name="DEPLOY" value="true" />
-    <option name="CHOOSE_DEVICE_MANUALLY" value="true" />
+    <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
     <option name="PREFERRED_AVD" value="" />
     <option name="COMMAND_LINE" value="" />
     <option name="WIPE_USER_DATA" value="false" />
