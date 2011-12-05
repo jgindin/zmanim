@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android.location;
 
 import android.location.Location;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
