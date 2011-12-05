@@ -7,6 +7,7 @@ package com.gindin.zmanim.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
 import com.gindin.util.Version;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
@@ -39,7 +40,11 @@ class AppUpgrader {
 				zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
 			}
 			catch ( Throwable e ) {
-				LogUtils.logError( "doUpgrade", "ver: " + thisCodeVersion + " old: " + lastKnownCodeVersion, e );
+				//noinspection unchecked
+				LogUtils.logError( "doUpgrade", "", e,
+					new Pair<String, String>( "ver", Integer.toString( thisCodeVersion ) ),
+					new Pair<String, String>( "old", Integer.toString( lastKnownCodeVersion ) )
+				);
 			}
 		}
 

@@ -5,9 +5,11 @@
 package com.gindin.zmanim.android.location;
 
 import android.location.Location;
-import net.sourceforge.zmanim.util.GeoLocation;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -29,8 +31,9 @@ public class ZmanimLocation
 
 
 	/**
-	 * Default ctor for when we are unable to obtain any real location informatio.
+	 * Default ctor for when we are unable to obtain any real location information.
 	 */
+	@SuppressWarnings( "MagicNumber" )
 	public ZmanimLocation() {
 
 		providerName = "Zmanim";
@@ -96,6 +99,18 @@ public class ZmanimLocation
 		setTimeZone( source.getTimeZone() );
 	}
 
+	
+	public String getLatitudeString() {
+		//noinspection AutoBoxing
+		return String.format( "%.1f", getLatitude() );
+	}
+	
+	
+	public String getLongitudeString() {
+		//noinspection AutoBoxing
+		return String.format( "%.1f", getLongitude() );
+	}
+
 
 	@Override
 	public String toString() {
@@ -104,18 +119,34 @@ public class ZmanimLocation
 		int MILLIS_IN_HOUR = 60 * 60 * 1000;
 
 		StringBuffer sb = new StringBuffer();
-		sb.append( "Location Name:\t" ).append(getLocationName());
-		sb.append( "\nLatitude:\t" ).append(getLatitude()).append( " deg" );
-		sb.append( "\nLongitude:\t" ).append(getLongitude()).append( " deg" );
-		sb.append( "\nElevation:\t" ).append(getElevation()).append( " Meters" );
-		sb.append( "\nTZ Name:\t" ).append(getTimeZone().getID());
+		sb.append( "Location Name:\t" ).append( getLocationName() );
+		sb.append( "\nLatitude:\t" ).append( getLatitudeString() ).append( " deg" );
+		sb.append( "\nLongitude:\t" ).append( getLongitudeString() ).append( " deg" );
+		sb.append( "\nElevation:\t" ).append( getElevation() ).append( " Meters" );
+		sb.append( "\nTZ Name:\t" ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
 		sb.append( "\nTZ GMT Offset:\t" ).append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
 		sb.append( "\nTZ DST Offset:\t" ).append( getTimeZone().getDSTSavings() / MILLIS_IN_HOUR );
 		sb.append( "\nProvider:\t" ).append( providerName );
-		sb.append( "\nTime:\t" ).append( new Date( locationTime ) );
-		sb.append( "\nAccuacy:\t" ).append( accuracy );
+		sb.append( "\nAccuracy:\t" ).append( accuracy );
+
+		DateFormat sdf = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault() );
+		sb.append( "\nFix:\t" ).append( sdf.format( new Date( locationTime ) ) );
 
 		return sb.toString();
 	}
+	
+	public String toShortString() {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append( "Where: " ).append( getLocationName());
+		sb.append( ";La: " ).append( getLatitudeString() ).append( " d" );
+		sb.append( ";Lo: " ).append( getLongitudeString() ).append( " d" );
+		sb.append( ";TZ: " ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
 
+		DateFormat sdf = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault() );
+		sb.append( ";Fix: " ).append( sdf.format( new Date( locationTime ) ) );
+
+		return sb.toString();
+	}	
+	
 }  // End of ZmanimLocation class

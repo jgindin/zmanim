@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
 import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.times.Zman;
@@ -96,7 +97,10 @@ public abstract class ZmanRowWrapper {
 			}
 			catch ( Exception e ) {
 				final Zman zman = zmans[ 0 ];
-				LogUtils.logError( "doInBackground", "Format zman: " + zman.type.name + "; zman: " + zman.name + "; ", e );
+				//noinspection unchecked
+				LogUtils.logError( "ZRW::doInBackground", "Format zman", e,
+					new Pair<String, String>( "type", zman.type.name ),
+					new Pair<String, String>( "zman", zman.name ) );
 			}
 
 			return formatted;

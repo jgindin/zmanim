@@ -4,8 +4,6 @@
 
 package com.gindin.util;
 
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,8 +11,10 @@ import com.flurry.android.FlurryAgent;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+
 
 /**
  * Wraps our usage of the Flurry analytics agent.
@@ -24,6 +24,7 @@ public class LogUtils {
 
 	/** Remember where we are. */
 	private static ZmanimLocationManager                      locationManager;
+
 
 
 	private LogUtils() {
@@ -52,7 +53,7 @@ public class LogUtils {
 				) {
 
 					String where = ( null == t ? "null thread" : t.getName() );
-					logError( where, "", e );
+					logError( "UEH", where, e );
 				}
 			}
 		);
@@ -78,62 +79,82 @@ public class LogUtils {
 		LogUtils.locationManager = locationManager;
 	}
 
-
-	private static void logError(
-		String errorID,
-	  String message
-	) {
-
-		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onError( errorID, message, locationManager.getLastKnownLocation().toString() );
-		}
-
-		Log.e( errorID, message );
-	}
-
-
+	
 	public static void logError(
 		String    where,
 		String    message,
 		Throwable error
 	) {
+		//noinspection NullArgumentToVariableArgMethod
+		logError( where, message, error, null );
+	}	
+
+	public static void logError(
+		String                  where,
+		String                  message,
+		Throwable               error,
+		Pair<String, String>... moreInfo
+	) {
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter( sw );
-		error.printStackTrace( pw );
+		
+		if ( null == error.getCause() ) {
+			error.printStackTrace( pw );
+		}
+		else {
+			error.getCause().printStackTrace( pw );
+		}
 
-		String errorMessage = cleanMessage( sw.toString() );
+		String stackTrace = cleanMessage( sw.toString() );
 
-		logError( where, message + "; " + errorMessage );
+		String curLocation;
+		if ( null != locationManager ) {
+			curLocation = locationManager.getLastKnownLocationString();
+		}
+		else {
+			curLocation = "?";
+		}
+
+		if ( Version.isDevelopment() ) {
+			Log.e( where, "Msg: " + message + "\nLocation: " + curLocation + "\nStack: " + stackTrace );
+		}
+		else {
+
+			List<Pair<String,String>> messages = new ArrayList<Pair<String, String>>();
+			messages.add( new Pair<String, String>( "Where", where ) );
+			messages.add( new Pair<String, String>( "Message", message ) );
+			messages.add( new Pair<String, String>( "Location", curLocation ) );
+			messages.add( new Pair<String, String>( "Stack", stackTrace ) );
+			if ( null != moreInfo ) {
+				Collections.addAll( messages, moreInfo );
+			}
+
+			//noinspection unchecked
+			logEvent( "Error", messages.toArray( new Pair[ messages.size() ] ) );
+
+			FlurryAgent.onError( where, message, "" );
+		}
+
 	}
 
 
 	public static void logEvent(
-		String      eventName,
-	  String ...  messages
+		String                  eventName,
+	  Pair<String,String>...  messages
 	) {
 
 		if ( !Version.isDevelopment() ) {
 
 			Map<String,String> messageMap = new HashMap<String, String>();
 			if ( null != messages ) {
-				for ( int index = 0; index < messages.length; index++ ) {
-					messageMap.put( "Msg" + index, messages[ index ] );
+				for ( Pair<String, String> message : messages ) {
+					messageMap.put( message.first, message.second );
 				}
 			}
 
 			FlurryAgent.onEvent( eventName, messageMap );
 		}
-
-		
-		StringBuffer message = new StringBuffer();
-		if ( null != messages ) {
-			for ( String msg : messages ) {
-				message.append( msg ).append( "; " );
-			}
-		}
-
-		Log.i( eventName, message.toString() );
 	}
 
 
@@ -147,9 +168,10 @@ public class LogUtils {
 	 */
 	private static String cleanMessage( String message ) {
 
-		String cleaned = message.replace( "com.gindin.zmanim.android.zmanList", "c.g.z.a.z" );
-		cleaned = cleaned.replace( "com.gindin.zmanim.android", "c.g.z.a" );
+		String cleaned;
+		cleaned = message.replace( "com.gindin.zmanim.android.zmanList", "c.g.z.a.z" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.android.location", "c.g.z.a.l" );
+		cleaned = cleaned.replace( "com.gindin.zmanim.android", "c.g.z.a" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.calendar", "c.g.z.c" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.times", "c.g.z.t" );
 		cleaned = cleaned.replace( "com.gindin.zmanim", "c.g.z" );
@@ -157,7 +179,9 @@ public class LogUtils {
 		cleaned = cleaned.replace( "com.gindin", "c.g" );
 
 		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerSetException", "j.u.c.FT$S.iSE" );
+		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerRun", "j.u.c.FT$S.iR" );
     cleaned = cleaned.replace( "java.util.concurrent.FutureTask.setException", "j.u.c.FT.sE" );
+		cleaned = cleaned.replace( "java.util.concurrent.FutureTask.run", "j.u.c.FT.r" );
 		cleaned = cleaned.replace( "java.util.concurrent", "j.u.c" );
 		cleaned = cleaned.replace( "java.util", "j.u" );
 		cleaned = cleaned.replace( "java.lang.NullPointerException", "NPE" );
@@ -168,7 +192,7 @@ public class LogUtils {
 		cleaned = cleaned.replace( "android.os.AsyncTask", "a.o.AT" );
 		cleaned = cleaned.replace( "android.os", "a.o" );
 
-		cleaned = cleaned.replace( "An error occured while executing", "Error" );
+		cleaned = cleaned.replace( "An error occurred while executing", "Error" );
 
 		return cleaned;
 	}

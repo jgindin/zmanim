@@ -13,6 +13,7 @@ import android.os.Bundle;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -79,6 +80,11 @@ class StaticLocationProvider
 
 					try {
 						return geocoder.getFromLocationName( places[ 0 ], 5 );
+					}
+					catch ( IOException ioe ) {
+						// Docs for Geocoder.getFromLocationName say this happens when there's no network connectivity, or
+						//  there's some other I/O error. In any case, it can happen...
+						return null;
 					}
 					catch ( Exception e ) {
 						LogUtils.logError( "SLP::updateLocationFromPlace", "", e );

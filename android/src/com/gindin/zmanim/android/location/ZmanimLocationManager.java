@@ -4,10 +4,16 @@
 
 package com.gindin.zmanim.android.location;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.view.View;
+
+import java.util.*;
+
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 import com.gindin.zmanim.android.Activities;
@@ -15,11 +21,6 @@ import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.location.Location;
-
-import java.util.*;
 
 /**
  * Encapsulates the necessary work of finding our current location from the phone in a way that is usable by the Zmanim
@@ -213,6 +214,15 @@ public class ZmanimLocationManager {
 	public ZmanimLocation getLastKnownLocation() {
 		return lastKnownLocation;
 	}
+	
+	
+	public String getLastKnownLocationString() {
+		if ( null == lastKnownLocation ) {
+			return "Unknown";
+		}
+		
+		return lastKnownLocation.toShortString();
+	}
 
 
 	/**
@@ -295,8 +305,11 @@ public class ZmanimLocationManager {
 
 	private void clearLocationFieldListeners() {
 
-		locationField.setOnClickListener( null );
-		locationField.setOnLongClickListener( null );
+		// Can happen that we get shutdown before we get a fix and really have an opportunity to get going...
+		if ( null != locationField ) {
+			locationField.setOnClickListener( null );
+			locationField.setOnLongClickListener( null );
+		}
 	}
 
 
@@ -373,8 +386,13 @@ public class ZmanimLocationManager {
 		ZmanimLocation location
 	) {
 
-		LogUtils.logEvent( "newLocation", "latitude: " + location.getLatitude(),
-			"longitude: " + location.getLongitude(), "location: " + location.getLocationName() );
+		/*
+		//noinspection unchecked
+		LogUtils.logEvent( "newLocation",
+			new Pair<String,String>( "latitude", location.getLatitudeString() ),
+			new Pair<String,String>( "longitude", location.getLongitudeString() ),
+			new Pair<String, String>( "location", location.getLocationName() ) );
+		*/
 
 		for ( Listener listener : listeners ) {
 			listener.locationChanged( location );

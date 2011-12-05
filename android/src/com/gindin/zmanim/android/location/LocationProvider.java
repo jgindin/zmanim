@@ -14,6 +14,7 @@ import android.os.Bundle;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,6 +232,11 @@ abstract class LocationProvider {
 						address = null;
 					}
 				}
+				catch ( IOException ioe ) {
+					// Docs for Geocoder.getFromLocation say this happens when there's no network connectivity, or
+					//  there's some other I/O error. In any case, it can happen...
+					address = null;
+				}
 				catch ( Exception e ) {
 					address = null;
 					LogUtils.logError( "LP::lookupLocationName", "", e );
@@ -248,6 +254,7 @@ abstract class LocationProvider {
 		catch ( Exception e ) {
 			geoLocation = null;
 		}
+
 		return geoLocation;
 	}
 
