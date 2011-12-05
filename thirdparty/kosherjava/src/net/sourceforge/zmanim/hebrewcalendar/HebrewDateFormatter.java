@@ -608,7 +608,6 @@ public class HebrewDateFormatter {
 	public String getFormattedKviah(int jewishYear) {
 		JewishDate jewishDate = new JewishDate(jewishYear, JewishDate.TISHREI, 1); // set date to Rosh Hashana
 		int kviah = jewishDate.getCheshvanKislevKviah();
-		int kviah = JewishDate.getCheshvanKislevKviah(jewishYear);
 		int roshHashanaDayOfweek = jewishDate.getDayOfWeek();
 		String returnValue = formatHebrewNumber(roshHashanaDayOfweek);
 		returnValue += (kviah == JewishDate.CHASERIM ? "\u05D7" : kviah == JewishDate.SHELAIMIM ? "\u05E9"
