@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar;
+package com.gindin.zmanim.icu4j_calendar;
 
 import java.text.DateFormat;
 import java.util.Calendar;

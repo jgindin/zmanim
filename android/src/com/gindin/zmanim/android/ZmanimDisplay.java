@@ -12,8 +12,8 @@ import android.widget.AdapterView;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
-import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.calendar.holiday.JewishDay;
+import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.icu4j_calendar.holiday.JewishDay;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.Zmanim;
 

@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.*;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
-import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.Zmanim;
 

@@ -11,8 +11,8 @@ import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.calendar.HebrewDateFormatter;
-import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.icu4j_calendar.HebrewDateFormatter;
+import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
 import android.app.*;

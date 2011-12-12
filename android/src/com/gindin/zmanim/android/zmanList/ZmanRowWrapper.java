@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.zman.Zman;
 
 /**

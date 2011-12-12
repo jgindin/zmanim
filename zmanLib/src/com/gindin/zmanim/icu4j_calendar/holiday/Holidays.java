@@ -2,9 +2,9 @@
  * Copyright (c) 2011. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar.holiday;
+package com.gindin.zmanim.icu4j_calendar.holiday;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.icu4j_calendar.HebrewCalendar;
 
 /**
  * Serves as the central location for declaring all the Jewish Holidays.

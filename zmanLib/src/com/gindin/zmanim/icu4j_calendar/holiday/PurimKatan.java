@@ -2,9 +2,9 @@
  * Copyright (c) 2011. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar.holiday;
+package com.gindin.zmanim.icu4j_calendar.holiday;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.icu4j_calendar.HebrewCalendar;
 
 /** Special class to ensure that Purim katan only shows up in leap years. */
 @SuppressWarnings( { "MagicNumber" } )

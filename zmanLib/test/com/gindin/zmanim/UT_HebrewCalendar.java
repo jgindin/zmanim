@@ -4,8 +4,8 @@
 
 package com.gindin.zmanim;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.holiday.*;
+import com.gindin.zmanim.icu4j_calendar.HebrewCalendar;
+import com.gindin.zmanim.icu4j_calendar.holiday.*;
 import org.junit.*;
 
 /**

@@ -2,7 +2,7 @@
  * Copyright (c) 2011. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar.holiday;
+package com.gindin.zmanim.icu4j_calendar.holiday;
 
 /**
  *
