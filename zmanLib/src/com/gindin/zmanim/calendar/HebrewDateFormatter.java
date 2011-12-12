@@ -4,12 +4,8 @@
 
 package com.gindin.zmanim.calendar;
 
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.ZmanRounder;
-
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 /**
@@ -18,72 +14,11 @@ import java.util.Date;
 public class HebrewDateFormatter {
 
 
-	/** Used to format the zmanim times that get displayed. */
-	private final DateFormat                                  timeFormatter;
-
 	/** Used to format the secular date in the screen's header. */
 	private final DateFormat                                  secularDateFormatter;
 
-	/** Used to ensure certain zmanim are rounded properly. */
-	private final ZmanRounder                                 zmanRounder;
-
-	public HebrewDateFormatter(
-		boolean showSeconds
-	) {
-
-		if ( showSeconds ) {
-			timeFormatter = DateFormat.getTimeInstance( DateFormat.MEDIUM );
-			zmanRounder = null;
-		}
-		else {
-			timeFormatter = DateFormat.getTimeInstance( DateFormat.SHORT );
-			zmanRounder = new ZmanRounder();
-		}
-
+	public HebrewDateFormatter() {
 		secularDateFormatter = DateFormat.getDateInstance( DateFormat.MEDIUM );
-	}
-
-
-	public String formatZmanTime(
-		Zman zman
-	) {
-
-		// This can return null in case the zman just doesn't apply. E.g., there are places where the Sun never
-		//  actually gets low enough to be able to calculate Alot @ 26degrees.
-		Date time = zman.getTime();
-		if ( null == time ) {
-			return "N/A";
-		}
-
-		if ( null != zmanRounder ) {
-			// Some of the zman types we need to do some rounding so that we avoid a situation of showing
-			//  a time that can mislead someone into missing their mitzvah...
-			switch ( zman.type ) {
-
-				case Alot:
-				case Talit:
-				case Hanetz:
-				case FastEnd:
-				case TzaitHacochavim:
-				case ShabbatEnd:
-					time = zmanRounder.roundToLatestMinute( time );
-					break;
-
-				case SofZmanShema:
-				case SofZmanTefila:
-				case MinchaGedola:
-				case MinchaKetana:
-				case PlagHaMincha:
-				case CandleLighting:
-				case LatestMincha:
-					time = zmanRounder.roundToEarliestMinute( time );
-					break;
-			}
-		}
-
-		synchronized ( this ) {
-			return timeFormatter.format( time );
-		}
 	}
 
 

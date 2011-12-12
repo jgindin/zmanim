@@ -7,6 +7,7 @@ package com.gindin.zmanim.calendar;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.calendar.holiday.JewishDay;
 import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
 import com.gindin.zmanim.zman.ZmanimFactory;
 import net.sourceforge.zmanim.util.GeoLocation;
@@ -29,11 +30,14 @@ public class HebrewZmanimCalendar {
 	/** Aggregated to expose the Zmanim functionality. */
 	private final ZmanimCalendar                              zmanimCalendar;
 
-	/** Used to format all of the dates and times. */
-	private final HebrewDateFormatter                         dateFormatter;
-
 	/** This is how we create the zmanim that we need. */
 	private final ZmanimFactory                               zmanimFactory;
+
+	/** Used to format all of the dates. */
+	private final HebrewDateFormatter                         dateFormatter;
+	
+	/** Used to format all the zmnanim. */
+	private final ZmanFormatter                               zmanFormatter;
 
 	/**
 	 * When the user is viewing the actual day, and it's after sunset, we'll adjust the hebrew
@@ -47,8 +51,10 @@ public class HebrewZmanimCalendar {
 
 
 	public HebrewZmanimCalendar(
-		GeoLocation         location,
-		HebrewDateFormatter dateFormatter
+		ZmanimLocation      location,
+		HebrewDateFormatter dateFormatter,
+		ZmanFormatter       zmanFormatter,
+		Calendar            secularDate
 	) {
 
 		// There are cases where we don't have / aren't able to get a location. In such a case, most of
@@ -61,17 +67,8 @@ public class HebrewZmanimCalendar {
 		}
 
 		this.dateFormatter = dateFormatter;
+		this.zmanFormatter = zmanFormatter;
 		this.zmanimFactory = new ZmanimFactory( this );
-	}
-
-
-	public HebrewZmanimCalendar(
-		ZmanimLocation location,
-		HebrewDateFormatter formatter,
-		Calendar            secularDate
-	) {
-
-		this( location, formatter );
 
 		if ( null != secularDate ) {
 			syncToSecularCalendar( secularDate, false );
@@ -140,7 +137,7 @@ public class HebrewZmanimCalendar {
 
 		String time = zman.getCachedFormattedTime();
 		if ( null == time ) {
-			time = dateFormatter.formatZmanTime( zman );
+			time = zmanFormatter.formatZmanTime( zman );
 			zman.setCachedFormattedTime( time );
 		}
 

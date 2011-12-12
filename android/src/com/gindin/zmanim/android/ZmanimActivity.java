@@ -13,6 +13,7 @@ import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.calendar.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.zman.ZmanFormatter;
 
 import android.app.*;
 import android.content.DialogInterface;
@@ -723,14 +724,15 @@ public class ZmanimActivity
 		protected Void doInBackground( Void... v ) {
 
 			boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-			final HebrewDateFormatter formatter = new HebrewDateFormatter( showSeconds );
+			final HebrewDateFormatter dateFormatter = new HebrewDateFormatter();
+			final ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds  );
 
 			Calendar secularDate = null;
 			if ( null != zmanimCalendar ) {
 				secularDate = zmanimCalendar.getSecularDate();
 			}
 
-			zmanimCalendar = new HebrewZmanimCalendar( location, formatter, secularDate );
+			zmanimCalendar = new HebrewZmanimCalendar( location, dateFormatter, zmanFormatter, secularDate );
 			return null;
 		}
 
