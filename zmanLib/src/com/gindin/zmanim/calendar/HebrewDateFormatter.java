@@ -4,8 +4,8 @@
 
 package com.gindin.zmanim.calendar;
 
-import com.gindin.zmanim.times.Zman;
-import com.gindin.zmanim.times.ZmanRounder;
+import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.ZmanRounder;
 
 import java.text.DateFormat;
 import java.util.Calendar;

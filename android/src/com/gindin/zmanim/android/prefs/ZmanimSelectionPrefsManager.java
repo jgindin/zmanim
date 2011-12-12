@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.ZmanimActivity;
-import com.gindin.zmanim.times.Zmanim;
+import com.gindin.zmanim.zman.Zmanim;
 
 import java.util.Map;
 

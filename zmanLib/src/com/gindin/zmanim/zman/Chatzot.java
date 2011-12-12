@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.times;
+package com.gindin.zmanim.zman;
 
 import com.gindin.zmanim.calendar.ZmanimCalendar;
 
@@ -13,14 +13,14 @@ import java.util.List;
 /**
  *
  */
-class Shkia
+class Chatzot
 	extends Zmanim {
 
-	Shkia(
+	Chatzot(
 		final ZmanimCalendar zmanimCalendar
 	) {
 
-		super( Type.Shkia, buildZmanim( zmanimCalendar ) );
+		super( Type.Chatzot, buildZmanim( zmanimCalendar ) );
 	}
 
 
@@ -31,9 +31,9 @@ class Shkia
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
+			new Zman( "Mid-day", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.Chatzot, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSunset();
+					return zmanimCalendar.getChatzos();
 				}
 			}
 		);
@@ -41,4 +41,4 @@ class Shkia
 		return zmanim;
 	}
 
-}  // End of Shkia class
+}  // End of Chatzot class

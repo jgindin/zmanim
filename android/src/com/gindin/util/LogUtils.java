@@ -173,7 +173,7 @@ public class LogUtils {
 		cleaned = cleaned.replace( "com.gindin.zmanim.android.location", "c.g.z.a.l" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.android", "c.g.z.a" );
 		cleaned = cleaned.replace( "com.gindin.zmanim.calendar", "c.g.z.c" );
-		cleaned = cleaned.replace( "com.gindin.zmanim.times", "c.g.z.t" );
+		cleaned = cleaned.replace( "com.gindin.zmanim.zman", "c.g.z.z" );
 		cleaned = cleaned.replace( "com.gindin.zmanim", "c.g.z" );
 		cleaned = cleaned.replace( "com.gindin.util", "c.g.u" );
 		cleaned = cleaned.replace( "com.gindin", "c.g" );

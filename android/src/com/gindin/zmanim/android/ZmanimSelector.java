@@ -13,8 +13,8 @@ import android.widget.*;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.times.Zman;
-import com.gindin.zmanim.times.Zmanim;
+import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.Zmanim;
 
 /**
  * Displays a dialog allowing the user to select one of the applicable zmanim.

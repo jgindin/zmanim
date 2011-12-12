@@ -2,7 +2,7 @@
  * Copyright (c) 2009. Jay R. Gindin
  */
 
-package com.gindin.zmanim.times;
+package com.gindin.zmanim.zman;
 
 import java.util.Calendar;
 import java.util.Date;

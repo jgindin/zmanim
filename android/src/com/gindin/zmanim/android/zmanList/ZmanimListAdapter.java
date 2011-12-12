@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.times.Zman;
+import com.gindin.zmanim.zman.Zman;
 
 /**
  * Adapter for a ListView that shows a set of Zman objects.

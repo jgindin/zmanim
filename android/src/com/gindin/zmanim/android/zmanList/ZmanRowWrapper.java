@@ -11,7 +11,7 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.times.Zman;
+import com.gindin.zmanim.zman.Zman;
 
 /**
  * Wraps a zman row, making for quick & easy recycling.
