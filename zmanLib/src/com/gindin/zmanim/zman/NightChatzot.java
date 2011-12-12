@@ -13,7 +13,7 @@ import java.util.List;
 /**
  *
  */
-public class NightChatzot
+class NightChatzot
 	extends Zmanim {
 
 	public NightChatzot( ZmanimCalendar zmanimCalendar ) {

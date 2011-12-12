@@ -13,7 +13,7 @@ import java.util.List;
 /**
  *
  */
-public class BeinHashmashot
+class BeinHashmashot
 	extends Zmanim {
 
 	private static final String                               DEFAULT_ZMAN_NAME = "2 Stars";
