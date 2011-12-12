@@ -192,13 +192,14 @@ public class HebrewDateFormatter {
 		String formattedRoshChodesh = "";
 		int month = jewishCalendar.getJewishMonth();
 		if (jewishCalendar.getJewishDayOfMonth() == 30) {
-			if (month < 12 || (month == 12 && jewishCalendar.isJewishLeapYear())) {
+			if (month < JewishCalendar.ADAR || (month == JewishCalendar.ADAR && jewishCalendar.isJewishLeapYear())) {
 				month++;
 			} else { // roll to Nissan
-				month = 1;
+				month = JewishCalendar.NISSAN;
 			}
 		}
 
+		// This method is only about formatting, so we shouldn't make any changes to the params passed in...
 		jewishCalendar = jewishCalendar.clone();
 		jewishCalendar.setJewishMonth( month );
 		formattedRoshChodesh = hebrewFormat ? hebrewHolidays[JewishCalendar.ROSH_CHODESH]
@@ -522,7 +523,6 @@ public class HebrewDateFormatter {
 	 */
 	public String formatMonth(JewishDate jewishDate) {
 		final int month = jewishDate.getJewishMonth();
-
 		if (isHebrewFormat()) {
 			if (jewishDate.isJewishLeapYear() && month == JewishDate.ADAR) {
 				return hebrewMonths[13] + (useGershGershayim ? GERESH : ""); // return Adar I, not Adar in a leap year
