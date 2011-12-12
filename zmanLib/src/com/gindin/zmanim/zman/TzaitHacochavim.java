@@ -4,7 +4,6 @@
 
 package com.gindin.zmanim.zman;
 
-import com.gindin.zmanim.calendar.ZmanimCalendar;
 import net.sourceforge.zmanim.AstronomicalCalendar;
 
 import java.util.ArrayList;

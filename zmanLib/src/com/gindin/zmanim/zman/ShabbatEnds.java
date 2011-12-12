@@ -4,9 +4,6 @@
 
 package com.gindin.zmanim.zman;
 
-import com.gindin.zmanim.calendar.ZmanimCalendar;
-
-
 
 /**
  *

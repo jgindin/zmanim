@@ -4,8 +4,6 @@
 
 package com.gindin.zmanim.zman;
 
-import com.gindin.zmanim.calendar.ZmanimCalendar;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -5,7 +5,6 @@
 package com.gindin.zmanim.zman;
 
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.calendar.ZmanimCalendar;
 
 import java.util.HashMap;
 import java.util.Map;
