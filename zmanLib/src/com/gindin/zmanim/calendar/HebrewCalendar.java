@@ -10,6 +10,7 @@ import com.gindin.zmanim.calendar.holiday.*;
  * Adds support for determining additional information about the current day, including whether or not
  *  the day is a holiday.
  */
+@Deprecated
 public class HebrewCalendar 
 	extends com.ibm.icu.util.HebrewCalendar {
 

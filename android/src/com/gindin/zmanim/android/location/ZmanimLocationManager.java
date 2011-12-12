@@ -20,6 +20,7 @@ import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.location.ZmanimLocation;
 
 
 /**
@@ -340,7 +341,9 @@ public class ZmanimLocationManager {
 		else {
 
 			TimeZone timeZone = getTimeZoneFromPrefs();
-			lastKnownLocation = new ZmanimLocation( newLocation, locationName, timeZone );
+			lastKnownLocation = new ZmanimLocation( newLocation.getProvider(), locationName, newLocation.getTime(), timeZone,
+				newLocation.getLatitude(), newLocation.getLongitude(),
+				newLocation.hasAltitude() ? newLocation.getAltitude() : -1, newLocation.hasAccuracy() ? newLocation.getAccuracy() : -1 );
 		}
 
 		return lastKnownLocation;
@@ -417,7 +420,7 @@ public class ZmanimLocationManager {
 
 		void error(
 			LocationError   error,
-			ZmanimLocation  lastKnownLocation
+			ZmanimLocation lastKnownLocation
 		);
 
 		void onProgress(

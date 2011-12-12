@@ -2,8 +2,9 @@
  * Copyright (c) 2011. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar;
+package com.gindin.zmanim;
 
+import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.holiday.*;
 import org.junit.*;
 
@@ -14,7 +15,7 @@ import org.junit.*;
 public class UT_HebrewCalendar {
 
 
-	private HebrewCalendar                                    calendar;
+	private HebrewCalendar calendar;
 
 
 	/**

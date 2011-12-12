@@ -6,15 +6,13 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.ZmanimLocation;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.calendar.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.HebrewZmanimCalendar;
-import com.ibm.icu.ICUAndroidBridge;
-import net.sourceforge.zmanim.util.GeoLocation;
 
 import android.app.*;
 import android.content.DialogInterface;
@@ -256,12 +254,11 @@ public class ZmanimActivity
 
 		buildUITask = new BuildUIAsyncTask( location, error );
 		buildUITask.execute();
-
 	}
 
 
 	private void buildHeader(
-		GeoLocation location
+		ZmanimLocation location
 	) {
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
@@ -795,8 +792,6 @@ public class ZmanimActivity
 		protected Void doInBackground( Void... voids ) {
 
 			setupViewListeners();
-
-			ICUAndroidBridge.create( getAssets() );
 
 			locationManager = new ZmanimLocationManager( ZmanimActivity.this );
 			LogUtils.setLocationHandler( locationManager );

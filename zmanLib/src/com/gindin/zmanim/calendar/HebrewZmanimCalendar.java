@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.calendar;
 
-import com.gindin.zmanim.android.location.ZmanimLocation;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.calendar.holiday.JewishDay;
 import com.gindin.zmanim.times.Zman;
 import com.gindin.zmanim.times.Zmanim;
@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Combines the functionality of a Hebrew calendar with a Zmanim calculator.
  */
+@Deprecated
 public class HebrewZmanimCalendar {
 
 
@@ -65,7 +66,7 @@ public class HebrewZmanimCalendar {
 
 
 	public HebrewZmanimCalendar(
-		ZmanimLocation      location,
+		ZmanimLocation location,
 		HebrewDateFormatter formatter,
 		Calendar            secularDate
 	) {

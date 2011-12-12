@@ -2,9 +2,8 @@
  * Copyright (c) 2011. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location;
+package com.gindin.zmanim.location;
 
-import android.location.Location;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.text.DateFormat;
@@ -48,41 +47,53 @@ public class ZmanimLocation
 	}
 
 
+	/**
+	 * 
+	 * @param providerName Name of the location provider.
+	 * @param locationName What's the name of this location?                  
+	 * @param locationTime What time is it in this location?
+	 * @param locationTimeZone Time zone for this location                     
+	 * @param accuracy How accurate is the location? -1 to indicate this isn't applicable.
+	 * @param latitude What's the latitude of this location?
+	 * @param longitude What's the longitude of this location?
+	 * @param altitude What's the altitude of this location? <= 0 to indicate unknown.
+	 */
 	public ZmanimLocation(
-		Location  newLocation,
+		String    providerName,
 		String    locationName,
-		TimeZone  timeZone
-	) {
+	  long      locationTime,
+	  TimeZone  locationTimeZone,
+	  double    latitude,
+	  double    longitude,
+	  double    altitude,
+	  float     accuracy
+	  ) {
+		
+		this.providerName = providerName;
+		this.locationTime = locationTime;
+		setLocationName( locationName );
+		setLatitude( latitude );
+		setLongitude( longitude );
 
-		providerName = newLocation.getProvider();
-		locationTime = newLocation.getTime();
-
-		if ( newLocation.hasAccuracy() ) {
-			accuracy = newLocation.getAccuracy();
+		if ( accuracy >= 0 ) {
+			this.accuracy = accuracy;
 		}
 		else {
-			accuracy = -1;
+			this.accuracy = -1;
 		}
 
-		setLocationName( locationName );
-		setLatitude( newLocation.getLatitude() );
-		setLongitude( newLocation.getLongitude() );
-
-		double altitude = newLocation.getAltitude();
-		if ( !newLocation.hasAltitude() || ( altitude < 0 ) ) {
+		if ( altitude < 0 ) {
 			altitude = 0.0;
 		}
-
 		setElevation( altitude );
-
+		
 		// If we don't set a time zone, then it defaults to GMT...
-		if ( null == timeZone ) {
+		if ( null == locationTimeZone ) {
 			setTimeZone( TimeZone.getDefault() );
 		}
 		else {
-			setTimeZone( timeZone );
+			setTimeZone( locationTimeZone );
 		}
-
 	}
 
 
@@ -119,7 +130,7 @@ public class ZmanimLocation
 		@SuppressWarnings( { "MagicNumber" } )
 		int MILLIS_IN_HOUR = 60 * 60 * 1000;
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append( "Location Name:\t" ).append( getLocationName() );
 		sb.append( "\nLatitude:\t" ).append( getLatitudeString() ).append( " deg" );
 		sb.append( "\nLongitude:\t" ).append( getLongitudeString() ).append( " deg" );
@@ -138,7 +149,7 @@ public class ZmanimLocation
 	
 	public String toShortString() {
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append( "Where: " ).append( getLocationName());
 		sb.append( ";La: " ).append( getLatitudeString() ).append( " d" );
 		sb.append( ";Lo: " ).append( getLongitudeString() ).append( " d" );

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file:///home2/jgindin/src/gindin/zmanim/trunk/android/AndroidZmanim.iml" filepath="/home2/jgindin/src/gindin/zmanim/trunk/android/AndroidZmanim.iml" />
       <module fileurl="file://$PROJECT_DIR$/../thirdparty/kosherjava/KosherJava.iml" filepath="$PROJECT_DIR$/../thirdparty/kosherjava/KosherJava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Zmanim.iml" filepath="$PROJECT_DIR$/Zmanim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../zmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/../zmanLib/ZmanLib.iml" />
     </modules>
   </component>
 </project>
