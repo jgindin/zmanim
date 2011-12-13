@@ -619,6 +619,12 @@ public class JewishDate
 	//
 	//
 
+	// Package local for unit tests.
+	int getLastDayOfGregorianMonth(
+		int month
+	) {
+		return getLastDayOfGregorianMonth( month, gregorianYear );
+	}
 
 	/**
 	 * Returns the number of days in a given month in a given month and year.
