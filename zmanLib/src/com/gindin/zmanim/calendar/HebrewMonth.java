@@ -13,42 +13,42 @@ public interface HebrewMonth {
 
 	/**
 	 * Value of the month field indicating Nissan, the first numeric month of the year in the Jewish calendar. With the
-	 * year starting at {@link #TISHREI}, it would actually be the 7th (or 8th in a {@link JewishDate#isJewishLeapYear() leap
+	 * year starting at {@link #TISHREI}, it would actually be the 7th (or 8th in a {@link HebrewCalendar#isJewishLeapYear() leap
 	 * year}) month of the year.
 	 */
 	public static final int NISSAN = 1;
 
 	/**
 	 * Value of the month field indicating Iyar, the second numeric month of the year in the Jewish calendar. With the
-	 * year starting at {@link #TISHREI}, it would actually be the 8th (or 9th in a {@link JewishDate#isJewishLeapYear() leap
+	 * year starting at {@link #TISHREI}, it would actually be the 8th (or 9th in a {@link HebrewCalendar#isJewishLeapYear() leap
 	 * year}) month of the year.
 	 */
 	public static final int IYAR = 2;
 
 	/**
 	 * Value of the month field indicating Sivan, the third numeric month of the year in the Jewish calendar. With the
-	 * year starting at {@link #TISHREI}, it would actually be the 9th (or 10th in a {@link JewishDate#isJewishLeapYear() leap
+	 * year starting at {@link #TISHREI}, it would actually be the 9th (or 10th in a {@link HebrewCalendar#isJewishLeapYear() leap
 	 * year}) month of the year.
 	 */
 	public static final int SIVAN = 3;
 
 	/**
 	 * Value of the month field indicating Tammuz, the fourth numeric month of the year in the Jewish calendar. With the
-	 * year starting at {@link #TISHREI}, it would actually be the 10th (or 11th in a {@link JewishDate#isJewishLeapYear() leap
+	 * year starting at {@link #TISHREI}, it would actually be the 10th (or 11th in a {@link HebrewCalendar#isJewishLeapYear() leap
 	 * year}) month of the year.
 	 */
 	public static final int TAMMUZ = 4;
 
 	/**
 	 * Value of the month field indicating Av, the fifth numeric month of the year in the Jewish calendar. With the year
-	 * starting at {@link #TISHREI}, it would actually be the 11th (or 12th in a {@link JewishDate#isJewishLeapYear() leap year})
+	 * starting at {@link #TISHREI}, it would actually be the 11th (or 12th in a {@link HebrewCalendar#isJewishLeapYear() leap year})
 	 * month of the year.
 	 */
 	public static final int AV = 5;
 
 	/**
 	 * Value of the month field indicating Elul, the sixth numeric month of the year in the Jewish calendar. With the
-	 * year starting at {@link #TISHREI}, it would actually be the 12th (or 13th in a {@link JewishDate#isJewishLeapYear() leap
+	 * year starting at {@link #TISHREI}, it would actually be the 12th (or 13th in a {@link HebrewCalendar#isJewishLeapYear() leap
 	 * year}) month of the year.
 	 */
 	public static final int ELUL = 6;
@@ -84,7 +84,7 @@ public interface HebrewMonth {
 	public static final int SHEVAT = 11;
 
 	/**
-	 * Value of the month field indicating Adar (or Adar I in a {@link JewishDate#isJewishLeapYear() leap year}), the twelfth
+	 * Value of the month field indicating Adar (or Adar I in a {@link HebrewCalendar#isJewishLeapYear() leap year}), the twelfth
 	 * numeric month of the year in the Jewish calendar. With the year starting at {@link #TISHREI}, it would actually
 	 * be the 6th month of the year.
 	 */
@@ -92,7 +92,7 @@ public interface HebrewMonth {
 
 	/**
 	 * Value of the month field indicating Adar II, the leap (intercalary or embolismic) thirteenth (Undecimber) numeric
-	 * month of the year added in Jewish {@link JewishDate#isJewishLeapYear() leap year}). The leap years are years 3, 6, 8, 11,
+	 * month of the year added in Jewish {@link HebrewCalendar#isJewishLeapYear() leap year}). The leap years are years 3, 6, 8, 11,
 	 * 14, 17 and 19 of a 19 year cycle. With the year starting at {@link #TISHREI}, it would actually be the 7th month
 	 * of the year.
 	 */
