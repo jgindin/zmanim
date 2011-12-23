@@ -23,98 +23,98 @@ public class UT_GregorianDateNavigation {
 		cal.set( Calendar.MONTH, Calendar.JANUARY );
 		cal.set( Calendar.DATE, 31 );
 
-		HebrewCalendar hebrewDate = new HebrewCalendar( cal );
-		Assert.assertEquals( 5771, hebrewDate.getJewishYear() );
-		Assert.assertEquals( 11, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 26, hebrewDate.getJewishDayOfMonth() );
+		JewishDate jewishDate = JewishCalendar.getForDate( cal );
+		Assert.assertEquals( 5771, jewishDate.getJewishYear() );
+		Assert.assertEquals( 11, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 26, jewishDate.getJewishDayOfMonth() );
 
-		hebrewDate = hebrewDate.forward();
-		cal.setTime( hebrewDate.getTime() );
+		jewishDate = jewishDate.tomorrow();
+		cal.setTime( jewishDate.getTime() );
 		Assert.assertEquals( Calendar.FEBRUARY, cal.get( Calendar.MONTH ) );
 		Assert.assertEquals( 1, cal.get( Calendar.DAY_OF_MONTH ) );
-		Assert.assertEquals( 11, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 27, hebrewDate.getJewishDayOfMonth() );
+		Assert.assertEquals( 11, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 27, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.FEBRUARY );
 		cal.set( Calendar.DATE, 28 );
-		hebrewDate = new HebrewCalendar( cal );
-		Assert.assertEquals( 12, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 24, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		Assert.assertEquals( 12, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 24, jewishDate.getJewishDayOfMonth() );
 
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 12, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 25, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 12, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 25, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.MARCH );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 13, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 26, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 13, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 26, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.APRIL );
 		cal.set( Calendar.DATE, 30 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 1, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 27, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 1, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 27, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.MAY );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 2, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 28, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 2, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 28, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.JUNE );
 		cal.set( Calendar.DATE, 30 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 3, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 29, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 3, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 29, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.JULY );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 5, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 1, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 5, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 1, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.AUGUST );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 6, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 2, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 6, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 2, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.SEPTEMBER );
 		cal.set( Calendar.DATE, 30 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 7, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 3, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 7, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 3, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.OCTOBER );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 5772, hebrewDate.getJewishYear() );
-		Assert.assertEquals( 8, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 4, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 5772, jewishDate.getJewishYear() );
+		Assert.assertEquals( 8, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 4, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.NOVEMBER );
 		cal.set( Calendar.DATE, 30 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 9, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 5, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 9, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 5, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.MONTH, Calendar.DECEMBER );
 		cal.set( Calendar.DATE, 31 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.forward();
-		Assert.assertEquals( 10, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 6, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.tomorrow();
+		Assert.assertEquals( 10, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 6, jewishDate.getJewishDayOfMonth() );
 	}
 
 
@@ -126,89 +126,89 @@ public class UT_GregorianDateNavigation {
 		cal.set( Calendar.MONTH, Calendar.JANUARY );
 		cal.set( Calendar.DATE, 1 );
 
-		HebrewCalendar hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 10, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 24, hebrewDate.getJewishDayOfMonth() );
+		JewishDate jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 10, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 24, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.DECEMBER );
 		cal.set( Calendar.YEAR, 2010 );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 9, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 23, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 9, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 23, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.NOVEMBER );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 8, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 23, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 8, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 23, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.OCTOBER );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 7, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 22, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 7, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 22, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.SEPTEMBER );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 5770, hebrewDate.getJewishYear() );
-		Assert.assertEquals( 6, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 21, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 5770, jewishDate.getJewishYear() );
+		Assert.assertEquals( 6, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 21, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.AUGUST );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 5, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 20, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 5, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 20, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.JULY );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 4, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 18, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 4, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 18, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.JUNE );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 3, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 18, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 3, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 18, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.MAY );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 2, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 16, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 2, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 16, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.APRIL );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 1, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 16, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 1, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 16, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.MARCH );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 12, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 14, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 12, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 14, jewishDate.getJewishDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.FEBRUARY );
-		hebrewDate = new HebrewCalendar( cal );
-		hebrewDate = hebrewDate.back();
-		Assert.assertEquals( 11, hebrewDate.getJewishMonth() );
-		Assert.assertEquals( 16, hebrewDate.getJewishDayOfMonth() );
+		jewishDate = JewishCalendar.getForDate( cal );
+		jewishDate = jewishDate.yesterday();
+		Assert.assertEquals( 11, jewishDate.getJewishMonth() );
+		Assert.assertEquals( 16, jewishDate.getJewishDayOfMonth() );
 
 	}
 

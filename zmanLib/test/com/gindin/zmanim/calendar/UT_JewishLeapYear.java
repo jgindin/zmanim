@@ -51,14 +51,14 @@ public class UT_JewishLeapYear {
 
 	private void shouldBeLeapYear( int year ) {
 
-		HebrewCalendar date = new HebrewCalendar( year, HebrewMonth.TISHREI, 1 );
+		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 		Assert.assertTrue( date.isJewishLeapYear() );
 	}
 
 
 	private void shouldNotBeLeapYear( int year ) {
 
-		HebrewCalendar date = new HebrewCalendar( year, HebrewMonth.TISHREI, 1 );
+		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 		Assert.assertFalse( date.isJewishLeapYear() );
 	}
 

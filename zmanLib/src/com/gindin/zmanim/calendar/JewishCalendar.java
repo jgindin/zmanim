@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * The HebrewCalendar class allows one to maintain an instance of a Gregorian date along with the corresponding Jewish date.
+ * The JewishCalendar class allows one to maintain an instance of a Gregorian date along with the corresponding Jewish date.
  * This class can use the standard Java Date and Calendar classes for setting it, but does not subclass these classes or
  * use them internally to any extensive use. This class also does not have a concept of a time (which the Date class
  * does). Please note that the calendar does not currently support dates prior to 1/1/1 Gregorian. Also keep in mind
@@ -31,36 +31,34 @@ import java.util.GregorianCalendar;
  * If you are looking for a class that implements a Jewish calendar version of the Calendar class, one is available from
  * the <a href="http://site.icu-project.org/" >ICU (International Components for Unicode)</a> project, formerly part of
  * IBM's DeveloperWorks.
+ * <p/>
+ * This class has migrated to become a calculation engine, computing the necessary values to return instances of the
+ * JewishDate class. Some reasons for doing this include a clearer separation of concerns and thread safety.
  *
  * @author &copy; Avrom Finkelstien 2002
  * @author &copy; Eliyahu Hershfeld 2011
- * @version 0.2.6
- * @see net.sourceforge.zmanim.hebrewcalendar.JewishCalendar
- * @see net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter
- * @see java.util.Date
- * @see java.util.Calendar
+ * @author &copy; Jay Gindin 2011
  */
 @SuppressWarnings( { "MagicNumber", "UnusedDeclaration" } )
-public class HebrewCalendar
-	implements Comparable<HebrewCalendar> {
+public class JewishCalendar {
 
 	
-	private static final int MINUTES_PER_HOUR = 60;
-	private static final int HOURS_PER_DAY = 24;
+	public static final int                                   MINUTES_PER_HOUR = 60;
+	public static final int                                   HOURS_PER_DAY = 24;
 
 	/**
 	 * the Jewish epoch using the RD (Rata Die/Fixed Date or Reingold Dershowitz) day used in Calendrical Calculations. Day
 	 * 1 is January 1, 0001 Gregorian
 	 */
-	private static final int JEWISH_EPOCH = -1373429;
+	private static final int                                  JEWISH_EPOCH = -1373429;
 
-	private static final int CHALAKIM_PER_MINUTE = 18;
+	public static final int                                   CHALAKIM_PER_MINUTE = 18;
 
-	private static final int CHALAKIM_PER_HOUR = CHALAKIM_PER_MINUTE * MINUTES_PER_HOUR;
+	public static final int                                   CHALAKIM_PER_HOUR = CHALAKIM_PER_MINUTE * MINUTES_PER_HOUR; // =1080
 
-	private static final int CHALAKIM_PER_DAY = CHALAKIM_PER_HOUR * HOURS_PER_DAY;
+	public static final int                                   CHALAKIM_PER_DAY = CHALAKIM_PER_HOUR * HOURS_PER_DAY; // =25920
 
-	private static final long CHALAKIM_PER_MONTH = 765433; // (29 * 24 + 12) * 1080 + 793
+	public static final long                                  CHALAKIM_PER_MONTH = 765433; // (29 * 24 + 12) * 1080 + 793
 
 
 	/**
@@ -73,49 +71,26 @@ public class HebrewCalendar
 	private static final int EARLIEST_VALID_HEBREW_YEAR = 3761;
 
 	private static final int YEARS_PER_CYCLE = 19;
-	
-
-	/** Must be a value from the HebrewMonth 'enum'. */
-	private int jewishMonth;
-
-	private int jewishDay;
-
-	private int jewishYear;
-
-	private int moladHours;
-
-	private int moladMinutes;
-
-	private int moladChalakim;
-
-	/**
-	 * The month, where 1 == January, 2 == February, etc... Note that this is different than the Java's Calendar class
-	 * where January ==0
-	 */
-	private int gregorianMonth;
-
-	/** The day of the Gregorian month */
-	private int gregorianDayOfMonth;
-
-	/** The Gregorian year */
-	private int gregorianYear;
-
-	/** 1 == Sunday, 2 == Monday, etc... */
-	private int dayOfWeek;
-
-	private int gregorianAbsDate;
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	// Constructors
+	// 
 
-	/** Default constructor will set a default date to the current system date. */
-	public HebrewCalendar() {
-		Calendar calendar = Calendar.getInstance();
-		setDate( calendar );
+	/** Default constructor to prevent creation */
+	private JewishCalendar() {
 	}
 
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Date navigation
+
+	public static JewishDate today() {
+		Calendar calendar = Calendar.getInstance();
+		return getForDate( calendar );
+	}
+	
 
 	/**
 	 * Creates a Jewish date based on a Jewish year, month and day of month.
@@ -125,328 +100,135 @@ public class HebrewCalendar
 	 *                         the constants {@link HebrewMonth#NISSAN} ... {@link HebrewMonth#ADAR} (or {@link
 	 *                         HebrewMonth#ADAR_II} for a leap year Adar II) to avoid any confusion.
 	 * @param jewishDayOfMonth the Jewish day of month. If 30 is passed in for a month with only 29 days (for example
-	 *                         {@link HebrewMonth#IYAR}, or {@link HebrewMonth#KISLEV} in a year that {@link
-	 *                         #isKislevShort()}), the 29th (last valid date of the month) will be set
+	 *                         {@link HebrewMonth#IYAR}, or {@link HebrewMonth#KISLEV} in a year where Kislev is short,
+	 *                         the 29th (last valid date of the month) will be set
 	 *
 	 * @throws IllegalArgumentException if the day of month is < 1 or > 30, or a year of < 0 is passed in.
 	 */
-	public HebrewCalendar(
+	public static JewishDate getForJewishDate(
 		int jewishYear,
 		int jewishMonth,
 		int jewishDayOfMonth
 	) {
-		setJewishDate( jewishYear, jewishMonth, jewishDayOfMonth );
+		return getForJewishDate( jewishYear, jewishMonth, jewishDayOfMonth, 0, 0, 0 );
+	}
+	
+	
+	public static JewishDate getForJewishDate(
+		int jewishYear,
+		int jewishMonth,
+		int jewishDayOfMonth,
+		int moladHours,
+		int moladMinutes,
+		int moladChalakim
+	) {
+		
+		validateJewishDate( jewishYear, jewishMonth, jewishDayOfMonth, moladHours, moladMinutes, moladChalakim );
+
+		// if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
+		// days to a month that only has 29) set the date to 29th
+		if ( jewishDayOfMonth > getDaysInJewishMonth( jewishMonth, jewishYear ) ) {
+			jewishDayOfMonth = getDaysInJewishMonth( jewishMonth, jewishYear );
+		}
+
+		int gregorianAbsDate = jewishDateToAbsDate( jewishYear, jewishMonth, jewishDayOfMonth );
+		
+		int year = computeGregorianYearFromAbsoluteDate( gregorianAbsDate );
+		int month = computeGregorianMonthFromAbsoluteDate( gregorianAbsDate, year );
+		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( gregorianAbsDate, year, month );
+
+		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
+
+		return new JewishDate( jewishYear, jewishMonth, jewishDayOfMonth, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
 
-
+		
+	
 	/**
-	 * A constructor that initializes the date to the {@link java.util.Date Date} paremeter.
+	 * A constructor that initializes the date to the {@link java.util.Date Date} parameter.
 	 *
 	 * @param date the <code>Date</code> to set the calendar to
 	 *
 	 * @throws IllegalArgumentException if the date would fall prior to the January 1, 1 AD
 	 */
-	public HebrewCalendar( Date date ) {
+	public static JewishDate getForDate( 
+		Date date 
+	) {
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime( date );
-		setDate( cal );
+		
+		return getForDate( cal );
 	}
-
-
+	
+	
 	/**
-	 * A constructor that initializes the date to the {@link java.util.Calendar Calendar} paremeter.
+	 * A constructor that initializes the date to the {@link java.util.Calendar Calendar} parameter.
 	 *
 	 * @param calendar the <code>Calendar</code> to set the calendar to
 	 *
 	 * @throws IllegalArgumentException if the {@link java.util.Calendar#ERA} is {@link java.util.GregorianCalendar#BC}
 	 */
-	public HebrewCalendar( Calendar calendar ) {
-		setDate( calendar );
+	public static JewishDate getForDate(
+		Calendar calendar
+	) {
+
+		if ( calendar.get( Calendar.ERA ) == GregorianCalendar.BC ) {
+			throw new IllegalArgumentException( "Calendars with a BC era are not supported. The year "
+				+ calendar.get( Calendar.YEAR ) + " BC is invalid." );
+		}
+
+		int gregorianMonth = calendar.get( Calendar.MONTH ) + 1;
+		int gregorianDayOfMonth = calendar.get( Calendar.DATE );
+		int gregorianYear = calendar.get( Calendar.YEAR );
+		int gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init the date
+
+		int jewishYear = computeJewishYearFromAbsoluteDate( gregorianAbsDate );
+		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
+		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
+
+		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+
+		return new JewishDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
-
-
+	
+	
 	/**
-	 * Constructor that creates a HebrewCalendar based on a molad passed in. The molad would be the number of chalakim/parts
+	 * Constructor that creates a JewishCalendar based on a molad passed in. The molad would be the number of chalakim/parts
 	 * starting at the begining of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
 	 * chalakim/parts) - prior to the start of the Jewish calendar. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080
 	 * chalakim after sunset on Sunday evening).
 	 */
-	public HebrewCalendar( long molad ) {
-		absDateToDate( moladToAbsDate( molad ) );
-		// long chalakimSince = getChalakimSinceMoladTohu(year, HebrewCalendar.TISHREI);// tishrei
+	public static JewishDate getForMolad( long molad ) {
+		
+		int absDate = moladToAbsDate( molad );
+		int year = computeGregorianYearFromAbsoluteDate( absDate );
+		int month = computeGregorianMonthFromAbsoluteDate( absDate, year );
+		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( absDate, year, month );
+		int gregorianAbsDate = gregorianDateToAbsDate( year, month, dayOfMonth ); // init date
+
+
+		int jewishYear = computeJewishYearFromAbsoluteDate( gregorianAbsDate );
+		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
+		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
+
+		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+
+		// long chalakimSince = getChalakimSinceMoladTohu(year, JewishCalendar.TISHREI);// tishrei
 		int conjunctionDay = (int)( molad / CHALAKIM_PER_DAY );
-		int conjunctionParts = (int)( molad - conjunctionDay * CHALAKIM_PER_DAY );
-		setMoladTime( conjunctionParts );
+		int adjustedChalakim = (int)( molad - conjunctionDay * CHALAKIM_PER_DAY );
+		int moladHours = adjustedChalakim / CHALAKIM_PER_HOUR;
+		adjustedChalakim = adjustedChalakim - ( moladHours * CHALAKIM_PER_HOUR );
+		int moladMinutes = adjustedChalakim / CHALAKIM_PER_MINUTE;
+		int moladChalakim = adjustedChalakim - moladMinutes * CHALAKIM_PER_MINUTE;
+
+		return new JewishDate( jewishYear, jewishMonth, jewishDay, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate,
+			moladHours, moladMinutes, moladChalakim);
 	}
+	
+	
 
-
-	/**
-	 * Construct a HebrewCalendar such that it is initialized the same as the specified date.
-	 *
-	 * @param date the date to initialize this new HebrewCalendar to.
-	 */
-	public HebrewCalendar( HebrewCalendar date ) {
-		this( date.getTime() );
-	}
-
-
-	/**
-	 * Constructor only used internally. 
-	 */
-	private HebrewCalendar(
-		int jewishYear,
-		int jewishMonth,
-		int jewishDay,
-		int gregorianYear,
-		int gregorianMonth,
-		int gregorianDayOfMonth,
-		int dayOfWeek,
-		int gregorianAbsDate
-	) {
-
-		this.jewishYear = jewishYear;
-		this.jewishMonth = jewishMonth;
-		this.jewishDay = jewishDay;
-		this.gregorianYear = gregorianYear;
-		this.gregorianMonth = gregorianMonth;
-		this.gregorianDayOfMonth = gregorianDayOfMonth;
-		this.dayOfWeek = dayOfWeek;
-		this.gregorianAbsDate = gregorianAbsDate;
-	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Molad info
-
-	/**
-	 * Returns the molad hours. Only a HebrewCalendar object populated with {@link #getMolad()}, {@link #setJewishDate(int,
-	 * int, int, int, int, int)} will have this field populated. A regular HebrewCalendar object
-	 * will have this field set to 0.
-	 *
-	 * @return the molad hours
-	 *
-	 * @see #getMolad()
-	 * @see #setJewishDate(int, int, int, int, int, int)
-	 */
-	public int getMoladHours() {
-		return moladHours;
-	}
-
-
-	/**
-	 * Returns the molad minutes. Only an object populated with {@link #getMolad()}, {@link #setJewishDate(int, int, int,
-	 * int, int, int)} will have these fields populated. A regular HebrewCalendar object will have this field set to 0.
-	 *
-	 * @return the molad minutes
-	 *
-	 * @see #getMolad()
-	 * @see #setJewishDate(int, int, int, int, int, int)
-	 */
-	public int getMoladMinutes() {
-		return moladMinutes;
-	}
-
-
-	/**
-	 * Returns the molad chalakim/parts. Only an object populated with {@link #getMolad()}, {@link #setJewishDate(int, int,
-	 * int, int, int, int)} will have these fields populated. A regular HebrewCalendar object will have this field set to 0.
-	 *
-	 * @return the molad chalakim/parts
-	 *
-	 * @see #getMolad()
-	 * @see #setJewishDate(int, int, int, int, int, int)
-	 */
-	public int getMoladChalakim() {
-		return moladChalakim;
-	}
-
-
-	/**
-	 * Returns the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu to the year and
-	 * month passed in.
-	 *
-	 * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
-	 */
-	public long getChalakimSinceMoladTohu() {
-		return getChalakimSinceMoladTohu( jewishYear, jewishMonth );
-	}
-
-
-	/**
-	 * Returns the molad for a given year and month. Returns a HebrewCalendar {@link Object} set to the date of the molad with
-	 * the {@link #getMoladHours() hours}, {@link #getMoladMinutes() minutes} and {@link #getMoladChalakim() chalakim} set.
-	 * In the current implementation, it sets the molad time based on a midnight date rollover. This means that Rosh
-	 * Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29 Adar I / March 5, 2011 12:00 AM and 7
-	 * chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
-	 *
-	 * @return a HebrewCalendar {@link Object} set to the date of the molad with the {@link #getMoladHours() hours}, {@link
-	 *         #getMoladMinutes() minutes} and {@link #getMoladChalakim() chalakim} set.
-	 */
-	public HebrewCalendar getMolad() {
-		HebrewCalendar moladDate = new HebrewCalendar( getChalakimSinceMoladTohu() );
-		if ( moladDate.getMoladHours() >= 6 ) {
-			moladDate.forward();
-		}
-		this.moladHours = ( moladDate.getMoladHours() + CHALAKIM_PER_MINUTE ) % HOURS_PER_DAY;
-		return moladDate;
-	}
-
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Queries about this date.
-
-	/**
-	 * Returns the Jewish month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
-	 * for Adar II
-	 *
-	 * @return the Jewish month from 1 to 12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes
-	 *         to 13 for Adar II
-	 */
-	public int getJewishMonth() {
-		return jewishMonth;
-	}
-
-
-	/**
-	 * Returns the Jewish day of month.
-	 *
-	 * @return the Jewish day of the month
-	 */
-	public int getJewishDayOfMonth() {
-		return jewishDay;
-	}
-
-
-	/**
-	 * Returns the Jewish year.
-	 *
-	 * @return the Jewish year
-	 */
-	public int getJewishYear() {
-		return jewishYear;
-	}
-
-
-	/**
-	 * Returns the day of the week as a number between 1-7.
-	 *
-	 * @return the day of the week as a number between 1-7.
-	 */
-	public int getDayOfWeek() {
-		return dayOfWeek;
-	}
-
-
-	/**
-	 * Returns this object's date as a java.util.Date object. <b>Note</b>: This class does not have a concept of time.
-	 *
-	 * @return The <code>Date</code>
-	 */
-	public Date getTime() {
-		Calendar cal = Calendar.getInstance();
-		cal.set( gregorianYear, gregorianMonth - 1, gregorianDayOfMonth );
-		return cal.getTime();
-	}
-
-
-	/**
-	 * Returns if the year the calendar is set to is a Jewish leap year. Years 3, 6, 8, 11, 14, 17 and 19 in the 19 year
-	 * cycle are leap years.
-	 *
-	 * @return true if it is a leap year
-	 *
-	 * @see #isJewishLeapYear(int)
-	 */
-	public boolean isJewishLeapYear() {
-		return isJewishLeapYear( getJewishYear() );
-	}
-
-
-	/**
-	 * Returns the number of days for the current year that the calendar is set to.
-	 *
-	 * @see #isCheshvanLong()
-	 * @see #isKislevShort()
-	 * @see #isJewishLeapYear()
-	 */
-	public int getDaysInJewishYear() {
-
-		return getJewishCalendarElapsedDays( getJewishYear() + 1 ) - getJewishCalendarElapsedDays( getJewishYear() );
-	}
-
-
-	/**
-	 * Returns if Cheshvan is long (30 days VS 29 days) for the current year that the calendar is set to. The method name
-	 * isLong is done since in a Qesidrah (ordered) year Cheshvan is short.
-	 *
-	 * @return true if Cheshvan is long for the current year that the calendar is set to
-	 *
-	 * @see #isCheshvanLong()
-	 */
-	public boolean isCheshvanLong() {
-		return isCheshvanLong( getJewishYear() );
-	}
-
-
-	/**
-	 * Returns if the Kislev is short for the year that this class is set to. The method name isShort is done since in a
-	 * Qesidrah (ordered) year Kislev is long.
-	 *
-	 * @return true if Kislev is short for the year that this class is set to
-	 *
-	 * @see #isKislevShort(int)
-	 */
-	public boolean isKislevShort() {
-		return isKislevShort( getJewishYear() );
-	}
-
-
-	/**
-	 * Returns the Cheshvan and Kislev kviah (whether a Jewish year is short, regular or long). It will return {@link
-	 * HebrewYearType#SHELAIMIM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#KESIDRAN} if Cheshvan is 29
-	 * days and Kislev is 30 days and {@link HebrewYearType#CHASERIM} if both are 29 days.
-	 *
-	 * @return {@link HebrewYearType#SHELAIMIM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#KESIDRAN} if
-	 *         Cheshvan is 29 days and Kislev is 30 days and {@link HebrewYearType#CHASERIM} if both are 29 days.
-	 *
-	 * @see #isCheshvanLong()
-	 * @see #isKislevShort(int)
-	 */
-	public int getCheshvanKislevKviah() {
-
-		final boolean cheshvanLong = isCheshvanLong();
-		final boolean kislevShort = isKislevShort();
-
-		if ( cheshvanLong && !kislevShort ) {
-			return HebrewYearType.SHELAIMIM;
-		}
-		else if ( !cheshvanLong && kislevShort ) {
-			return HebrewYearType.CHASERIM;
-		}
-		else {
-			return HebrewYearType.KESIDRAN;
-		}
-	}
-
-
-	/**
-	 * Returns the number of days of the Jewish month that the calendar is currently set to.
-	 *
-	 * @return the number of days for a given Jewish month that the calendar is currently set to.
-	 */
-	public int getDaysInJewishMonth() {
-		return getDaysInJewishMonth( getJewishMonth(), getJewishYear() );
-	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Date navigation
-
+	
 	/**
 	 * Rolls the date forward by 1 day. It modifies both the Gregorian and Jewish dates accordingly. The API does not
 	 * currently offer the ability to forward more than one day at time, or to forward by month or year. If such
@@ -455,22 +237,19 @@ public class HebrewCalendar
 	 * <p/>
 	 * <pre>
 	 * <code>
-	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the JewishCalendar
 	 * 	cal.add(Calendar.MONTH, 3); // add 3 Gregorian months
-	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
+	 * 	JewishCalendar newDate = new JewishCalendar(cal); // set the updated calendar back to this class
 	 * </code>
 	 * </pre>
-	 *
-	 * @see #back()
-	 * @see java.util.Calendar#add(int, int)
-	 * @see java.util.Calendar#roll(int, int)
 	 */
-	public HebrewCalendar forward() {
+	@SuppressWarnings( "FeatureEnvy" )
+	static JewishDate forward( JewishDate today ) {
 		
 		// Change Gregorian date
-		int newGregorianMonth = gregorianMonth;
-		int newGregorianYear = gregorianYear;
-		int newGregorianDayOfMonth = gregorianDayOfMonth;
+		int newGregorianYear = today.getGregorianYear();
+		int newGregorianMonth = today.getGregorianMonth();
+		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
 		
 		if ( newGregorianDayOfMonth == getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear ) ) {
 			// if last day of year
@@ -490,11 +269,11 @@ public class HebrewCalendar
 		}
 
 		// Change the Jewish Date
-		int newJewishDay = jewishDay;
-		int newJewishMonth = jewishMonth;
-		int newJewishYear = jewishYear;
+		int newJewishYear = today.getJewishYear();
+		int newJewishMonth = today.getJewishMonth();
+		int newJewishDay = today.getJewishDayOfMonth();
 		
-		if ( newJewishDay == getDaysInJewishMonth() ) {
+		if ( newJewishDay == getDaysInJewishMonth( newJewishMonth, newJewishYear ) ) {
 			// if it last day of elul (i.e. last day of Jewish year)
 			if ( newJewishMonth == HebrewMonth.ELUL ) {
 				newJewishYear++;
@@ -515,7 +294,7 @@ public class HebrewCalendar
 			newJewishDay++;
 		}
 
-		int newDayOfWeek = dayOfWeek;
+		int newDayOfWeek = today.getDayOfWeek();
 		if ( newDayOfWeek == 7 ) { 
 			// if last day of week, loop back to Sunday
 			newDayOfWeek = 1;
@@ -525,9 +304,9 @@ public class HebrewCalendar
 		}
 
 		// increment the absolute date
-		int newGregorianAbsDate = gregorianAbsDate + 1; 
+		int newGregorianAbsDate = today.getGregorianAbsDate() + 1;
 		
-		return new HebrewCalendar( newJewishYear, newJewishMonth, newJewishDay,
+		return new JewishDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
 	}
 
@@ -540,22 +319,19 @@ public class HebrewCalendar
 	 * <p/>
 	 * <pre>
 	 * <code>
-	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the JewishCalendar
 	 * 	cal.add(Calendar.MONTH, -3); // subtract 3 Gregorian months
-	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
+	 * 	JewishCalendar newDate = new JewishCalendar(cal); // set the updated calendar back to this class
 	 * </code>
 	 * </pre>
-	 *
-	 * @see #back()
-	 * @see java.util.Calendar#add(int, int)
-	 * @see java.util.Calendar#roll(int, int)
 	 */
-	public HebrewCalendar back() {
+	@SuppressWarnings( "FeatureEnvy" )
+	static JewishDate back( JewishDate today ) {
 
 		// Change Gregorian date
-		int newGregorianMonth = gregorianMonth;
-		int newGregorianYear = gregorianYear;
-		int newGregorianDayOfMonth = gregorianDayOfMonth;
+		int newGregorianYear = today.getGregorianYear();
+		int newGregorianMonth = today.getGregorianMonth();
+		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
 
 
 		// if first day of month...
@@ -577,9 +353,9 @@ public class HebrewCalendar
 		}
 
 		// Change Jewish date
-		int newJewishDay = jewishDay;
-		int newJewishMonth = jewishMonth;
-		int newJewishYear = jewishYear;
+		int newJewishYear = today.getJewishYear();
+		int newJewishMonth = today.getJewishMonth();
+		int newJewishDay = today.getJewishDayOfMonth();
 
 		// if first day of the Jewish month...
 		if ( newJewishDay == 1 ) {
@@ -592,13 +368,13 @@ public class HebrewCalendar
 			}
 
 			newJewishYear--;
-			newJewishDay = getDaysInJewishMonth();
+			newJewishDay = getDaysInJewishMonth( newJewishMonth, newJewishYear );
 		}
 		else {
 			newJewishDay--;
 		}
 
-		int newDayOfWeek = dayOfWeek;
+		int newDayOfWeek = today.getDayOfWeek();
 		if ( newDayOfWeek == 1 ) {
 			// if first day of week, loop back to Saturday
 			newDayOfWeek = 7;
@@ -608,9 +384,9 @@ public class HebrewCalendar
 		}
 
 		// change the absolute date
-		int newGregorianAbsDate = gregorianAbsDate - 1;
+		int newGregorianAbsDate = today.getGregorianAbsDate() - 1;
 
-		return new HebrewCalendar( newJewishYear, newJewishMonth, newJewishDay,
+		return new JewishDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
 	}
 
@@ -619,12 +395,6 @@ public class HebrewCalendar
 	//
 	//
 
-	// Package local for unit tests.
-	int getLastDayOfGregorianMonth(
-		int month
-	) {
-		return getLastDayOfGregorianMonth( month, gregorianYear );
-	}
 
 	/**
 	 * Returns the number of days in a given month in a given month and year.
@@ -634,7 +404,7 @@ public class HebrewCalendar
 	 *
 	 * @return the number of days in the month in the given year
 	 */
-	private static int getLastDayOfGregorianMonth(
+	static int getLastDayOfGregorianMonth(
 		int month,
 		int year
 	) {
@@ -663,20 +433,39 @@ public class HebrewCalendar
 	// Gregorian / Absolute date conversions
 
 
-	/** Computes the Gregorian date from the absolute date. ND+ER */
-	private void absDateToDate( int absDate ) {
+	private static int computeGregorianYearFromAbsoluteDate( int absDate ) {
 		int year = absDate / 366; // Search forward year by year from approximate year
 		while ( absDate >= gregorianDateToAbsDate( year + 1, 1, 1 ) ) {
 			year++;
 		}
+		return year;
+	}
 
+
+	private static int computeGregorianMonthFromAbsoluteDate(
+		int absDate,
+		int year
+	) {
 		int month = 1; // Search forward month by month from January
 		while ( absDate > gregorianDateToAbsDate( year, month, getLastDayOfGregorianMonth( month, year ) ) ) {
 			month++;
 		}
+		return month;
+	}
 
+
+	private static int computeGregorianDayOfMonthFromAbsoluteDate(
+		int absDate,
+		int year,
+		int month
+	) {
 		int dayOfMonth = absDate - gregorianDateToAbsDate( year, month, 1 ) + 1;
-		setInternalGregorianDate( year, month, dayOfMonth );
+
+		// make sure date is a valid date for the given month, if not, set to last day of month
+		if ( dayOfMonth > getLastDayOfGregorianMonth( month, year ) ) {
+			dayOfMonth = getLastDayOfGregorianMonth( month, year );
+		}
+		return dayOfMonth;
 	}
 
 
@@ -707,14 +496,21 @@ public class HebrewCalendar
 	}
 
 
-	/** Computes the Jewish date from the absolute date. ND+ER */
-	private void absDateToJewishDate() {
+	private static int computeJewishYearFromAbsoluteDate( int gregorianAbsDate ) {
 		// Approximation from below
-		jewishYear = ( gregorianAbsDate + JEWISH_EPOCH ) / 366;
+		int jewishYear = ( gregorianAbsDate + JEWISH_EPOCH ) / 366;
 		// Search forward for year from the approximation
 		while ( gregorianAbsDate >= jewishDateToAbsDate( jewishYear + 1, HebrewMonth.TISHREI, 1 ) ) {
 			jewishYear++;
 		}
+		return jewishYear;
+	}
+
+
+	private static int computeJewishMonthFromAbsoluteDate( int gregorianAbsDate, int jewishYear ) {
+		
+		int jewishMonth;
+		
 		// Search forward for month from either Tishri or Nisan.
 		if ( gregorianAbsDate < jewishDateToAbsDate( jewishYear, HebrewMonth.NISSAN, 1 ) ) {
 			jewishMonth = HebrewMonth.TISHREI;// Start at Tishri
@@ -722,12 +518,21 @@ public class HebrewCalendar
 		else {
 			jewishMonth = HebrewMonth.NISSAN;// Start at Nisan
 		}
-		while ( gregorianAbsDate > jewishDateToAbsDate( jewishYear, jewishMonth,
-			getDaysInJewishMonth() ) ) {
+		while ( gregorianAbsDate > jewishDateToAbsDate( jewishYear, jewishMonth, getDaysInJewishMonth( jewishMonth, jewishYear ) ) ) {
 			jewishMonth++;
 		}
+		
+		return jewishMonth;
+	}
+
+
+	private static int computeJewishDayFromAbsoluteDate(
+		int gregorianAbsDate,
+		int jewishYear,
+		int jewishMonth
+	) {
 		// Calculate the day by subtraction
-		jewishDay = gregorianAbsDate - jewishDateToAbsDate( jewishYear, jewishMonth, 1 ) + 1;
+		return  gregorianAbsDate - jewishDateToAbsDate( jewishYear, jewishMonth, 1 ) + 1;
 	}
 
 
@@ -777,10 +582,8 @@ public class HebrewCalendar
 	 * @param year the Jewish year.
 	 *
 	 * @return true if it is a leap year
-	 *
-	 * @see #isJewishLeapYear()
 	 */
-	private static boolean isJewishLeapYear( int year ) {
+	static boolean isJewishLeapYear( int year ) {
 		return ( ( 7 * year ) + 1 ) % YEARS_PER_CYCLE < 7;
 	}
 
@@ -854,11 +657,8 @@ public class HebrewCalendar
 	 * @param year the year
 	 *
 	 * @return true if Cheshvan is long in Jewish year.
-	 *
-	 * @see #isCheshvanLong()
-	 * @see #getCheshvanKislevKviah()
 	 */
-	private static boolean isCheshvanLong( int year ) {
+	static boolean isCheshvanLong( int year ) {
 		return getDaysInJewishYear( year ) % 10 == 5;
 	}
 
@@ -871,11 +671,8 @@ public class HebrewCalendar
 	 * @param year the Jewish year
 	 *
 	 * @return true if Kislev is short for the given Jewish year.
-	 *
-	 * @see #isKislevShort()
-	 * @see #getCheshvanKislevKviah()
 	 */
-	private static boolean isKislevShort( int year ) {
+	static boolean isKislevShort( int year ) {
 		return getDaysInJewishYear( year ) % 10 == 3;
 	}
 
@@ -888,7 +685,7 @@ public class HebrewCalendar
 	 *
 	 * @return the number of days for a given Jewish month
 	 */
-	private static int getDaysInJewishMonth(
+	static int getDaysInJewishMonth(
 		int month,
 		int year
 	) {
@@ -979,7 +776,7 @@ public class HebrewCalendar
 	}
 
 
-	private static long getChalakimSinceMoladTohu(
+	static long getChalakimSinceMoladTohu(
 		int year,
 		int month
 	) {
@@ -993,142 +790,6 @@ public class HebrewCalendar
 		// return chalakim prior to BeHaRaD + number of chalakim since
 		return CHALAKIM_MOLAD_TOHU + ( CHALAKIM_PER_MONTH * monthsElapsed );
 	}
-
-
-	/**
-	 * Sets the molad time (hours minutes and chalakim) based on the number of chalakim since the start of the day.
-	 *
-	 * @param chalakim the number of chalakim since the start of the day.
-	 */
-	private void setMoladTime( int chalakim ) {
-		int adjustedChalakim = chalakim;
-		this.moladHours = adjustedChalakim / CHALAKIM_PER_HOUR;
-		adjustedChalakim = adjustedChalakim - ( getMoladHours() * CHALAKIM_PER_HOUR );
-		this.moladMinutes = adjustedChalakim / CHALAKIM_PER_MINUTE;
-		this.moladChalakim = adjustedChalakim - moladMinutes * CHALAKIM_PER_MINUTE;
-	}
-
-
-	/**
-	 * Sets the date based on a {@link java.util.Calendar Calendar} object. Modifies the Jewish date as well.
-	 *
-	 * @param calendar the <code>Calendar</code> to set the calendar to
-	 *
-	 * @throws IllegalArgumentException if the {@link java.util.Calendar#ERA} is {@link java.util.GregorianCalendar#BC}
-	 */
-	private void setDate( Calendar calendar ) {
-		if ( calendar.get( Calendar.ERA ) == GregorianCalendar.BC ) {
-			throw new IllegalArgumentException( "Calendars with a BC era are not supported. The year "
-				+ calendar.get( Calendar.YEAR ) + " BC is invalid." );
-		}
-		gregorianMonth = calendar.get( Calendar.MONTH ) + 1;
-		gregorianDayOfMonth = calendar.get( Calendar.DATE );
-		gregorianYear = calendar.get( Calendar.YEAR );
-		gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init the date
-		absDateToJewishDate();
-
-		dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
-	}
-
-
-	/**
-	 * Sets the hidden internal representation of the Gregorian date , and updates the Jewish date accordingly. While
-	 * public getters and setters have 0 based months matching the Java Calendar classes, This class internally represents
-	 * the Gregorian month starting at 1. When this is called it will not adjust the month to match the Java Calendar
-	 * classes.
-	 */
-	private void setInternalGregorianDate(
-		int year,
-		int month,
-		int dayOfMonth
-	) {
-		// make sure date is a valid date for the given month, if not, set to last day of month
-		if ( dayOfMonth > getLastDayOfGregorianMonth( month, year ) ) {
-			dayOfMonth = getLastDayOfGregorianMonth( month, year );
-		}
-		// init month, date, year
-		gregorianMonth = month;
-		gregorianDayOfMonth = dayOfMonth;
-		gregorianYear = year;
-
-		gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init date
-		absDateToJewishDate();
-
-		dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
-	}
-
-
-	/**
-	 * Sets the Jewish Date and updates the Gregorian date accordingly.
-	 *
-	 * @param year       the Jewish year. The year can't be negative
-	 * @param month      the Jewish month starting with Nisan. A value of 1 is expected for Nissan ... 12 for Adar and 13
-	 *                   for Adar II. Use the constants {@link HebrewMonth#NISSAN} ... {@link HebrewMonth#ADAR} (or {@link
-	 *                   HebrewMonth#ADAR_II} for a leap year Adar II) to avoid any confusion.
-	 * @param dayOfMonth the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that
-	 *                   only has 29 days, the day will be set as 29.
-	 *
-	 * @throws IllegalArgumentException if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or >
-	 *                                  12 (or 13 on a leap year) or the day of month is < 1 or > 30 is passed in
-	 */
-	private void setJewishDate(
-		int year,
-		int month,
-		int dayOfMonth
-	) {
-		setJewishDate( year, month, dayOfMonth, 0, 0, 0 );
-	}
-
-
-	/**
-	 * Sets the Jewish Date and updates the Gregorian date accordingly.
-	 *
-	 * @param year       the Jewish year. The year can't be negative
-	 * @param month      the Jewish month starting with Nisan. A value of 1 is expected for Nissan ... 12 for Adar and 13
-	 *                   for Adar II. Use the constants {@link HebrewMonth#NISSAN} ... {@link HebrewMonth#ADAR} (or {@link
-	 *                   HebrewMonth#ADAR_II} for a leap year Adar II) to avoid any confusion.
-	 * @param dayOfMonth the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that
-	 *                   only has 29 days, the day will be set as 29.
-	 * @param hours      the hour of the day. Used for Molad calculations
-	 * @param minutes    the minutes. Used for Molad calculations
-	 * @param chalakim   the chalakim/parts. Used for Molad calculations. The chalakim should not exceed 17. Minutes should
-	 *                   be used for larger numbers.
-	 *
-	 * @throws IllegalArgumentException if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or >
-	 *                                  12 (or 13 on a leap year), the day of month is < 1 or > 30, an hour < 0 or > 23, a
-	 *                                  minute < 0 > 59 or chalakim < 0 > 17. For larger a larger number of chalakim such
-	 *                                  as 793 (TaShTzaG) break the chalakim into minutes (18 chalakim per minutes, so it
-	 *                                  would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
-	 */
-	private void setJewishDate(
-		int year,
-		int month,
-		int dayOfMonth,
-		int hours,
-		int minutes,
-		int chalakim
-	) {
-		validateJewishDate( year, month, dayOfMonth, hours, minutes, chalakim );
-
-		// if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
-		// days to a month that only has 29) set the date to 29th
-		if ( dayOfMonth > getDaysInJewishMonth( month, year ) ) {
-			dayOfMonth = getDaysInJewishMonth( month, year );
-		}
-
-		jewishMonth = month;
-		jewishDay = dayOfMonth;
-		jewishYear = year;
-		moladHours = hours;
-		moladMinutes = minutes;
-		moladChalakim = chalakim;
-
-		gregorianAbsDate = jewishDateToAbsDate( jewishYear, jewishMonth, jewishDay ); // reset Gregorian date
-		absDateToDate( gregorianAbsDate );
-
-		dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
-	}
-
 
 
 	/**
@@ -1195,71 +856,4 @@ public class HebrewCalendar
 		}
 	}
 
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Base class overrides
-
-	/**
-	 * Compares two dates as per the compareTo() method in the Comparable interface. Returns a value less than 0 if this
-	 * date is "less than" (before) the date, greater than 0 if this date is "greater than" (after) the date, or 0 if they
-	 * are equal.
-	 */
-	public int compareTo( HebrewCalendar hebrewCalendar ) {
-		return gregorianAbsDate < hebrewCalendar.gregorianAbsDate ? -1 : gregorianAbsDate > hebrewCalendar.gregorianAbsDate ? 1 : 0;
-	}
-
-
-	@Override
-	public boolean equals( Object o ) {
-		if ( this == o ) {
-			return true;
-		}
-		if ( !( o instanceof HebrewCalendar ) ) {
-			return false;
-		}
-
-		HebrewCalendar that = (HebrewCalendar)o;
-
-		if ( jewishDay != that.jewishDay ) {
-			return false;
-		}
-		if ( jewishMonth != that.jewishMonth ) {
-			return false;
-		}
-
-		//noinspection RedundantIfStatement
-		if ( jewishYear != that.jewishYear ) {
-			return false;
-		}
-
-		return true;
-	}
-
-
-	@Override
-	public int hashCode() {
-		int result = jewishMonth;
-		result = 31 * result + jewishDay;
-		result = 31 * result + jewishYear;
-		return result;
-	}
-
-
-	@Override
-	public String toString() {
-		return "HebrewCalendar{" +
-			"jewishMonth=" + jewishMonth +
-			", jewishDay=" + jewishDay +
-			", jewishYear=" + jewishYear +
-			", moladHours=" + moladHours +
-			", moladMinutes=" + moladMinutes +
-			", moladChalakim=" + moladChalakim +
-			", gregorianMonth=" + gregorianMonth +
-			", gregorianDayOfMonth=" + gregorianDayOfMonth +
-			", gregorianYear=" + gregorianYear +
-			", dayOfWeek=" + dayOfWeek +
-			", gregorianAbsDate=" + gregorianAbsDate +
-			'}';
-	}
 }
