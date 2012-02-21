@@ -4,11 +4,13 @@
 
 package com.gindin.zmanim.calendar;
 
+import org.intellij.lang.annotations.MagicConstant;
+
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * A JewishDate represents a specific date obtained from a JewishCalendar.
+ * A JewishDate represents a specific date obtained from a JewishCalendar. Each instance is immutable once created.
  */
 public class JewishDate
 	implements Comparable<JewishDate> {
@@ -27,8 +29,8 @@ public class JewishDate
 	private int                                               gregorianYear;
 
 	/**
-	 * The month, where 1 == January, 2 == February, etc... Note that this is different than the Java's Calendar class
-	 * where January == 0.
+	 * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
+	 *  month 11 being December.
 	 */
 	private int                                               gregorianMonth;
 
@@ -138,8 +140,9 @@ public class JewishDate
 	/**
 	 * @return A month which can be directly compared to the months as defined in java.util.Calendar.
 	 */
+	@MagicConstant( intValues = {Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL, Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST, Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER })
 	public int getGregorianMonth() {
-		return gregorianMonth - 1;
+		return gregorianMonth;
 	}
 
 
@@ -160,7 +163,7 @@ public class JewishDate
 	 */
 	public Date getTime() {
 		Calendar cal = Calendar.getInstance();
-		cal.set( gregorianYear, gregorianMonth - 1, gregorianDayOfMonth );
+		cal.set( gregorianYear, gregorianMonth, gregorianDayOfMonth );
 		return cal.getTime();
 	}
 

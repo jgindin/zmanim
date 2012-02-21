@@ -178,7 +178,7 @@ public class JewishCalendar {
 				+ calendar.get( Calendar.YEAR ) + " BC is invalid." );
 		}
 
-		int gregorianMonth = calendar.get( Calendar.MONTH ) + 1;
+		int gregorianMonth = calendar.get( Calendar.MONTH );
 		int gregorianDayOfMonth = calendar.get( Calendar.DATE );
 		int gregorianYear = calendar.get( Calendar.YEAR );
 		int gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init the date
@@ -253,9 +253,9 @@ public class JewishCalendar {
 		
 		if ( newGregorianDayOfMonth == getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear ) ) {
 			// if last day of year
-			if ( newGregorianMonth == 12 ) {
+			if ( newGregorianMonth == Calendar.DECEMBER ) {
 				newGregorianYear++;
-				newGregorianMonth = 1;
+				newGregorianMonth = Calendar.JANUARY;
 			}
 			else {
 				newGregorianMonth++;
@@ -399,7 +399,7 @@ public class JewishCalendar {
 	/**
 	 * Returns the number of days in a given month in a given month and year.
 	 *
-	 * @param month the month. As with other cases in this class, this is 1-based, not zero-based.
+	 * @param month the month.
 	 * @param year  the year (only impacts February)
 	 *
 	 * @return the number of days in the month in the given year
@@ -409,17 +409,17 @@ public class JewishCalendar {
 		int year
 	) {
 		switch ( month ) {
-			case 2:
+			case Calendar.FEBRUARY:
 				if ( ( year % 4 == 0 && year % 100 != 0 ) || ( year % 400 == 0 ) ) {
 					return 29;
 				}
 				else {
 					return 28;
 				}
-			case 4:
-			case 6:
-			case 9:
-			case 11:
+			case Calendar.APRIL:
+			case Calendar.JUNE:
+			case Calendar.SEPTEMBER:
+			case Calendar.NOVEMBER:
 				return 30;
 			default:
 				return 31;
@@ -435,7 +435,7 @@ public class JewishCalendar {
 
 	private static int computeGregorianYearFromAbsoluteDate( int absDate ) {
 		int year = absDate / 366; // Search forward year by year from approximate year
-		while ( absDate >= gregorianDateToAbsDate( year + 1, 1, 1 ) ) {
+		while ( absDate >= gregorianDateToAbsDate( year + 1, Calendar.JANUARY, 1 ) ) {
 			year++;
 		}
 		return year;
@@ -446,7 +446,7 @@ public class JewishCalendar {
 		int absDate,
 		int year
 	) {
-		int month = 1; // Search forward month by month from January
+		int month = 0; // Search forward month by month from January
 		while ( absDate > gregorianDateToAbsDate( year, month, getLastDayOfGregorianMonth( month, year ) ) ) {
 			month++;
 		}
@@ -473,8 +473,7 @@ public class JewishCalendar {
 	 * Computes the absolute date from a Gregorian date. ND+ER
 	 *
 	 * @param year       the Gregorian year
-	 * @param month      the Gregorian month. Unlike the Java Calendar where January has the value of 0,This expects a 1
-	 *                   for January
+	 * @param month      the Gregorian month
 	 * @param dayOfMonth the day of the month (1st, 2nd, etc...)
 	 *
 	 * @return the absolute Gregorian day
@@ -485,7 +484,7 @@ public class JewishCalendar {
 		int dayOfMonth
 	) {
 		int absDate = dayOfMonth;
-		for ( int m = month - 1; m > 0; m-- ) {
+		for ( int m = month - 1; m >= 0; m-- ) {
 			absDate += getLastDayOfGregorianMonth( m, year ); // days in prior months of the year
 		}
 		return ( absDate // days this year
