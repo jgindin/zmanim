@@ -31,6 +31,7 @@ class SofZmanShema
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private static List<Zman> buildZmanim(
 		final ZmanimCalendar  zmanimCalendar
 	) {
@@ -79,6 +80,7 @@ class SofZmanShema
 			}
 		);
 
+		// todo: deprecated
 		zmanim.add(
 			new Zman( "GR'A Kol Eliyahu", "Based on Kol Eliyahu on Berachos #173 (zman kriat shema is half the time from sunrise to fixed local chatzot).",Zmanim.Type.SofZmanShema ) {
 				@Override protected Date calculate() {
