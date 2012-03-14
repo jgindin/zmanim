@@ -48,27 +48,25 @@ package com.gindin.zmanim.calendar;
  * (Partially taken from http://www.jewishvirtuallibrary.org/jsource/Judaism/calendar.html.)
  */
 
-// TODO: Make this an enum
-public interface HebrewYearType {
+public enum HebrewYearType {
 
 	/**
 	 * A short year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 29 days.
-	 *
 	 */
-	public static final int CHASERIM = 0;
+	CHASERIM,
 
 	/**
 	 * An ordered year where {@link HebrewMonth#CHESHVAN} is 29 days and {@link HebrewMonth#KISLEV} is 30 days.
 	 *
 	 * @see net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter#getFormattedKviah(int)
 	 */
-	public static final int KESIDRAN = 1;
+	KESIDRAN,
 
 	/**
 	 * A long year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 30 days.
 	 *
 	 * @see net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter#getFormattedKviah(int)
 	 */
-	public static final int SHELAIMIM = 2;
+	SHELAIMIM
 
 }

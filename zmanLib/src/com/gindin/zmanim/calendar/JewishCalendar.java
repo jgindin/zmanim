@@ -65,12 +65,12 @@ public class JewishCalendar {
 	 * Days from the beginning of Sunday till molad BaHaRaD. Calculated as 1 day, 5 hours and 204 chalakim = (24 + 5) *
 	 * 1080 + 204 = 31524
 	 */
-	private static final int CHALAKIM_MOLAD_TOHU = 31524;
+	private static final int                                  CHALAKIM_MOLAD_TOHU = 31524;
 
 	/** Reject dates prior to 18 Teves, 3761 (1/1/1 AD). This restriction can be relaxed if the date coding is changed/corrected. */
-	private static final int EARLIEST_VALID_HEBREW_YEAR = 3761;
+	private static final int                                  EARLIEST_VALID_HEBREW_YEAR = 3761;
 
-	private static final int YEARS_PER_CYCLE = 19;
+	private static final int                                  YEARS_PER_CYCLE = 19;
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

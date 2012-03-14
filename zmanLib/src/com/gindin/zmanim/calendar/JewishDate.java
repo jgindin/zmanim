@@ -230,7 +230,7 @@ public class JewishDate
 	 * @see #isCheshvanLong()
 	 * @see #isKislevShort()
 	 */
-	public int getCheshvanKislevKviah() {
+	public HebrewYearType getYearType() {
 
 		final boolean cheshvanLong = isCheshvanLong();
 		final boolean kislevShort = isKislevShort();
