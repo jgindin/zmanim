@@ -19,9 +19,9 @@ public class UT_JewishDateNavigation {
 	@Test
 	public void jewishForwardMonthToMonth() {
 
-		JewishDate jewishDate = JewishCalendar.getForJewishDate( 5771, 1, 1 );
+		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, 1, 1 );
 		Calendar cal = Calendar.getInstance();
-		cal.setTime( jewishDate.getTime() );
+		cal.setTime( hebrewDate.getTime() );
 		
 		Assert.assertEquals( 5, cal.get( Calendar.DAY_OF_MONTH ) );
 		Assert.assertEquals( Calendar.APRIL, cal.get( Calendar.MONTH ) );
@@ -32,11 +32,11 @@ public class UT_JewishDateNavigation {
 	@Test
 	public void computeRoshHashana5771() {
 
-		// At one point, this test was failing as the JewishCalendar class spun through a never-ending loop...
+		// At one point, this test was failing as the HebrewCalendar class spun through a never-ending loop...
 
-		JewishDate jewishDate = JewishCalendar.getForJewishDate( 5771, 7, 1 );
+		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, 7, 1 );
 		Calendar cal = Calendar.getInstance();
-		cal.setTime( jewishDate.getTime() );
+		cal.setTime( hebrewDate.getTime() );
 
 		Assert.assertEquals( 9, cal.get( Calendar.DAY_OF_MONTH ) );
 		Assert.assertEquals( Calendar.SEPTEMBER, cal.get( Calendar.MONTH ) );

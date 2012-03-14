@@ -10,10 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * A JewishDate represents a specific date obtained from a JewishCalendar. Each instance is immutable once created.
+ * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
  */
-public class JewishDate
-	implements Comparable<JewishDate> {
+public class HebrewDate
+	implements Comparable<HebrewDate> {
 
 
 	/** Must be a value from the HebrewMonth 'enum'. */
@@ -44,7 +44,7 @@ public class JewishDate
 	private int                                               gregorianAbsDate;
 
 
-	JewishDate(
+	HebrewDate(
 		int jewishYear,
 		int jewishMonth,
 		int jewishDay,
@@ -58,7 +58,7 @@ public class JewishDate
 	}
 
 
-	JewishDate(
+	HebrewDate(
 		int jewishYear,
 		int jewishMonth,
 		int jewishDay,
@@ -67,9 +67,9 @@ public class JewishDate
 		int gregorianDayOfMonth,
 		int dayOfWeek,
 		int gregorianAbsDate,
-	  int moladHours,
-	  int moladMinutes,
-	  int moladChalakim
+		int moladHours,
+		int moladMinutes,
+		int moladChalakim
 	) {
 
 		this.jewishYear = jewishYear;
@@ -175,7 +175,7 @@ public class JewishDate
 	 * @return true if it is a leap year
 	 */
 	public boolean isJewishLeapYear() {
-		return JewishCalendar.isJewishLeapYear( getJewishYear() );
+		return HebrewCalendar.isJewishLeapYear( getJewishYear() );
 	}
 
 	
@@ -188,8 +188,8 @@ public class JewishDate
 	 */
 	public int getDaysInJewishYear() {
 
-		return JewishCalendar.getJewishCalendarElapsedDays(
-			getJewishYear() + 1 ) - JewishCalendar.getJewishCalendarElapsedDays( getJewishYear() );
+		return HebrewCalendar.getJewishCalendarElapsedDays(
+			getJewishYear() + 1 ) - HebrewCalendar.getJewishCalendarElapsedDays( getJewishYear() );
 	}
 
 	
@@ -203,7 +203,7 @@ public class JewishDate
 	 * @see #isCheshvanLong()
 	 */
 	public boolean isCheshvanLong() {
-		return JewishCalendar.isCheshvanLong( getJewishYear() );
+		return HebrewCalendar.isCheshvanLong( getJewishYear() );
 	}
 
 
@@ -215,7 +215,7 @@ public class JewishDate
 	 *
 	 */
 	public boolean isKislevShort() {
-		return JewishCalendar.isKislevShort( getJewishYear() );
+		return HebrewCalendar.isKislevShort( getJewishYear() );
 	}
 
 
@@ -253,7 +253,7 @@ public class JewishDate
 	 * @return the number of days for a given Jewish month that the calendar is currently set to.
 	 */
 	public int getDaysInJewishMonth() {
-		return JewishCalendar.getDaysInJewishMonth( jewishMonth, jewishYear );
+		return HebrewCalendar.getDaysInJewishMonth( jewishMonth, jewishYear );
 	}
 	
 
@@ -262,7 +262,7 @@ public class JewishDate
 	// Molad info
 
 	/**
-	 * Returns the molad for the year and month of the specified JewishDate. Returns a JewishDate set to the date of
+	 * Returns the molad for the year and month of the specified HebrewDate. Returns a HebrewDate set to the date of
 	 * the molad with the molad fields properly set.
 	 *
 	 * In the current implementation, it sets the molad time based on a midnight date rollover. This means that Rosh
@@ -270,22 +270,23 @@ public class JewishDate
 	 * chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
 	 */
 	@SuppressWarnings( "FeatureEnvy" )
-	public JewishDate getMolad( JewishDate date ) {
+	public HebrewDate getMolad( HebrewDate date ) {
 
-		JewishDate moladDate = JewishCalendar.getForMolad( JewishCalendar.getChalakimSinceMoladTohu( jewishYear, jewishMonth ) );
+		HebrewDate moladDate = HebrewCalendar
+			.getForMolad( HebrewCalendar.getChalakimSinceMoladTohu( jewishYear, jewishMonth ) );
 
 		if ( moladDate.getMoladHours() >= 6 ) {
 			moladDate = moladDate.tomorrow();
 		}
 		
-		moladHours = ( moladDate.getMoladHours() + JewishCalendar.CHALAKIM_PER_MINUTE ) % JewishCalendar.HOURS_PER_DAY;
+		moladHours = ( moladDate.getMoladHours() + HebrewCalendar.CHALAKIM_PER_MINUTE ) % HebrewCalendar.HOURS_PER_DAY;
 		return moladDate;
 	}
 
 	
 	
 	/**
-	 * Returns the molad hours. Only a JewishDate created via the getMolad() method will have this field set. Other 
+	 * Returns the molad hours. Only a HebrewDate created via the getMolad() method will have this field set. Other
 	 *  JewishDates will have this field set to 0.
 	 *
 	 * @return the molad hours
@@ -296,7 +297,7 @@ public class JewishDate
 
 
 	/**
-	 * Returns the molad minutes. Only a JewishDate created via the getMolad() method will have this field set. Other 
+	 * Returns the molad minutes. Only a HebrewDate created via the getMolad() method will have this field set. Other
 	 *  JewishDates will have this field set to 0.
 	 *
 	 * @return the molad minutes
@@ -307,7 +308,7 @@ public class JewishDate
 
 
 	/**
-	 * Returns the molad chalakim/parts. Only a JewishDate created via the getMolad() method will have this field set. Other 
+	 * Returns the molad chalakim/parts. Only a HebrewDate created via the getMolad() method will have this field set. Other
 	 *  JewishDates will have this field set to 0.
 	 *
 	 * @return the molad chalakim/parts
@@ -324,7 +325,7 @@ public class JewishDate
 	 * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
 	 */
 	public long getChalakimSinceMoladTohu() {
-		return JewishCalendar.getChalakimSinceMoladTohu( jewishYear, jewishMonth );
+		return HebrewCalendar.getChalakimSinceMoladTohu( jewishYear, jewishMonth );
 	}
 
 
@@ -333,12 +334,12 @@ public class JewishDate
 	//
 	// Date navigation
 
-	public JewishDate tomorrow() {
-		return JewishCalendar.forward( this );
+	public HebrewDate tomorrow() {
+		return HebrewCalendar.forward( this );
 	}
 	
-	public JewishDate yesterday() {
-		return JewishCalendar.back( this );
+	public HebrewDate yesterday() {
+		return HebrewCalendar.back( this );
 	}
 
 
@@ -347,7 +348,7 @@ public class JewishDate
 	// Base class overrides
 	
 	@Override
-	public int compareTo( JewishDate otherDate ) {
+	public int compareTo( HebrewDate otherDate ) {
 		
 		if ( jewishYear < otherDate.jewishYear ) {
 			return -1;
@@ -379,11 +380,11 @@ public class JewishDate
 		if ( this == o ) {
 			return true;
 		}
-		if ( !( o instanceof JewishDate ) ) {
+		if ( !( o instanceof HebrewDate ) ) {
 			return false;
 		}
 
-		JewishDate that = (JewishDate)o;
+		HebrewDate that = (HebrewDate)o;
 
 		if ( jewishDay != that.jewishDay ) {
 			return false;
@@ -406,4 +407,4 @@ public class JewishDate
 		result = 31 * result + jewishDay;
 		return result;
 	}
-}  // End of JewishDate class
+}  // End of HebrewDate class

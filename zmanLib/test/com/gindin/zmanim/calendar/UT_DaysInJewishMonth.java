@@ -61,7 +61,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertHaser( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		Assert.assertFalse( date.isCheshvanLong() );
 		Assert.assertTrue( date.isKislevShort() );
@@ -70,7 +70,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertHaserLeap( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertHaser( year );
 		Assert.assertTrue( date.isJewishLeapYear() );
@@ -79,7 +79,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertQesidrah( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		Assert.assertFalse( date.isCheshvanLong() );
 		Assert.assertFalse( date.isKislevShort() );
@@ -88,7 +88,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertQesidrahLeap( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertQesidrah( year );
 		Assert.assertTrue( date.isJewishLeapYear() );
@@ -97,7 +97,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertShalem( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		Assert.assertTrue( date.isCheshvanLong() );
 		Assert.assertFalse( date.isKislevShort() );
@@ -106,7 +106,7 @@ public class UT_DaysInJewishMonth {
 
 	private void assertShalemLeap( int year ) {
 
-		JewishDate date = JewishCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertShalem( year );
 		Assert.assertTrue( date.isJewishLeapYear() );

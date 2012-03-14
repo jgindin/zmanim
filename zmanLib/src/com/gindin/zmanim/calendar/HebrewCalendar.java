@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * The JewishCalendar class allows one to maintain an instance of a Gregorian date along with the corresponding Jewish date.
+ * The HebrewCalendar class allows one to maintain an instance of a Gregorian date along with the corresponding Jewish date.
  * This class can use the standard Java Date and Calendar classes for setting it, but does not subclass these classes or
  * use them internally to any extensive use. This class also does not have a concept of a time (which the Date class
  * does). Please note that the calendar does not currently support dates prior to 1/1/1 Gregorian. Also keep in mind
@@ -33,14 +33,14 @@ import java.util.GregorianCalendar;
  * IBM's DeveloperWorks.
  * <p/>
  * This class has migrated to become a calculation engine, computing the necessary values to return instances of the
- * JewishDate class. Some reasons for doing this include a clearer separation of concerns and thread safety.
+ * HebrewDate class. Some reasons for doing this include a clearer separation of concerns and thread safety.
  *
  * @author &copy; Avrom Finkelstien 2002
  * @author &copy; Eliyahu Hershfeld 2011
  * @author &copy; Jay Gindin 2011
  */
 @SuppressWarnings( { "MagicNumber", "UnusedDeclaration" } )
-public class JewishCalendar {
+public class HebrewCalendar {
 
 	
 	public static final int                                   MINUTES_PER_HOUR = 60;
@@ -78,7 +78,7 @@ public class JewishCalendar {
 	// 
 
 	/** Default constructor to prevent creation */
-	private JewishCalendar() {
+	private HebrewCalendar() {
 	}
 
 
@@ -86,7 +86,7 @@ public class JewishCalendar {
 	//
 	// Date navigation
 
-	public static JewishDate today() {
+	public static HebrewDate today() {
 		Calendar calendar = Calendar.getInstance();
 		return getForDate( calendar );
 	}
@@ -105,7 +105,7 @@ public class JewishCalendar {
 	 *
 	 * @throws IllegalArgumentException if the day of month is < 1 or > 30, or a year of < 0 is passed in.
 	 */
-	public static JewishDate getForJewishDate(
+	public static HebrewDate getForJewishDate(
 		int jewishYear,
 		int jewishMonth,
 		int jewishDayOfMonth
@@ -114,7 +114,7 @@ public class JewishCalendar {
 	}
 	
 	
-	public static JewishDate getForJewishDate(
+	public static HebrewDate getForJewishDate(
 		int jewishYear,
 		int jewishMonth,
 		int jewishDayOfMonth,
@@ -139,7 +139,7 @@ public class JewishCalendar {
 
 		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
 
-		return new JewishDate( jewishYear, jewishMonth, jewishDayOfMonth, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
+		return new HebrewDate( jewishYear, jewishMonth, jewishDayOfMonth, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
 
 		
@@ -151,7 +151,7 @@ public class JewishCalendar {
 	 *
 	 * @throws IllegalArgumentException if the date would fall prior to the January 1, 1 AD
 	 */
-	public static JewishDate getForDate( 
+	public static HebrewDate getForDate(
 		Date date 
 	) {
 		
@@ -169,7 +169,7 @@ public class JewishCalendar {
 	 *
 	 * @throws IllegalArgumentException if the {@link java.util.Calendar#ERA} is {@link java.util.GregorianCalendar#BC}
 	 */
-	public static JewishDate getForDate(
+	public static HebrewDate getForDate(
 		Calendar calendar
 	) {
 
@@ -189,17 +189,17 @@ public class JewishCalendar {
 
 		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
-		return new JewishDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
+		return new HebrewDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
 	
 	
 	/**
-	 * Constructor that creates a JewishCalendar based on a molad passed in. The molad would be the number of chalakim/parts
+	 * Constructor that creates a HebrewCalendar based on a molad passed in. The molad would be the number of chalakim/parts
 	 * starting at the begining of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
 	 * chalakim/parts) - prior to the start of the Jewish calendar. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080
 	 * chalakim after sunset on Sunday evening).
 	 */
-	public static JewishDate getForMolad( long molad ) {
+	public static HebrewDate getForMolad( long molad ) {
 		
 		int absDate = moladToAbsDate( molad );
 		int year = computeGregorianYearFromAbsoluteDate( absDate );
@@ -214,7 +214,7 @@ public class JewishCalendar {
 
 		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
-		// long chalakimSince = getChalakimSinceMoladTohu(year, JewishCalendar.TISHREI);// tishrei
+		// long chalakimSince = getChalakimSinceMoladTohu(year, HebrewCalendar.TISHREI);// tishrei
 		int conjunctionDay = (int)( molad / CHALAKIM_PER_DAY );
 		int adjustedChalakim = (int)( molad - conjunctionDay * CHALAKIM_PER_DAY );
 		int moladHours = adjustedChalakim / CHALAKIM_PER_HOUR;
@@ -222,7 +222,7 @@ public class JewishCalendar {
 		int moladMinutes = adjustedChalakim / CHALAKIM_PER_MINUTE;
 		int moladChalakim = adjustedChalakim - moladMinutes * CHALAKIM_PER_MINUTE;
 
-		return new JewishDate( jewishYear, jewishMonth, jewishDay, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate,
+		return new HebrewDate( jewishYear, jewishMonth, jewishDay, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate,
 			moladHours, moladMinutes, moladChalakim);
 	}
 	
@@ -237,14 +237,14 @@ public class JewishCalendar {
 	 * <p/>
 	 * <pre>
 	 * <code>
-	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the JewishCalendar
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
 	 * 	cal.add(Calendar.MONTH, 3); // add 3 Gregorian months
-	 * 	JewishCalendar newDate = new JewishCalendar(cal); // set the updated calendar back to this class
+	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
 	 * </code>
 	 * </pre>
 	 */
 	@SuppressWarnings( "FeatureEnvy" )
-	static JewishDate forward( JewishDate today ) {
+	static HebrewDate forward( HebrewDate today ) {
 		
 		// Change Gregorian date
 		int newGregorianYear = today.getGregorianYear();
@@ -306,7 +306,7 @@ public class JewishCalendar {
 		// increment the absolute date
 		int newGregorianAbsDate = today.getGregorianAbsDate() + 1;
 		
-		return new JewishDate( newJewishYear, newJewishMonth, newJewishDay,
+		return new HebrewDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
 	}
 
@@ -319,14 +319,14 @@ public class JewishCalendar {
 	 * <p/>
 	 * <pre>
 	 * <code>
-	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the JewishCalendar
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
 	 * 	cal.add(Calendar.MONTH, -3); // subtract 3 Gregorian months
-	 * 	JewishCalendar newDate = new JewishCalendar(cal); // set the updated calendar back to this class
+	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
 	 * </code>
 	 * </pre>
 	 */
 	@SuppressWarnings( "FeatureEnvy" )
-	static JewishDate back( JewishDate today ) {
+	static HebrewDate back( HebrewDate today ) {
 
 		// Change Gregorian date
 		int newGregorianYear = today.getGregorianYear();
@@ -386,7 +386,7 @@ public class JewishCalendar {
 		// change the absolute date
 		int newGregorianAbsDate = today.getGregorianAbsDate() - 1;
 
-		return new JewishDate( newJewishYear, newJewishMonth, newJewishDay,
+		return new HebrewDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
 	}
 
@@ -623,7 +623,7 @@ public class JewishCalendar {
 
 	/**
 	 * Converts the the {@link HebrewMonth#NISSAN} based constants used by this class to numeric month starting from {@link
-	 * HebrewMonth#TISHREI}. This is required for Molad claculations.
+	 * HebrewMonth#TISHREI}. This is required for Molad calculations.
 	 */
 	private static int getJewishMonthOfYear(
 		int jewishYear,
@@ -747,7 +747,7 @@ public class JewishCalendar {
 	 * delay, plus one day for Lo ADU Rosh)</li> <li>BeTuTaKFoT - if the year following a leap year falls on a Monday (Be)
 	 * on or after 15 hours (Tu) and 589 chalakim (TaKFoT) it is delayed till Tuesday</li> </ol>
 	 *
-	 * @return the number of elapsed days in the JewishCalendar adjusted for the 4 dechiyos.
+	 * @return the number of elapsed days in the HebrewCalendar adjusted for the 4 dechiyos.
 	 */
 	private static int addDechiyos(
 		int year,
