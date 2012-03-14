@@ -689,7 +689,7 @@ public class HebrewCalendar {
 		int year
 	) {
 		if ( ( month == HebrewMonth.IYAR ) || ( month == HebrewMonth.TAMMUZ ) || ( month == HebrewMonth.ELUL ) || ( ( month == HebrewMonth.CHESHVAN ) && !( isCheshvanLong( year ) ) )
-			|| ( ( month == HebrewMonth.KISLEV ) && isKislevShort( year ) ) || ( month == HebrewMonth.TEVES )
+			|| ( ( month == HebrewMonth.KISLEV ) && isKislevShort( year ) ) || ( month == HebrewMonth.TEVET )
 			|| ( ( month == HebrewMonth.ADAR ) && !( isJewishLeapYear( year ) ) ) || ( month == HebrewMonth.ADAR_II ) ) {
 			return HebrewMonth.SHORT_MONTH_LENGTH;
 		}
@@ -833,8 +833,8 @@ public class HebrewCalendar {
 		// reject dates prior to 18 Teves, 3761 (1/1/1 AD). This restriction can be relaxed if the date coding is
 		// changed/corrected
 		if ( ( year < EARLIEST_VALID_HEBREW_YEAR ) ||
-			( year == EARLIEST_VALID_HEBREW_YEAR && ( month >= HebrewMonth.TISHREI && month < HebrewMonth.TEVES ) ) ||
-			( year == EARLIEST_VALID_HEBREW_YEAR && month == HebrewMonth.TEVES && dayOfMonth < 18 ) ) {
+			( year == EARLIEST_VALID_HEBREW_YEAR && ( month >= HebrewMonth.TISHREI && month < HebrewMonth.TEVET ) ) ||
+			( year == EARLIEST_VALID_HEBREW_YEAR && month == HebrewMonth.TEVET && dayOfMonth < 18 ) ) {
 			throw new IllegalArgumentException(
 				"A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian) can't be set. " + year + ", " + month +
 					", " + dayOfMonth + " is invalid." );

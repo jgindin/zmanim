@@ -75,7 +75,7 @@ public interface HebrewMonth {
 	 * Value of the month field indicating Teves, the tenth numeric month of the year in the Jewish calendar. With the
 	 * year starting at {@link #TISHREI}, it would actually be the 4th month of the year.
 	 */
-	public static final int TEVES = 10;
+	public static final int TEVET = 10;
 
 	/**
 	 * Value of the month field indicating Shevat, the eleventh numeric month of the year in the Jewish calendar. With

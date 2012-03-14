@@ -17,6 +17,7 @@ public class HebrewDate
 
 
 	/** Must be a value from the HebrewMonth 'enum'. */
+	@MagicConstant( intValues = {HebrewMonth.NISSAN, HebrewMonth.IYAR, HebrewMonth.SIVAN, HebrewMonth.TAMMUZ, HebrewMonth.AV, HebrewMonth.ELUL, HebrewMonth.TISHREI, HebrewMonth.CHESHVAN, HebrewMonth.KISLEV, HebrewMonth.TEVET, HebrewMonth.SHEVAT, HebrewMonth.ADAR, HebrewMonth.ADAR_II})
 	private int                                               jewishMonth;
 	private int                                               jewishYear;
 	private int                                               jewishDay;
@@ -32,12 +33,14 @@ public class HebrewDate
 	 * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
 	 *  month 11 being December.
 	 */
+	@MagicConstant( intValues = {Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL, Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST, Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER })
 	private int                                               gregorianMonth;
 
 	/** The day of the Gregorian month */
 	private int                                               gregorianDayOfMonth;
 
 	/** 1 == Sunday, 2 == Monday, etc... */
+	@MagicConstant( intValues = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY })
 	private int                                               dayOfWeek;
 
 	/** Internal representation of the date. */
@@ -91,21 +94,17 @@ public class HebrewDate
 	// Queries about this date.
 
 	/**
-	 * Returns the Jewish month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
+	 * @return  the Jewish month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
 	 * for Adar II
-	 *
-	 * @return the Jewish month from 1 to 12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes
-	 *         to 13 for Adar II
 	 */
+	@MagicConstant( intValues = {HebrewMonth.NISSAN, HebrewMonth.IYAR, HebrewMonth.SIVAN, HebrewMonth.TAMMUZ, HebrewMonth.AV, HebrewMonth.ELUL, HebrewMonth.TISHREI, HebrewMonth.CHESHVAN, HebrewMonth.KISLEV, HebrewMonth.TEVET, HebrewMonth.SHEVAT, HebrewMonth.ADAR, HebrewMonth.ADAR_II})
 	public int getJewishMonth() {
 		return jewishMonth;
 	}
 
 
 	/**
-	 * Returns the Jewish day of month.
-	 *
-	 * @return the Jewish day of the month
+	 * @return the Jewish day of month.
 	 */
 	public int getJewishDayOfMonth() {
 		return jewishDay;
@@ -113,9 +112,7 @@ public class HebrewDate
 
 
 	/**
-	 * Returns the Jewish year.
-	 *
-	 * @return the Jewish year
+	 * @return the Jewish year (e.g., 5772).
 	 */
 	public int getJewishYear() {
 		return jewishYear;
@@ -123,15 +120,17 @@ public class HebrewDate
 
 
 	/**
-	 * Returns the day of the week as a number between 1-7.
-	 *
 	 * @return the day of the week as a number between 1-7.
 	 */
+	@MagicConstant( intValues = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY })
 	public int getDayOfWeek() {
 		return dayOfWeek;
 	}
 
 
+	/**
+	 * @return the gregorian year (e.g., 2012).
+	 */
 	public int getGregorianYear() {
 		return gregorianYear;
 	}
