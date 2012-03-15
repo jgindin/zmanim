@@ -4,8 +4,6 @@
 
 package com.gindin.zmanim.calendar;
 
-import org.intellij.lang.annotations.MagicConstant;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,7 +15,7 @@ public class HebrewDate
 
 
 	/** Must be a value from the HebrewMonth 'enum'. */
-	@MagicConstant( intValues = {HebrewMonth.NISSAN, HebrewMonth.IYAR, HebrewMonth.SIVAN, HebrewMonth.TAMMUZ, HebrewMonth.AV, HebrewMonth.ELUL, HebrewMonth.TISHREI, HebrewMonth.CHESHVAN, HebrewMonth.KISLEV, HebrewMonth.TEVET, HebrewMonth.SHEVAT, HebrewMonth.ADAR, HebrewMonth.ADAR_II})
+	@HebrewMonth.Constant
 	private int                                               jewishMonth;
 	private int                                               jewishYear;
 	private int                                               jewishDay;
@@ -33,14 +31,14 @@ public class HebrewDate
 	 * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
 	 *  month 11 being December.
 	 */
-	@MagicConstant( intValues = {Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL, Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST, Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER })
+	@Constants.CalendarMonth
 	private int                                               gregorianMonth;
 
 	/** The day of the Gregorian month */
 	private int                                               gregorianDayOfMonth;
 
 	/** 1 == Sunday, 2 == Monday, etc... */
-	@MagicConstant( intValues = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY })
+	@Constants.CalendarDay
 	private int                                               dayOfWeek;
 
 	/** Internal representation of the date. */
@@ -49,10 +47,10 @@ public class HebrewDate
 
 	HebrewDate(
 		int jewishYear,
-		int jewishMonth,
+		@HebrewMonth.Constant int jewishMonth,
 		int jewishDay,
 		int gregorianYear,
-		int gregorianMonth,
+		@Constants.CalendarMonth int gregorianMonth,
 		int gregorianDayOfMonth,
 		int dayOfWeek,
 		int gregorianAbsDate
@@ -63,10 +61,10 @@ public class HebrewDate
 
 	HebrewDate(
 		int jewishYear,
-		int jewishMonth,
+		@HebrewMonth.Constant int jewishMonth,
 		int jewishDay,
 		int gregorianYear,
-		int gregorianMonth,
+		@Constants.CalendarMonth int gregorianMonth,
 		int gregorianDayOfMonth,
 		int dayOfWeek,
 		int gregorianAbsDate,
@@ -97,7 +95,7 @@ public class HebrewDate
 	 * @return  the Jewish month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
 	 * for Adar II
 	 */
-	@MagicConstant( intValues = {HebrewMonth.NISSAN, HebrewMonth.IYAR, HebrewMonth.SIVAN, HebrewMonth.TAMMUZ, HebrewMonth.AV, HebrewMonth.ELUL, HebrewMonth.TISHREI, HebrewMonth.CHESHVAN, HebrewMonth.KISLEV, HebrewMonth.TEVET, HebrewMonth.SHEVAT, HebrewMonth.ADAR, HebrewMonth.ADAR_II})
+	@HebrewMonth.Constant
 	public int getJewishMonth() {
 		return jewishMonth;
 	}
@@ -122,7 +120,7 @@ public class HebrewDate
 	/**
 	 * @return the day of the week as a number between 1-7.
 	 */
-	@MagicConstant( intValues = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY })
+	@Constants.CalendarDay
 	public int getDayOfWeek() {
 		return dayOfWeek;
 	}
@@ -139,7 +137,7 @@ public class HebrewDate
 	/**
 	 * @return A month which can be directly compared to the months as defined in java.util.Calendar.
 	 */
-	@MagicConstant( intValues = {Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL, Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST, Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER })
+	@Constants.CalendarMonth
 	public int getGregorianMonth() {
 		return gregorianMonth;
 	}

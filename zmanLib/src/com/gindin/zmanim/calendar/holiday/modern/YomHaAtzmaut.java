@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2012. Jay R. Gindin
+ */
+
+package com.gindin.zmanim.calendar.holiday.modern;
+
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Observance;
+
+import java.util.Calendar;
+
+/**
+ * Yom Ha'atzmaut is nominally celebrated on the 5th day of Iyar (ה' באייר) in the Hebrew calendar, the anniversary
+ *  of the day in which Israel independence was proclaimed, when David Ben Gurion publicly read the Israeli Declaration
+ *  of Independence. The corresponding Gregorian date was May 14, 1948.
+ *
+ * If the 5th of Iyar falls on a Friday or Saturday, the celebrations are moved up to the preceding Thursday.
+ *  This rule has been effective since 1951.
+ *
+ * If the 5th of Iyar is on a Monday, the festival is postponed to Tuesday. This rule has been effective since 2004,
+ *  in order to avoid having Yom Hazikaron or Yom Ha'atzmaut on (or following) a Shabbat.
+ *
+ * Since the only other day of the week that the 5th of Iyar can fall on is a Wednesday, it is actually now relatively
+ *  rare for the festival to be observed on the 5th Iyar itself.
+ *    -- http://en.wikipedia.org/wiki/Yom_Ha%27atzmaut
+ *
+ * This means:
+ *  - If Yom HaAtzmaut falls on Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd
+ *  - If Yom HaAtzmaut falls on Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2008)
+ *  - If Yom HaAtzmaut falls on Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2011)
+ *
+ */
+public class YomHaAtzmaut
+	implements Observance {
+
+	private static final String                               NAME = "Yom HaAtzmaut";
+
+	private static final ErevYomHaAtzmautDetails              EREV_YOM_HA_ATZMAUT_DETAILS = new ErevYomHaAtzmautDetails();
+	private static final YomHaAtzmautDetails                  YOM_HA_ATZMAUT_DETAILS = new YomHaAtzmautDetails();
+
+
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+
+	@Override
+	public Details getDetailsFor( HebrewDate date ) {
+
+		if ( HebrewMonth.IYAR != date.getJewishMonth() ) {
+			return null;
+		}
+
+		// In order to prevent Yom HaZikaron or Yom HaAtzmaut from falling on or immediately after Shabbat,
+		//  if the 5th of Iyar falls on:
+		//    Friday:   Moved back to the 4th
+		//    Shabbat:  Moved back to the 3rd
+		//    Monday:   Moved forward to the 6th
+		// See http://en.wikipedia.org/wiki/Yom_Ha-Atzma%27ut
+		final int jewishDayOfMonth = date.getJewishDayOfMonth();
+
+		switch ( date.getDayOfWeek() ) {
+			case Calendar.MONDAY:
+				if ( 5 == jewishDayOfMonth ) {
+					return EREV_YOM_HA_ATZMAUT_DETAILS;
+				}
+				break;
+
+			case Calendar.TUESDAY:
+				if ( 6 == jewishDayOfMonth ) {
+					return YOM_HA_ATZMAUT_DETAILS;
+				}
+				break;
+
+			case Calendar.WEDNESDAY:
+				if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
+					return EREV_YOM_HA_ATZMAUT_DETAILS;
+				}
+				break;
+
+			case Calendar.THURSDAY:
+				if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
+					return YOM_HA_ATZMAUT_DETAILS;
+				}
+				break;
+		}
+
+		// We've handled the special cases, so if we get here, we're dealing with a regular year...
+		if ( 4 == jewishDayOfMonth ) {
+			return EREV_YOM_HA_ATZMAUT_DETAILS;
+		}
+		else if ( 5 == jewishDayOfMonth ) {
+			return YOM_HA_ATZMAUT_DETAILS;
+		}
+
+		return null;
+	}
+
+
+	private static class ErevYomHaAtzmautDetails
+		implements Details {
+
+		@Override public boolean isErev() {
+			return true;
+		}
+
+		@Override public boolean lightCandles() {
+			return false;
+		}
+
+		@Override public boolean sayHavdalah() {
+			return false;
+		}
+
+		@Override public String getDescription() {
+			return "Erev " + NAME;
+		}
+	}
+
+	private static class YomHaAtzmautDetails
+		implements Details {
+
+		@Override public boolean isErev() {
+			return false;
+		}
+
+		@Override public boolean lightCandles() {
+			return false;
+		}
+
+		@Override public boolean sayHavdalah() {
+			return false;
+		}
+
+		@Override public String getDescription() {
+			return "Erev " + NAME;
+		}
+	}
+
+}  // End of YomHaAtzmaut class

@@ -5,7 +5,6 @@ package com.gindin.zmanim.calendar;
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -107,7 +106,7 @@ public class HebrewCalendar {
 	 */
 	public static HebrewDate getForJewishDate(
 		int jewishYear,
-		int jewishMonth,
+		@HebrewMonth.Constant int jewishMonth,
 		int jewishDayOfMonth
 	) {
 		return getForJewishDate( jewishYear, jewishMonth, jewishDayOfMonth, 0, 0, 0 );
@@ -116,7 +115,7 @@ public class HebrewCalendar {
 	
 	public static HebrewDate getForJewishDate(
 		int jewishYear,
-		int jewishMonth,
+		@HebrewMonth.Constant int jewishMonth,
 		int jewishDayOfMonth,
 		int moladHours,
 		int moladMinutes,
@@ -147,18 +146,31 @@ public class HebrewCalendar {
 	/**
 	 * A constructor that initializes the date to the {@link java.util.Date Date} parameter.
 	 *
-	 * @param date the <code>Date</code> to set the calendar to
+	 * @param gregorianYear The Gregorian year, which must be >= 1. BCE dates are not supported.
+	 * @param gregorianMonth The Gregorian month, using the same numbering format as the Calendar class does for months.
+	 * @param gregorianDayOfMonth The day of the Gregorian month, the maximum value of which depends on the specified month.
 	 *
 	 * @throws IllegalArgumentException if the date would fall prior to the January 1, 1 AD
 	 */
 	public static HebrewDate getForDate(
-		Date date 
+		int gregorianYear,
+	  @Constants.CalendarMonth int gregorianMonth,
+	  int gregorianDayOfMonth
 	) {
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime( date );
-		
-		return getForDate( cal );
+
+		if ( gregorianYear < 1 ) {
+			throw new IllegalArgumentException( "Dates prior to year 1 of the CE are not supported." );
+		}
+
+		int gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init the date
+
+		int jewishYear = computeJewishYearFromAbsoluteDate( gregorianAbsDate );
+		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
+		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
+
+		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+
+		return new HebrewDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
 	
 	
@@ -174,22 +186,15 @@ public class HebrewCalendar {
 	) {
 
 		if ( calendar.get( Calendar.ERA ) == GregorianCalendar.BC ) {
-			throw new IllegalArgumentException( "Calendars with a BC era are not supported. The year "
-				+ calendar.get( Calendar.YEAR ) + " BC is invalid." );
+			throw new IllegalArgumentException( "Calendars with a BCE era are not supported. The year "
+				+ calendar.get( Calendar.YEAR ) + " BCE is invalid." );
 		}
 
 		int gregorianMonth = calendar.get( Calendar.MONTH );
 		int gregorianDayOfMonth = calendar.get( Calendar.DATE );
 		int gregorianYear = calendar.get( Calendar.YEAR );
-		int gregorianAbsDate = gregorianDateToAbsDate( gregorianYear, gregorianMonth, gregorianDayOfMonth ); // init the date
 
-		int jewishYear = computeJewishYearFromAbsoluteDate( gregorianAbsDate );
-		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
-		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
-
-		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
-
-		return new HebrewDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
+		return getForDate( gregorianYear, gregorianMonth, gregorianDayOfMonth );
 	}
 	
 	

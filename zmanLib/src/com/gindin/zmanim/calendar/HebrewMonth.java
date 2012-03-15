@@ -4,12 +4,19 @@
 
 package com.gindin.zmanim.calendar;
 
+
+import org.intellij.lang.annotations.MagicConstant;
+
 /**
  * Enumeration of the Hebrew months, starting with Nissan.
  * 
  * TODO: Make this an enum.
  */
 public interface HebrewMonth {
+
+	@MagicConstant( intValues = { HebrewMonth.NISSAN, HebrewMonth.IYAR, HebrewMonth.SIVAN, HebrewMonth.TAMMUZ, HebrewMonth.AV, HebrewMonth.ELUL, HebrewMonth.TISHREI, HebrewMonth.CHESHVAN, HebrewMonth.KISLEV, HebrewMonth.TEVET, HebrewMonth.SHEVAT, HebrewMonth.ADAR, HebrewMonth.ADAR_II })
+	@interface Constant {
+	}
 
 	/**
 	 * Value of the month field indicating Nissan, the first numeric month of the year in the Jewish calendar. With the
@@ -106,6 +113,5 @@ public interface HebrewMonth {
 	
 	public static final int SHORT_MONTH_LENGTH = 29;
 	public static final int LONG_MONTH_LENGTH = 30;
-
 
 }  // End of HebrewMonth class
