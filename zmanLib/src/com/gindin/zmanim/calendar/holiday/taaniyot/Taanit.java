@@ -19,10 +19,11 @@ abstract class Taanit
 	protected static final String                             TAANIT = "Ta'anit ";
 
 	/** Which month does the fast fall in? */
-	private int                                               monthOfFast;
+	@HebrewMonth.Constant
+	private final int                                         monthOfFast;
 
 	/** Absent any reason to postpone the fast, what day of the month does it fall on? */
-	private int                                               normalDayOfFast;
+	private final int                                         normalDayOfFast;
 
 
 	/** Can the fast take place on a Friday? */
@@ -34,6 +35,7 @@ abstract class Taanit
 
 
 	protected Taanit(
+		@HebrewMonth.Constant
 		int   monthOfFast,
 		int   normalDayOfFast
 	) {
@@ -42,10 +44,11 @@ abstract class Taanit
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	public final Details getDetailsFor( HebrewDate date ) {
 
-		int actualMonthOfFast = monthOfFast;
+		@HebrewMonth.Constant int actualMonthOfFast = monthOfFast;
 		if ( date.isJewishLeapYear() && ( HebrewMonth.ADAR == monthOfFast ) ) {
 			actualMonthOfFast = HebrewMonth.ADAR_II;
 		}
@@ -54,23 +57,75 @@ abstract class Taanit
 			return null;
 		}
 
-		int actualDayOfFast = normalDayOfFast;
+		final int dayOfWeek = date.getDayOfWeek();
+		final int jewishDayOfMonth = date.getJewishDayOfMonth();
 
-		// Cannot fall out on Shabbat! If this Shabbat, then move it to Sunday.
-		if ( Calendar.SATURDAY == date.getDayOfWeek() ) {
-			actualDayOfFast++;
-		}
-		else if ( ( Calendar.FRIDAY == date.getDayOfWeek() ) && !canFallOnFriday() ) {
-			actualDayOfFast--;
+		if ( Calendar.WEDNESDAY == dayOfWeek ) {
+
+			if ( canFallOnFriday() ) {
+				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+					return getDetailsForErevTaanit();
+				}
+			}
+			else {
+				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+					return getDetailsForErevTaanit();
+				}
+
+				if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
+					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
+					return getDetailsForErevTaanit();
+				}
+			}
 		}
 
-		if ( actualDayOfFast == date.getJewishDayOfMonth() ) {
+		if ( Calendar.THURSDAY == dayOfWeek ) {
+
+			if ( canFallOnFriday() ) {
+				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+					return getDetailsForErevTaanit();
+				}
+			}
+			else {
+				if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
+					return getDetailsForTaanit();
+				}
+
+				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
+					return getDetailsForTaanit();
+				}
+			}
+		}
+
+		if ( ( Calendar.FRIDAY == dayOfWeek ) && canFallOnFriday() ) {
+			if ( normalDayOfFast == jewishDayOfMonth ) {
+				return getDetailsForTaanit();
+			}
+		}
+
+		if ( Calendar.SATURDAY == dayOfWeek ) {
+			if ( normalDayOfFast == jewishDayOfMonth ) {
+				return getDetailsForErevTaanit();
+			}
+		}
+
+		if ( Calendar.SUNDAY == dayOfWeek ) {
+			if ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) {
+				return getDetailsForTaanit();
+			}
+		}
+
+
+		// We've handled all the special cases above...
+		if ( normalDayOfFast == jewishDayOfMonth ) {
 			return getDetailsForTaanit();
 		}
 
-		if ( ( actualDayOfFast - 1 ) == date.getJewishDayOfMonth() ) {
+		if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
 			return getDetailsForErevTaanit();
 		}
+
 
 		return null;
 	}

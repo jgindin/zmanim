@@ -74,7 +74,7 @@ public class Taanit17Tamuz
 		implements Observance.Details {
 
 		@Override public boolean isErev() {
-			return true;
+			return false;
 		}
 
 		@Override public boolean lightCandles() {

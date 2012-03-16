@@ -4,10 +4,14 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
+import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
- *
+ * The Fast is observed on the 13th day of the Hebrew month of Adar. If the date of the Fast of Esther falls on
+ *  Shabbat (Saturday), the fast is instead observed on the preceding Thursday.
+ *    -- http://en.wikipedia.org/wiki/Fast_of_Esther
  */
 public class TaanitEsther
 	extends Taanit {
