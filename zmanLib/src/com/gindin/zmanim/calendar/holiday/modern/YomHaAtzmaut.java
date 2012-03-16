@@ -25,10 +25,10 @@ import java.util.Calendar;
  *  rare for the festival to be observed on the 5th Iyar itself.
  *    -- http://en.wikipedia.org/wiki/Yom_Ha%27atzmaut
  *
- * This means:
- *  - If Yom HaAtzmaut falls on Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd
- *  - If Yom HaAtzmaut falls on Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2008)
- *  - If Yom HaAtzmaut falls on Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2011)
+ * This means that if Yom HaAtzmaut falls on:
+ *  - Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd (2012)
+ *  - Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2001, 2005, 2008)
+ *  - Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2004, 2007, 2010, 2011)
  *
  */
 public class YomHaAtzmaut

@@ -19,6 +19,7 @@ import java.util.Calendar;
 /**
  * Tests the dates for the 'modern' holidays.
  */
+@SuppressWarnings( "MagicNumber" )
 public class UT_Modern {
 
 	private static final YomHaShoah                           YOM_HA_SHOAH = new YomHaShoah();
@@ -32,29 +33,54 @@ public class UT_Modern {
 		// NOTE: www.hebcal.com shows Yom HaZikaron falling on *Sunday* May 10, 1970. However, the rules seem
 		//  to say that if it falls on Sunday, it gets pushed off to Monday. Maybe they're being smart and
 		//  handling some older version of the rules?
-		testModernHolidays( 1970, Calendar.MAY, 3, Calendar.MAY, 11, Calendar.JUNE, 3 );
+		testModernHolidays(
+			1970,
+			Calendar.MAY, 3,
+			Calendar.MAY, 11,
+			Calendar.JUNE, 3
+		);
 	}
 
 
 	@Test
 	public void test2008() {
-		testModernHolidays( 2008, Calendar.MAY, 2, Calendar.MAY, 7, Calendar.JUNE, 2 );
+		testModernHolidays(
+			2008,
+			Calendar.MAY, 2,
+			Calendar.MAY, 7,
+			Calendar.JUNE, 2
+		);
 	}
 
 	@Test
 	public void test2009() {
-		testModernHolidays( 2009, Calendar.APRIL, 21, Calendar.APRIL, 28, Calendar.MAY, 22 );
+		testModernHolidays(
+			2009,
+			Calendar.APRIL, 21,
+			Calendar.APRIL, 28,
+			Calendar.MAY, 22
+		);
 	}
 
 	@Test
 	public void test2011() {
-		testModernHolidays( 2011, Calendar.MAY, 1, Calendar.MAY, 9, Calendar.JUNE, 1 );
+		testModernHolidays(
+			2011,
+			Calendar.MAY, 1,
+			Calendar.MAY, 9,
+			Calendar.JUNE, 1
+		);
 	}
 
 
 	@Test
 	public void test2012() {
-
+		testModernHolidays(
+			2012,
+			Calendar.APRIL, 19,
+			Calendar.APRIL, 25,
+			Calendar.MAY, 20
+		);
 	}
 
 
