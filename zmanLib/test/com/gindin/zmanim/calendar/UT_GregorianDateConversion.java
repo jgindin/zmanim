@@ -59,9 +59,9 @@ public class UT_GregorianDateConversion {
 	
 	private void assertJewishDate( HebrewDate date, int year, int month, int dayOfMonth ) {
 		
-		Assert.assertEquals( year, date.getJewishYear() );
-		Assert.assertEquals( month, date.getJewishMonth() );
-		Assert.assertEquals( dayOfMonth, date.getJewishDayOfMonth() );
+		Assert.assertEquals( year, date.getHebrewYear() );
+		Assert.assertEquals( month, date.getHebrewMonth() );
+		Assert.assertEquals( dayOfMonth, date.getHebrewDayOfMonth() );
 	}
 
 } // End of UT_GregorianDateConversion class

@@ -17,6 +17,7 @@ import com.gindin.zmanim.calendar.holiday.Observance;
  *  the Hebrew date on which the divided city of Jerusalem became one.
  *    -- http://en.wikipedia.org/wiki/Yom_Yerushalayim
  */
+@SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
 public class YomYerushalayim
 	implements Observance {
 
@@ -35,15 +36,15 @@ public class YomYerushalayim
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
 
-		if ( HebrewMonth.IYAR != date.getJewishMonth() ) {
+		if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
 			return null;
 		}
 
-		if ( 27 == date.getJewishDayOfMonth() ) {
+		if ( 27 == date.getHebrewDayOfMonth() ) {
 			return EREV_YOM_YERUSHALAYIM_DETAILS;
 		}
 
-		if ( 28 == date.getJewishDayOfMonth() ) {
+		if ( 28 == date.getHebrewDayOfMonth() ) {
 			return YOM_YERUSHALAYIM_DETAILS;
 		}
 

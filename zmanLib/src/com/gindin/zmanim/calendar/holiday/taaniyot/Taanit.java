@@ -49,16 +49,16 @@ abstract class Taanit
 	public final Details getDetailsFor( HebrewDate date ) {
 
 		@HebrewMonth.Constant int actualMonthOfFast = monthOfFast;
-		if ( date.isJewishLeapYear() && ( HebrewMonth.ADAR == monthOfFast ) ) {
+		if ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR == monthOfFast ) ) {
 			actualMonthOfFast = HebrewMonth.ADAR_II;
 		}
 
-		if ( actualMonthOfFast != date.getJewishMonth() ) {
+		if ( actualMonthOfFast != date.getHebrewMonth() ) {
 			return null;
 		}
 
 		final int dayOfWeek = date.getDayOfWeek();
-		final int jewishDayOfMonth = date.getJewishDayOfMonth();
+		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( Calendar.WEDNESDAY == dayOfWeek ) {
 

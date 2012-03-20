@@ -12,6 +12,7 @@ import com.gindin.zmanim.calendar.holiday.Observance;
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class YomHaShoah
 	implements Observance {
 
@@ -30,7 +31,7 @@ public class YomHaShoah
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
 
-		if ( HebrewMonth.NISSAN != date.getJewishMonth() ) {
+		if ( HebrewMonth.NISSAN != date.getHebrewMonth() ) {
 			return null;
 		}
 
@@ -39,7 +40,7 @@ public class YomHaShoah
 		//
 		// However, the reference they provide, http://www.yomhashoah.org.uk/dates clearly shows that it *can* fall on
 		//  either a Friday or a Sunday...
-		final int jewishDayOfMonth = date.getJewishDayOfMonth();
+		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( 26 == jewishDayOfMonth ) {
 			return EREV_YOM_HA_SHOAH_DETAILS;

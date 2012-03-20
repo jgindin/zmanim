@@ -27,10 +27,10 @@ public class ShushanPurim
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
 
-		if ( ( date.isJewishLeapYear() && ( HebrewMonth.ADAR_II == date.getJewishMonth() ) ) ||
-			   ( !date.isJewishLeapYear() && ( HebrewMonth.ADAR == date.getJewishMonth() ) ) ) {
+		if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
+			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
-			if ( 15 == date.getJewishDayOfMonth() ) {
+			if ( 15 == date.getHebrewDayOfMonth() ) {
 				return SHUSHAN_PURIM_DETAILS;
 			}
 		}

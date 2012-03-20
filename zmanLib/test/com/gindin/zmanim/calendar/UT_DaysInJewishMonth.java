@@ -73,7 +73,7 @@ public class UT_DaysInJewishMonth {
 		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertHaser( year );
-		Assert.assertTrue( date.isJewishLeapYear() );
+		Assert.assertTrue( date.isHebrewLeapYear() );
 	}
 
 
@@ -91,7 +91,7 @@ public class UT_DaysInJewishMonth {
 		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertQesidrah( year );
-		Assert.assertTrue( date.isJewishLeapYear() );
+		Assert.assertTrue( date.isHebrewLeapYear() );
 	}
 
 
@@ -109,7 +109,7 @@ public class UT_DaysInJewishMonth {
 		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
 		assertShalem( year );
-		Assert.assertTrue( date.isJewishLeapYear() );
+		Assert.assertTrue( date.isHebrewLeapYear() );
 	}
 
 } // End of UT_DaysInJewishMonth class

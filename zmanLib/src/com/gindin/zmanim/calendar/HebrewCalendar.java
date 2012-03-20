@@ -126,8 +126,8 @@ public class HebrewCalendar {
 
 		// if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
 		// days to a month that only has 29) set the date to 29th
-		if ( jewishDayOfMonth > getDaysInJewishMonth( jewishMonth, jewishYear ) ) {
-			jewishDayOfMonth = getDaysInJewishMonth( jewishMonth, jewishYear );
+		if ( jewishDayOfMonth > getDaysInHebrewMonth( jewishMonth, jewishYear ) ) {
+			jewishDayOfMonth = getDaysInHebrewMonth( jewishMonth, jewishYear );
 		}
 
 		int gregorianAbsDate = jewishDateToAbsDate( jewishYear, jewishMonth, jewishDayOfMonth );
@@ -274,11 +274,11 @@ public class HebrewCalendar {
 		}
 
 		// Change the Jewish Date
-		int newJewishYear = today.getJewishYear();
-		int newJewishMonth = today.getJewishMonth();
-		int newJewishDay = today.getJewishDayOfMonth();
+		int newJewishYear = today.getHebrewYear();
+		int newJewishMonth = today.getHebrewMonth();
+		int newJewishDay = today.getHebrewDayOfMonth();
 		
-		if ( newJewishDay == getDaysInJewishMonth( newJewishMonth, newJewishYear ) ) {
+		if ( newJewishDay == getDaysInHebrewMonth( newJewishMonth, newJewishYear ) ) {
 			// if it last day of elul (i.e. last day of Jewish year)
 			if ( newJewishMonth == HebrewMonth.ELUL ) {
 				newJewishYear++;
@@ -358,9 +358,9 @@ public class HebrewCalendar {
 		}
 
 		// Change Jewish date
-		int newJewishYear = today.getJewishYear();
-		int newJewishMonth = today.getJewishMonth();
-		int newJewishDay = today.getJewishDayOfMonth();
+		int newJewishYear = today.getHebrewYear();
+		int newJewishMonth = today.getHebrewMonth();
+		int newJewishDay = today.getHebrewDayOfMonth();
 
 		// if first day of the Jewish month...
 		if ( newJewishDay == 1 ) {
@@ -373,7 +373,7 @@ public class HebrewCalendar {
 			}
 
 			newJewishYear--;
-			newJewishDay = getDaysInJewishMonth( newJewishMonth, newJewishYear );
+			newJewishDay = getDaysInHebrewMonth( newJewishMonth, newJewishYear );
 		}
 		else {
 			newJewishDay--;
@@ -522,7 +522,7 @@ public class HebrewCalendar {
 		else {
 			jewishMonth = HebrewMonth.NISSAN;// Start at Nisan
 		}
-		while ( gregorianAbsDate > jewishDateToAbsDate( jewishYear, jewishMonth, getDaysInJewishMonth( jewishMonth, jewishYear ) ) ) {
+		while ( gregorianAbsDate > jewishDateToAbsDate( jewishYear, jewishMonth, getDaysInHebrewMonth( jewishMonth, jewishYear ) ) ) {
 			jewishMonth++;
 		}
 		
@@ -559,7 +559,7 @@ public class HebrewCalendar {
 	) {
 		int elapsed = getDaysSinceStartOfJewishYear( year, month, dayOfMonth );
 		// add elapsed days this year + Days in prior years + Days elapsed before absolute year 1
-		return elapsed + getJewishCalendarElapsedDays( year ) + JEWISH_EPOCH;
+		return elapsed + getElapsedDays( year ) + JEWISH_EPOCH;
 	}
 
 
@@ -587,23 +587,23 @@ public class HebrewCalendar {
 	 *
 	 * @return true if it is a leap year
 	 */
-	static boolean isJewishLeapYear( int year ) {
+	static boolean isHebrewLeapYear( int year ) {
 		return ( ( 7 * year ) + 1 ) % YEARS_PER_CYCLE < 7;
 	}
 
 
 	/**
-	 * Returns the last month of a given Jewish year. This will be 12 on a non {@link #isJewishLeapYear(int) leap year} or
+	 * Returns the last month of a given Jewish year. This will be 12 on a non {@link #isHebrewLeapYear(int) leap year} or
 	 * 13 on a leap year.
 	 *
 	 * @param year the Jewish year.
 	 *
 	 * @return 12 on a non leap year or 13 on a leap year
 	 *
-	 * @see #isJewishLeapYear(int)
+	 * @see #isHebrewLeapYear(int)
 	 */
 	private static int getLastMonthOfJewishYear( int year ) {
-		return isJewishLeapYear( year ) ? HebrewMonth.ADAR_II : HebrewMonth.ADAR;
+		return isHebrewLeapYear( year ) ? HebrewMonth.ADAR_II : HebrewMonth.ADAR;
 	}
 
 
@@ -617,7 +617,7 @@ public class HebrewCalendar {
 	 *         chalakim/parts) prior to the start of the Jewish calendar, to the mean conjunction of Tishri of the Jewish
 	 *         year. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080 chalakim after sunset on Sunday evening).
 	 */
-	public static int getJewishCalendarElapsedDays( int year ) {
+	public static int getElapsedDays( int year ) {
 		long chalakimSince = getChalakimSinceMoladTohu( year, HebrewMonth.TISHREI );
 		int moladDay = (int)( chalakimSince / CHALAKIM_PER_DAY );
 		int moladParts = (int)( chalakimSince - moladDay * CHALAKIM_PER_DAY );
@@ -634,7 +634,7 @@ public class HebrewCalendar {
 		int jewishYear,
 		int jewishMonth
 	) {
-		boolean isLeapYear = isJewishLeapYear( jewishYear );
+		boolean isLeapYear = isHebrewLeapYear( jewishYear );
 		return ( jewishMonth + ( isLeapYear ? 6 : 5 ) ) % ( isLeapYear ? HebrewMonth.ADAR_II : HebrewMonth.ADAR ) + 1;
 	}
 
@@ -650,7 +650,7 @@ public class HebrewCalendar {
 	 * @see #isKislevShort(int)
 	 */
 	public static int getDaysInJewishYear( int year ) {
-		return getJewishCalendarElapsedDays( year + 1 ) - getJewishCalendarElapsedDays( year );
+		return getElapsedDays( year + 1 ) - getElapsedDays( year );
 	}
 
 
@@ -689,13 +689,13 @@ public class HebrewCalendar {
 	 *
 	 * @return the number of days for a given Jewish month
 	 */
-	static int getDaysInJewishMonth(
+	static int getDaysInHebrewMonth(
 		int month,
 		int year
 	) {
 		if ( ( month == HebrewMonth.IYAR ) || ( month == HebrewMonth.TAMMUZ ) || ( month == HebrewMonth.ELUL ) || ( ( month == HebrewMonth.CHESHVAN ) && !( isCheshvanLong( year ) ) )
 			|| ( ( month == HebrewMonth.KISLEV ) && isKislevShort( year ) ) || ( month == HebrewMonth.TEVET )
-			|| ( ( month == HebrewMonth.ADAR ) && !( isJewishLeapYear( year ) ) ) || ( month == HebrewMonth.ADAR_II ) ) {
+			|| ( ( month == HebrewMonth.ADAR ) && !( isHebrewLeapYear( year ) ) ) || ( month == HebrewMonth.ADAR_II ) ) {
 			return HebrewMonth.SHORT_MONTH_LENGTH;
 		}
 		else {
@@ -723,15 +723,15 @@ public class HebrewCalendar {
 		if ( month < HebrewMonth.TISHREI ) {
 			// this year before and after Nisan.
 			for ( int m = HebrewMonth.TISHREI; m <= getLastMonthOfJewishYear( year ); m++ ) {
-				elapsedDays += getDaysInJewishMonth( m, year );
+				elapsedDays += getDaysInHebrewMonth( m, year );
 			}
 			for ( int m = HebrewMonth.NISSAN; m < month; m++ ) {
-				elapsedDays += getDaysInJewishMonth( m, year );
+				elapsedDays += getDaysInHebrewMonth( m, year );
 			}
 		}
 		else { // Add days in prior months this year
 			for ( int m = HebrewMonth.TISHREI; m < month; m++ ) {
-				elapsedDays += getDaysInJewishMonth( m, year );
+				elapsedDays += getDaysInHebrewMonth( m, year );
 			}
 		}
 		return elapsedDays;
@@ -764,10 +764,10 @@ public class HebrewCalendar {
 		if ( ( moladParts >= 19440 ) // Dechiya of Molad Zaken - molad is >= midday (18 hours * 1080 chalakim)
 			|| ( ( ( moladDay % 7 ) == 2 ) // start Dechiya of GaTRaD - Ga = is a Tuesday
 			&& ( moladParts >= 9924 ) // TRaD = 9 hours, 204 parts or later (9 * 1080 + 204)
-			&& !isJewishLeapYear( year ) ) // of a non-leap year - end Dechiya of GaTRaD
+			&& !isHebrewLeapYear( year ) ) // of a non-leap year - end Dechiya of GaTRaD
 			|| ( ( ( moladDay % 7 ) == 1 ) // start Dechiya of BeTuTaKFoT - Be = is on a Monday
 			&& ( moladParts >= 16789 ) // TRaD = 15 hours, 589 parts or later (15 * 1080 + 589)
-			&& ( isJewishLeapYear( year - 1 ) ) ) ) { // in a year following a leap year - end Dechiya of BeTuTaKFoT
+			&& ( isHebrewLeapYear( year - 1 ) ) ) ) { // in a year following a leap year - end Dechiya of BeTuTaKFoT
 			roshHashanaDay += 1; // Then postpone Rosh HaShanah one day
 		}
 		// start 4th Dechiya - Lo ADU Rosh - Rosh Hashana can't occur on A- sunday, D- Wednesday, U - Friday
@@ -799,7 +799,7 @@ public class HebrewCalendar {
 	/**
 	 * Validates the components of a Jewish date for validity. It will throw an {@link IllegalArgumentException} if the
 	 * Jewish date is earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a {@link
-	 * #isJewishLeapYear(int) leap year}), the day of month is < 1 or > 30, an hour < 0 or > 23, a minute < 0 > 59 or
+	 * #isHebrewLeapYear(int) leap year}), the day of month is < 1 or > 30, an hour < 0 or > 23, a minute < 0 > 59 or
 	 * chalakim < 0 > 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into minutes (18
 	 * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793/TaShTzaG).
 	 *

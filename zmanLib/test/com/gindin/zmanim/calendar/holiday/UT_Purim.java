@@ -90,9 +90,9 @@ public class UT_Purim {
 		Assert.assertFalse( details.lightCandles() );
 		Assert.assertFalse( details.sayHavdalah() );
 
-		if ( date.isJewishLeapYear() ) {
+		if ( date.isHebrewLeapYear() ) {
 
-			date = HebrewCalendar.getForJewishDate( date.getJewishYear(), HebrewMonth.ADAR, 13 );
+			date = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ADAR, 13 );
 			details = PURIM_KATAN.getDetailsFor( date );
 			Assert.assertNotNull( details );
 			Assert.assertTrue( details.isErev() );
@@ -109,7 +109,7 @@ public class UT_Purim {
 		}
 		else {
 
-			date = HebrewCalendar.getForJewishDate( date.getJewishYear(), HebrewMonth.ADAR, 13 );
+			date = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ADAR, 13 );
 			details = PURIM_KATAN.getDetailsFor( date );
 			Assert.assertNull( details );
 		}

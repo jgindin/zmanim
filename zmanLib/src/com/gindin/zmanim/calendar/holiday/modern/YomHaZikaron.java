@@ -23,6 +23,7 @@ import java.util.Calendar;
  *  - If Yom HaAtzmaut falls on Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2008)
  *  - If Yom HaAtzmaut falls on Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2011)
  */
+@SuppressWarnings( "FeatureEnvy" )
 public class YomHaZikaron
 	implements Observance {
 
@@ -41,7 +42,7 @@ public class YomHaZikaron
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
 
-		if ( HebrewMonth.IYAR != date.getJewishMonth() ) {
+		if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
 			return null;
 		}
 
@@ -51,7 +52,7 @@ public class YomHaZikaron
 		//    Friday:   Moved back to the 2nd
 		//    Sunday:   Moved forward to the 5th
 		// See http://en.wikipedia.org/wiki/Yom_Hazikaron
-		final int jewishDayOfMonth = date.getJewishDayOfMonth();
+		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		switch ( date.getDayOfWeek() ) {
 			case Calendar.SUNDAY:

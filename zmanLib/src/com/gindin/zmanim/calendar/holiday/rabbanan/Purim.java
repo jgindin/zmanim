@@ -28,13 +28,13 @@ public class Purim
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
 
-		if ( ( date.isJewishLeapYear() && ( HebrewMonth.ADAR_II == date.getJewishMonth() ) ) ||
-			   ( !date.isJewishLeapYear() && ( HebrewMonth.ADAR == date.getJewishMonth() ) ) ) {
+		if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
+			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
-			if ( 13 == date.getJewishDayOfMonth() ) {
+			if ( 13 == date.getHebrewDayOfMonth() ) {
 				return EREV_PURIM_DETAILS;
 			}
-			if ( 14 == date.getJewishDayOfMonth() ) {
+			if ( 14 == date.getHebrewDayOfMonth() ) {
 				return PURIM_DETAILS;
 			}
 		}
