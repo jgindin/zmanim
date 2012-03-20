@@ -189,12 +189,7 @@ public class HebrewDate
 
 
 	/**
-	 * Returns if Cheshvan is long (30 days VS 29 days) for the current year that the calendar is set to. The method name
-	 * isLong is done since in a Qesidrah (ordered) year Cheshvan is short.
-	 *
-	 * @return true if Cheshvan is long for the current year that the calendar is set to
-	 *
-	 * @see #isCheshvanLong()
+	 * @return true if Cheshvan is long (29 or 30 days) for the current year that the calendar is set to
 	 */
 	public boolean isCheshvanLong() {
 		return HebrewCalendar.isCheshvanLong( getHebrewYear() );
@@ -202,11 +197,7 @@ public class HebrewDate
 
 
 	/**
-	 * Returns if the Kislev is short for the year that this class is set to. The method name isShort is done since in a
-	 * Qesidrah (ordered) year Kislev is long.
-	 *
-	 * @return true if Kislev is short for the year that this class is set to
-	 *
+	 * @return true if Kislev is short (29 or 30 days) for the year that this class is set to
 	 */
 	public boolean isKislevShort() {
 		return HebrewCalendar.isKislevShort( getHebrewYear() );
