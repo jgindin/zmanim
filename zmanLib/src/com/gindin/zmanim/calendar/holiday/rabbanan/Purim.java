@@ -6,17 +6,14 @@ package com.gindin.zmanim.calendar.holiday.rabbanan;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 /**
  *
  */
 @SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
 public class Purim
-	implements Observance {
-
-	private static final ErevPurimDetails                     EREV_PURIM_DETAILS = new ErevPurimDetails();
-	private static final PurimDetails                         PURIM_DETAILS = new PurimDetails();
+	extends AbstractCachingObservance {
 
 
 	@Override
@@ -32,14 +29,26 @@ public class Purim
 			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
 			if ( 13 == date.getHebrewDayOfMonth() ) {
-				return EREV_PURIM_DETAILS;
+				return getErevDetails();
 			}
 			if ( 14 == date.getHebrewDayOfMonth() ) {
-				return PURIM_DETAILS;
+				return getYomDetails();
 			}
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected Details createErevDetails() {
+		return new ErevPurimDetails();
+	}
+
+
+	@Override
+	protected Details createYomDetails() {
+		return new PurimDetails();
 	}
 
 

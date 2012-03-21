@@ -5,7 +5,6 @@
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
@@ -15,8 +14,6 @@ public class TzomGedaliah
 
 	private static final String                               TZOM_GEDALIAH = "Tzom Gedaliah";
 
-	private static final ErevTzomGedaliahDetails              EREV_TZOM_GEDALIAH_DETAILS = new ErevTzomGedaliahDetails();
-	private static final TzomGedaliahDetails                  TZOM_GEDALIAH_DETAILS = new TzomGedaliahDetails();
 
 
 	public TzomGedaliah() {
@@ -37,14 +34,14 @@ public class TzomGedaliah
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_TZOM_GEDALIAH_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevTzomGedaliahDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return TZOM_GEDALIAH_DETAILS;
+	protected Details createYomDetails() {
+		return new TzomGedaliahDetails();
 	}
 
 

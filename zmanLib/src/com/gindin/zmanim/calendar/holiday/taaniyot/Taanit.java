@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.taaniyot;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 import java.util.Calendar;
 
@@ -14,7 +14,7 @@ import java.util.Calendar;
  *
  */
 abstract class Taanit
-	implements Observance {
+	extends AbstractCachingObservance {
 
 	protected static final String                             TAANIT = "Ta'anit ";
 
@@ -29,9 +29,6 @@ abstract class Taanit
 	/** Can the fast take place on a Friday? */
 	protected abstract boolean canFallOnFriday();
 
-	protected abstract Details getDetailsForErevTaanit();
-
-	protected abstract Details getDetailsForTaanit();
 
 
 	protected Taanit(
@@ -64,17 +61,17 @@ abstract class Taanit
 
 			if ( canFallOnFriday() ) {
 				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-					return getDetailsForErevTaanit();
+					return getErevDetails();
 				}
 			}
 			else {
 				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-					return getDetailsForErevTaanit();
+					return getErevDetails();
 				}
 
 				if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
 					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-					return getDetailsForErevTaanit();
+					return getErevDetails();
 				}
 			}
 		}
@@ -83,47 +80,47 @@ abstract class Taanit
 
 			if ( canFallOnFriday() ) {
 				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-					return getDetailsForErevTaanit();
+					return getErevDetails();
 				}
 			}
 			else {
 				if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
-					return getDetailsForTaanit();
+					return getYomDetails();
 				}
 
 				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
 					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-					return getDetailsForTaanit();
+					return getYomDetails();
 				}
 			}
 		}
 
 		if ( ( Calendar.FRIDAY == dayOfWeek ) && canFallOnFriday() ) {
 			if ( normalDayOfFast == jewishDayOfMonth ) {
-				return getDetailsForTaanit();
+				return getYomDetails();
 			}
 		}
 
 		if ( Calendar.SATURDAY == dayOfWeek ) {
 			if ( normalDayOfFast == jewishDayOfMonth ) {
-				return getDetailsForErevTaanit();
+				return getErevDetails();
 			}
 		}
 
 		if ( Calendar.SUNDAY == dayOfWeek ) {
 			if ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) {
-				return getDetailsForTaanit();
+				return getYomDetails();
 			}
 		}
 
 
 		// We've handled all the special cases above...
 		if ( normalDayOfFast == jewishDayOfMonth ) {
-			return getDetailsForTaanit();
+			return getYomDetails();
 		}
 
 		if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-			return getDetailsForErevTaanit();
+			return getErevDetails();
 		}
 
 

@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 import java.util.Calendar;
 
@@ -25,12 +25,10 @@ import java.util.Calendar;
  */
 @SuppressWarnings( "FeatureEnvy" )
 public class YomHaZikaron
-	implements Observance {
+	extends AbstractCachingObservance {
 
 	private static final String                               NAME = "Yom HaZikaron";
 
-	private static final ErevYomHaZikaronDetails              EREV_YOM_HA_ZIKARON_DETAILS = new ErevYomHaZikaronDetails();
-	private static final YomHaZikaronDetails                  YOM_HA_ZIKARON_DETAILS = new YomHaZikaronDetails();
 
 
 	@Override
@@ -57,25 +55,25 @@ public class YomHaZikaron
 		switch ( date.getDayOfWeek() ) {
 			case Calendar.SUNDAY:
 				if ( 4 == jewishDayOfMonth ) {
-					return EREV_YOM_HA_ZIKARON_DETAILS;
+					return getErevDetails();
 				}
 				break;
 
 			case Calendar.MONDAY:
 				if ( 5 == jewishDayOfMonth ) {
-					return YOM_HA_ZIKARON_DETAILS;
+					return getYomDetails();
 				}
 				break;
 
 			case Calendar.TUESDAY:
 				if ( ( 1 == jewishDayOfMonth ) || ( 2 == jewishDayOfMonth ) ) {
-					return EREV_YOM_HA_ZIKARON_DETAILS;
+					return getErevDetails();
 				}
 				break;
 
 			case Calendar.WEDNESDAY:
 				if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
-					return YOM_HA_ZIKARON_DETAILS;
+					return getYomDetails();
 				}
 				break;
 
@@ -84,13 +82,25 @@ public class YomHaZikaron
 
 		// We've handled the special cases, so if we get here, we're just looking for the "regular" year...
 		if ( 3 == jewishDayOfMonth ) {
-			return EREV_YOM_HA_ZIKARON_DETAILS;
+			return getErevDetails();
 		}
 		else if ( 4 == jewishDayOfMonth ) {
-			return YOM_HA_ZIKARON_DETAILS;
+			return getYomDetails();
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected Details createErevDetails() {
+		return new ErevYomHaZikaronDetails();
+	}
+
+
+	@Override
+	protected Details createYomDetails() {
+		return new YomHaZikaronDetails();
 	}
 
 

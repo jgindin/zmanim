@@ -9,13 +9,12 @@ import com.gindin.zmanim.calendar.HebrewMonth;
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class TaanitBechorot
 	extends Taanit {
 
 	private static final String                               BECHOROT = TAANIT + "Bechorot";
 
-	private static final ErevTaanitBechorotDetails            EREV_TAANIT_BECHOROT_DETAILS = new ErevTaanitBechorotDetails();
-	private static final TaanitBechorotDetails                TAANIT_BECHOROT_DETAILS = new TaanitBechorotDetails();
 
 
 	public TaanitBechorot() {
@@ -36,14 +35,14 @@ public class TaanitBechorot
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_TAANIT_BECHOROT_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevTaanitBechorotDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return TAANIT_BECHOROT_DETAILS;
+	protected Details createYomDetails() {
+		return new TaanitBechorotDetails();
 	}
 
 

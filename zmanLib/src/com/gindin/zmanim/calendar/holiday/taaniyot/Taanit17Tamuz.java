@@ -4,21 +4,18 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
-import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class Taanit17Tamuz
 	extends Taanit {
 
 
 	private static final String                               TAANIT_17_TAMUZ = TAANIT + "17 Tamuz";
-
-	private static final ErevTaanit17TamuzDetails             EREV_TAANIT_17_TAMUZ_DETAILS = new ErevTaanit17TamuzDetails();
-	private static final Taanit17TamuzDetails                 TAANIT_17_TAMUZ_DETAILS = new Taanit17TamuzDetails();
 
 
 	public Taanit17Tamuz() {
@@ -39,14 +36,14 @@ public class Taanit17Tamuz
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_TAANIT_17_TAMUZ_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevTaanit17TamuzDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return TAANIT_17_TAMUZ_DETAILS;
+	protected Details createYomDetails() {
+		return new Taanit17TamuzDetails();
 	}
 
 

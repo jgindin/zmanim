@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 import java.util.Calendar;
 
@@ -33,12 +33,9 @@ import java.util.Calendar;
  */
 @SuppressWarnings( "FeatureEnvy" )
 public class YomHaAtzmaut
-	implements Observance {
+	extends AbstractCachingObservance {
 
 	private static final String                               NAME = "Yom HaAtzmaut";
-
-	private static final ErevYomHaAtzmautDetails              EREV_YOM_HA_ATZMAUT_DETAILS = new ErevYomHaAtzmautDetails();
-	private static final YomHaAtzmautDetails                  YOM_HA_ATZMAUT_DETAILS = new YomHaAtzmautDetails();
 
 
 	@Override
@@ -65,38 +62,50 @@ public class YomHaAtzmaut
 		switch ( date.getDayOfWeek() ) {
 			case Calendar.MONDAY:
 				if ( 5 == jewishDayOfMonth ) {
-					return EREV_YOM_HA_ATZMAUT_DETAILS;
+					return getErevDetails();
 				}
 				break;
 
 			case Calendar.TUESDAY:
 				if ( 6 == jewishDayOfMonth ) {
-					return YOM_HA_ATZMAUT_DETAILS;
+					return getYomDetails();
 				}
 				break;
 
 			case Calendar.WEDNESDAY:
 				if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
-					return EREV_YOM_HA_ATZMAUT_DETAILS;
+					return getErevDetails();
 				}
 				break;
 
 			case Calendar.THURSDAY:
 				if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
-					return YOM_HA_ATZMAUT_DETAILS;
+					return getYomDetails();
 				}
 				break;
 		}
 
 		// We've handled the special cases, so if we get here, we're dealing with a regular year...
 		if ( 4 == jewishDayOfMonth ) {
-			return EREV_YOM_HA_ATZMAUT_DETAILS;
+			return getErevDetails();
 		}
 		else if ( 5 == jewishDayOfMonth ) {
-			return YOM_HA_ATZMAUT_DETAILS;
+			return getYomDetails();
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected Details createErevDetails() {
+		return new ErevYomHaAtzmautDetails();
+	}
+
+
+	@Override
+	protected Details createYomDetails() {
+		return new YomHaAtzmautDetails();
 	}
 
 

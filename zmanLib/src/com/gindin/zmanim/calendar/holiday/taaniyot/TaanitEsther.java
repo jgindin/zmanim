@@ -4,22 +4,19 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
-import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  * The Fast is observed on the 13th day of the Hebrew month of Adar. If the date of the Fast of Esther falls on
  *  Shabbat (Saturday), the fast is instead observed on the preceding Thursday.
  *    -- http://en.wikipedia.org/wiki/Fast_of_Esther
  */
+@SuppressWarnings( "MagicNumber" )
 public class TaanitEsther
 	extends Taanit {
 
 	private static final String                               ESTHER = TAANIT + "Esther";
 
-	private static final ErevTaanitEstherDetails              EREV_TAANIT_ESTHER_DETAILS = new ErevTaanitEstherDetails();
-	private static final TaanitEstherDetails                  TAANIT_ESTHER_DETAILS = new TaanitEstherDetails();
 
 
 	public TaanitEsther() {
@@ -40,14 +37,14 @@ public class TaanitEsther
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_TAANIT_ESTHER_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevTaanitEstherDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return TAANIT_ESTHER_DETAILS;
+	protected Details createYomDetails() {
+		return new TaanitEstherDetails();
 	}
 
 

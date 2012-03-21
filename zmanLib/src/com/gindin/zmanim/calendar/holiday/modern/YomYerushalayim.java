@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 /**
  * An Israeli national holiday commemorating the reunification of Jerusalem and the establishment of Israeli control
@@ -19,12 +19,9 @@ import com.gindin.zmanim.calendar.holiday.Observance;
  */
 @SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
 public class YomYerushalayim
-	implements Observance {
+	extends AbstractCachingObservance {
 
 	private static final String                               NAME = "Yom Yerushalyim";
-
-	private static final ErevYomYerushalayimDetails           EREV_YOM_YERUSHALAYIM_DETAILS = new ErevYomYerushalayimDetails();
-	private static final YomYerushalayimDetails               YOM_YERUSHALAYIM_DETAILS = new YomYerushalayimDetails();
 
 
 	@Override
@@ -41,14 +38,26 @@ public class YomYerushalayim
 		}
 
 		if ( 27 == date.getHebrewDayOfMonth() ) {
-			return EREV_YOM_YERUSHALAYIM_DETAILS;
+			return getErevDetails();
 		}
 
 		if ( 28 == date.getHebrewDayOfMonth() ) {
-			return YOM_YERUSHALAYIM_DETAILS;
+			return getYomDetails();
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected Details createErevDetails() {
+		return new ErevYomYerushalayimDetails();
+	}
+
+
+	@Override
+	protected Details createYomDetails() {
+		return new YomYerushalayimDetails();
 	}
 
 

@@ -14,9 +14,6 @@ public class TishaBAv
 
 	private static final String                               TISHA_B_AV = "Tisha B'Av";
 
-	private static final ErevTishaBAvDetails                  EREV_TISHA_B_AV_DETAILS = new ErevTishaBAvDetails();
-	private static final TishaBAvDetails                      TISHA_B_AV_DETAILS = new TishaBAvDetails();
-
 
 	public TishaBAv() {
 		super( HebrewMonth.AV, 9 );
@@ -36,14 +33,14 @@ public class TishaBAv
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_TISHA_B_AV_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevTishaBAvDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return TISHA_B_AV_DETAILS;
+	protected Details createYomDetails() {
+		return new TishaBAvDetails();
 	}
 
 

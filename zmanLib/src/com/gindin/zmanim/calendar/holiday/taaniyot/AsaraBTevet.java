@@ -14,8 +14,6 @@ public class AsaraBTevet
 
 	private static final String                               ASARA_BTEVET = "Asara B'Tevet";
 
-	private static final ErevAsaraBTevetDetails               EREV_ASARA_B_TEVET_DETAILS = new ErevAsaraBTevetDetails();
-	private static final AsaraBTevetDetails                   ASARA_B_TEVET_DETAILS = new AsaraBTevetDetails();
 
 
 	public AsaraBTevet() {
@@ -36,14 +34,14 @@ public class AsaraBTevet
 
 
 	@Override
-	protected Details getDetailsForErevTaanit() {
-		return EREV_ASARA_B_TEVET_DETAILS;
+	protected Details createErevDetails() {
+		return new ErevAsaraBTevetDetails();
 	}
 
 
 	@Override
-	protected Details getDetailsForTaanit() {
-		return ASARA_B_TEVET_DETAILS;
+	protected Details createYomDetails() {
+		return new AsaraBTevetDetails();
 	}
 
 

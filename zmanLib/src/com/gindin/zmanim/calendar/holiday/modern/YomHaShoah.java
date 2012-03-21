@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 
 
 /**
@@ -14,12 +14,9 @@ import com.gindin.zmanim.calendar.holiday.Observance;
  */
 @SuppressWarnings( "MagicNumber" )
 public class YomHaShoah
-	implements Observance {
+	extends AbstractCachingObservance {
 
 	private static final String                               NAME = "Yom HaShoah";
-
-	private static final ErevYomHaShoahDetails                EREV_YOM_HA_SHOAH_DETAILS = new ErevYomHaShoahDetails();
-	private static final YomHaShoahDetails                    YOM_HA_SHOAH_DETAILS = new YomHaShoahDetails();
 
 
 	@Override
@@ -43,13 +40,25 @@ public class YomHaShoah
 		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( 26 == jewishDayOfMonth ) {
-			return EREV_YOM_HA_SHOAH_DETAILS;
+			return getErevDetails();
 		}
 		else if ( 27 == jewishDayOfMonth ) {
-			return YOM_HA_SHOAH_DETAILS;
+			return getYomDetails();
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected Details createErevDetails() {
+		return new ErevYomHaShoahDetails();
+	}
+
+
+	@Override
+	protected Details createYomDetails() {
+		return new YomHaShoahDetails();
 	}
 
 
