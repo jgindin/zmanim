@@ -68,7 +68,7 @@ public class Purim
 		}
 
 		@Override public String getDescription() {
-			return "Erev Purim";
+			return EREV + "Purim";
 		}
 	}
 

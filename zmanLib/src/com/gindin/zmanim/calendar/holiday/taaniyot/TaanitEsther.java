@@ -64,7 +64,7 @@ public class TaanitEsther
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + ESTHER;
+			return EREV + ESTHER;
 		}
 	}
 

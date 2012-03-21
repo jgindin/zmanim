@@ -62,7 +62,7 @@ public class TaanitBechorot
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + BECHOROT;
+			return EREV + BECHOROT;
 		}
 	}
 

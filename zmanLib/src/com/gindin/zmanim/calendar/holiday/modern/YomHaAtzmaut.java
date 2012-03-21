@@ -125,7 +125,7 @@ public class YomHaAtzmaut
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return EREV + NAME;
 		}
 	}
 
@@ -145,7 +145,7 @@ public class YomHaAtzmaut
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return NAME;
 		}
 	}
 

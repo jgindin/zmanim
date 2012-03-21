@@ -66,7 +66,7 @@ public class PurimKatan
 		}
 
 		@Override public String getDescription() {
-			return "Erev Purim Katan";
+			return EREV + "Purim Katan";
 		}
 	}
 

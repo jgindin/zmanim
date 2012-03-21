@@ -63,7 +63,7 @@ public class Taanit17Tamuz
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + TAANIT_17_TAMUZ;
+			return EREV + TAANIT_17_TAMUZ;
 		}
 	}
 

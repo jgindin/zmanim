@@ -70,7 +70,7 @@ public class Chanukah
 		}
 
 		@Override public String getDescription() {
-			return "Erev Chanukah";
+			return EREV + "Chanukah";
 		}
 	}
 

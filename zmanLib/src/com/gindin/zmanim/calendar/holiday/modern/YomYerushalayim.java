@@ -77,7 +77,7 @@ public class YomYerushalayim
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return EREV + NAME;
 		}
 	}
 

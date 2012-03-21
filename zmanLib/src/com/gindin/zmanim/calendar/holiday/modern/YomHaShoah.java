@@ -78,7 +78,7 @@ public class YomHaShoah
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return EREV + NAME;
 		}
 	}
 
@@ -98,7 +98,7 @@ public class YomHaShoah
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return NAME;
 		}
 	}
 

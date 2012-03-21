@@ -60,7 +60,7 @@ public class TishaBAv
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + TISHA_B_AV;
+			return EREV + TISHA_B_AV;
 		}
 	}
 

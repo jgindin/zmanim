@@ -61,7 +61,7 @@ public class TzomGedaliah
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + TZOM_GEDALIAH;
+			return EREV + TZOM_GEDALIAH;
 		}
 	}
 

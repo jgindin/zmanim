@@ -11,6 +11,8 @@ import com.gindin.zmanim.calendar.HebrewDate;
  */
 public interface Observance {
 
+	public static final String                                EREV = "Erev ";
+
 	String getName();
 
 	/**

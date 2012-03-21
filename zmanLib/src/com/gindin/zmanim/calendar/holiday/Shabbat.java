@@ -56,7 +56,7 @@ public class Shabbat
 		}
 
 		@Override public String getDescription() {
-			return "Erev Shabbat";
+			return EREV + "Shabbat";
 		}
 	}
 

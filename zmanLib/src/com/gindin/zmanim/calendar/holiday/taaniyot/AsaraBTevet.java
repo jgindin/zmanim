@@ -61,7 +61,7 @@ public class AsaraBTevet
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + ASARA_BTEVET;
+			return EREV + ASARA_BTEVET;
 		}
 	}
 

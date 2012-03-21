@@ -120,7 +120,7 @@ public class YomHaZikaron
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return EREV + NAME;
 		}
 	}
 
@@ -140,7 +140,7 @@ public class YomHaZikaron
 		}
 
 		@Override public String getDescription() {
-			return "Erev " + NAME;
+			return NAME;
 		}
 	}
 
