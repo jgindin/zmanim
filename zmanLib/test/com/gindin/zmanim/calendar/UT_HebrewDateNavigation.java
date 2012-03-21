@@ -13,13 +13,13 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( { "MagicNumber" } )
-public class UT_JewishDateNavigation {
+public class UT_HebrewDateNavigation {
 
 
 	@Test
 	public void jewishForwardMonthToMonth() {
 
-		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, 1, 1 );
+		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, HebrewMonth.NISSAN, 1 );
 		Calendar cal = Calendar.getInstance();
 		cal.setTime( hebrewDate.getTime() );
 		
@@ -34,7 +34,7 @@ public class UT_JewishDateNavigation {
 
 		// At one point, this test was failing as the HebrewCalendar class spun through a never-ending loop...
 
-		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, 7, 1 );
+		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, HebrewMonth.TISHREI, 1 );
 		Calendar cal = Calendar.getInstance();
 		cal.setTime( hebrewDate.getTime() );
 
@@ -43,5 +43,21 @@ public class UT_JewishDateNavigation {
 		Assert.assertEquals( 2010, cal.get( Calendar.YEAR ) );
 	}
 
+	@Test
+	public void testCrossingYears() {
 
-} // End of UT_JewishDateNavigation class
+		HebrewDate hebrewDate = HebrewCalendar.getForJewishDate( 5771, HebrewMonth.TISHREI, 1 );
+		hebrewDate = hebrewDate.yesterday();
+		Assert.assertEquals( 5770, hebrewDate.getHebrewYear() );
+		Assert.assertEquals( HebrewMonth.ELUL, hebrewDate.getHebrewMonth() );
+		Assert.assertEquals( 29, hebrewDate.getHebrewDayOfMonth() );
+
+		hebrewDate = HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 13 );
+		hebrewDate = hebrewDate.tomorrow();
+		Assert.assertEquals( 5776, hebrewDate.getHebrewYear() );
+		Assert.assertEquals( HebrewMonth.TISHREI, hebrewDate.getHebrewMonth() );
+		Assert.assertEquals( 1, hebrewDate.getHebrewDayOfMonth() );
+	}
+
+
+} // End of UT_HebrewDateNavigation class

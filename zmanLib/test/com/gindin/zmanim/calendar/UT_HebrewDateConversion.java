@@ -13,7 +13,7 @@ import java.util.Calendar;
  * Verifies we can convert from a given Jewish date to the corresponding secular date.
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_JewishDateConversion {
+public class UT_HebrewDateConversion {
 
 	@Test
 	public void testConversions() {
@@ -57,4 +57,4 @@ public class UT_JewishDateConversion {
 		Assert.assertEquals( dayOfMonth, date.getGregorianDayOfMonth() );
 	}
 
-} // End of UT_JewishDateConversion class
+} // End of UT_HebrewDateConversion class
