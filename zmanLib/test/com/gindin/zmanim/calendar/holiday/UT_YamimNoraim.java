@@ -8,6 +8,7 @@ import com.gindin.zmanim.calendar.Constants;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.holiday.yomtov.RoshHashana;
+import com.gindin.zmanim.calendar.holiday.yomtov.YomKippur;
 import org.junit.*;
 
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import java.util.Calendar;
 public class UT_YamimNoraim {
 
 	private static final RoshHashana                          ROSH_HASHANA = new RoshHashana();
+	private static final YomKippur                            YOM_KIPPUR = new YomKippur();
 
 
 	@Test
@@ -79,6 +81,20 @@ public class UT_YamimNoraim {
 
 		date = date.tomorrow();
 		details = ROSH_HASHANA.getDetailsFor( date );
+		Assert.assertNotNull( details );
+		Assert.assertFalse( details.isErev() );
+		Assert.assertFalse( details.lightCandles() );
+		Assert.assertTrue( details.sayHavdalah() );
+
+		date = date.forward( 7 );
+		details = YOM_KIPPUR.getDetailsFor( date );
+		Assert.assertNotNull( details );
+		Assert.assertTrue( details.isErev() );
+		Assert.assertTrue( details.lightCandles() );
+		Assert.assertFalse( details.sayHavdalah() );
+
+		date = date.tomorrow();
+		details = YOM_KIPPUR.getDetailsFor( date );
 		Assert.assertNotNull( details );
 		Assert.assertFalse( details.isErev() );
 		Assert.assertFalse( details.lightCandles() );
