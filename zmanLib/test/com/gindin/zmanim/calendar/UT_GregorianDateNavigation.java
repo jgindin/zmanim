@@ -115,6 +115,8 @@ public class UT_GregorianDateNavigation {
 		hebrewDate = hebrewDate.tomorrow();
 		Assert.assertEquals( 10, hebrewDate.getHebrewMonth() );
 		Assert.assertEquals( 6, hebrewDate.getHebrewDayOfMonth() );
+		Assert.assertEquals( Calendar.JANUARY, hebrewDate.getGregorianMonth() );
+		Assert.assertEquals( 1, hebrewDate.getGregorianDayOfMonth() );
 	}
 
 
@@ -130,6 +132,8 @@ public class UT_GregorianDateNavigation {
 		hebrewDate = hebrewDate.yesterday();
 		Assert.assertEquals( 10, hebrewDate.getHebrewMonth() );
 		Assert.assertEquals( 24, hebrewDate.getHebrewDayOfMonth() );
+		Assert.assertEquals( Calendar.DECEMBER, hebrewDate.getGregorianMonth() );
+		Assert.assertEquals( 31, hebrewDate.getGregorianDayOfMonth() );
 
 		cal.set( Calendar.DATE, 1 );
 		cal.set( Calendar.MONTH, Calendar.DECEMBER );
@@ -213,5 +217,46 @@ public class UT_GregorianDateNavigation {
 	}
 
 
+	@Test
+	public void testMultiDayForward() {
+
+		HebrewDate date = HebrewCalendar.getForDate( 2012, Calendar.MAY, 1 );
+		date = date.forward( 5 );
+		Assert.assertEquals( Calendar.MAY, date.getGregorianMonth() );
+		Assert.assertEquals( 6, date.getGregorianDayOfMonth() );
+
+		date = HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 28 );
+		date = date.forward( 4 );
+		Assert.assertEquals( Calendar.OCTOBER, date.getGregorianMonth() );
+		Assert.assertEquals( 2, date.getGregorianDayOfMonth() );
+
+		date = HebrewCalendar.getForDate( 2015, Calendar.DECEMBER, 30 );
+		date = date.forward( 2 );
+		Assert.assertEquals( 2016, date.getGregorianYear() );
+		Assert.assertEquals( Calendar.JANUARY, date.getGregorianMonth() );
+		Assert.assertEquals( 1, date.getGregorianDayOfMonth() );
+	}
+
+	@Test
+	public void testMultiDayBackward() {
+
+		HebrewDate date = HebrewCalendar.getForDate( 2012, Calendar.MAY, 1 );
+		date = date.back( 5 );
+		Assert.assertEquals( Calendar.APRIL, date.getGregorianMonth() );
+		Assert.assertEquals( 26, date.getGregorianDayOfMonth() );
+
+		date = HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 28 );
+		date = date.back( 4 );
+		Assert.assertEquals( Calendar.SEPTEMBER, date.getGregorianMonth() );
+		Assert.assertEquals( 24, date.getGregorianDayOfMonth() );
+
+		date = HebrewCalendar.getForDate( 2015, Calendar.JANUARY, 1 );
+		date = date.back( 2 );
+		Assert.assertEquals( 2014, date.getGregorianYear() );
+		Assert.assertEquals( Calendar.DECEMBER, date.getGregorianMonth() );
+		Assert.assertEquals( 30, date.getGregorianDayOfMonth() );
+
+
+	}
 
 } // End of UT_GregorianDateNavigation class

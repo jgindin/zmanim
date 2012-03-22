@@ -320,11 +320,18 @@ public class HebrewDate
 	public HebrewDate tomorrow() {
 		return HebrewCalendar.forward( this );
 	}
+
+	public HebrewDate forward( int numDays ) {
+		return HebrewCalendar.forward( this, numDays );
+	}
 	
 	public HebrewDate yesterday() {
 		return HebrewCalendar.back( this );
 	}
 
+	public HebrewDate back( int numDays ) {
+		return HebrewCalendar.back( this, numDays );
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//

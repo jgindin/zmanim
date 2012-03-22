@@ -179,9 +179,10 @@ public class HebrewCalendar {
 		int month = computeGregorianMonthFromAbsoluteDate( gregorianAbsDate, year );
 		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( gregorianAbsDate, year, month );
 
-		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
+		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
 
-		return new HebrewDate( jewishYear, jewishMonth, jewishDayOfMonth, year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
+		return new HebrewDate( jewishYear, jewishMonth, jewishDayOfMonth,
+			year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
 	}
 
 		
@@ -211,9 +212,11 @@ public class HebrewCalendar {
 		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
 		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
 
-		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
-		return new HebrewDate( jewishYear, jewishMonth, jewishDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate );
+		return new HebrewDate( jewishYear, jewishMonth, jewishDay,
+			gregorianYear, gregorianMonth, gregorianDayOfMonth,
+			dayOfWeek, gregorianAbsDate );
 	}
 	
 	
@@ -233,7 +236,7 @@ public class HebrewCalendar {
 				+ calendar.get( Calendar.YEAR ) + " BCE is invalid." );
 		}
 
-		int gregorianMonth = calendar.get( Calendar.MONTH );
+		@Constants.CalendarMonth int gregorianMonth = calendar.get( Calendar.MONTH );
 		int gregorianDayOfMonth = calendar.get( Calendar.DATE );
 		int gregorianYear = calendar.get( Calendar.YEAR );
 
@@ -251,16 +254,16 @@ public class HebrewCalendar {
 		
 		int absDate = moladToAbsDate( molad );
 		int year = computeGregorianYearFromAbsoluteDate( absDate );
-		int month = computeGregorianMonthFromAbsoluteDate( absDate, year );
+		@Constants.CalendarMonth int month = computeGregorianMonthFromAbsoluteDate( absDate, year );
 		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( absDate, year, month );
 		int gregorianAbsDate = gregorianDateToAbsDate( year, month, dayOfMonth ); // init date
 
 
 		int jewishYear = computeJewishYearFromAbsoluteDate( gregorianAbsDate );
-		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
+		@HebrewMonth.Constant int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
 		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
 
-		int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
 		// long chalakimSince = getChalakimSinceMoladTohu(year, HebrewCalendar.TISHREI);// tishrei
 		int conjunctionDay = (int)( molad / CHALAKIM_PER_DAY );
@@ -275,13 +278,32 @@ public class HebrewCalendar {
 	}
 	
 	
-
-	
 	/**
 	 * Rolls the date forward by 1 day. It modifies both the Gregorian and Jewish dates accordingly. The API does not
-	 * currently offer the ability to forward more than one day at time, or to forward by month or year. If such
-	 * manipulation is required use the {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or {@link
-	 * java.util.Calendar#roll(int, int)} methods in the following manner.
+	 *  currently offer the ability to forward month or year. If such manipulation is required use the
+	 *  {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or
+	 *  {@link java.util.Calendar#roll(int, int)} methods in the following manner.
+	 * <p/>
+	 * <pre>
+	 * <code>
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
+	 * 	cal.add(Calendar.MONTH, 3); // add 3 Gregorian months
+	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
+	 * </code>
+	 * </pre>
+	 */
+	static HebrewDate forward(
+		HebrewDate today
+	) {
+		return forward( today, 1 );
+	}
+
+
+	/**
+	 * Rolls the date forward by the specified number of days. It modifies both the Gregorian and Jewish dates
+	 *  accordingly. The API does not currently offer the ability to forward month or year. If such manipulation
+	 *  is required use the {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or
+	 *  {@link java.util.Calendar#roll(int, int)} methods in the following manner.
 	 * <p/>
 	 * <pre>
 	 * <code>
@@ -292,78 +314,85 @@ public class HebrewCalendar {
 	 * </pre>
 	 */
 	@SuppressWarnings( "FeatureEnvy" )
-	static HebrewDate forward( HebrewDate today ) {
-		
-		// Change Gregorian date
+	static HebrewDate forward(
+		HebrewDate  today,
+		int         numDays
+	) {
+
 		int newGregorianYear = today.getGregorianYear();
 		int newGregorianMonth = today.getGregorianMonth();
 		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
-		
-		if ( newGregorianDayOfMonth == getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear ) ) {
-			// if last day of year
-			if ( newGregorianMonth == Calendar.DECEMBER ) {
-				newGregorianYear++;
-				newGregorianMonth = Calendar.JANUARY;
-			}
-			else {
-				newGregorianMonth++;
-			}
 
-			newGregorianDayOfMonth = 1;
-		}
-		else { 
-			// if not last day of month
-			newGregorianDayOfMonth++;
-		}
-
-		// Change the Jewish Date
 		int newJewishYear = today.getHebrewYear();
 		int newJewishMonth = today.getHebrewMonth();
 		int newJewishDay = today.getHebrewDayOfMonth();
-		
-		if ( newJewishDay == getDaysInHebrewMonth( newJewishMonth, newJewishYear ) ) {
-			// if it last day of elul (i.e. last day of Jewish year)
-			if ( newJewishMonth == HebrewMonth.ELUL ) {
-				newJewishYear++;
-				newJewishMonth++;
-			}
-			else if ( newJewishMonth == getLastMonthOfJewishYear( newJewishYear ) ) {
-				// if it is the last day of Adar, or Adar II as case may be
-				newJewishMonth = HebrewMonth.NISSAN;
+
+		@Constants.CalendarDay int newDayOfWeek = today.getDayOfWeek();
+
+		for ( int update = 0; update < numDays; update++ ) {
+
+			// Change Gregorian date
+			if ( newGregorianDayOfMonth == getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear ) ) {
+				// if last day of year
+				if ( newGregorianMonth == Calendar.DECEMBER ) {
+					newGregorianYear++;
+					newGregorianMonth = Calendar.JANUARY;
+				}
+				else {
+					newGregorianMonth++;
+				}
+
+				newGregorianDayOfMonth = 1;
 			}
 			else {
-				newJewishMonth++;
+				// if not last day of month
+				newGregorianDayOfMonth++;
 			}
 
-			newJewishDay = 1;
+			// Change the Jewish Date
+			if ( newJewishDay == getDaysInHebrewMonth( newJewishMonth, newJewishYear ) ) {
+				// if it last day of elul (i.e. last day of Jewish year)
+				if ( newJewishMonth == HebrewMonth.ELUL ) {
+					newJewishYear++;
+					newJewishMonth++;
+				}
+				else if ( newJewishMonth == getLastMonthOfJewishYear( newJewishYear ) ) {
+					// if it is the last day of Adar, or Adar II as case may be
+					newJewishMonth = HebrewMonth.NISSAN;
+				}
+				else {
+					newJewishMonth++;
+				}
 
-		}
-		else { // if not last date of month
-			newJewishDay++;
-		}
+				newJewishDay = 1;
 
-		int newDayOfWeek = today.getDayOfWeek();
-		if ( newDayOfWeek == 7 ) { 
-			// if last day of week, loop back to Sunday
-			newDayOfWeek = 1;
-		}
-		else {
-			newDayOfWeek++;
+			}
+			else { // if not last date of month
+				newJewishDay++;
+			}
+
+			if ( Calendar.SATURDAY == newDayOfWeek ) {
+				// if last day of week, loop back to Sunday
+				newDayOfWeek = Calendar.SUNDAY;
+			}
+			else {
+				newDayOfWeek++;
+			}
 		}
 
 		// increment the absolute date
-		int newGregorianAbsDate = today.getGregorianAbsDate() + 1;
-		
+		int newGregorianAbsDate = today.getGregorianAbsDate() + numDays;
+
 		return new HebrewDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
 	}
 
 
 	/**
-	 * Rolls the date back by 1 day. It modifies both the Gregorian and Jewish dates accordingly. The API does not
-	 * currently offer the ability to forward more than one day t a time, or to forward by month or year. If such
-	 * manipulation is required use the {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or {@link
-	 * java.util.Calendar#roll(int, int)} methods in the following manner.
+	 * Rolls the date back by the specified number of days. It modifies both the Gregorian and Jewish dates
+	 *  accordingly. The API does not currently offer the ability to forward month or year. If such manipulation
+	 *  is required use the {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or
+	 *  {@link java.util.Calendar#roll(int, int)} methods in the following manner.
 	 * <p/>
 	 * <pre>
 	 * <code>
@@ -374,65 +403,92 @@ public class HebrewCalendar {
 	 * </pre>
 	 */
 	@SuppressWarnings( "FeatureEnvy" )
-	static HebrewDate back( HebrewDate today ) {
+	static HebrewDate back(
+		HebrewDate today
+	) {
+		return back( today, 1 );
+	}
 
-		// Change Gregorian date
+	/**
+	 * Rolls the date back by the specified number of days. It modifies both the Gregorian and Jewish dates accordingly.
+	 *  The API does not currently offer the ability to forward by month or year. If such manipulation is required use
+	 *  the {@link java.util.Calendar} class {@link java.util.Calendar#add(int, int)} or {@link java.util.Calendar#roll(int, int)} methods in the following manner.
+	 * <p/>
+	 * <pre>
+	 * <code>
+	 * 	Calendar cal = jewishDate.getTime(); // get a java.util.Calendar representation of the HebrewCalendar
+	 * 	cal.add(Calendar.MONTH, -3); // subtract 3 Gregorian months
+	 * 	HebrewCalendar newDate = new HebrewCalendar(cal); // set the updated calendar back to this class
+	 * </code>
+	 * </pre>
+	 */
+	@SuppressWarnings( "FeatureEnvy" )
+	static HebrewDate back(
+		HebrewDate  today,
+	  int         numDays
+	) {
+
 		int newGregorianYear = today.getGregorianYear();
-		int newGregorianMonth = today.getGregorianMonth();
+		@Constants.CalendarMonth int newGregorianMonth = today.getGregorianMonth();
 		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
 
-
-		// if first day of month...
-		if ( newGregorianDayOfMonth == 1 ) {
-
-			// if first day of year...
-			if ( newGregorianMonth == 1 ) {
-				newGregorianMonth = 12;
-				newGregorianYear--;
-			}
-			else {
-				newGregorianMonth--;
-			}
-			// change to last day of previous month
-			newGregorianDayOfMonth = getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear );
-		}
-		else {
-			newGregorianDayOfMonth--;
-		}
-
-		// Change Jewish date
 		int newJewishYear = today.getHebrewYear();
 		int newJewishMonth = today.getHebrewMonth();
 		int newJewishDay = today.getHebrewDayOfMonth();
+		@Constants.CalendarDay int newDayOfWeek = 0;
 
-		// if first day of the Jewish month...
-		if ( newJewishDay == 1 ) {
-			if ( newJewishMonth == HebrewMonth.NISSAN ) {
-				newJewishMonth = getLastMonthOfJewishYear( newJewishYear );
+
+		for ( int update = 0; update < numDays; update++  ) {
+
+			// Change Gregorian date
+			// if first day of month...
+			if ( newGregorianDayOfMonth == 1 ) {
+
+				// if first day of year...
+				if ( Calendar.JANUARY == newGregorianMonth ) {
+					newGregorianMonth = Calendar.DECEMBER;
+					newGregorianYear--;
+				}
+				else {
+					newGregorianMonth--;
+				}
+				// change to last day of previous month
+				newGregorianDayOfMonth = getLastDayOfGregorianMonth( newGregorianMonth, newGregorianYear );
 			}
-			else if ( newJewishMonth == HebrewMonth.TISHREI ) {
-				// if Rosh Hashana
-				newJewishYear--;
+			else {
+				newGregorianDayOfMonth--;
 			}
 
-			newJewishMonth--;
-			newJewishDay = getDaysInHebrewMonth( newJewishMonth, newJewishYear );
-		}
-		else {
-			newJewishDay--;
-		}
+			// Change Jewish date
+			// if first day of the Jewish month...
+			if ( newJewishDay == 1 ) {
+				if ( newJewishMonth == HebrewMonth.NISSAN ) {
+					newJewishMonth = getLastMonthOfJewishYear( newJewishYear );
+				}
+				else if ( newJewishMonth == HebrewMonth.TISHREI ) {
+					// if Rosh Hashana
+					newJewishYear--;
+				}
 
-		int newDayOfWeek = today.getDayOfWeek();
-		if ( newDayOfWeek == 1 ) {
-			// if first day of week, loop back to Saturday
-			newDayOfWeek = 7;
-		}
-		else {
-			newDayOfWeek--;
+				newJewishMonth--;
+				newJewishDay = getDaysInHebrewMonth( newJewishMonth, newJewishYear );
+			}
+			else {
+				newJewishDay--;
+			}
+
+			newDayOfWeek = today.getDayOfWeek();
+			if ( Calendar.SUNDAY == newDayOfWeek ) {
+				// if first day of week, loop back to Saturday
+				newDayOfWeek = Calendar.SATURDAY;
+			}
+			else {
+				newDayOfWeek--;
+			}
 		}
 
 		// change the absolute date
-		int newGregorianAbsDate = today.getGregorianAbsDate() - 1;
+		int newGregorianAbsDate = today.getGregorianAbsDate() - numDays;
 
 		return new HebrewDate( newJewishYear, newJewishMonth, newJewishDay,
 			newGregorianYear, newGregorianMonth, newGregorianDayOfMonth, newDayOfWeek, newGregorianAbsDate );
@@ -490,11 +546,13 @@ public class HebrewCalendar {
 	}
 
 
+	@Constants.CalendarMonth
 	private static int computeGregorianMonthFromAbsoluteDate(
 		int absDate,
 		int year
 	) {
-		int month = 0; // Search forward month by month from January
+
+		@Constants.CalendarMonth int month = 0; // Search forward month by month from January
 		while ( absDate > gregorianDateToAbsDate( year, month, getLastDayOfGregorianMonth( month, year ) ) ) {
 			month++;
 		}
@@ -554,6 +612,7 @@ public class HebrewCalendar {
 	}
 
 
+	@HebrewMonth.Constant
 	private static int computeJewishMonthFromAbsoluteDate( int gregorianAbsDate, int jewishYear ) {
 		
 		int jewishMonth;
