@@ -76,12 +76,6 @@ public class RoshHashana
 
 
 		@Override
-		public boolean lightCandles() {
-			// Only light candles on Erev, not after the first day...
-			return false;
-		}
-
-		@Override
 		public boolean sayHavdalah() {
 			// Israel or not...it's always a two day holiday...
 			return ( 2 == day );

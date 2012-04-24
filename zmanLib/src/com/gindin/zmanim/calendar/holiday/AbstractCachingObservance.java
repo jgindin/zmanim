@@ -10,8 +10,8 @@ package com.gindin.zmanim.calendar.holiday;
 public abstract class AbstractCachingObservance
 	implements Observance {
 
-	private static Details                                    erevDetails;
-	private static Details                                    yomDetails;
+	private Details                                           erevDetails;
+	private Details                                           yomDetails;
 
 
 	protected abstract Details createErevDetails();

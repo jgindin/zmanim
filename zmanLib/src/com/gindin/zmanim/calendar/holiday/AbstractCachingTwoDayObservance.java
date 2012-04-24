@@ -10,7 +10,7 @@ package com.gindin.zmanim.calendar.holiday;
 public abstract class AbstractCachingTwoDayObservance
 	extends AbstractCachingObservance {
 
-	private static Details                                    yom2Details;
+	private Details                                           yom2Details;
 
 
 	protected abstract Details createYom2Details();
