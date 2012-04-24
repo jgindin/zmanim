@@ -3,6 +3,9 @@
   ~ Copyright (c) 2012. Jay R. Gindin
   -->
 
+<!--
+	I figured out the proper format for this file from https://github.com/twaddington/android-obd-logger/commit/95f3360a6cd12340214f134dfe5b896e1cf54539#diff-0
+-->
 <project name="imported">
 
 
