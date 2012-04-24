@@ -6,20 +6,16 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingTwoDayObservance;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
 public class RoshHashana
-	implements Observance {
+	extends AbstractCachingTwoDayObservance {
 
 	private static final String                               NAME = "Rosh Hashana";
-
-	private static Details                                    erevDetails;
-	private static Details                                    day1Details;
-	private static Details                                    day2Details;
 
 
 
@@ -40,10 +36,10 @@ public class RoshHashana
 		}
 		else if ( HebrewMonth.TISHREI == hebrewMonth ) {
 			if ( 1 == hebrewDayOfMonth ) {
-				return getDay1Details();
+				return getYomDetails();
 			}
 			else if ( 2 == hebrewDayOfMonth ) {
-				return getDay2Details();
+				return getYom2Details();
 			}
 		}
 
@@ -51,92 +47,44 @@ public class RoshHashana
 	}
 
 
-	private Details getErevDetails() {
-		if ( null == erevDetails ) {
-			erevDetails = new ErevDetails();
-		}
-
-		return erevDetails;
+	@Override
+	protected Details createErevDetails() {
+		return new ErevDetails( NAME );
 	}
 
 
-	private Details getDay1Details() {
-		if ( null == day1Details ) {
-			day1Details = new YomDetails( 1 );
-		}
-
-		return day1Details;
+	@Override
+	protected Details createYomDetails() {
+		return new RoshHashanaYomDetails( 1 );
 	}
 
 
-	private Details getDay2Details() {
-		if ( null == day2Details ) {
-			day2Details = new YomDetails( 2 );
-		}
-
-		return day2Details;
+	@Override
+	protected Details createYom2Details() {
+		return new RoshHashanaYomDetails( 2 );
 	}
 
 
-	private static class ErevDetails
-		implements Details {
+	private static final class RoshHashanaYomDetails
+		extends YomDetails {
 
-		@Override
-		public boolean isErev() {
-			return true;
+		private RoshHashanaYomDetails(
+			int day
+		) {
+			super( NAME, day );
 		}
 
 
 		@Override
 		public boolean lightCandles() {
-			return true;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
+			// Only light candles on Erev, not after the first day...
 			return false;
 		}
 
-
-		@Override
-		public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static final class YomDetails
-		implements Details {
-
-		private final int                                       day;
-
-
-		private YomDetails( int day ) {
-			this.day = day;
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return ( 1 == day );
-		}
-
-
 		@Override
 		public boolean sayHavdalah() {
+			// Israel or not...it's always a two day holiday...
 			return ( 2 == day );
-		}
-
-
-		@Override
-		public String getDescription() {
-			return NAME;
 		}
 	}
 
