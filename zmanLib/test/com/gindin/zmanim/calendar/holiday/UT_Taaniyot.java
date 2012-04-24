@@ -52,6 +52,7 @@ public class UT_Taaniyot {
 
 		final TaanitBechorot taanitBechorot = new TaanitBechorot();
 
+		runTest( taanitBechorot, 2010, Calendar.MARCH, 29 );
 		runTest( taanitBechorot, 2011, Calendar.APRIL, 18 );
 		runTest( taanitBechorot, 2012, Calendar.APRIL, 5 );
 		runTest( taanitBechorot, 2013, Calendar.MARCH, 25 );

@@ -5,11 +5,13 @@
 package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.calendar.HebrewMonth;
 import com.gindin.zmanim.calendar.holiday.AbstractCachingObservanceWithCholHaMoed;
 
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class Pesach
 	extends AbstractCachingObservanceWithCholHaMoed {
 
@@ -24,6 +26,36 @@ public class Pesach
 
 	@Override
 	public Details getDetailsFor( HebrewDate date ) {
+
+		final int hebrewMonth = date.getHebrewMonth();
+		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+
+		if ( HebrewMonth.NISSAN != hebrewMonth ) {
+			return null;
+		}
+
+		switch ( hebrewDayOfMonth ) {
+			case 14:
+				return getErevDetails();
+
+			case 15:
+				return getYomDetails();
+
+			case 16:
+				return getYom2Details();
+
+			case 17:
+			case 18:
+			case 19:
+			case 20:
+				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME );
+
+			case 21:
+				return getPenultimateYomDetails();
+
+			case 22:
+				return getFinalYomDetails();
+		}
 
 		return null;
 	}
