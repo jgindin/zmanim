@@ -6,7 +6,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="200"
-  android:versionName="3.5.200.409-DEV"
+  android:versionName="3.5.200.420-DEV"
   android:installLocation="auto"
 >
 

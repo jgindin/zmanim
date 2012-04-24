@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012. Jay R. Gindin
+  -->
+
+<project name="imported">
+
+
+	<!--
+	 If this is set, then lot of additional stuff will get dumped out so you can see what's going on...
+ -->
+	<!--<property name="verbose" value="true" />-->
+
+	<!--
+		Extension targets. Uncomment the ones where you want to do custom work
+		in between standard targets
+	 -->
+	<target name="-pre-build" depends="replace-version-placeholders,show-svn-info">
+		<echo>-pre-build</echo>
+	</target>
+
+
+	<target name="-pre-compile">
+		<echo>-pre-compile</echo>
+	</target>
+
+	<!--
+		 This is typically used for code obfuscation. Compiled code location: ${out.classes.absolute.dir}
+		 If this is not done in place, override ${out.dex.input.absolute.dir}]
+	 -->
+	<target name="-post-compile">
+		<echo>-post-compile</echo>
+	</target>
+
+	<target name="-post-build">
+		<echo>-post-build</echo>
+	</target>
+
+	<target name="-pre-clean">
+		<echo>-pre-clean</echo>
+	</target>
+
+
+	<!--
+	 My custom targets
+ -->
+
+	<property name="svnant.javahl" value="false"/>
+	<property name="svnant.svnkit" value="true"/>
+	<path id="svnant.classpath">
+		<fileset dir="${svnant.lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
+
+	<property file="flurry.properties"/>
+
+
+	<target name="get-svn-state">
+		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
+			<wcversion path="." prefix="svn.status."/>
+		</svn>
+	</target>
+
+
+	<target name="show-svn-info">
+		<echo>
+			repository.url=${svn.status.repository.url}
+			committed.max=${svn.status.committed.max}
+			modified=${svn.status.modified}
+		</echo>
+	</target>
+
+
+	<!--
+	 Takes care of updating the user-visible version string.
+ -->
+	<target name="set-version" depends="get-svn-state">
+
+		<property file="version.number"/>
+		<property file="build.number"/>
+
+		<condition property="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}"
+		           else="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV">
+			<isset property="release_build"/>
+		</condition>
+
+		<echo>
+			version.major = ${version.major}
+			version.minor = ${version.minor}
+			build.number = ${build.number}
+
+			version = ${version}
+		</echo>
+
+	</target>
+
+
+	<!--
+	 Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
+		 minor version number.
+ -->
+	<target name="zmanim-update-release-version">
+
+		<echo>Updating version number...</echo>
+		<buildnumber file="build.number"/>
+
+		<propertyfile file="version.number" comment="Zmanim Version">
+			<!-- Actually, I don't want to bump the minor version every time.... -->
+			<!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
+			<entry key="version.date" type="date" value="now"/>
+		</propertyfile>
+
+	</target>
+
+
+	<target name="replace-version-placeholders" depends="set-version">
+
+		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
+		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
+		               replace='android:versionName="${version}"'/>
+		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)"
+		               replace='android:versionCode="${build.number}"'/>
+
+		<replaceregexp file="assets/com/gindin/zmanim/android/about.html" match='Version (.*)'
+		               replace='Version ${version}'/>
+
+		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)'
+		               replace='public static final String androidVersionName = "${version}";'/>
+		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)'
+		               replace='public static final int androidCodeVersion = ${build.number};'/>
+
+	</target>
+
+	<!--
+	  We don't want to store our flurry key in the source code...after all, we're hosting the code in a public
+	  location! Instead, we write the code using a placeholder, and replace it here based on the contents of
+	  a file that is NEVER committed to svn...
+	-->
+	<target name="zmanim-replace-flurry-key-placeholders">
+		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
+	</target>
+
+
+	<target name="zmanim-reset-flurry-key">
+		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE"/>
+	</target>
+
+
+	<!--
+		Takes care to set the necessary properties such that everyone else knows we're doing a real release.
+	-->
+	<target name="zmanim-setup-for-release">
+		<!-- Set this property so that we do the right versioning for an actual release. -->
+		<property name="release_build" value="true"/>
+	</target>
+
+
+	<!--
+		Deploys a release build .apk to a locally attached device.
+	-->
+	<target name="install-release-to-device" if="install-zmanim">
+
+		<property name="apk-to-install" value="${out.release.file}"/>
+		<antcall target="usb-install"/>
+
+	</target>
+
+
+	<!--
+		Deploys a debug build .apk to a locally attached device.
+	-->
+	<target name="install-debug-to-device">
+
+		<property name="apk-to-install" value="${out.debug.file}"/>
+		<antcall target="usb-install"/>
+
+	</target>
+
+
+	<!--
+		Copies the .apk to an ACTUAL device that is plugged into the USB.
+	-->
+	<target name="usb-install">
+		<echo>Installing ${apk-to-install}...</echo>
+		<exec executable="${adb}" failonerror="true">
+			<arg value="-d"/>
+			<arg value="install"/>
+			<arg value="-r"/>
+			<arg path="${apk-to-install}"/>
+		</exec>
+	</target>
+
+</project>

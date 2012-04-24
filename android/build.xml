@@ -1,290 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) 2011. Jay R. Gindin
-  -->
+<project name="Zmanim" default="help">
 
-<project name="ZmanimDisplay">
+	<!-- The local.properties file is created and updated by the 'android' tool.
+					 It contains the path to the SDK. It should *NOT* be checked into
+					 Version Control Systems. -->
+	<property file="local.properties"/>
 
+	<!-- The ant.properties file can be created by you. It is only edited by the
+					 'android' tool to add properties to it.
+					 This is the place to change some Ant specific build properties.
+					 Here are some properties you may want to change/update:
 
-	<!--
-		If this is set, then lot of additional stuff will get dumped out so you can see what's going on...
-	-->
-	<!--<property name="verbose" value="true" />-->
+					 source.dir
+							 The name of the source directory. Default is 'src'.
+					 out.dir
+							 The name of the output directory. Default is 'bin'.
 
+					 For other overridable properties, look at the beginning of the rules
+					 files in the SDK, at tools/ant/build.xml
 
-	<!--
-			The local.properties file is created and updated by the 'android' tool.
-      It contains the path to the SDK. It should *NOT* be checked into
-      Version Control Systems.
-	-->
-	<property file="local.properties" />
+					 Properties related to the SDK location or the project target should
+					 be updated using the 'android' tool with the 'update' action.
 
-	<!--
-		The build.properties file can be created by you and is never touched
-		by the 'android' tool. This is the place to change some of the
-		default property values used by the Ant rules.
-		Here are some properties you may want to change/update:
+					 This file is an integral part of the build system for your
+					 application and should be checked into Version Control Systems.
 
-			source.dir
-					 The name of the source directory. Default is 'src'.
-			out.dir
-					 The name of the output directory. Default is 'bin'.
+					 -->
+	<property file="ant.properties"/>
 
-		Properties related to the SDK location or the project target should
-		be updated using the 'android' tool with the 'update' action.
+	<!-- The project.properties file is created and updated by the 'android'
+					 tool, as well as ADT.
 
-		This file is an integral part of the build system for your
-		application and should be checked into Version Control Systems.
-	-->
-	<property file="build.properties" />
+					 This contains project specific properties such as project target, and library
+					 dependencies. Lower level build properties are stored in ant.properties
+					 (or in .classpath for Eclipse projects).
 
+					 This file is an integral part of the build system for your
+					 application and should be checked into Version Control Systems. -->
+	<loadproperties srcFile="project.properties"/>
 
-	<!--
-		The default.properties file is created and updated by the 'android'
-    tool, as well as ADT.
-    This file is an integral part of the build system for your
-    application and should be checked into Version Control Systems.
-	-->
-	<property file="default.properties" />
-
+	<!-- quick check on sdk.dir -->
+	<fail
+		message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through an env var"
+		unless="sdk.dir"
+		/>
 
 	<!--
-		Custom Android task to deal with the project target, and import the
-		proper rules.
-    This requires ant 1.6.0 or above.
-  -->
-	<path id="android.antlibs">
-		<pathelement path="${sdk.dir}/tools/lib/anttasks.jar"/>
-		<pathelement path="${sdk.dir}/tools/lib/sdklib.jar"/>
-		<pathelement path="${sdk.dir}/tools/lib/androidprefs.jar"/>
-	</path>
+					Import per project custom build rules if present at the root of the project.
+					This is the place to put custom intermediary targets such as:
+							-pre-build
+							-pre-compile
+							-post-compile (This is typically used for code obfuscation.
+														 Compiled code location: ${out.classes.absolute.dir}
+														 If this is not done in place, override ${out.dex.input.absolute.dir})
+							-post-package
+							-post-build
+							-pre-clean
+			-->
+	<import file="custom_rules.xml" optional="true"/>
 
-	<taskdef name="setup"
-		classname="com.android.ant.SetupTask"
-	  classpathref="android.antlibs"/>
+	<!-- Import the actual build file.
 
+					 To customize existing targets, there are two options:
+					 - Customize only one target:
+							 - copy/paste the target into this file, *before* the
+								 <import> task.
+							 - customize it to your needs.
+					 - Customize the whole content of build.xml
+							 - copy/paste the content of the rules files (minus the top node)
+								 into this file, replacing the <import> task.
+							 - customize to your needs.
 
-	<!--
-		Extension targets. Uncomment the ones where you want to do custom work
-		in between standard targets
-	 -->
-	<target name="-pre-build" depends="replace-version-placeholders,show-svn-info">
-	</target>
-
-
-	<target name="-pre-compile">
-	</target>
-
-	<!--
-		 This is typically used for code obfuscation. Compiled code location: ${out.classes.absolute.dir}
-		 If this is not done in place, override ${out.dex.input.absolute.dir}]
-	 -->
-	<target name="-post-compile">
-	</target>
-
-
-	<!--
-		This runs -package-release and -release-nosign first and then runs
-	  only if release-sign is true (set in -release-check, called by -release-no-sign)
-
-		Copied the original -set-release-mode to add the dependencies necessary for Zmanim.
-	-->
-	<target name="release"
-		depends="zmanim-setup-for-release,zmanim-update-release-version,zmanim-replace-flurry-key-placeholders,-set-release-mode,-release-obfuscation-check,-package-release, -release-prompt-for-password, -release-nosign,zmanim-reset-flurry-key"
-	  if="has.keystore"
-	  description="Builds the application. The generated apk file must be signed before it is published.">
-
-		<!-- Signs the APK -->
-		<echo>Signing final apk...</echo>
-		<signjar
-	            jar="${out.unsigned.file}"
-	            signedjar="${out.unaligned.file}"
-	            keystore="${key.store}"
-	            storepass="${key.store.password}"
-	            alias="${key.alias}"
-	            keypass="${key.alias.password}"
-	            verbose="${verbose}" />
-
-		<!-- Zip aligns the APK -->
-		<zipalign-helper in.package="${out.unaligned.file}"
-	                               out.package="${out.release.file}" />
-		<echo>Release Package: ${out.release.file}</echo>
-
-		<!-- Get it installed (if we're supposed to) -->
-		<antcall target="install-release-to-device"/>
-
-	</target>
-
-
-
-	<!--
-		Execute the Android Setup task that will setup some properties
-		specific to the target, and import the build rules files.
-
-		The rules file is imported from
-			<SDK>/platforms/<target_platform>/ant/ant_rules_r#.xml
-
-		To customize existing targets, there are two options:
-			- Customize only one target:
-				- copy/paste the target into this file, *before* the <setup> task.
-				- customize it to your needs.
-		  - Customize the whole script.
-				- copy/paste the content of the rules files (minus the top node)
-					into this file, *after* the <setup> task
-				- disable the import of the rules by changing the setup task
-					below to <setup import="false" />.
-				- customize to your needs.
-	-->
-  <setup />
-
-
-	<!--
-		BEGIN Customized targets
-	-->
-	<property name="svnant.javahl" value="false" />
-	<property name="svnant.svnkit" value="true" />
-	<path id="svnant.classpath">
-		<fileset dir="${svnant.lib.dir}">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
-	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
-
-	<property file="flurry.properties"/>
-
-
-	<target name="get-svn-state">
-		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
-			<wcversion path="." prefix="svn.status." />
-		</svn>
-	</target>
-
-
-
-	<target name="show-svn-info">
-		<echo>
-			repository.url=${svn.status.repository.url}
-			committed.max=${svn.status.committed.max}
-			modified=${svn.status.modified}
-		</echo>
-	</target>
-
-
-	<!--
-		Takes care of updating the user-visible version string.
-	-->
-	<target name="set-version" depends="get-svn-state">
-
-		<property file="version.number"/>
-		<property file="build.number"/>
-
-		<condition property="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}" else="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV">
-			<isset property="release_build" />
-		</condition>
-
-		<echo>
-			version.major = ${version.major}
-			version.minor = ${version.minor}
-			build.number  = ${build.number}
-
-			version       = ${version}
-		</echo>
-
-	</target>
-
-
-	<!--
-		Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
-			minor version number.
-	-->
-	<target name="zmanim-update-release-version">
-
-		<echo>Updating version number...</echo>
-		<buildnumber file="build.number"/>
-
-		<propertyfile file="version.number" comment="Zmanim Version">
-			<!-- Actually, I don't want to bump the minor version every time.... -->
-			<!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
-			<entry key="version.date" type="date" value="now"/>
-		</propertyfile>
-
-	</target>
-
-
-	<target name="replace-version-placeholders" depends="set-version">
-
-		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)" replace='android:versionName="${version}"'/>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)" replace='android:versionCode="${build.number}"'/>
-
-		<replaceregexp file="assets/com/gindin/zmanim/android/about.html" match='Version (.*)' replace='Version ${version}'/>
-
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)' replace='public static final String androidVersionName = "${version}";'/>
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)' replace='public static final int androidCodeVersion = ${build.number};'/>
-
-	</target>
-
-
-
-	<!--
-	  We don't want to store our flurry key in the source code...after all, we're hosting the code in a public
-	  location! Instead, we write the code using a placeholder, and replace it here based on the contents of
-	  a file that is NEVER committed to svn...
-	-->
-	<target name="zmanim-replace-flurry-key-placeholders">
-		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
-	</target>
-
-
-	<target name="zmanim-reset-flurry-key">
-		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE" />
-	</target>
-
-
-
-	<!--
-		Takes care to set the necessary properties such that everyone else knows we're doing a real release.
-	-->
-	<target name="zmanim-setup-for-release">
-		<!-- Set this property so that we do the right versioning for an actual release. -->
-		<property name="release_build" value="true"/>
-	</target>
-
-
-	<!--
-		Deploys a release build .apk to a locally attached device.
-	-->
-	<target name="install-release-to-device" if="install-zmanim">
-
-		<property name="apk-to-install" value="${out.release.file}"/>
-		<antcall target="usb-install"/>
-
-	</target>
-
-
-	<!--
-		Deploys a debug build .apk to a locally attached device.
-	-->
-	<target name="install-debug-to-device">
-
-		<property name="apk-to-install" value="${out.debug.file}"/>
-		<antcall target="usb-install"/>
-
-	</target>
-
-
-
-	<!--
-		Copies the .apk to an ACTUAL device that is plugged into the USB.
-	-->
-	<target name="usb-install">
-		<echo>Installing ${apk-to-install}...</echo>
-		<exec executable="${adb}" failonerror="true">
-			<arg value="-d"/>
-			<arg value="install"/>
-			<arg value="-r"/>
-			<arg path="${apk-to-install}"/>
-		</exec>
-	</target>
+					 ***********************
+					 ****** IMPORTANT ******
+					 ***********************
+					 In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
+					 in order to avoid having your file be overridden by tools such as "android update project"
+			-->
+	<!-- version-tag: 1 -->
+	<import file="${sdk.dir}/tools/ant/build.xml"/>
 
 </project>
