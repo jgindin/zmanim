@@ -2,7 +2,7 @@
  * Copyright (c) 2012. Jay R. Gindin
  */
 
-package com.gindin.zmanim.calendar.holiday.rabbanan;
+package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
@@ -15,10 +15,11 @@ import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
 public class PurimKatan
 	extends AbstractCachingObservance {
 
+	private static final String                               PURIM_KATAN = "Purim Katan";
 
 	@Override
 	public String getName() {
-		return "Purim Katan";
+		return PURIM_KATAN;
 	}
 
 
@@ -66,7 +67,7 @@ public class PurimKatan
 		}
 
 		@Override public String getDescription() {
-			return EREV + "Purim Katan";
+			return EREV + PURIM_KATAN;
 		}
 	}
 
