@@ -7,6 +7,7 @@ package com.gindin.zmanim.calendar.holiday;
 import com.gindin.zmanim.calendar.Constants;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.calendar.holiday.minor.Omer;
 import com.gindin.zmanim.calendar.holiday.minor.PesachSheni;
 import com.gindin.zmanim.calendar.holiday.yomtov.Pesach;
 import org.junit.*;
@@ -21,50 +22,101 @@ public class UT_Pesach {
 
 	private static final Pesach                               PESACH = new Pesach();
 	private static final PesachSheni                          PESACH_SHENI = new PesachSheni();
+	private static final Omer                                 OMER = new Omer();
 
 	@Test
 	public void test2010() {
-		runPesachTest( 2010, Calendar.MARCH, 30 );
-		runPesachSheniTest( 2010, Calendar.APRIL, 28 );
+		assertPesach( 2010, Calendar.MARCH, 30 );
+		assertPesachSheni( 2010, Calendar.APRIL, 28 );
+
+		assertOmer( 2010, Calendar.MARCH, 31, 1 );
+		assertOmer( 2010, Calendar.APRIL, 4, 5 );
+		assertOmer( 2010, Calendar.APRIL, 19, 20 );
+		assertOmer( 2010, Calendar.MAY, 1, 32 );
+		assertOmer( 2010, Calendar.MAY, 18, 49 );
+
+		assertNotOmer( 2010, Calendar.MARCH, 30 );
+		assertNotOmer( 2010, Calendar.MAY, 19 );
 	}
 
 	@Test
 	public void test2011() {
-		runPesachTest( 2011, Calendar.APRIL, 19 );
-		runPesachSheniTest( 2011, Calendar.MAY, 18 );
+		assertPesach( 2011, Calendar.APRIL, 19 );
+		assertPesachSheni( 2011, Calendar.MAY, 18 );
+
+		assertOmer( 2011, Calendar.APRIL, 21, 2 );
+		assertOmer( 2011, Calendar.APRIL, 28, 9 );
+		assertOmer( 2011, Calendar.MAY, 11, 22 );
+		assertOmer( 2011, Calendar.MAY, 30, 41 );
+		assertOmer( 2011, Calendar.JUNE, 3, 45 );
+
+		assertNotOmer( 2011, Calendar.APRIL, 18 );
+		assertNotOmer( 2011, Calendar.APRIL, 19 );
+		assertNotOmer( 2011, Calendar.JUNE, 8 );
+		assertNotOmer( 2011, Calendar.JULY, 4 );
 	}
 
 	@Test
 	public void test2012() {
-		runPesachTest( 2012, Calendar.APRIL, 7 );
-		runPesachSheniTest( 2012, Calendar.MAY, 6 );
+		assertPesach( 2012, Calendar.APRIL, 7 );
+		assertPesachSheni( 2012, Calendar.MAY, 6 );
+
+		assertOmer( 2012, Calendar.APRIL, 8, 1 );
+		assertOmer( 2012, Calendar.APRIL, 25, 18 );
+		assertOmer( 2012, Calendar.MAY, 2, 25 );
+		assertOmer( 2012, Calendar.MAY, 7, 30 );
+		assertOmer( 2012, Calendar.MAY, 19, 42 );
+		assertOmer( 2012, Calendar.MAY, 25, 48 );
+
+		assertNotOmer( 2012, Calendar.APRIL, 7 );
+		assertNotOmer( 2012, Calendar.MAY, 27 );
 	}
 
 	@Test
 	public void test2013() {
-		runPesachTest( 2013, Calendar.MARCH, 26 );
-		runPesachSheniTest( 2013, Calendar.APRIL, 24 );
+		assertPesach( 2013, Calendar.MARCH, 26 );
+		assertPesachSheni( 2013, Calendar.APRIL, 24 );
+
+		assertOmer( 2013, Calendar.MARCH, 27, 1 );
+		assertOmer( 2013, Calendar.APRIL, 1, 6 );
+		assertOmer( 2013, Calendar.APRIL, 10, 15 );
+		assertOmer( 2013, Calendar.APRIL, 11, 16 );
+		assertOmer( 2013, Calendar.MAY, 9, 44 );
+		assertOmer( 2013, Calendar.MAY, 10, 45 );
+
+		assertNotOmer( 2013, Calendar.MARCH, 20 );
+		assertNotOmer( 2013, Calendar.MARCH, 25 );
+		assertNotOmer( 2013, Calendar.MAY, 16 );
 	}
 
 	@Test
 	public void test2014() {
-		runPesachTest( 2014, Calendar.APRIL, 15 );
-		runPesachSheniTest( 2014, Calendar.MAY, 14 );
+		assertPesach( 2014, Calendar.APRIL, 15 );
+		assertPesachSheni( 2014, Calendar.MAY, 14 );
+
+		assertOmer( 2014, Calendar.APRIL, 23, 8 );
+		assertOmer( 2014, Calendar.APRIL, 30, 15 );
+		assertOmer( 2014, Calendar.MAY, 1, 16 );
+		assertOmer( 2014, Calendar.MAY, 30, 45 );
+		assertOmer( 2014, Calendar.JUNE, 3, 49 );
+
+		assertNotOmer( 2014, Calendar.APRIL, 14 );
+		assertNotOmer( 2014, Calendar.JUNE, 4 );
 	}
 
 	@Test
 	public void test2015() {
-		runPesachTest( 2015, Calendar.APRIL, 4 );
-		runPesachSheniTest( 2015, Calendar.MAY, 3 );
+		assertPesach( 2015, Calendar.APRIL, 4 );
+		assertPesachSheni( 2015, Calendar.MAY, 3 );
 	}
 
 	@Test
 	public void test2016() {
-		runPesachTest( 2016, Calendar.APRIL, 23 );
-		runPesachSheniTest( 2016, Calendar.MAY, 22 );
+		assertPesach( 2016, Calendar.APRIL, 23 );
+		assertPesachSheni( 2016, Calendar.MAY, 22 );
 	}
 
-	private void runPesachTest(
+	private void assertPesach(
 		int year,
 		@Constants.CalendarMonth int month,
 		int day
@@ -152,7 +204,7 @@ public class UT_Pesach {
 	}
 
 
-	private void runPesachSheniTest(
+	private void assertPesachSheni(
 		int year,
 		@Constants.CalendarMonth int month,
 		int day
@@ -174,6 +226,36 @@ public class UT_Pesach {
 		Assert.assertTrue( details.isErev() );
 		Assert.assertFalse( details.lightCandles() );
 		Assert.assertFalse( details.sayHavdalah() );
+	}
+
+
+	private void assertOmer(
+		int year,
+		@Constants.CalendarMonth int month,
+		int day,
+		int expectedDayOfOmer
+	) {
+
+		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
+		Observance.Details details = OMER.getDetailsFor( date );
+		Assert.assertNotNull( details );
+		Assert.assertFalse( details.isErev() );
+		Assert.assertFalse( details.lightCandles() );
+		Assert.assertFalse( details.sayHavdalah() );
+		Assert.assertTrue( details.getDescription().contains( "" + expectedDayOfOmer ) );
+	}
+
+
+	private void assertNotOmer(
+		int year,
+		@Constants.CalendarMonth int month,
+		int day
+	) {
+
+		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
+		Observance.Details details = OMER.getDetailsFor( date );
+
+		Assert.assertNull( details );
 	}
 
 } // End of UT_Pesach class
