@@ -52,13 +52,13 @@ public class Shavuot
 
 	@Override
 	protected Details createYomDetails() {
-		return new YomDetails( SHAVUOT, 1 );
+		return new YomDetails( SHAVUOT, true );
 	}
 
 
 	@Override
 	protected Details createYom2Details() {
-		return new YomDetails( SHAVUOT, 2 );
+		return new YomDetails( SHAVUOT, false );
 	}
 
 

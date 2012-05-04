@@ -6,21 +6,27 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingTwoDayObservance;
+import com.gindin.zmanim.calendar.holiday.AbstractCachingObservanceWithCholHaMoed;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
 public class Succot
-	extends AbstractCachingTwoDayObservance {
+	extends AbstractCachingObservanceWithCholHaMoed {
 
-	private static final String                               NAME = "Sukkot";
+	private static final String                               SUKKOT = "Sukkot";
+	private static final String                               HOSHANA_RABBA = "Hoshana Rabba";
+	private static final String                               SHMINI_ATZERET = "Shmini Atzeret";
+	private static final String                               SIMCHAT_TORAH = "Simchat Torah";
+
+	private ErevHoshanaRabbaDetails                           erevHoshanaRabbaDetails;
+	private HoshanaRabbaDetails                               hoshanaRabbaDetails;
 
 
 	@Override
 	public String getName() {
-		return NAME;
+		return SUKKOT;
 	}
 
 
@@ -28,20 +34,34 @@ public class Succot
 	public Details getDetailsFor( HebrewDate date ) {
 
 		if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
-			final int dayOfMonth = date.getHebrewDayOfMonth();
+			final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
-			if ( 14 == dayOfMonth ) {
-				return getErevDetails();
-			}
+			switch ( hebrewDayOfMonth ) {
+				case 14:
+					return getErevDetails();
 
-			if ( 15 == dayOfMonth ) {
-				return getYomDetails();
-			}
+				case 15:
+					return getYomDetails();
 
-			// TODO: Add a flag to check if we're in Israel or not. If yes, then we have to change the YomDetails
-			// TODO:  (they will say Havdalah) and ignore the 16th...
-			if ( 16 == dayOfMonth ) {
-				return getYom2Details();
+				case 16:
+					return getYom2Details();
+
+				case 17:
+				case 18:
+				case 19:
+					return new AbstractCachingObservanceWithCholHaMoed.CholHaMoedDetails( hebrewDayOfMonth - 14, SUKKOT, false );
+
+				case 20:
+					return getErevHoshanaRabbaDetails();
+
+				case 21:
+					return getHoshanaRabbaDetails();
+
+				case 22:
+					return getPenultimateYomDetails();
+
+				case 23:
+					return getFinalYomDetails();
 			}
 		}
 
@@ -51,27 +71,67 @@ public class Succot
 
 	@Override
 	protected Details createErevDetails() {
-		return new ErevDetails();
+		return new ErevDetails( SUKKOT );
 	}
 
 
 	@Override
 	protected Details createYomDetails() {
-		return new YomDetails( 1 );
+		return new YomDetails( SUKKOT, true );
 	}
 
 
 	@Override
 	protected Details createYom2Details() {
-		return new YomDetails( 2 );
+		return new YomDetails( SUKKOT, false );
 	}
 
 
-	private static class ErevDetails
+	@Override
+	protected Details createPenultimateYomDetails() {
+		return new YomDetails( SHMINI_ATZERET, true );
+	}
+
+
+	@Override
+	protected Details createFinalYomDetails() {
+		return new YomDetails( SIMCHAT_TORAH, false );
+	}
+
+
+	private Details getErevHoshanaRabbaDetails() {
+		if ( null == erevHoshanaRabbaDetails ) {
+			erevHoshanaRabbaDetails = new ErevHoshanaRabbaDetails();
+		}
+
+		return erevHoshanaRabbaDetails;
+	}
+
+
+	private Details getHoshanaRabbaDetails() {
+		if ( null == hoshanaRabbaDetails ) {
+			hoshanaRabbaDetails = new HoshanaRabbaDetails();
+		}
+
+		return hoshanaRabbaDetails;
+	}
+
+
+	private static final class ErevHoshanaRabbaDetails
+		extends CholHaMoedDetails {
+
+		private ErevHoshanaRabbaDetails() {
+			super( 6, SUKKOT + " 6 / " + HOSHANA_RABBA, false );
+		}
+	}
+
+
+	private static final class HoshanaRabbaDetails
 		implements Details {
 
 		@Override
 		public boolean isErev() {
+			// This is Erev Shmini Atzeret...
 			return true;
 		}
 
@@ -90,69 +150,7 @@ public class Succot
 
 		@Override
 		public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static final class YomDetails
-		implements Details {
-
-		private final int                                       day;
-
-
-		private YomDetails( int day ) {
-			this.day = day;
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return ( 1 == day );
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return ( 2 == day );
-		}
-
-
-		@Override
-		public String getDescription() {
-			return NAME;
-		}
-	}
-
-	private static final class CholHaMoedDetails
-		implements Details {
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;  //To change body of implemented methods use File | Settings | File Templates.
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return null;  //To change body of implemented methods use File | Settings | File Templates.
+			return SUKKOT + " 7 / " + HOSHANA_RABBA + " / " + EREV + SHMINI_ATZERET;
 		}
 	}
 

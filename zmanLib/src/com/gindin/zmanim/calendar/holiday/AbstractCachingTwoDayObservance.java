@@ -65,15 +65,15 @@ public abstract class AbstractCachingTwoDayObservance
 		implements Details {
 
 		protected final String                                  name;
-		protected final int                                     day;
+		private boolean                                         lightCandles;
 
 
 		public YomDetails(
 			String  name,
-			int     day
+			boolean lightCandles
 		) {
 			this.name = name;
-			this.day = day;
+			this.lightCandles = lightCandles;
 		}
 
 
@@ -85,15 +85,13 @@ public abstract class AbstractCachingTwoDayObservance
 
 		@Override
 		public boolean lightCandles() {
-			// TODO: In Israel, this is false.
-			return ( 1 == day );
+			return lightCandles;
 		}
 
 
 		@Override
 		public boolean sayHavdalah() {
-			// TODO: In Israel, this would be 1 == day.
-			return ( 2 == day );
+			return !lightCandles;
 		}
 
 

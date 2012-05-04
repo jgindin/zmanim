@@ -55,13 +55,13 @@ public class RoshHashana
 
 	@Override
 	protected Details createYomDetails() {
-		return new RoshHashanaYomDetails( 1 );
+		return new RoshHashanaYomDetails( true );
 	}
 
 
 	@Override
 	protected Details createYom2Details() {
-		return new RoshHashanaYomDetails( 2 );
+		return new RoshHashanaYomDetails( false );
 	}
 
 
@@ -69,16 +69,9 @@ public class RoshHashana
 		extends YomDetails {
 
 		private RoshHashanaYomDetails(
-			int day
+			boolean lightCandles
 		) {
-			super( NAME, day );
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			// Israel or not...it's always a two day holiday...
-			return ( 2 == day );
+			super( NAME, lightCandles );
 		}
 	}
 

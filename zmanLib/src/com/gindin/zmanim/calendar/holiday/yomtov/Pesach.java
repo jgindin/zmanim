@@ -47,8 +47,10 @@ public class Pesach
 			case 17:
 			case 18:
 			case 19:
+				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME, false );
+
 			case 20:
-				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME );
+				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME, true );
 
 			case 21:
 				return getPenultimateYomDetails();
@@ -69,26 +71,25 @@ public class Pesach
 
 	@Override
 	protected Details createYomDetails() {
-		return new YomDetails( NAME, 1 );
+		return new YomDetails( NAME, true );
 	}
 
 
 	@Override
 	protected Details createYom2Details() {
-		return new YomDetails( NAME, 2 );
+		return new YomDetails( NAME, false );
 	}
 
 
 	@Override
 	protected Details createPenultimateYomDetails() {
-		return new LastDaysDetails( NAME, 7 );
+		return new YomDetails( NAME, true );
 	}
 
 
 	@Override
 	protected Details createFinalYomDetails() {
-		// TODO: Not quite right for Israel...
-		return new LastDaysDetails( NAME, 8 );
+		return new YomDetails( NAME, false );
 	}
 
 }  // End of Pesach class

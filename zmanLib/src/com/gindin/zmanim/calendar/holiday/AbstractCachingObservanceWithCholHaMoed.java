@@ -39,17 +39,23 @@ public abstract class AbstractCachingObservanceWithCholHaMoed
 	}
 
 
-	protected static final class CholHaMoedDetails
+	protected static class CholHaMoedDetails
 		implements Details {
 
 		/** This is the day of the chag, NOT the day of chol hamoed. */
 		private int                                             day;
 		private String                                          name;
+		private boolean                                         lightCandles;
 
 
-		public CholHaMoedDetails( int day, String name ) {
+		public CholHaMoedDetails(
+			int     day,
+			String  name,
+			boolean lightCandles
+		) {
 			this.day = day;
 			this.name = name;
+			this.lightCandles = lightCandles;
 		}
 
 
@@ -61,8 +67,7 @@ public abstract class AbstractCachingObservanceWithCholHaMoed
 
 		@Override
 		public boolean lightCandles() {
-			// TODO: Have to override for dealing with Sukkot where, at least outside of Israel, this isn't right.
-			return ( 6 == day );
+			return lightCandles;
 		}
 
 
@@ -75,40 +80,6 @@ public abstract class AbstractCachingObservanceWithCholHaMoed
 		@Override
 		public String getDescription() {
 			return CHOL_HA_MOED + name + " " + day;
-		}
-	}
-
-
-	protected static class LastDaysDetails
-		extends YomDetails {
-
-		public LastDaysDetails(
-			String  name,
-			int     day
-		) {
-			super( name, day );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			// TODO: In Israel, this would always be false;
-			// TODO: Have to override for dealing with Sukkot where, at least outside of Israel, this isn't right.
-			return ( 7 == day );
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			// TODO: In Israel, this would be 7 == day.
-			// TODO: Have to override for dealing with Sukkot where, at least outside of Israel, this isn't right.
-			return ( 8 == day );
 		}
 	}
 
