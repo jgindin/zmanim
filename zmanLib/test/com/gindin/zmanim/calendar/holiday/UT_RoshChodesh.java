@@ -165,6 +165,13 @@ public class UT_RoshChodesh {
 	}
 
 
+	@Test
+	public void test2024() {
+
+		// This is interesting because Rosh Chodesh Tevet starts in December, but carries over
+		//  into January...
+		assertIsRoshChodesh( 2024, Calendar.DECEMBER, 30, true );
+	}
 
 
 	private void assertIsRoshChodesh(
