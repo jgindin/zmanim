@@ -206,29 +206,17 @@ public class HebrewDate
 
 	/**
 	 * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It will return {@link
-	 * HebrewYearType#SHELAIMIM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#KESIDRAN} if Cheshvan is 29
-	 * days and Kislev is 30 days and {@link HebrewYearType#CHASERIM} if both are 29 days.
+	 * HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if Cheshvan is 29
+	 * days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
 	 *
-	 * @return {@link HebrewYearType#SHELAIMIM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#KESIDRAN} if
-	 *         Cheshvan is 29 days and Kislev is 30 days and {@link HebrewYearType#CHASERIM} if both are 29 days.
+	 * @return {@link HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if
+	 *         Cheshvan is 29 days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
 	 *
 	 * @see #isCheshvanLong()
 	 * @see #isKislevShort()
 	 */
 	public HebrewYearType getYearType() {
-
-		final boolean cheshvanLong = isCheshvanLong();
-		final boolean kislevShort = isKislevShort();
-
-		if ( cheshvanLong && !kislevShort ) {
-			return HebrewYearType.SHELAIMIM;
-		}
-		else if ( !cheshvanLong && kislevShort ) {
-			return HebrewYearType.CHASERIM;
-		}
-		else {
-			return HebrewYearType.KESIDRAN;
-		}
+		return HebrewCalendar.getYearType( getHebrewYear() );
 	}
 
 

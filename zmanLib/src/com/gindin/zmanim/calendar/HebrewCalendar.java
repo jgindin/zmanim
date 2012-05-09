@@ -719,7 +719,7 @@ public class HebrewCalendar {
 	 *         chalakim/parts) prior to the start of the Jewish calendar, to the mean conjunction of Tishri of the Jewish
 	 *         year. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080 chalakim after sunset on Sunday evening).
 	 */
-	public static int getElapsedDays( int year ) {
+	static int getElapsedDays( int year ) {
 		long chalakimSince = getChalakimSinceMoladTohu( year, HebrewMonth.TISHREI );
 		int moladDay = (int)( chalakimSince / CHALAKIM_PER_DAY );
 		int moladParts = (int)( chalakimSince - moladDay * CHALAKIM_PER_DAY );
@@ -751,7 +751,7 @@ public class HebrewCalendar {
 	 * @see #isCheshvanLong(int)
 	 * @see #isKislevShort(int)
 	 */
-	public static int getDaysInJewishYear( int year ) {
+	private static int getDaysInJewishYear( int year ) {
 		return getElapsedDays( year + 1 ) - getElapsedDays( year );
 	}
 
@@ -839,6 +839,33 @@ public class HebrewCalendar {
 		return elapsedDays;
 	}
 
+
+	/**
+	 * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It will return {@link
+	 * HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if Cheshvan is 29
+	 * days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
+	 *
+	 * @return {@link HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if
+	 *         Cheshvan is 29 days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
+	 *
+	 * @see #isCheshvanLong(int)
+	 * @see #isKislevShort(int)
+	 */
+	public static HebrewYearType getYearType( int year ) {
+
+		final boolean cheshvanLong = isCheshvanLong( year );
+		final boolean kislevShort = isKislevShort( year );
+
+		if ( cheshvanLong && !kislevShort ) {
+			return HebrewYearType.SHALEM;
+		}
+		else if ( !cheshvanLong && kislevShort ) {
+			return HebrewYearType.HASER;
+		}
+		else {
+			return HebrewYearType.QESIDRAH;
+		}
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

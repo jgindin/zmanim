@@ -53,20 +53,16 @@ public enum HebrewYearType {
 	/**
 	 * A short year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 29 days.
 	 */
-	CHASERIM,
+	HASER,
 
 	/**
 	 * An ordered year where {@link HebrewMonth#CHESHVAN} is 29 days and {@link HebrewMonth#KISLEV} is 30 days.
-	 *
-	 * @see net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter#getFormattedKviah(int)
 	 */
-	KESIDRAN,
+	QESIDRAH,
 
 	/**
 	 * A long year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 30 days.
-	 *
-	 * @see net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter#getFormattedKviah(int)
 	 */
-	SHELAIMIM
+	SHALEM
 
 }
