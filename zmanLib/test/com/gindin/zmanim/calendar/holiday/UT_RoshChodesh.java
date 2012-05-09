@@ -7,7 +7,6 @@ package com.gindin.zmanim.calendar.holiday;
 import com.gindin.zmanim.calendar.Constants;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.HebrewYearType;
 import org.junit.*;
 
 import java.util.Calendar;
@@ -39,8 +38,6 @@ public class UT_RoshChodesh {
 
 	@Test
 	public void test5771() {
-
-		HebrewYearType yearType = HebrewCalendar.getYearType( 5771 );
 
 		assertIsRoshChodesh( 2010, Calendar.OCTOBER, 7, true );     // Heshvan
 		assertIsRoshChodesh( 2010, Calendar.NOVEMBER, 6, true );    // Kislev
