@@ -119,7 +119,7 @@ public class HebrewCalendar {
 	//
 	// 
 
-	/** Default constructor to prevent creation */
+	/** Default constructor to prevent uninitialized creation */
 	private HebrewCalendar() {
 	}
 
@@ -246,7 +246,7 @@ public class HebrewCalendar {
 	
 	/**
 	 * Constructor that creates a HebrewCalendar based on a molad passed in. The molad would be the number of chalakim/parts
-	 * starting at the begining of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
+	 * starting at the beginning of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
 	 * chalakim/parts) - prior to the start of the Jewish calendar. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080
 	 * chalakim after sunset on Sunday evening).
 	 */
@@ -433,7 +433,7 @@ public class HebrewCalendar {
 		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
 
 		int newJewishYear = today.getHebrewYear();
-		int newJewishMonth = today.getHebrewMonth();
+		@HebrewMonth.Constant int newJewishMonth = today.getHebrewMonth();
 		int newJewishDay = today.getHebrewDayOfMonth();
 		@Constants.CalendarDay int newDayOfWeek = 0;
 
@@ -464,13 +464,17 @@ public class HebrewCalendar {
 			if ( newJewishDay == 1 ) {
 				if ( newJewishMonth == HebrewMonth.NISSAN ) {
 					newJewishMonth = getLastMonthOfJewishYear( newJewishYear );
+					// DO NOT decrement the newJewishMonth...it gets set properly from calling the above method...
 				}
 				else if ( newJewishMonth == HebrewMonth.TISHREI ) {
 					// if Rosh Hashana
 					newJewishYear--;
+					newJewishMonth--;
+				}
+				else {
+					newJewishMonth--;
 				}
 
-				newJewishMonth--;
 				newJewishDay = getDaysInHebrewMonth( newJewishMonth, newJewishYear );
 			}
 			else {

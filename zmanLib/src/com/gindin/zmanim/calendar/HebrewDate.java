@@ -240,17 +240,15 @@ public class HebrewDate
 	 * Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29 Adar I / March 5, 2011 12:00 AM and 7
 	 * chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
 	 */
-	@SuppressWarnings( "FeatureEnvy" )
-	public HebrewDate getMolad( HebrewDate date ) {
+	public HebrewDate getMolad() {
 
-		HebrewDate moladDate = HebrewCalendar
-			.getForMolad( HebrewCalendar.getChalakimSinceMoladTohu( hebrewYear, hebrewMonth ) );
+		HebrewDate moladDate = HebrewCalendar.getForMolad( HebrewCalendar.getChalakimSinceMoladTohu( hebrewYear, hebrewMonth ) );
 
 		if ( moladDate.getMoladHours() >= 6 ) {
 			moladDate = moladDate.tomorrow();
 		}
 		
-		moladHours = ( moladDate.getMoladHours() + HebrewCalendar.CHALAKIM_PER_MINUTE ) % HebrewCalendar.HOURS_PER_DAY;
+		moladDate.moladHours = ( moladDate.getMoladHours() + HebrewCalendar.CHALAKIM_PER_MINUTE ) % HebrewCalendar.HOURS_PER_DAY;
 		return moladDate;
 	}
 
@@ -327,25 +325,28 @@ public class HebrewDate
 	
 	@Override
 	public int compareTo( HebrewDate otherDate ) {
-		
-		if ( hebrewYear < otherDate.hebrewYear ) {
+
+		// We use gregorian because with the Hebrew months, because Nisan is the first month, it gets more complex.
+		//  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN < ADAR...
+
+		if ( gregorianYear < otherDate.gregorianYear ) {
 			return -1;
 		}
-		else if ( hebrewYear > otherDate.hebrewYear ) {
+		else if ( gregorianYear > otherDate.gregorianYear ) {
 			return 1;
 		}
 		
-		if ( hebrewMonth < otherDate.hebrewMonth ) {
+		if ( gregorianMonth < otherDate.gregorianMonth ) {
 			return -1;
 		}
-		else if ( hebrewMonth > otherDate.hebrewMonth ) {
+		else if ( gregorianMonth > otherDate.gregorianMonth ) {
 			return 1;
 		}
 		
-		if ( hebrewDay < otherDate.hebrewDay ) {
+		if ( gregorianDayOfMonth < otherDate.gregorianDayOfMonth ) {
 			return -1;
 		}
-		else if ( hebrewDay > otherDate.hebrewDay ) {
+		else if ( gregorianDayOfMonth > otherDate.gregorianDayOfMonth ) {
 			return 1;
 		}
 		
