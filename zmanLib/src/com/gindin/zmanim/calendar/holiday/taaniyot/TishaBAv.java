@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
+import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
 
 /**
@@ -33,19 +34,23 @@ public class TishaBAv
 
 
 	@Override
-	protected Details createErevDetails() {
-		return new ErevTishaBAvDetails();
+	protected Details createErevDetails( HebrewDate date ) {
+		return new ErevTishaBAvDetails( date );
 	}
 
 
 	@Override
-	protected Details createYomDetails() {
-		return new TishaBAvDetails();
+	protected Details createYomDetails( HebrewDate date ) {
+		return new TishaBAvDetails( date );
 	}
 
 
 	private static class ErevTishaBAvDetails
-		implements Details {
+		extends Details {
+
+		private ErevTishaBAvDetails( HebrewDate date ) {
+			super( date );
+		}
 
 		@Override public boolean isErev() {
 			return true;
@@ -65,7 +70,12 @@ public class TishaBAv
 	}
 
 	private static class TishaBAvDetails
-		implements Details {
+		extends Details {
+
+		private TishaBAvDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

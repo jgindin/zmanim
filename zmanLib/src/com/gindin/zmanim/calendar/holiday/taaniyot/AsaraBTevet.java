@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
+import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
 
 /**
@@ -34,19 +35,24 @@ public class AsaraBTevet
 
 
 	@Override
-	protected Details createErevDetails() {
-		return new ErevAsaraBTevetDetails();
+	protected Details createErevDetails( HebrewDate date ) {
+		return new ErevAsaraBTevetDetails( date );
 	}
 
 
 	@Override
-	protected Details createYomDetails() {
-		return new AsaraBTevetDetails();
+	protected Details createYomDetails( HebrewDate date ) {
+		return new AsaraBTevetDetails( date );
 	}
 
 
 	private static class ErevAsaraBTevetDetails
-		implements Details {
+		extends Details {
+
+		private ErevAsaraBTevetDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -67,7 +73,12 @@ public class AsaraBTevet
 
 
 	private static class AsaraBTevetDetails
-		implements Details {
+		extends Details {
+
+		private AsaraBTevetDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 
 /**
@@ -14,7 +14,7 @@ import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
  */
 @SuppressWarnings( "MagicNumber" )
 public class YomHaShoah
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               NAME = "Yom HaShoah";
 
@@ -40,30 +40,23 @@ public class YomHaShoah
 		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( 26 == jewishDayOfMonth ) {
-			return getErevDetails();
+			return new ErevYomHaShoahDetails( date );
 		}
 		else if ( 27 == jewishDayOfMonth ) {
-			return getYomDetails();
+			return new YomHaShoahDetails( date );
 		}
 
 		return null;
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevYomHaShoahDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new YomHaShoahDetails();
-	}
-
-
 	private static class ErevYomHaShoahDetails
-		implements Details {
+		extends Details {
+
+		private ErevYomHaShoahDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -83,7 +76,12 @@ public class YomHaShoah
 	}
 
 	private static class YomHaShoahDetails
-		implements Details {
+		extends Details {
+
+		private YomHaShoahDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

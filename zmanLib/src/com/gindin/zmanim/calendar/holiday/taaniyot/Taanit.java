@@ -6,15 +6,26 @@ package com.gindin.zmanim.calendar.holiday.taaniyot;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 import java.util.Calendar;
 
 /**
+ * Fast days:
+ *  - Gedaliah
+ *  - 10 Tevet
+ *  - Esther
+ *  - 14 Nissan (Bechorot -- firstborn)
+ *  - 17 Tammuz
+ *  - Tisha B'Av
  *
+ * These fast days may move around on the calendar such that, none of them can fall on Shabbat,
+ *  and none, except 10 Tevet, can fall on Friday.
+ *<p>
+ * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
  */
 abstract class Taanit
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	protected static final String                             TAANIT = "Ta'anit ";
 
@@ -23,12 +34,7 @@ abstract class Taanit
 	private final int                                         monthOfFast;
 
 	/** Absent any reason to postpone the fast, what day of the month does it fall on? */
-	private final int                                         normalDayOfFast;
-
-
-	/** Can the fast take place on a Friday? */
-	protected abstract boolean canFallOnFriday();
-
+	protected final int                                       normalDayOfFast;
 
 
 	protected Taanit(
@@ -41,14 +47,37 @@ abstract class Taanit
 	}
 
 
+	/** Can the fast take place on a Friday? */
+	protected abstract boolean canFallOnFriday();
+
+	protected abstract Details createErevDetails( HebrewDate date );
+
+	protected abstract Details createYomDetails( HebrewDate date );
+
+
+	/**
+	 * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets
+	 *  pulled back instead.
+	 */
+	protected boolean canPushToSunday() {
+		return true;
+	}
+
+	/**
+	 * Allows the subclass to change the month of the fast based on the specified date.
+	 */
+	@HebrewMonth.Constant
+	protected int getAdjustedMonthOfFast( HebrewDate date ) {
+		return monthOfFast;
+	}
+
+
 	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	public final Details getDetailsFor( HebrewDate date ) {
 
-		@HebrewMonth.Constant int actualMonthOfFast = monthOfFast;
-		if ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR == monthOfFast ) ) {
-			actualMonthOfFast = HebrewMonth.ADAR_II;
-		}
+		@HebrewMonth.Constant
+		int actualMonthOfFast = getAdjustedMonthOfFast( date );
 
 		if ( actualMonthOfFast != date.getHebrewMonth() ) {
 			return null;
@@ -58,74 +87,106 @@ abstract class Taanit
 		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( Calendar.WEDNESDAY == dayOfWeek ) {
-
-			if ( canFallOnFriday() ) {
-				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-					return getErevDetails();
-				}
-			}
-			else {
-				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-					return getErevDetails();
-				}
-
-				if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
-					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-					return getErevDetails();
-				}
+			Details details = checkWednesday( date );
+			if ( null != details ) {
+				return details;
 			}
 		}
 
 		if ( Calendar.THURSDAY == dayOfWeek ) {
-
-			if ( canFallOnFriday() ) {
-				if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-					return getErevDetails();
-				}
-			}
-			else {
-				if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
-					return getYomDetails();
-				}
-
-				if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-					// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-					return getYomDetails();
-				}
+			Details details = checkThursday( date );
+			if ( null != details ) {
+				return details;
 			}
 		}
 
-		if ( ( Calendar.FRIDAY == dayOfWeek ) && canFallOnFriday() ) {
-			if ( normalDayOfFast == jewishDayOfMonth ) {
-				return getYomDetails();
+		if ( Calendar.FRIDAY == dayOfWeek ) {
+
+			if ( canFallOnFriday() ) {
+				if ( normalDayOfFast == jewishDayOfMonth ) {
+					return createYomDetails( date );
+				}
+			}
+			else {
+				// If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be
+				//  Erev, because we never have a Ta'anit on Shabbat (well, except Yom Kippur, but that's
+				//  a whole separate case)...
+				return null;
 			}
 		}
 
 		if ( Calendar.SATURDAY == dayOfWeek ) {
-			if ( normalDayOfFast == jewishDayOfMonth ) {
-				return getErevDetails();
+			if ( canPushToSunday() ) {
+				if ( normalDayOfFast == jewishDayOfMonth ) {
+					return createErevDetails( date );
+				}
+			}
+			else {
+				// If we can't push it, then today is nothing.
+				return null;
 			}
 		}
 
 		if ( Calendar.SUNDAY == dayOfWeek ) {
-			if ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) {
-				return getYomDetails();
+			if ( ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) && canPushToSunday() ) {
+				return createYomDetails( date );
 			}
 		}
 
 
 		// We've handled all the special cases above...
 		if ( normalDayOfFast == jewishDayOfMonth ) {
-			return getYomDetails();
+			return createYomDetails( date );
 		}
 
 		if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-			return getErevDetails();
+			return createErevDetails( date );
 		}
 
 
 		return null;
 	}
 
+
+	protected Details checkWednesday(
+		HebrewDate date
+	) {
+
+		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+
+		if ( canFallOnFriday() ) {
+			if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+				return createErevDetails( date );
+			}
+		}
+		else {
+			if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+				return createErevDetails( date );
+			}
+		}
+
+		return null;
+	}
+
+
+	protected Details checkThursday(
+		HebrewDate date
+	) {
+
+		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+
+		if ( canFallOnFriday() ) {
+			if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+				return createErevDetails( date );
+			}
+		}
+		else {
+			if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
+				return createYomDetails( date );
+			}
+		}
+
+		return null;
+	}
 
 }  // End of Taanit class

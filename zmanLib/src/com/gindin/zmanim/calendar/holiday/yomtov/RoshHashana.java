@@ -6,22 +6,22 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingTwoDayObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
 public class RoshHashana
-	extends AbstractCachingTwoDayObservance {
+	extends Observance {
 
-	private static final String                               NAME = "Rosh Hashana";
+	private static final String ROSH_HASHANA = "Rosh Hashana";
 
 
 
 	@Override
 	public String getName() {
-		return NAME;
+		return ROSH_HASHANA;
 	}
 
 
@@ -32,14 +32,14 @@ public class RoshHashana
 		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( ( HebrewMonth.ELUL == hebrewMonth ) && ( 29 == hebrewDayOfMonth ) ) {
-			return getErevDetails();
+			return new ErevDetails( date, ROSH_HASHANA );
 		}
 		else if ( HebrewMonth.TISHREI == hebrewMonth ) {
 			if ( 1 == hebrewDayOfMonth ) {
-				return getYomDetails();
+				return new RoshHashanaYomDetails( date, true );
 			}
 			else if ( 2 == hebrewDayOfMonth ) {
-				return getYom2Details();
+				return new RoshHashanaYomDetails( date, false );
 			}
 		}
 
@@ -47,31 +47,14 @@ public class RoshHashana
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevDetails( NAME );
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new RoshHashanaYomDetails( true );
-	}
-
-
-	@Override
-	protected Details createYom2Details() {
-		return new RoshHashanaYomDetails( false );
-	}
-
-
 	private static final class RoshHashanaYomDetails
-		extends YomDetails {
+		extends YomTovDetails {
 
 		private RoshHashanaYomDetails(
+			HebrewDate date,
 			boolean lightCandles
 		) {
-			super( NAME, lightCandles );
+			super( date, ROSH_HASHANA, lightCandles );
 		}
 	}
 

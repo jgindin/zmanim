@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.calendar.holiday.taaniyot;
 
+import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
@@ -36,19 +37,24 @@ public class Taanit17Tamuz
 
 
 	@Override
-	protected Details createErevDetails() {
-		return new ErevTaanit17TamuzDetails();
+	protected Details createErevDetails( HebrewDate date ) {
+		return new ErevTaanit17TamuzDetails( date );
 	}
 
 
 	@Override
-	protected Details createYomDetails() {
-		return new Taanit17TamuzDetails();
+	protected Details createYomDetails( HebrewDate date ) {
+		return new Taanit17TamuzDetails( date );
 	}
 
 
 	private static class ErevTaanit17TamuzDetails
-		implements Observance.Details {
+		extends Observance.Details {
+
+		private ErevTaanit17TamuzDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -68,7 +74,12 @@ public class Taanit17Tamuz
 	}
 
 	private static class Taanit17TamuzDetails
-		implements Observance.Details {
+		extends Observance.Details {
+
+		private Taanit17TamuzDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

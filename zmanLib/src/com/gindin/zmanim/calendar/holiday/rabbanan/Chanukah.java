@@ -13,9 +13,7 @@ import com.gindin.zmanim.calendar.holiday.Observance;
  */
 @SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
 public class Chanukah
-	implements Observance {
-
-	private static final ErevChanukahDetails                  EREV_CHANUKAH_DETAILS = new ErevChanukahDetails();
+	extends Observance {
 
 
 	@Override
@@ -31,21 +29,21 @@ public class Chanukah
 
 		if ( HebrewMonth.KISLEV == date.getHebrewMonth() ) {
 			if ( 24 == hebrewDayOfMonth ) {
-				return EREV_CHANUKAH_DETAILS;
+				return new ErevChanukahDetails( date );
 			}
 			else if ( hebrewDayOfMonth >= 25 ) {
-				return new ChanukahDetails( ( hebrewDayOfMonth + 1 ) - 25 );
+				return new ChanukahDetails( date, ( hebrewDayOfMonth + 1 ) - 25 );
 			}
 		}
 		else if ( HebrewMonth.TEVET == date.getHebrewMonth() ) {
 			if ( date.isKislevShort() ) {
 				if ( hebrewDayOfMonth <= 3 ) {
-					return new ChanukahDetails( hebrewDayOfMonth + 5 );
+					return new ChanukahDetails( date, hebrewDayOfMonth + 5 );
 				}
 			}
 			else {
 				if ( hebrewDayOfMonth <= 2 ) {
-					return new ChanukahDetails( hebrewDayOfMonth + 6 );
+					return new ChanukahDetails( date, hebrewDayOfMonth + 6 );
 				}
 			}
 		}
@@ -55,7 +53,12 @@ public class Chanukah
 
 
 	private static class ErevChanukahDetails
-		implements Details {
+		extends Details {
+
+		private ErevChanukahDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -75,12 +78,13 @@ public class Chanukah
 	}
 
 	private static class ChanukahDetails
-		implements Details {
+		extends Details {
 
 		private final int                                       day;
 
 
-		private ChanukahDetails( int day ) {
+		private ChanukahDetails( HebrewDate date, int day ) {
+			super( date );
 			this.day = day;
 		}
 

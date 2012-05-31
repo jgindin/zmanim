@@ -12,7 +12,7 @@ import com.gindin.zmanim.calendar.holiday.Observance;
  *
  */
 public class Omer
-	implements Observance {
+	extends Observance {
 
 	private static final String                               OMER = "Omer";
 
@@ -31,15 +31,15 @@ public class Omer
 
 		if ( HebrewMonth.NISSAN == hebrewMonth ) {
 			if ( hebrewDayOfMonth >= 16 ) {
-				return new OmerDetails( hebrewDayOfMonth - 15 );
+				return new OmerDetails( date, hebrewDayOfMonth - 15 );
 			}
 		}
 		else if ( HebrewMonth.IYAR == hebrewMonth ) {
-			return new OmerDetails( 15 + hebrewDayOfMonth );
+			return new OmerDetails( date, 15 + hebrewDayOfMonth );
 		}
 		else if ( HebrewMonth.SIVAN == hebrewMonth ) {
 			if ( hebrewDayOfMonth < 6 ) {
-				return new OmerDetails( 15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth );
+				return new OmerDetails( date, 15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth );
 			}
 		}
 
@@ -48,12 +48,13 @@ public class Omer
 
 
 	private static final class OmerDetails
-		implements Details {
+		extends Details {
 
 		private int                                             dayOfOmer;
 
 
-		private OmerDetails( int dayOfOmer ) {
+		private OmerDetails( HebrewDate date, int dayOfOmer ) {
+			super( date );
 			this.dayOfOmer = dayOfOmer;
 		}
 

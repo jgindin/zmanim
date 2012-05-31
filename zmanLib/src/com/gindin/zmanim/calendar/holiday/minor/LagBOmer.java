@@ -6,13 +6,13 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 public class LagBOmer
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               NAME = "Lag B'Omer";
 
@@ -30,10 +30,10 @@ public class LagBOmer
 		if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 17 == hebrewDayOfMonth ) {
-				return getErevDetails();
+				return new ErevLagBOmerDetails( date );
 			}
 			else if ( 18 == hebrewDayOfMonth ) {
-				return getYomDetails();
+				return new LagBOmerDetails( date );
 			}
 		}
 
@@ -41,20 +41,13 @@ public class LagBOmer
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevLagBOmerDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new LagBOmerDetails();
-	}
-
-
 	private static final class ErevLagBOmerDetails
-		implements Details {
+		extends Details {
+
+		private ErevLagBOmerDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
@@ -76,14 +69,19 @@ public class LagBOmer
 
 		@Override
 		public String getDescription() {
-			return NAME;
+			return EREV + NAME;
 		}
 	}
 
 
 
 	private static final class LagBOmerDetails
-		implements Details {
+		extends Details {
+
+		private LagBOmerDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {

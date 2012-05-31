@@ -6,22 +6,20 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservanceWithCholHaMoed;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
 public class Succot
-	extends AbstractCachingObservanceWithCholHaMoed {
+	extends Observance {
 
 	private static final String                               SUKKOT = "Sukkot";
 	private static final String                               HOSHANA_RABBA = "Hoshana Rabba";
 	private static final String                               SHMINI_ATZERET = "Shmini Atzeret";
 	private static final String                               SIMCHAT_TORAH = "Simchat Torah";
 
-	private ErevHoshanaRabbaDetails                           erevHoshanaRabbaDetails;
-	private HoshanaRabbaDetails                               hoshanaRabbaDetails;
 
 
 	@Override
@@ -38,30 +36,28 @@ public class Succot
 
 			switch ( hebrewDayOfMonth ) {
 				case 14:
-					return getErevDetails();
+					return new ErevDetails( date, SUKKOT );
 
 				case 15:
-					return getYomDetails();
+					return new YomTovDetails( date, SUKKOT, true );
 
 				case 16:
-					return getYom2Details();
+					return new YomTovDetails( date, SUKKOT, false );
 
 				case 17:
 				case 18:
 				case 19:
-					return new AbstractCachingObservanceWithCholHaMoed.CholHaMoedDetails( hebrewDayOfMonth - 14, SUKKOT, false );
-
 				case 20:
-					return getErevHoshanaRabbaDetails();
+					return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, SUKKOT, false );
 
 				case 21:
-					return getHoshanaRabbaDetails();
+					return new HoshanaRabbaDetails( date );
 
 				case 22:
-					return getPenultimateYomDetails();
+					return new YomTovDetails( date, SHMINI_ATZERET, true );
 
 				case 23:
-					return getFinalYomDetails();
+					return new YomTovDetails( date, SIMCHAT_TORAH, false );
 			}
 		}
 
@@ -69,65 +65,13 @@ public class Succot
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevDetails( SUKKOT );
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new YomDetails( SUKKOT, true );
-	}
-
-
-	@Override
-	protected Details createYom2Details() {
-		return new YomDetails( SUKKOT, false );
-	}
-
-
-	@Override
-	protected Details createPenultimateYomDetails() {
-		return new YomDetails( SHMINI_ATZERET, true );
-	}
-
-
-	@Override
-	protected Details createFinalYomDetails() {
-		return new YomDetails( SIMCHAT_TORAH, false );
-	}
-
-
-	private Details getErevHoshanaRabbaDetails() {
-		if ( null == erevHoshanaRabbaDetails ) {
-			erevHoshanaRabbaDetails = new ErevHoshanaRabbaDetails();
-		}
-
-		return erevHoshanaRabbaDetails;
-	}
-
-
-	private Details getHoshanaRabbaDetails() {
-		if ( null == hoshanaRabbaDetails ) {
-			hoshanaRabbaDetails = new HoshanaRabbaDetails();
-		}
-
-		return hoshanaRabbaDetails;
-	}
-
-
-	private static final class ErevHoshanaRabbaDetails
-		extends CholHaMoedDetails {
-
-		private ErevHoshanaRabbaDetails() {
-			super( 6, SUKKOT + " 6 / " + HOSHANA_RABBA, false );
-		}
-	}
-
-
 	private static final class HoshanaRabbaDetails
-		implements Details {
+		extends Details {
+
+		private HoshanaRabbaDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
@@ -150,7 +94,7 @@ public class Succot
 
 		@Override
 		public String getDescription() {
-			return SUKKOT + " 7 / " + HOSHANA_RABBA + " / " + EREV + SHMINI_ATZERET;
+			return SUKKOT + " 7 (" + HOSHANA_RABBA + ")";
 		}
 	}
 

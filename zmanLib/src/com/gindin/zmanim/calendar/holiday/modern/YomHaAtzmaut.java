@@ -6,7 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 import java.util.Calendar;
 
@@ -33,7 +33,7 @@ import java.util.Calendar;
  */
 @SuppressWarnings( "FeatureEnvy" )
 public class YomHaAtzmaut
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               NAME = "Yom HaAtzmaut";
 
@@ -60,57 +60,66 @@ public class YomHaAtzmaut
 		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		switch ( date.getDayOfWeek() ) {
+			case Calendar.SUNDAY:
+				if ( 4 == jewishDayOfMonth ) {
+					// This is a case where we're pushing it forward...
+					return null;
+				}
+
 			case Calendar.MONDAY:
 				if ( 5 == jewishDayOfMonth ) {
-					return getErevDetails();
+					return createErevDetails( date );
 				}
 				break;
 
 			case Calendar.TUESDAY:
 				if ( 6 == jewishDayOfMonth ) {
-					return getYomDetails();
+					return createYomDetails( date );
 				}
 				break;
 
 			case Calendar.WEDNESDAY:
 				if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
-					return getErevDetails();
+					return createErevDetails( date );
 				}
 				break;
 
 			case Calendar.THURSDAY:
 				if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
-					return getYomDetails();
+					return createYomDetails( date );
 				}
 				break;
 		}
 
 		// We've handled the special cases, so if we get here, we're dealing with a regular year...
 		if ( 4 == jewishDayOfMonth ) {
-			return getErevDetails();
+			return createErevDetails( date );
 		}
 		else if ( 5 == jewishDayOfMonth ) {
-			return getYomDetails();
+			return createYomDetails( date );
 		}
 
 		return null;
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevYomHaAtzmautDetails();
+	private Details createErevDetails( HebrewDate date ) {
+		return new ErevYomHaAtzmautDetails( date );
 	}
 
 
-	@Override
-	protected Details createYomDetails() {
-		return new YomHaAtzmautDetails();
+	private Details createYomDetails( HebrewDate date ) {
+		return new YomHaAtzmautDetails( date );
 	}
 
 
 	private static class ErevYomHaAtzmautDetails
-		implements Details {
+		extends Details {
+
+		private ErevYomHaAtzmautDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -130,7 +139,12 @@ public class YomHaAtzmaut
 	}
 
 	private static class YomHaAtzmautDetails
-		implements Details {
+		extends Details {
+
+		private YomHaAtzmautDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

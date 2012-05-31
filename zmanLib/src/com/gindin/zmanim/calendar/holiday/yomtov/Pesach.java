@@ -6,26 +6,26 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservanceWithCholHaMoed;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
 public class Pesach
-	extends AbstractCachingObservanceWithCholHaMoed {
+	extends Observance {
 
-	private static final String                               NAME = "Pesach";
+	private static final String PESACH = "Pesach";
 
 
 	@Override
 	public String getName() {
-		return NAME;
+		return PESACH;
 	}
 
 
 	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+	public Observance.Details getDetailsFor( HebrewDate date ) {
 
 		final int hebrewMonth = date.getHebrewMonth();
 		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
@@ -36,60 +36,30 @@ public class Pesach
 
 		switch ( hebrewDayOfMonth ) {
 			case 14:
-				return getErevDetails();
+				return new ErevDetails( date, PESACH );
 
 			case 15:
-				return getYomDetails();
+				return new YomTovDetails( date, PESACH, true );
 
 			case 16:
-				return getYom2Details();
+				return new YomTovDetails( date, PESACH, false );
 
 			case 17:
 			case 18:
 			case 19:
-				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME, false );
+				return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, false );
 
 			case 20:
-				return new CholHaMoedDetails( hebrewDayOfMonth - 14, NAME, true );
+				return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, true );
 
 			case 21:
-				return getPenultimateYomDetails();
+				return new YomTovDetails( date, PESACH, true );
 
 			case 22:
-				return getFinalYomDetails();
+				return new YomTovDetails( date, PESACH, false );
 		}
 
 		return null;
-	}
-
-
-	@Override
-	protected Details createErevDetails() {
-		return new ErevDetails( NAME );
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new YomDetails( NAME, true );
-	}
-
-
-	@Override
-	protected Details createYom2Details() {
-		return new YomDetails( NAME, false );
-	}
-
-
-	@Override
-	protected Details createPenultimateYomDetails() {
-		return new YomDetails( NAME, true );
-	}
-
-
-	@Override
-	protected Details createFinalYomDetails() {
-		return new YomDetails( NAME, false );
 	}
 
 }  // End of Pesach class

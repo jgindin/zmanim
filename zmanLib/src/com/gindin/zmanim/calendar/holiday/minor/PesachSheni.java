@@ -6,13 +6,13 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 public class PesachSheni
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               PESACH_SHENI = "Pesach Sheni";
 
@@ -31,11 +31,11 @@ public class PesachSheni
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
 			if ( 13 == hebrewDayOfMonth ) {
-				return getErevDetails();
+				return new ErevPesachSheniDetails( date );
 			}
 
 			if ( 14 == hebrewDayOfMonth ) {
-				return getYomDetails();
+				return new PesachSheniDetails( date );
 			}
 		}
 
@@ -43,20 +43,13 @@ public class PesachSheni
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevPesachSheniDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new PesachSheniDetails();
-	}
-
-
 	private static final class ErevPesachSheniDetails
-		implements Details {
+		extends Details {
+
+		private ErevPesachSheniDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
@@ -84,7 +77,12 @@ public class PesachSheni
 
 
 	private static final class PesachSheniDetails
-		implements Details {
+		extends Details {
+
+		private PesachSheniDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {

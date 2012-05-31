@@ -6,14 +6,14 @@ package com.gindin.zmanim.calendar.holiday.rabbanan;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 @SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
 public class Purim
-	extends AbstractCachingObservance {
+	extends Observance {
 
 
 	@Override
@@ -29,10 +29,10 @@ public class Purim
 			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
 			if ( 13 == date.getHebrewDayOfMonth() ) {
-				return getErevDetails();
+				return new ErevPurimDetails( date );
 			}
 			if ( 14 == date.getHebrewDayOfMonth() ) {
-				return getYomDetails();
+				return new PurimDetails( date );
 			}
 		}
 
@@ -40,20 +40,14 @@ public class Purim
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevPurimDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new PurimDetails();
-	}
-
 
 	private static class ErevPurimDetails
-		implements Details {
+		extends Details {
+
+		private ErevPurimDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -73,7 +67,12 @@ public class Purim
 	}
 
 	private static class PurimDetails
-		implements Details {
+		extends Details {
+
+		private PurimDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

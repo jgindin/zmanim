@@ -12,11 +12,8 @@ import java.util.Calendar;
  * Represents Shabbat.
  */
 public class Shabbat
-	implements Observance {
+	extends Observance {
 
-
-	private static final ErevShabbatDetails                   EREV_SHABBAT_DETAILS = new ErevShabbatDetails();
-	private static final ShabbatDetails                       SHABBAT_DETAILS = new ShabbatDetails();
 
 
 	@Override
@@ -29,11 +26,11 @@ public class Shabbat
 	public Details getDetailsFor( final HebrewDate date ) {
 
 		if ( Calendar.FRIDAY == date.getDayOfWeek() ) {
-			return EREV_SHABBAT_DETAILS;
+			return new ErevShabbatDetails( date );
 		}
 
 		if ( Calendar.SATURDAY == date.getDayOfWeek() ) {
-			return SHABBAT_DETAILS;
+			return new ShabbatDetails( date );
 		}
 
 		return null;
@@ -41,7 +38,12 @@ public class Shabbat
 
 
 	private static class ErevShabbatDetails
-		implements Details {
+		extends Details {
+
+		private ErevShabbatDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return true;
@@ -61,7 +63,12 @@ public class Shabbat
 	}
 
 	private static class ShabbatDetails
-		implements Details {
+		extends Details {
+
+		private ShabbatDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override public boolean isErev() {
 			return false;

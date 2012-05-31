@@ -6,13 +6,13 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 public class YomKippur
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               NAME = "Yom Kippur";
 
@@ -29,11 +29,11 @@ public class YomKippur
 
 		if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
 			if ( 9 == date.getHebrewDayOfMonth() ) {
-				return getErevDetails();
+				return new ErevDetails( date );
 			}
 
 			if ( 10 == date.getHebrewDayOfMonth() ) {
-				return getYomDetails();
+				return new YomDetails( date );
 			}
 		}
 
@@ -41,20 +41,13 @@ public class YomKippur
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new YomDetails();
-	}
-
-
 	private static class ErevDetails
-		implements Details {
+		extends Details {
+
+		private ErevDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
@@ -81,7 +74,12 @@ public class YomKippur
 	}
 
 	private static class YomDetails
-		implements Details {
+		extends Details {
+
+		private YomDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {

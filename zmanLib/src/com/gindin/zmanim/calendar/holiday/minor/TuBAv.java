@@ -6,13 +6,13 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.AbstractCachingObservance;
+import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 public class TuBAv
-	extends AbstractCachingObservance {
+	extends Observance {
 
 	private static final String                               TU_BAV = "Tu B'Av";
 
@@ -29,11 +29,11 @@ public class TuBAv
 		if ( date.getHebrewMonth() == HebrewMonth.AV ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 14 == hebrewDayOfMonth ) {
-				return getErevDetails();
+				return new ErevTuBAvDetails( date );
 			}
 
 			if ( 15 == hebrewDayOfMonth ) {
-				return getYomDetails();
+				return new TuBAvDetails( date );
 			}
 		}
 
@@ -41,20 +41,13 @@ public class TuBAv
 	}
 
 
-	@Override
-	protected Details createErevDetails() {
-		return new ErevTuBAvDetails();
-	}
-
-
-	@Override
-	protected Details createYomDetails() {
-		return new TuBAvDetails();
-	}
-
-
 	private static final class ErevTuBAvDetails
-		implements Details {
+		extends Details {
+
+		private ErevTuBAvDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
@@ -82,7 +75,12 @@ public class TuBAv
 
 
 	private static final class TuBAvDetails
-		implements Details {
+		extends Details {
+
+		private TuBAvDetails( HebrewDate date ) {
+			super( date );
+		}
+
 
 		@Override
 		public boolean isErev() {
