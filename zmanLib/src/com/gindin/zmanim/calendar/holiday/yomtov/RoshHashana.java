@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -32,7 +33,7 @@ public class RoshHashana
 		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( ( HebrewMonth.ELUL == hebrewMonth ) && ( 29 == hebrewDayOfMonth ) ) {
-			return new ErevDetails( date, ROSH_HASHANA );
+			return new Details.Erev( date, ROSH_HASHANA );
 		}
 		else if ( HebrewMonth.TISHREI == hebrewMonth ) {
 			if ( 1 == hebrewDayOfMonth ) {
@@ -48,7 +49,7 @@ public class RoshHashana
 
 
 	private static final class RoshHashanaYomDetails
-		extends YomTovDetails {
+		extends Details.YomTovDetails {
 
 		private RoshHashanaYomDetails(
 			HebrewDate date,

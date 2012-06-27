@@ -6,13 +6,14 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class Succot
+public class Sukkot
 	extends Observance {
 
 	private static final String                               SUKKOT = "Sukkot";
@@ -36,28 +37,28 @@ public class Succot
 
 			switch ( hebrewDayOfMonth ) {
 				case 14:
-					return new ErevDetails( date, SUKKOT );
+					return new Details.Erev( date, SUKKOT );
 
 				case 15:
-					return new YomTovDetails( date, SUKKOT, true );
+					return new Details.YomTovDetails( date, SUKKOT, true );
 
 				case 16:
-					return new YomTovDetails( date, SUKKOT, false );
+					return new Details.YomTovDetails( date, SUKKOT, false );
 
 				case 17:
 				case 18:
 				case 19:
 				case 20:
-					return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, SUKKOT, false );
+					return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, SUKKOT, false );
 
 				case 21:
 					return new HoshanaRabbaDetails( date );
 
 				case 22:
-					return new YomTovDetails( date, SHMINI_ATZERET, true );
+					return new Details.YomTovDetails( date, SHMINI_ATZERET, true );
 
 				case 23:
-					return new YomTovDetails( date, SIMCHAT_TORAH, false );
+					return new Details.YomTovDetails( date, SIMCHAT_TORAH, false );
 			}
 		}
 
@@ -88,7 +89,7 @@ public class Succot
 
 		@Override
 		public boolean sayHavdalah() {
-			return false;
+			return isShabbat();
 		}
 
 
@@ -98,4 +99,4 @@ public class Succot
 		}
 	}
 
-}  // End of Succot class
+}  // End of Sukkot class

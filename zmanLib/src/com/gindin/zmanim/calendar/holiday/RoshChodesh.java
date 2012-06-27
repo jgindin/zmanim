@@ -178,75 +178,19 @@ public class RoshChodesh
 
 
 	private static final class ErevRoshChodeshDetails
-		extends Details {
-
-		private final String                                    month;
-
+		extends Details.Erev {
 
 		ErevRoshChodeshDetails( HebrewDate date, String month ) {
-			super( date );
-			this.month = month;
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return EREV + ROSH_CHODESH + " " + month;
+			super( date, ROSH_CHODESH + " " + month, false );
 		}
 	}
 
 
 	private static final class RoshChodeshDetails
-		extends Details {
-
-		private final String                                    month;
-
+		extends Details.Yom {
 
 		RoshChodeshDetails( HebrewDate date, String month ) {
-			super( date );
-			this.month = month;
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return ROSH_CHODESH + " " + month;
+			super( date, ROSH_CHODESH + " " + month );
 		}
 	}
 

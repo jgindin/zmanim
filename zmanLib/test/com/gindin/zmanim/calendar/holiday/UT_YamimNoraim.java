@@ -61,7 +61,7 @@ public class UT_YamimNoraim {
 	) {
 
 		HebrewDate  date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, month, day );
 

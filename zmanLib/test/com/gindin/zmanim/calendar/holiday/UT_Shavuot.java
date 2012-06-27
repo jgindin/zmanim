@@ -62,7 +62,7 @@ public class UT_Shavuot {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = SHAVUOT.getDetailsFor( date );

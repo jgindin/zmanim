@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -29,82 +30,15 @@ public class TuBShvat
 		if ( date.getHebrewMonth() == HebrewMonth.SHEVAT ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 14 == hebrewDayOfMonth ) {
-				return new ErevTuBShvatDetails( date );
+				return new Details.Erev( date, TU_B_SHVAT, false );
 			}
 
 			if ( 15 == hebrewDayOfMonth ) {
-				return new TuBShvatDetails( date );
+				return new Details.Yom( date, TU_B_SHVAT );
 			}
 		}
 
 		return null;
-	}
-
-
-
-	private static final class ErevTuBShvatDetails
-		extends Details {
-
-		private ErevTuBShvatDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return EREV + TU_B_SHVAT;
-		}
-	}
-
-
-	private static final class TuBShvatDetails
-		extends Details {
-
-		private TuBShvatDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return TU_B_SHVAT;
-		}
 	}
 
 }  // End of TuBAv class

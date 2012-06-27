@@ -57,7 +57,7 @@ public class UT_Chanukah {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, chanukahMonth, startingDay );
 		date = date.yesterday();

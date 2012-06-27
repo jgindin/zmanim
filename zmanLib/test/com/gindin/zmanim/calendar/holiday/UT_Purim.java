@@ -7,7 +7,6 @@ package com.gindin.zmanim.calendar.holiday;
 import com.gindin.zmanim.calendar.Constants;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.HebrewMonth;
 import com.gindin.zmanim.calendar.holiday.rabbanan.Purim;
 import com.gindin.zmanim.calendar.holiday.minor.PurimKatan;
 import com.gindin.zmanim.calendar.holiday.rabbanan.ShushanPurim;
@@ -70,7 +69,7 @@ public class UT_Purim {
 	) {
 
 		HebrewDate  date;
-		Observance.Details  details;
+		Details details;
 
 		// Check today -- should be Purim.
 		date = HebrewCalendar.getForDate( year, purimMonth, purimDay );
@@ -105,7 +104,7 @@ public class UT_Purim {
 	) {
 
 		HebrewDate  date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, purimMonth, purimDay );
 		details = PURIM_KATAN.getDetailsFor( date );

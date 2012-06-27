@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -38,65 +39,15 @@ public class YomYerushalayim
 		}
 
 		if ( 27 == date.getHebrewDayOfMonth() ) {
-			return new ErevYomYerushalayimDetails( date );
+			return new Details.Erev( date, NAME, false );
 		}
 
 		if ( 28 == date.getHebrewDayOfMonth() ) {
-			return new YomYerushalayimDetails( date );
+			return new Details.Yom( date, NAME );
 		}
 
 		return null;
 	}
 
-
-	private static class ErevYomYerushalayimDetails
-		extends Details {
-
-		private ErevYomYerushalayimDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static class YomYerushalayimDetails
-		extends Details {
-
-		private YomYerushalayimDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return NAME;
-		}
-	}
 
 }  // End of YomYerushalayim class

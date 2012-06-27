@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -48,38 +49,10 @@ public class Omer
 
 
 	private static final class OmerDetails
-		extends Details {
-
-		private int                                             dayOfOmer;
-
+		extends Details.Yom {
 
 		private OmerDetails( HebrewDate date, int dayOfOmer ) {
-			super( date );
-			this.dayOfOmer = dayOfOmer;
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return OMER + " " + dayOfOmer;
+			super( date, OMER + " " + dayOfOmer );
 		}
 	}
 

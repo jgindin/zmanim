@@ -96,7 +96,7 @@ public class UT_Modern {
 	) {
 
 		HebrewDate date;
-		Observance.Details details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, yomHaShoahMonth, yomHaShoahDay );
 		details = YOM_HA_SHOAH.getDetailsFor( date );

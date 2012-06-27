@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 import java.util.Calendar;
@@ -104,63 +105,12 @@ public class YomHaAtzmaut
 
 
 	private Details createErevDetails( HebrewDate date ) {
-		return new ErevYomHaAtzmautDetails( date );
+		return new Details.Erev( date, NAME, false );
 	}
 
 
 	private Details createYomDetails( HebrewDate date ) {
-		return new YomHaAtzmautDetails( date );
-	}
-
-
-	private static class ErevYomHaAtzmautDetails
-		extends Details {
-
-		private ErevYomHaAtzmautDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static class YomHaAtzmautDetails
-		extends Details {
-
-		private YomHaAtzmautDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return NAME;
-		}
+		return new Details.Yom( date, NAME );
 	}
 
 }  // End of YomHaAtzmaut class

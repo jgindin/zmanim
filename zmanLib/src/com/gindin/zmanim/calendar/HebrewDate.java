@@ -4,6 +4,10 @@
 
 package com.gindin.zmanim.calendar;
 
+import com.gindin.zmanim.calendar.holiday.Details;
+import com.gindin.zmanim.calendar.holiday.Holidays;
+import com.gindin.zmanim.calendar.holiday.Observance;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -43,6 +47,9 @@ public class HebrewDate
 
 	/** Internal representation of the date. */
 	private int                                               gregorianAbsDate;
+
+	/** Cache the details lookup. */
+	private Details                                           dateDetails;
 
 
 	HebrewDate(
@@ -84,6 +91,75 @@ public class HebrewDate
 		this.moladHours = moladHours;
 		this.moladMinutes = moladMinutes;
 		this.moladChalakim = moladChalakim;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Find out about this date
+	@SuppressWarnings( "FeatureEnvy" )
+	public Details getDetails() {
+
+		if ( null != dateDetails ) {
+			return dateDetails;
+		}
+
+		// Create a NullDetails here...it avoids a bunch of null checking...
+		dateDetails = new NullDetails( this );
+
+		Details shabbat = Holidays.SHABBAT.getDetailsFor( this );
+		if ( null != shabbat ) {
+			dateDetails = dateDetails.composeWith( shabbat );
+		}
+
+		Details roshChodeshDetails = Holidays.ROSH_CHODESH.getDetailsFor( this );
+		if ( null != roshChodeshDetails ) {
+			dateDetails = dateDetails.composeWith( roshChodeshDetails );
+		}
+
+
+		Details holidayDetails = null;
+		for ( Observance fastDay : Holidays.FAST_DAYS ) {
+			holidayDetails = fastDay.getDetailsFor( this );
+			if ( null != holidayDetails ) {
+				dateDetails = dateDetails.composeWith( holidayDetails );
+			}
+		}
+
+		for ( Observance holiday : Holidays.MAJOR_HOLIDAYS ) {
+			holidayDetails = holiday.getDetailsFor( this );
+			if ( null != holidayDetails ) {
+				dateDetails = dateDetails.composeWith( holidayDetails );
+			}
+		}
+
+		for ( Observance holiday : Holidays.MINOR_HOLIDAYS ) {
+			holidayDetails = holiday.getDetailsFor( this );
+			if ( null != holidayDetails ) {
+				dateDetails = dateDetails.composeWith( holidayDetails );
+			}
+		}
+
+		for ( Observance modernHoliday : Holidays.MODERN_HOLIDAYS ) {
+			holidayDetails = modernHoliday.getDetailsFor( this );
+			if ( null != holidayDetails ) {
+				dateDetails = dateDetails.composeWith( holidayDetails );
+			}
+		}
+
+		Details omerDetails = Holidays.OMER.getDetailsFor( this );
+		if ( null != omerDetails ) {
+			if ( null == dateDetails ) {
+				dateDetails = omerDetails;
+			}
+			else {
+				dateDetails = dateDetails.composeWith( omerDetails );
+			}
+		}
+
+
+
+		return dateDetails;
 	}
 
 
@@ -387,4 +463,44 @@ public class HebrewDate
 		result = 31 * result + hebrewDay;
 		return result;
 	}
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//
+
+	private static class NullDetails
+		extends Details {
+
+		NullDetails( HebrewDate date ) {
+			super( date );
+		}
+
+		@Override
+		public boolean isErev() {
+			return false;
+		}
+
+		@Override
+		public boolean lightCandles() {
+			return false;
+		}
+
+		@Override
+		public boolean sayHavdalah() {
+			return false;
+		}
+
+		@Override
+		public String getDescription() {
+			return "";
+		}
+
+
+		@Override
+		public boolean isAnything() {
+			return false;
+		}
+	}
+
 }  // End of HebrewDate class

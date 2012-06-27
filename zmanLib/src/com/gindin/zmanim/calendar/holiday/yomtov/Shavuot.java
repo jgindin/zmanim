@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -28,15 +29,15 @@ public class Shavuot
 		if ( HebrewMonth.SIVAN == date.getHebrewMonth() ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 5 == hebrewDayOfMonth ) {
-				return new ErevDetails( date, SHAVUOT );
+				return new Details.Erev( date, SHAVUOT );
 			}
 
 			if ( 6 == hebrewDayOfMonth ) {
-				return new YomTovDetails( date, SHAVUOT, true );
+				return new Details.YomTovDetails( date, SHAVUOT, true );
 			}
 
 			if ( 7 == hebrewDayOfMonth ) {
-				return new YomTovDetails( date, SHAVUOT, false );
+				return new Details.YomTovDetails( date, SHAVUOT, false );
 			}
 		}
 

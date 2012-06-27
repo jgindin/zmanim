@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -25,7 +26,7 @@ public class Pesach
 
 
 	@Override
-	public Observance.Details getDetailsFor( HebrewDate date ) {
+	public Details getDetailsFor( HebrewDate date ) {
 
 		final int hebrewMonth = date.getHebrewMonth();
 		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
@@ -36,27 +37,27 @@ public class Pesach
 
 		switch ( hebrewDayOfMonth ) {
 			case 14:
-				return new ErevDetails( date, PESACH );
+				return new Details.Erev( date, PESACH );
 
 			case 15:
-				return new YomTovDetails( date, PESACH, true );
+				return new Details.YomTovDetails( date, PESACH, true );
 
 			case 16:
-				return new YomTovDetails( date, PESACH, false );
+				return new Details.YomTovDetails( date, PESACH, false );
 
 			case 17:
 			case 18:
 			case 19:
-				return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, false );
+				return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, false );
 
 			case 20:
-				return new CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, true );
+				return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, true );
 
 			case 21:
-				return new YomTovDetails( date, PESACH, true );
+				return new Details.YomTovDetails( date, PESACH, true );
 
 			case 22:
-				return new YomTovDetails( date, PESACH, false );
+				return new Details.YomTovDetails( date, PESACH, false );
 		}
 
 		return null;

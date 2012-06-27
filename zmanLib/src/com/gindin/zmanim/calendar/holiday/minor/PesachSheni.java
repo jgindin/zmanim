@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -31,81 +32,15 @@ public class PesachSheni
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
 			if ( 13 == hebrewDayOfMonth ) {
-				return new ErevPesachSheniDetails( date );
+				return new Details.Erev( date, PESACH_SHENI, false );
 			}
 
 			if ( 14 == hebrewDayOfMonth ) {
-				return new PesachSheniDetails( date );
+				return new Details.Yom( date, PESACH_SHENI );
 			}
 		}
 
 		return null;
-	}
-
-
-	private static final class ErevPesachSheniDetails
-		extends Details {
-
-		private ErevPesachSheniDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return EREV + PESACH_SHENI;
-		}
-	}
-
-
-	private static final class PesachSheniDetails
-		extends Details {
-
-		private PesachSheniDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return PESACH_SHENI;
-		}
 	}
 
 }  // End of PesachSheni class

@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.taaniyot;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 import java.util.Calendar;
@@ -187,6 +188,56 @@ abstract class Taanit
 		}
 
 		return null;
+	}
+
+
+	protected static class ErevTaanitDetails
+		extends Details.Erev {
+
+		ErevTaanitDetails(
+			HebrewDate  date,
+			String      name
+		) {
+
+			// Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
+			//  Details class)
+			super( date, name, false );
+		}
+
+
+		@Override
+		public boolean sayHavdalah() {
+
+			// We can have a fast day that falls on Sunday, in which case we would say Havdalah on erev of the fast...
+			return isShabbat();
+		}
+	}
+
+
+	protected static class TaanitDetails
+		extends Details.Yom {
+
+		public TaanitDetails(
+			HebrewDate  date,
+			String      name
+		) {
+			super( date, name );
+		}
+
+
+		@Override
+		public boolean lightCandles() {
+
+			// At least one fast can fall on Erev Shabbat...
+			return isErevShabbat();
+		}
+
+
+		@Override
+		public boolean sayHavdalah() {
+			// No fast requires havdalah.
+			return false;
+		}
 	}
 
 }  // End of Taanit class

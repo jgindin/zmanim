@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.rabbanan;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -16,9 +17,12 @@ public class Purim
 	extends Observance {
 
 
+	private static final String                               PURIM = "Purim";
+
+
 	@Override
 	public String getName() {
-		return "Purim";
+		return PURIM;
 	}
 
 
@@ -29,66 +33,14 @@ public class Purim
 			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
 			if ( 13 == date.getHebrewDayOfMonth() ) {
-				return new ErevPurimDetails( date );
+				return new Details.Erev( date, PURIM, false );
 			}
 			if ( 14 == date.getHebrewDayOfMonth() ) {
-				return new PurimDetails( date );
+				return new Details.Yom( date, PURIM );
 			}
 		}
 
 		return null;
-	}
-
-
-
-	private static class ErevPurimDetails
-		extends Details {
-
-		private ErevPurimDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + "Purim";
-		}
-	}
-
-	private static class PurimDetails
-		extends Details {
-
-		private PurimDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return "Purim";
-		}
 	}
 
 }  // End of Purim class

@@ -73,7 +73,7 @@ public class UT_Minor {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 		
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = TU_B_SHVAT.getDetailsFor( date );
@@ -98,7 +98,7 @@ public class UT_Minor {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 		
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = TU_B_AV.getDetailsFor( date );

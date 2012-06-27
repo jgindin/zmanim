@@ -121,7 +121,7 @@ public class UT_Taaniyot {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );
-		Observance.Details details = observance.getDetailsFor( date );
+		Details details = observance.getDetailsFor( date );
 		Assert.assertNotNull( details );
 		Assert.assertFalse( details.isErev() );
 
@@ -150,7 +150,7 @@ public class UT_Taaniyot {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );
-		Observance.Details details = observance.getDetailsFor( date );
+		Details details = observance.getDetailsFor( date );
 		Assert.assertNull( details );
 	}
 

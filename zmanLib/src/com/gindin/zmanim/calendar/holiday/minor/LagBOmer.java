@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.minor;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -30,81 +31,14 @@ public class LagBOmer
 		if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 17 == hebrewDayOfMonth ) {
-				return new ErevLagBOmerDetails( date );
+				return new Details.Erev( date, NAME, false );
 			}
 			else if ( 18 == hebrewDayOfMonth ) {
-				return new LagBOmerDetails( date );
+				return new Details.Yom( date, NAME );
 			}
 		}
 
 		return null;
-	}
-
-
-	private static final class ErevLagBOmerDetails
-		extends Details {
-
-		private ErevLagBOmerDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-
-
-	private static final class LagBOmerDetails
-		extends Details {
-
-		private LagBOmerDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return NAME;
-		}
 	}
 
 }  // End of LagBOmer class

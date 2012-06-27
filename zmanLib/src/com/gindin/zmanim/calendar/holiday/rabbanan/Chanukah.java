@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.rabbanan;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -16,9 +17,12 @@ public class Chanukah
 	extends Observance {
 
 
+	private static final String                               CHANUKAH = "Chanukah";
+
+
 	@Override
 	public String getName() {
-		return "Chanukah";
+		return CHANUKAH;
 	}
 
 
@@ -29,7 +33,7 @@ public class Chanukah
 
 		if ( HebrewMonth.KISLEV == date.getHebrewMonth() ) {
 			if ( 24 == hebrewDayOfMonth ) {
-				return new ErevChanukahDetails( date );
+				return new Details.Erev( date, CHANUKAH, false );
 			}
 			else if ( hebrewDayOfMonth >= 25 ) {
 				return new ChanukahDetails( date, ( hebrewDayOfMonth + 1 ) - 25 );
@@ -52,57 +56,11 @@ public class Chanukah
 	}
 
 
-	private static class ErevChanukahDetails
-		extends Details {
-
-		private ErevChanukahDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + "Chanukah";
-		}
-	}
-
 	private static class ChanukahDetails
-		extends Details {
-
-		private final int                                       day;
-
+		extends Details.Yom {
 
 		private ChanukahDetails( HebrewDate date, int day ) {
-			super( date );
-			this.day = day;
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return "Chanukah " + day;
+			super( date, CHANUKAH + " " + day );
 		}
 	}
 

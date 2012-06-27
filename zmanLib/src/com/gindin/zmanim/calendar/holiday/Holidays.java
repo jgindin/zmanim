@@ -15,11 +15,13 @@ import com.gindin.zmanim.calendar.holiday.yomtov.*;
  */
 public class Holidays {
 
+	public static final Shabbat                               SHABBAT = new Shabbat();
+
 	// Yom Tov
 	private static final Pesach                               PESACH = new Pesach();
 	private static final RoshHashana                          ROSH_HASHANA = new RoshHashana();
 	private static final Shavuot                              SHAVUOT = new Shavuot();
-	private static final Succot                               SUCCOT = new Succot();
+	private static final Sukkot                               SUKKOT = new Sukkot();
 	private static final YomKippur                            YOM_KIPPUR = new YomKippur();
 
 	// Rabanic Holidays
@@ -29,10 +31,10 @@ public class Holidays {
 
 	// Minor
 	private static final LagBOmer                             LAG_B_OMER = new LagBOmer();
-	private static final Omer                                 OMER = new Omer();
 	private static final PesachSheni                          PESACH_SHENI = new PesachSheni();
 	private static final TuBAv                                TU_B_AV = new TuBAv();
 	private static final TuBShvat                             TU_B_SHVAT = new TuBShvat();
+	private static final PurimKatan                           PURIM_KATAN = new PurimKatan();
 
 	// Fast Days
 	private static final AsaraBTevet                          ASARA_B_TEVET = new AsaraBTevet();
@@ -49,21 +51,38 @@ public class Holidays {
 	private static final YomYerushalayim                      YOM_YERUSHALAYIM = new YomYerushalayim();
 
 	// Handles all of the Rosh Chodeshim
-	private static final RoshChodesh                          ROSH_CHODESH = new RoshChodesh();
+	public static final RoshChodesh                           ROSH_CHODESH = new RoshChodesh();
+
+	// Handles all of the Omer
+	public static final Omer                                  OMER = new Omer();
+
 
 	/**
 	 * Sets of the holidays.
 	 */
-	public static final Observance[]                          ALL = {
-		PESACH,         ROSH_HASHANA,       SHAVUOT,          SUCCOT,           YOM_KIPPUR,
-		CHANUKAH,       PURIM,              SHUSHAN_PURIM,
-		LAG_B_OMER,     OMER,               PESACH_SHENI,     TU_B_AV,          TU_B_SHVAT,
-		ASARA_B_TEVET,  TAANIT_17_TAMUZ,    TAANIT_BECHOROT,  TAANIT_ESTHER,    TISHA_B_AV,   TZOM_GEDALIAH,
-		YOM_HA_ATZMAUT, YOM_HA_SHOAH,       YOM_HA_ZIKARON,   YOM_YERUSHALAYIM,
-		ROSH_CHODESH
+	public static final Observance[]                          MAJOR_HOLIDAYS = {
+		ROSH_HASHANA,       YOM_KIPPUR,         SUKKOT,
+		CHANUKAH,           PURIM,              PESACH,
+		SHAVUOT
 	};
 
 
+	public static final Observance[]                          MINOR_HOLIDAYS = {
+		TU_B_SHVAT,         PURIM_KATAN,        SHUSHAN_PURIM,
+		PESACH_SHENI,       LAG_B_OMER
+	};
+
+
+	public static final Observance[]                          FAST_DAYS = {
+		TZOM_GEDALIAH,      ASARA_B_TEVET,      TAANIT_ESTHER,
+		TAANIT_BECHOROT,    TAANIT_17_TAMUZ,    TISHA_B_AV
+	};
+
+
+	public static final Observance[]                          MODERN_HOLIDAYS = {
+		YOM_HA_SHOAH,       YOM_HA_ZIKARON,     YOM_HA_ATZMAUT,
+		YOM_YERUSHALAYIM
+	};
 
 
 	/** Not instantiatable. */

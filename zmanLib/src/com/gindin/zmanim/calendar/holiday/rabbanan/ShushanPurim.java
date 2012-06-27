@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.rabbanan;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -16,9 +17,12 @@ public class ShushanPurim
 	extends Observance {
 
 
+	private static final String                               SHUSHAN_PURIM = "Shushan Purim";
+
+
 	@Override
 	public String getName() {
-		return "Shushan Purim";
+		return SHUSHAN_PURIM;
 	}
 
 
@@ -29,39 +33,11 @@ public class ShushanPurim
 			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
 			if ( 15 == date.getHebrewDayOfMonth() ) {
-				return new ShushanPurimDetails( date );
+				return new Details.Yom( date, SHUSHAN_PURIM );
 			}
 		}
 
 		return null;
 	}
-
-
-
-	private static class ShushanPurimDetails
-		extends Details {
-
-		private ShushanPurimDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return "Shushan Purim";
-		}
-	}
-
 
 }  // End of ShushanPurim class

@@ -15,10 +15,12 @@ public class Shabbat
 	extends Observance {
 
 
+	private static final String                               SHABBAT = "Shabbat";
+
 
 	@Override
 	public String getName() {
-		return "Shabbat";
+		return SHABBAT;
 	}
 
 
@@ -37,53 +39,38 @@ public class Shabbat
 	}
 
 
-	private static class ErevShabbatDetails
-		extends Details {
+	private static class ShabbatDetails
+		extends Details.Yom {
 
-		private ErevShabbatDetails( HebrewDate date ) {
-			super( date );
+		private ShabbatDetails( HebrewDate date ) {
+			super( date, SHABBAT );
 		}
 
-
-		@Override public boolean isErev() {
-			return true;
-		}
 
 		@Override public boolean lightCandles() {
-			return true;
-		}
-
-		@Override public boolean sayHavdalah() {
 			return false;
 		}
 
-		@Override public String getDescription() {
-			return EREV + "Shabbat";
+		@Override public boolean sayHavdalah() {
+			return true;
 		}
 	}
 
-	private static class ShabbatDetails
-		extends Details {
 
-		private ShabbatDetails( HebrewDate date ) {
-			super( date );
+	private static class ErevShabbatDetails
+		extends Details.Erev {
+
+		private ErevShabbatDetails(
+			HebrewDate date
+		) {
+			super( date, SHABBAT, true );
 		}
 
 
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return true;
-		}
-
-		@Override public String getDescription() {
-			return "Shabbat";
+		@Override
+		public String getDescription() {
+			// No one wants to see "Erev Shabbat" for every Friday...
+			return "";
 		}
 	}
 

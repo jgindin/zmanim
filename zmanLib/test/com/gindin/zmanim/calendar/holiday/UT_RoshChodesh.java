@@ -182,7 +182,7 @@ public class UT_RoshChodesh {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
-		Observance.Details details = ROSH_CHODESH.getDetailsFor( date );
+		Details details = ROSH_CHODESH.getDetailsFor( date );
 
 		Assert.assertNotNull( details );
 		Assert.assertTrue( details.isErev() );
@@ -217,7 +217,7 @@ public class UT_RoshChodesh {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
-		Observance.Details details = ROSH_CHODESH.getDetailsFor( date );
+		Details details = ROSH_CHODESH.getDetailsFor( date );
 
 		Assert.assertNull( details );
 	}

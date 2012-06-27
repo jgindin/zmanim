@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.taaniyot;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 
 /**
  *
@@ -36,65 +37,14 @@ public class TzomGedaliah
 
 	@Override
 	protected Details createErevDetails( HebrewDate date ) {
-		return new ErevTzomGedaliahDetails( date );
+		return new ErevTaanitDetails( date, TZOM_GEDALIAH );
 	}
 
 
 	@Override
 	protected Details createYomDetails( HebrewDate date ) {
-		return new TzomGedaliahDetails( date );
+		return new TaanitDetails( date, TZOM_GEDALIAH );
 	}
 
-
-	private static class ErevTzomGedaliahDetails
-		extends Details {
-
-		private ErevTzomGedaliahDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + TZOM_GEDALIAH;
-		}
-	}
-
-
-	private static class TzomGedaliahDetails
-		extends Details {
-
-		private TzomGedaliahDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return TZOM_GEDALIAH;
-		}
-	}
 
 }  // End of TzomGedaliah class

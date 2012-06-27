@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.yomtov;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 /**
@@ -29,11 +30,11 @@ public class YomKippur
 
 		if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
 			if ( 9 == date.getHebrewDayOfMonth() ) {
-				return new ErevDetails( date );
+				return new Details.Erev( date, NAME );
 			}
 
 			if ( 10 == date.getHebrewDayOfMonth() ) {
-				return new YomDetails( date );
+				return new YomKippurDetails( date );
 			}
 		}
 
@@ -41,42 +42,10 @@ public class YomKippur
 	}
 
 
-	private static class ErevDetails
+	private static class YomKippurDetails
 		extends Details {
 
-		private ErevDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return true;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return false;
-		}
-
-
-		@Override
-		public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static class YomDetails
-		extends Details {
-
-		private YomDetails( HebrewDate date ) {
+		private YomKippurDetails( HebrewDate date ) {
 			super( date );
 		}
 

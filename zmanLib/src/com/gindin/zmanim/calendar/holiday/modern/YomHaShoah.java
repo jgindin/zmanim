@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.holiday.modern;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.HebrewMonth;
+import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Observance;
 
 
@@ -40,64 +41,14 @@ public class YomHaShoah
 		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( 26 == jewishDayOfMonth ) {
-			return new ErevYomHaShoahDetails( date );
+			return new Details.Erev( date, NAME, false );
 		}
 		else if ( 27 == jewishDayOfMonth ) {
-			return new YomHaShoahDetails( date );
+			return new Details.Yom( date, NAME );
 		}
 
 		return null;
 	}
 
-
-	private static class ErevYomHaShoahDetails
-		extends Details {
-
-		private ErevYomHaShoahDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return true;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return EREV + NAME;
-		}
-	}
-
-	private static class YomHaShoahDetails
-		extends Details {
-
-		private YomHaShoahDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override public boolean isErev() {
-			return false;
-		}
-
-		@Override public boolean lightCandles() {
-			return false;
-		}
-
-		@Override public boolean sayHavdalah() {
-			return false;
-		}
-
-		@Override public String getDescription() {
-			return NAME;
-		}
-	}
 
 }  // End of YomHaShoah class

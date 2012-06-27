@@ -139,7 +139,7 @@ public class UT_Pesach {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, month, day );
 
@@ -227,7 +227,7 @@ public class UT_Pesach {
 	) {
 
 		HebrewDate date;
-		Observance.Details  details;
+		Details details;
 
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = PESACH_SHENI.getDetailsFor( date );
@@ -253,7 +253,7 @@ public class UT_Pesach {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
-		Observance.Details details = OMER.getDetailsFor( date );
+		Details details = OMER.getDetailsFor( date );
 		Assert.assertNotNull( details );
 		Assert.assertFalse( details.isErev() );
 		Assert.assertFalse( details.lightCandles() );
@@ -269,7 +269,7 @@ public class UT_Pesach {
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
-		Observance.Details details = OMER.getDetailsFor( date );
+		Details details = OMER.getDetailsFor( date );
 
 		Assert.assertNull( details );
 	}
@@ -283,7 +283,7 @@ public class UT_Pesach {
 
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
-		Observance.Details details = LAG_B_OMER.getDetailsFor( date );
+		Details details = LAG_B_OMER.getDetailsFor( date );
 		Assert.assertNotNull( details );
 		Assert.assertFalse( details.isErev() );
 		Assert.assertFalse( details.lightCandles() );
