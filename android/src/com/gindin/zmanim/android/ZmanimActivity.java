@@ -106,6 +106,16 @@ public class ZmanimActivity
 		Bundle savedInstanceState
 	) {
 
+
+		// Enable this to get more detailed info regarding disk or network access occurring on the UI thread.
+		//  See http://stackoverflow.com/questions/704311/android-how-do-i-investigate-an-anr.
+//		StrictMode.setVmPolicy(
+//			new StrictMode.VmPolicy.Builder()
+//				.detectAll()
+//        .penaltyLog()
+//        .penaltyDeath()
+//        .build()
+//		);
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
