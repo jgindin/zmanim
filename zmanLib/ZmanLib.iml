@@ -9,7 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="KosherJava" />
-    <orderEntry type="library" name="ICU4J" level="project" />
     <orderEntry type="library" name="JUnit 4" level="project" />
     <orderEntry type="library" name="IJ Annotations" level="application" />
   </component>
