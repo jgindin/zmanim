@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.ZmanFormatter;
 
 /**
  * Wraps a zman row, making for quick & easy recycling.
@@ -23,17 +23,16 @@ public abstract class ZmanRowWrapper {
 
 	private final TextView                                  timeField;
 
-	private final HebrewZmanimCalendar                      zmanimCalendar;
-
 	private ZmanAsyncCalculator                             currentCalculator;
+
+	private ZmanFormatter                                   zmanFormatter;
 
 
 	public ZmanRowWrapper(
-		View                  zmanRowView,
-		HebrewZmanimCalendar  zmanimCalendar
+		View          zmanRowView,
+		ZmanFormatter zmanFormatter
 	) {
-
-		this.zmanimCalendar = zmanimCalendar;
+		this.zmanFormatter = zmanFormatter;
 
 		nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
 		timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
@@ -51,7 +50,7 @@ public abstract class ZmanRowWrapper {
 		}
 
 		// Start the new calculation
-		currentCalculator = new ZmanAsyncCalculator( zmanimCalendar, timeField );
+		currentCalculator = new ZmanAsyncCalculator( zmanFormatter, timeField );
 		currentCalculator.execute( zman );
 		updateTextFields( zman );
 
@@ -72,15 +71,15 @@ public abstract class ZmanRowWrapper {
 	private static class ZmanAsyncCalculator
 		extends AsyncTask<Zman, Void, String> {
 
-		private final HebrewZmanimCalendar                      zmanimCalendar;
+		private final ZmanFormatter                             zmanFormatter;
 		private final TextView                                  timeField;
 
 
 		ZmanAsyncCalculator(
-			HebrewZmanimCalendar  zmanimCalendar,
-			TextView              timeField
+			ZmanFormatter zmanFormatter,
+			TextView      timeField
 		) {
-			this.zmanimCalendar = zmanimCalendar;
+			this.zmanFormatter = zmanFormatter;
 			this.timeField = timeField;
 
 			timeField.setText( "" );
@@ -93,7 +92,7 @@ public abstract class ZmanRowWrapper {
 			String formatted = "";
 
 			try {
-				formatted = zmanimCalendar.formatZmanTime( zmans[0] );
+				formatted = zmanFormatter.formatZmanTime( zmans[0] );
 			}
 			catch ( Exception e ) {
 				final Zman zman = zmans[ 0 ];

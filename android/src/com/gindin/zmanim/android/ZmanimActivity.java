@@ -4,15 +4,18 @@
 
 package com.gindin.zmanim.android;
 
+import com.gindin.util.EventManager;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
+import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.icu4j_calendar.HebrewDateFormatter;
-import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
 import android.app.*;
@@ -28,24 +31,29 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends ListActivity {
+	extends ListActivity
+	implements DateChangedEvent.HasListeners {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
-	/** The calendar we use for displaying everything. */
-	private HebrewZmanimCalendar                              zmanimCalendar;
+	/** What date is currently being viewed? */
+	private HebrewDate                                        currentDate;
+
+	/** Controls how we format the zmanim. */
+	private ZmanFormatter                                     zmanFormatter;
+
+	/** How do we format Hebrew & Secular dates? */
+	private HebrewDateFormatter                               hebrewDateFormatter;
+	private SecularDateFormatter                              secularDateFormatter;
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
-
-	private HebrewZmanimCalendar.Listener                     zmanimCalendarListener;
 
 	private ZmanimLocationManager                             locationManager;
 
@@ -68,6 +76,8 @@ public class ZmanimActivity
 	 *  we're done, it's reset to null.
 	 */
 	private AsyncTask<Void, Void, Void>                       buildUITask = null;
+
+	private DateChangeEventManager                            dateChangedEventManager = new DateChangeEventManager();
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -209,8 +219,6 @@ public class ZmanimActivity
 			locationManager.onDestroy();
 		}
 
-		cleanupCalendarListeners();
-
 		LogUtils.endSession( this );
 		
 		super.onDestroy();
@@ -234,7 +242,6 @@ public class ZmanimActivity
 			case ENABLE_LOCATION_SERVICES:
 				determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 				determiningLocationDialog.show();
-				cleanupCalendarListeners();
 				locationManager.onLocationProvidersChanged();
 				break;
 
@@ -264,7 +271,7 @@ public class ZmanimActivity
 		}
 
 		buildUITask = new BuildUIAsyncTask( location, error );
-		buildUITask.execute();
+		buildUITask.execute( (Void)null );
 	}
 
 
@@ -396,10 +403,10 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void updateHeader() {
 
-		updateField( R.id.hebrew_date, zmanimCalendar.formatHebrewDate() );
-		updateField( R.id.secular_date, Html.fromHtml( "<u>" + zmanimCalendar.formatSecularDate() + "</u>" ) );
+		updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate ) );
+		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
 
-		String description = zmanimCalendar.getTodaysDescription();
+		String description = currentDate.getDetails().getDescription();
 		if ( ( null == description ) || ( 0 == description.trim().length() ) ) {
 			findViewById( R.id.holiday_row ).setVisibility( View.GONE );
 		}
@@ -427,14 +434,6 @@ public class ZmanimActivity
 
 		View listing = findViewById( android.R.id.list );
 		listing.setOnTouchListener( touchListener );
-	}
-
-
-	private void cleanupCalendarListeners() {
-
-		if ( ( null != zmanimCalendar ) && ( null != zmanimCalendarListener ) ) {
-			zmanimCalendar.removeListener( zmanimCalendarListener );
-		}
 	}
 
 
@@ -542,6 +541,7 @@ public class ZmanimActivity
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private Dialog createSecularDatePickerDialog() {
 
 		final DatePickerDialog.OnDateSetListener dateChangedListener = new DatePickerDialog.OnDateSetListener() {
@@ -552,14 +552,14 @@ public class ZmanimActivity
 				int date
 			) {
 
-				zmanimCalendar.goToSecularDate( year, month, date );
+				//noinspection MagicConstant
+				changeDate( HebrewCalendar.getForDate( year, month, date ) );
+				updateHeader();
 			}
 		};
 
-		Calendar secularDate = zmanimCalendar.getSecularDate();
-
-		return new DatePickerDialog( this, dateChangedListener, secularDate.get( Calendar.YEAR ),
-			secularDate.get( Calendar.MONTH ), secularDate.get( Calendar.DAY_OF_MONTH ) );
+		return new DatePickerDialog( this, dateChangedListener, currentDate.getGregorianYear(),
+			currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
 	}
 
 
@@ -626,17 +626,23 @@ public class ZmanimActivity
 	}
 
 
-	private void moveToNextDay() {
-
-		zmanimCalendar.nextDay();
+	@Override
+	public void addDateChangeListener( DateChangedEvent.Listener listener ) {
+		dateChangedEventManager.addListener( listener );
+		listener.onDateChanged( new DateChangedEvent( currentDate ) );
 	}
 
 
-	private void moveToPrevDay() {
-
-		zmanimCalendar.previousDay();
+	@Override
+	public void removeDateChangeListener( DateChangedEvent.Listener listener ) {
+		dateChangedEventManager.removeListener( listener );
 	}
 
+
+	private void changeDate( HebrewDate newDate ) {
+		currentDate = newDate;
+		dateChangedEventManager.fire( new DateChangedEvent( newDate ) );
+	}
 
 
 	private class ZmanimGestureListener
@@ -664,10 +670,10 @@ public class ZmanimActivity
 
 			if ( Math.abs( xVelocity ) > Math.abs( yVelocity ) ) {
 				if ( xDiff > 0 ) {
-					moveToNextDay();
+					changeDate( currentDate.tomorrow() );
 				}
 				else {
-					moveToPrevDay();
+					changeDate( currentDate.yesterday() );
 				}
 
 				return true;
@@ -734,15 +740,12 @@ public class ZmanimActivity
 		protected Void doInBackground( Void... v ) {
 
 			boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-			final HebrewDateFormatter dateFormatter = new HebrewDateFormatter();
-			final ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds  );
+			zmanFormatter = new ZmanFormatter( showSeconds );
 
-			Calendar secularDate = null;
-			if ( null != zmanimCalendar ) {
-				secularDate = zmanimCalendar.getSecularDate();
-			}
+			currentDate = HebrewCalendar.today();
+			hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.DEFAULT );
+			secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
 
-			zmanimCalendar = new HebrewZmanimCalendar( location, dateFormatter, zmanFormatter, secularDate );
 			return null;
 		}
 
@@ -762,19 +765,11 @@ public class ZmanimActivity
 				buildFooter( location, error );
 
 				if ( null == location ) {
-					zmanimCalendarListener = null;
 					return;
 				}
 
 				// We just need a display...don't need to hold on to it...
-				new ZmanimDisplay( ZmanimActivity.this, zmanimCalendar );
-
-				zmanimCalendarListener = new HebrewZmanimCalendar.Listener() {
-					public void dateChanged() {
-						updateHeader();
-					}
-				};
-				zmanimCalendar.addListener( zmanimCalendarListener );
+				new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
 			}
 			finally {
 
@@ -825,6 +820,25 @@ public class ZmanimActivity
 
 			// This is how we know that this is done.
 			activityInitTask = null;
+		}
+	}
+
+
+	private class DateChangeEventManager
+		extends EventManager<DateChangedEvent.Listener, DateChangedEvent> {
+
+		@Override
+		protected void dispatch(
+			DateChangedEvent.Listener listener,
+			DateChangedEvent event
+		) {
+			listener.onDateChanged( event );
+		}
+
+
+		@Override
+		protected void handleException( Exception e ) {
+			LogUtils.logError( "date change dispatch", e.getMessage(), e );
 		}
 	}
 

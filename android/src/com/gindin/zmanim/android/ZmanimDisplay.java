@@ -4,18 +4,19 @@
 
 package com.gindin.zmanim.android;
 
-import android.app.ListActivity;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
+import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.ZmanFormatter;
+import com.gindin.zmanim.zman.Zmanim;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
-import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
-import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
-import com.gindin.zmanim.icu4j_calendar.holiday.JewishDay;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.Zmanim;
+import java.util.List;
 
 
 /**
@@ -25,10 +26,9 @@ import com.gindin.zmanim.zman.Zmanim;
 class ZmanimDisplay {
 
 	/** The activity we're associated with. */
-	private final ListActivity                                listActivity;
+	private final ZmanimActivity                              zmanimActivity;
 
-	/** The calendar we use for displaying everything. */
-	private final HebrewZmanimCalendar                        zmanimCalendar;
+	private final ZmanFormatter                               zmanFormatter;
 
 	/** Manages the selection process, allowing the user to select a different zman. */
 	private final ZmanimSelector                              selector;
@@ -36,90 +36,45 @@ class ZmanimDisplay {
 	/** Set/Get the choosen zmanim. */
 	private final SharedPreferences                           preferences;
 
+	private HebrewDate                                        currentDate;
+
 
 	ZmanimDisplay(
-		final ListActivity    listActivity,
-		HebrewZmanimCalendar  zmanimCalendar
+		final ZmanimActivity  zmanimActivity,
+		final ZmanFormatter   zmanFormatter
 	) {
 
-		this.listActivity = listActivity;
-		this.zmanimCalendar = zmanimCalendar;
+		this.zmanimActivity = zmanimActivity;
+		this.zmanFormatter = zmanFormatter;
 
-		selector = new ZmanimSelector( listActivity, zmanimCalendar );
+		selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
+		preferences = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		listenToRows();
 
-		zmanimCalendar.addListener(
-			new HebrewZmanimCalendar.Listener() {
-				public void dateChanged() {
-					listActivity.setListAdapter( getListAdapter() );
-				}
+		// Adding the listener will cause the event to get fired.
+		DateChangedEvent.Listener dateChangeListener = new DateChangedEvent.Listener() {
+			@Override
+			public void onDateChanged( DateChangedEvent event ) {
+				currentDate = event.getSource();
+				zmanimActivity.setListAdapter( getListAdapter( currentDate ) );
 			}
-		);
-
-		preferences = listActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
-
-		listActivity.setListAdapter( getListAdapter() );
+		};
+		zmanimActivity.addDateChangeListener( dateChangeListener );
 	}
 
 
 	@SuppressWarnings( { "ValueOfIncrementOrDecrementUsed" } )
-	private ListAdapter getListAdapter() {
+	private ListAdapter getListAdapter( HebrewDate date ) {
 
-		int numZmanim = Zmanim.Type.values().length;
-
-		final boolean showCandles = zmanimCalendar.showCandlelighting();
-		if ( !showCandles ) {
-			numZmanim--;
-		}
-
-		final boolean showHavdalah = zmanimCalendar.showHavdalah();
-		if ( !showHavdalah ) {
-			numZmanim--;
-		}
-
-		// TODO: This is a bit whacked...if it's a ta'anit, then it's a ta'anit! Erev ta'anit IS NOT the ta'anit...
-		final JewishDay today = zmanimCalendar.isTodayATaanit();
-		final boolean showEndOfFast = ( null != today ) && ( null == today.isErev() );
-		if ( !showEndOfFast ) {
-			numZmanim--;
-		}
-
-
+		List<Zmanim> daysZmanim = date.getZmanim();
+		int numZmanim = daysZmanim.size();
 		Zman[] zmanimToDisplay = new Zman[ numZmanim ];
-
-		int index = 0;
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Alot );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Talit );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Hanetz );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.SofZmanShema );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.SofZmanTefila );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Chatzot );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.MinchaGedola );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.MinchaKetana );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.PlagHaMincha );
-
-		if ( showCandles ) {
-			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.CandleLighting );
+		for ( int i = 0; i < numZmanim; i++ ) {
+			zmanimToDisplay[i] = getZman( daysZmanim.get( i ) );
 		}
 
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.Shkia );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.LatestMincha );
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.BeinHashmashot );
-
-		if ( showEndOfFast ) {
-			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.FastEnd );
-		}
-
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.TzaitHacochavim );
-
-		if ( showHavdalah ) {
-			zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.ShabbatEnd );
-		}
-
-		zmanimToDisplay[ index++ ] = getZmanForType( Zmanim.Type.NightChatzot );
-
-		return new ListAdapter( listActivity, zmanimToDisplay );
+		return new ListAdapter( zmanimActivity, zmanimToDisplay );
 	}
 
 
@@ -135,11 +90,11 @@ class ZmanimDisplay {
 				// This is a bit of a hammer, but it works...
 				//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
 				//  apparently the List which backs the adapter doesn't support remove().
-				listActivity.setListAdapter( getListAdapter() );
+				zmanimActivity.setListAdapter( getListAdapter( currentDate ) );
 			}
 		};
 
-		listActivity.getListView().setOnItemClickListener(
+		zmanimActivity.getListView().setOnItemClickListener(
 			new AdapterView.OnItemClickListener() {
 				public void onItemClick(
 					AdapterView<?>  adapterView,
@@ -148,9 +103,9 @@ class ZmanimDisplay {
 					long            id
 				) {
 
-					ListAdapter adapter = (ListAdapter)listActivity.getListAdapter();
+					ListAdapter adapter = (ListAdapter)zmanimActivity.getListAdapter();
 					Zman zman = adapter.getItem( position );
-					selector.selectFrom( zman.type, selectionCallback );
+					selector.selectFrom( currentDate, zman.type, selectionCallback );
 				}
 			}
 		);
@@ -158,16 +113,13 @@ class ZmanimDisplay {
 	}
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private Zman getZmanForType(
-		Zmanim.Type type
+	private Zman getZman(
+		Zmanim      zmanim
 	) {
 
-		Zmanim zmanim = zmanimCalendar.get( type );
-		String zmanName = preferences.getString( type.name, zmanim.getDefault().name );
+		String zmanName = preferences.getString( zmanim.type.name, null );
 		Zman zman = zmanim.getByName( zmanName );
 		if ( null == zman ) {
-			// Should only happen in development builds if I change the name of a zman...
 			zman = zmanim.getDefault();
 		}
 
@@ -189,7 +141,7 @@ class ZmanimDisplay {
 
 		@Override
 		protected ZmanRowWrapper createRowWrapper( View rowView ) {
-			return new RowWrapper( rowView, zmanimCalendar );
+			return new RowWrapper( rowView, zmanFormatter );
 		}
 
 	}
@@ -199,8 +151,8 @@ class ZmanimDisplay {
 		extends ZmanRowWrapper {
 
 		private RowWrapper(
-			View                  zmanRowView,
-			HebrewZmanimCalendar  zmanimCalendar
+			View          zmanRowView,
+			ZmanFormatter zmanimCalendar
 		) {
 			super( zmanRowView, zmanimCalendar );
 		}

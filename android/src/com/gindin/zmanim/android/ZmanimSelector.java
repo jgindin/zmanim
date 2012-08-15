@@ -12,8 +12,9 @@ import android.view.View;
 import android.widget.*;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
-import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
+import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
 
 /**
@@ -23,9 +24,9 @@ public class ZmanimSelector {
 
 	private final Context                                     context;
 
-	private final HebrewZmanimCalendar                        zmanimCalendar;
+	private final ZmanFormatter                               zmanFormatter;
 
-	/** Let's only build our dialog once and re-use it... */
+	/** Let's only build our dialog once and re-use it... */ // todo: but, please be lazy about it!
 	private final Dialog                                      dialog;
 
 	/** Where we can display the name of the zman being selected. */
@@ -46,12 +47,12 @@ public class ZmanimSelector {
 
 
 	public ZmanimSelector(
-		Context               context,
-		HebrewZmanimCalendar  zmanimCalendar
+		Context       context,
+		ZmanFormatter zmanFormatter
 	) {
 
 		this.context = context;
-		this.zmanimCalendar = zmanimCalendar;
+		this.zmanFormatter = zmanFormatter;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( context );
 
@@ -86,17 +87,18 @@ public class ZmanimSelector {
 
 
 	void selectFrom(
+		HebrewDate              currentDate,
 		final Zmanim.Type       type,
-	  final SelectionCallback callback
+		final SelectionCallback callback
 	) {
 
 		typeToSelectFrom = type;
 		typeSelectionCallback = callback;
 
-		final Zmanim zmanim = zmanimCalendar.get( type );
+		final Zmanim zmanim = currentDate.getZmanim( type );
 		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.toArray() ) {
 			@Override protected ZmanRowWrapper createRowWrapper( View rowView ) {
-				return new SelectorRow( rowView, zmanimCalendar );
+				return new SelectorRow( rowView, zmanFormatter );
 			}
 		};
 
@@ -121,10 +123,10 @@ public class ZmanimSelector {
 		extends ZmanRowWrapper {
 
 		private SelectorRow(
-			View                  zmanRowView,
-			HebrewZmanimCalendar  zmanimCalendar
+			View          zmanRowView,
+			ZmanFormatter zmanFormatter
 		) {
-			super( zmanRowView, zmanimCalendar );
+			super( zmanRowView, zmanFormatter );
 		}
 
 
