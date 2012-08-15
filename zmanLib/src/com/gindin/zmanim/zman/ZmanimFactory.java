@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.zman;
 
-import com.gindin.zmanim.icu4j_calendar.HebrewZmanimCalendar;
+import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,24 +20,10 @@ public class ZmanimFactory {
 	private final ZmanimCalendar                       zmanimCalendar;
 
 
-	public ZmanimFactory(
-		HebrewZmanimCalendar hebrewZmanimCalendar
-	) {
+	public ZmanimFactory() {
 
-		this.zmanimCalendar = hebrewZmanimCalendar.getZmanimCalendar();
-
-		HebrewZmanimCalendar.Listener listener = new HebrewZmanimCalendar.Listener() {
-			public void dateChanged() {
-
-				synchronized ( typeToZmanimMap ) {
-					for ( Zmanim zmanim : typeToZmanimMap.values() ) {
-						zmanim.clearCaches();
-					}
-				}
-			}
-		};
-
-		hebrewZmanimCalendar.addListener( listener );
+		// TODO: Get the location passed in!
+		this.zmanimCalendar = new ZmanimCalendar( new GeoLocation() );
 	}
 
 

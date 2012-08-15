@@ -31,6 +31,7 @@ class AlotHashachar
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private static List<Zman> buildZmanim(
 		final ZmanimCalendar  zmanimCalendar
 	) {

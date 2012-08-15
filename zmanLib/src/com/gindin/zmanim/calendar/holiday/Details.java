@@ -43,6 +43,10 @@ public abstract class Details {
 	 */
 	public abstract boolean sayHavdalah();
 
+	public boolean isTaanit() {
+		return false;
+	}
+
 	/**
 	 * A complete description of today's observance. Could be something simple like,
 	 *  "Yom Kippur" or something more complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
@@ -310,6 +314,18 @@ public abstract class Details {
 		public boolean sayHavdalah() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.sayHavdalah() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isTaanit() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isTaanit() ) {
 					return true;
 				}
 			}

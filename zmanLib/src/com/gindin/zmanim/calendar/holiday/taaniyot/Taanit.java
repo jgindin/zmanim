@@ -238,6 +238,12 @@ abstract class Taanit
 			// No fast requires havdalah.
 			return false;
 		}
+
+
+		@Override
+		public boolean isTaanit() {
+			return true;
+		}
 	}
 
 }  // End of Taanit class

@@ -35,18 +35,6 @@ public abstract class Zmanim {
 	}
 
 
-	public Zman get(
-		int position
-	) {
-
-		if ( position >= allZmanim.size() ) {
-			return null;
-		}
-
-		return allZmanim.get( position );
-	}
-
-
 	/**
 	 * Finds the named zman.
 	 *
@@ -57,6 +45,10 @@ public abstract class Zmanim {
 	public Zman getByName(
 		String zmanName
 	) {
+
+		if ( null == zmanName ) {
+			return null;
+		}
 
 		for ( Zman zman : allZmanim ) {
 			if ( zmanName.equals( zman.name ) ) {
@@ -93,17 +85,6 @@ public abstract class Zmanim {
 
 	public Zman[] toArray() {
 		return allZmanim.toArray( new Zman[ allZmanim.size() ] );
-	}
-
-
-	/**
-	 * Must be called whenever the date has changed so that we can clear our caches.
-	 */
-	public void clearCaches() {
-
-		for ( Zman zman : allZmanim ) {
-			zman.clearCache();
-		}
 	}
 
 

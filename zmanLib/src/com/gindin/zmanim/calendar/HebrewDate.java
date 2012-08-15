@@ -7,9 +7,14 @@ package com.gindin.zmanim.calendar;
 import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Holidays;
 import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.Zmanim;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
@@ -50,6 +55,9 @@ public class HebrewDate
 
 	/** Cache the details lookup. */
 	private Details                                           dateDetails;
+
+	/** Cache the zmanim which are applicable to today. */
+	private List<Zmanim>                                      zmanimList;
 
 
 	HebrewDate(
@@ -118,7 +126,7 @@ public class HebrewDate
 		}
 
 
-		Details holidayDetails = null;
+		Details holidayDetails;
 		for ( Observance fastDay : Holidays.FAST_DAYS ) {
 			holidayDetails = fastDay.getDetailsFor( this );
 			if ( null != holidayDetails ) {
@@ -158,8 +166,80 @@ public class HebrewDate
 		}
 
 
-
 		return dateDetails;
+	}
+
+
+	public Zmanim getZmanim( Zmanim.Type type ) {
+		return HebrewCalendar.getZmanim( type );
+	}
+
+
+	@SuppressWarnings( "FeatureEnvy" )
+	public List<Zmanim> getZmanim() {
+
+		if ( null != zmanimList ) {
+			return zmanimList;
+		}
+
+		Details details = getDetails();
+		zmanimList = new ArrayList<Zmanim>();
+
+		// Get all the possible zmanim, then weed out the ones that don't apply for today.
+		zmanimList.add( getZmanim( Zmanim.Type.Alot ) );
+		zmanimList.add( getZmanim( Zmanim.Type.Talit ) );
+		zmanimList.add( getZmanim( Zmanim.Type.Hanetz ) );
+		zmanimList.add( getZmanim( Zmanim.Type.SofZmanShema ) );
+		zmanimList.add( getZmanim( Zmanim.Type.SofZmanTefila ) );
+		zmanimList.add( getZmanim( Zmanim.Type.Chatzot ) );
+		zmanimList.add( getZmanim( Zmanim.Type.MinchaGedola ) );
+		zmanimList.add( getZmanim( Zmanim.Type.MinchaKetana ) );
+		zmanimList.add( getZmanim( Zmanim.Type.PlagHaMincha ) );
+
+		if ( details.lightCandles() ) {
+			zmanimList.add( getZmanim( Zmanim.Type.CandleLighting ) );
+		}
+
+		zmanimList.add( getZmanim( Zmanim.Type.Shkia ) );
+		zmanimList.add( getZmanim( Zmanim.Type.LatestMincha ) );
+		zmanimList.add( getZmanim( Zmanim.Type.BeinHashmashot ) );
+
+		if ( details.isTaanit() ) {
+			zmanimList.add( getZmanim( Zmanim.Type.FastEnd ) );
+		}
+
+		zmanimList.add( getZmanim( Zmanim.Type.TzaitHacochavim ) );
+
+		if ( details.sayHavdalah() ) {
+			zmanimList.add( getZmanim( Zmanim.Type.ShabbatEnd ) );
+		}
+
+		zmanimList.add( getZmanim( Zmanim.Type.NightChatzot ) );
+
+		return zmanimList;
+	}
+
+
+	public Zman getZman(
+		Zmanim.Type type
+	) {
+
+		return getZman( type, null );
+	}
+
+
+	public Zman getZman(
+		Zmanim.Type       type,
+		@Nullable String  zmanName
+	) {
+
+		Zmanim zmanim = getZmanim( type );
+		Zman zman = zmanim.getByName( zmanName );
+		if ( null == zman ) {
+			zman = zmanim.getDefault();
+		}
+
+		return zman;
 	}
 
 
@@ -194,7 +274,7 @@ public class HebrewDate
 
 
 	/**
-	 * @return the day of the week as a number between 1-7.
+	 * @return the day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc...
 	 */
 	@Constants.CalendarDay
 	public int getDayOfWeek() {
@@ -230,12 +310,15 @@ public class HebrewDate
 
 
 	/**
-	 * Returns this object's date as a java.util.Date object. <b>Note</b>: This class does not have a concept of time.
+	 * Returns this object's date as a java.util.Date object.
+	 *
+	 * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
 	 *
 	 * @return The <code>Date</code>
 	 */
 	public Date getTime() {
 		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( System.currentTimeMillis() );
 		cal.set( gregorianYear, gregorianMonth, gregorianDayOfMonth );
 		return cal.getTime();
 	}

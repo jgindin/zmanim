@@ -4,6 +4,9 @@
 package com.gindin.zmanim.calendar;
 
 
+import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanim.zman.ZmanimFactory;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -113,6 +116,10 @@ public class HebrewCalendar {
 	private static final int                                  EARLIEST_VALID_HEBREW_YEAR = 3761;
 
 	private static final int                                  YEARS_PER_CYCLE = 19;
+
+	/** This is how we create the zmanim that we need. */
+	private static final ZmanimFactory                        zmanimFactory = new ZmanimFactory();
+
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -871,6 +878,10 @@ public class HebrewCalendar {
 		}
 	}
 
+
+	public static Zmanim getZmanim( Zmanim.Type type ) {
+		return zmanimFactory.getOrCreate( type );
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
