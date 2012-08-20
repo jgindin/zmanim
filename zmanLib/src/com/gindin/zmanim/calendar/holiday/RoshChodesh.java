@@ -38,13 +38,13 @@ public class RoshChodesh
 					return new ErevRoshChodeshDetails( date, "Iyar" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Iyar" );
+					return new RoshChodeshDetails( date, "Iyar (1)" );
 				}
 				break;
 
 			case HebrewMonth.IYAR:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Iyar" );
+					return new RoshChodeshDetails( date, "Iyar (2)" );
 				}
 				else if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Sivan" );
@@ -59,13 +59,13 @@ public class RoshChodesh
 					return new ErevRoshChodeshDetails( date, "Tammuz" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Tammuz" );
+					return new RoshChodeshDetails( date, "Tammuz (1)" );
 				}
 				break;
 
 			case HebrewMonth.TAMMUZ:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Tammuz" );
+					return new RoshChodeshDetails( date, "Tammuz (2)" );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Av" );
@@ -80,13 +80,13 @@ public class RoshChodesh
 					return new ErevRoshChodeshDetails( date, "Elul" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Elul" );
+					return new RoshChodeshDetails( date, "Elul (1)" );
 				}
 				break;
 
 			case HebrewMonth.ELUL:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Elul" );
+					return new RoshChodeshDetails( date, "Elul (2)" );
 				}
 				break;
 
@@ -95,13 +95,13 @@ public class RoshChodesh
 					return new ErevRoshChodeshDetails( date, "Heshvan" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Heshvan" );
+					return new RoshChodeshDetails( date, "Heshvan (1)" );
 				}
 				break;
 
 			case HebrewMonth.CHESHVAN:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Heshvan" );
+					return new RoshChodeshDetails( date, "Heshvan (2)" );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Kislev" );
@@ -110,27 +110,29 @@ public class RoshChodesh
 					// Will only happen in a Shalem year
 					assert date.isCheshvanLong();
 					assert date.getYearType() == HebrewYearType.SHALEM;
-					return new RoshChodeshDetails( date, "Kislev" );
+					return new RoshChodeshDetails( date, "Kislev (1)" );
 				}
 				break;
 
 			case HebrewMonth.KISLEV:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Kislev" );
+					return new RoshChodeshDetails( date, "Kislev" + ( date.getYearType() == HebrewYearType.SHALEM ? " (2)" : "" ) );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Tevet" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
 					assert !date.isKislevShort();
-					assert date.getYearType() == HebrewYearType.SHALEM || date.getYearType() == HebrewYearType.QESIDRAH;
-					return new RoshChodeshDetails( date, "Tevet" );
+					HebrewYearType yearType = date.getYearType();
+					assert HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType;
+					return new RoshChodeshDetails( date, "Tevet (1)" );
 				}
 				break;
 
 			case HebrewMonth.TEVET:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Tevet" );
+					HebrewYearType yearType = date.getYearType();
+					return new RoshChodeshDetails( date, "Tevet" + ( HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType ? " (2)" : "" ) );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Shevat" );
@@ -145,13 +147,13 @@ public class RoshChodesh
 					return new ErevRoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar I" : "Adar" );
 				}
 				if ( 30 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar I" : "Adar" );
+					return new RoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar I (1)" : "Adar" );
 				}
 				break;
 
 			case HebrewMonth.ADAR:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar I" : "Adar" );
+					return new RoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar I (2)" : "Adar" );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, date.isHebrewLeapYear() ? "Adar II" : "Nissan" );
@@ -159,13 +161,13 @@ public class RoshChodesh
 				if ( 30 == hebrewDayOfMonth ) {
 					// Can only happen if this is a leap year
 					assert date.isHebrewLeapYear();
-					return new RoshChodeshDetails( date, "Adar II" );
+					return new RoshChodeshDetails( date, "Adar II (1)" );
 				}
 				break;
 
 			case HebrewMonth.ADAR_II:
 				if ( 1 == hebrewDayOfMonth ) {
-					return new RoshChodeshDetails( date, "Adar II" );
+					return new RoshChodeshDetails( date, "Adar II" + ( date.isHebrewLeapYear() ? " (2)" : "" ) );
 				}
 				if ( 29 == hebrewDayOfMonth ) {
 					return new ErevRoshChodeshDetails( date, "Nissan" );

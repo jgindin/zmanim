@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public abstract class HebrewDateFormatter {
 
-	protected static final String[]                           HEBREW_MONTH_NAMES = {
+	private static final String[]                           HEBREW_MONTH_NAMES = {
 		"Nissan",     "Iyar",     "Sivan",    "Tammuz",   "Av",       "Elul",
 		"Tishrei",    "Chesvan",  "Kislev",   "Tevet",    "Shevat",   "Adar", "Adar II"
 	};
@@ -78,7 +78,9 @@ public abstract class HebrewDateFormatter {
 			buf
 				.append( date.getHebrewDayOfMonth() )
 				.append( " " )
-				.append( HEBREW_MONTH_NAMES[ date.getHebrewMonth() + 1 ] )
+
+				// subtract one because the hebrew month is stored as a one-based value...
+				.append( HEBREW_MONTH_NAMES[ date.getHebrewMonth() - 1 ] )
 				.append( " " )
 				.append( date.getHebrewYear() );
 

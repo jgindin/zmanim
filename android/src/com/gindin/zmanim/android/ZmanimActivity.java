@@ -554,7 +554,6 @@ public class ZmanimActivity
 
 				//noinspection MagicConstant
 				changeDate( HebrewCalendar.getForDate( year, month, date ) );
-				updateHeader();
 			}
 		};
 
@@ -642,6 +641,9 @@ public class ZmanimActivity
 	private void changeDate( HebrewDate newDate ) {
 		currentDate = newDate;
 		dateChangedEventManager.fire( new DateChangedEvent( newDate ) );
+
+		// todo: should we have a date change listener to do this???
+		updateHeader();
 	}
 
 
@@ -743,7 +745,7 @@ public class ZmanimActivity
 			zmanFormatter = new ZmanFormatter( showSeconds );
 
 			currentDate = HebrewCalendar.today();
-			hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.DEFAULT );
+			hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
 			secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
 
 			return null;

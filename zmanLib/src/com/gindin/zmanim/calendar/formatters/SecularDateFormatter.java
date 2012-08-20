@@ -6,7 +6,6 @@ package com.gindin.zmanim.calendar.formatters;
 
 import com.gindin.zmanim.calendar.HebrewDate;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
 /**
@@ -46,14 +45,11 @@ public abstract class SecularDateFormatter {
 	static class DefaultFormatter
 		extends SecularDateFormatter {
 
-		private final DateFormat                                  secularDateFormatter;
-
-
 		DefaultFormatter() {
-			secularDateFormatter = DateFormat.getDateInstance( DateFormat.MEDIUM );
 		}
 
 
+		@SuppressWarnings( "FeatureEnvy" )
 		@Override
 		public String format( HebrewDate date ) {
 
@@ -90,7 +86,58 @@ public abstract class SecularDateFormatter {
 			}
 
 			formattedDate.append( ", " );
-			formattedDate.append( secularDateFormatter.format( date.getTime() ) );
+
+			switch ( date.getGregorianMonth() ) {
+				case Calendar.JANUARY:
+					formattedDate.append( "Jan " );
+					break;
+
+				case Calendar.FEBRUARY:
+					formattedDate.append( "Feb " );
+					break;
+
+				case Calendar.MARCH:
+					formattedDate.append( "Mar " );
+					break;
+
+				case Calendar.APRIL:
+					formattedDate.append( "Apr " );
+					break;
+
+				case Calendar.MAY:
+					formattedDate.append( "May " );
+					break;
+
+				case Calendar.JUNE:
+					formattedDate.append( "Jun " );
+					break;
+
+				case Calendar.JULY:
+					formattedDate.append( "Jul " );
+					break;
+
+				case Calendar.AUGUST:
+					formattedDate.append( "Aug " );
+					break;
+
+				case Calendar.SEPTEMBER:
+					formattedDate.append( "Sep " );
+					break;
+
+				case Calendar.OCTOBER:
+					formattedDate.append( "Oct " );
+					break;
+
+				case Calendar.NOVEMBER:
+					formattedDate.append( "Nov " );
+					break;
+
+				case Calendar.DECEMBER:
+					formattedDate.append( "Dec " );
+					break;
+			}
+
+			formattedDate.append( date.getGregorianDayOfMonth() ).append( ", " ).append( date.getGregorianYear() );
 
 			return formattedDate.toString();
 		}
