@@ -96,8 +96,8 @@ public class UT_HebrewCalendar {
 			"2010 / 10 /  1 | erev     | yes     | no       | Simchat Torah\n" +
 			"2010 / 10 /  2 | yom      | no      | yes      | Shabbat\n" +
 			"2010 / 10 /  7 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
-			"2010 / 10 /  8 | erev     | yes     | no       | Rosh Chodesh Heshvan\n" +
-			"2010 / 10 /  9 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan\n" +
+			"2010 / 10 /  8 | erev     | yes     | no       | Rosh Chodesh Heshvan (1)\n" +
+			"2010 / 10 /  9 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan (2)\n" +
 			"2010 / 10 / 15 | erev     | yes     | no       | \n" +
 			"2010 / 10 / 16 | yom      | no      | yes      | Shabbat\n" +
 			"2010 / 10 / 22 | erev     | yes     | no       | \n" +
@@ -106,8 +106,8 @@ public class UT_HebrewCalendar {
 			"2010 / 10 / 30 | yom      | no      | yes      | Shabbat\n" +
 			"2010 / 11 /  5 | erev     | yes     | no       | \n" +
 			"2010 / 11 /  6 | erev     | no      | yes      | Shabbat / Erev Rosh Chodesh Kislev\n" +
-			"2010 / 11 /  7 | yom      | no      | no       | Rosh Chodesh Kislev\n" +
-			"2010 / 11 /  8 | yom      | no      | no       | Rosh Chodesh Kislev\n" +
+			"2010 / 11 /  7 | yom      | no      | no       | Rosh Chodesh Kislev (1)\n" +
+			"2010 / 11 /  8 | yom      | no      | no       | Rosh Chodesh Kislev (2)\n" +
 			"2010 / 11 / 12 | erev     | yes     | no       | \n" +
 			"2010 / 11 / 13 | yom      | no      | yes      | Shabbat\n" +
 			"2010 / 11 / 19 | erev     | yes     | no       | \n" +
@@ -120,8 +120,8 @@ public class UT_HebrewCalendar {
 			"2010 / 12 /  4 | yom      | no      | yes      | Shabbat / Chanukah 3\n" +
 			"2010 / 12 /  5 | yom      | no      | no       | Chanukah 4\n" +
 			"2010 / 12 /  6 | erev     | no      | no       | Erev Rosh Chodesh Tevet / Chanukah 5\n" +
-			"2010 / 12 /  7 | yom      | no      | no       | Rosh Chodesh Tevet / Chanukah 6\n" +
-			"2010 / 12 /  8 | yom      | no      | no       | Rosh Chodesh Tevet / Chanukah 7\n" +
+			"2010 / 12 /  7 | yom      | no      | no       | Rosh Chodesh Tevet (1) / Chanukah 6\n" +
+			"2010 / 12 /  8 | yom      | no      | no       | Rosh Chodesh Tevet (2) / Chanukah 7\n" +
 			"2010 / 12 /  9 | yom      | no      | no       | Chanukah 8\n" +
 			"2010 / 12 / 10 | erev     | yes     | no       | \n" +
 			"2010 / 12 / 11 | yom      | no      | yes      | Shabbat\n" +
@@ -145,8 +145,8 @@ public class UT_HebrewCalendar {
 			"2011 /  1 / 28 | erev     | yes     | no       | \n" +
 			"2011 /  1 / 29 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  2 /  3 | erev     | no      | no       | Erev Rosh Chodesh Adar I\n" +
-			"2011 /  2 /  4 | erev     | yes     | no       | Rosh Chodesh Adar I\n" +
-			"2011 /  2 /  5 | yom      | no      | yes      | Shabbat / Rosh Chodesh Adar I\n" +
+			"2011 /  2 /  4 | erev     | yes     | no       | Rosh Chodesh Adar I (1)\n" +
+			"2011 /  2 /  5 | yom      | no      | yes      | Shabbat / Rosh Chodesh Adar I (2)\n" +
 			"2011 /  2 / 11 | erev     | yes     | no       | \n" +
 			"2011 /  2 / 12 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  2 / 17 | erev     | no      | no       | Erev Purim Katan\n" +
@@ -156,8 +156,8 @@ public class UT_HebrewCalendar {
 			"2011 /  2 / 26 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  3 /  4 | erev     | yes     | no       | \n" +
 			"2011 /  3 /  5 | erev     | no      | yes      | Shabbat / Erev Rosh Chodesh Adar II\n" +
-			"2011 /  3 /  6 | yom      | no      | no       | Rosh Chodesh Adar II\n" +
-			"2011 /  3 /  7 | yom      | no      | no       | Rosh Chodesh Adar II\n" +
+			"2011 /  3 /  6 | yom      | no      | no       | Rosh Chodesh Adar II (1)\n" +
+			"2011 /  3 /  7 | yom      | no      | no       | Rosh Chodesh Adar II (2)\n" +
 			"2011 /  3 / 11 | erev     | yes     | no       | \n" +
 			"2011 /  3 / 12 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  3 / 16 | erev     | no      | no       | Erev Ta'anit Esther\n" +
@@ -193,8 +193,8 @@ public class UT_HebrewCalendar {
 			"2011 /  5 /  1 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
 			"2011 /  5 /  2 | yom      | no      | no       | Omer 13\n" +
 			"2011 /  5 /  3 | erev     | no      | no       | Erev Rosh Chodesh Iyar / Omer 14\n" +
-			"2011 /  5 /  4 | yom      | no      | no       | Rosh Chodesh Iyar / Omer 15\n" +
-			"2011 /  5 /  5 | yom      | no      | no       | Rosh Chodesh Iyar / Omer 16\n" +
+			"2011 /  5 /  4 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
+			"2011 /  5 /  5 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
 			"2011 /  5 /  6 | erev     | yes     | no       | Omer 17\n" +
 			"2011 /  5 /  7 | yom      | no      | yes      | Shabbat / Omer 18\n" +
 			"2011 /  5 /  8 | erev     | no      | no       | Erev Yom HaZikaron / Omer 19\n" +
@@ -237,8 +237,8 @@ public class UT_HebrewCalendar {
 			"2011 /  6 / 24 | erev     | yes     | no       | \n" +
 			"2011 /  6 / 25 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  7 /  1 | erev     | yes     | no       | Erev Rosh Chodesh Tammuz\n" +
-			"2011 /  7 /  2 | yom      | no      | yes      | Shabbat / Rosh Chodesh Tammuz\n" +
-			"2011 /  7 /  3 | yom      | no      | no       | Rosh Chodesh Tammuz\n" +
+			"2011 /  7 /  2 | yom      | no      | yes      | Shabbat / Rosh Chodesh Tammuz (1)\n" +
+			"2011 /  7 /  3 | yom      | no      | no       | Rosh Chodesh Tammuz (2)\n" +
 			"2011 /  7 /  8 | erev     | yes     | no       | \n" +
 			"2011 /  7 /  9 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  7 / 15 | erev     | yes     | no       | \n" +
@@ -262,8 +262,8 @@ public class UT_HebrewCalendar {
 			"2011 /  8 / 26 | erev     | yes     | no       | \n" +
 			"2011 /  8 / 27 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  8 / 29 | erev     | no      | no       | Erev Rosh Chodesh Elul\n" +
-			"2011 /  8 / 30 | yom      | no      | no       | Rosh Chodesh Elul\n" +
-			"2011 /  8 / 31 | yom      | no      | no       | Rosh Chodesh Elul\n" +
+			"2011 /  8 / 30 | yom      | no      | no       | Rosh Chodesh Elul (1)\n" +
+			"2011 /  8 / 31 | yom      | no      | no       | Rosh Chodesh Elul (2)\n" +
 			"2011 /  9 /  2 | erev     | yes     | no       | \n" +
 			"2011 /  9 /  3 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  9 /  9 | erev     | yes     | no       | \n" +
@@ -305,8 +305,8 @@ public class UT_HebrewCalendar {
 			"2012 / 10 / 12 | erev     | yes     | no       | \n" +
 			"2012 / 10 / 13 | yom      | no      | yes      | Shabbat\n" +
 			"2012 / 10 / 15 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
-			"2012 / 10 / 16 | yom      | no      | no       | Rosh Chodesh Heshvan\n" +
-			"2012 / 10 / 17 | yom      | no      | no       | Rosh Chodesh Heshvan\n" +
+			"2012 / 10 / 16 | yom      | no      | no       | Rosh Chodesh Heshvan (1)\n" +
+			"2012 / 10 / 17 | yom      | no      | no       | Rosh Chodesh Heshvan (2)\n" +
 			"2012 / 10 / 19 | erev     | yes     | no       | \n" +
 			"2012 / 10 / 20 | yom      | no      | yes      | Shabbat\n" +
 			"2012 / 10 / 26 | erev     | yes     | no       | \n" +
@@ -387,8 +387,8 @@ public class UT_HebrewCalendar {
 			"2013 /  4 /  7 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
 			"2013 /  4 /  8 | yom      | no      | no       | Omer 13\n" +
 			"2013 /  4 /  9 | erev     | no      | no       | Erev Rosh Chodesh Iyar / Omer 14\n" +
-			"2013 /  4 / 10 | yom      | no      | no       | Rosh Chodesh Iyar / Omer 15\n" +
-			"2013 /  4 / 11 | yom      | no      | no       | Rosh Chodesh Iyar / Omer 16\n" +
+			"2013 /  4 / 10 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
+			"2013 /  4 / 11 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
 			"2013 /  4 / 12 | erev     | yes     | no       | Omer 17\n" +
 			"2013 /  4 / 13 | yom      | no      | yes      | Shabbat / Omer 18\n" +
 			"2013 /  4 / 14 | erev     | no      | no       | Erev Yom HaZikaron / Omer 19\n" +
@@ -431,8 +431,8 @@ public class UT_HebrewCalendar {
 			"2013 /  5 / 31 | erev     | yes     | no       | \n" +
 			"2013 /  6 /  1 | yom      | no      | yes      | Shabbat\n" +
 			"2013 /  6 /  7 | erev     | yes     | no       | Erev Rosh Chodesh Tammuz\n" +
-			"2013 /  6 /  8 | yom      | no      | yes      | Shabbat / Rosh Chodesh Tammuz\n" +
-			"2013 /  6 /  9 | yom      | no      | no       | Rosh Chodesh Tammuz\n" +
+			"2013 /  6 /  8 | yom      | no      | yes      | Shabbat / Rosh Chodesh Tammuz (1)\n" +
+			"2013 /  6 /  9 | yom      | no      | no       | Rosh Chodesh Tammuz (2)\n" +
 			"2013 /  6 / 14 | erev     | yes     | no       | \n" +
 			"2013 /  6 / 15 | yom      | no      | yes      | Shabbat\n" +
 			"2013 /  6 / 21 | erev     | yes     | no       | \n" +
@@ -456,8 +456,8 @@ public class UT_HebrewCalendar {
 			"2013 /  8 /  2 | erev     | yes     | no       | \n" +
 			"2013 /  8 /  3 | yom      | no      | yes      | Shabbat\n" +
 			"2013 /  8 /  5 | erev     | no      | no       | Erev Rosh Chodesh Elul\n" +
-			"2013 /  8 /  6 | yom      | no      | no       | Rosh Chodesh Elul\n" +
-			"2013 /  8 /  7 | yom      | no      | no       | Rosh Chodesh Elul\n" +
+			"2013 /  8 /  6 | yom      | no      | no       | Rosh Chodesh Elul (1)\n" +
+			"2013 /  8 /  7 | yom      | no      | no       | Rosh Chodesh Elul (2)\n" +
 			"2013 /  8 /  9 | erev     | yes     | no       | \n" +
 			"2013 /  8 / 10 | yom      | no      | yes      | Shabbat\n" +
 			"2013 /  8 / 16 | erev     | yes     | no       | \n" +
