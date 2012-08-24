@@ -20,7 +20,8 @@ import java.util.Calendar;
  * Tests the dates for the 'modern' holidays.
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Modern {
+public class UT_Modern
+	extends UT_AbstractHoliday {
 
 	private static final YomHaShoah                           YOM_HA_SHOAH = new YomHaShoah();
 	private static final YomHaZikaron                         YOM_HA_ZIKARON = new YomHaZikaron();
@@ -100,60 +101,36 @@ public class UT_Modern {
 
 		date = HebrewCalendar.getForDate( year, yomHaShoahMonth, yomHaShoahDay );
 		details = YOM_HA_SHOAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.yesterday();
 		details = YOM_HA_SHOAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		date = HebrewCalendar.getForDate( year, yomHaZikaronMonth, yomHaZikaronDay );
 		details = YOM_HA_ZIKARON.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.yesterday();
 		details = YOM_HA_ZIKARON.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		// Yes, Erev Yom HaAtzmaut is the same day as Yom HaZikaron...
 		date = date.tomorrow();
 		details = YOM_HA_ATZMAUT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		date = date.tomorrow();
 		details = YOM_HA_ATZMAUT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = HebrewCalendar.getForDate( year, yomYerushalyimMonth, yomYerushalyimDay );
 		details = YOM_YERUSHALAYIM.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.yesterday();
 		details = YOM_YERUSHALAYIM.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		// Sprinkle some sanity checks in...
 		date = HebrewCalendar.getForDate( year, yomHaShoahMonth - 1, 1 );

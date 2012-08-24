@@ -18,7 +18,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Purim {
+public class UT_Purim
+	extends UT_AbstractHoliday {
 
 	private static final Purim                                PURIM = new Purim();
 	private static final PurimKatan                           PURIM_KATAN = new PurimKatan();
@@ -74,26 +75,17 @@ public class UT_Purim {
 		// Check today -- should be Purim.
 		date = HebrewCalendar.getForDate( year, purimMonth, purimDay );
 		details = PURIM.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Yesterday should be erev Purim.
 		date = date.yesterday();
 		details = PURIM.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		// Day after Purim is Shusha Purim.
 	  date = date.tomorrow().tomorrow();
 		details = SHUSHAN_PURIM.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 	}
 
 
@@ -110,10 +102,7 @@ public class UT_Purim {
 		details = PURIM_KATAN.getDetailsFor( date );
 
 		if ( date.isHebrewLeapYear() ) {
-			Assert.assertNotNull( details );
-			Assert.assertFalse( details.isErev() );
-			Assert.assertFalse( details.lightCandles() );
-			Assert.assertFalse( details.sayHavdalah() );
+			checkDate( details, false, false, false );
 		}
 		else {
 			Assert.assertNull( details );
@@ -122,10 +111,7 @@ public class UT_Purim {
 		date = date.yesterday();
 		details = PURIM_KATAN.getDetailsFor( date );
 		if ( date.isHebrewLeapYear() ) {
-			Assert.assertNotNull( details );
-			Assert.assertTrue( details.isErev() );
-			Assert.assertFalse( details.lightCandles() );
-			Assert.assertFalse( details.sayHavdalah() );
+			checkDate( details, true, false, false );
 		}
 		else {
 			Assert.assertNull( details );

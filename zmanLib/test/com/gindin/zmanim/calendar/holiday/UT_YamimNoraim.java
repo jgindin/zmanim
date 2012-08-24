@@ -17,7 +17,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_YamimNoraim {
+public class UT_YamimNoraim
+	extends UT_AbstractHoliday {
 
 	private static final RoshHashana                          ROSH_HASHANA = new RoshHashana();
 	private static final YomKippur                            YOM_KIPPUR = new YomKippur();
@@ -67,38 +68,23 @@ public class UT_YamimNoraim {
 
 		date = date.yesterday();
 		details = ROSH_HASHANA.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, true, false );
 
 		date = date.tomorrow();
 		details = ROSH_HASHANA.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		date = date.tomorrow();
 		details = ROSH_HASHANA.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 
 		date = date.forward( 7 );
 		details = YOM_KIPPUR.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, true, false );
 
 		date = date.tomorrow();
 		details = YOM_KIPPUR.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 	}
 
 

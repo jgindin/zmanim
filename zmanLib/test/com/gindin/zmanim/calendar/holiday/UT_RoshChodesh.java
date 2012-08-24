@@ -15,7 +15,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_RoshChodesh {
+public class UT_RoshChodesh
+	extends UT_AbstractHoliday {
 
 	private static final RoshChodesh                          ROSH_CHODESH = new RoshChodesh();
 
@@ -183,26 +184,16 @@ public class UT_RoshChodesh {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
 		Details details = ROSH_CHODESH.getDetailsFor( date );
-
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		date = date.tomorrow();
 		details = ROSH_CHODESH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.tomorrow();
 		details = ROSH_CHODESH.getDetailsFor( date );
 		if ( twoDays ) {
-			Assert.assertNotNull( details );
-			Assert.assertFalse( details.isErev() );
-			Assert.assertFalse( details.lightCandles() );
-			Assert.assertFalse( details.sayHavdalah() );
+			checkDate( details, false, false, false );
 		}
 		else {
 			Assert.assertNull( details );
@@ -218,7 +209,6 @@ public class UT_RoshChodesh {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
 		Details details = ROSH_CHODESH.getDetailsFor( date );
-
 		Assert.assertNull( details );
 	}
 

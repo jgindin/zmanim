@@ -16,7 +16,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Succot {
+public class UT_Succot
+	extends UT_AbstractHoliday {
 
 	private static final Sukkot SUKKOT = new Sukkot();
 	
@@ -71,86 +72,56 @@ public class UT_Succot {
 		// Erev Sukkot
 		date = date.yesterday();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, true, false );
 
 		// Sukkot I
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		// Sukkot II
 		// TODO: Handle Israel...
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 
 		// Sukkot III
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Sukkot IV
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 
 		// Sukkot V
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Sukkot VI
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Sukkot VII -- Hoshana Rabba
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, true, false );
 		Assert.assertTrue( details.getDescription().contains( "Hoshana Rabba" ) );
 
 		// Shmini Atzeret
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 		Assert.assertTrue( details.getDescription().contains( "Shmini Atzeret" ) );
 
 		// Simchat Torah
 		date = date.tomorrow();
 		details = SUKKOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 		Assert.assertTrue( details.getDescription().contains( "Simchat Torah" ) );
 	}
 	

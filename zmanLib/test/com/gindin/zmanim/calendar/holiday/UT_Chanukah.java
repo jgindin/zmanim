@@ -16,7 +16,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Chanukah {
+public class UT_Chanukah
+	extends UT_AbstractHoliday {
 
 	private static final Chanukah                             CHANUKAH = new Chanukah();
 
@@ -62,64 +63,46 @@ public class UT_Chanukah {
 		date = HebrewCalendar.getForDate( year, chanukahMonth, startingDay );
 		date = date.yesterday();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "1" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "2" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "3" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "4" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "5" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "6" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "7" ) );
 
 		date = date.tomorrow();
 		details = CHANUKAH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().endsWith( "8" ) );
 
 		date = date.tomorrow();

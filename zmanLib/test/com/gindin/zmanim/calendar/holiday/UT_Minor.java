@@ -17,7 +17,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Minor {
+public class UT_Minor
+	 extends UT_AbstractHoliday {
 
 	private static final TuBShvat                             TU_B_SHVAT = new TuBShvat();
 	private static final TuBAv                                TU_B_AV = new TuBAv();
@@ -77,18 +78,12 @@ public class UT_Minor {
 		
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = TU_B_SHVAT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
-		
+		checkDate( details, false, false, false );
+
 		date = date.yesterday();
 		details = TU_B_SHVAT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
-	}	
+		checkDate( details,  true, false, false );
+	}
 	
 	
 	private void runTuBAvTest(
@@ -102,17 +97,11 @@ public class UT_Minor {
 		
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = TU_B_AV.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
-		
+		checkDate( details, false, false, false );
+
 		date = date.yesterday();
 		details = TU_B_AV.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
-	}	
+		checkDate( details, true, false, false );
+	}
 
 } // End of UT_Minor class

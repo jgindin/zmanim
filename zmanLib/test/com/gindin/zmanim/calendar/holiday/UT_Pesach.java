@@ -19,7 +19,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Pesach {
+public class UT_Pesach
+	extends UT_AbstractHoliday {
 
 	private static final Pesach                               PESACH = new Pesach();
 	private static final PesachSheni                          PESACH_SHENI = new PesachSheni();
@@ -146,76 +147,49 @@ public class UT_Pesach {
 		// Erev Pesach
 		date = date.yesterday();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, true, false );
 
 		// Pesach I
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		// Pesach II
 		// TODO: Handle Israel...
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 
 		// Pesach III
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Pesach IV
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 
 		// Pesach V
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		// Pesach VI
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		// Pesach VII
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		// Pesach VIII
 		date = date.tomorrow();
 		details = PESACH.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 
 	}
 
@@ -231,17 +205,11 @@ public class UT_Pesach {
 
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = PESACH_SHENI.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.yesterday();
 		details = PESACH_SHENI.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 	}
 
 
@@ -254,10 +222,7 @@ public class UT_Pesach {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
 		Details details = OMER.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 		Assert.assertTrue( details.getDescription().contains( "" + expectedDayOfOmer ) );
 	}
 
@@ -284,17 +249,11 @@ public class UT_Pesach {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
 		Details details = LAG_B_OMER.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, false, false );
 
 		date = date.yesterday();
 		details = LAG_B_OMER.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, true, false, false );
 	}
 
 } // End of UT_Pesach class

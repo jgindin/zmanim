@@ -16,7 +16,8 @@ import java.util.Calendar;
  *
  */
 @SuppressWarnings( "MagicNumber" )
-public class UT_Shavuot {
+public class UT_Shavuot
+	extends UT_AbstractHoliday {
 
 	private static final Shavuot                              SHAVUOT = new Shavuot();
 
@@ -66,25 +67,15 @@ public class UT_Shavuot {
 
 		date = HebrewCalendar.getForDate( year, month, day );
 		details = SHAVUOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
+		checkDate( details, false, true, false );
 
 		date = date.tomorrow();
 		details = SHAVUOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertFalse( details.isErev() );
-		Assert.assertFalse( details.lightCandles() );
-		Assert.assertTrue( details.sayHavdalah() );
+		checkDate( details, false, false, true );
 
 		date = date.yesterday().yesterday();
 		details = SHAVUOT.getDetailsFor( date );
-		Assert.assertNotNull( details );
-		Assert.assertTrue( details.isErev() );
-		Assert.assertTrue( details.lightCandles() );
-		Assert.assertFalse( details.sayHavdalah() );
-
+		checkDate( details, true, true, false );
 	}
 
 } // End of UT_Shavuot class
