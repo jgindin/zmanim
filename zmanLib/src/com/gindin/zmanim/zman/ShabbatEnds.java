@@ -13,11 +13,14 @@ class ShabbatEnds
 
 
 	ShabbatEnds(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.ShabbatEnd, zmanimCalendar,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalendar ), buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalendar ) ) );
+		super( Type.ShabbatEnd, zmanimCalculator,
+			mergeZmanimLists(
+				buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ),
+				buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ) )
+		);
 	}
 
 }  // End of TzaitHacochavim class

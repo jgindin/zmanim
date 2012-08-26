@@ -11,9 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Adds support for earliest time for Mincha.
+ * Used to calculate all of our zmanim.
  */
-public class ZmanimCalendar
+public class ZmanimCalculator
 	extends ComplexZmanimCalendar {
 
 	/**
@@ -70,7 +70,7 @@ public class ZmanimCalendar
 
 
 
-	public ZmanimCalendar( GeoLocation location ) {
+	public ZmanimCalculator( GeoLocation location ) {
 		super( location );
 	}
 
@@ -143,7 +143,7 @@ public class ZmanimCalendar
 	 */
 	public Date getNightChatzos() {
 
-		ZmanimCalendar clonedCal = (ZmanimCalendar)clone();
+		ZmanimCalculator clonedCal = (ZmanimCalculator)clone();
 		clonedCal.getCalendar().add( Calendar.DAY_OF_MONTH, 1);
 		Date sunset = getSunset();
 		Date sunrise = clonedCal.getSunrise();
@@ -154,4 +154,4 @@ public class ZmanimCalendar
 		return getTimeOffset( sunset, ( sunrise.getTime() - sunset.getTime() ) / 2 );
 	}
 
-}  // End of ZmanimCalendar class
+}  // End of ZmanimCalculator class

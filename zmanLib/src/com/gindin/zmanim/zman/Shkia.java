@@ -15,15 +15,15 @@ class Shkia
 	extends Zmanim {
 
 	Shkia(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Shkia, buildZmanim( zmanimCalendar ) );
+		super( Type.Shkia, buildZmanim( zmanimCalculator ) );
 	}
 
 
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -31,7 +31,7 @@ class Shkia
 		zmanim.add(
 			new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSunset();
+					return zmanimCalculator.getSunset();
 				}
 			}
 		);

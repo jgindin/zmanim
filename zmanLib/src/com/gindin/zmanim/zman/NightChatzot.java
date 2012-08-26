@@ -14,13 +14,13 @@ import java.util.List;
 class NightChatzot
 	extends Zmanim {
 
-	public NightChatzot( ZmanimCalendar zmanimCalendar ) {
-		super( Type.Chatzot, buildZmanim( zmanimCalendar ) );
+	public NightChatzot( ZmanimCalculator zmanimCalculator ) {
+		super( Type.Chatzot, buildZmanim( zmanimCalculator ) );
 	}
 
 
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -28,7 +28,7 @@ class NightChatzot
 		zmanim.add(
 			new Zman( "Mid-night", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.NightChatzot, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getNightChatzos();
+					return zmanimCalculator.getNightChatzos();
 				}
 			}
 		);

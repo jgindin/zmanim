@@ -18,10 +18,10 @@ class SofZmanTefila
 	
 
 	SofZmanTefila(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.SofZmanTefila, buildZmanim( zmanimCalendar ) );
+		super( Type.SofZmanTefila, buildZmanim( zmanimCalculator ) );
 	}
 
 
@@ -31,8 +31,9 @@ class SofZmanTefila
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -40,17 +41,17 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "2 Hours before Chatzot", "2 hours before chatzot.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfila2HoursBeforeChatzos();
+					return zmanimCalculator.getSofZmanTfila2HoursBeforeChatzos();
 				}
 			}
 		);
 
-//		sofZmanTefila.addZman( zmanimCalendar.getSofZmanTfilaFixedLocal(), "", "" );
+//		sofZmanTefila.addZman( zmanimCalculator.getSofZmanTfilaFixedLocal(), "", "" );
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanTefila, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaGRA();
+					return zmanimCalculator.getSofZmanTfilaGRA();
 				}
 			}
 		);
@@ -58,7 +59,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting at 1/10th of the day before sunrise and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilahAteretTorah();
+					return zmanimCalculator.getSofZmanTfilahAteretTorah();
 				}
 			}
 		);
@@ -66,7 +67,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A", "Based on alot being 72 minutes before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA();
+					return zmanimCalculator.getSofZmanTfilaMGA();
 				}
 			}
 		);
@@ -74,7 +75,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 120 Minutes", "Based on alot being 120 minutes before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA120Minutes();
+					return zmanimCalculator.getSofZmanTfilaMGA120Minutes();
 				}
 			}
 		);
@@ -82,7 +83,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanTefila, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA16Point1Degrees();
+					return zmanimCalculator.getSofZmanTfilaMGA16Point1Degrees();
 				}
 			}
 		);
@@ -90,17 +91,17 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 19.8 deg", "Based on alot being 19.8 degrees before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA19Point8Degrees();
+					return zmanimCalculator.getSofZmanTfilaMGA19Point8Degrees();
 				}
 			}
 		);
 
-//		sofZmanTefila.addZman( zmanimCalendar.getSofZmanTfilaMGA72Minutes(), "", "" );
+//		sofZmanTefila.addZman( zmanimCalculator.getSofZmanTfilaMGA72Minutes(), "", "" );
 
 		zmanim.add(
 			new Zman( "MG'A 72 Minutes Zmaniyot", "Based on alot being 72 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA72MinutesZmanis();
+					return zmanimCalculator.getSofZmanTfilaMGA72MinutesZmanis();
 				}
 			}
 		);
@@ -108,7 +109,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 90 Minutes", "Based on alot being 90 minutes before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA90Minutes();
+					return zmanimCalculator.getSofZmanTfilaMGA90Minutes();
 				}
 			}
 		);
@@ -116,7 +117,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 90 Minutes Zmaniyot", "Based on alot being 90 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA90MinutesZmanis();
+					return zmanimCalculator.getSofZmanTfilaMGA90MinutesZmanis();
 				}
 			}
 		);
@@ -124,7 +125,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 96 Minutes", "Based on alot being 96 minutes before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA96Minutes();
+					return zmanimCalculator.getSofZmanTfilaMGA96Minutes();
 				}
 			}
 		);
@@ -132,7 +133,7 @@ class SofZmanTefila
 		zmanim.add(
 			new Zman( "MG'A 96 Minutes Zmaniyot", "Based on alot being 96 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanTefila ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSofZmanTfilaMGA96MinutesZmanis();
+					return zmanimCalculator.getSofZmanTfilaMGA96MinutesZmanis();
 				}
 			}
 		);

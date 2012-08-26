@@ -7,14 +7,12 @@ package com.gindin.zmanim.calendar;
 import com.gindin.zmanim.calendar.holiday.Details;
 import com.gindin.zmanim.calendar.holiday.Holidays;
 import com.gindin.zmanim.calendar.holiday.Observance;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.Zmanim;
-import org.jetbrains.annotations.Nullable;
+import com.gindin.zmanim.zman.ZmanimFactory;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
@@ -22,7 +20,6 @@ import java.util.List;
 @SuppressWarnings( "UnusedDeclaration" )
 public class HebrewDate
 	implements Comparable<HebrewDate> {
-
 
 	private int                                               hebrewYear;
 	@HebrewMonth.Constant
@@ -57,7 +54,7 @@ public class HebrewDate
 	private Details                                           dateDetails;
 
 	/** Cache the zmanim which are applicable to today. */
-	private List<Zmanim>                                      zmanimList;
+	private Map<ZmanimLocation, List<Zmanim>>                 locationToZmanim;
 
 
 	HebrewDate(
@@ -170,14 +167,25 @@ public class HebrewDate
 	}
 
 
-	public Zmanim getZmanim( Zmanim.Type type ) {
-		return HebrewCalendar.getZmanim( type );
+	public Zmanim getZmanim(
+		ZmanimLocation  location,
+		Zmanim.Type     type
+	) {
+
+		return ZmanimFactory.getInstance( location ).getOrCreate( type );
 	}
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	public List<Zmanim> getZmanim() {
+	public List<Zmanim> getZmanim(
+		ZmanimLocation location
+	) {
 
+		if ( null == locationToZmanim ) {
+			locationToZmanim = new HashMap<ZmanimLocation, List<Zmanim>>();
+		}
+
+		List<Zmanim> zmanimList = locationToZmanim.get( location );
 		if ( null != zmanimList ) {
 			return zmanimList;
 		}
@@ -186,60 +194,47 @@ public class HebrewDate
 		zmanimList = new ArrayList<Zmanim>();
 
 		// Get all the possible zmanim, then weed out the ones that don't apply for today.
-		zmanimList.add( getZmanim( Zmanim.Type.Alot ) );
-		zmanimList.add( getZmanim( Zmanim.Type.Talit ) );
-		zmanimList.add( getZmanim( Zmanim.Type.Hanetz ) );
-		zmanimList.add( getZmanim( Zmanim.Type.SofZmanShema ) );
-		zmanimList.add( getZmanim( Zmanim.Type.SofZmanTefila ) );
-		zmanimList.add( getZmanim( Zmanim.Type.Chatzot ) );
-		zmanimList.add( getZmanim( Zmanim.Type.MinchaGedola ) );
-		zmanimList.add( getZmanim( Zmanim.Type.MinchaKetana ) );
-		zmanimList.add( getZmanim( Zmanim.Type.PlagHaMincha ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.Alot ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.Talit ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.Hanetz ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanShema ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanTefila ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.Chatzot ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.MinchaGedola ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.MinchaKetana ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.PlagHaMincha ) );
 
 		if ( details.lightCandles() ) {
-			zmanimList.add( getZmanim( Zmanim.Type.CandleLighting ) );
+			zmanimList.add( getZmanim( location, Zmanim.Type.CandleLighting ) );
 		}
 
-		zmanimList.add( getZmanim( Zmanim.Type.Shkia ) );
-		zmanimList.add( getZmanim( Zmanim.Type.LatestMincha ) );
-		zmanimList.add( getZmanim( Zmanim.Type.BeinHashmashot ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.Shkia ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.LatestMincha ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.BeinHashmashot ) );
 
 		if ( details.isTaanit() ) {
-			zmanimList.add( getZmanim( Zmanim.Type.FastEnd ) );
+			zmanimList.add( getZmanim( location, Zmanim.Type.FastEnd ) );
 		}
 
-		zmanimList.add( getZmanim( Zmanim.Type.TzaitHacochavim ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.TzaitHacochavim ) );
 
 		if ( details.sayHavdalah() ) {
-			zmanimList.add( getZmanim( Zmanim.Type.ShabbatEnd ) );
+			zmanimList.add( getZmanim( location, Zmanim.Type.ShabbatEnd ) );
 		}
 
-		zmanimList.add( getZmanim( Zmanim.Type.NightChatzot ) );
+		zmanimList.add( getZmanim( location, Zmanim.Type.NightChatzot ) );
 
 		return zmanimList;
 	}
 
 
 	public Zman getZman(
-		Zmanim.Type type
+		ZmanimLocation  location,
+		Zmanim.Type     type
 	) {
 
-		return getZman( type, null );
-	}
-
-
-	public Zman getZman(
-		Zmanim.Type       type,
-		@Nullable String  zmanName
-	) {
-
-		Zmanim zmanim = getZmanim( type );
-		Zman zman = zmanim.getByName( zmanName );
-		if ( null == zman ) {
-			zman = zmanim.getDefault();
-		}
-
-		return zman;
+		Zmanim zmanim = getZmanim( location, type );
+		return zmanim.getDefault();
 	}
 
 

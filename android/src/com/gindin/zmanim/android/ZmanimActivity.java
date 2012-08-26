@@ -4,8 +4,10 @@
 
 package com.gindin.zmanim.android;
 
-import com.gindin.util.EventManager;
+import com.gindin.util.events.EventManager;
 import com.gindin.util.LogUtils;
+import com.gindin.zmanim.android.location.LocationChangedEvent;
+import com.gindin.zmanim.android.location.LocationChangedEventManager;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
@@ -38,7 +40,7 @@ import java.util.Date;
  */
 public class ZmanimActivity
 	extends ListActivity
-	implements DateChangedEvent.HasListeners {
+	implements DateChangedEvent.HasListeners, LocationChangedEvent.HasListeners {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
@@ -57,14 +59,13 @@ public class ZmanimActivity
 
 	private ZmanimLocationManager                             locationManager;
 
-	private ZmanimLocationManager.Listener                    locationListener;
+	private LocationChangedEvent.Listener                     locationListener;
 
 	private PersonalPrefsManager                              personalPrefsManager;
 
 
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
-
 
 	/**
 	 * Task used to initialize the UI for the first time. Once we're done this will be null.
@@ -77,7 +78,10 @@ public class ZmanimActivity
 	 */
 	private AsyncTask<Void, Void, Void>                       buildUITask = null;
 
-	private DateChangeEventManager                            dateChangedEventManager = new DateChangeEventManager();
+	private final DateChangeEventManager                      dateChangedEventManager = new DateChangeEventManager();
+	private final LocationChangedEventManager                 locationChangedEventManager = new LocationChangedEventManager();
+
+	private ZmanimDisplay                                     zmanimDisplay;
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -140,26 +144,17 @@ public class ZmanimActivity
 		determiningLocationDialog.setIndeterminate( true );
 		determiningLocationDialog.setMessage( "Determining location..." );
 
-		locationListener = new ZmanimLocationManager.Listener() {
+		locationListener = new LocationChangedEvent.Listener() {
 
-			public void onProgress( String message ) {
+			@Override public void onProgress( String message ) {
 				determiningLocationDialog.setMessage( message );
 				if ( !determiningLocationDialog.isShowing() ) {
 					determiningLocationDialog.show();
 				}
 			}
 
-
-			public void locationChanged( ZmanimLocation newLocation ) {
-				rebuildUI( newLocation, null );
-			}
-
-
-			public void error(
-				LocationError   error,
-				ZmanimLocation  lastKnownLocation
-			) {
-				rebuildUI( lastKnownLocation, error );
+			@Override public void onLocationChanged( LocationChangedEvent event ) {
+				rebuildUI( event.getEventInfo(), event.getError() );
 			}
 		};
 
@@ -215,8 +210,12 @@ public class ZmanimActivity
 
 		// Might be null if we got stopped before we were fully started...
 		if ( null != locationManager ) {
-			locationManager.removeListener( locationListener );
+			locationManager.removeLocationChangeListener( locationListener );
 			locationManager.onDestroy();
+		}
+
+		if ( null != zmanimDisplay ) {
+			zmanimDisplay.onDestroy();
 		}
 
 		LogUtils.endSession( this );
@@ -306,7 +305,7 @@ public class ZmanimActivity
 		updateField( R.id.location, locationName );
 
 		// Update the header
-		updateHeader();
+		updateHeader( location );
 	}
 
 
@@ -401,9 +400,9 @@ public class ZmanimActivity
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private void updateHeader() {
+	private void updateHeader( ZmanimLocation location ) {
 
-		updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate ) );
+		updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, location ) );
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
 
 		String description = currentDate.getDetails().getDescription();
@@ -638,12 +637,25 @@ public class ZmanimActivity
 	}
 
 
+	@Override
+	public void addLocationChangeListener( LocationChangedEvent.Listener listener ) {
+		locationChangedEventManager.addListener( listener );
+		listener.onLocationChanged( new LocationChangedEvent( locationManager.getLastKnownLocation() ) );
+	}
+
+
+	@Override
+	public void removeLocationChangeListener( LocationChangedEvent.Listener listener ) {
+		locationChangedEventManager.removeListener( listener );
+	}
+
+
 	private void changeDate( HebrewDate newDate ) {
 		currentDate = newDate;
 		dateChangedEventManager.fire( new DateChangedEvent( newDate ) );
 
 		// todo: should we have a date change listener to do this???
-		updateHeader();
+		updateHeader( locationManager.getLastKnownLocation() );
 	}
 
 
@@ -770,8 +782,7 @@ public class ZmanimActivity
 					return;
 				}
 
-				// We just need a display...don't need to hold on to it...
-				new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
+				zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
 			}
 			finally {
 
@@ -818,7 +829,7 @@ public class ZmanimActivity
 			gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
 
 			// Now start listening for location changes...
-			locationManager.addListener( locationListener );
+			locationManager.addLocationChangeListener( locationListener );
 
 			// This is how we know that this is done.
 			activityInitTask = null;
@@ -827,7 +838,7 @@ public class ZmanimActivity
 
 
 	private class DateChangeEventManager
-		extends EventManager<DateChangedEvent.Listener, DateChangedEvent> {
+		extends EventManager<DateChangedEvent.Listener, HebrewDate, DateChangedEvent> {
 
 		@Override
 		protected void dispatch(

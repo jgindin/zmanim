@@ -17,8 +17,8 @@ class BeinHashmashot
 	private static final String                               DEFAULT_ZMAN_NAME = "2 Stars";
 
 
-	public BeinHashmashot( ZmanimCalendar zmanimCalendar ) {
-		super( Type.BeinHashmashot, buildZmanim( zmanimCalendar ) );
+	public BeinHashmashot( ZmanimCalculator zmanimCalculator ) {
+		super( Type.BeinHashmashot, buildZmanim( zmanimCalculator ) );
 	}
 
 
@@ -29,7 +29,7 @@ class BeinHashmashot
 
 
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -37,7 +37,7 @@ class BeinHashmashot
 		zmanim.add(
 			new Zman( "13 Degrees", "Based on Rabainu Tam's calculation as the time the sun is 13° below geometric zenith (90°).", Zmanim.Type.BeinHashmashot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getBainHasmashosRT13Point24Degrees();
+					return zmanimCalculator.getBainHasmashosRT13Point24Degrees();
 				}
 			}
 		);
@@ -45,7 +45,7 @@ class BeinHashmashot
 		zmanim.add(
 			new Zman( "58.5 Minutes", "Based on Rabainu Tam's calculation as a 58.5 minute offset after sunset.", Zmanim.Type.BeinHashmashot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getBainHasmashosRT58Point5Minutes();
+					return zmanimCalculator.getBainHasmashosRT58Point5Minutes();
 				}
 			}
 		);
@@ -53,7 +53,7 @@ class BeinHashmashot
 		zmanim.add(
 			new Zman( "13.5 Minutes", "Based on 13.5 minutes (3/4 of an 18 minute mil before shkiah calculated as 7.083°.", Zmanim.Type.BeinHashmashot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getBainHasmashosRT13Point5MinutesBefore7Point083Degrees();
+					return zmanimCalculator.getBainHasmashosRT13Point5MinutesBefore7Point083Degrees();
 				}
 			}
 		);
@@ -61,7 +61,7 @@ class BeinHashmashot
 		zmanim.add(
 			new Zman( "2 Stars", "Based on Rabainu Tam's calculation in the opinion of the Divray Yosef (see Yisrael Vehazmanim) of 5/18th (27.77%) of the time between alot (calculated as 19.8° before sunrise) and sunrise.", Zmanim.Type.BeinHashmashot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getBainHasmashosRT2Stars();
+					return zmanimCalculator.getBainHasmashosRT2Stars();
 				}
 			}
 		);

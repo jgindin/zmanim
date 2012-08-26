@@ -15,15 +15,15 @@ class Hanetz
 	extends Zmanim {
 
 	Hanetz(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Hanetz, buildZmanim( zmanimCalendar ) );
+		super( Type.Hanetz, buildZmanim( zmanimCalculator ) );
 	}
 
 
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -31,7 +31,7 @@ class Hanetz
 		zmanim.add(
 			new Zman( "Sunrise", "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getSunrise();
+					return zmanimCalculator.getSunrise();
 				}
 			}
 		);

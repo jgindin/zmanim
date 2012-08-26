@@ -6,6 +6,7 @@ package com.gindin.zmanim.calendar.formatters;
 
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zmanim;
 
 import java.util.Date;
@@ -55,7 +56,10 @@ public abstract class HebrewDateFormatter {
 		return null;
 	}
 
-	public abstract String format( HebrewDate date );
+	public abstract String format(
+		HebrewDate      date,
+		ZmanimLocation  location
+	);
 
 
 	/**
@@ -66,11 +70,14 @@ public abstract class HebrewDateFormatter {
 
 		@SuppressWarnings( "FeatureEnvy" )
 		@Override
-		public String format( HebrewDate date ) {
+		public String format(
+			HebrewDate      date,
+			ZmanimLocation  location
+		) {
 
 			StringBuilder buf = new StringBuilder();
 
-			if ( isAfterSunset( date ) ) {
+			if ( isAfterSunset( date, location ) ) {
 				date = date.tomorrow();
 				buf.append( "Or le " );
 			}
@@ -89,18 +96,20 @@ public abstract class HebrewDateFormatter {
 
 
 		@SuppressWarnings( "FeatureEnvy" )
-		private boolean isAfterSunset( HebrewDate date ) {
+		private boolean isAfterSunset(
+			HebrewDate      date,
+			ZmanimLocation  location
+		) {
 
 			HebrewDate today = HebrewCalendar.today();
 			if ( 0 != today.compareTo( date ) ) {
 				return false;
 			}
 
-			final Date sunset = date.getZman( Zmanim.Type.Shkia ).getTime();
+			final Date sunset = date.getZman( location, Zmanim.Type.Shkia ).getTime();
 
 			return today.getTime().after( sunset );
 		}
-
 
 	}  // End of ShortFormatter class
 
@@ -113,9 +122,12 @@ public abstract class HebrewDateFormatter {
 		extends ShortFormatter {
 
 		@Override
-		public String format( HebrewDate date ) {
+		public String format(
+			HebrewDate date,
+			ZmanimLocation location
+		) {
 
-			String buf = super.format( date );
+			String buf = super.format( date, location );
 			buf += date.getDetails().getDescription();
 
 			return buf;

@@ -18,10 +18,10 @@ class CandleLighting
 
 
 	CandleLighting(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.CandleLighting, buildZmanim( zmanimCalendar ) );
+		super( Type.CandleLighting, buildZmanim( zmanimCalculator ) );
 	}
 
 
@@ -33,7 +33,7 @@ class CandleLighting
 
 	@SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -41,7 +41,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Standard Candle lighting", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting();
+					return zmanimCalculator.getCandleLighting();
 				}
 			}
 		);
@@ -49,7 +49,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( "20 Minutes", "Raanana", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting( 20 );
+					return zmanimCalculator.getCandleLighting( 20 );
 				}
 			}
 		);
@@ -57,7 +57,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( "21 Minutes", "Tel Aviv", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting( 21 );
+					return zmanimCalculator.getCandleLighting( 21 );
 				}
 			}
 		);
@@ -65,7 +65,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( "22 Minutes", "Ashdod", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting( 22 );
+					return zmanimCalculator.getCandleLighting( 22 );
 				}
 			}
 		);
@@ -73,7 +73,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( "30 Minutes", "Tzefat, Teveria, Haifa", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting( 30 );
+					return zmanimCalculator.getCandleLighting( 30 );
 				}
 			}
 		);
@@ -81,7 +81,7 @@ class CandleLighting
 		zmanim.add(
 			new Zman( "40 Minutes", "Jerusalem, Petach Tikvah", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getCandleLighting( 40 );
+					return zmanimCalculator.getCandleLighting( 40 );
 				}
 			}
 		);

@@ -16,17 +16,18 @@ class FastEnds
 	extends TzaitHacochavim {
 
 	FastEnds(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.FastEnd, zmanimCalendar,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalendar ), buildFastEndsZmanim( zmanimCalendar ) ) );
+		super( Type.FastEnd, zmanimCalculator,
+			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator ), buildFastEndsZmanim(
+				zmanimCalculator ) ) );
 	}
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private static List<Zman> buildFastEndsZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -35,7 +36,7 @@ class FastEnds
 			new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {
 				@Override protected Date calculate() {
 					//noinspection MagicNumber
-					return zmanimCalendar.getEndOfFast( 30 );
+					return zmanimCalculator.getEndOfFast( 30 );
 				}
 			}
 		);

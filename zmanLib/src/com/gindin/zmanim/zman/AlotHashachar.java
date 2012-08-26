@@ -18,10 +18,10 @@ class AlotHashachar
 
 
 	AlotHashachar(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Alot, buildZmanim( zmanimCalendar ) );
+		super( Type.Alot, buildZmanim( zmanimCalculator ) );
 	}
 
 
@@ -33,7 +33,7 @@ class AlotHashachar
 
 	@SuppressWarnings( "FeatureEnvy" )
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -41,7 +41,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "120 Minutes", "Before sea level sunrise, based on the time to walk the distance of 5 Mil at 24 minutes a Mil.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos120();
+					return zmanimCalculator.getAlos120();
 				}
 			}
 		);
@@ -49,7 +49,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "120 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/6th of the day before sea level sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos120Zmanis();
+					return zmanimCalculator.getAlos120Zmanis();
 				}
 			}
 		);
@@ -57,7 +57,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "When the sun is 16.1 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos16Point1Degrees();
+					return zmanimCalculator.getAlos16Point1Degrees();
 				}
 			}
 		);
@@ -65,7 +65,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "18 deg", "When the sun is 18 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos18Degrees();
+					return zmanimCalculator.getAlos18Degrees();
 				}
 			}
 		);
@@ -73,7 +73,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "19.8 deg", "When the sun is 19.8 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos19Point8Degrees();
+					return zmanimCalculator.getAlos19Point8Degrees();
 				}
 			}
 		);
@@ -81,7 +81,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "26 deg", "When the sun is 26 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos26Degrees();
+					return zmanimCalculator.getAlos26Degrees();
 				}
 			}
 		);
@@ -89,7 +89,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "60 Minutes", "Based on the time to walk 4 Mil at 15 minutes/Mil.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos60();
+					return zmanimCalculator.getAlos60();
 				}
 			}
 		);
@@ -97,7 +97,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "72 Minutes", "Based on the time to walk 4 Mil at 18 minutes/Mil.", Zmanim.Type.Alot, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos72();
+					return zmanimCalculator.getAlos72();
 				}
 			}
 		);
@@ -105,7 +105,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "GR'A 72 Minutes Zmaniyot", "Based on 1/10th of the day before sea level sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos72Zmanis();
+					return zmanimCalculator.getAlos72Zmanis();
 				}
 			}
 		);
@@ -113,7 +113,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "90 Minutes", "Based on the time to walk 4 Mil at 22.5 minutes a Mil.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos90();
+					return zmanimCalculator.getAlos90();
 				}
 			}
 		);
@@ -121,7 +121,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "GR'A 90 Minutes Zmaniyot", "Based on 1/8th of the day before sea level sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos90Zmanis();
+					return zmanimCalculator.getAlos90Zmanis();
 				}
 			}
 		);
@@ -129,7 +129,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "96 Minutes", "Based on the time to walk the distance of 4 Mil at 24 minutes/Mil.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos96();
+					return zmanimCalculator.getAlos96();
 				}
 			}
 		);
@@ -137,7 +137,7 @@ class AlotHashachar
 		zmanim.add(
 			new Zman( "GR'A 96 Minutes Zmaniyot", "Based on 1/8th of the day before sea level sunrise.", Zmanim.Type.Alot ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getAlos96Zmanis();
+					return zmanimCalculator.getAlos96Zmanis();
 				}
 			}
 		);

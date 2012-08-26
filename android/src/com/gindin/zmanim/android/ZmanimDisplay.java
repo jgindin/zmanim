@@ -4,10 +4,12 @@
 
 package com.gindin.zmanim.android;
 
+import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
@@ -31,12 +33,16 @@ class ZmanimDisplay {
 	private final ZmanFormatter                               zmanFormatter;
 
 	/** Manages the selection process, allowing the user to select a different zman. */
-	private final ZmanimSelector                              selector;
+	private ZmanimSelector                                    selector;
 
 	/** Set/Get the choosen zmanim. */
 	private final SharedPreferences                           preferences;
 
 	private HebrewDate                                        currentDate;
+	private final DateChangedEvent.Listener                   dateChangeListener;
+
+	private ZmanimLocation                                    currentLocation;
+	private final LocationChangedEvent.Listener               locationChangeListener;
 
 
 	ZmanimDisplay(
@@ -47,27 +53,58 @@ class ZmanimDisplay {
 		this.zmanimActivity = zmanimActivity;
 		this.zmanFormatter = zmanFormatter;
 
-		selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
 		preferences = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		listenToRows();
 
 		// Adding the listener will cause the event to get fired.
-		DateChangedEvent.Listener dateChangeListener = new DateChangedEvent.Listener() {
-			@Override
-			public void onDateChanged( DateChangedEvent event ) {
-				currentDate = event.getSource();
-				zmanimActivity.setListAdapter( getListAdapter( currentDate ) );
+		dateChangeListener = new DateChangedEvent.Listener() {
+			@Override public void onDateChanged( DateChangedEvent event ) {
+				currentDate = event.getEventInfo();
+				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
+				if ( null != listAdapter ) {
+					zmanimActivity.setListAdapter( listAdapter );
+				}
 			}
 		};
 		zmanimActivity.addDateChangeListener( dateChangeListener );
+
+		locationChangeListener = new LocationChangedEvent.Listener() {
+			@Override
+			public void onLocationChanged( LocationChangedEvent event ) {
+				currentLocation = event.getEventInfo();
+				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
+				if ( null != listAdapter ) {
+					zmanimActivity.setListAdapter( listAdapter );
+				}
+			}
+
+			@Override
+			public void onProgress( String message ) {
+			}
+		};
+		zmanimActivity.addLocationChangeListener( locationChangeListener );
+	}
+
+
+	void onDestroy() {
+		zmanimActivity.removeDateChangeListener( dateChangeListener );
+		zmanimActivity.removeLocationChangeListener( locationChangeListener );
 	}
 
 
 	@SuppressWarnings( { "ValueOfIncrementOrDecrementUsed" } )
-	private ListAdapter getListAdapter( HebrewDate date ) {
+	private ListAdapter getListAdapter(
+		HebrewDate      date,
+		ZmanimLocation  location
+	) {
 
-		List<Zmanim> daysZmanim = date.getZmanim();
+		// If we don't yet have the current date or the current location, just wait...
+		if ( ( null == date ) || ( null == location ) ) {
+			return null;
+		}
+
+		List<Zmanim> daysZmanim = date.getZmanim( location );
 		int numZmanim = daysZmanim.size();
 		Zman[] zmanimToDisplay = new Zman[ numZmanim ];
 		for ( int i = 0; i < numZmanim; i++ ) {
@@ -90,7 +127,7 @@ class ZmanimDisplay {
 				// This is a bit of a hammer, but it works...
 				//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
 				//  apparently the List which backs the adapter doesn't support remove().
-				zmanimActivity.setListAdapter( getListAdapter( currentDate ) );
+				zmanimActivity.setListAdapter( getListAdapter( currentDate, currentLocation ) );
 			}
 		};
 
@@ -103,9 +140,13 @@ class ZmanimDisplay {
 					long            id
 				) {
 
+					if ( null == selector ) {
+						selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
+					}
+
 					ListAdapter adapter = (ListAdapter)zmanimActivity.getListAdapter();
 					Zman zman = adapter.getItem( position );
-					selector.selectFrom( currentDate, zman.type, selectionCallback );
+					selector.selectFrom( currentDate, currentLocation, zman.type, selectionCallback );
 				}
 			}
 		);
@@ -125,7 +166,6 @@ class ZmanimDisplay {
 
 		return zman;
 	}
-
 
 
 	private class ListAdapter

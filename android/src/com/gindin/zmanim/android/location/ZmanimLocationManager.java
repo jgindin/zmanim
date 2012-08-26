@@ -14,8 +14,6 @@ import android.view.View;
 
 import java.util.*;
 
-import com.gindin.util.LogUtils;
-import com.gindin.util.Version;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
@@ -30,7 +28,8 @@ import com.gindin.zmanim.location.ZmanimLocation;
  * TODO: Allow user to choose how to select location:
  *        3. Google Map (see http://code.google.com/android/add-ons/google-apis/mapkey.html, http://code.google.com/android/add-ons/google-apis/reference/index.html)
  */
-public class ZmanimLocationManager {
+public class ZmanimLocationManager
+	implements LocationChangedEvent.HasListeners {
 
 
 	/** Need to know the activity so we can do things like build dialogs and spawn other activities. */
@@ -39,11 +38,8 @@ public class ZmanimLocationManager {
 	/** Who's really providing the location for us? */
 	private LocationProvider                                  locationProvider;
 
-	/** These are the folks who need to know when the location changes. */
-	private final List<Listener>                              listeners = new ArrayList<Listener>();
-
 	/** Everyone wants to see what preferences have been set. */
-	private final SharedPreferences                           locationManagementPrefs;
+	private SharedPreferences                                 locationManagementPrefs = null;
 
 	/** We need to listen to the provider for changes, which we then forward on to our listeners. */
 	private final LocationProvider.Listener                   locationListener;
@@ -75,22 +71,24 @@ public class ZmanimLocationManager {
  	 */
 	private Map<String,?>                                     prefsBeforeEditing;
 
+	/** Handles event firing, etc.. */
+	private final LocationChangedEventManager                 locationChangedEventManager = new LocationChangedEventManager();
 
+
+	@SuppressWarnings( "FeatureEnvy" )
 	public ZmanimLocationManager(
 		Activity activity
 	) {
 
 		this.activity = activity;
-		locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
-		locationListener = new DynamicLocationProvider.Listener() {
+		locationListener = new LocationProvider.Listener() {
 
 			public void onProgress(
 				String message
 			) {
-				fireProgress( message );
+				locationChangedEventManager.progress( message );
 			}
-
 
 			public void onLocationChanged(
 				Location  newLocation,
@@ -98,9 +96,8 @@ public class ZmanimLocationManager {
 			) {
 
 				ZmanimLocation location = updateLastKnownLocation( newLocation, locationName );
-				fireLocationChanged( location );
+				locationChangedEventManager.fire( new LocationChangedEvent( location ) );
 			}
-
 
 			public void onError(
 				LocationError error,
@@ -109,7 +106,7 @@ public class ZmanimLocationManager {
 			) {
 
 				ZmanimLocation location = updateLastKnownLocation( oldLocation, locationName );
-				fireError( error, location );
+				locationChangedEventManager.fire( new LocationChangedEvent( location, error ) );
 			}
 		};
 	}
@@ -134,23 +131,10 @@ public class ZmanimLocationManager {
 
 	public void onDestroy() {
 
-		if ( !listeners.isEmpty() ) {
-
-			final List<Listener> copy = listeners;
-			for ( Listener listener : copy ) {
-				removeListener( listener );
-			}
-
-			if ( !listeners.isEmpty() ) {
-
-				// If we get here, things are in bad shape, but we can still remove our listener from
-				//  the location handler...
-				locationProvider.removeListener( locationListener );
-
-				if ( Version.isDevelopment() ) {
-					throw new IllegalStateException( "Should have removed all listeners. Still have " + listeners.size() );
-				}
-			}
+		if ( !locationChangedEventManager.destroy() ) {
+			// If we get here, things are in bad shape, but we can still remove our listener from
+			//  the location handler...
+			locationProvider.removeListener( locationListener );
 		}
 
 		locationProvider.onDestroy();
@@ -174,40 +158,19 @@ public class ZmanimLocationManager {
 	}
 
 
-
-	public void addListener(
-		Listener  listener
-	) {
-
-		if ( listeners.contains( listener ) ) {
-			if ( Version.isDevelopment() ) {
-				LogUtils.logError( "ZmanimLocationManager::addListener", "Listener already listening!", new Throwable() );
-			}
-		}
-		else {
-			listeners.add( listener );
-
-			if ( 1 == listeners.size() ) {
-				// Force a provider to be created...
-				startInitialProvider();
-			}
+	@Override
+	public void addLocationChangeListener( LocationChangedEvent.Listener listener ) {
+		if ( locationChangedEventManager.addListener( listener ) ) {
+			// Force a provider to be created...
+			startInitialProvider();
 		}
 	}
 
 
-	public void removeListener(
-		Listener listener
-	) {
-
-		if ( listeners.contains( listener ) ) {
-			listeners.remove( listener );
-
-			if ( listeners.isEmpty() ) {
-				locationProvider.removeListener( locationListener );
-			}
-		}
-		else if ( Version.isDevelopment() ) {
-			LogUtils.logError( "ZmanimLocationManager::removeListener", "Listener wasn't listening!", new Throwable() );
+	@Override
+	public void removeLocationChangeListener( LocationChangedEvent.Listener listener ) {
+		if ( locationChangedEventManager.removeListener( listener ) ) {
+			locationProvider.removeListener( locationListener );
 		}
 	}
 
@@ -244,9 +207,10 @@ public class ZmanimLocationManager {
 	public void editLocationPrefs() {
 
 		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
-		prefsBeforeEditing = locationManagementPrefs.getAll();
+		prefsBeforeEditing = getLocationManagementPrefs().getAll();
 
-		activity.startActivityForResult( new Intent( activity, EditLocationProviderPreferences.class ), Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
+		activity.startActivityForResult( new Intent( activity, EditLocationProviderPreferences.class ),
+			Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
 	}
 
 
@@ -256,7 +220,7 @@ public class ZmanimLocationManager {
 	 */
 	public void locationPrefsChanged() {
 
-		final Map<String, ?> prefsAfterEditing = locationManagementPrefs.getAll();
+		final Map<String, ?> prefsAfterEditing = getLocationManagementPrefs().getAll();
 		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
 
 			startInitialProvider();
@@ -274,30 +238,30 @@ public class ZmanimLocationManager {
 			locationProvider.onDestroy();
 		}
 
-
-		boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+		SharedPreferences prefs = getLocationManagementPrefs();
+		boolean useThis = prefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
 		if ( useThis ) {
-			locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
+			locationProvider = new DynamicLocationProvider( activity, prefs );
 		}
 		else {
 
-			useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
+			useThis = prefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
 			if ( useThis ) {
-				locationProvider = new StaticLocationProvider( activity, locationManagementPrefs );
+				locationProvider = new StaticLocationProvider( activity, prefs );
 			}
 			else {
 
-				useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
+				useThis = prefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
 				if ( useThis ) {
-					locationProvider = new LatitudeLongitudeLocationProvider( activity, locationManagementPrefs );
+					locationProvider = new LatitudeLongitudeLocationProvider( activity, prefs );
 				}
 			}
 		}
 
 		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
 		if ( !useThis ) {
-			locationProvider = new DynamicLocationProvider( activity, locationManagementPrefs );
-			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+			locationProvider = new DynamicLocationProvider( activity, prefs );
+			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
 		}
 
 		locationProvider.addListener( locationListener );
@@ -355,16 +319,17 @@ public class ZmanimLocationManager {
 	 */
 	private TimeZone getTimeZoneFromPrefs() {
 
-		if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
+		SharedPreferences prefs = getLocationManagementPrefs();
+		if ( !prefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
 			return null;
 		}
 
-		final String timeZoneArea = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+		final String timeZoneArea = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
 		if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
 			return null;
 		}
 
-		final String timeZoneLocale = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+		final String timeZoneLocale = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
 		if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
 			return null;
 		}
@@ -374,58 +339,13 @@ public class ZmanimLocationManager {
 	}
 
 
-	private void fireProgress(
-		String message
-	) {
+	private SharedPreferences getLocationManagementPrefs() {
 
-		for ( Listener listener : listeners ) {
-			listener.onProgress( message );
+		if ( null == locationManagementPrefs ) {
+			locationManagementPrefs = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		}
-	}
 
-
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private void fireLocationChanged(
-		ZmanimLocation location
-	) {
-
-		/*
-		//noinspection unchecked
-		LogUtils.logEvent( "newLocation",
-			new Pair<String,String>( "latitude", location.getLatitudeString() ),
-			new Pair<String,String>( "longitude", location.getLongitudeString() ),
-			new Pair<String, String>( "location", location.getLocationName() ) );
-		*/
-
-		for ( Listener listener : listeners ) {
-			listener.locationChanged( location );
-		}
-	}
-
-
-	private void fireError(
-		LocationError   error,
-		ZmanimLocation  location
-	) {
-
-		for ( Listener listener : listeners ) {
-			listener.error( error, location );
-		}
-	}
-
-
-	public interface Listener {
-
-		void locationChanged( ZmanimLocation newLocation );
-
-		void error(
-			LocationError   error,
-			ZmanimLocation lastKnownLocation
-		);
-
-		void onProgress(
-			String message
-		);
+		return locationManagementPrefs;
 	}
 
 

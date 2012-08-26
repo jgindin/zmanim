@@ -15,15 +15,15 @@ class Chatzot
 	extends Zmanim {
 
 	Chatzot(
-		final ZmanimCalendar zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Chatzot, buildZmanim( zmanimCalendar ) );
+		super( Type.Chatzot, buildZmanim( zmanimCalculator ) );
 	}
 
 
 	private static List<Zman> buildZmanim(
-		final ZmanimCalendar  zmanimCalendar
+		final ZmanimCalculator zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
@@ -31,7 +31,7 @@ class Chatzot
 		zmanim.add(
 			new Zman( "Mid-day", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.Chatzot, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalendar.getChatzos();
+					return zmanimCalculator.getChatzos();
 				}
 			}
 		);

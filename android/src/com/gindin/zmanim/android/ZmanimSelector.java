@@ -13,6 +13,7 @@ import android.widget.*;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
@@ -88,6 +89,7 @@ public class ZmanimSelector {
 
 	void selectFrom(
 		HebrewDate              currentDate,
+		ZmanimLocation          currentLocation,
 		final Zmanim.Type       type,
 		final SelectionCallback callback
 	) {
@@ -95,7 +97,7 @@ public class ZmanimSelector {
 		typeToSelectFrom = type;
 		typeSelectionCallback = callback;
 
-		final Zmanim zmanim = currentDate.getZmanim( type );
+		final Zmanim zmanim = currentDate.getZmanim( currentLocation, type );
 		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.toArray() ) {
 			@Override protected ZmanRowWrapper createRowWrapper( View rowView ) {
 				return new SelectorRow( rowView, zmanFormatter );
