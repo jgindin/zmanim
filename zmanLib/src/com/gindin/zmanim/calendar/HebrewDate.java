@@ -172,7 +172,7 @@ public class HebrewDate
 		Zmanim.Type     type
 	) {
 
-		return ZmanimFactory.getInstance( location ).getOrCreate( type );
+		return ZmanimFactory.get( location, this, type );
 	}
 
 
@@ -313,9 +313,20 @@ public class HebrewDate
 	 */
 	public Date getTime() {
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis( System.currentTimeMillis() );
-		cal.set( gregorianYear, gregorianMonth, gregorianDayOfMonth );
+		syncCalendar( cal );
 		return cal.getTime();
+	}
+
+
+	/**
+	 * Updates the specified calendar to match the Gregorian date represented by this Hebrew date.
+	 *
+	 * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
+	 */
+	public void syncCalendar( Calendar calendar ) {
+
+		calendar.setTimeInMillis( System.currentTimeMillis() );
+		calendar.set( gregorianYear, gregorianMonth, gregorianDayOfMonth );
 	}
 
 

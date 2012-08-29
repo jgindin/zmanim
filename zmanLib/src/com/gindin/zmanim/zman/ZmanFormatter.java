@@ -10,8 +10,6 @@ import java.util.Date;
 
 /**
  * Format zmanim.
- *
- * TODO: Derive from KosherJava's ZmanimFormatter????
  */
 public class ZmanFormatter {
 

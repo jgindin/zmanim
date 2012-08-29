@@ -30,11 +30,6 @@ public abstract class Zmanim {
 	}
 
 
-	public int size() {
-		return allZmanim.size();
-	}
-
-
 	/**
 	 * Finds the named zman.
 	 *
@@ -75,11 +70,6 @@ public abstract class Zmanim {
 
 		// Should never get here.
 		return null;
-	}
-
-
-	public Iterator<Zman> iterator() {
-		return allZmanim.iterator();
 	}
 
 

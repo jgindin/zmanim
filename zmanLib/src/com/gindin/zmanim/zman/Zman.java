@@ -26,11 +26,8 @@ public abstract class Zman {
 	/** Keep the calculation cached until we're told to clear the cache. */
 	private Date                                              cachedTime;
 
-	/** Keep any formatting cached until we're told to clear. */
-	private String                                            cachedFormattedTime;
 
-
-	public Zman(
+	Zman(
 		String      name,
 		String      description,
 		Zmanim.Type type
@@ -39,7 +36,7 @@ public abstract class Zman {
 	}
 
 
-	public Zman(
+	Zman(
 		String      name,
 		String      description,
 		Zmanim.Type type,
@@ -62,21 +59,6 @@ public abstract class Zman {
 		return cachedTime;
 	}
 
-
-	public String getCachedFormattedTime() {
-		return cachedFormattedTime;
-	}
-
-
-	public void setCachedFormattedTime( String cachedFormattedTime ) {
-		this.cachedFormattedTime = cachedFormattedTime;
-	}
-	
-
-	public void clearCache() {
-		cachedTime = null;
-		cachedFormattedTime = null;
-	}
 
 	/**
 	 * @return Subclass must implement to return the actual time of the zman.

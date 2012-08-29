@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.android.location;
 
-import com.gindin.util.ProgressAwareEventListener;
+import com.gindin.util.events.ProgressAwareEventListener;
 import com.gindin.util.events.AbstractEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 

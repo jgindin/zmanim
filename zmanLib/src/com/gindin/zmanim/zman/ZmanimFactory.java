@@ -4,6 +4,8 @@
 
 package com.gindin.zmanim.zman;
 
+import com.gindin.util.Pair;
+import com.gindin.zmanim.calendar.HebrewDate;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import java.util.Map;
  */
 public class ZmanimFactory {
 
-	private static final Map<GeoLocation, ZmanimFactory>      locationToFactory = new HashMap<GeoLocation, ZmanimFactory>();
+	private static final Map<Pair<GeoLocation, HebrewDate>, ZmanimFactory>      locationToFactory = new HashMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory>();
 
 	/** Cache so that we don't create the zmanim instances more than once. */
 	private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<Zmanim.Type, Zmanim>();
@@ -23,29 +25,33 @@ public class ZmanimFactory {
 
 
 
-	// TODO: Problem here is that when we create a new ZmanimFactory, it's for a particular ZmanimCalculator.
-	// TODO:  And, the ZmanimCalculator's super class (AstronomicalCalendar) is calling setCalendar, which initializes
-	// TODO:  it to the current date. So, every time we ask for the ZmanimFactory, it's pulling out the first one
-	// TODO:  that was created, and using it, but not changing the date it's associated with...
-	public static ZmanimFactory getInstance( GeoLocation location ) {
+	public static Zmanim get(
+		GeoLocation location,
+		HebrewDate  date,
+		Zmanim.Type type
+	) {
 
 		assert null != location;
 
-		ZmanimFactory factory = locationToFactory.get( location );
+		Pair<GeoLocation,HebrewDate>  key = new Pair<GeoLocation, HebrewDate>( location, date );
+		ZmanimFactory factory = locationToFactory.get( key );
 		if ( null == factory ) {
-			factory = new ZmanimFactory( location );
-			locationToFactory.put( location, factory );
+			factory = new ZmanimFactory( location, date );
+			locationToFactory.put( key, factory );
 		}
 
-		return factory;
+		return factory.get( type );
 	}
 
-	private ZmanimFactory( GeoLocation location ) {
-		this.zmanimCalculator = new ZmanimCalculator( location );
+	private ZmanimFactory(
+		GeoLocation location,
+		HebrewDate date
+	) {
+		this.zmanimCalculator = new ZmanimCalculator( location, date );
 	}
 
 
-	public Zmanim getOrCreate(
+	private Zmanim get(
 		Zmanim.Type type
 	) {
 

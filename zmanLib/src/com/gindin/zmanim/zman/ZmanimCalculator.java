@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.zman;
 
+import com.gindin.zmanim.calendar.HebrewDate;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
@@ -70,8 +71,12 @@ public class ZmanimCalculator
 
 
 
-	public ZmanimCalculator( GeoLocation location ) {
+	public ZmanimCalculator(
+		GeoLocation location,
+		HebrewDate date
+	) {
 		super( location );
+		date.syncCalendar( getCalendar() );
 	}
 
 

@@ -4,7 +4,6 @@
 
 package com.gindin.util.events;
 
-import com.gindin.util.ProgressAwareEventListener;
 import com.gindin.util.Version;
 
 import java.util.ArrayList;
