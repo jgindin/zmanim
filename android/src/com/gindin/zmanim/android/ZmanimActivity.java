@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.android;
 
+import com.gindin.util.Version;
 import com.gindin.util.events.EventManager;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationChangedEvent;
@@ -133,6 +134,7 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
+		EventManager.performListenerChecks = Version.isDevelopment();
 
 		personalPrefsManager = new PersonalPrefsManager( this );
 
@@ -282,7 +284,7 @@ public class ZmanimActivity
 		final View secularDate = findViewById( R.id.secular_date );
 		secularDate.setOnClickListener(
 			new View.OnClickListener() {
-				public void onClick(View v) {
+				public void onClick( View v ) {
 					showDialog( R.id.secular_date );
 				}
 			}
