@@ -8,6 +8,7 @@
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
       <directory url="file://$USER_HOME$/src/gindin/zmanim/trunk/android/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/../zmanLib/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />

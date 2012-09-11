@@ -6,7 +6,18 @@
 <!--
 	I figured out the proper format for this file from https://github.com/twaddington/android-obd-logger/commit/95f3360a6cd12340214f134dfe5b896e1cf54539#diff-0
 -->
-<project name="imported">
+<project name="AndroidZmanim_CustomRules">
+
+	<property name="about.html" value="assets/com/gindin/zmanim/android/about.html"/>
+	<import file="../common/versioning_rules.xml" optional="false"/>
+
+
+	<!--
+		This is my custom target extension.
+	-->
+	<target name="-pre-setup" depends="replace-version-placeholders,show-svn-info">
+		<echo>-pre-setup</echo>
+	</target>
 
 
 	<!--
@@ -18,7 +29,7 @@
 		Extension targets. Uncomment the ones where you want to do custom work
 		in between standard targets
 	 -->
-	<target name="-pre-build" depends="replace-version-placeholders,show-svn-info">
+	<target name="-pre-build" depends="zmanim-replace-flurry-key-placeholders">
 		<echo>-pre-build</echo>
 	</target>
 
@@ -35,7 +46,7 @@
 		<echo>-post-compile</echo>
 	</target>
 
-	<target name="-post-build">
+	<target name="-post-build" depends="zmanim-reset-flurry-key">
 		<echo>-post-build</echo>
 	</target>
 
@@ -48,93 +59,8 @@
 	 My custom targets
  -->
 
-	<property name="svnant.javahl" value="false"/>
-	<property name="svnant.svnkit" value="true"/>
-	<path id="svnant.classpath">
-		<fileset dir="${svnant.lib.dir}">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
-	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
-
 	<property file="flurry.properties"/>
 
-
-	<target name="get-svn-state">
-		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
-			<wcversion path="." prefix="svn.status."/>
-		</svn>
-	</target>
-
-
-	<target name="show-svn-info">
-		<echo>
-			repository.url=${svn.status.repository.url}
-			committed.max=${svn.status.committed.max}
-			modified=${svn.status.modified}
-		</echo>
-	</target>
-
-
-	<!--
-	 Takes care of updating the user-visible version string.
- -->
-	<target name="set-version" depends="get-svn-state">
-
-		<property file="version.number"/>
-		<property file="build.number"/>
-
-		<condition property="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}"
-		           else="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV">
-			<isset property="release_build"/>
-		</condition>
-
-		<echo>
-			version.major = ${version.major}
-			version.minor = ${version.minor}
-			build.number = ${build.number}
-
-			version = ${version}
-		</echo>
-
-	</target>
-
-
-	<!--
-	 Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
-		 minor version number.
- -->
-	<target name="zmanim-update-release-version">
-
-		<echo>Updating version number...</echo>
-		<buildnumber file="build.number"/>
-
-		<propertyfile file="version.number" comment="Zmanim Version">
-			<!-- Actually, I don't want to bump the minor version every time.... -->
-			<!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
-			<entry key="version.date" type="date" value="now"/>
-		</propertyfile>
-
-	</target>
-
-
-	<target name="replace-version-placeholders" depends="set-version">
-
-		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
-		               replace='android:versionName="${version}"'/>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)"
-		               replace='android:versionCode="${build.number}"'/>
-
-		<replaceregexp file="assets/com/gindin/zmanim/android/about.html" match='Version (.*)'
-		               replace='Version ${version}'/>
-
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)'
-		               replace='public static final String androidVersionName = "${version}";'/>
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)'
-		               replace='public static final int androidCodeVersion = ${build.number};'/>
-
-	</target>
 
 	<!--
 	  We don't want to store our flurry key in the source code...after all, we're hosting the code in a public

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidZmanim.iml" filepath="$PROJECT_DIR$/AndroidZmanim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../common/Common.iml" filepath="$PROJECT_DIR$/../common/Common.iml" />
       <module fileurl="file://$PROJECT_DIR$/../thirdparty/kosherjava/KosherJava.iml" filepath="$PROJECT_DIR$/../thirdparty/kosherjava/KosherJava.iml" />
       <module fileurl="file://$PROJECT_DIR$/../zmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/../zmanLib/ZmanLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/../utils/utils.iml" filepath="$PROJECT_DIR$/../utils/utils.iml" />
