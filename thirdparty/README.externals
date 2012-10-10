@@ -10,4 +10,4 @@ The zmanim directory is imported from http://code.google.com/p/zmanim-framework/
 	3. svn update
 
 
-The icu4j directory is imported in a similar fashion from http://source.icu-project.org/repos/icu/icu4j/tags/release-4-2-1/.
+The kosherjava directory is imported in a similar fashion from http://kosherjava.googlecode.com/svn/trunk/
