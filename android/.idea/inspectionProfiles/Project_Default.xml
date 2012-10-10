@@ -56,6 +56,7 @@
     <inspection_tool class="MagicNumber" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreInHashCode" value="true" />
       <option name="ignoreInTestCode" value="false" />
+      <option name="ignoreInAnnotations" value="true" />
     </inspection_tool>
     <inspection_tool class="MisspelledSetUp" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MisspelledTearDown" enabled="true" level="WARNING" enabled_by_default="true" />
