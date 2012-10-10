@@ -40,6 +40,7 @@
     <orderEntry type="module" module-name="ZmanLib" />
     <orderEntry type="library" name="Flurry" level="project" />
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="application" />
+    <orderEntry type="library" name="kosherjava" level="project" />
   </component>
 </module>
 

@@ -6,7 +6,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gindin.zmanim"
     android:versionCode="1"
-    android:versionName="3.5.1.453-DEV"
+    android:versionName="3.5.1.459-DEV"
   >
   <application android:label="@string/app_name" >
     <activity android:name=".ZmanimLibrary"

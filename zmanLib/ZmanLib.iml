@@ -41,6 +41,7 @@
     <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="project" />
     <orderEntry type="library" name="IJ Annotations" level="application" />
+    <orderEntry type="library" name="kosherjava" level="project" />
   </component>
 </module>
 

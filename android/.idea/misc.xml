@@ -46,7 +46,35 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../common">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://android-zmanim.googlecode.com/svn/branches" />
+                  <option value="https://android-zmanim.googlecode.com/svn/tags" />
+                  <option value="https://android-zmanim.googlecode.com/svn/wiki" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://android-zmanim.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../thirdparty/kosherjava">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://android-zmanim.googlecode.com/svn/branches" />
+                  <option value="https://android-zmanim.googlecode.com/svn/tags" />
+                  <option value="https://android-zmanim.googlecode.com/svn/wiki" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://android-zmanim.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../utils">
           <value>
             <SvnBranchConfiguration>
               <option name="branchUrls">

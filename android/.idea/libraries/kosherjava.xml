@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="kosherjava">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/KosherJava.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/docs/api" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/src" />
+      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/test" />
+    </SOURCES>
+  </library>
+</component>
