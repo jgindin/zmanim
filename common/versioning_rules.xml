@@ -22,6 +22,15 @@
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
 
 
+	<target name="check-release">
+
+		<condition property="release_build">
+			<equals arg1="${build.target}" arg2="release" />
+		</condition>
+
+		<echo>Release build? ${release_build}</echo>
+	</target>
+
 	<target name="get-svn-state">
 		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
 			<wcversion path="." prefix="svn.status."/>
@@ -80,7 +89,7 @@
 	</target>
 
 
-	<target name="replace-version-placeholders" depends="set-version">
+	<target name="replace-version-placeholders" depends="check-release,set-version">
 
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
