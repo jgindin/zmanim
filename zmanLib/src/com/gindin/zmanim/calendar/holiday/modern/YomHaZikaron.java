@@ -78,6 +78,14 @@ public class YomHaZikaron
 				}
 				break;
 
+			case Calendar.THURSDAY:
+				if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
+					// This means that Wednesday was the 2nd (or 3rd), and that's when Yom HaZikaron should fall out
+					//  for this year...
+					return null;
+				}
+
+
 			case Calendar.SATURDAY:
 				if ( 3 == jewishDayOfMonth ) {
 					// This is a case where we're pushing it forward...

@@ -678,6 +678,196 @@ public class UT_HebrewCalendar {
 		);
 	}
 
+
+	@Test
+	public void test5775() {
+
+		runTest( 5775,
+			"2014 /  9 / 24 | erev     | yes     | no       | Erev Rosh Hashana\n" +
+			"2014 /  9 / 25 | yom      | yes     | no       | Rosh Hashana\n" +
+			"2014 /  9 / 26 | erev     | yes     | no       | Rosh Hashana\n" +
+			"2014 /  9 / 27 | erev     | no      | yes      | Shabbat / Erev Tzom Gedaliah\n" +
+			"2014 /  9 / 28 | yom      | no      | no       | Tzom Gedaliah\n" +
+			"2014 / 10 /  3 | erev     | yes     | no       | Erev Yom Kippur\n" +
+			"2014 / 10 /  4 | yom      | no      | yes      | Shabbat / Yom Kippur\n" +
+			"2014 / 10 /  8 | erev     | yes     | no       | Erev Sukkot\n" +
+			"2014 / 10 /  9 | yom      | yes     | no       | Sukkot\n" +
+			"2014 / 10 / 10 | erev     | yes     | no       | Sukkot\n" +
+			"2014 / 10 / 11 | yom      | no      | yes      | Shabbat / Chol HaMoed Sukkot 3\n" +
+			"2014 / 10 / 12 | yom      | no      | no       | Chol HaMoed Sukkot 4\n" +
+			"2014 / 10 / 13 | yom      | no      | no       | Chol HaMoed Sukkot 5\n" +
+			"2014 / 10 / 14 | yom      | no      | no       | Chol HaMoed Sukkot 6\n" +
+			"2014 / 10 / 15 | erev     | yes     | no       | Sukkot 7 (Hoshana Rabba)\n" +
+			"2014 / 10 / 16 | yom      | yes     | no       | Shmini Atzeret\n" +
+			"2014 / 10 / 17 | erev     | yes     | no       | Simchat Torah\n" +
+			"2014 / 10 / 18 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 10 / 23 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
+			"2014 / 10 / 24 | erev     | yes     | no       | Rosh Chodesh Heshvan (1)\n" +
+			"2014 / 10 / 25 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan (2)\n" +
+			"2014 / 10 / 31 | erev     | yes     | no       | \n" +
+			"2014 / 11 /  1 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 11 /  7 | erev     | yes     | no       | \n" +
+			"2014 / 11 /  8 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 11 / 14 | erev     | yes     | no       | \n" +
+			"2014 / 11 / 15 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 11 / 21 | erev     | yes     | no       | \n" +
+			"2014 / 11 / 22 | erev     | no      | yes      | Shabbat / Erev Rosh Chodesh Kislev\n" +
+			"2014 / 11 / 23 | yom      | no      | no       | Rosh Chodesh Kislev\n" +
+			"2014 / 11 / 28 | erev     | yes     | no       | \n" +
+			"2014 / 11 / 29 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 12 /  5 | erev     | yes     | no       | \n" +
+			"2014 / 12 /  6 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 12 / 12 | erev     | yes     | no       | \n" +
+			"2014 / 12 / 13 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 12 / 16 | erev     | no      | no       | Erev Chanukah\n" +
+			"2014 / 12 / 17 | yom      | no      | no       | Chanukah 1\n" +
+			"2014 / 12 / 18 | yom      | no      | no       | Chanukah 2\n" +
+			"2014 / 12 / 19 | erev     | yes     | no       | Chanukah 3\n" +
+			"2014 / 12 / 20 | yom      | no      | yes      | Shabbat / Chanukah 4\n" +
+			"2014 / 12 / 21 | erev     | no      | no       | Erev Rosh Chodesh Tevet / Chanukah 5\n" +
+			"2014 / 12 / 22 | yom      | no      | no       | Rosh Chodesh Tevet (1) / Chanukah 6\n" +
+			"2014 / 12 / 23 | yom      | no      | no       | Rosh Chodesh Tevet (2) / Chanukah 7\n" +
+			"2014 / 12 / 24 | yom      | no      | no       | Chanukah 8\n" +
+			"2014 / 12 / 26 | erev     | yes     | no       | \n" +
+			"2014 / 12 / 27 | yom      | no      | yes      | Shabbat\n" +
+			"2014 / 12 / 31 | erev     | no      | no       | Erev Asara B'Tevet\n" +
+			"2015 /  1 /  1 | yom      | no      | no       | Asara B'Tevet\n" +
+			"2015 /  1 /  2 | erev     | yes     | no       | \n" +
+			"2015 /  1 /  3 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  1 /  9 | erev     | yes     | no       | \n" +
+			"2015 /  1 / 10 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  1 / 16 | erev     | yes     | no       | \n" +
+			"2015 /  1 / 17 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  1 / 20 | erev     | no      | no       | Erev Rosh Chodesh Shevat\n" +
+			"2015 /  1 / 21 | yom      | no      | no       | Rosh Chodesh Shevat\n" +
+			"2015 /  1 / 23 | erev     | yes     | no       | \n" +
+			"2015 /  1 / 24 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  1 / 30 | erev     | yes     | no       | \n" +
+			"2015 /  1 / 31 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  2 /  3 | erev     | no      | no       | Erev Tu B'Shvat\n" +
+			"2015 /  2 /  4 | yom      | no      | no       | Tu B'Shvat\n" +
+			"2015 /  2 /  6 | erev     | yes     | no       | \n" +
+			"2015 /  2 /  7 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  2 / 13 | erev     | yes     | no       | \n" +
+			"2015 /  2 / 14 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  2 / 18 | erev     | no      | no       | Erev Rosh Chodesh Adar\n" +
+			"2015 /  2 / 19 | yom      | no      | no       | Rosh Chodesh Adar\n" +
+			"2015 /  2 / 20 | erev     | yes     | no       | Rosh Chodesh Adar\n" +
+			"2015 /  2 / 21 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  2 / 27 | erev     | yes     | no       | \n" +
+			"2015 /  2 / 28 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  3 /  3 | erev     | no      | no       | Erev Ta'anit Esther\n" +
+			"2015 /  3 /  4 | erev     | no      | no       | Ta'anit Esther / Erev Purim\n" +
+			"2015 /  3 /  5 | yom      | no      | no       | Purim\n" +
+			"2015 /  3 /  6 | erev     | yes     | no       | Shushan Purim\n" +
+			"2015 /  3 /  7 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  3 / 13 | erev     | yes     | no       | \n" +
+			"2015 /  3 / 14 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  3 / 20 | erev     | yes     | no       | Erev Rosh Chodesh Nissan\n" +
+			"2015 /  3 / 21 | yom      | no      | yes      | Shabbat / Rosh Chodesh Nissan\n" +
+			"2015 /  3 / 27 | erev     | yes     | no       | \n" +
+			"2015 /  3 / 28 | yom      | no      | yes      | Shabbat\n" +
+
+			// todo: Hebcal.com says this fast is NOT pushed back to Thursday, but rather can
+			// todo:  fall on Friday... other sites disagree...
+			"2015 /  4 /  1 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
+			"2015 /  4 /  2 | yom      | no      | no       | Ta'anit Bechorot\n" +
+			"2015 /  4 /  3 | erev     | yes     | no       | Erev Pesach\n" +
+			"2015 /  4 /  4 | yom      | yes     | yes      | Shabbat / Pesach\n" +
+			"2015 /  4 /  5 | yom      | no      | yes      | Pesach / Omer 1\n" +
+			"2015 /  4 /  6 | yom      | no      | no       | Chol HaMoed Pesach 3 / Omer 2\n" +
+			"2015 /  4 /  7 | yom      | no      | no       | Chol HaMoed Pesach 4 / Omer 3\n" +
+			"2015 /  4 /  8 | yom      | no      | no       | Chol HaMoed Pesach 5 / Omer 4\n" +
+			"2015 /  4 /  9 | yom      | yes     | no       | Chol HaMoed Pesach 6 / Omer 5\n" +
+			"2015 /  4 / 10 | erev     | yes     | no       | Pesach / Omer 6\n" +
+			"2015 /  4 / 11 | yom      | no      | yes      | Shabbat / Pesach / Omer 7\n" +
+			"2015 /  4 / 12 | yom      | no      | no       | Omer 8\n" +
+			"2015 /  4 / 13 | yom      | no      | no       | Omer 9\n" +
+			"2015 /  4 / 14 | yom      | no      | no       | Omer 10\n" +
+			"2015 /  4 / 15 | erev     | no      | no       | Erev Yom HaShoah / Omer 11\n" +
+			"2015 /  4 / 16 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
+			"2015 /  4 / 17 | erev     | yes     | no       | Omer 13\n" +
+			"2015 /  4 / 18 | erev     | no      | yes      | Shabbat / Erev Rosh Chodesh Iyar / Omer 14\n" +
+			"2015 /  4 / 19 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
+			"2015 /  4 / 20 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
+			"2015 /  4 / 21 | erev     | no      | no       | Erev Yom HaZikaron / Omer 17\n" +
+			"2015 /  4 / 22 | erev     | no      | no       | Yom HaZikaron / Erev Yom HaAtzmaut / Omer 18\n" +
+			"2015 /  4 / 23 | yom      | no      | no       | Yom HaAtzmaut / Omer 19\n" +
+			"2015 /  4 / 24 | erev     | yes     | no       | Omer 20\n" +
+			"2015 /  4 / 25 | yom      | no      | yes      | Shabbat / Omer 21\n" +
+			"2015 /  4 / 26 | yom      | no      | no       | Omer 22\n" +
+			"2015 /  4 / 27 | yom      | no      | no       | Omer 23\n" +
+			"2015 /  4 / 28 | yom      | no      | no       | Omer 24\n" +
+			"2015 /  4 / 29 | yom      | no      | no       | Omer 25\n" +
+			"2015 /  4 / 30 | yom      | no      | no       | Omer 26\n" +
+			"2015 /  5 /  1 | erev     | yes     | no       | Omer 27\n" +
+			"2015 /  5 /  2 | erev     | no      | yes      | Shabbat / Erev Pesach Sheni / Omer 28\n" +
+			"2015 /  5 /  3 | yom      | no      | no       | Pesach Sheni / Omer 29\n" +
+			"2015 /  5 /  4 | yom      | no      | no       | Omer 30\n" +
+			"2015 /  5 /  5 | yom      | no      | no       | Omer 31\n" +
+			"2015 /  5 /  6 | erev     | no      | no       | Erev Lag B'Omer / Omer 32\n" +
+			"2015 /  5 /  7 | yom      | no      | no       | Lag B'Omer / Omer 33\n" +
+			"2015 /  5 /  8 | erev     | yes     | no       | Omer 34\n" +
+			"2015 /  5 /  9 | yom      | no      | yes      | Shabbat / Omer 35\n" +
+			"2015 /  5 / 10 | yom      | no      | no       | Omer 36\n" +
+			"2015 /  5 / 11 | yom      | no      | no       | Omer 37\n" +
+			"2015 /  5 / 12 | yom      | no      | no       | Omer 38\n" +
+			"2015 /  5 / 13 | yom      | no      | no       | Omer 39\n" +
+			"2015 /  5 / 14 | yom      | no      | no       | Omer 40\n" +
+			"2015 /  5 / 15 | erev     | yes     | no       | Omer 41\n" +
+			"2015 /  5 / 16 | erev     | no      | yes      | Shabbat / Erev Yom Yerushalyim / Omer 42\n" +
+			"2015 /  5 / 17 | yom      | no      | no       | Yom Yerushalyim / Omer 43\n" +
+			"2015 /  5 / 18 | erev     | no      | no       | Erev Rosh Chodesh Sivan / Omer 44\n" +
+			"2015 /  5 / 19 | yom      | no      | no       | Rosh Chodesh Sivan / Omer 45\n" +
+			"2015 /  5 / 20 | yom      | no      | no       | Omer 46\n" +
+			"2015 /  5 / 21 | yom      | no      | no       | Omer 47\n" +
+			"2015 /  5 / 22 | erev     | yes     | no       | Omer 48\n" +
+			"2015 /  5 / 23 | erev     | yes     | yes      | Shabbat / Erev Shavuot / Omer 49\n" +
+			"2015 /  5 / 24 | yom      | yes     | no       | Shavuot\n" +
+			"2015 /  5 / 25 | yom      | no      | yes      | Shavuot\n" +
+			"2015 /  5 / 29 | erev     | yes     | no       | \n" +
+			"2015 /  5 / 30 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  6 /  5 | erev     | yes     | no       | \n" +
+			"2015 /  6 /  6 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  6 / 12 | erev     | yes     | no       | \n" +
+			"2015 /  6 / 13 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  6 / 16 | erev     | no      | no       | Erev Rosh Chodesh Tammuz\n" +
+			"2015 /  6 / 17 | yom      | no      | no       | Rosh Chodesh Tammuz (1)\n" +
+			"2015 /  6 / 18 | yom      | no      | no       | Rosh Chodesh Tammuz (2)\n" +
+			"2015 /  6 / 19 | erev     | yes     | no       | \n" +
+			"2015 /  6 / 20 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  6 / 26 | erev     | yes     | no       | \n" +
+			"2015 /  6 / 27 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  7 /  3 | erev     | yes     | no       | \n" +
+			"2015 /  7 /  4 | erev     | no      | yes      | Shabbat / Erev Ta'anit 17 Tamuz\n" +
+			"2015 /  7 /  5 | yom      | no      | no       | Ta'anit 17 Tamuz\n" +
+			"2015 /  7 / 10 | erev     | yes     | no       | \n" +
+			"2015 /  7 / 11 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  7 / 16 | erev     | no      | no       | Erev Rosh Chodesh Av\n" +
+			"2015 /  7 / 17 | erev     | yes     | no       | Rosh Chodesh Av\n" +
+			"2015 /  7 / 18 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  7 / 24 | erev     | yes     | no       | \n" +
+			"2015 /  7 / 25 | erev     | no      | yes      | Shabbat / Erev Tisha B'Av\n" +
+			"2015 /  7 / 26 | yom      | no      | no       | Tisha B'Av\n" +
+			"2015 /  7 / 31 | erev     | yes     | no       | \n" +
+			"2015 /  8 /  1 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  8 /  7 | erev     | yes     | no       | \n" +
+			"2015 /  8 /  8 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  8 / 14 | erev     | yes     | no       | Erev Rosh Chodesh Elul\n" +
+			"2015 /  8 / 15 | yom      | no      | yes      | Shabbat / Rosh Chodesh Elul (1)\n" +
+			"2015 /  8 / 16 | yom      | no      | no       | Rosh Chodesh Elul (2)\n" +
+			"2015 /  8 / 21 | erev     | yes     | no       | \n" +
+			"2015 /  8 / 22 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  8 / 28 | erev     | yes     | no       | \n" +
+			"2015 /  8 / 29 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  9 /  4 | erev     | yes     | no       | \n" +
+			"2015 /  9 /  5 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  9 / 11 | erev     | yes     | no       | \n" +
+			"2015 /  9 / 12 | yom      | no      | yes      | Shabbat\n" +
+			"2015 /  9 / 13 | erev     | yes     | no       | Erev Rosh Hashana\n"
+		);
+	}
+
 	private void runTest( int year, String expected ) {
 
 		HebrewDate date = HebrewCalendar.getForJewishDate( year - 1, HebrewMonth.ELUL, 28 );

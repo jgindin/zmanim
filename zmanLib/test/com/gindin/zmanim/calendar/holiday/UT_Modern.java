@@ -85,6 +85,16 @@ public class UT_Modern
 	}
 
 
+	@Test
+	public void test2015() {
+		testModernHolidays(
+			2015,
+			Calendar.APRIL, 16,
+			Calendar.APRIL, 22,
+			Calendar.MAY, 17
+		);
+	}
+
 
 	private void testModernHolidays(
 		int year,
@@ -100,36 +110,44 @@ public class UT_Modern
 		Details details;
 
 		date = HebrewCalendar.getForDate( year, yomHaShoahMonth, yomHaShoahDay );
-		details = YOM_HA_SHOAH.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
 		checkDate( details, false, false, false );
 
 		date = date.yesterday();
-		details = YOM_HA_SHOAH.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
 		checkDate( details, true, false, false );
 
 		date = HebrewCalendar.getForDate( year, yomHaZikaronMonth, yomHaZikaronDay );
-		details = YOM_HA_ZIKARON.getDetailsFor( date );
-		checkDate( details, false, false, false );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
+		checkDate( details, true, false, false ); // Note that we KNOW this is Erev Yom HaAtzma'ut...
 
 		date = date.yesterday();
-		details = YOM_HA_ZIKARON.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
 		checkDate( details, true, false, false );
 
 		// Yes, Erev Yom HaAtzmaut is the same day as Yom HaZikaron...
 		date = date.tomorrow();
-		details = YOM_HA_ATZMAUT.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
 		checkDate( details, true, false, false );
 
 		date = date.tomorrow();
-		details = YOM_HA_ATZMAUT.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
 		checkDate( details, false, false, false );
 
 		date = HebrewCalendar.getForDate( year, yomYerushalyimMonth, yomYerushalyimDay );
-		details = YOM_YERUSHALAYIM.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
 		checkDate( details, false, false, false );
 
 		date = date.yesterday();
-		details = YOM_YERUSHALAYIM.getDetailsFor( date );
+		details = date.getDetails();
+		Assert.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
 		checkDate( details, true, false, false );
 
 		// Sprinkle some sanity checks in...

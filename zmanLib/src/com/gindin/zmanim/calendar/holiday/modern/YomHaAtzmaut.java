@@ -90,6 +90,12 @@ public class YomHaAtzmaut
 					return createYomDetails( date );
 				}
 				break;
+
+			case Calendar.FRIDAY:
+				if ( 5 == jewishDayOfMonth ) {
+					// In this case, we pushed it back to the Thursday the 4th...
+					return null;
+				}
 		}
 
 		// We've handled the special cases, so if we get here, we're dealing with a regular year...

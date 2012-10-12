@@ -26,7 +26,8 @@ public class UT_AbstractHoliday {
 
 		Assert.assertNotNull( details );
 
-		Assert.assertTrue( isErev == details.isErev() );
+		// The caller may thing that this isn't an erev anything, but actually it's erev Shabbat...
+		Assert.assertTrue( isErev == details.isErev() || details.isErevShabbat() );
 
 		// Caller thinks we should (not) light candles, but we have to check:
 		//  - If the caller thinks we don't, but actually we do because it's Erev Shabbat?
