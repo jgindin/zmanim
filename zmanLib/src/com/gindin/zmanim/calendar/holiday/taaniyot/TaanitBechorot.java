@@ -32,7 +32,7 @@ public class TaanitBechorot
 
 	@Override
 	protected boolean canFallOnFriday() {
-		return false;
+		return true;
 	}
 
 

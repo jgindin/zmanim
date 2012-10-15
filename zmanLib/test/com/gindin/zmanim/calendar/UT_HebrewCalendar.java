@@ -767,12 +767,8 @@ public class UT_HebrewCalendar {
 			"2015 /  3 / 21 | yom      | no      | yes      | Shabbat / Rosh Chodesh Nissan\n" +
 			"2015 /  3 / 27 | erev     | yes     | no       | \n" +
 			"2015 /  3 / 28 | yom      | no      | yes      | Shabbat\n" +
-
-			// todo: Hebcal.com says this fast is NOT pushed back to Thursday, but rather can
-			// todo:  fall on Friday... other sites disagree...
-			"2015 /  4 /  1 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
-			"2015 /  4 /  2 | yom      | no      | no       | Ta'anit Bechorot\n" +
-			"2015 /  4 /  3 | erev     | yes     | no       | Erev Pesach\n" +
+			"2015 /  4 /  2 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
+			"2015 /  4 /  3 | erev     | yes     | no       | Ta'anit Bechorot / Erev Pesach\n" +
 			"2015 /  4 /  4 | yom      | yes     | yes      | Shabbat / Pesach\n" +
 			"2015 /  4 /  5 | yom      | no      | yes      | Pesach / Omer 1\n" +
 			"2015 /  4 /  6 | yom      | no      | no       | Chol HaMoed Pesach 3 / Omer 2\n" +
