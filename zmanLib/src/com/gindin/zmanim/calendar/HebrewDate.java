@@ -124,13 +124,6 @@ public class HebrewDate
 
 
 		Details holidayDetails;
-		for ( Observance fastDay : Holidays.FAST_DAYS ) {
-			holidayDetails = fastDay.getDetailsFor( this );
-			if ( null != holidayDetails ) {
-				dateDetails = dateDetails.composeWith( holidayDetails );
-			}
-		}
-
 		for ( Observance holiday : Holidays.MAJOR_HOLIDAYS ) {
 			holidayDetails = holiday.getDetailsFor( this );
 			if ( null != holidayDetails ) {
@@ -140,6 +133,13 @@ public class HebrewDate
 
 		for ( Observance holiday : Holidays.MINOR_HOLIDAYS ) {
 			holidayDetails = holiday.getDetailsFor( this );
+			if ( null != holidayDetails ) {
+				dateDetails = dateDetails.composeWith( holidayDetails );
+			}
+		}
+
+		for ( Observance fastDay : Holidays.FAST_DAYS ) {
+			holidayDetails = fastDay.getDetailsFor( this );
 			if ( null != holidayDetails ) {
 				dateDetails = dateDetails.composeWith( holidayDetails );
 			}

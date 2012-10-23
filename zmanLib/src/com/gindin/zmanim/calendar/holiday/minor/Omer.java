@@ -54,6 +54,12 @@ public class Omer
 		private OmerDetails( HebrewDate date, int dayOfOmer ) {
 			super( date, OMER + " " + dayOfOmer );
 		}
+
+
+		@Override
+		protected boolean isOmer() {
+			return true;
+		}
 	}
 
 }  // End of Omer class

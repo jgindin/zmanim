@@ -7,6 +7,8 @@ package com.gindin.zmanim.calendar.holiday;
 import com.gindin.zmanim.calendar.HebrewDate;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,6 +45,10 @@ public abstract class Details {
 	 */
 	public abstract boolean sayHavdalah();
 
+
+	/**
+	 * Is this a Ta'anit?
+	 */
 	public boolean isTaanit() {
 		return false;
 	}
@@ -79,6 +85,15 @@ public abstract class Details {
 		Details shabbatDetails = Holidays.SHABBAT.getDetailsFor( date );
 		return null != shabbatDetails && !shabbatDetails.isErev();
 	}
+
+
+	/**
+	 * Is this a day of the omer?
+	 */
+	protected boolean isOmer() {
+		return false;
+	}
+
 
 
 	public static class Erev
@@ -273,6 +288,68 @@ public abstract class Details {
 	private static class CompositeDetails
 		extends Details {
 
+		/**
+		 * This comparator is used to arrange the dates which are composed into this one date.
+		 *  The way CompositeDetails is used, we can assert the following.
+		 *  Every Details represented in this composite:
+		 *    <ul>
+		 *      <li>is for the SAME date
+		 *      <li>represents *something*, whether it be Erev or actual Yom.
+		 *    </ul>
+		 */
+		private static final Comparator<Details>                COMPARATOR = new Comparator<Details>() {
+
+			/**
+			 * @return an integer < 0 if lhs is less than rhs, 0 if they are equal, and > 0 if lhs is greater than rhs
+			 */
+			@Override
+			public int compare(
+				Details lhs,
+				Details rhs
+			) {
+
+				if ( !lhs.isAnything() && !rhs.isAnything() ) {
+					// Both are nothing... This should not happen.
+					return 0;
+				}
+
+				if ( lhs.isAnything() && !rhs.isAnything() ) {
+					// The one that has something should come first. This should not happen.
+					return -1;
+				}
+
+				if ( !lhs.isAnything() && rhs.isAnything() ) {
+					// The one that has something should come first. This should not happen.
+					return 1;
+				}
+
+				// OK, so now we KNOW that both are *something*.
+				//  * Omer should always come LAST
+				if ( lhs.isOmer() && !rhs.isOmer() ) {
+					return 1;
+				}
+
+				if ( rhs.isOmer() && !lhs.isOmer() ) {
+					return -1;
+				}
+
+				// We always want the erev of something to come AFTER a day which *is* something itself.
+				if ( lhs.isErev() && rhs.isErev() ) {
+					return 0;
+				}
+
+				if ( lhs.isErev() && !rhs.isErev() ) {
+					return 1;
+				}
+
+				if ( !lhs.isErev() && rhs.isErev() ) {
+					return -1;
+				}
+
+				return 0;
+			}
+		};
+
 		private final List<Details>                             composedDates = new ArrayList<Details>();
 
 		CompositeDetails(
@@ -338,6 +415,8 @@ public abstract class Details {
 		public String getDescription() {
 			StringBuilder sb = new StringBuilder();
 
+			Collections.sort( composedDates, COMPARATOR );
+
 			for ( Details composedDate : composedDates ) {
 				String composedDateDescription = composedDate.getDescription();
 
@@ -368,5 +447,6 @@ public abstract class Details {
 
 			return false;
 		}
-	}
-}
+	} // End of CompositeDetails class
+
+} // End of Details class
