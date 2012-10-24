@@ -58,11 +58,11 @@ public class UT_Taaniyot {
 
 		assertIsTaanit( taanitBechorot, 2010, Calendar.MARCH, 29 );
 		assertIsTaanit( taanitBechorot, 2011, Calendar.APRIL, 18 );
-		assertIsTaanit( taanitBechorot, 2012, Calendar.APRIL, 5 );
+		assertIsTaanit( taanitBechorot, 2012, Calendar.APRIL, 6 );
 		assertIsTaanit( taanitBechorot, 2013, Calendar.MARCH, 25 );
 		assertIsTaanit( taanitBechorot, 2014, Calendar.APRIL, 14 );
-		assertIsTaanit( taanitBechorot, 2015, Calendar.APRIL, 2 );
-		assertIsTaanit( taanitBechorot, 2016, Calendar.APRIL, 21 );
+		assertIsTaanit( taanitBechorot, 2015, Calendar.APRIL, 3 );
+		assertIsTaanit( taanitBechorot, 2016, Calendar.APRIL, 22 );
 	}
 
 
