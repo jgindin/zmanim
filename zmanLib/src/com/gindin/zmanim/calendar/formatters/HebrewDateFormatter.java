@@ -20,7 +20,7 @@ public abstract class HebrewDateFormatter {
 
 	private static final String[]                           HEBREW_MONTH_NAMES = {
 		"Nissan",     "Iyar",     "Sivan",    "Tammuz",   "Av",       "Elul",
-		"Tishrei",    "Chesvan",  "Kislev",   "Tevet",    "Shevat",   "Adar", "Adar II"
+		"Tishrei",    "Cheshvan", "Kislev",   "Tevet",    "Shevat",   "Adar", "Adar II"
 	};
 
 
