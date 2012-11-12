@@ -7,7 +7,6 @@
     <option name="DEFAULT_COMPILER" value="Javac" />
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$USER_HOME$/src/gindin/zmanim/trunk/android/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/../zmanLib/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/../utils/gen" includeSubdirectories="true" />
     </excludeFromCompile>
