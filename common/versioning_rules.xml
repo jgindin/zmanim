@@ -33,7 +33,7 @@
 
 	<target name="get-svn-state">
 		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
-			<wcversion path="." prefix="svn.status."/>
+			<wcversion path="../" prefix="svn.status."/>
 		</svn>
 	</target>
 
