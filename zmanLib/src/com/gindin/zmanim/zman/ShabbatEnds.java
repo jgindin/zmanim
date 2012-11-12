@@ -16,7 +16,7 @@ class ShabbatEnds
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.ShabbatEnd, zmanimCalculator,
+		super( Type.ShabbatEnd,
 			mergeZmanimLists(
 				buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ),
 				buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ) )

@@ -19,9 +19,9 @@ class FastEnds
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.FastEnd, zmanimCalculator,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator ), buildFastEndsZmanim(
-				zmanimCalculator ) ) );
+		super( Type.FastEnd,
+			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator ),
+				buildFastEndsZmanim( zmanimCalculator ) ) );
 	}
 
 

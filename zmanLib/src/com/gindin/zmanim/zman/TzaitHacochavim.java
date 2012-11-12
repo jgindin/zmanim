@@ -23,18 +23,17 @@ class TzaitHacochavim
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		this( Type.TzaitHacochavim, zmanimCalculator,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ), buildExtraTzaitZmanim( Type.TzaitHacochavim,
-				zmanimCalculator ) ) );
+		super( Type.TzaitHacochavim,
+			mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ),
+				buildExtraTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ) ) );
 	}
 
 
 	protected TzaitHacochavim(
-		final Type            type,
-		final ZmanimCalculator zmanimCalculator,
-		List<Zman>            additionalZmanim
+		final Type              type,
+		final List<Zman>        zmanim
 	) {
-		super( type, mergeZmanimLists( buildStandardTzaitZmanim( type, zmanimCalculator ), additionalZmanim ) );
+		super( type, zmanim );
 	}
 
 
