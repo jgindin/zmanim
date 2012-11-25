@@ -50,15 +50,22 @@
 	<!--
 	 Takes care of updating the user-visible version string.
  -->
-	<target name="set-version" depends="get-svn-state">
-
+	<target name="read-version-files">
 		<property file="version.number"/>
 		<property file="build.number"/>
+	</target>
 
-		<condition property="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}"
-		           else="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV">
-			<isset property="release_build"/>
-		</condition>
+	<target name="set-release-version" if="release_build">
+		<property name="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}" />
+		<echo message="Set a release version..." />
+	</target>
+
+	<target name="set-debug-version" unless="release_build">
+		<property name="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV" />
+		<echo message="Set a debug version..." />
+	</target>
+
+	<target name="set-version" depends="get-svn-state,read-version-files,set-release-version,set-debug-version">
 
 		<echo>
 			version.major = ${version.major}
@@ -75,7 +82,7 @@
 	 Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
 		 minor version number.
  -->
-	<target name="zmanim-update-release-version">
+	<target name="zmanim-update-release-version" if="release_build">
 
 		<echo>Updating version number...</echo>
 		<buildnumber file="build.number"/>
@@ -89,7 +96,7 @@
 	</target>
 
 
-	<target name="replace-version-placeholders" depends="check-release,set-version">
+	<target name="replace-version-placeholders" depends="check-release,set-version,zmanim-update-release-version">
 
 		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
 		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
