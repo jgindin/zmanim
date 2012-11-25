@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.zmanim.android.location.LocationChangedEvent;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
@@ -36,7 +37,7 @@ class ZmanimDisplay {
 	private ZmanimSelector                                    selector;
 
 	/** Set/Get the choosen zmanim. */
-	private final SharedPreferences                           preferences;
+	private final SharedPreferences                           zmanimSelectionPrefs;
 
 	private HebrewDate                                        currentDate;
 	private final DateChangedEvent.Listener                   dateChangeListener;
@@ -53,7 +54,7 @@ class ZmanimDisplay {
 		this.zmanimActivity = zmanimActivity;
 		this.zmanFormatter = zmanFormatter;
 
-		preferences = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+		zmanimSelectionPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		listenToRows();
 
@@ -73,6 +74,13 @@ class ZmanimDisplay {
 			@Override
 			public void onLocationChanged( LocationChangedEvent event ) {
 				currentLocation = event.getEventInfo();
+
+				SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+				boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+				if ( !useElevation ) {
+					currentLocation.setElevation( 0.0 );
+				}
+
 				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
 				if ( null != listAdapter ) {
 					zmanimActivity.setListAdapter( listAdapter );
@@ -120,7 +128,7 @@ class ZmanimDisplay {
 		final ZmanimSelector.SelectionCallback selectionCallback = new ZmanimSelector.SelectionCallback() {
 			public void selected( Zmanim.Type type, Zman selection ) {
 
-				final SharedPreferences.Editor editor = preferences.edit();
+				final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
 				editor.putString( type.name, selection.name );
 				editor.commit();
 
@@ -158,7 +166,7 @@ class ZmanimDisplay {
 		Zmanim      zmanim
 	) {
 
-		String zmanName = preferences.getString( zmanim.type.name, null );
+		String zmanName = zmanimSelectionPrefs.getString( zmanim.type.name, null );
 		Zman zman = zmanim.getByName( zmanName );
 		if ( null == zman ) {
 			zman = zmanim.getDefault();

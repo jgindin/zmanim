@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.android;
 
+import android.os.StrictMode;
 import com.gindin.util.Version;
 import com.gindin.util.events.EventManager;
 import com.gindin.util.LogUtils;
@@ -121,16 +122,18 @@ public class ZmanimActivity
 		Bundle savedInstanceState
 	) {
 
+		if ( Version.isDevelopment() ) {
+			// Enable this to get more detailed info regarding disk or network access occurring on the UI thread.
+			//  See http://stackoverflow.com/questions/704311/android-how-do-i-investigate-an-anr.
+			StrictMode.setVmPolicy(
+				new StrictMode.VmPolicy.Builder()
+					.detectAll()
+	        .penaltyLog()
+	        .penaltyDeath()
+	        .build()
+			);
+		}
 
-		// Enable this to get more detailed info regarding disk or network access occurring on the UI thread.
-		//  See http://stackoverflow.com/questions/704311/android-how-do-i-investigate-an-anr.
-//		StrictMode.setVmPolicy(
-//			new StrictMode.VmPolicy.Builder()
-//				.detectAll()
-//        .penaltyLog()
-//        .penaltyDeath()
-//        .build()
-//		);
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
@@ -312,10 +315,9 @@ public class ZmanimActivity
 
 
 	private void buildFooter(
-		ZmanimLocation              location,
+		ZmanimLocation      location,
 		final LocationError error
 	) {
-
 
 		if ( null == error ) {
 			updateField( R.id.messages, "" );
@@ -720,17 +722,7 @@ public class ZmanimActivity
 			// In some error cases (where we've never before received a previous location) it could be possible that
 			//  the incoming location is null...
 			if ( null == location ) {
-				location = new ZmanimLocation();
-			}
-
-
-			// The user may not want to take elevation into account. Or, they may be used to other services
-			//  which don't take elevation into account and want to see if we're doing the right thing...
-			final boolean useElevation = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-			if ( !useElevation ) {
-
-				this.location = new ZmanimLocation( location );
-				this.location.setElevation( 0.0 );
+				this.location = new ZmanimLocation();
 			}
 			else {
 				this.location = location;
