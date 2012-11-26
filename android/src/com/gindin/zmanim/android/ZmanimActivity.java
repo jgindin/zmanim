@@ -805,8 +805,6 @@ public class ZmanimActivity
 		@Override
 		protected Void doInBackground( Void... voids ) {
 
-			setupViewListeners();
-
 			locationManager = new ZmanimLocationManager( ZmanimActivity.this );
 			LogUtils.setLocationHandler( locationManager );
 
@@ -817,6 +815,8 @@ public class ZmanimActivity
 		@Override
 		protected void onPostExecute( Void aVoid ) {
 			super.onPostExecute( aVoid );
+
+			setupViewListeners();
 
 			// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 			// Note that it *must* be run on the UI thread...
