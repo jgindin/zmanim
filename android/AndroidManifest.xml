@@ -10,7 +10,13 @@
   android:installLocation="auto"
 >
 
-	<!-- In order for the supports-screens to work right, we have to specify the target SDK of at least 11. -->
+	<!--
+	  NOTES:
+			1. In order for the supports-screens to work right, we have to specify the target SDK of at least 11.
+			2. If minSdkVersion is >= 13, then the behavior of AsyncTask is CHANGED!
+					See http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
+					For minSdkVersion >= 11, there's some other interesting stuff in that article...
+	-->
 	<uses-sdk
 		android:minSdkVersion="3"
 	  android:targetSdkVersion="11"
