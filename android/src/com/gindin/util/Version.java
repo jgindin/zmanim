@@ -10,10 +10,10 @@ package com.gindin.util;
 public class Version {
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final int androidCodeVersion = 204;
+	public static final int androidCodeVersion = 206;
 
 	// DO NOT MUCK WITH THE FORMATTING!!!
-	public static final String androidVersionName = "3.5.204.481";
+	public static final String androidVersionName = "3.5.206.491";
 
 
 	public static boolean isDevelopment() {
