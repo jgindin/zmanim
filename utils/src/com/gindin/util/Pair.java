@@ -22,6 +22,7 @@ public class Pair<FIRST_TYPE, SECOND_TYPE> {
 	}
 
 
+	@SuppressWarnings( "RedundantIfStatement" )
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o ) {
