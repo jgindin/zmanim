@@ -66,13 +66,13 @@
 	<string name="override_system_time_zone">Use Custom Time Zone?</string>
 	<string name="override_system_time_zone_summary">Ignores the system time zone for calculations.</string>
 	<string name="time_zone_area">Select Time Zone</string>
-	<string name="time_zone_area_summary">What area? (E.g., "America")</string>
+	<string name="time_zone_area_summary">What area? (E.g., “America”)</string>
 	<string name="time_zone_locale">Select Time Zone Locale</string>
-	<string name="time_zone_locale_summary">Which locale? (E.g., "Los Angeles")</string>
+	<string name="time_zone_locale_summary">Which locale? (E.g., “Los Angeles”)</string>
 
-	<string name="determining_location">"Determining location..."</string>
-	<string name="waiting_for_location_update">Waiting for location update...</string>
-	<string name="updating_with_new_location">"Updating with new location..."</string>
+	<string name="determining_location">"Determining location…"</string>
+	<string name="waiting_for_location_update">Waiting for location update…</string>
+	<string name="updating_with_new_location">"Updating with new location…"</string>
 
 	<string name="personal_prefs">Preferences</string>
 	<string name="show_seconds_pref_title">Show Exact Zmanim</string>
