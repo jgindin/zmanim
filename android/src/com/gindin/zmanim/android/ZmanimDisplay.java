@@ -64,7 +64,7 @@ class ZmanimDisplay {
 				currentDate = event.getEventInfo();
 				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
 				if ( null != listAdapter ) {
-					zmanimActivity.setListAdapter( listAdapter );
+					zmanimActivity.getListView().setAdapter( listAdapter );
 				}
 			}
 		};
@@ -83,7 +83,7 @@ class ZmanimDisplay {
 
 				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
 				if ( null != listAdapter ) {
-					zmanimActivity.setListAdapter( listAdapter );
+					zmanimActivity.getListView().setAdapter( listAdapter );
 				}
 			}
 
@@ -135,7 +135,7 @@ class ZmanimDisplay {
 				// This is a bit of a hammer, but it works...
 				//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
 				//  apparently the List which backs the adapter doesn't support remove().
-				zmanimActivity.setListAdapter( getListAdapter( currentDate, currentLocation ) );
+				zmanimActivity.getListView().setAdapter( getListAdapter( currentDate, currentLocation ) );
 			}
 		};
 
@@ -152,7 +152,7 @@ class ZmanimDisplay {
 						selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
 					}
 
-					ListAdapter adapter = (ListAdapter)zmanimActivity.getListAdapter();
+					ListAdapter adapter = (ListAdapter)zmanimActivity.getListView().getAdapter();
 					Zman zman = adapter.getItem( position );
 					selector.selectFrom( currentDate, currentLocation, zman.type, selectionCallback );
 				}

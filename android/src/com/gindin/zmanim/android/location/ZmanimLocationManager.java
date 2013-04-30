@@ -176,6 +176,12 @@ public class ZmanimLocationManager
 
 
 	public ZmanimLocation getLastKnownLocation() {
+
+		if ( null == lastKnownLocation ) {
+			// Do the best we can with a default location.
+			return new ZmanimLocation();
+		}
+
 		return lastKnownLocation;
 	}
 	

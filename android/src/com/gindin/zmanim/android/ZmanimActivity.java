@@ -30,9 +30,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
 import android.webkit.WebView;
-import android.widget.DatePicker;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import java.util.Date;
 
@@ -40,7 +38,7 @@ import java.util.Date;
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends ListActivity
+	extends Activity
 	implements DateChangedEvent.HasListeners, LocationChangedEvent.HasListeners {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
@@ -256,6 +254,11 @@ public class ZmanimActivity
 				personalPrefsManager.personalPrefsChanged();
 				break;
 		}
+	}
+
+
+	public ListView getListView() {
+		return (ListView)findViewById( android.R.id.list );
 	}
 
 
@@ -672,8 +675,8 @@ public class ZmanimActivity
 		public boolean onFling(
 			MotionEvent startMotionEvent,
 			MotionEvent endMotionEvent,
-			float xVelocity,
-			float yVelocity
+			float       xVelocity,
+			float       yVelocity
 		) {
 
 			// Did the user want to move to the next/prev day (swiping right or left) or next/prev month
