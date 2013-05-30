@@ -24,8 +24,8 @@ public class EditLocationProviderPreferences
 	private CheckBoxPreference                                useDynamicPos;
 	private CheckBoxPreference                                useStaticLocation;
 	private CheckBoxPreference                                useLatLong;
-	private EditTextPreference                                latitude;
-	private EditTextPreference                                longitude;
+	private LongitudeLatitudePreference                       latitude;
+	private LongitudeLatitudePreference                       longitude;
 	private EditTextPreference                                place;
 
 	/**
@@ -57,13 +57,12 @@ public class EditLocationProviderPreferences
 
 		prefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
-
 		useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.name() );
 		useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
 		useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
 		place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
-		latitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
-		longitude = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
+		latitude = (LongitudeLatitudePreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
+		longitude = (LongitudeLatitudePreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
 		overrideSystemTimeZone = (CheckBoxPreference)findPreference( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name() );
 		timeZoneAreas = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name() );
 		timeZoneLocales = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name() );
@@ -278,15 +277,17 @@ public class EditLocationProviderPreferences
 		useStaticLocation.setChecked( false );
 		updateSummary( place, "", getString( R.string.static_location_pref_summary ) );
 
-		String latitudeDegrees = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "-1" );
-		if ( !"-1".equals( latitudeDegrees ) ) {
-			updateSummary( latitude, latitudeDegrees, getString( R.string.use_latitude_pref_summary ) );
+		String latitudeStr = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "-1" );
+		if ( !"-1".equals( latitudeStr ) ) {
+			updateSummary( latitude, latitudeStr, getString( R.string.use_latitude_pref_summary ) );
 		}
+		latitude.init( latitudeStr, true );
 
-		String longitudeDegrees = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "-1" );
-		if ( !"-1".equals( latitudeDegrees ) ) {
-			updateSummary( longitude, longitudeDegrees, getString( R.string.use_longitude_pref_summary ) );
+		String longitudeStr = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "-1" );
+		if ( !"-1".equals( latitudeStr ) ) {
+			updateSummary( longitude, longitudeStr, getString( R.string.use_longitude_pref_summary ) );
 		}
+		longitude.init( longitudeStr, false );
 	}
 
 

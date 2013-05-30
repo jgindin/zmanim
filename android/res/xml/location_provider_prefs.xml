@@ -64,13 +64,13 @@
 		  android:title="@string/use_latitude_longitued_pref_title"
 		  android:summary="@string/use_latitude_longitued_pref_summary" 
 		/>
-		<EditTextPreference
+		<com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
 			android:key="LATITUDE"
 		  android:title="@string/use_latitude_pref_title"
 		  android:summary="@string/use_latitude_pref_summary"
 		  android:dependency="LATITUDE_LONGITUDE_POSITION"
 		/>
-		<EditTextPreference
+		<com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
 			android:key="LONGITUDE"
 		  android:title="@string/use_longitude_pref_title"
 		  android:summary="@string/use_longitude_pref_summary"

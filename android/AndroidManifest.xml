@@ -5,8 +5,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
-	android:versionCode="209"
-  android:versionName="3.5.209.501"
+	android:versionCode="210"
+  android:versionName="3.5.210.502-DEV"
   android:installLocation="auto"
 >
 

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2013. Jay R. Gindin
+  -->
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_gravity="center|left">
+
+	<TableRow
+		android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="center_vertical"
+	>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/lat_long_editor_degrees_text"
+			android:id="@+id/lat_long_editor_degrees_text"
+		/>
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/lat_long_editor_degrees_editor"
+			android:inputType="numberDecimal"
+		/>
+	</TableRow>
+
+	<TableRow
+		android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="center_vertical"
+	>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/lat_long_editor_minutes_text"
+			android:id="@+id/lat_long_editor_minutes_text"
+		/>
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/lat_long_editor_minutes_editor"
+			android:inputType="numberDecimal"
+		/>
+	</TableRow>
+
+	<TableRow
+		android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="center_vertical"
+	>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/lat_long_editor_ns_text"
+			android:id="@+id/lat_long_editor_ns_text"
+		/>
+
+		<Spinner
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/lat_long_editor_ns_ew_picker"
+		/>
+	</TableRow>
+
+
+</TableLayout>

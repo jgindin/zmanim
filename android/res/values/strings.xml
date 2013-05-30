@@ -80,4 +80,17 @@
 	<string name="use_elevation_pref_title">Use Elevation</string>
 	<string name="use_elevation_pref_summary">Take elevation into account for zmanim calculations.</string>
 
+	<string name="lat_long_editor_degrees_text">Degrees:</string>
+	<string name="lat_long_editor_minutes_text">Minutes:</string>
+	<string name="lat_long_editor_ns_text">North / South:</string>
+	<string name="lat_long_editor_ew_text">East / West:</string>
+	<string-array name="lat_long_editor_north_south">
+		<item>North</item>
+		<item>South</item>
+	</string-array>
+	<string-array name="lat_long_editor_east_west">
+		<item>East</item>
+		<item>West</item>
+	</string-array>
+
 </resources>
