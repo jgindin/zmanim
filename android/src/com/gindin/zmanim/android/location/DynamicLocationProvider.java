@@ -97,7 +97,7 @@ class DynamicLocationProvider
 
 	/**
 	 * Intended to be called when someone has reason to believe that the set of available location providers
-	 *  has changed significantly enough that we ought to requery them all.
+	 *  has changed significantly enough that we ought to re-query them all.
 	 */
 	@Override
 	public void onLocationProvidersChanged() {
@@ -143,6 +143,16 @@ class DynamicLocationProvider
 	) {
 
 		if ( isFirst ) {
+
+			boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), false );
+			if ( preferCachedLocation ) {
+				Location lastKnownLocation = getLastKnownLocation();
+				if ( null != lastKnownLocation ) {
+					fireNewLocation( lastKnownLocation );
+					return;
+				}
+			}
+
 			startListeningToLocations();
 		}
 	}

@@ -69,6 +69,8 @@ public class ZmanimActivity
 	/**
 	 * Task used to initialize the UI for the first time. Once we're done this will be null.
 	 */
+	// todo: It doesn't seem like this is a useful AsyncTask anymore...we don't do anything that really
+	// todo:  needs to be on a background thread...
 	private AsyncTask<Void, Void, Void>                       activityInitTask;
 
 	/**
@@ -479,6 +481,10 @@ public class ZmanimActivity
 			case R.id.help:
 				showDialog( id );
 				return true;
+
+			case R.id.refresh:
+				refresh();
+				return true;
 		}
 
 		return false;
@@ -598,17 +604,11 @@ public class ZmanimActivity
 		return builder.create();
 	}
 
-//	private void displayDebugMessages() {
-//
-//		List<String> strings= ICUAndroidBridge.get().whatDidWeTryToLoad;
-//		String loaded = "";
-//		for ( String string : strings ) {
-//			loaded = loaded + "\n";
-//			loaded = loaded + string;
-//		}
-//		updateField( R.id.messages, loaded );
-//	}
 
+	private void refresh() {
+		// This will force us to go re-query for our location.
+		locationManager.onLocationProvidersChanged();
+	}
 
 	private void updateField(
 		int     field,

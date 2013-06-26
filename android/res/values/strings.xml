@@ -28,6 +28,8 @@
 	<string name="help_menu">Help</string>
 	<string name="help_header">Zmanim Help</string>
 
+	<string name="refresh_menu">Refresh</string>
+
 	<string name="zmanim_selector">Select Zman</string>
 
 	<string name="unable_to_determine_location_header">Enable Location</string>
@@ -50,6 +52,8 @@
 	<string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
 	<string name="prefer_gps_pref_title">Prefer GPS</string>
 	<string name="prefer_gps_pref_summary">If GPS is turned on, it will be preferred over network location.</string>
+	<string name="prefer_cached_location_pref_title">Use Last Location</string>
+	<string name="prefer_cached_location_pref_summary">Start Zmanim with the last known location, without waiting for either GPS or Network location updates.</string>
 	<string name="static_location">Specify Your Location</string>
 	<string name="use_static_location_pref_title">Use Specified Place</string>
 	<string name="use_static_location_pref_summary">Calculate zmanim for a location. (Requires network.)</string>

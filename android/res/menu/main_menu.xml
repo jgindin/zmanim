@@ -25,4 +25,9 @@
 		android:title="@string/help_menu"
 		android:icon="@android:drawable/ic_menu_help"
 	/>
+	<item
+		android:id="@+id/refresh"
+		android:title="@string/refresh_menu"
+		android:icon="@android:drawable/ic_menu_rotate"
+	/>
 </menu>

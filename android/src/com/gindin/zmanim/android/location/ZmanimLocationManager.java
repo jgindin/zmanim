@@ -228,7 +228,6 @@ public class ZmanimLocationManager
 
 		final Map<String, ?> prefsAfterEditing = getLocationManagementPrefs().getAll();
 		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
-
 			startInitialProvider();
 		}
 
