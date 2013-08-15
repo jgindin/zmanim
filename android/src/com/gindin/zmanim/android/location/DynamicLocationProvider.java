@@ -239,7 +239,7 @@ class DynamicLocationProvider
 
 		// We've got a fix we can use, even if it turns out to not be from our preferred method. Make sure
 		//  we don't time out and claim to have failed...
-		waitingForLocationTimer.cancel();
+		cancelWaitingForLocationTimer();
 
 
 		// Now, there's a few cases here:
