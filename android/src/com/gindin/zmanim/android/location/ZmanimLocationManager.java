@@ -11,14 +11,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.view.View;
-
-import java.util.*;
-
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.prefs.EditLocationProviderPreferences;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.location.ZmanimLocation;
+
+import java.util.Map;
+import java.util.TimeZone;
 
 
 /**
@@ -117,7 +117,13 @@ public class ZmanimLocationManager
 	 *  acquiring locations or handling location updates.
 	 */
 	public void onStop() {
-		locationProvider.onStop();
+
+		// Flurry event log showed an NPE accessing the locationProvider. It seems that this could
+		//  only happen if Zmanim was paused or stopped before we were able to create the provider.
+		//  Better safe than sorry...
+		if ( null != locationProvider ) {
+			locationProvider.onStop();
+		}
 	}
 
 
