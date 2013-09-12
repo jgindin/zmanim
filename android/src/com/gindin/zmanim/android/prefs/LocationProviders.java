@@ -9,6 +9,9 @@ package com.gindin.zmanim.android.prefs;
  */
 public enum LocationProviders {
 
+	/** The name of the category which contains these options. */
+	DYNAMIC_LOCATION_CATEGORY,
+
 	/** Indicates the user wants us to find their location every time. */
 	DYNAMIC_POSITION,
 

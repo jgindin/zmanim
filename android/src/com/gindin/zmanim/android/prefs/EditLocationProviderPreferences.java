@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.*;
+import com.gindin.util.Version;
 import com.gindin.zmanim.android.R;
 
 import java.util.*;
@@ -36,7 +37,7 @@ public class EditLocationProviderPreferences
 	private ListPreference                                    timeZoneAreas;
 	private ListPreference                                    timeZoneLocales;
 
-	protected SharedPreferences                               prefs;
+	private SharedPreferences                                 prefs;
 
 	/**
 	 * Only want to build this map once. Using a TreeMap so that the time zones get sorted upon addition,
@@ -84,8 +85,17 @@ public class EditLocationProviderPreferences
 			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
 		}
 
-		
 		overridingSystemTimeZone( overrideSystemTimeZone.isChecked() );
+
+		// Only want the "prefer cached location" property for debugging...
+		if ( !Version.isDevelopment() ) {
+
+			// See http://stackoverflow.com/questions/2240326/remove-hide-a-preference-from-the-screen
+			PreferenceCategory category = (PreferenceCategory)findPreference( LocationProviders.DYNAMIC_LOCATION_CATEGORY.name() );
+			CheckBoxPreference preferCachedLocation = (CheckBoxPreference)findPreference( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name() );
+			category.removePreference( preferCachedLocation );
+		}
+
 	}
 
 

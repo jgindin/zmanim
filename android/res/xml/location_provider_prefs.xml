@@ -10,15 +10,16 @@
   android:title="@string/edit_location_prefs_title"
 >
 
+	<!--
+		See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,
+		DYNAMIC_POSITION, STATIC_POSITION, LATITUDE_LONGITUDE_POSITION.
+	-->
+
 	<PreferenceCategory
+		android:key="DYNAMIC_LOCATION_CATEGORY"
 		android:title="@string/dynamic_location"
 	  android:orderingFromXml="true"
 	>
-
-		<!--
-			See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,
-			DYNAMIC_POSITION, STATIC_POSITION, LATITUDE_LONGITUDE_POSITION.
-		-->
 
 		<CheckBoxPreference
 			android:key="DYNAMIC_POSITION"

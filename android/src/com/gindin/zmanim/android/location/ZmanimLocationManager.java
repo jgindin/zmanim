@@ -131,6 +131,11 @@ public class ZmanimLocationManager
 	 * Called after onPause() once the activity has restarted.
 	 */
 	public void onStart() {
+
+		if ( null == locationProvider ) {
+			startInitialProvider();
+		}
+
 		locationProvider.onStart();
 	}
 
@@ -166,10 +171,7 @@ public class ZmanimLocationManager
 
 	@Override
 	public void addLocationChangeListener( LocationChangedEvent.Listener listener ) {
-		if ( locationChangedEventManager.addListener( listener ) ) {
-			// Force a provider to be created...
-			startInitialProvider();
-		}
+		locationChangedEventManager.addListener( listener );
 	}
 
 
@@ -181,6 +183,18 @@ public class ZmanimLocationManager
 	}
 
 
+	/**
+	 * @return the current location or null if we don't know our location.
+	 */
+	public ZmanimLocation getCurrentLocation() {
+		return lastKnownLocation;
+	}
+
+
+
+	/**
+	 * @return the last known location, or a default location if we don't know our location.
+	 */
 	public ZmanimLocation getLastKnownLocation() {
 
 		if ( null == lastKnownLocation ) {

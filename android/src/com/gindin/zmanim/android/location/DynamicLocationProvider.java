@@ -144,16 +144,15 @@ class DynamicLocationProvider
 
 		if ( isFirst ) {
 
-			boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), false );
+			boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
 			if ( preferCachedLocation ) {
 				Location lastKnownLocation = getLastKnownLocation();
 				if ( null != lastKnownLocation ) {
-					fireNewLocation( lastKnownLocation );
-					return;
+					// Start with the cached location, but then go ahead and still try for an update in case the
+					//  user has moved significantly since the last location.
+					fireCurrentLocation( lastKnownLocation );
 				}
 			}
-
-			startListeningToLocations();
 		}
 	}
 
@@ -216,7 +215,10 @@ class DynamicLocationProvider
 
 		ourLastFix = location;
 
-		super.fireNewLocation( location );
+		// Now that we've updated to know our current location, we can fire that.
+		//  We do NOT call super here...it *is* strange, but in order to be able to simply fire the current location,
+		//  without saving it, we need to break the method this way.
+		fireCurrentLocation( location );
 		lastFixedLocationFactory.save( location );
 	}
 
@@ -231,8 +233,16 @@ class DynamicLocationProvider
 		super.fireError( error );
 	}
 
+
+	private void fireCurrentLocation(
+		final Location location
+	) {
+
+		super.fireNewLocation( location );
+	}
+
 	
-	void onReceivedFix(
+	private void onReceivedFix(
 		final Location                location,
 		final AndroidLocationListener source
 	) {
@@ -256,40 +266,11 @@ class DynamicLocationProvider
 			}
 		}
 
-		// Did we ever get a fix before? If so, is this new fix a significant enough change to warrant firing an
-		//  event?
-		boolean needToFire = false;
-		if ( null == ourLastFix ) {
-			needToFire = true;
-		}
-		else {
-
-			// First, check the time. If the time is more than our min update, then sure...go ahead and notify everyone.
-			final long lastFixTime = ourLastFix.getTime();
-			final long thisFixTime = location.getTime();
-
-			if ( ( thisFixTime - lastFixTime ) > MIN_UPDATE_INTERVAL_MINUTES ) {
-				needToFire = true;
-			}
-			else {
-				// Maybe our new fix is GPS, which is more accurate?
-				boolean lastFixWasGps =  LocationManager.GPS_PROVIDER.equals( ourLastFix.getProvider() );
-				boolean thisFixIsGps = LocationManager.GPS_PROVIDER.equals( location.getProvider() );
-
-				if ( thisFixIsGps && !lastFixWasGps ) {
-					needToFire = true;
-				}
-			}
-		}
-
-		if ( needToFire ) {
-			fireNewLocation( location );
-		}
-
+		fireNewLocation( location );
 	}
 
 
-	void onFailedToGetAnyFixes() {
+	private void onFailedToGetAnyFixes() {
 
 		cancelWaitingForLocationTimer();
 

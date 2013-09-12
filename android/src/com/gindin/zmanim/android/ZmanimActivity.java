@@ -4,23 +4,6 @@
 
 package com.gindin.zmanim.android;
 
-import com.gindin.util.Version;
-import com.gindin.util.events.EventManager;
-import com.gindin.util.LogUtils;
-import com.gindin.zmanim.android.location.LocationChangedEvent;
-import com.gindin.zmanim.android.location.LocationChangedEventManager;
-import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
-import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
-import com.gindin.zmanim.android.prefs.PersonalPreferences;
-import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
-import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.zman.ZmanFormatter;
-
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +13,25 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
 import android.webkit.WebView;
-import android.widget.*;
+import android.widget.DatePicker;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.gindin.util.LogUtils;
+import com.gindin.util.Version;
+import com.gindin.util.events.EventManager;
+import com.gindin.zmanim.android.location.LocationChangedEvent;
+import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
+import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
+import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
+import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanim.zman.ZmanFormatter;
 
 import java.util.Date;
 
@@ -67,20 +68,12 @@ public class ZmanimActivity
 	private ProgressDialog                                    determiningLocationDialog;
 
 	/**
-	 * Task used to initialize the UI for the first time. Once we're done this will be null.
-	 */
-	// todo: It doesn't seem like this is a useful AsyncTask anymore...we don't do anything that really
-	// todo:  needs to be on a background thread...
-	private AsyncTask<Void, Void, Void>                       activityInitTask;
-
-	/**
 	 * Task used to build the UI. While we're in the process of (re)building the UI, this will be set. As soon as
 	 *  we're done, it's reset to null.
 	 */
 	private AsyncTask<Void, Void, Void>                       buildUITask = null;
 
 	private final DateChangeEventManager                      dateChangedEventManager = new DateChangeEventManager();
-	private final LocationChangedEventManager                 locationChangedEventManager = new LocationChangedEventManager();
 
 	private ZmanimDisplay                                     zmanimDisplay;
 
@@ -151,9 +144,13 @@ public class ZmanimActivity
 		locationListener = new LocationChangedEvent.Listener() {
 
 			@Override public void onProgress( String message ) {
-				determiningLocationDialog.setMessage( message );
-				if ( !determiningLocationDialog.isShowing() ) {
-					determiningLocationDialog.show();
+
+				// If we already have a location, then do not show the dialog...
+				if ( null == locationManager.getCurrentLocation() ) {
+					determiningLocationDialog.setMessage( message );
+					if ( !determiningLocationDialog.isShowing() ) {
+						determiningLocationDialog.show();
+					}
 				}
 			}
 
@@ -162,8 +159,25 @@ public class ZmanimActivity
 			}
 		};
 
-		activityInitTask = new ActivityInitializationTask();
-		activityInitTask.execute( (Void)null );
+		initializeActivity();
+	}
+
+
+	private void initializeActivity() {
+
+		determiningLocationDialog.show();
+
+		locationManager = new ZmanimLocationManager( ZmanimActivity.this );
+		LogUtils.setLocationHandler( locationManager );
+
+		setupViewListeners();
+
+		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+		// Note that it *must* be run on the UI thread...
+		gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
+
+		// Now start listening for location changes...
+		locationManager.addLocationChangeListener( locationListener );
 	}
 
 
@@ -171,10 +185,7 @@ public class ZmanimActivity
 	protected void onStart() {
 		super.onStart();
 
-		// If we're still initializing the UI, then there's nothing to do..
-		if ( null == activityInitTask ) {
-			locationManager.onStart();
-		}
+		locationManager.onStart();
 	}
 
 
@@ -309,7 +320,6 @@ public class ZmanimActivity
 		// Notify the location manager of the field that contains the current location.
 		final View locationField = findViewById( R.id.location );
 		locationManager.setLocationField( locationField );
-
 
 		updateField( R.id.location, locationName );
 
@@ -645,14 +655,14 @@ public class ZmanimActivity
 
 	@Override
 	public void addLocationChangeListener( LocationChangedEvent.Listener listener ) {
-		locationChangedEventManager.addListener( listener );
+		locationManager.addLocationChangeListener( listener );
 		listener.onLocationChanged( new LocationChangedEvent( locationManager.getLastKnownLocation() ) );
 	}
 
 
 	@Override
 	public void removeLocationChangeListener( LocationChangedEvent.Listener listener ) {
-		locationChangedEventManager.removeListener( listener );
+		locationManager.removeLocationChangeListener( listener );
 	}
 
 
@@ -740,7 +750,10 @@ public class ZmanimActivity
 			super.onPreExecute();
 
 			determiningLocationDialog.setMessage( getString( R.string.updating_with_new_location ) );
-			if ( !determiningLocationDialog.isShowing() ) {
+
+			// Only show the dialog if we don't already have a location. If we do, then it's OK...we'll update
+			//  everything once we've got the new data...
+			if ( ( null == locationManager.getCurrentLocation() ) && !determiningLocationDialog.isShowing() ) {
 				determiningLocationDialog.show();
 			}
 		}
@@ -778,7 +791,9 @@ public class ZmanimActivity
 					return;
 				}
 
-				zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
+				if ( null == zmanimDisplay ) {
+					zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
+				}
 			}
 			finally {
 
@@ -786,49 +801,6 @@ public class ZmanimActivity
 				determiningLocationDialog.dismiss();
 				buildUITask = null;
 			}
-
-		}
-	}
-
-
-	/**
-	 * Task used for initial creation of the activity
-	 */
-	private class ActivityInitializationTask
-		extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			determiningLocationDialog.show();
-		}
-
-
-		@Override
-		protected Void doInBackground( Void... voids ) {
-
-			locationManager = new ZmanimLocationManager( ZmanimActivity.this );
-			LogUtils.setLocationHandler( locationManager );
-
-			return null;
-		}
-
-
-		@Override
-		protected void onPostExecute( Void aVoid ) {
-			super.onPostExecute( aVoid );
-
-			setupViewListeners();
-
-			// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
-			// Note that it *must* be run on the UI thread...
-			gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
-
-			// Now start listening for location changes...
-			locationManager.addLocationChangeListener( locationListener );
-
-			// This is how we know that this is done.
-			activityInitTask = null;
 		}
 	}
 

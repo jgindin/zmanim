@@ -73,18 +73,7 @@ class ZmanimDisplay {
 		locationChangeListener = new LocationChangedEvent.Listener() {
 			@Override
 			public void onLocationChanged( LocationChangedEvent event ) {
-				currentLocation = event.getEventInfo();
-
-				SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-				boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-				if ( !useElevation ) {
-					currentLocation.setElevation( 0.0 );
-				}
-
-				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
-				if ( null != listAdapter ) {
-					zmanimActivity.getListView().setAdapter( listAdapter );
-				}
+				handleLocationChanged( event, zmanimActivity );
 			}
 
 			@Override
@@ -101,7 +90,37 @@ class ZmanimDisplay {
 	}
 
 
-	@SuppressWarnings( { "ValueOfIncrementOrDecrementUsed" } )
+	private void handleLocationChanged(
+		LocationChangedEvent  event,
+		ZmanimActivity        zmanimActivity
+	) {
+		ZmanimLocation lastLocation = currentLocation;
+		currentLocation = event.getEventInfo();
+
+		// Before we do anything, make sure that there's a significant change worthy of our time...
+		if ( ( null != lastLocation ) && ( null != currentLocation ) ) {
+
+			// Less than 1km? Don't bother...
+			// TODO: I suppose you could run into an issue if that 1km puts you in a different time zone
+			// TODO:  or something like that...
+			if ( currentLocation.getGeodesicDistance( lastLocation ) < 1000 ) {
+				return;
+			}
+		}
+
+		SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+		if ( !useElevation ) {
+			currentLocation.setElevation( 0.0 );
+		}
+
+		ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
+		if ( null != listAdapter ) {
+			zmanimActivity.getListView().setAdapter( listAdapter );
+		}
+	}
+
+
 	private ListAdapter getListAdapter(
 		HebrewDate      date,
 		ZmanimLocation  location
@@ -119,6 +138,8 @@ class ZmanimDisplay {
 			zmanimToDisplay[i] = getZman( daysZmanim.get( i ) );
 		}
 
+		// TODO: Rather than creating a new ListAdapter *every* time, it seems that  we ought to be
+		// TODO:  able to update and reuse...
 		return new ListAdapter( zmanimActivity, zmanimToDisplay );
 	}
 
