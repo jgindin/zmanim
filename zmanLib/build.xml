@@ -91,11 +91,6 @@
          in order to avoid having your file be overridden by tools such as "android update project"
     -->
 
-		<!-- Override so my -pre-setup can get invoked. -->
-		<target name="-check-env" depends="-pre-setup">
-	     <checkenv />
-	  </target>
-
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 

@@ -35,10 +35,7 @@
 		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
 			<wcversion path="../" prefix="svn.status."/>
 		</svn>
-	</target>
 
-
-	<target name="show-svn-info">
 		<echo>
 			repository.url=${svn.status.repository.url}
 			committed.max=${svn.status.committed.max}

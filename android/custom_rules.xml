@@ -12,13 +12,6 @@
 	<import file="../common/versioning_rules.xml" optional="false"/>
 
 
-	<!--
-		This is my custom target extension.
-	-->
-	<target name="-pre-setup" depends="replace-version-placeholders,show-svn-info">
-		<echo>-pre-setup</echo>
-	</target>
-
 
 	<!--
 	 If this is set, then lot of additional stuff will get dumped out so you can see what's going on...
@@ -29,7 +22,7 @@
 		Extension targets. Uncomment the ones where you want to do custom work
 		in between standard targets
 	 -->
-	<target name="-pre-build" depends="zmanim-replace-flurry-key-placeholders">
+	<target name="-pre-build" depends="replace-version-placeholders,zmanim-replace-flurry-key-placeholders">
 		<echo>-pre-build</echo>
 	</target>
 
