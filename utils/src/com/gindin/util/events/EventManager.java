@@ -4,6 +4,8 @@
 
 package com.gindin.util.events;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -21,7 +23,14 @@ public abstract class EventManager<EL extends EventListener, T, E extends Abstra
 	 */
 	public static boolean                                     performListenerChecks = false;
 
+	/** The listeners which are being tracked by this manager. */
 	private List<EL>                                          listeners;
+
+	/**
+	 * When performListenerChecks is true, this list will track where a given listener was allocated from to
+	 *  enable debugging of leaks.
+	 */
+	private List<Exception>                                   listenerAllocations;
 
 
 	/**
@@ -45,6 +54,14 @@ public abstract class EventManager<EL extends EventListener, T, E extends Abstra
 			if ( listeners.contains( listener ) ) {
 				throw new IllegalStateException( "listener already listening to " + getClass() );
 			}
+
+			if ( null == listenerAllocations ) {
+				listenerAllocations = new ArrayList<Exception>();
+			}
+
+			Exception whereFrom = new Exception();
+			whereFrom.fillInStackTrace();
+			listenerAllocations.add( whereFrom );
 		}
 
 		listeners.add( listener );
@@ -61,9 +78,14 @@ public abstract class EventManager<EL extends EventListener, T, E extends Abstra
 	public boolean removeListener( EL listener ) {
 
 		if ( performListenerChecks ) {
-			if ( !listeners.contains( listener ) ) {
+
+			int index = listeners.indexOf( listener );
+			if ( index < 0 ) {
 				throw new IllegalStateException( "listener NOT listening to " + getClass() );
 			}
+
+			//noinspection ThrowableResultOfMethodCallIgnored
+			listenerAllocations.remove( index );
 		}
 
 		listeners.remove( listener );
@@ -121,7 +143,17 @@ public abstract class EventManager<EL extends EventListener, T, E extends Abstra
 		if ( !listeners.isEmpty() ) {
 
 			if ( performListenerChecks ) {
-				throw new IllegalStateException( "Still have: " + listeners.size() + " listeners from " + getClass() );
+
+				StringWriter sw = new StringWriter();
+				PrintWriter writer = new PrintWriter( sw );
+
+				for ( Exception allocation : listenerAllocations ) {
+					allocation.printStackTrace( writer );
+					writer.print( "\n\n" );
+				}
+
+				throw new IllegalStateException( "Still have: " + listeners.size() + " listeners from " + getClass() + "\n" +
+					sw.toString() + "\n\n\n" );
 			}
 
 			// For production, go ahead and do the necessary cleanup...
