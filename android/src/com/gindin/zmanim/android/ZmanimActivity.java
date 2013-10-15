@@ -223,14 +223,17 @@ public class ZmanimActivity
 	@Override
 	protected void onDestroy() {
 
+		if ( null != zmanimDisplay ) {
+			zmanimDisplay.onDestroy();
+		}
+
 		// Might be null if we got stopped before we were fully started...
+		//  Note that since we're going to be destroying the location manager, it had better be the last thing
+		//  of meaning we do in this method.
 		if ( null != locationManager ) {
 			locationManager.removeLocationChangeListener( locationListener );
 			locationManager.onDestroy();
-		}
-
-		if ( null != zmanimDisplay ) {
-			zmanimDisplay.onDestroy();
+			locationManager = null;
 		}
 
 		LogUtils.endSession( this );
@@ -242,9 +245,9 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FeatureEnvy" } )
 	@Override
 	protected void onActivityResult(
-		int requestCode,
-		int resultCode,
-		Intent data
+		int     requestCode,
+		int     resultCode,
+		Intent  data
 	) {
 
 		super.onActivityResult( requestCode, resultCode, data );
