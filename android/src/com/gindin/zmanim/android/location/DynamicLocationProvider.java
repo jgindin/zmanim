@@ -53,8 +53,6 @@ import java.util.*;
 class DynamicLocationProvider
 	extends LocationProvider {
 
-	private static final int                                  MIN_UPDATE_INTERVAL_MINUTES = 20 * 60 * 1000;
-
 
 	private final LocationManager                             locationManager;
 
