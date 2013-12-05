@@ -22,6 +22,7 @@ import com.gindin.util.Version;
 import com.gindin.util.events.EventManager;
 import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
@@ -156,6 +157,12 @@ public class ZmanimActivity
 
 			@Override public void onLocationChanged( LocationChangedEvent event ) {
 				rebuildUI( event.getEventInfo(), event.getError() );
+			}
+
+
+			@Override
+			public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
+				updateLocation( event.eventInfo );
 			}
 		};
 
@@ -311,8 +318,16 @@ public class ZmanimActivity
 			}
 		);
 
-		final String locationName;
+		updateLocation( location );
 
+		// Update the header
+		updateHeader( location );
+	}
+
+
+	private void updateLocation( ZmanimLocation location ) {
+
+		final String locationName;
 		if ( null == location ) {
 			locationName = getResources().getString( R.string.unknown_location );
 		}
@@ -320,14 +335,16 @@ public class ZmanimActivity
 			locationName = location.getLocationName();
 		}
 
-		// Notify the location manager of the field that contains the current location.
+		// Let the location manager know about the field that contains the current location.
 		final View locationField = findViewById( R.id.location );
 		locationManager.setLocationField( locationField );
 
-		updateField( R.id.location, locationName );
-
-		// Update the header
-		updateHeader( location );
+		// We may not have a location name. In that case, don't do anything. This is a bit of a hack, because we can
+		//  determine the location name *before* we render the whole UI. And, in these cases, we may not have the
+		//  location with a name (because maybe we've got a last-known location that didn't store the name).
+		if ( ( null != locationName ) && ( locationName.length() > 0 ) ) {
+			updateField( R.id.location, locationName );
+		}
 	}
 
 
@@ -789,10 +806,6 @@ public class ZmanimActivity
 				
 				buildHeader( location );
 				buildFooter( location, error );
-
-				if ( null == location ) {
-					return;
-				}
 
 				if ( null == zmanimDisplay ) {
 					zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );

@@ -14,9 +14,16 @@ public class LocationChangedEventManager
 	@Override
 	protected void dispatch(
 		LocationChangedEvent.Listener listener,
-		LocationChangedEvent event
+		LocationChangedEvent          event
 	) {
-		listener.onLocationChanged( event );
+
+		// Yes, this is a bit hacky. Gotta change the event manager to be more like an Event Bus...
+		if ( event instanceof LocationNameUpdatedEvent ) {
+			listener.onLocationNameUpdated( (LocationNameUpdatedEvent)event );
+		}
+		else {
+			listener.onLocationChanged( event );
+		}
 	}
 
 

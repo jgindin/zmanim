@@ -45,8 +45,10 @@ public class LocationChangedEvent
 		void onLocationChanged(
 			LocationChangedEvent event
 		);
+
+		void onLocationNameUpdated(
+			LocationNameUpdatedEvent event
+		);
 	}
-
-
 
 }  // End of LocationChangedEvent class

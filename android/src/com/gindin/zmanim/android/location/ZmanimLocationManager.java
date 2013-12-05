@@ -82,33 +82,7 @@ public class ZmanimLocationManager
 
 		this.activity = activity;
 
-		locationListener = new LocationProvider.Listener() {
-
-			public void onProgress(
-				String message
-			) {
-				locationChangedEventManager.progress( message );
-			}
-
-			public void onLocationChanged(
-				Location  newLocation,
-				String    locationName
-			) {
-
-				ZmanimLocation location = updateLastKnownLocation( newLocation, locationName );
-				locationChangedEventManager.fire( new LocationChangedEvent( location ) );
-			}
-
-			public void onError(
-				LocationError error,
-				Location      oldLocation,
-				String        locationName
-			) {
-
-				ZmanimLocation location = updateLastKnownLocation( oldLocation, locationName );
-				locationChangedEventManager.fire( new LocationChangedEvent( location, error ) );
-			}
-		};
+		locationListener = new LocationListener();
 	}
 
 
@@ -374,4 +348,45 @@ public class ZmanimLocationManager
 	}
 
 
+	private class LocationListener
+		implements LocationProvider.Listener {
+
+		public void onProgress(
+			String message
+		) {
+			locationChangedEventManager.progress( message );
+		}
+
+
+		public void onLocationChanged(
+			Location newLocation,
+			String    locationName
+		) {
+
+			ZmanimLocation zmanimLocation = updateLastKnownLocation( newLocation, locationName );
+			locationChangedEventManager.fire( new LocationChangedEvent( zmanimLocation ) );
+		}
+
+
+		public void onError(
+			LocationError error,
+			Location      oldLocation,
+			String        locationName
+		) {
+
+			ZmanimLocation zmanimLocation = updateLastKnownLocation( oldLocation, locationName );
+			locationChangedEventManager.fire( new LocationChangedEvent( zmanimLocation, error ) );
+		}
+
+
+		@Override
+		public void onLocationNameDetermined(
+			Location  location,
+			String    locationName
+		) {
+
+			ZmanimLocation zmanimLocation = updateLastKnownLocation( location, locationName );
+			locationChangedEventManager.fire( new LocationNameUpdatedEvent( zmanimLocation ) );
+		}
+	}
 }  // End of ZmanimLocation class

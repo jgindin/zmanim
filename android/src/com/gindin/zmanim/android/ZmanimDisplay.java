@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.zmanim.android.location.LocationChangedEvent;
+import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
@@ -78,6 +79,10 @@ class ZmanimDisplay {
 
 			@Override
 			public void onProgress( String message ) {
+			}
+
+			@Override
+			public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
 			}
 		};
 		zmanimActivity.addLocationChangeListener( locationChangeListener );

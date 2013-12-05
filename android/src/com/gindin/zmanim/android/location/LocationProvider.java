@@ -173,10 +173,21 @@ abstract class LocationProvider {
 		final Location location
 	) {
 
-		String geoLocation = lookupLocationName( location );
+		String locationName = lookupLocationName( location );
 
 		for ( Listener listener : listeners ) {
-			listener.onLocationChanged( location, geoLocation );
+			listener.onLocationChanged( location, locationName );
+		}
+	}
+
+
+	protected synchronized void fireLocationNameUpdated(
+		final Location  location,
+	  final String    locationName
+	) {
+
+		for ( Listener listener : listeners ) {
+			listener.onLocationNameDetermined( location, locationName );
 		}
 	}
 
@@ -192,7 +203,6 @@ abstract class LocationProvider {
 			listener.onError( error, oldLocation, oldLocationName );
 		}
 	}
-
 
 
 	protected String lookupLocationName(
@@ -242,20 +252,35 @@ abstract class LocationProvider {
 					LogUtils.logError( "LP::lookupLocationName", "", e );
 				}
 
+				// If we managed to find an address, save it for next time.
+				if ( null != address ) {
+					Bundle addressExtras;
+					if ( null == extras ) {
+						addressExtras = new Bundle();
+					}
+					else {
+						addressExtras = extras;
+					}
+
+					addressExtras.putParcelable( ADDRESS, address );
+					location.setExtras( addressExtras );
+				}
+
 				return addressToLocationName( location, address );
+			}
+
+
+			@Override
+			protected void onPostExecute( String locationName ) {
+				super.onPostExecute( locationName );
+				fireLocationNameUpdated( location, locationName );
 			}
 		};
 
 		getGeoLocationTask.execute( location );
-		String geoLocation;
-		try {
-			geoLocation = getGeoLocationTask.get();
-		}
-		catch ( Exception e ) {
-			geoLocation = null;
-		}
 
-		return geoLocation;
+		// Once the task is done, another event will fire to update the location name.
+		return null;
 	}
 
 
@@ -278,22 +303,31 @@ abstract class LocationProvider {
 			if ( ( null != locality ) && ( null != adminArea ) ) {
 				locationString = locality + ", " + adminArea;
 			}
-			else if ( ( null == locality ) && ( -1 != maxAddressLineIndex ) && ( null != postalCode ) ) {
-				// Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
-				for ( int index = 0; index < maxAddressLineIndex; index++ ) {
-					String addrLine = address.getAddressLine( index );
-					if ( null == addrLine ) continue;
+			else if ( null == locality ) {
 
-					if ( addrLine.contains( postalCode ) ) {
-						locationString = addrLine.substring( 0, addrLine.indexOf( postalCode ) );
-						break;
+				if ( maxAddressLineIndex > 0 ) {
+
+					// Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
+					for ( int index = 0; index < maxAddressLineIndex; index++ ) {
+						String addrLine = address.getAddressLine( index );
+						if ( null == addrLine ) continue;
+
+						if ( ( null != postalCode ) && addrLine.contains( postalCode ) ) {
+							locationString = addrLine.substring( 0, addrLine.indexOf( postalCode ) );
+							break;
+						}
 					}
 				}
+				else if ( null != country ) {
+					// Yup. I forced a usage of 55.0, -1.6 and the only info we get back is "United Kingdom".
+					locationString = country;
+				}
+
 			}
-			else if ( ( null != locality ) && ( null != country ) ) {
+			else if ( null != country ) {
 				locationString = locality + ", " + country;
 			}
-			else if ( null != locality ) {
+			else {
 				locationString = locality;
 			}
 		}
@@ -313,19 +347,50 @@ abstract class LocationProvider {
 
 	public interface Listener {
 
+		/**
+		 * Called when it's been determined that the location has changed.
+		 *
+		 * @param newLocation represents the new location
+		 * @param locationName  the name of the new location, or null if it has not (or cannot) be determined
+		 */
 		public void onLocationChanged(
 			Location  newLocation,
 			String    locationName
 		);
 
+		/**
+		 * Called when some problem was encountered while trying to get the current location.
+		 *
+		 * @param error describes the error that happened
+		 * @param oldLocation the last known location
+		 * @param locationName the name of the last known location, or null if it has not (or cannot) be determined
+		 */
 		public void onError(
 			LocationError error,
 			Location      oldLocation,
 			String        locationName
 		);
 
+		/**
+		 * Called at various times during the process of trying to determine the current location.
+		 *
+		 * @param message describes the current step of trying to find the location
+		 */
 		void onProgress(
 			String message
 		);
+
+
+		/**
+		 * Called when the name of the location has (finally) been determined.
+		 *
+		 * @param location represents the location
+		 * @param locationName the name of this location
+		 */
+		void onLocationNameDetermined(
+			Location  location,
+			String    locationName
+		);
+
 	}
 }  // End of LocationProvider class
