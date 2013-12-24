@@ -1,14 +1,13 @@
 <component name="libraryTable">
   <library name="kosherjava">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/KosherJava.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../thirdparty/kosherjava/zmanim-1.3.0.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/docs/api" />
+      <root url="jar://$PROJECT_DIR$/../thirdparty/kosherjava/zmanim-1.3.0.zip!/docs/api" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/src" />
-      <root url="file://$PROJECT_DIR$/../thirdparty/kosherjava/test" />
+      <root url="jar://$PROJECT_DIR$/../thirdparty/kosherjava/zmanim-1.3.0.zip!/src" />
     </SOURCES>
   </library>
 </component>
