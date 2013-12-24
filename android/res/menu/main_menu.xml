@@ -6,6 +6,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+		android:id="@+id/refresh"
+		android:title="@string/refresh_menu"
+		android:icon="@android:drawable/ic_menu_rotate"
+	/>
+	<item
 		android:id="@+id/location_prefs"
 	  android:title="@string/location_prefs"
 	  android:icon="@android:drawable/ic_menu_mylocation"
@@ -24,10 +29,5 @@
 		android:id="@+id/help"
 		android:title="@string/help_menu"
 		android:icon="@android:drawable/ic_menu_help"
-	/>
-	<item
-		android:id="@+id/refresh"
-		android:title="@string/refresh_menu"
-		android:icon="@android:drawable/ic_menu_rotate"
 	/>
 </menu>
