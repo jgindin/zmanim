@@ -32,15 +32,9 @@
 	</target>
 
 	<target name="get-svn-state">
-		<svn javahl="${svnant.javahl}" svnkit="${svnant.svnkit}">
-			<wcversion path="../" prefix="svn.status."/>
-		</svn>
-
-		<echo>
-			repository.url=${svn.status.repository.url}
-			committed.max=${svn.status.committed.max}
-			modified=${svn.status.modified}
-		</echo>
+		<exec executable="hg" output="hg.number" >
+			<arg line="log --limit 1 --template 'hg.node={node}'"/>
+		</exec>
 	</target>
 
 
@@ -50,15 +44,16 @@
 	<target name="read-version-files">
 		<property file="version.number"/>
 		<property file="build.number"/>
+		<property file="hg.number"/>
 	</target>
 
 	<target name="set-release-version" if="release_build">
-		<property name="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}" />
+		<property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}" />
 		<echo message="Set a release version..." />
 	</target>
 
 	<target name="set-debug-version" unless="release_build">
-		<property name="version" value="${version.major}.${version.minor}.${build.number}.${svn.status.committed.max}-DEV" />
+		<property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}-DEV" />
 		<echo message="Set a debug version..." />
 	</target>
 
