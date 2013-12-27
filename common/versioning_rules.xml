@@ -33,7 +33,7 @@
 
 	<target name="get-svn-state">
 		<exec executable="hg" output="hg.number" >
-			<arg line="log --limit 1 --template 'hg.node={node}'"/>
+			<arg line="log --limit 1 --template 'hg.node={node|short}'"/>
 		</exec>
 	</target>
 
