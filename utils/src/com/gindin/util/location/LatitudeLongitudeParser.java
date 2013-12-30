@@ -215,7 +215,7 @@ public abstract class LatitudeLongitudeParser {
 
 		// See http://stackoverflow.com/questions/6945008/converting-value-longitude-valuesdmscompass-direction-format-to-correspondi
 		//noinspection MagicNumber
-		double convertedDegrees = holder.getDegrees() + ( ( (double)( holder.getSeconds() / 60 ) ) + holder.getMinutes() ) / 60;
+		double convertedDegrees = holder.getDegrees() + ( ( ( (double)holder.getSeconds() / 60 ) ) + holder.getMinutes() ) / (double)60;
 
 		if ( ( Direction.SOUTH == holder.getDirection() ) || ( Direction.WEST == holder.getDirection() ) ) {
 			convertedDegrees = -1 * convertedDegrees;

@@ -42,6 +42,11 @@ public class UT_LatitudeLongitudeParser {
 	private static final List<CityInfo>                       cityInfo = new ArrayList<CityInfo>();
 
 	static {
+
+		/**
+		 * Data comes from: http://www.infoplease.com/ipa/A0001769.html, http://www.infoplease.com/ipa/A0001796.html
+		 */
+
 		cityInfo.add(
 			new CityInfo(
 				"Aberdeen, Scotland",
@@ -89,6 +94,36 @@ public class UT_LatitudeLongitudeParser {
 				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 58 ),
 				40.78333333333333333333,
 				-73.96666666666666666667
+			)
+		);
+
+		cityInfo.add(
+			new CityInfo(
+				"San Francisco, Calif.",
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 37, 47 ),
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 122, 26),
+				37.78333333333333333333,
+				-122.43333333333333333333
+			)
+		);
+
+		cityInfo.add(
+			new CityInfo(
+				"Phoenix, Ariz.",
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 33, 29 ),
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 112, 4 ),
+				33.48333333333333333333,
+				-112.06666666666666666667
+			)
+		);
+
+		cityInfo.add(
+			new CityInfo(
+				"Ottawa, Ont., Can.",
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 45, 24 ),
+				new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 43 ),
+				45.4,
+				-73.71666666666666666667
 			)
 		);
 	}
