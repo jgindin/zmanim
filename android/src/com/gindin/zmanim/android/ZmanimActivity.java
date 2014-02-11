@@ -13,10 +13,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
 import android.webkit.WebView;
-import android.widget.DatePicker;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 import com.gindin.util.events.EventManager;
@@ -77,6 +74,9 @@ public class ZmanimActivity
 	private final DateChangeEventManager                      dateChangedEventManager = new DateChangeEventManager();
 
 	private ZmanimDisplay                                     zmanimDisplay;
+
+	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
+	private ListView                                          listView;
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -281,7 +281,17 @@ public class ZmanimActivity
 
 
 	public ListView getListView() {
-		return (ListView)findViewById( android.R.id.list );
+
+		if ( null == listView ) {
+			listView = (ListView)findViewById( android.R.id.list );
+		}
+
+		return listView;
+	}
+
+
+	public void setAdapter( ListAdapter listAdapter ) {
+		getListView().setAdapter( listAdapter );
 	}
 
 
@@ -821,7 +831,7 @@ public class ZmanimActivity
 	}
 
 
-	private class DateChangeEventManager
+	private static class DateChangeEventManager
 		extends EventManager<DateChangedEvent.Listener, HebrewDate, DateChangedEvent> {
 
 		@Override
