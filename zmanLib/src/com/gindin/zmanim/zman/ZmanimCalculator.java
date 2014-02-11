@@ -63,6 +63,11 @@ public class ZmanimCalculator
 
 
 	/**
+	 * Minutes in an hour.
+	 */
+	private static final int                                  MINUTES_PER_HOUR = 60;
+
+	/**
 	 * How many milliseconds in a minute?
 	 *<p>
 	 * Have to copy this since it is package-local in the base class.
@@ -73,7 +78,7 @@ public class ZmanimCalculator
 
 	public ZmanimCalculator(
 		GeoLocation location,
-		HebrewDate date
+		HebrewDate  date
 	) {
 		super( location );
 		date.syncCalendar( getCalendar() );
@@ -93,13 +98,18 @@ public class ZmanimCalculator
 
 	/**
 	 * Method to return the latest time for mincha based on Daily Halacha's representation of Chacham Ovadia Yosef's
-	 *  ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 minutes after sunset.
+	 *  ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 shaot zmaniot minutes after sunset.
 	 *
 	 * @return the <code>Date</code> representing the time.
 	 */
 	public Date getLatestMinchaOvadiaYosef() {
+		// First, we have to figure out how long a shaot zmaniot minute is. The returned temporal hour is represented by
+		//  the number of milliseconds in that "hour".
+		long shaotZmaniotHour = getTemporalHour();
+		long shaotZmaniotMinute = shaotZmaniotHour / MINUTES_PER_HOUR;
+
 		return getTimeOffset( getSunset(),
-			( MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF * MINUTE_MILLIS ) + ( MINUTE_MILLIS / 2 ) );
+			( MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF * shaotZmaniotMinute ) + ( shaotZmaniotMinute / 2 ) );
 	}
 
 

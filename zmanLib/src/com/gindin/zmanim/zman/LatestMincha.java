@@ -47,7 +47,7 @@ class LatestMincha
 		);
 
 		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "Daily Halacha's representation of Chacham Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "Daily Halacha's representation of Chacham Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 shaot zmaniot minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalculator.getLatestMinchaOvadiaYosef();
 				}
