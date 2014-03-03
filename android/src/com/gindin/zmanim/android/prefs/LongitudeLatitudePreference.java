@@ -190,6 +190,10 @@ public class LongitudeLatitudePreference
 		Object  defaultValue
 	) {
 
+		/*
+			I'm really not sure what this method is supposed to do. But, not having it do anything doesn't seem to cause
+			any problems...
+
 		// Have to parse the default value...
 		String initValue;
 		if ( restorePersistedValue ) {
@@ -211,6 +215,7 @@ public class LongitudeLatitudePreference
 //		else {
 //			LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( initValue );
 //		}
+		*/
 	}
 
 
