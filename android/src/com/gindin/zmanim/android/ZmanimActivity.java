@@ -78,6 +78,8 @@ public class ZmanimActivity
 	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
 	private ListView                                          listView;
 
+	private DatePickerDialog                                  datePickerDialog;
+
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
 	//    onCreate
@@ -536,7 +538,7 @@ public class ZmanimActivity
 
 		switch ( dialogID ) {
 			case R.id.secular_date:
-				return createSecularDatePickerDialog();
+				return getSecularDatePickerDialog();
 
 			case R.id.about:
 				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text );
@@ -593,23 +595,38 @@ public class ZmanimActivity
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	private Dialog createSecularDatePickerDialog() {
+	private Dialog getSecularDatePickerDialog() {
 
-		final DatePickerDialog.OnDateSetListener dateChangedListener = new DatePickerDialog.OnDateSetListener() {
-			public void onDateSet(
-				DatePicker datePicker,
-				int year,
-				int month,
-				int date
-			) {
+		if ( null == datePickerDialog ) {
 
-				//noinspection MagicConstant
-				changeDate( HebrewCalendar.getForDate( year, month, date ) );
-			}
-		};
+			final DatePickerDialog.OnDateSetListener dateChangedListener = new DatePickerDialog.OnDateSetListener() {
+				public void onDateSet(
+					DatePicker datePicker,
+					int year,
+					int month,
+					int date
+				) {
 
-		return new DatePickerDialog( this, dateChangedListener, currentDate.getGregorianYear(),
-			currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
+					// Seems like this callback gets invoked multiple times. That's bad...we don't want to do all the work
+					//  involved in changing dates if we're not actually changing dates...
+					if ( ( currentDate.getGregorianYear() != year ) ||
+							 ( currentDate.getGregorianMonth() != month ) ||
+							 ( currentDate.getGregorianDayOfMonth() != date ) ) {
+
+						changeDate( HebrewCalendar.getForDate( year, month, date ) );
+					}
+				}
+			};
+
+			datePickerDialog = new DatePickerDialog( this, dateChangedListener, currentDate.getGregorianYear(),
+				currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
+		}
+		else {
+			datePickerDialog.updateDate( currentDate.getGregorianYear(),
+				currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
+		}
+
+		return datePickerDialog;
 	}
 
 
