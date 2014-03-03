@@ -113,23 +113,44 @@ public class LongitudeLatitudePreference
 		TextView value = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
 		String degreesText = value.getText().toString();
 
+		boolean parseMinutes = true;
+
 		int degrees;
+		int minutes = 0;
+
 		try {
 			degrees = Integer.parseInt( degreesText );
 		}
 		catch ( NumberFormatException e ) {
-			degrees = 0;
+			// Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
+			try {
+				double degreesDouble = Double.parseDouble( degreesText );
+
+				// Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
+				degrees = (int)degreesDouble;
+
+				// Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
+				minutes = (int)( ( degreesDouble - degrees ) * 60 );
+
+				parseMinutes = false;
+			}
+			catch ( NumberFormatException e1 ) {
+				// Nope... just give up.
+				degrees = 0;
+				minutes = 0;
+			}
 		}
 
-		value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
-		String minutesText = value.getText().toString();
+		if ( parseMinutes ) {
+			value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+			String minutesText = value.getText().toString();
 
-		int minutes;
-		try {
-			minutes = Integer.parseInt( minutesText );
-		}
-		catch ( NumberFormatException e ) {
-			minutes = 0;
+			try {
+				minutes = Integer.parseInt( minutesText );
+			}
+			catch ( NumberFormatException e ) {
+				minutes = 0;
+			}
 		}
 
 		LatitudeLongitudeParser.Direction direction;
