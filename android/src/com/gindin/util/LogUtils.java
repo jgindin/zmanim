@@ -4,6 +4,7 @@
 
 package com.gindin.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ public class LogUtils {
 
 
 	public static void startSession(
-		Context context
+		final Activity context
 	) {
 
 		if ( !Version.isDevelopment() ) {
@@ -54,6 +55,23 @@ public class LogUtils {
 
 					String where = ( null == t ? "null thread" : t.getName() );
 					logError( "UEH", where, e );
+
+/*
+					// This could be useful when hitting a problem that only reproduces in production builds..
+					final String display =  "Where: " + where + "; e: " + exceptionToString( e );
+
+					context.runOnUiThread(
+						new Runnable() {
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder( context );
+								builder.setMessage( display );
+								builder.create().show();
+							}
+						}
+					);
+*/
+
 				}
 			}
 		);
@@ -96,17 +114,7 @@ public class LogUtils {
 		Pair<String, String>... moreInfo
 	) {
 
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter( sw );
-		
-		if ( null == error.getCause() ) {
-			error.printStackTrace( pw );
-		}
-		else {
-			error.getCause().printStackTrace( pw );
-		}
-
-		String stackTrace = cleanMessage( sw.toString() );
+		String stackTrace = exceptionToString( error );
 
 		String curLocation;
 		if ( null != locationManager ) {
@@ -197,5 +205,20 @@ public class LogUtils {
 		return cleaned;
 	}
 
+
+	private static String exceptionToString( Throwable error ) {
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter( sw );
+
+		if ( null == error.getCause() ) {
+			error.printStackTrace( pw );
+		}
+		else {
+			error.getCause().printStackTrace( pw );
+		}
+
+		return cleanMessage( sw.toString() );
+	}
 
 }  // End of LogUtils class
