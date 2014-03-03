@@ -47,6 +47,14 @@ class CandleLighting
 		);
 
 		zmanim.add(
+			new Zman( "15 Minutes", "London", Zmanim.Type.CandleLighting, false ) {
+				@Override protected Date calculate() {
+					return zmanimCalculator.getCandleLighting( 15 );
+				}
+			}
+		);
+
+		zmanim.add(
 			new Zman( "20 Minutes", "Raanana", Zmanim.Type.CandleLighting, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalculator.getCandleLighting( 20 );
