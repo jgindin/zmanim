@@ -25,7 +25,7 @@ import java.util.Calendar;
  *<p>
  * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
  */
-abstract class Taanit
+public abstract class Taanit
 	extends Observance {
 
 	protected static final String                             TAANIT = "Ta'anit ";

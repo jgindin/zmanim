@@ -10,9 +10,13 @@ import com.gindin.zmanim.calendar.holiday.rabbanan.*;
 import com.gindin.zmanim.calendar.holiday.taaniyot.*;
 import com.gindin.zmanim.calendar.holiday.yomtov.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Serves as the central location for declaring all the Jewish Holidays.
  */
+@SuppressWarnings( "OverlyCoupledClass" )
 public class Holidays {
 
 	public static final Shabbat                               SHABBAT = new Shabbat();
@@ -60,29 +64,29 @@ public class Holidays {
 	/**
 	 * Sets of the holidays.
 	 */
-	public static final Observance[]                          MAJOR_HOLIDAYS = {
+	public static final List<Observance>                      MAJOR_HOLIDAYS = Arrays.asList(
 		ROSH_HASHANA,       YOM_KIPPUR,         SUKKOT,
 		CHANUKAH,           PURIM,              PESACH,
 		SHAVUOT
-	};
+	);
 
 
-	public static final Observance[]                          MINOR_HOLIDAYS = {
+	public static final List<Observance>                      MINOR_HOLIDAYS = Arrays.asList(
 		TU_B_SHVAT,         PURIM_KATAN,        SHUSHAN_PURIM,
-		PESACH_SHENI,       LAG_B_OMER
-	};
+		PESACH_SHENI,       LAG_B_OMER,         TU_B_AV
+	);
 
 
-	public static final Observance[]                          FAST_DAYS = {
+	public static final List<Taanit>                      FAST_DAYS = Arrays.asList(
 		TZOM_GEDALIAH,      ASARA_B_TEVET,      TAANIT_ESTHER,
 		TAANIT_BECHOROT,    TAANIT_17_TAMUZ,    TISHA_B_AV
-	};
+	);
 
 
-	public static final Observance[]                          MODERN_HOLIDAYS = {
+	public static final List<Observance>                      MODERN_HOLIDAYS = Arrays.asList(
 		YOM_HA_SHOAH,       YOM_HA_ZIKARON,     YOM_HA_ATZMAUT,
 		YOM_YERUSHALAYIM
-	};
+	);
 
 
 	/** Not instantiatable. */
