@@ -115,7 +115,7 @@ class ZmanimDisplay {
 
 		SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-		if ( !useElevation ) {
+		if ( !useElevation && ( null != currentLocation) ) {
 			currentLocation.setElevation( 0.0 );
 		}
 
