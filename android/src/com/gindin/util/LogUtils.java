@@ -139,7 +139,7 @@ public class LogUtils {
 			}
 
 			//noinspection unchecked
-			logEvent( "Error", messages.toArray( new Pair[ messages.size() ] ) );
+			logEvent( "Error", messages );
 
 			FlurryAgent.onError( where, message, "" );
 		}
@@ -148,8 +148,8 @@ public class LogUtils {
 
 
 	public static void logEvent(
-		String                  eventName,
-	  Pair<String,String>...  messages
+		String                    eventName,
+	  List<Pair<String,String>>  messages
 	) {
 
 		if ( !Version.isDevelopment() ) {
