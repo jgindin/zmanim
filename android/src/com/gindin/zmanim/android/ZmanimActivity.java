@@ -234,6 +234,7 @@ public class ZmanimActivity
 
 		if ( null != zmanimDisplay ) {
 			zmanimDisplay.onDestroy();
+			zmanimDisplay = null;
 		}
 
 		// Might be null if we got stopped before we were fully started...
@@ -349,7 +350,15 @@ public class ZmanimActivity
 
 		// Let the location manager know about the field that contains the current location.
 		final View locationField = findViewById( R.id.location );
-		locationManager.setLocationField( locationField );
+
+		// I'm seeing NPE in the logs, but I have no idea how this can be. It doesn't repro for me, so for now
+		//  the best I can do is to guard against it...
+		if ( null == locationManager ) {
+			LogUtils.logError( "ZmanimActivity::updateLocation", "null location manager. zmanimDisplay?" + zmanimDisplay, null  );
+		}
+		else {
+			locationManager.setLocationField( locationField );
+		}
 
 		// We may not have a location name. In that case, don't do anything. This is a bit of a hack, because we can
 		//  determine the location name *before* we render the whole UI. And, in these cases, we may not have the
