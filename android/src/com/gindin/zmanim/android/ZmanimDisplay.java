@@ -4,6 +4,8 @@
 
 package com.gindin.zmanim.android;
 
+import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
@@ -20,6 +22,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
+
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -157,6 +161,8 @@ class ZmanimDisplay {
 				final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
 				editor.putString( type.name, selection.name );
 				editor.commit();
+
+				LogUtils.logEvent( "Zman Change", Arrays.asList( new Pair<String, String>( type.name, selection.name ) ) );
 
 				// This is a bit of a hammer, but it works...
 				//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
