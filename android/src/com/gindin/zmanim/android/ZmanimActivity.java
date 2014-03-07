@@ -464,7 +464,7 @@ public class ZmanimActivity
 		updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, location ) );
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
 
-		String description = currentDate.getDetails().getDescription();
+		String description = currentDate.getDescription();
 		if ( ( null == description ) || ( 0 == description.trim().length() ) ) {
 			findViewById( R.id.holiday_row ).setVisibility( View.GONE );
 		}

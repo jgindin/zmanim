@@ -102,6 +102,11 @@ public class HebrewDate
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	// Find out about this date
+	public String getDescription() {
+		return getDetails().getDescription();
+	}
+
+
 	@SuppressWarnings( "FeatureEnvy" )
 	public Details getDetails() {
 

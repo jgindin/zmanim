@@ -128,7 +128,7 @@ public abstract class HebrewDateFormatter {
 		) {
 
 			String buf = super.format( date, location );
-			buf += date.getDetails().getDescription();
+			buf += date.getDescription();
 
 			return buf;
 		}
