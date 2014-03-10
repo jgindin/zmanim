@@ -5,7 +5,6 @@
       <additionalClassPath>
         <entry dir="file:///opt/devtools/android/android-sdk-linux/tools/lib" />
       </additionalClassPath>
-      <executeOn event="beforeCompilation" target="replace-version-placeholders" />
     </buildFile>
   </component>
 </project>
