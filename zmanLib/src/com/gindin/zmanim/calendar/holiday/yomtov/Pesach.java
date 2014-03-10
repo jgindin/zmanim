@@ -29,38 +29,92 @@ public class Pesach
 	public Details getDetailsFor( HebrewDate date ) {
 
 		final int hebrewMonth = date.getHebrewMonth();
-		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
 		if ( HebrewMonth.NISSAN != hebrewMonth ) {
 			return null;
 		}
 
+		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 		switch ( hebrewDayOfMonth ) {
 			case 14:
-				return new Details.Erev( date, PESACH );
+				return new ErevPesachDetails( date );
 
 			case 15:
-				return new Details.YomTovDetails( date, PESACH, true );
+				return new PesachYomTovDetails( date, true );
 
 			case 16:
-				return new Details.YomTovDetails( date, PESACH, false );
+				return new PesachYomTovDetails( date, false );
 
 			case 17:
 			case 18:
 			case 19:
-				return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, false );
+				return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, false );
 
 			case 20:
-				return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, PESACH, true );
+				return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, true );
 
 			case 21:
-				return new Details.YomTovDetails( date, PESACH, true );
+				return new PesachYomTovDetails( date, true );
 
 			case 22:
-				return new Details.YomTovDetails( date, PESACH, false );
+				return new PesachYomTovDetails( date, false );
 		}
 
 		return null;
+	}
+
+
+	protected static class ErevPesachDetails
+		extends Details.Erev {
+
+		ErevPesachDetails(
+			HebrewDate  date
+		) {
+			super( date, PESACH );
+		}
+
+
+		@Override
+		public boolean isPesach() {
+			return true;
+		}
+	}
+
+
+	protected static class PesachYomTovDetails
+		extends Details.YomTovDetails {
+
+		PesachYomTovDetails(
+			HebrewDate  date,
+			boolean     lightCandles
+		) {
+			super( date, PESACH, lightCandles );
+		}
+
+
+		@Override
+		public boolean isPesach() {
+			return true;
+		}
+	}
+
+
+	protected static class PesachCholHaMoedDetails
+		extends Details.CholHaMoedDetails {
+
+		PesachCholHaMoedDetails(
+			HebrewDate  date,
+			int         dayOfChag,
+			boolean     lightCandles
+		) {
+			super( date, dayOfChag, PESACH, lightCandles );
+		}
+
+
+		@Override
+		public boolean isPesach() {
+			return true;
+		}
 	}
 
 }  // End of Pesach class

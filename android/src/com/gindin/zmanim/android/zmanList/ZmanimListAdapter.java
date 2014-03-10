@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.zman.Zman;
 
+import java.util.List;
+
 /**
  * Adapter for a ListView that shows a set of Zman objects.
  */
@@ -24,8 +26,8 @@ public abstract class ZmanimListAdapter
 
 
 	public ZmanimListAdapter(
-		Context context,
-		Zman[] zmanim
+		Context     context,
+		List<Zman>  zmanim
 	) {
 
 		super( context, R.layout.zman_list_row, zmanim );

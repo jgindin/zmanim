@@ -98,7 +98,7 @@ public class ZmanimSelector {
 		typeSelectionCallback = callback;
 
 		final Zmanim zmanim = currentDate.getZmanim( currentLocation, type );
-		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.toArray() ) {
+		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.asList() ) {
 			@Override protected ZmanRowWrapper createRowWrapper( View rowView ) {
 				return new SelectorRow( rowView, zmanFormatter );
 			}

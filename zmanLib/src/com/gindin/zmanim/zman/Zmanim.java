@@ -26,7 +26,7 @@ public abstract class Zmanim {
 	) {
 
 		this.type = type;
-		this.allZmanim = zmanim;
+		this.allZmanim = Collections.unmodifiableList( zmanim );
 	}
 
 
@@ -73,8 +73,8 @@ public abstract class Zmanim {
 	}
 
 
-	public Zman[] toArray() {
-		return allZmanim.toArray( new Zman[ allZmanim.size() ] );
+	public List<Zman> asList() {
+		return allZmanim;
 	}
 
 
@@ -85,23 +85,101 @@ public abstract class Zmanim {
 	 */
 	public enum Type {
 
-		Alot( "Alot Hashachar", "Dawn" ),
-		Talit( "Talit/Tefilin", "Earliest Time to don Talit and Tefilin" ),
-		Hanetz( "Hanetz", "Sunrise" ),
-		SofZmanShema( "Sof Zman Shema", "Latest time to finish Shema" ),
-		SofZmanTefila( "Sof Zman Tefila", "Latest time to finish Shacharit" ),
-		Chatzot( "Chatzot", "Mid-day" ),
-		MinchaGedola( "Mincha Gedola", "Earliest time to start Mincha" ),
-		MinchaKetana( "Mincha Ketana", "Earliest time to start Mincha (Rambam)" ),
-		PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ),
-		CandleLighting( "Candle Lighting", "When candles should be lit" ),
-		Shkia( "Shkia", "Sunset" ),
-		BeinHashmashot( "Bein Hashmashot", "Twilight" ),
-		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ),
-		FastEnd( "Fast Ends", "Earliest end of fast days" ),
-		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ),
-		ShabbatEnd( "Havdalah", "Earliest Havdalah" ),
-		NightChatzot( "Chatzot", "Halachic Midnight" );
+		Alot( "Alot Hashachar", "Dawn" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new AlotHashachar( zmanimCalculator );
+			}
+		},
+		Talit( "Talit/Tefilin", "Earliest Time to don Talit and Tefilin" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new Talit( zmanimCalculator );
+			}
+		},
+		Hanetz( "Hanetz", "Sunrise" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new Hanetz( zmanimCalculator );
+			}
+		},
+		SofZmanShema( "Sof Zman Shema", "Latest time to finish Shema" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new SofZmanShema( zmanimCalculator );
+			}
+		},
+		SofZmanTefila( "Sof Zman Tefila", "Latest time to finish Shacharit" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new SofZmanTefila( zmanimCalculator );
+			}
+		},
+		SofZmanAchilatChametz( "Achilat Chametz", "Latest time to each Chametz" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new SofZmanAchilatChametz( zmanimCalculator );
+			}
+		},
+		SofZmanBiurChametz( "Biur Chametz", "Latest time to dispose Chametz" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new SofZmanBiurChametz( zmanimCalculator );
+			}
+		},
+		Chatzot( "Chatzot", "Mid-day" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new Chatzot( zmanimCalculator );
+			}
+		},
+		MinchaGedola( "Mincha Gedola", "Earliest time to start Mincha" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new MinchaGedola( zmanimCalculator );
+			}
+		},
+		MinchaKetana( "Mincha Ketana", "Earliest time to start Mincha (Rambam)" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new MinchaKetana( zmanimCalculator );
+			}
+		},
+		PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new PlagHaMincha( zmanimCalculator );
+			}
+		},
+		CandleLighting( "Candle Lighting", "When candles should be lit" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new CandleLighting( zmanimCalculator );
+			}
+		},
+		Shkia( "Shkia", "Sunset" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new Shkia( zmanimCalculator );
+			}
+		},
+		BeinHashmashot( "Bein Hashmashot", "Twilight" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new BeinHashmashot( zmanimCalculator );
+			}
+		},
+		LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new LatestMincha( zmanimCalculator );
+			}
+		},
+		FastEnd( "Fast Ends", "Earliest end of fast days" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new FastEnds( zmanimCalculator );
+			}
+		},
+		TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new TzaitHacochavim( zmanimCalculator );
+			}
+		},
+		ShabbatEnd( "Havdalah", "Earliest Havdalah" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new ShabbatEnds( zmanimCalculator );
+			}
+		},
+		NightChatzot( "Chatzot", "Halachic Midnight" ) {
+			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+				return new NightChatzot( zmanimCalculator );
+			}
+		};
 
 		/** Name of the set of zmanim. E.g., "Sof Zman Shema" */
 		public final String                                       name;
@@ -117,6 +195,9 @@ public abstract class Zmanim {
 			this.name = name;
 			this.description = description;
 		}
+
+
+		public abstract Zmanim get( ZmanimCalculator zmanimCalculator );
 	}
 
 }  // End of Zmanim class

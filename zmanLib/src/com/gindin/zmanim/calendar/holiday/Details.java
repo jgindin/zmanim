@@ -53,6 +53,12 @@ public abstract class Details {
 		return false;
 	}
 
+
+	public boolean isPesach() {
+		return false;
+	}
+
+
 	/**
 	 * A complete description of today's observance. Could be something simple like,
 	 *  "Yom Kippur" or something more complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
@@ -80,7 +86,7 @@ public abstract class Details {
 	}
 
 
-	protected final boolean isShabbat() {
+	public boolean isShabbat() {
 
 		Details shabbatDetails = Holidays.SHABBAT.getDetailsFor( date );
 		return null != shabbatDetails && !shabbatDetails.isErev();
@@ -400,9 +406,33 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isShabbat() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isShabbat() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
 		public boolean isTaanit() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isTaanit() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isPesach() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isPesach() ) {
 					return true;
 				}
 			}

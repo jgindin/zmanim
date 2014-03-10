@@ -204,6 +204,17 @@ public class HebrewDate
 		zmanimList.add( getZmanim( location, Zmanim.Type.Hanetz ) );
 		zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanShema ) );
 		zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanTefila ) );
+
+		if ( details.isErev() && details.isPesach() ) {
+			zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanAchilatChametz ) );
+
+			// When erev Pesach falls out on Shabbat, then we cannot do Biur. Technically, the time still exists, but
+			//  it's not quite the same...
+			if ( !details.isShabbat() ) {
+				zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanBiurChametz ) );
+			}
+		}
+
 		zmanimList.add( getZmanim( location, Zmanim.Type.Chatzot ) );
 		zmanimList.add( getZmanim( location, Zmanim.Type.MinchaGedola ) );
 		zmanimList.add( getZmanim( location, Zmanim.Type.MinchaKetana ) );

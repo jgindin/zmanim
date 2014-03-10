@@ -149,7 +149,7 @@ class ZmanimDisplay {
 
 		// TODO: Rather than creating a new ListAdapter *every* time, it seems that  we ought to be
 		// TODO:  able to update and reuse...
-		return new ListAdapter( zmanimActivity, zmanimToDisplay );
+		return new ListAdapter( zmanimActivity, Arrays.asList( zmanimToDisplay ) );
 	}
 
 
@@ -213,7 +213,7 @@ class ZmanimDisplay {
 
 		private ListAdapter(
 			Context context,
-			Zman[]  zmanim
+			List<Zman>  zmanim
 		) {
 			super( context, zmanim );
 		}

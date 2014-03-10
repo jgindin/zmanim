@@ -62,75 +62,7 @@ public class ZmanimFactory {
 				return zmanim;
 			}
 
-			switch ( type ) {
-				case Alot:
-					zmanim = new AlotHashachar( zmanimCalculator );
-					break;
-
-				case Talit:
-					zmanim = new Talit( zmanimCalculator );
-					break;
-
-				case Hanetz:
-					zmanim = new Hanetz( zmanimCalculator );
-					break;
-
-				case SofZmanShema:
-					zmanim = new SofZmanShema( zmanimCalculator );
-					break;
-
-				case SofZmanTefila:
-					zmanim = new SofZmanTefila( zmanimCalculator );
-					break;
-
-				case Chatzot:
-					zmanim = new Chatzot( zmanimCalculator );
-					break;
-
-				case MinchaGedola:
-					zmanim = new MinchaGedola( zmanimCalculator );
-					break;
-
-				case MinchaKetana:
-					zmanim = new MinchaKetana( zmanimCalculator );
-					break;
-
-				case PlagHaMincha:
-					zmanim = new PlagHaMincha( zmanimCalculator );
-					break;
-
-				case CandleLighting:
-					zmanim = new CandleLighting( zmanimCalculator );
-					break;
-
-				case Shkia:
-					zmanim = new Shkia( zmanimCalculator );
-					break;
-
-				case BeinHashmashot:
-					zmanim = new BeinHashmashot( zmanimCalculator );
-					break;
-
-				case LatestMincha:
-					zmanim = new LatestMincha( zmanimCalculator );
-					break;
-
-				case FastEnd:
-					zmanim = new FastEnds( zmanimCalculator );
-					break;
-
-				case TzaitHacochavim:
-					zmanim = new TzaitHacochavim( zmanimCalculator );
-					break;
-
-				case ShabbatEnd:
-					zmanim = new ShabbatEnds( zmanimCalculator );
-					break;
-
-				case NightChatzot:
-					zmanim = new NightChatzot( zmanimCalculator );
-			}
-
+			zmanim = type.get( zmanimCalculator );
 			typeToZmanimMap.put( type, zmanim );
 			return zmanim;
 		}
