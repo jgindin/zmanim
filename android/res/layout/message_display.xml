@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2009. Jay R. Gindin
+  ~ Copyright (c) 2014. Jay R. Gindin
   -->
 
 <LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/layout_root"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
-	xmlns:android="http://schemas.android.com/apk/res/android"
 	>
 	
 	<WebView
-		android:id="@+id/about_text"
+		android:id="@+id/message_display"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 	>

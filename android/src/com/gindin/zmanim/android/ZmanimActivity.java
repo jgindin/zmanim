@@ -24,6 +24,7 @@ import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
@@ -84,6 +85,9 @@ public class ZmanimActivity
 	private ListView                                          listView;
 
 	private SecularDatePicker                                 secularDatePicker = new SecularDatePicker( dateChangedEventManager );
+
+	private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
+
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -537,10 +541,8 @@ public class ZmanimActivity
 				return secularDatePicker.create( this );
 
 			case R.id.about:
-				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text );
-
 			case R.id.help:
-				return createHtmlTextDialog( R.string.help_header, R.layout.help, R.id.help_text );
+				return messageDisplayer.getInstance( this );
 
 			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
 				return createEnableLocationSourcesDialog();
@@ -562,52 +564,18 @@ public class ZmanimActivity
 				secularDatePicker.changeDate( currentDate );
 				break;
 
+			case R.id.about:
+				messageDisplayer.update( R.string.about_header, "com/gindin/zmanim/android/about.html" );
+				break;
+
+			case R.id.help:
+				messageDisplayer.update( R.string.help_header, "com/gindin/zmanim/android/help.html" );
+				break;
+
 			default:
 				// nothing for the other dialogs.
 		}
 	}
-
-
-	private Dialog createHtmlTextDialog(
-		int   titleResource,
-	  int   layoutResource,
-	  int   webviewId
-	) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder( this );
-		builder.setTitle( titleResource );
-
-		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
-		View layout = inflater.inflate( layoutResource, null );
-
-		WebView helpText = (WebView)layout.findViewById( webviewId );
-		final String textLocation = getTextLocation( webviewId );
-		helpText.loadUrl( "file:///android_asset/" + textLocation );
-
-		builder.setView( layout );
-		return builder.create();
-	}
-
-
-	private String getTextLocation( int webviewId ) {
-
-
-		if ( R.id.help_text == webviewId ) {
-			return "com/gindin/zmanim/android/help.html";
-		}
-
-		if ( R.id.about_text == webviewId ) {
-			return "com/gindin/zmanim/android/about.html";
-		}
-
-		if ( R.id.enable_locations_text == webviewId ) {
-			return "com/gindin/zmanim/android/enable_locations.html";
-		}
-
-		return null;
-	}
-
-
 
 
 	private Dialog createEnableLocationSourcesDialog() {
@@ -619,8 +587,7 @@ public class ZmanimActivity
 		View layout = inflater.inflate( R.layout.enable_locations, null );
 
 		WebView helpText = (WebView)layout.findViewById( R.id.enable_locations_text );
-		final String textLocation = getTextLocation( R.id.enable_locations_text );
-		helpText.loadUrl( "file:///android_asset/" + textLocation );
+		helpText.loadUrl( "file:///android_asset/" + "com/gindin/zmanim/android/enable_locations.html" );
 
 		builder.setPositiveButton( R.string.unable_to_determine_location_button,
 			new DialogInterface.OnClickListener() {

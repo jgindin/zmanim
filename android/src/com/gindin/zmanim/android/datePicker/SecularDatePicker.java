@@ -47,14 +47,12 @@ public class SecularDatePicker {
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	public Dialog changeDate(
+	public void changeDate(
 		HebrewDate  hebrewDate
 	) {
 
 		lastDisplayedDate = hebrewDate;
 		secularDatePicker.updateDate( hebrewDate.getGregorianYear(), hebrewDate.getGregorianMonth(), hebrewDate.getGregorianDayOfMonth() );
-
-		return secularDatePicker;
 	}
 
 
