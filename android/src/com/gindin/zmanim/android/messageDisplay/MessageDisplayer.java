@@ -18,9 +18,9 @@ import com.gindin.zmanim.android.R;
 public class MessageDisplayer {
 
 
-	private AlertDialog                                       messageDialog;
+	protected AlertDialog                                     messageDialog;
 
-	private WebView helpTextView;
+	private WebView                                           helpTextView;
 
 
 	public Dialog getInstance(
@@ -41,12 +41,18 @@ public class MessageDisplayer {
 		View layout = inflater.inflate( R.layout.message_display, null );
 		helpTextView = (WebView)layout.findViewById( R.id.message_display );
 
+		customize( builder );
+
 		builder.setView( layout );
 
 		messageDialog = builder.create();
 		return messageDialog;
 	}
 
+
+	protected void customize( AlertDialog.Builder builder ) {
+		// Nothing
+	}
 
 
 	public void update(

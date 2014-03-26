@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
-import android.webkit.WebView;
 import android.widget.*;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
@@ -25,6 +24,7 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
+import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
@@ -86,7 +86,11 @@ public class ZmanimActivity
 
 	private SecularDatePicker                                 secularDatePicker = new SecularDatePicker( dateChangedEventManager );
 
+	// TODO: Inject this
 	private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
+
+	// TODO: Inject this
+	private MessageDisplayerOneButton                         messageDisplayerOneButton = new MessageDisplayerOneButton();
 
 
 
@@ -545,7 +549,7 @@ public class ZmanimActivity
 				return messageDisplayer.getInstance( this );
 
 			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
-				return createEnableLocationSourcesDialog();
+				return messageDisplayerOneButton.getInstance( this );
 		}
 
 		return null;
@@ -572,40 +576,22 @@ public class ZmanimActivity
 				messageDisplayer.update( R.string.help_header, "com/gindin/zmanim/android/help.html" );
 				break;
 
+			case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
+			  messageDisplayerOneButton.update( R.string.unable_to_determine_location_header,
+				  "com/gindin/zmanim/android/enable_locations.html", R.string.unable_to_determine_location_button,
+				  new DialogInterface.OnClickListener() {
+					  @Override public void onClick( DialogInterface dialog, int button ) {
+							// Launch the correct settings screen for the user. Saw this example from:
+							//  http://stackoverflow.com/questions/623225/android-go-to-settings-screen
+							startActivityForResult( new Intent( android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS ),
+								Activities.ENABLE_LOCATION_SERVICES.ordinal() );
+						}
+					}
+			  );
+
 			default:
 				// nothing for the other dialogs.
 		}
-	}
-
-
-	private Dialog createEnableLocationSourcesDialog() {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder( this );
-		builder.setTitle( R.string.unable_to_determine_location_header );
-
-		LayoutInflater inflater = (LayoutInflater)getSystemService( LAYOUT_INFLATER_SERVICE );
-		View layout = inflater.inflate( R.layout.enable_locations, null );
-
-		WebView helpText = (WebView)layout.findViewById( R.id.enable_locations_text );
-		helpText.loadUrl( "file:///android_asset/" + "com/gindin/zmanim/android/enable_locations.html" );
-
-		builder.setPositiveButton( R.string.unable_to_determine_location_button,
-			new DialogInterface.OnClickListener() {
-				public void onClick(
-					DialogInterface dialogInterface,
-					int             buttonId
-				) {
-
-					// Launch the correct settings screen for the user. Saw this example from:
-					//  http://stackoverflow.com/questions/623225/android-go-to-settings-screen
-					startActivityForResult( new Intent( android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS ),
-						Activities.ENABLE_LOCATION_SERVICES.ordinal() );
-				}
-			}
-		);
-
-		builder.setView( layout );
-		return builder.create();
 	}
 
 
