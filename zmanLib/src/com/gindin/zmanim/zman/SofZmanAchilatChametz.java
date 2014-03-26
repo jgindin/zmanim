@@ -51,7 +51,7 @@ public class SofZmanAchilatChametz
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanAchilatChametz, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanTfilaGRA();
+					return zmanimCalculator.getSofZmanAchilasChametzGRA();
 				}
 			}
 		);
@@ -83,7 +83,7 @@ public class SofZmanAchilatChametz
 		zmanim.add(
 			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanAchilatChametz, false ) {
 				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanTfilaMGA16Point1Degrees();
+					return zmanimCalculator.getSofZmanAchilasChametzMGA16Point1Degrees();
 				}
 			}
 		);
@@ -96,12 +96,10 @@ public class SofZmanAchilatChametz
 			}
 		);
 
-//		SofZmanAchilatChametz.addZman( zmanimCalculator.getSofZmanTfilaMGA72Minutes(), "", "" );
-
 		zmanim.add(
 			new Zman( "MG'A 72 Minutes Zmaniyot", "Based on alot being 72 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanAchilatChametz ) {
 				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanTfilaMGA72MinutesZmanis();
+					return zmanimCalculator.getSofZmanAchilasChametzMGA72Minutes();
 				}
 			}
 		);
