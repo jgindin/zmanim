@@ -114,7 +114,7 @@ public class LogUtils {
 		Pair<String, String>... moreInfo
 	) {
 
-		String stackTrace = exceptionToString( error );
+		String stackTrace = ( null == error ? null: exceptionToString( error ) );
 
 		String curLocation;
 		if ( null != locationManager ) {
@@ -133,7 +133,10 @@ public class LogUtils {
 			messages.add( new Pair<String, String>( "Where", where ) );
 			messages.add( new Pair<String, String>( "Message", message ) );
 			messages.add( new Pair<String, String>( "Location", curLocation ) );
-			messages.add( new Pair<String, String>( "Stack", stackTrace ) );
+			if ( null != error ) {
+				messages.add( new Pair<String, String>( "Stack", stackTrace ) );
+			}
+
 			if ( null != moreInfo ) {
 				Collections.addAll( messages, moreInfo );
 			}
