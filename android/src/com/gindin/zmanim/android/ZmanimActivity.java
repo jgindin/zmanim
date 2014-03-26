@@ -17,6 +17,9 @@ import android.widget.*;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
 import com.gindin.util.events.EventManager;
+import com.gindin.zmanim.android.datePicker.DateChangeEventManager;
+import com.gindin.zmanim.android.datePicker.DateChangedEvent;
+import com.gindin.zmanim.android.datePicker.SecularDatePicker;
 import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
@@ -73,12 +76,14 @@ public class ZmanimActivity
 
 	private final DateChangeEventManager                      dateChangedEventManager = new DateChangeEventManager();
 
+	private final DateChangedEvent.Listener                   dateChangeListener = new DateChangeListener();
+
 	private ZmanimDisplay                                     zmanimDisplay;
 
 	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
 	private ListView                                          listView;
 
-	private DatePickerDialog                                  datePickerDialog;
+	private SecularDatePicker                                 secularDatePicker = new SecularDatePicker( dateChangedEventManager );
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -144,29 +149,7 @@ public class ZmanimActivity
 		determiningLocationDialog.setIndeterminate( true );
 		determiningLocationDialog.setMessage( "Determining location..." );
 
-		locationListener = new LocationChangedEvent.Listener() {
-
-			@Override public void onProgress( String message ) {
-
-				// If we already have a location, then do not show the dialog...
-				if ( null == locationManager.getCurrentLocation() ) {
-					determiningLocationDialog.setMessage( message );
-					if ( !determiningLocationDialog.isShowing() ) {
-						determiningLocationDialog.show();
-					}
-				}
-			}
-
-			@Override public void onLocationChanged( LocationChangedEvent event ) {
-				rebuildUI( event.getEventInfo(), event.getError() );
-			}
-
-
-			@Override
-			public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
-				updateLocation( event.eventInfo );
-			}
-		};
+		locationListener = new LocationChangedListener();
 
 		initializeActivity();
 	}
@@ -179,11 +162,9 @@ public class ZmanimActivity
 		locationManager = new ZmanimLocationManager( ZmanimActivity.this );
 		LogUtils.setLocationHandler( locationManager );
 
-		setupViewListeners();
+		dateChangedEventManager.addListener( dateChangeListener );
 
-		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
-		// Note that it *must* be run on the UI thread...
-		gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
+		setupViewListeners();
 
 		// Now start listening for location changes...
 		locationManager.addLocationChangeListener( locationListener );
@@ -223,6 +204,8 @@ public class ZmanimActivity
 		if ( null != locationManager ) {
 			locationManager.onStop();
 		}
+
+		dateChangedEventManager.removeListener( dateChangeListener );
 
 		determiningLocationDialog.dismiss();
 		super.onStop();
@@ -492,6 +475,10 @@ public class ZmanimActivity
 
 		View listing = findViewById( android.R.id.list );
 		listing.setOnTouchListener( touchListener );
+
+		// How to make this gesture stuff work? See http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+		// Note that it *must* be run on the UI thread...
+		gestureDetector = new GestureDetector( ZmanimActivity.this, new ZmanimGestureListener() );
 	}
 
 
@@ -547,7 +534,7 @@ public class ZmanimActivity
 
 		switch ( dialogID ) {
 			case R.id.secular_date:
-				return getSecularDatePickerDialog();
+				return secularDatePicker.create( this );
 
 			case R.id.about:
 				return createHtmlTextDialog( R.string.about_header, R.layout.about, R.id.about_text );
@@ -560,6 +547,24 @@ public class ZmanimActivity
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected void onPrepareDialog(
+		int     dialogID,
+		Dialog  dialog
+	) {
+		super.onPrepareDialog( dialogID, dialog );
+
+		switch ( dialogID ) {
+			case R.id.secular_date:
+				secularDatePicker.changeDate( currentDate );
+				break;
+
+			default:
+				// nothing for the other dialogs.
+		}
 	}
 
 
@@ -603,40 +608,6 @@ public class ZmanimActivity
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	private Dialog getSecularDatePickerDialog() {
-
-		if ( null == datePickerDialog ) {
-
-			final DatePickerDialog.OnDateSetListener dateChangedListener = new DatePickerDialog.OnDateSetListener() {
-				public void onDateSet(
-					DatePicker datePicker,
-					int year,
-					int month,
-					int date
-				) {
-
-					// Seems like this callback gets invoked multiple times. That's bad...we don't want to do all the work
-					//  involved in changing dates if we're not actually changing dates...
-					if ( ( currentDate.getGregorianYear() != year ) ||
-							 ( currentDate.getGregorianMonth() != month ) ||
-							 ( currentDate.getGregorianDayOfMonth() != date ) ) {
-
-						changeDate( HebrewCalendar.getForDate( year, month, date ) );
-					}
-				}
-			};
-
-			datePickerDialog = new DatePickerDialog( this, dateChangedListener, currentDate.getGregorianYear(),
-				currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
-		}
-		else {
-			datePickerDialog.updateDate( currentDate.getGregorianYear(),
-				currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
-		}
-
-		return datePickerDialog;
-	}
 
 
 	private Dialog createEnableLocationSourcesDialog() {
@@ -722,15 +693,6 @@ public class ZmanimActivity
 	}
 
 
-	private void changeDate( HebrewDate newDate ) {
-		currentDate = newDate;
-		dateChangedEventManager.fire( new DateChangedEvent( newDate ) );
-
-		// todo: should we have a date change listener to do this???
-		updateHeader( locationManager.getLastKnownLocation() );
-	}
-
-
 	private class ZmanimGestureListener
 		extends GestureDetector.SimpleOnGestureListener {
 
@@ -756,10 +718,10 @@ public class ZmanimActivity
 
 			if ( Math.abs( xVelocity ) > Math.abs( yVelocity ) ) {
 				if ( xDiff > 0 ) {
-					changeDate( currentDate.tomorrow() );
+					dateChangedEventManager.fire( new DateChangedEvent( currentDate.tomorrow() ) );
 				}
 				else {
-					changeDate( currentDate.yesterday() );
+					dateChangedEventManager.fire( new DateChangedEvent( currentDate.yesterday() ) );
 				}
 
 				return true;
@@ -857,22 +819,40 @@ public class ZmanimActivity
 	}
 
 
-	private static class DateChangeEventManager
-		extends EventManager<DateChangedEvent.Listener, HebrewDate, DateChangedEvent> {
+	private class DateChangeListener
+		implements DateChangedEvent.Listener {
 
 		@Override
-		protected void dispatch(
-			DateChangedEvent.Listener listener,
-			DateChangedEvent event
-		) {
-			listener.onDateChanged( event );
-		}
-
-
-		@Override
-		protected void handleException( Exception e ) {
-			LogUtils.logError( "date change dispatch", e.getMessage(), e );
+		public void onDateChanged( DateChangedEvent event ) {
+			currentDate = event.eventInfo;
+			updateHeader( locationManager.getLastKnownLocation() );
 		}
 	}
 
+
+	private class LocationChangedListener
+		implements LocationChangedEvent.Listener {
+
+		@Override public void onProgress( String message ) {
+
+			// If we already have a location, then do not show the dialog...
+			if ( null == locationManager.getCurrentLocation() ) {
+				determiningLocationDialog.setMessage( message );
+				if ( !determiningLocationDialog.isShowing() ) {
+					determiningLocationDialog.show();
+				}
+			}
+		}
+
+
+		@Override public void onLocationChanged( LocationChangedEvent event ) {
+			rebuildUI( event.getEventInfo(), event.getError() );
+		}
+
+
+		@Override
+		public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
+			updateLocation( event.eventInfo );
+		}
+	}
 }  // End of ZmanimActivity class

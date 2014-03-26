@@ -2,7 +2,7 @@
  * Copyright (c) 2012. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.datePicker;
 
 import com.gindin.util.events.AbstractEvent;
 import com.gindin.zmanim.calendar.HebrewDate;

@@ -6,6 +6,7 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
+import com.gindin.zmanim.android.datePicker.DateChangedEvent;
 import com.gindin.zmanim.android.location.LocationChangedEvent;
 import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
