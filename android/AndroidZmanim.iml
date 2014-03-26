@@ -4,7 +4,6 @@
     <facet type="android" name="Android">
       <configuration>
         <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
-        <resOverlayFolders />
       </configuration>
     </facet>
   </component>
