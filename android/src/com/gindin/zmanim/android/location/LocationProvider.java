@@ -40,9 +40,6 @@ abstract class LocationProvider {
 	/** Who's listening for our events? */
 	private final List<Listener>                              listeners = new ArrayList<Listener>();
 
-	/** Translates from latitude & longitude to a location name, and vice-versa. */
-	protected final Geocoder                                  geocoder;
-
 	/** Everyone wants to see what preferences have been set. */
 	protected final SharedPreferences                         locationManagementPrefs;
 
@@ -55,8 +52,6 @@ abstract class LocationProvider {
 
 		this.activity = activity;
 		this.locationManagementPrefs = locationManagementPrefs;
-
-		geocoder = new Geocoder( activity );
 	}
 
 
@@ -233,7 +228,8 @@ abstract class LocationProvider {
 
 				Address address;
 				try {
-					final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
+					Geocoder geocoder = new Geocoder( activity );
+					final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 5 );
 
 					if ( ( null != addresses ) && !addresses.isEmpty() ) {
 						address = addresses.get( 0 );

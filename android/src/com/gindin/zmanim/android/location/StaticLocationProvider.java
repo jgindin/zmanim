@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.location;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,6 +80,7 @@ class StaticLocationProvider
 				protected List<Address> doInBackground( String... places ) {
 
 					try {
+						Geocoder geocoder = new Geocoder( activity );
 						return geocoder.getFromLocationName( places[ 0 ], 5 );
 					}
 					catch ( IOException ioe ) {
@@ -91,32 +93,30 @@ class StaticLocationProvider
 						return null;
 					}
 				}
+
+
+				@Override
+				protected void onPostExecute( List<Address> addresses ) {
+					super.onPostExecute( addresses );
+					if ( ( null != addresses ) && !addresses.isEmpty() ) {
+						final Address address = addresses.get( 0 );
+
+						ourLocation.setTime( System.currentTimeMillis() );
+						ourLocation.setLongitude( address.getLongitude() );
+						ourLocation.setLatitude( address.getLatitude() );
+
+						Bundle extras = ourLocation.getExtras();
+						if ( null == extras ) {
+							extras = new Bundle();
+							extras.putParcelable( ADDRESS, address );
+						}
+
+						ourLocation.setExtras( extras );
+					}
+				}
 			};
 
 			lookupPlaceTask.execute( place );
-			List<Address> addresses;
-			try {
-				addresses = lookupPlaceTask.get();
-			}
-			catch ( Exception e ) {
-				addresses = null;
-			}
-
-			if ( ( null != addresses ) && !addresses.isEmpty() ) {
-				final Address address = addresses.get( 0 );
-
-				ourLocation.setTime( System.currentTimeMillis() );
-				ourLocation.setLongitude( address.getLongitude() );
-				ourLocation.setLatitude( address.getLatitude() );
-
-				Bundle extras = ourLocation.getExtras();
-				if ( null == extras ) {
-					extras = new Bundle();
-					extras.putParcelable( ADDRESS, address );
-				}
-
-				ourLocation.setExtras( extras );
-			}
 		}
 		else {
 			fireError( new LocationError( LocationError.Code.BAD_INPUT, "Invalid place: " + place ) );
