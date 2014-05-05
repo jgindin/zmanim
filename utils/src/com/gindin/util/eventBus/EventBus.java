@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * Roughly based on the event bus from GWT.
  */
-public class EventBus {
+public final class EventBus {
 
 	/** The registered handlers, keyed by the event they're interested in. */
 	private final HandlerCollection                           handlerCollection = new HandlerCollection();
@@ -75,6 +75,8 @@ public class EventBus {
 
 	public <E extends Event<H>, H extends EventHandler<E>> void addHandler( H handler, boolean withCatchup ) {
 
+		assert null != handler;
+
 		if ( null == inProgressEvent ) {
 			actuallyAddHandler( handler, withCatchup );
 		}
@@ -91,6 +93,8 @@ public class EventBus {
 	 */
 	public <E extends Event<H>, H extends EventHandler<E>> void removeHandler( H handler ) {
 
+		assert handler != null;
+
 		if ( null == inProgressEvent ) {
 			List<H> handlers = handlerCollection.get( handler.getAssociatedType() );
 			handlers.remove( handler );
@@ -102,6 +106,8 @@ public class EventBus {
 
 
 	public <H extends EventHandler, E extends Event<H>> void fire( E event ) {
+
+		assert null != event;
 
 		if ( null == inProgressEvent ) {
 
