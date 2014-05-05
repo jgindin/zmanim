@@ -4,6 +4,8 @@
 
 package com.gindin.util.eventBus;
 
+import com.gindin.util.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +24,37 @@ import java.util.Map;
  * If a handler of event 'a' is added during the firing of an 'a', that handler will not be notified of this event.
  *<p/>
  *
+ * Also adds caching of the most recent event. This allows 'late' handlers to receive "catchup" events if they so desire.
+ *
  * Roughly based on the event bus from GWT.
  */
 public class EventBus {
 
-	/**
-	 * The registered handlers, keyed by the event they're interested in.
-	 */
+	/** The registered handlers, keyed by the event they're interested in. */
 	private final HandlerCollection                           handlerCollection = new HandlerCollection();
 
-	private final HandlerCollection                           postponedHandlersToAdd = new HandlerCollection();
+	/**
+	 * If we're currently firing an event, then we'll queue newly added handlers here, and they will be added
+	 *  after the event is done being dispatched.
+	 */
+	private final List<Pair<EventHandler, Boolean>>           postponedHandlersToAdd = new ArrayList<Pair<EventHandler, Boolean>>();
 
+	/**
+	 * If we're currently firing an event, then we'll queue handlers which have requested to be removed here, and they
+	 *  will be added after the event is done being dispatched.
+	 */
 	private final HandlerCollection                           postponedHandlersToRemove = new HandlerCollection();
 
+	/**
+	 * If we're currently firing an event, then we'll queue newly fired events here, and they will be fired, in the order
+	 *  they were received, after the current event is done being dispatched.
+	 */
 	private final List<Event<?>>                              postponedEvents = new ArrayList<Event<?>>();
+
+	/**
+	 * A cache of the most recently fired event for a given event type.
+	 */
+	private final EventCache                                  eventCache = new EventCache();
 
 	/**
 	 * When we're actively firing an event, this will be set. Used to ensure that (a) handler add/removes only happen
@@ -44,17 +63,32 @@ public class EventBus {
 	private Event<?>                                          inProgressEvent = null;
 
 
+	/**
+	 * Adds the specified handler. If an event of this handler's type is currently being fired, the newly added handler
+	 *  will NOT get this event.
+	 */
 	public <E extends Event<H>, H extends EventHandler<E>> void addHandler( H handler ) {
 
+		addHandler( handler, false );
+	}
+
+
+	public <E extends Event<H>, H extends EventHandler<E>> void addHandler( H handler, boolean withCatchup ) {
+
 		if ( null == inProgressEvent ) {
-			handlerCollection.put( handler, handler.getAssociatedType() );
+			actuallyAddHandler( handler, withCatchup );
 		}
 		else {
-			postponedHandlersToAdd.put( handler, handler.getAssociatedType() );
+			//noinspection AutoBoxing
+			postponedHandlersToAdd.add( new Pair<EventHandler, Boolean>( handler, withCatchup ) );
 		}
 	}
 
 
+	/**
+	 * Removes the specified handler. If an event of this handler's type is currently being fired, this handler may
+	 *  still receive the event.
+	 */
 	public <E extends Event<H>, H extends EventHandler<E>> void removeHandler( H handler ) {
 
 		if ( null == inProgressEvent ) {
@@ -91,6 +125,8 @@ public class EventBus {
 			}
 		}
 
+		eventCache.put( (Class<Event>)event.getClass(), event );
+
 		inProgressEvent = null;
 	}
 
@@ -98,7 +134,10 @@ public class EventBus {
 	private void handlePostponed() {
 
 		// First, add/remove handlers...
-		handlerCollection.putAll( postponedHandlersToAdd );
+		for ( Pair<EventHandler, Boolean> pair : postponedHandlersToAdd ) {
+			//noinspection AutoUnboxing
+			actuallyAddHandler( pair.first, pair.second );
+		}
 		postponedHandlersToAdd.clear();
 
 		handlerCollection.removeAll( postponedHandlersToRemove );
@@ -132,8 +171,23 @@ public class EventBus {
 	}
 
 
+	private <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
+
+		handlerCollection.put( handler, handler.getAssociatedType() );
+		if ( withCatchup ) {
+			E cachedEvent = eventCache.get( handler.getAssociatedType() );
+			if ( cachedEvent != null ) {
+				cachedEvent.dispatch( handler );
+			}
+		}
+	}
+
+
+
 	/**
-	 * Type-safe heterogeneous container. See Effective Java, 2nd ed.
+	 * Type-safe heterogeneous container, associating an event type with the handlers for that type..
+	 *
+	 * See Effective Java, 2nd ed.
 	 */
 	private static class HandlerCollection {
 
@@ -141,7 +195,7 @@ public class EventBus {
 		 * The actual, non-type safe map. The keys are the event class, and the values are a list of handlers for that
 		 *  event type.
 		 */
-		private final Map<Class<?>, List<? extends EventHandler>>   handlerMap = new HashMap<Class<?>, List<? extends EventHandler>>();
+		private final Map<Class<? extends Event>, List<? extends EventHandler>>   handlerMap = new HashMap<Class<? extends Event>, List<? extends EventHandler>>();
 
 
 		public <H extends EventHandler, E extends Event<H>> void put( H handler, Class<E> eventType ) {
@@ -176,14 +230,10 @@ public class EventBus {
 			return handlerMap.isEmpty();
 		}
 
-		public void putAll( HandlerCollection source ) {
-			handlerMap.putAll( source.handlerMap );
-		}
-
 
 		public void removeAll( HandlerCollection source ) {
 
-			for ( Map.Entry<Class<?>, List<? extends EventHandler>> entry : source.handlerMap.entrySet() ) {
+			for ( Map.Entry<Class<? extends Event>, List<? extends EventHandler>> entry : source.handlerMap.entrySet() ) {
 
 				List<? extends EventHandler> handlers = handlerMap.get( entry.getKey() );
 				if ( null != handlers ) {
@@ -193,5 +243,31 @@ public class EventBus {
 		}
 	}
 
+
+
+	/**
+	 * Type-safe heterogeneous container, associating an event type with the most recent event for that type..
+	 *
+	 * See Effective Java, 2nd ed.
+	 */
+	private static class EventCache {
+
+		/**
+		 * The actual, non-type safe map. The keys are the event class, and the value is the most recent event for that
+		 *  event type.
+		 */
+		private final Map<Class<? extends Event>, Event>        eventCache = new HashMap<Class<? extends Event>, Event>();
+
+
+		public <H extends EventHandler, E extends Event<H>> void put( Class<E> eventType, E cache ) {
+			eventCache.put( eventType, cache );
+		}
+
+
+		public <H extends EventHandler, E extends Event<H>> E get( Class<E> eventType ) {
+			//noinspection unchecked
+			return (E)eventCache.get( eventType );
+		}
+	}
 
 } // End of EventBus class

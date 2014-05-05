@@ -209,6 +209,33 @@ public class UT_EventBus {
 	}
 
 
+	@Test
+	public void addHandlerWithCatchup() {
+
+		final List<EventHandler> handlersInOrder = new ArrayList<EventHandler>();
+
+		final Event1.Handler handler1 = new Event1.Handler() {
+			@Override
+			void onEvent1() {
+				handlersInOrder.add( this );
+			}
+		};
+		eventBus.addHandler( handler1 );
+
+		Event1 event1 = new Event1();
+		eventBus.fire( event1 );
+
+		final Event1.Handler handler2 = new Event1.Handler() {
+			@Override
+			void onEvent1() {
+				handlersInOrder.add( this );
+			}
+		};
+		eventBus.addHandler( handler2, true );
+
+		Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
+		Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
+	}
 
 
 	private static class Event1 extends Event<Event1.Handler> {
