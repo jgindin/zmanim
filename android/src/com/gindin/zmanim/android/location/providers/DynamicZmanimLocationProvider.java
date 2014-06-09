@@ -57,8 +57,8 @@ import java.util.TimerTask;
  *    asking the location providers for a fix, we kick off a timer. If that time actually expires, then if we did receive
  *    a fix from some other location provider, we'll use that. Otherwise, we'll fire an error.
  */
-class DynamicLocationProvider
-	extends LocationProvider {
+class DynamicZmanimLocationProvider
+	extends ZmanimLocationProvider {
 
 
 	private final LocationManager                             locationManager;
@@ -84,7 +84,7 @@ class DynamicLocationProvider
 	private boolean                                           preferGPS;
 
 
-	DynamicLocationProvider(
+	DynamicZmanimLocationProvider(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs,
 		LocationManager   locationManager

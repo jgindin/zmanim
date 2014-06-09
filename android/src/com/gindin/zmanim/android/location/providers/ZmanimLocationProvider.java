@@ -26,14 +26,14 @@ import java.util.TimeZone;
  *<p/>
  *  If, for any reason, the acquisition is to be canceled, cancel() will handle that.
  */
-public abstract class LocationProvider {
+public abstract class ZmanimLocationProvider {
 
 	protected final EventBus                                  eventBus;
 
 	protected final SharedPreferences                         locationManagementPrefs;
 
 
-	protected LocationProvider(
+	protected ZmanimLocationProvider(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {

@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.android.location;
 
-import com.gindin.zmanim.android.location.providers.LocationProvider;
+import com.gindin.zmanim.android.location.providers.ZmanimLocationProvider;
 import com.gindin.zmanim.android.location.providers.LocationProviderFactory;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
@@ -32,7 +32,7 @@ public class ZmanimLocationManager {
 	private final LocationProviderFactory                     locationProviderFactory;
 
 	/** Which provider are we currently using? */
-	private LocationProvider                                  currentProvider;
+	private ZmanimLocationProvider                            currentProvider;
 
 
 	public ZmanimLocationManager(

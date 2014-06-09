@@ -31,7 +31,7 @@ public class LocationProviderFactory {
 
 	private final LocationManager                             locationManager;
 
-	private final Map<Type,LocationProvider>                  typeToProviderMap = new HashMap<Type, LocationProvider>();
+	private final Map<Type,ZmanimLocationProvider>            typeToProviderMap = new HashMap<Type, ZmanimLocationProvider>();
 
 
 	public LocationProviderFactory(
@@ -45,21 +45,21 @@ public class LocationProviderFactory {
 	}
 
 
-	public LocationProvider get( Type type ) {
+	public ZmanimLocationProvider get( Type type ) {
 
-		LocationProvider provider = typeToProviderMap.get( type );
+		ZmanimLocationProvider provider = typeToProviderMap.get( type );
 		if ( provider == null ) {
 			switch ( type ) {
 				case FROM_DEVICE:
-					provider = new DynamicLocationProvider( eventBus, locationManagementPrefs, locationManager );
+					provider = new DynamicZmanimLocationProvider( eventBus, locationManagementPrefs, locationManager );
 					break;
 
 				case LAT_LONG_FROM_USER:
-					provider = new LatitudeLongitudeLocationProvider( eventBus, locationManagementPrefs );
+					provider = new LatitudeLongitudeZmanimLocationProvider( eventBus, locationManagementPrefs );
 					break;
 
 				case NAME_FROM_USER:
-					provider = new StaticLocationProvider( eventBus, locationManagementPrefs );
+					provider = new StaticZmanimLocationProvider( eventBus, locationManagementPrefs );
 					break;
 
 				default:
