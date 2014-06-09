@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location.providers;
+package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.prefs.LocationProviders;
@@ -26,14 +26,14 @@ import java.util.TimeZone;
  *<p/>
  *  If, for any reason, the acquisition is to be canceled, cancel() will handle that.
  */
-public abstract class ZmanimLocationProvider {
+public abstract class ZmanimLocationAcquirer {
 
 	protected final EventBus                                  eventBus;
 
 	protected final SharedPreferences                         locationManagementPrefs;
 
 
-	protected ZmanimLocationProvider(
+	protected ZmanimLocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {

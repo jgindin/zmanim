@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location.providers;
+package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.util.location.LatitudeLongitudeParser;
@@ -19,11 +19,11 @@ import java.util.TimeZone;
 /**
  * Location provider that deals with a static latitude & longitude location.
  */
-class LatitudeLongitudeZmanimLocationProvider
-	extends ZmanimLocationProvider {
+public class LatitudeLongitudeZmanimLocationAcquirer
+	extends ZmanimLocationAcquirer {
 
 
-	LatitudeLongitudeZmanimLocationProvider(
+	public LatitudeLongitudeZmanimLocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {

@@ -11,9 +11,11 @@ import com.gindin.util.eventBus.EventBus;
 import com.gindin.util.events.EventManager;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.datePicker.SecularDatePicker;
-import com.gindin.zmanim.android.location.*;
-import com.gindin.zmanim.android.location.providers.LocationProviderFactory;
-import com.gindin.zmanim.android.location.providers.LocationToAddressConverter;
+import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.location.acquirers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.*;
@@ -200,8 +202,7 @@ public class ZmanimActivity
 
 		SharedPreferences sharedPreferences = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-		locationManager = new ZmanimLocationManager( sharedPreferences,
-			new LocationProviderFactory( eventBus, sharedPreferences, systemLocationManager ) );
+		locationManager = new ZmanimLocationManager( eventBus, sharedPreferences, systemLocationManager );
 
 		setupViewListeners();
 

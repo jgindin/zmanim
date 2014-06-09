@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location.providers;
+package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;

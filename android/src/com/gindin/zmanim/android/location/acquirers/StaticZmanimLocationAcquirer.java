@@ -2,7 +2,7 @@
  * Copyright (c) 2010. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location.providers;
+package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
@@ -14,11 +14,11 @@ import android.content.SharedPreferences;
 /**
  * Location provider which uses a place name like "5217 South Brandon St., Seattle, WA" to determine the Zmanim.
  */
-class StaticZmanimLocationProvider
-	extends ZmanimLocationProvider {
+public class StaticZmanimLocationAcquirer
+	extends ZmanimLocationAcquirer {
 
 
-	StaticZmanimLocationProvider(
+	public StaticZmanimLocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {
