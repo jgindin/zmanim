@@ -106,12 +106,6 @@ public class LocationProviderPreferences
 			CheckBoxPreference preferCachedLocation = (CheckBoxPreference)findPreference( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name() );
 			category.removePreference( preferCachedLocation );
 		}
-	}
-
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 
 		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
 		prefsBeforeEditing = prefs.getAll();
@@ -119,8 +113,7 @@ public class LocationProviderPreferences
 
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	public void onBackPressed() {
 
 		boolean changed = false;
 
@@ -130,6 +123,9 @@ public class LocationProviderPreferences
 		}
 
 		setResult( changed ? RESULT_OK : RESULT_CANCELED );
+		finish();
+
+		super.onBackPressed();
 	}
 
 
