@@ -6,9 +6,7 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
-import com.gindin.util.Version;
 import com.gindin.util.eventBus.EventBus;
-import com.gindin.util.events.EventManager;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.datePicker.SecularDatePicker;
 import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
@@ -180,9 +178,6 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
-
-		//noinspection AssignmentToStaticFieldFromInstanceMethod
-		EventManager.performListenerChecks = Version.isDevelopment();
 
 		personalPrefsManager = new PersonalPrefsManager( this );
 
