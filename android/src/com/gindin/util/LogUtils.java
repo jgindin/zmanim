@@ -4,28 +4,22 @@
 
 package com.gindin.util;
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import com.flurry.android.FlurryAgent;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
-
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
 
 
 /**
  * Wraps our usage of the Flurry analytics agent.
  */
 public class LogUtils {
-
-
-	/** Remember where we are. */
-	private static ZmanimLocationManager                      locationManager;
-
 
 
 	private LogUtils() {
@@ -90,14 +84,6 @@ public class LogUtils {
 
 
 
-	public static void setLocationHandler(
-		ZmanimLocationManager locationManager
-	) {
-
-		LogUtils.locationManager = locationManager;
-	}
-
-	
 	public static void logError(
 		String    where,
 		String    message,
@@ -116,23 +102,14 @@ public class LogUtils {
 
 		String stackTrace = ( null == error ? null: exceptionToString( error ) );
 
-		String curLocation;
-		if ( null != locationManager ) {
-			curLocation = locationManager.getLastKnownLocationString();
-		}
-		else {
-			curLocation = "?";
-		}
-
 		if ( Version.isDevelopment() ) {
-			Log.e( where, "Msg: " + message + "\nLocation: " + curLocation + "\nStack: " + stackTrace );
+			Log.e( where, "Msg: " + message + "\nStack: " + stackTrace );
 		}
 		else {
 
 			List<Pair<String,String>> messages = new ArrayList<Pair<String, String>>();
 			messages.add( new Pair<String, String>( "Where", where ) );
 			messages.add( new Pair<String, String>( "Message", message ) );
-			messages.add( new Pair<String, String>( "Location", curLocation ) );
 			if ( null != error ) {
 				messages.add( new Pair<String, String>( "Stack", stackTrace ) );
 			}
