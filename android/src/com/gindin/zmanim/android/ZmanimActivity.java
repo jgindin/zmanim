@@ -4,30 +4,19 @@
 
 package com.gindin.zmanim.android;
 
-import android.app.*;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.*;
-import android.widget.*;
+import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Version;
+import com.gindin.util.eventBus.EventBus;
 import com.gindin.util.events.EventManager;
-import com.gindin.zmanim.android.datePicker.DateChangeEventManager;
-import com.gindin.zmanim.android.datePicker.DateChangedEvent;
+import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.datePicker.SecularDatePicker;
-import com.gindin.zmanim.android.location.LocationChangedEvent;
-import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.location.*;
+import com.gindin.zmanim.android.location.providers.LocationProviderFactory;
+import com.gindin.zmanim.android.location.providers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
-import com.gindin.zmanim.android.prefs.PersonalPreferences;
-import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
-import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
@@ -35,14 +24,33 @@ import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.*;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Date;
 
 /**
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends Activity
-	implements DateChangedEvent.HasListeners, LocationChangedEvent.HasListeners {
+	extends Activity {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
@@ -50,20 +58,28 @@ public class ZmanimActivity
 	private HebrewDate                                        currentDate;
 
 	/** Controls how we format the zmanim. */
+	// TODO: Inject this
 	private ZmanFormatter                                     zmanFormatter;
 
 	/** How do we format Hebrew & Secular dates? */
+	// TODO: Inject these
 	private HebrewDateFormatter                               hebrewDateFormatter;
 	private SecularDateFormatter                              secularDateFormatter;
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
+	// TODO: Inject this
 	private ZmanimLocationManager                             locationManager;
 
-	private LocationChangedEvent.Listener                     locationListener;
+	private RawLocationAcquiredEvent.Handler                  rawLocationAcquiredHandler;
+	private FullLocationAcquiredEvent.Handler                 fullLocationAcquiredHandler;
 
+	// TODO: Inject this
 	private PersonalPrefsManager                              personalPrefsManager;
+
+	// TODO: Inject this
+	private EventBus                                          eventBus;
 
 
 	/** We use a progress dialog to let the user know we're working. */
@@ -73,18 +89,14 @@ public class ZmanimActivity
 	 * Task used to build the UI. While we're in the process of (re)building the UI, this will be set. As soon as
 	 *  we're done, it's reset to null.
 	 */
-	private AsyncTask<Void, Void, Void>                       buildUITask = null;
-
-	private final DateChangeEventManager                      dateChangedEventManager = new DateChangeEventManager();
-
-	private final DateChangedEvent.Listener                   dateChangeListener = new DateChangeListener();
+	private AsyncTask<LocationError, Void, LocationError>     buildUITask = null;
 
 	private ZmanimDisplay                                     zmanimDisplay;
 
 	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
 	private ListView                                          listView;
 
-	private SecularDatePicker                                 secularDatePicker = new SecularDatePicker( dateChangedEventManager );
+	private SecularDatePicker                                 secularDatePicker;
 
 	// TODO: Inject this
 	private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
@@ -92,6 +104,27 @@ public class ZmanimActivity
 	// TODO: Inject this
 	private MessageDisplayerOneButton                         messageDisplayerOneButton = new MessageDisplayerOneButton();
 
+	private HebrewDateChangedEvent.Handler                    dateChangedHandler;
+
+	private ZmanimLocation                                    lastKnownLocation;
+
+	private LocationToAddressConverter                        locationToAddressConverter;
+
+	/** When the user clicks on the location, they're indicating they want to change it. */
+	private final View.OnClickListener                        locationClickListener = new View.OnClickListener() {
+		public void onClick( View view ) {
+			editLocationProviderPrefs();
+		}
+	};
+
+
+	/** When the user long-clicks on the location, they're indicating they want to see some details about it. */
+	private final View.OnLongClickListener                    locationLongClickListener = new View.OnLongClickListener() {
+		public boolean onLongClick( View view ) {
+			showLocationDetails();
+			return true;
+		}
+	};
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -145,6 +178,8 @@ public class ZmanimActivity
 		super.onCreate( savedInstanceState );
 
 		LogUtils.startSession( this );
+
+		//noinspection AssignmentToStaticFieldFromInstanceMethod
 		EventManager.performListenerChecks = Version.isDevelopment();
 
 		personalPrefsManager = new PersonalPrefsManager( this );
@@ -157,33 +192,31 @@ public class ZmanimActivity
 		determiningLocationDialog.setIndeterminate( true );
 		determiningLocationDialog.setMessage( "Determining location..." );
 
-		locationListener = new LocationChangedListener();
-
-		initializeActivity();
-	}
-
-
-	private void initializeActivity() {
+		eventBus = new EventBus();
+		secularDatePicker = new SecularDatePicker( eventBus );
+		locationToAddressConverter = new LocationToAddressConverter( new Geocoder( this ), eventBus );
 
 		determiningLocationDialog.show();
 
-		locationManager = new ZmanimLocationManager( ZmanimActivity.this );
-		LogUtils.setLocationHandler( locationManager );
-
-		dateChangedEventManager.addListener( dateChangeListener );
+		SharedPreferences sharedPreferences = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
+		locationManager = new ZmanimLocationManager( sharedPreferences,
+			new LocationProviderFactory( eventBus, sharedPreferences, systemLocationManager ) );
 
 		setupViewListeners();
 
+		dateChangedHandler = new HebrewDateChangeHandler();
+
 		// Now start listening for location changes...
-		locationManager.addLocationChangeListener( locationListener );
-	}
+		rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
+		fullLocationAcquiredHandler = new FullLocationAcquiredHandler();
 
+		locationManager.determineLocation();
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		locationManager.onStart();
+		// Let the location manager know about the field that contains the current location.
+		final View locationField = findViewById( R.id.location );
+		locationField.setOnClickListener( locationClickListener );
+		locationField.setOnLongClickListener( locationLongClickListener );
 	}
 
 
@@ -194,26 +227,41 @@ public class ZmanimActivity
 
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+
+
+	@Override
 	protected void onResume() {
 		super.onResume();
+
+		// NOTE: We do NOT want any catchup events...that will throw us off, and have us off acquiring
+		//  locations again when we don't want to...
+		eventBus.addHandler( dateChangedHandler );
+		eventBus.addHandler( rawLocationAcquiredHandler );
+		eventBus.addHandler( fullLocationAcquiredHandler );
 	}
 
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		eventBus.removeHandler( dateChangedHandler );
+		eventBus.removeHandler( rawLocationAcquiredHandler );
+		eventBus.removeHandler( fullLocationAcquiredHandler );
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	protected void onStop() {
 
 		// Might be null if we get stopped before we're fully started...
 		if ( null != locationManager ) {
-			locationManager.onStop();
+			locationManager.cancel();
 		}
-
-		dateChangedEventManager.removeListener( dateChangeListener );
 
 		determiningLocationDialog.dismiss();
 		super.onStop();
@@ -228,14 +276,7 @@ public class ZmanimActivity
 			zmanimDisplay = null;
 		}
 
-		// Might be null if we got stopped before we were fully started...
-		//  Note that since we're going to be destroying the location manager, it had better be the last thing
-		//  of meaning we do in this method.
-		if ( null != locationManager ) {
-			locationManager.removeLocationChangeListener( locationListener );
-			locationManager.onDestroy();
-			locationManager = null;
-		}
+		eventBus.removeHandler( dateChangedHandler );
 
 		LogUtils.endSession( this );
 		
@@ -260,11 +301,13 @@ public class ZmanimActivity
 			case ENABLE_LOCATION_SERVICES:
 				determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 				determiningLocationDialog.show();
-				locationManager.onLocationProvidersChanged();
+				locationManager.determineLocation();
 				break;
 
 			case EDIT_LOCATION_PREFERENCES:
-				locationManager.locationPrefsChanged();
+				if ( resultCode == RESULT_OK ) {
+					locationManager.determineLocation();
+				}
 				break;
 
 			case PERSONAL_PREFERENCS:
@@ -290,27 +333,80 @@ public class ZmanimActivity
 
 
 	public void rebuildUI() {
-		rebuildUI( locationManager.getLastKnownLocation(), null );
+		rebuildUI( lastKnownLocation, null );
 	}
 
 
 	private void rebuildUI(
-		final ZmanimLocation  location,
-	  final LocationError   error
+		ZmanimLocation  location,
+	  LocationError   error
 	) {
+
+		lastKnownLocation = location;
 
 		if ( null != buildUITask ) {
 			buildUITask.cancel( false );
 		}
 
-		buildUITask = new BuildUIAsyncTask( location, error );
-		buildUITask.execute( (Void)null );
+		BaseAsyncClass.Callbacks<LocationError, Void, LocationError> callbacks = new BaseAsyncClass.Callbacks<LocationError, Void, LocationError>() {
+
+			@Override protected void onPreExecute() {
+				super.onPreExecute();
+				determiningLocationDialog.setMessage( getString( R.string.updating_with_new_location ) );
+
+				// Only show the dialog if we don't already have a location. If we do, then it's OK...we'll update
+				//  everything once we've got the new data...
+				if ( ( null == lastKnownLocation ) && !determiningLocationDialog.isShowing() ) {
+					determiningLocationDialog.show();
+				}
+			}
+
+
+			@Override protected LocationError doInBackground( LocationError... params ) {
+				boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
+				zmanFormatter = new ZmanFormatter( showSeconds );
+
+				// Get the date here, but do NOT fire the event...we're on a background thread and that might not be good.
+				currentDate = HebrewCalendar.today();
+				hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
+				secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
+
+				return params[0];
+			}
+
+
+			@Override protected void onPostExecute( LocationError error ) {
+				super.onPostExecute( error );
+				try {
+					super.onPostExecute( error );
+
+					buildHeader();
+					buildFooter( error );
+
+					// Now go ahead and fire the date change event.
+					eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
+
+					if ( null == zmanimDisplay ) {
+						zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, eventBus, zmanFormatter );
+					}
+					else {
+						zmanimDisplay.setZmanFormatter( zmanFormatter );
+					}
+				}
+				finally {
+					// Make sure to clean up!
+					determiningLocationDialog.dismiss();
+					buildUITask = null;
+				}
+			}
+		};
+
+		buildUITask = new BaseAsyncClass<LocationError, Void, LocationError>( callbacks );
+		buildUITask.execute( error );
 	}
 
 
-	private void buildHeader(
-		ZmanimLocation location
-	) {
+	private void buildHeader() {
 
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
 		final View secularDate = findViewById( R.id.secular_date );
@@ -322,14 +418,14 @@ public class ZmanimActivity
 			}
 		);
 
-		updateLocation( location );
+		updateLocationView( lastKnownLocation );
 
 		// Update the header
-		updateHeader( location );
+		updateHeader();
 	}
 
 
-	private void updateLocation( ZmanimLocation location ) {
+	private void updateLocationView( ZmanimLocation location ) {
 
 		final String locationName;
 		if ( null == location ) {
@@ -337,18 +433,6 @@ public class ZmanimActivity
 		}
 		else {
 			locationName = location.getLocationName();
-		}
-
-		// Let the location manager know about the field that contains the current location.
-		final View locationField = findViewById( R.id.location );
-
-		// I'm seeing NPE in the logs, but I have no idea how this can be. It doesn't repro for me, so for now
-		//  the best I can do is to guard against it...
-		if ( null == locationManager ) {
-			LogUtils.logError( "ZmanimActivity::updateLocation", "null location manager. zmanimDisplay?" + zmanimDisplay, null  );
-		}
-		else {
-			locationManager.setLocationField( locationField );
 		}
 
 		// We may not have a location name. In that case, don't do anything. This is a bit of a hack, because we can
@@ -361,7 +445,6 @@ public class ZmanimActivity
 
 
 	private void buildFooter(
-		ZmanimLocation      location,
 		final LocationError error
 	) {
 
@@ -370,14 +453,13 @@ public class ZmanimActivity
 			//displayDebugMessages();
 		}
 		else {
-			handleLocationError( location, error );
+			handleLocationError( error );
 		}
 	}
 
 
 	private void handleLocationError(
-		ZmanimLocation  location,
-		LocationError   error
+		LocationError error
 	) {
 
 		String errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
@@ -400,13 +482,13 @@ public class ZmanimActivity
 			case CANNOT_DETERMINE_LOCATION:
 				extra = getResources().getString( R.string.cannot_determine_location );
 
-				if ( null != location ) {
-					extra += " " + getResources().getString( R.string.last_location_time, new Date( location.locationTime ) ); 
+				if ( null != lastKnownLocation ) {
+					extra += " " + getResources().getString( R.string.last_location_time, new Date( lastKnownLocation.locationTime ) );
 				}
 
 				// TODO: Need to add click listener that will invoke a dialog allowing the user to:
 				//  1. try obtaining location again; or
-				//  2. manually specify where the are
+				//  2. manually specify where they are
 				clickListener = null;
 				break;
 
@@ -450,9 +532,12 @@ public class ZmanimActivity
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private void updateHeader( ZmanimLocation location ) {
+	private void updateHeader() {
 
-		updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, location ) );
+		if ( lastKnownLocation != null ) {
+			updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, lastKnownLocation ) );
+		}
+
 		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
 
 		String description = currentDate.getDescription();
@@ -517,7 +602,7 @@ public class ZmanimActivity
 				break;
 
 			case R.id.location_prefs:
-				locationManager.editLocationPrefs();
+				editLocationProviderPrefs();
 				return true;
 
 			case R.id.about:
@@ -597,7 +682,7 @@ public class ZmanimActivity
 
 	private void refresh() {
 		// This will force us to go re-query for our location.
-		locationManager.onLocationProvidersChanged();
+		locationManager.determineLocation();
 	}
 
 	private void updateField(
@@ -620,30 +705,32 @@ public class ZmanimActivity
 	}
 
 
-	@Override
-	public void addDateChangeListener( DateChangedEvent.Listener listener ) {
-		dateChangedEventManager.addListener( listener );
-		listener.onDateChanged( new DateChangedEvent( currentDate ) );
+	private void editLocationProviderPrefs() {
+		startActivityForResult( new Intent( this, LocationProviderPreferences.class ),
+			Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
 	}
 
 
-	@Override
-	public void removeDateChangeListener( DateChangedEvent.Listener listener ) {
-		dateChangedEventManager.removeListener( listener );
+	private void showLocationDetails() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		builder.setTitle( R.string.current_location_title );
+
+		String locationDetails;
+		if ( lastKnownLocation == null ) {
+			locationDetails = getResources().getString( R.string.unable_to_determine_location_error );
+		}
+		else {
+			locationDetails = lastKnownLocation.toString();
+		}
+
+		builder.setMessage( locationDetails );
+
+		final AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 
-	@Override
-	public void addLocationChangeListener( LocationChangedEvent.Listener listener ) {
-		locationManager.addLocationChangeListener( listener );
-		listener.onLocationChanged( new LocationChangedEvent( locationManager.getLastKnownLocation() ) );
-	}
-
-
-	@Override
-	public void removeLocationChangeListener( LocationChangedEvent.Listener listener ) {
-		locationManager.removeLocationChangeListener( listener );
-	}
 
 
 	private class ZmanimGestureListener
@@ -670,13 +757,15 @@ public class ZmanimActivity
 			}
 
 			if ( Math.abs( xVelocity ) > Math.abs( yVelocity ) ) {
+				HebrewDateChangedEvent event;
 				if ( xDiff > 0 ) {
-					dateChangedEventManager.fire( new DateChangedEvent( currentDate.tomorrow() ) );
+					event = new HebrewDateChangedEvent( currentDate.tomorrow() );
 				}
 				else {
-					dateChangedEventManager.fire( new DateChangedEvent( currentDate.yesterday() ) );
+					event = new HebrewDateChangedEvent( currentDate.yesterday() );
 				}
 
+				eventBus.fire( event );
 				return true;
 			}
 
@@ -686,126 +775,66 @@ public class ZmanimActivity
 	}
 
 
-	/**
-	 * Task used for rebuilding the UI.
-	 */
-	private class BuildUIAsyncTask
-		extends AsyncTask<Void, Void, Void> {
 
-		private final ZmanimLocation                            location;
+	private class HebrewDateChangeHandler
+		extends HebrewDateChangedEvent.Handler {
 
-		private final LocationError                             error;
+		@Override
+		public void onHebrewDateChanged( HebrewDate newDate ) {
+			currentDate = newDate;
+			updateHeader();
+		}
+	}
 
 
-		public BuildUIAsyncTask(
-			ZmanimLocation  location,
-			LocationError   error
+	private class RawLocationAcquiredHandler
+		extends RawLocationAcquiredEvent.Handler {
+
+		@Override
+		public void onLocationAcquired( final ZmanimLocation location ) {
+			runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						rebuildUI( location, null );
+					}
+				}
+			);
+		}
+
+
+		@Override
+		public void onError(
+			final LocationError   error,
+			final ZmanimLocation  lastKnownLocation
 		) {
 
-			// In some error cases (where we've never before received a previous location) it could be possible that
-			//  the incoming location is null...
-			if ( null == location ) {
-				this.location = new ZmanimLocation();
-			}
-			else {
-				this.location = location;
-			}
-
-			this.error = error;
-		}
-
-
-		@Override
-		protected void onPreExecute() {
-			
-			super.onPreExecute();
-
-			determiningLocationDialog.setMessage( getString( R.string.updating_with_new_location ) );
-
-			// Only show the dialog if we don't already have a location. If we do, then it's OK...we'll update
-			//  everything once we've got the new data...
-			if ( ( null == locationManager.getCurrentLocation() ) && !determiningLocationDialog.isShowing() ) {
-				determiningLocationDialog.show();
-			}
-		}
-
-
-		@Override
-		protected Void doInBackground( Void... v ) {
-
-			boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-			zmanFormatter = new ZmanFormatter( showSeconds );
-
-			currentDate = HebrewCalendar.today();
-			hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-			secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
-
-			return null;
-		}
-
-
-		@Override
-		protected void onPostExecute( Void v ) {
-
-			try {
-				super.onPostExecute( v );
-
-				if ( isCancelled() ) {
-					// I guess someone else is coming along with a new request to build the UI...
-					return;
+			runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						rebuildUI( lastKnownLocation, error );
+					}
 				}
-				
-				buildHeader( location );
-				buildFooter( location, error );
-
-				if ( null == zmanimDisplay ) {
-					zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, zmanFormatter );
-				}
-			}
-			finally {
-
-				// Make sure to clean up!
-				determiningLocationDialog.dismiss();
-				buildUITask = null;
-			}
+			);
 		}
 	}
 
 
-	private class DateChangeListener
-		implements DateChangedEvent.Listener {
+	private class FullLocationAcquiredHandler
+		extends FullLocationAcquiredEvent.Handler {
 
 		@Override
-		public void onDateChanged( DateChangedEvent event ) {
-			currentDate = event.eventInfo;
-			updateHeader( locationManager.getLastKnownLocation() );
-		}
-	}
-
-
-	private class LocationChangedListener
-		implements LocationChangedEvent.Listener {
-
-		@Override public void onProgress( String message ) {
-
-			// If we already have a location, then do not show the dialog...
-			if ( null == locationManager.getCurrentLocation() ) {
-				determiningLocationDialog.setMessage( message );
-				if ( !determiningLocationDialog.isShowing() ) {
-					determiningLocationDialog.show();
+		public void addressAcquired( final ZmanimLocation location ) {
+			runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						updateLocationView( location );
+					}
 				}
-			}
-		}
-
-
-		@Override public void onLocationChanged( LocationChangedEvent event ) {
-			rebuildUI( event.getEventInfo(), event.getError() );
-		}
-
-
-		@Override
-		public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
-			updateLocation( event.eventInfo );
+			);
 		}
 	}
+
 }  // End of ZmanimActivity class

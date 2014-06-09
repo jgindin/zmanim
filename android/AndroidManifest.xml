@@ -5,8 +5,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
-	android:versionCode="229"
-  android:versionName="3.5.229.32cc0dc90e5e"
+	android:versionCode="230"
+  android:versionName="3.5.230.86491bd72b31"
   android:installLocation="auto"
 >
 
@@ -55,7 +55,7 @@
 		</activity>
 
 		<activity
-			android:name=".prefs.EditLocationProviderPreferences"
+			android:name=".prefs.LocationProviderPreferences"
 			android:label=".EditLocationPrefs"
 		/>
 		<activity

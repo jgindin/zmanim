@@ -4,21 +4,32 @@
 
 package com.gindin.zmanim.android.prefs;
 
+import com.gindin.util.Version;
+import com.gindin.zmanim.android.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.*;
-import com.gindin.util.Version;
-import com.gindin.zmanim.android.R;
 
 import java.util.*;
 
 /**
  * Activity which is invoked when the user wants to edit their preferences around determining location.
+ *<p/>
+ *
+ * When this activity completes, it will set a result code of RESULT_OK to indicate the user has made some changes.
+ * If no changes were made, then RESULT_CANCELED will be set.
  */
-public class EditLocationProviderPreferences
+public class LocationProviderPreferences
 	extends PreferenceActivity {
+
+	/**
+	 * Only want to build this map once. Using a TreeMap so that the time zones get sorted upon addition,
+	 *  and we don't have to do it again..
+	 */
+	private static final Map<String, List<String>>            timeZoneAreasToLocales = new TreeMap<String, List<String>>();
 
 	private boolean                                           handlingPrefChange = false;
 
@@ -39,12 +50,12 @@ public class EditLocationProviderPreferences
 
 	private SharedPreferences                                 prefs;
 
-	/**
-	 * Only want to build this map once. Using a TreeMap so that the time zones get sorted upon addition,
-	 *  and we don't have to do it again..
-	 */
-	private static final Map<String, List<String>>            timeZoneAreasToLocales = new TreeMap<String, List<String>>();
 
+	/**
+	 * Prior to invoking the location configuration activity, tuck away the current prefs so that if
+	 *  the user doesn't make any changes, then we don't do anything upon return.
+ 	 */
+	private Map<String,?>                                     prefsBeforeEditing;
 
 
 	@Override
@@ -95,7 +106,30 @@ public class EditLocationProviderPreferences
 			CheckBoxPreference preferCachedLocation = (CheckBoxPreference)findPreference( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name() );
 			category.removePreference( preferCachedLocation );
 		}
+	}
 
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
+		prefsBeforeEditing = prefs.getAll();
+	}
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		boolean changed = false;
+
+		final Map<String, ?> prefsAfterEditing = prefs.getAll();
+		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
+			changed = true;
+		}
+
+		setResult( changed ? RESULT_OK : RESULT_CANCELED );
 	}
 
 

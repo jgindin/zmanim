@@ -6,9 +6,10 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.android.datePicker.DateChangedEvent;
-import com.gindin.zmanim.android.location.LocationChangedEvent;
-import com.gindin.zmanim.android.location.LocationNameUpdatedEvent;
+import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
+import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
@@ -37,7 +38,9 @@ class ZmanimDisplay {
 	/** The activity we're associated with. */
 	private final ZmanimActivity                              zmanimActivity;
 
-	private final ZmanFormatter                               zmanFormatter;
+	private final EventBus                                    eventBus;
+
+	private ZmanFormatter                                     zmanFormatter;
 
 	/** Manages the selection process, allowing the user to select a different zman. */
 	private ZmanimSelector                                    selector;
@@ -46,66 +49,84 @@ class ZmanimDisplay {
 	private final SharedPreferences                           zmanimSelectionPrefs;
 
 	private HebrewDate                                        currentDate;
-	private final DateChangedEvent.Listener                   dateChangeListener;
+	private final HebrewDateChangedEvent.Handler              dateChangeHandler;
 
 	private ZmanimLocation                                    currentLocation;
-	private final LocationChangedEvent.Listener               locationChangeListener;
+
+	private final RawLocationAcquiredEvent.Handler            locationAcquiredHandler;
 
 
 	ZmanimDisplay(
 		final ZmanimActivity  zmanimActivity,
+		final EventBus        eventBus,
 		final ZmanFormatter   zmanFormatter
 	) {
 
 		this.zmanimActivity = zmanimActivity;
+		this.eventBus = eventBus;
 		this.zmanFormatter = zmanFormatter;
 
 		zmanimSelectionPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		listenToRows();
 
-		// Adding the listener will cause the event to get fired.
-		dateChangeListener = new DateChangedEvent.Listener() {
-			@Override public void onDateChanged( DateChangedEvent event ) {
-				currentDate = event.getEventInfo();
-				ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
-				if ( null != listAdapter ) {
-					zmanimActivity.setAdapter( listAdapter );
-				}
+		dateChangeHandler = new HebrewDateChangedEvent.Handler() {
+			@Override
+			public void onHebrewDateChanged( HebrewDate newDate ) {
+				currentDate = newDate;
+				updateListAdapater();
 			}
 		};
-		zmanimActivity.addDateChangeListener( dateChangeListener );
+		eventBus.addHandler( dateChangeHandler, true );
 
-		locationChangeListener = new LocationChangedEvent.Listener() {
+		locationAcquiredHandler = new RawLocationAcquiredEvent.Handler() {
 			@Override
-			public void onLocationChanged( LocationChangedEvent event ) {
-				handleLocationChanged( event, zmanimActivity );
+			public void onLocationAcquired( ZmanimLocation location ) {
+				handleLocationChanged( location );
 			}
 
 			@Override
-			public void onProgress( String message ) {
-			}
-
-			@Override
-			public void onLocationNameUpdated( LocationNameUpdatedEvent event ) {
+			public void onError(
+				LocationError   error,
+				ZmanimLocation  lastKnownLocation
+			) {
+				handleLocationChanged( lastKnownLocation );
 			}
 		};
-		zmanimActivity.addLocationChangeListener( locationChangeListener );
+		eventBus.addHandler( locationAcquiredHandler, true );
 	}
 
 
 	void onDestroy() {
-		zmanimActivity.removeDateChangeListener( dateChangeListener );
-		zmanimActivity.removeLocationChangeListener( locationChangeListener );
+
+		eventBus.removeHandler( dateChangeHandler );
+		eventBus.removeHandler( locationAcquiredHandler );
+	}
+
+
+	public void setZmanFormatter( ZmanFormatter zmanFormatter ) {
+
+		if ( this.zmanFormatter != zmanFormatter ) {
+			this.zmanFormatter = zmanFormatter;
+			updateListAdapater();
+		}
+	}
+
+
+	private void updateListAdapater() {
+		ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
+		if ( null != listAdapter ) {
+			zmanimActivity.setAdapter( listAdapter );
+		}
 	}
 
 
 	private void handleLocationChanged(
-		LocationChangedEvent  event,
-		ZmanimActivity        zmanimActivity
+		ZmanimLocation newLocation
 	) {
+
 		ZmanimLocation lastLocation = currentLocation;
-		currentLocation = event.getEventInfo();
+		currentLocation = newLocation;
 
 		// Before we do anything, make sure that there's a significant change worthy of our time...
 		if ( ( null != lastLocation ) && ( null != currentLocation ) ) {

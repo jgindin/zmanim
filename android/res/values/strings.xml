@@ -78,6 +78,8 @@
 	<string name="waiting_for_location_update">Waiting for location update…</string>
 	<string name="updating_with_new_location">"Updating with new location…"</string>
 
+	<string name="current_location_title">Current Location</string>
+
 	<string name="personal_prefs">Preferences</string>
 	<string name="show_seconds_pref_title">Show Exact Zmanim</string>
 	<string name="show_seconds_pref_summary">Will not round the zmanim times to the nearest minute.</string>

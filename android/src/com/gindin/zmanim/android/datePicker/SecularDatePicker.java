@@ -4,22 +4,24 @@
 
 package com.gindin.zmanim.android.datePicker;
 
+import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.calendar.HebrewDate;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.DatePicker;
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
 
 /**
  * Allow the user to change the secular date.
  */
 public class SecularDatePicker {
 
+	private final EventBus                                    eventBus;
+
 	/** Lazily created. */
 	private DatePickerDialog                                  secularDatePicker;
-
-	private final DateChangeEventManager                      dateChangeEventManager;
 
 	private final DatePickerDialog.OnDateSetListener          dateSetListener;
 
@@ -27,10 +29,10 @@ public class SecularDatePicker {
 
 
 	public SecularDatePicker(
-		DateChangeEventManager  dateChangeEventManager
+		EventBus  eventBus
 	) {
+		this.eventBus = eventBus;
 
-		this.dateChangeEventManager = dateChangeEventManager;
 		dateSetListener = createDateSetListener();
 	}
 
@@ -74,7 +76,7 @@ public class SecularDatePicker {
 						 ( lastDisplayedDate.getGregorianDayOfMonth() != date ) ) {
 
 					lastDisplayedDate = HebrewCalendar.getForDate( year, month, date );
-					dateChangeEventManager.fire( new DateChangedEvent( lastDisplayedDate ) );
+					eventBus.fire( new HebrewDateChangedEvent( lastDisplayedDate ) );
 				}
 			}
 		};
