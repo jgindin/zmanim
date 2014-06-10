@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.location;

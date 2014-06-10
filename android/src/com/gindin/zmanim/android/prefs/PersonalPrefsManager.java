@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2011. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
 
-import android.content.SharedPreferences;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.ZmanimActivity;
 
-import java.util.Map;
+import android.content.SharedPreferences;
 
 /**
  * Takes care of dealing with the user's preferences--invoking the activity, notifying the main app

@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2011. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
 
+import com.gindin.zmanim.android.R;
+
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import com.gindin.zmanim.android.R;
 
 /**
  * Activity for editing personal preferences.

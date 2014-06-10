@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2014. Jay R. Gindin
+  -->
+
 <project name="Utils" default="help">
 
 	<!-- The local.properties file is created and updated by the 'android' tool.

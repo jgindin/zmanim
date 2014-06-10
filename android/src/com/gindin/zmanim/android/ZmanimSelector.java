@@ -1,15 +1,9 @@
 /*
- * Copyright (c) 2011. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.*;
 import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewDate;
@@ -17,6 +11,15 @@ import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Displays a dialog allowing the user to select one of the applicable zmanim.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.calendar.holiday.modern;

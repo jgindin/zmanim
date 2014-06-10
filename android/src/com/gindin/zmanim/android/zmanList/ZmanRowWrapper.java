@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.zmanList;
 
-import android.os.AsyncTask;
-import android.view.View;
-import android.widget.TextView;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
+
+import android.os.AsyncTask;
+import android.view.View;
+import android.widget.TextView;
 
 /**
  * Wraps a zman row, making for quick & easy recycling.

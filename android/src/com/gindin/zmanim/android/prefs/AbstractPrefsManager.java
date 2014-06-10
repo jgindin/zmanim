@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2011. Jay R. Gindin
+ * Copyright (c) 2014. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
+
+import com.gindin.zmanim.android.Activities;
+import com.gindin.zmanim.android.ZmanimActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceActivity;
-import com.gindin.zmanim.android.Activities;
-import com.gindin.zmanim.android.ZmanimActivity;
 
 import java.util.Map;
 
