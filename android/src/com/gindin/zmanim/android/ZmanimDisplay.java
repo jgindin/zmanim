@@ -8,6 +8,7 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
+import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
@@ -55,6 +56,8 @@ class ZmanimDisplay {
 
 	private final RawLocationAcquiredEvent.Handler            locationAcquiredHandler;
 
+	private final FullLocationAcquiredEvent.Handler           fullLocationAcquiredHandler;
+
 
 	ZmanimDisplay(
 		final ZmanimActivity  zmanimActivity,
@@ -94,6 +97,14 @@ class ZmanimDisplay {
 			}
 		};
 		eventBus.addHandler( locationAcquiredHandler, true );
+
+		fullLocationAcquiredHandler = new FullLocationAcquiredEvent.Handler() {
+			@Override
+			public void addressAcquired( ZmanimLocation location ) {
+				handleLocationChanged( location );
+			}
+		};
+		eventBus.addHandler( fullLocationAcquiredHandler );
 	}
 
 
@@ -101,6 +112,7 @@ class ZmanimDisplay {
 
 		eventBus.removeHandler( dateChangeHandler );
 		eventBus.removeHandler( locationAcquiredHandler );
+		eventBus.removeHandler( fullLocationAcquiredHandler );
 	}
 
 

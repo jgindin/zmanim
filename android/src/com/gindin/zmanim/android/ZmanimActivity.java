@@ -826,6 +826,9 @@ public class ZmanimActivity
 				new Runnable() {
 					@Override
 					public void run() {
+
+						// This may be sub-optimal if the location isn't really changing...
+						rebuildUI( location, null );
 						updateLocationView( location );
 					}
 				}
