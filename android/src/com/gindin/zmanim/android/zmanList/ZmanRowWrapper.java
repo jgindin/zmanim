@@ -54,7 +54,6 @@ public abstract class ZmanRowWrapper {
 		currentCalculator = new ZmanAsyncCalculator( zmanFormatter, timeField );
 		currentCalculator.execute( zman );
 		updateTextFields( zman );
-
 	}
 
 
