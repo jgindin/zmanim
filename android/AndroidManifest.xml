@@ -18,8 +18,7 @@
 					For minSdkVersion >= 11, there's some other interesting stuff in that article...
 	-->
 	<uses-sdk
-		android:minSdkVersion="3"
-	  android:targetSdkVersion="11"
+		android:minSdkVersion="10"
 	/>
 
 	<!--
