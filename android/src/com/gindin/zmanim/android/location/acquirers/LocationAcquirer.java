@@ -12,28 +12,28 @@ import android.content.SharedPreferences;
 import java.util.TimeZone;
 
 /**
- * Base class for our various location handlers.
+ * Base class for our various location acquirers.
  *<p/>
  *
- * The provider will do what it needs to in order to provide a location to the application when acquire() is invoked.
+ * The acquirer will do what it needs to in order to provide a location to the application when acquire() is invoked.
  *  When the location is acquired, either a RawLocationAcquiredEvent or PlaceAcquiredEvent will be fired, depending
  *  on what information was acquired.
  *
  *<p/>
- *  Due to the fact that some providers may have a cached location (in order to provide faster startup for the
+ *  Due to the fact that some acquirers may have a cached location (in order to provide faster startup for the
  *    application), multiple of these events could be fired.
  *
  *<p/>
  *  If, for any reason, the acquisition is to be canceled, cancel() will handle that.
  */
-public abstract class ZmanimLocationAcquirer {
+public abstract class LocationAcquirer {
 
 	protected final EventBus                                  eventBus;
 
 	protected final SharedPreferences                         locationManagementPrefs;
 
 
-	protected ZmanimLocationAcquirer(
+	protected LocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {

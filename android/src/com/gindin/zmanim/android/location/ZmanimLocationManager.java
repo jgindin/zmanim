@@ -5,10 +5,9 @@
 package com.gindin.zmanim.android.location;
 
 import com.gindin.util.eventBus.EventBus;
-import com.gindin.zmanim.android.location.acquirers.DynamicZmanimLocationAcquirer;
-import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeZmanimLocationAcquirer;
-import com.gindin.zmanim.android.location.acquirers.StaticZmanimLocationAcquirer;
-import com.gindin.zmanim.android.location.acquirers.ZmanimLocationAcquirer;
+import com.gindin.zmanim.android.location.acquirers.*;
+import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
+import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
 import android.content.SharedPreferences;
@@ -50,7 +49,7 @@ public class ZmanimLocationManager {
 	/** System-wide, actual location manager. */
 	private final LocationManager                             locationManager;
 
-	private final Map<Type,ZmanimLocationAcquirer>            typeToAcquirerMap = new HashMap<Type, ZmanimLocationAcquirer>();
+	private final Map<Type,LocationAcquirer>                  typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
 
 	/**
 	 * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
@@ -58,7 +57,7 @@ public class ZmanimLocationManager {
 	private final LastKnownLocationProvider                   lastKnownLocationProvider;
 
 	/** Which provider are we currently using? */
-	private ZmanimLocationAcquirer                            currentAcquirer;
+	private LocationAcquirer                                  currentAcquirer;
 
 
 
@@ -183,21 +182,21 @@ public class ZmanimLocationManager {
 	}
 
 
-	private ZmanimLocationAcquirer getAcquirer( Type type ) {
+	private LocationAcquirer getAcquirer( Type type ) {
 
-		ZmanimLocationAcquirer provider = typeToAcquirerMap.get( type );
+		LocationAcquirer provider = typeToAcquirerMap.get( type );
 		if ( provider == null ) {
 			switch ( type ) {
 				case FROM_DEVICE:
-					provider = new DynamicZmanimLocationAcquirer( eventBus, locationManagementPrefs, this );
+					provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, this );
 					break;
 
 				case LAT_LONG_FROM_USER:
-					provider = new LatitudeLongitudeZmanimLocationAcquirer( eventBus, locationManagementPrefs );
+					provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs );
 					break;
 
 				case NAME_FROM_USER:
-					provider = new StaticZmanimLocationAcquirer( eventBus, locationManagementPrefs );
+					provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs );
 					break;
 
 				default:

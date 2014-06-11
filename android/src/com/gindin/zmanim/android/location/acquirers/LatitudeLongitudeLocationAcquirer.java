@@ -19,11 +19,11 @@ import java.util.TimeZone;
 /**
  * Location provider that deals with a static latitude & longitude location.
  */
-public class LatitudeLongitudeZmanimLocationAcquirer
-	extends ZmanimLocationAcquirer {
+public class LatitudeLongitudeLocationAcquirer
+	extends LocationAcquirer {
 
 
-	public LatitudeLongitudeZmanimLocationAcquirer(
+	public LatitudeLongitudeLocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {

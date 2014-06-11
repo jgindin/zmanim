@@ -14,11 +14,11 @@ import android.content.SharedPreferences;
 /**
  * Location provider which uses a place name like "5217 South Brandon St., Seattle, WA" to determine the Zmanim.
  */
-public class StaticZmanimLocationAcquirer
-	extends ZmanimLocationAcquirer {
+public class StaticLocationAcquirer
+	extends LocationAcquirer {
 
 
-	public StaticZmanimLocationAcquirer(
+	public StaticLocationAcquirer(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs
 	) {
