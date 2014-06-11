@@ -13,7 +13,7 @@ import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
-import com.gindin.zmanim.android.location.acquirers.LocationToAddressConverter;
+import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.*;

@@ -214,7 +214,20 @@ public class ZmanimLocation
 
 		return sb.toString();
 	}
-	
+
+
+	public boolean hasName() {
+
+		// Make sure to NOT compare against our overridden getLocationName!
+		return UNKNOWN_LOCATION.equals( super.getLocationName() );
+	}
+
+
+	public boolean hasCoordinates() {
+
+		return ( getLatitude() != 0 ) && ( getLongitude() != 0 );
+	}
+
 	public String toShortString() {
 		
 		StringBuilder sb = new StringBuilder();
