@@ -11,6 +11,7 @@
 
 	<uses-sdk
 		android:minSdkVersion="10"
+		android:targetSdkVersion="15"
 	/>
 
 	<application android:label="@string/app_name">
