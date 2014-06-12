@@ -51,7 +51,7 @@ class AppUpgrader {
 
 		final SharedPreferences.Editor editor = prefs.edit();
 		editor.putInt( LAST_KNOWN_CODE_VERSION, thisCodeVersion );
-		editor.commit();
+		editor.apply();
 	}
 
 }  // End of AppUpgrader class

@@ -194,7 +194,7 @@ class ZmanimDisplay {
 
 				final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
 				editor.putString( type.name, selection.name );
-				editor.commit();
+				editor.apply();
 
 				LogUtils.logEvent( "Zman Change", Arrays.asList( new Pair<String, String>( type.name, selection.name ) ) );
 

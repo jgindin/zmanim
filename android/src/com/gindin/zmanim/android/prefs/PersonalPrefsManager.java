@@ -33,7 +33,7 @@ public class PersonalPrefsManager
 		if ( lastKnownCodeVersion <= 66 ) {
 			final SharedPreferences.Editor editor = prefs.edit();
 			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-			editor.commit();
+			editor.apply();
 		}
 	}
 

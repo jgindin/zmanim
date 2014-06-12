@@ -15,7 +15,7 @@ import android.location.Location;
  *  that such permissions actually can only be granted if its installed in a package signed with the system key.
  *  See http://stackoverflow.com/questions/3394626/how-to-provide-your-own-locationprovider-on-android.
  */
-public class LastKnownLocationProvider {
+class LastKnownLocationProvider {
 
 	public static final String                                NAME = "LastKnownLocationProvider";
 
@@ -44,7 +44,7 @@ public class LastKnownLocationProvider {
 	private Location                                          lastKnownLocation;
 
 
-	public LastKnownLocationProvider( SharedPreferences preferences ) {
+	LastKnownLocationProvider( SharedPreferences preferences ) {
 		this.preferences = preferences;
 
 		String lastFixProviderName = preferences.getString( PROVIDER_NAME, null );
@@ -133,7 +133,7 @@ public class LastKnownLocationProvider {
 
 		editor.putLong( TIME, newLocation.getTime() );
 
-		editor.commit();
+		editor.apply();
 	}
 
 } // End of LocationProvider class

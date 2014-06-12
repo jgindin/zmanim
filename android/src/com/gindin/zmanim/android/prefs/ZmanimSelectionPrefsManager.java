@@ -4,11 +4,12 @@
 
 package com.gindin.zmanim.android.prefs;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.zman.Zmanim;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.Map;
 
@@ -50,12 +51,12 @@ public class ZmanimSelectionPrefsManager
 					newPrefsEditor.putString( entry.getKey(), (String)entry.getValue() );
 				}
 
-				newPrefsEditor.commit();
+				newPrefsEditor.apply();
 
 				// Now remove the old prefs.
 				final SharedPreferences.Editor oldPrefsEditor = oldPrefs.edit();
 				oldPrefsEditor.clear();
-				oldPrefsEditor.commit();
+				oldPrefsEditor.apply();
 			}
 		}
 		else if ( lastKnownCodeVersion <= 92 ) {
@@ -66,7 +67,7 @@ public class ZmanimSelectionPrefsManager
 			final SharedPreferences.Editor editor = prefs.edit();
 			editor.putString( Zmanim.Type.ShabbatEnd.name, oldTzait );
 
-			editor.commit();
+			editor.apply();
 		}
 	}
 

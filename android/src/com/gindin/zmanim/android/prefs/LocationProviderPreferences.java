@@ -93,7 +93,7 @@ public class LocationProviderPreferences
 		}
 		else {
 			// No preference set? Set the dynamic...
-			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+			prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
 		}
 
 		overridingSystemTimeZone( overrideSystemTimeZone.isChecked() );
@@ -157,7 +157,7 @@ public class LocationProviderPreferences
 							dynamicProviderSelected();
 						}
 						else {
-							prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+							prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
 						}
 					}
 					else if ( useStaticLocation == preference ) {
@@ -165,7 +165,7 @@ public class LocationProviderPreferences
 							staticProviderSelected();
 						}
 						else {
-							prefs.edit().putBoolean( LocationProviders.STATIC_POSITION.name(), true ).commit();
+							prefs.edit().putBoolean( LocationProviders.STATIC_POSITION.name(), true ).apply();
 						}
 					}
 					else if ( useLatLong == preference ) {
@@ -173,7 +173,7 @@ public class LocationProviderPreferences
 							latLongProviderSelected();
 						}
 						else {
-							prefs.edit().putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true ).commit();
+							prefs.edit().putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true ).apply();
 						}
 					}
 					else if ( place == preference ) {

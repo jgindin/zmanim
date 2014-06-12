@@ -102,7 +102,7 @@ public class ZmanimLocationManager {
 		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
 		if ( !useThis ) {
 			currentAcquirer = getAcquirer( Type.FROM_DEVICE );
-			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).commit();
+			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
 		}
 
 		currentAcquirer.acquire();
