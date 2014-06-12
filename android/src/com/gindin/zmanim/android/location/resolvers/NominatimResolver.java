@@ -47,6 +47,7 @@ class NominatimResolver
 
 	/** Parameters to send when making the request. */
 	private static final String                               ADDRESS_DETAILS_PARAM = "addressdetails";
+	private static final String                               EMAIL_PARAM = "email";
 	private static final String                               FORMAT_PARAM = "format";
 	private static final String                               LATITUDE_PARAM = "lat";
 	private static final String                               LONGITUDE_PARAM = "lon";
@@ -133,6 +134,7 @@ class NominatimResolver
 		// We know we always want JSON returned and we need all the gory details..
 		params.add( new Pair<String, String>( FORMAT_PARAM, "json" ) );
 		params.add( new Pair<String, String>( ADDRESS_DETAILS_PARAM, "1" ) );
+		params.add( new Pair<String, String>( EMAIL_PARAM, "zmanim.apps@gmail.com" ) );
 
 		StringBuilder queryParams = new StringBuilder();
 		for ( int index = 0; index < params.size(); index++ ) {

@@ -5,12 +5,15 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.BaseAsyncClass;
+import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,12 +55,16 @@ abstract class LocationResolver {
 	/**
 	 * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
 	 *  specified location using the latitude and longitude, and return a new location with all possible details filled out.
+	 *
+	 * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
 	 */
 	protected abstract ZmanimLocation resolveFromCoordinatesInBackground( ZmanimLocation zmanimLocation );
 
 	/**
 	 * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
 	 *  specified location using the name, and return a new location with all possible details fillled out.
+	 *
+	 * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
 	 */
 	protected abstract ZmanimLocation resolveFromNameInBackground( ZmanimLocation zmanimLocation );
 
@@ -130,6 +137,9 @@ abstract class LocationResolver {
 		}
 		else {
 			eventBus.fire( new FullLocationAcquiredEvent( resolvedLocation ) );
+
+			// Let's keep track of how often we use each resolver.
+			LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
 		}
 	}
 

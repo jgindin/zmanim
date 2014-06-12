@@ -42,35 +42,28 @@ class AndroidResolver
 		final double latitude = location.getLatitude();
 		final double longitude = location.getLongitude();
 
-		// TODO: Check our cache for a hit so we don't have to go out to the geocoder...
-
-		Address address;
 		try {
 			final List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 5 );
 
 			if ( ( null != addresses ) && !addresses.isEmpty() ) {
-				address = addresses.get( 0 );
-			}
-			else {
-				address = null;
+				Address address = addresses.get( 0 );
+
+				return new ZmanimLocation.Builder()
+					.from( location )
+					.resolvedTo( address )
+					.build();
 			}
 		}
 		catch ( IOException ioe ) {
 			// Docs for Geocoder.getFromLocation say this happens when there's no network connectivity, or
 			//  there's some other I/O error. In any case, it can happen...
-			address = null;
-			LogUtils.logError( "LP::updateLocationWithName", "", ioe );
+			LogUtils.logError( "AR::updateLocationWithName", "", ioe );
 		}
 		catch ( Exception e ) {
-			address = null;
-			LogUtils.logError( "LP::updateLocationWithName", "", e );
+			LogUtils.logError( "AR::updateLocationWithName", "", e );
 		}
 
-		// TODO: Cache the location somewhere...
-		return new ZmanimLocation.Builder()
-			.from( location )
-			.resolvedTo( address )
-			.build();
+		return null;
 	}
 
 
@@ -81,17 +74,12 @@ class AndroidResolver
 			return null;
 		}
 
-
-		// In case there's an issue, we'll just return the original place. It won't have a real name, but it'll
-		//  still be Good Enough.
-		ZmanimLocation updatedLocation = location;
-
 		try {
 			List<Address> addresses = geocoder.getFromLocationName( location.getLocationName(), 5 );
 
 			if ( ( null != addresses ) && !addresses.isEmpty() ) {
 				final Address address = addresses.get( 0 );
-				updatedLocation = new ZmanimLocation.Builder()
+				return new ZmanimLocation.Builder()
 					.resolvedTo( address )
 					.inTimeZone( location.getTimeZone() )
 					.build();
@@ -100,12 +88,13 @@ class AndroidResolver
 		catch ( IOException ioe ) {
 			// Docs for Geocoder.getFromLocationName say this happens when there's no network connectivity, or
 			//  there's some other I/O error. In any case, it can happen...
+			LogUtils.logError( "AR::updateLocationFromPlace", "", ioe );
 		}
 		catch ( Exception e ) {
-			LogUtils.logError( "SLP::updateLocationFromPlace", "", e );
+			LogUtils.logError( "AR::updateLocationFromPlace", "", e );
 		}
 
-		return updatedLocation;
+		return null;
 	}
 
 
