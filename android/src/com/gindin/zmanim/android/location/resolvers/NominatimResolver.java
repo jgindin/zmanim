@@ -34,6 +34,13 @@ import java.util.Locale;
  *   <li>No heavy uses (an absolute maximum of 1 request/s).
  *   <li>Provide a valid HTTP Referer or User-Agent identifying the application (stock User-Agents as set by http libraries will not do).
  * </ul>
+ *
+ * The syntax for querying the Nominatim web service is described here: http://wiki.openstreetmap.org/wiki/Nominatim.
+ *  Basically, there are two ways of querying:
+ *  <ul>
+ *    <li>search: format=json&q=[query goes here]
+ *    <li>reverse: format=json&lat=[latitude]&lon=[longitude]
+ *  </ul>
  */
 class NominatimResolver
 	extends LocationResolver {
