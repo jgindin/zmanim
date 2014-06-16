@@ -13,9 +13,16 @@ public final class BaseAsyncClass<Params, Progress, Result>
 	extends AsyncTask<Params, Progress, Result> {
 
 
+	public interface ProgressPublisher<Progress> {
+		void publish( Progress... progress );
+	}
+
 	public static abstract class Callbacks<Params, Progress, Result> {
 
-		protected abstract Result doInBackground( Params... paramses );
+		protected abstract Result doInBackground(
+			ProgressPublisher<Progress> publisher,
+			Params...                   params
+		);
 
 		protected void onPreExecute() {}
 		protected void onProgressUpdate( Progress... values ) {}
@@ -41,7 +48,13 @@ public final class BaseAsyncClass<Params, Progress, Result>
 
 	@Override
 	protected Result doInBackground( Params... paramses ) {
-		return callbacks.doInBackground( paramses );
+		ProgressPublisher<Progress> publisher = new ProgressPublisher<Progress>() {
+			@Override
+			public void publish( Progress... progress ) {
+				publishProgress( progress );
+			}
+		};
+		return callbacks.doInBackground( publisher, paramses );
 	}
 
 

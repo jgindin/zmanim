@@ -17,6 +17,7 @@ import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.*;
+import com.gindin.zmanim.android.zmanList.ZmanimDisplay;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
@@ -358,7 +359,10 @@ public class ZmanimActivity
 			}
 
 
-			@Override protected LocationError doInBackground( LocationError... params ) {
+			@Override protected LocationError doInBackground(
+				BaseAsyncClass.ProgressPublisher<Void>  publisher,
+				LocationError...                        params
+			) {
 				boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 				zmanFormatter = new ZmanFormatter( showSeconds );
 

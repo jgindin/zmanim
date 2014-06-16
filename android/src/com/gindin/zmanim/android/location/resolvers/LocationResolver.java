@@ -26,7 +26,7 @@ import java.util.List;
 abstract class LocationResolver {
 
 
-	protected final EventBus                                  eventBus;
+	private final EventBus                                  eventBus;
 
 
 	protected LocationResolver( EventBus eventBus ) {
@@ -81,7 +81,10 @@ abstract class LocationResolver {
 
 		BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
-			protected ZmanimLocation doInBackground( ZmanimLocation... zmanimLocations ) {
+			protected ZmanimLocation doInBackground(
+				BaseAsyncClass.ProgressPublisher<Void> publisher,
+				ZmanimLocation...                   zmanimLocations
+			) {
 				return resolveFromCoordinatesInBackground( zmanimLocations[0] );
 			}
 
@@ -111,7 +114,10 @@ abstract class LocationResolver {
 
 		BaseAsyncClass.Callbacks<ZmanimLocation,Void,ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
-			protected ZmanimLocation doInBackground( ZmanimLocation... zmanimLocations ) {
+			protected ZmanimLocation doInBackground(
+				BaseAsyncClass.ProgressPublisher<Void> publisher,
+				ZmanimLocation...                   zmanimLocations
+			) {
 				return resolveFromNameInBackground( zmanimLocations[0] );
 			}
 
