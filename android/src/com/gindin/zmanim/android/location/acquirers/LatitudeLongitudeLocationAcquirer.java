@@ -6,8 +6,8 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.util.location.LatitudeLongitudeParser;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.location.ZmanimLocation;
 
@@ -48,7 +48,7 @@ public class LatitudeLongitudeLocationAcquirer
 			.inTimeZone( timeZone )
 			.build();
 
-		eventBus.fire( new RawLocationAcquiredEvent( newLocation ) );
+		eventBus.fire( new LocationAcquiredEvent( newLocation ) );
 	}
 
 
@@ -63,7 +63,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			eventBus.fire( new RawLocationAcquiredEvent( null,
+			eventBus.fire( new LocationAcquiredEvent( null,
 				new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) ) );
 		}
 	}
@@ -80,7 +80,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			eventBus.fire( new RawLocationAcquiredEvent( null,
+			eventBus.fire( new LocationAcquiredEvent( null,
 				new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) ) );
 		}
 	}

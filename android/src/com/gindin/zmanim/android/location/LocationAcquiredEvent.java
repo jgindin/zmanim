@@ -9,14 +9,14 @@ import com.gindin.util.eventBus.EventHandler;
 import com.gindin.zmanim.location.ZmanimLocation;
 
 /**
- * An event fired when the latitude and longitude (the current location) have been acquired, regardless of how they
- *  may have been acquired.
+ * An event fired when the current location has been acquired. If a handler needs to know if the location
+ *  is fully resolved, it will have to ask the location.
  */
-public class RawLocationAcquiredEvent
-	extends Event<RawLocationAcquiredEvent.Handler> {
+public class LocationAcquiredEvent
+	extends Event<LocationAcquiredEvent.Handler> {
 
 
-	public static abstract class Handler implements EventHandler<RawLocationAcquiredEvent> {
+	public static abstract class Handler implements EventHandler<LocationAcquiredEvent> {
 
 		/**
 		 * Invoked when the location has been acquired. By location, we mean only the latitude and
@@ -30,7 +30,7 @@ public class RawLocationAcquiredEvent
 		 * Invoked when an error occurred while trying to acquire the location.
 		 *
 		 * @param error Describes the error.
-		 * @param lastKnownLocation The last known locaiton.
+		 * @param lastKnownLocation The last known location.
 		 */
 		public abstract void onError(
 			LocationError   error,
@@ -39,8 +39,8 @@ public class RawLocationAcquiredEvent
 
 
 		@Override
-		public Class<RawLocationAcquiredEvent> getAssociatedType() {
-			return RawLocationAcquiredEvent.class;
+		public Class<LocationAcquiredEvent> getAssociatedType() {
+			return LocationAcquiredEvent.class;
 		}
 	}
 
@@ -55,16 +55,16 @@ public class RawLocationAcquiredEvent
 	private final LocationError                               error;
 
 
-	public RawLocationAcquiredEvent(
+	public LocationAcquiredEvent(
 		ZmanimLocation newLocation
 	) {
 		this( newLocation, null );
 	}
 
 
-	public RawLocationAcquiredEvent(
-		ZmanimLocation  location,
-		LocationError   error
+	public LocationAcquiredEvent(
+		ZmanimLocation location,
+		LocationError error
 	) {
 		this.location = location;
 		this.error = error;
@@ -73,7 +73,12 @@ public class RawLocationAcquiredEvent
 
 	@Override
 	public void dispatch( Handler handler ) {
-		handler.onLocationAcquired( location );
+		if ( error == null ) {
+			handler.onLocationAcquired( location );
+		}
+		else {
+			handler.onError( error, location );
+		}
 	}
 
 } // End of RawLocationAcquiredEvent class

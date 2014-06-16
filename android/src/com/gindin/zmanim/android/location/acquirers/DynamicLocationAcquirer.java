@@ -6,8 +6,8 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.location.ZmanimLocation;
@@ -100,7 +100,7 @@ public class DynamicLocationAcquirer
 		if ( preferCachedLocation ) {
 			ZmanimLocation lastKnownLocation = getLastKnownLocation();
 			if ( lastKnownLocation != null ) {
-				eventBus.fire( new RawLocationAcquiredEvent( lastKnownLocation ) );
+				eventBus.fire( new LocationAcquiredEvent( lastKnownLocation ) );
 			}
 		}
 
@@ -193,7 +193,7 @@ public class DynamicLocationAcquirer
 			.from( newLocation )
 			.inTimeZone( getTimeZoneFromPrefs() )
 			.build();
-		eventBus.fire( new RawLocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location ) );
 	}
 
 
@@ -206,7 +206,7 @@ public class DynamicLocationAcquirer
 		}
 
 		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-		eventBus.fire( new RawLocationAcquiredEvent( getLastKnownLocation(),
+		eventBus.fire( new LocationAcquiredEvent( getLastKnownLocation(),
 			new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  ) );
 	}
 
@@ -262,7 +262,7 @@ public class DynamicLocationAcquirer
 	private boolean isLocationEnabled() {
 
 		if ( null == locationManager ) {
-			eventBus.fire( new RawLocationAcquiredEvent( getLastKnownLocation(),
+			eventBus.fire( new LocationAcquiredEvent( getLastKnownLocation(),
 				new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) ) );
 			return false;
 		}
@@ -277,7 +277,7 @@ public class DynamicLocationAcquirer
 		}
 
 		if ( !foundAProvider ) {
-			eventBus.fire( new RawLocationAcquiredEvent( getLastKnownLocation(),
+			eventBus.fire( new LocationAcquiredEvent( getLastKnownLocation(),
 				new LocationError( LocationError.Code.NO_PROVIDERS ) ) );
 			return false;
 		}

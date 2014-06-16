@@ -9,9 +9,8 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.datePicker.SecularDatePicker;
-import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
@@ -73,8 +72,7 @@ public class ZmanimActivity
 	// TODO: Inject this
 	private ZmanimLocationManager                             locationManager;
 
-	private RawLocationAcquiredEvent.Handler                  rawLocationAcquiredHandler;
-	private FullLocationAcquiredEvent.Handler                 fullLocationAcquiredHandler;
+	private LocationAcquiredEvent.Handler                     rawLocationAcquiredHandler;
 
 	// TODO: Inject this
 	private PersonalPrefsManager                              personalPrefsManager;
@@ -206,7 +204,6 @@ public class ZmanimActivity
 
 		// Now start listening for location changes...
 		rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
-		fullLocationAcquiredHandler = new FullLocationAcquiredHandler();
 
 		locationManager.determineLocation();
 
@@ -237,7 +234,6 @@ public class ZmanimActivity
 		//  locations again when we don't want to...
 		eventBus.addHandler( dateChangedHandler );
 		eventBus.addHandler( rawLocationAcquiredHandler );
-		eventBus.addHandler( fullLocationAcquiredHandler );
 	}
 
 
@@ -247,7 +243,6 @@ public class ZmanimActivity
 
 		eventBus.removeHandler( dateChangedHandler );
 		eventBus.removeHandler( rawLocationAcquiredHandler );
-		eventBus.removeHandler( fullLocationAcquiredHandler );
 	}
 
 
@@ -788,7 +783,7 @@ public class ZmanimActivity
 
 
 	private class RawLocationAcquiredHandler
-		extends RawLocationAcquiredEvent.Handler {
+		extends LocationAcquiredEvent.Handler {
 
 		@Override
 		public void onLocationAcquired( final ZmanimLocation location ) {
@@ -797,6 +792,7 @@ public class ZmanimActivity
 					@Override
 					public void run() {
 						rebuildUI( location, null );
+						updateLocationView( location );
 					}
 				}
 			);
@@ -814,26 +810,7 @@ public class ZmanimActivity
 					@Override
 					public void run() {
 						rebuildUI( lastKnownLocation, error );
-					}
-				}
-			);
-		}
-	}
-
-
-	private class FullLocationAcquiredHandler
-		extends FullLocationAcquiredEvent.Handler {
-
-		@Override
-		public void addressAcquired( final ZmanimLocation location ) {
-			runOnUiThread(
-				new Runnable() {
-					@Override
-					public void run() {
-
-						// This may be sub-optimal if the location isn't really changing...
-						rebuildUI( location, null );
-						updateLocationView( location );
+						updateLocationView( lastKnownLocation );
 					}
 				}
 			);

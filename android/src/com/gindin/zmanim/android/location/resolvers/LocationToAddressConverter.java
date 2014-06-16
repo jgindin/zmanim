@@ -5,9 +5,9 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 
 import android.location.Geocoder;
@@ -24,7 +24,7 @@ public class LocationToAddressConverter {
 
 	private final List<LocationResolver>                      orderedResolvers;
 
-	private final RawLocationAcquiredEvent.Handler            locationAcquiredHandler;
+	private final LocationAcquiredEvent.Handler            locationAcquiredHandler;
 	private final PlaceAcquiredEvent.Handler                  placeAcquiredHandler;
 
 
@@ -40,10 +40,12 @@ public class LocationToAddressConverter {
 		orderedResolvers.add( new NominatimResolver( eventBus ) );
 		orderedResolvers.add( new PassthroughResolver( eventBus ) );
 
-		locationAcquiredHandler = new RawLocationAcquiredEvent.Handler() {
+		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
 			public void onLocationAcquired( ZmanimLocation location ) {
-				orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
+				if ( !location.isResolved() ) {
+					orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
+				}
 			}
 
 

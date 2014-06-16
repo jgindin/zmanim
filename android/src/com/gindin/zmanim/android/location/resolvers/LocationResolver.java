@@ -8,9 +8,8 @@ import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
-import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 
 import java.util.Arrays;
@@ -109,7 +108,7 @@ abstract class LocationResolver {
 	) {
 
 		if ( location.getLocationName().trim().length() == 0 ) {
-			eventBus.fire( new RawLocationAcquiredEvent( location, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
+			eventBus.fire( new LocationAcquiredEvent( location, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
 		}
 
 		BaseAsyncClass.Callbacks<ZmanimLocation,Void,ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
@@ -142,7 +141,7 @@ abstract class LocationResolver {
 			nextResolvers.get( 0 ).resolve( originalLocation, nextResolvers.subList( 1, nextResolvers.size() ) );
 		}
 		else {
-			eventBus.fire( new FullLocationAcquiredEvent( resolvedLocation ) );
+			eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
 
 			// Let's keep track of how often we use each resolver.
 			LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );

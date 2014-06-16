@@ -219,14 +219,22 @@ public class ZmanimLocation
 	public boolean hasName() {
 
 		// Make sure to NOT compare against our overridden getLocationName!
-		return UNKNOWN_LOCATION.equals( super.getLocationName() );
+		return !UNKNOWN_LOCATION.equals( super.getLocationName() );
 	}
 
 
 	public boolean hasCoordinates() {
-
 		return ( getLatitude() != 0 ) && ( getLongitude() != 0 );
 	}
+
+
+	/**
+	 * Check if this is a resolved location, meaning that we know both the coordinates AND the name.
+	 */
+	public boolean isResolved() {
+		return hasCoordinates() && hasName();
+	}
+
 
 	public String toShortString() {
 		
