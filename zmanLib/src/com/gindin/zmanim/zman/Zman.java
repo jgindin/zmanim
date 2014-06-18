@@ -42,6 +42,10 @@ public abstract class Zman {
 		Zmanim.Type type,
 	  boolean     advanced
 	) {
+
+		assert name != null;
+		assert type != null;
+
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -65,5 +69,34 @@ public abstract class Zman {
 	 */
 	protected abstract Date calculate();
 
+
+	@Override
+	public boolean equals( Object o ) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( o == null || getClass() != o.getClass() ) {
+			return false;
+		}
+
+		Zman zman = (Zman)o;
+
+		if ( !name.equals( zman.name ) ) {
+			return false;
+		}
+		if ( type != zman.type ) {
+			return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = name.hashCode();
+		result = 31 * result + type.hashCode();
+		return result;
+	}
 
 } // End of Zman interface
