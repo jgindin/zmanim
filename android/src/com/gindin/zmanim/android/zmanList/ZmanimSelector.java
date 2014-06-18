@@ -2,10 +2,9 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.zmanList;
 
-import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
-import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
+import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;

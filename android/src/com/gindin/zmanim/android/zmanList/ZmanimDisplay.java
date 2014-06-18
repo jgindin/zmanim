@@ -2,19 +2,17 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.zmanList;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
-import com.gindin.zmanim.android.location.FullLocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RawLocationAcquiredEvent;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanim.android.zmanList.ZmanRowWrapper;
-import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
@@ -34,7 +32,7 @@ import java.util.List;
  * Actually displays the zmanim on the screen.
  */
 @SuppressWarnings( { "UnnecessaryBoxing", "AutoUnboxing", "UnnecessaryUnboxing" } )
-class ZmanimDisplay {
+public class ZmanimDisplay {
 
 	/** The activity we're associated with. */
 	private final ZmanimActivity                              zmanimActivity;
@@ -54,12 +52,11 @@ class ZmanimDisplay {
 
 	private ZmanimLocation                                    currentLocation;
 
-	private final RawLocationAcquiredEvent.Handler            locationAcquiredHandler;
-
-	private final FullLocationAcquiredEvent.Handler           fullLocationAcquiredHandler;
+	private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
 
 
-	ZmanimDisplay(
+
+	public ZmanimDisplay(
 		final ZmanimActivity  zmanimActivity,
 		final EventBus        eventBus,
 		final ZmanFormatter   zmanFormatter
@@ -82,7 +79,7 @@ class ZmanimDisplay {
 		};
 		eventBus.addHandler( dateChangeHandler, true );
 
-		locationAcquiredHandler = new RawLocationAcquiredEvent.Handler() {
+		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
 			public void onLocationAcquired( ZmanimLocation location ) {
 				handleLocationChanged( location );
@@ -97,22 +94,13 @@ class ZmanimDisplay {
 			}
 		};
 		eventBus.addHandler( locationAcquiredHandler, true );
-
-		fullLocationAcquiredHandler = new FullLocationAcquiredEvent.Handler() {
-			@Override
-			public void addressAcquired( ZmanimLocation location ) {
-				handleLocationChanged( location );
-			}
-		};
-		eventBus.addHandler( fullLocationAcquiredHandler );
 	}
 
 
-	void onDestroy() {
+	public void onDestroy() {
 
 		eventBus.removeHandler( dateChangeHandler );
 		eventBus.removeHandler( locationAcquiredHandler );
-		eventBus.removeHandler( fullLocationAcquiredHandler );
 	}
 
 
@@ -151,11 +139,13 @@ class ZmanimDisplay {
 			}
 		}
 
+		// TODO: Move this block ... elsewhere!
 		SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
 		if ( !useElevation && ( null != currentLocation) ) {
 			currentLocation.setElevation( 0.0 );
 		}
+		// TODO: End of block to move
 
 		ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
 		if ( null != listAdapter ) {

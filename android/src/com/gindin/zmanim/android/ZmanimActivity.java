@@ -8,7 +8,7 @@ import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
-import com.gindin.zmanim.android.datePicker.SecularDatePicker;
+import com.gindin.zmanim.android.display.daily.DateDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
@@ -19,12 +19,9 @@ import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanim.android.zmanList.ZmanimDisplay;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
-import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -36,6 +33,7 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
@@ -50,7 +48,7 @@ import java.util.Date;
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends Activity {
+	extends FragmentActivity {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
@@ -60,11 +58,6 @@ public class ZmanimActivity
 	/** Controls how we format the zmanim. */
 	// TODO: Inject this
 	private ZmanFormatter                                     zmanFormatter;
-
-	/** How do we format Hebrew & Secular dates? */
-	// TODO: Inject these
-	private HebrewDateFormatter                               hebrewDateFormatter;
-	private SecularDateFormatter                              secularDateFormatter;
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
@@ -94,8 +87,6 @@ public class ZmanimActivity
 
 	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
 	private ListView                                          listView;
-
-	private SecularDatePicker                                 secularDatePicker;
 
 	// TODO: Inject this
 	private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
@@ -187,12 +178,17 @@ public class ZmanimActivity
 		determiningLocationDialog = new ProgressDialog( this );
 		determiningLocationDialog.setIndeterminate( true );
 		determiningLocationDialog.setMessage( "Determining location..." );
+		determiningLocationDialog.show();
 
 		eventBus = new EventBus();
-		secularDatePicker = new SecularDatePicker( eventBus );
+
+		// todo: Move to background thread????????
 		locationToAddressConverter = new LocationToAddressConverter( new Geocoder( this ), eventBus );
 
-		determiningLocationDialog.show();
+		/////
+		// TODO: Move things things into Guice modules, etc....
+		DateDisplayModule dateDisplayModule = new DateDisplayModule( ZmanimActivity.this, eventBus );
+		dateDisplayModule.create();
 
 		SharedPreferences sharedPreferences = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
@@ -363,8 +359,6 @@ public class ZmanimActivity
 
 				// Get the date here, but do NOT fire the event...we're on a background thread and that might not be good.
 				currentDate = HebrewCalendar.today();
-				hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-				secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
 
 				return params[0];
 			}
@@ -403,15 +397,17 @@ public class ZmanimActivity
 
 	private void buildHeader() {
 
+		// todo: this goes away
+
 		// Listen for 'clicks' indicating the user wants to change the date being viewed.
-		final View secularDate = findViewById( R.id.secular_date );
-		secularDate.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View v ) {
-					showDialog( R.id.secular_date );
-				}
-			}
-		);
+//		final View secularDate = findViewById( R.id.secular_date );
+//		secularDate.setOnClickListener(
+//			new View.OnClickListener() {
+//				public void onClick( View v ) {
+//					showDialog( R.id.secular_date );
+//				}
+//			}
+//		);
 
 		updateLocationView( lastKnownLocation );
 
@@ -529,11 +525,12 @@ public class ZmanimActivity
 	@SuppressWarnings( { "FeatureEnvy" } )
 	private void updateHeader() {
 
-		if ( lastKnownLocation != null ) {
-			updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, lastKnownLocation ) );
-		}
-
-		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
+		//todo find callers, probably from events, and then make it go away
+//		if ( lastKnownLocation != null ) {
+//			updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, lastKnownLocation ) );
+//		}
+//
+//		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
 
 		String description = currentDate.getDescription();
 		if ( ( null == description ) || ( 0 == description.trim().length() ) ) {
@@ -621,9 +618,6 @@ public class ZmanimActivity
 	protected Dialog onCreateDialog( int dialogID ) {
 
 		switch ( dialogID ) {
-			case R.id.secular_date:
-				return secularDatePicker.create( this );
-
 			case R.id.about:
 			case R.id.help:
 				return messageDisplayer.getInstance( this );
@@ -644,10 +638,6 @@ public class ZmanimActivity
 		super.onPrepareDialog( dialogID, dialog );
 
 		switch ( dialogID ) {
-			case R.id.secular_date:
-				secularDatePicker.changeDate( currentDate );
-				break;
-
 			case R.id.about:
 				messageDisplayer.update( R.string.about_header, "com/gindin/zmanim/android/about.html" );
 				break;
@@ -777,6 +767,8 @@ public class ZmanimActivity
 		@Override
 		public void onHebrewDateChanged( HebrewDate newDate ) {
 			currentDate = newDate;
+
+			// todo: this method won't be necessary much longer...
 			updateHeader();
 		}
 	}
