@@ -5,6 +5,7 @@
 package com.gindin.zmanim.location;
 
 import net.sourceforge.zmanim.util.GeoLocation;
+import org.jetbrains.annotations.NotNull;
 
 import android.location.Address;
 import android.location.Location;
@@ -182,9 +183,10 @@ public class ZmanimLocation
 
 
 	@Override
+	@NotNull
 	public String getLocationName() {
 		String name = super.getLocationName();
-		if ( ( name == null ) || ( name.equals( UNKNOWN_LOCATION ) ) ) {
+		if ( ( name == null ) || name.equals( UNKNOWN_LOCATION ) || name.trim().isEmpty() ) {
 			name = toLatLongString( getLatitude(), getLongitude() );
 		}
 
