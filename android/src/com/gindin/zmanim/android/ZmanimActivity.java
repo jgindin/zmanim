@@ -369,7 +369,6 @@ public class ZmanimActivity
 				try {
 					super.onPostExecute( error );
 
-					buildHeader();
 					buildFooter( error );
 
 					// Now go ahead and fire the date change event.
@@ -392,46 +391,6 @@ public class ZmanimActivity
 
 		buildUITask = new BaseAsyncClass<LocationError, Void, LocationError>( callbacks );
 		buildUITask.execute( error );
-	}
-
-
-	private void buildHeader() {
-
-		// todo: this goes away
-
-		// Listen for 'clicks' indicating the user wants to change the date being viewed.
-//		final View secularDate = findViewById( R.id.secular_date );
-//		secularDate.setOnClickListener(
-//			new View.OnClickListener() {
-//				public void onClick( View v ) {
-//					showDialog( R.id.secular_date );
-//				}
-//			}
-//		);
-
-		updateLocationView( lastKnownLocation );
-
-		// Update the header
-		updateHeader();
-	}
-
-
-	private void updateLocationView( ZmanimLocation location ) {
-
-		final String locationName;
-		if ( null == location ) {
-			locationName = getResources().getString( R.string.unknown_location );
-		}
-		else {
-			locationName = location.getLocationName();
-		}
-
-		// We may not have a location name. In that case, don't do anything. This is a bit of a hack, because we can
-		//  determine the location name *before* we render the whole UI. And, in these cases, we may not have the
-		//  location with a name (because maybe we've got a last-known location that didn't store the name).
-		if ( ( null != locationName ) && ( locationName.length() > 0 ) ) {
-			updateField( R.id.location, locationName );
-		}
 	}
 
 
@@ -519,27 +478,6 @@ public class ZmanimActivity
 		}
 
 		updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
-	}
-
-
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private void updateHeader() {
-
-		//todo find callers, probably from events, and then make it go away
-//		if ( lastKnownLocation != null ) {
-//			updateField( R.id.hebrew_date, hebrewDateFormatter.format( currentDate, lastKnownLocation ) );
-//		}
-//
-//		updateField( R.id.secular_date, Html.fromHtml( "<u>" + secularDateFormatter.format( currentDate ) + "</u>" ) );
-
-		String description = currentDate.getDescription();
-		if ( ( null == description ) || ( 0 == description.trim().length() ) ) {
-			findViewById( R.id.holiday_row ).setVisibility( View.GONE );
-		}
-		else {
-			findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
-			updateField( R.id.holiday, description );
-		}
 	}
 
 
@@ -767,9 +705,6 @@ public class ZmanimActivity
 		@Override
 		public void onHebrewDateChanged( HebrewDate newDate ) {
 			currentDate = newDate;
-
-			// todo: this method won't be necessary much longer...
-			updateHeader();
 		}
 	}
 
@@ -784,7 +719,6 @@ public class ZmanimActivity
 					@Override
 					public void run() {
 						rebuildUI( location, null );
-						updateLocationView( location );
 					}
 				}
 			);
@@ -802,7 +736,6 @@ public class ZmanimActivity
 					@Override
 					public void run() {
 						rebuildUI( lastKnownLocation, error );
-						updateLocationView( lastKnownLocation );
 					}
 				}
 			);

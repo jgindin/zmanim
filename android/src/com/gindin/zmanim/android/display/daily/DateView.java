@@ -14,12 +14,21 @@ import com.gindin.zmanim.calendar.HebrewDate;
 public interface DateView<P extends DatePresenter>
 	extends View<P> {
 
+	/** Instructs the view to display the date. */
 	void displayDate(
 		String formattedHebrewDate,
 		String formattedSecularDate
 	);
 
 
+	/** Instructs the view that it should present a UI allowing the user to change the date. */
 	void allowUserToChangeDate( HebrewDate currentDate );
+
+	/** Instructs the view to display the location information. */
+	void displayLocation( String formattedLocation );
+
+	/** Instructs the view do render a description for the day. May be null to indicate no description. */
+	void displayDescriptionOfTheDay( String descriptionOfTheDay );
+
 
 } // End of DateView interface

@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.display.daily;
 
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -15,12 +16,16 @@ import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanim.location.ZmanimLocation;
 
+import android.content.res.Resources;
+
 /**
  *
  */
 class DatePresenterImpl<V extends DateView>
 	extends AbstractPresenter<V>
 	implements DatePresenter<V> {
+
+	private final Resources                                   resources;
 
 	private final HebrewDateFormatter                         hebrewDateFormatter;
 
@@ -39,11 +44,13 @@ class DatePresenterImpl<V extends DateView>
 	DatePresenterImpl(
 		V                     view,
 		EventBus              eventBus,
+		Resources             resources,
 		HebrewDateFormatter   hebrewDateFormatter,
 		SecularDateFormatter  secularDateFormatter
 	) {
-		super( view, eventBus );
 
+		super( view, eventBus );
+		this.resources = resources;
 		this.hebrewDateFormatter = hebrewDateFormatter;
 		this.secularDateFormatter = secularDateFormatter;
 
@@ -105,14 +112,30 @@ class DatePresenterImpl<V extends DateView>
 
 
 	private void handleLocationChanged( ZmanimLocation location ) {
-		this.currentLocation = location;
+		currentLocation = location;
 		displayDate();
+		displayLocationName();
 	}
 
 
 	private void handleDateChanged( HebrewDate newDate ) {
 		currentDate = newDate;
 		displayDate();
+		displayDateDescription();
+	}
+
+
+	private void displayLocationName() {
+
+		String locationName;
+		if ( null == currentLocation ) {
+			locationName = resources.getString( R.string.unknown_location );
+		}
+		else {
+			locationName = currentLocation.getLocationName();
+		}
+
+		getView().displayLocation( locationName );
 	}
 
 
@@ -126,6 +149,20 @@ class DatePresenterImpl<V extends DateView>
 			hebrewDateFormatter.format( currentDate, currentLocation ),
 			secularDateFormatter.format( currentDate )
 		);
+	}
+
+
+	private void displayDateDescription() {
+
+		String description;
+		if ( currentDate == null ) {
+			description = null;
+		}
+		else {
+			description = currentDate.getDescription();
+		}
+
+		getView().displayDescriptionOfTheDay( description );
 	}
 
 

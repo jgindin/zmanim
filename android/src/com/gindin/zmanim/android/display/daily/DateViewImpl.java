@@ -27,6 +27,8 @@ class DateViewImpl<P extends DatePresenter>
 
 	private final TextView                                    hebrewDateView;
 	private final TextView                                    secularDateView;
+	private final TextView                                    locationView;
+	private final TextView                                    dateDescriptionView;
 
 	private final FragmentActivity                            owner;
 
@@ -59,6 +61,8 @@ class DateViewImpl<P extends DatePresenter>
 		);
 
 		hebrewDateView = (TextView)owner.findViewById( R.id.hebrew_date );
+		locationView = (TextView)owner.findViewById( R.id.location );
+		dateDescriptionView = (TextView)owner.findViewById( R.id.holiday );
 	}
 
 
@@ -78,6 +82,25 @@ class DateViewImpl<P extends DatePresenter>
 
 		ChangeDateFragment changeDateFragment = new ChangeDateFragment( currentDate, dateSetListener );
 		changeDateFragment.show( owner.getSupportFragmentManager(), "secularDatePicker" );
+	}
+
+
+	@Override
+	public void displayLocation( String formattedLocation ) {
+		locationView.setText( formattedLocation );
+	}
+
+
+	@Override
+	public void displayDescriptionOfTheDay( String descriptionOfTheDay ) {
+
+		if ( ( descriptionOfTheDay == null ) || descriptionOfTheDay.trim().isEmpty() ) {
+			owner.findViewById( R.id.holiday_row ).setVisibility( View.GONE );
+		}
+		else {
+			owner.findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
+			dateDescriptionView.setText( descriptionOfTheDay );
+		}
 	}
 
 
