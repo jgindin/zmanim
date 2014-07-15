@@ -93,7 +93,7 @@ public class ZmanimCalculator
 	 * @return the <code>Date</code> representing the time.
 	 */
 	public Date getLatestMinchaMishnaBerura() {
-		return getSunset();
+		return getSeaLevelSunset();
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class ZmanimCalculator
 		long shaotZmaniotHour = getTemporalHour();
 		long shaotZmaniotMinute = shaotZmaniotHour / MINUTES_PER_HOUR;
 
-		return getTimeOffset( getSunset(),
+		return getTimeOffset( getSeaLevelSunset(),
 			( MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF * shaotZmaniotMinute ) + ( shaotZmaniotMinute / 2 ) );
 	}
 
@@ -120,7 +120,7 @@ public class ZmanimCalculator
 	 * @return the <code>Date</code> representing the time.
 	 */
 	public Date getLatestMinchaBenSion() {
-		return getTimeOffset( getSunset(), MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL * MINUTE_MILLIS);
+		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL * MINUTE_MILLIS);
 	}
 
 
@@ -147,7 +147,7 @@ public class ZmanimCalculator
 	 * @return the <code>Date</code> representing candle lighting.
 	 */
 	public Date getCandleLighting( int minutesBeforeShkia ) {
-		return getTimeOffset(getSunset(), - minutesBeforeShkia * MINUTE_MILLIS);
+		return getTimeOffset(getSeaLevelSunset(), -minutesBeforeShkia * MINUTE_MILLIS);
 	}
 
 	/**
@@ -160,8 +160,8 @@ public class ZmanimCalculator
 
 		ZmanimCalculator clonedCal = (ZmanimCalculator)clone();
 		clonedCal.getCalendar().add( Calendar.DAY_OF_MONTH, 1);
-		Date sunset = getSunset();
-		Date sunrise = clonedCal.getSunrise();
+		Date sunset = getSeaLevelSunset();
+		Date sunrise = clonedCal.getSeaLevelSunrise();
 		if ( ( null == sunset ) || ( null == sunrise ) ) {
 			return null;
 		}

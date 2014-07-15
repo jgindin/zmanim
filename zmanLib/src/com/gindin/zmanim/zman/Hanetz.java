@@ -14,6 +14,9 @@ import java.util.List;
 class Hanetz
 	extends Zmanim {
 
+
+	private static final String                               DEFAULT_ZMAN_NAME = "Sunrise";
+
 	Hanetz(
 		final ZmanimCalculator zmanimCalculator
 	) {
@@ -29,7 +32,15 @@ class Hanetz
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Sunrise", "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
+			new Zman( DEFAULT_ZMAN_NAME, "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
+				@Override protected Date calculate() {
+					return zmanimCalculator.getSeaLevelSunrise();
+				}
+			}
+		);
+
+		zmanim.add(
+			new Zman( "Sunrise (with elevation)", "The exact sunrise time, taking elevation into account..", Zmanim.Type.Hanetz, false ) {
 				@Override protected Date calculate() {
 					return zmanimCalculator.getSunrise();
 				}
