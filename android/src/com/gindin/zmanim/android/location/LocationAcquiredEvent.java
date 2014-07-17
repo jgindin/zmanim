@@ -19,10 +19,7 @@ public class LocationAcquiredEvent
 	public static abstract class Handler implements EventHandler<LocationAcquiredEvent> {
 
 		/**
-		 * Invoked when the location has been acquired. By location, we mean only the latitude and
-		 *  longitude.
-		 *
-		 * @param location Only the latitude and longitude fields will be valid.
+		 * Invoked when the location has been acquired.
 		 */
 		public abstract void onLocationAcquired( ZmanimLocation location );
 
