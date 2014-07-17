@@ -10,7 +10,7 @@ package com.gindin.mvp;
  *
  * Temporary until I get Guice / Dagger / whatever-DI implemented.
  */
-public interface MvpModule<P> {
+public interface MvpModule<P extends Presenter> {
 
 	P create();
 

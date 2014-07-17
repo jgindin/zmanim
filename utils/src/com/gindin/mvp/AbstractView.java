@@ -4,6 +4,8 @@
 
 package com.gindin.mvp;
 
+import android.support.v4.app.FragmentActivity;
+
 /**
  * Abstract, base implementation of a View.
  *<p/>
@@ -14,10 +16,13 @@ package com.gindin.mvp;
 public abstract class AbstractView<P extends Presenter>
 	implements View<P> {
 
+	protected final FragmentActivity                          owner;
+
 	private P                                                 presenter;
 
 
-	protected AbstractView() {
+	protected AbstractView( FragmentActivity owner ) {
+		this.owner = owner;
 	}
 
 
