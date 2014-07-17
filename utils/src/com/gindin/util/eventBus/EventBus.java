@@ -57,6 +57,11 @@ public final class EventBus {
 	private final EventCache                                  eventCache = new EventCache();
 
 	/**
+	 * Used to allow interaction with our cache prior to dispatching an event.
+	 */
+	private final EventCacheControl                           eventCacheControl = new EventCacheControlImpl();
+
+	/**
 	 * When we're actively firing an event, this will be set. Used to ensure that (a) handler add/removes only happen
 	 *  after the event is fully dispatched; (b) events are dispatched in the proper order.
 	 */
@@ -124,6 +129,8 @@ public final class EventBus {
 
 		inProgressEvent = event;
 
+		event.preDispatch( eventCacheControl );
+
 		List<H> handlers = handlerCollection.get( event.getClass() );
 		if ( null != handlers ) {
 			for ( H handler : handlers ) {
@@ -131,7 +138,9 @@ public final class EventBus {
 			}
 		}
 
-		eventCache.put( (Class<Event>)event.getClass(), event );
+		if ( event.isCachable() ) {
+			eventCache.put( (Class<Event>)event.getClass(), event );
+		}
 
 		inProgressEvent = null;
 	}
@@ -188,6 +197,15 @@ public final class EventBus {
 		}
 	}
 
+
+	private class EventCacheControlImpl
+		implements EventCacheControl {
+
+		@Override
+		public void clearCacheForType( Class<? extends Event> type ) {
+			eventCache.remove( type );
+		}
+	}
 
 
 	/**
@@ -273,6 +291,11 @@ public final class EventBus {
 		public <H extends EventHandler, E extends Event<H>> E get( Class<E> eventType ) {
 			//noinspection unchecked
 			return (E)eventCache.get( eventType );
+		}
+
+
+		public <H extends EventHandler, E extends Event<H>> void remove( Class<E> eventType ) {
+			eventCache.remove( eventType );
 		}
 	}
 

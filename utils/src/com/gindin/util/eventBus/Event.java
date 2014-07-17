@@ -19,6 +19,13 @@ public abstract class Event<H extends EventHandler> {
 
 
 	/**
+	 * Invoked prior to any dispatching of the event, allowing an opportunity to interact with the cache control.
+	 */
+	public void preDispatch( EventCacheControl cacheControl ) {
+	}
+
+
+	/**
 	 * Called by the event bus to send this method to the specified handler. Generally, if the handler has a method
 	 *  onFoo, the implementation of this method will be of the form, "handler.onFoo( this );".
 	 *
@@ -26,5 +33,12 @@ public abstract class Event<H extends EventHandler> {
 	 */
 	public abstract void dispatch( H handler );
 
+
+	/**
+	 * @return true if this event can be cached.
+	 */
+	public boolean isCachable() {
+		return true;
+	}
 
 } // End of Event class

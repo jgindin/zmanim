@@ -238,6 +238,61 @@ public class UT_EventBus {
 	}
 
 
+	@Test
+	public void testUncachableEvent() {
+
+		// To test uncachable events:
+		//  1. fire an event that is not cachable
+		eventBus.fire( new UncachableEvent() );
+
+		//  2. add a handler w/ catchup and ensure it does not get any event.
+		final Boolean[] received = new Boolean[1];
+		UncachableEvent.Handler handler = new UncachableEvent.Handler() {
+			@Override
+			void onUncachableEvent() {
+				received[0] = Boolean.TRUE;
+			}
+		};
+		eventBus.addHandler( handler, true );
+		Assert.assertNull( received[0] );
+	}
+
+
+	@Test
+	public void testCacheControl() {
+
+		// To test cache control:
+		//  1. fire a cachable event (e1)
+		eventBus.fire( new Event1() );
+
+		//  2. add handler for e1 w/ catchup to ensure it was cached
+		final Boolean[] received = new Boolean[1];
+		final Event1.Handler handler1 = new Event1.Handler() {
+			@Override
+			void onEvent1() {
+				received[0] = Boolean.TRUE;
+			}
+		};
+		eventBus.addHandler( handler1, true );
+		Assert.assertEquals( Boolean.TRUE, received[ 0 ] );
+
+		//  3. fire event that will clear that event from the cache
+		eventBus.fire( new EventWithCacheControl() );
+
+		//  4. add handler for e1 w/ catchup and ensure it does not get any catch up event
+		received[0] = null;
+		final Event1.Handler handler2 = new Event1.Handler() {
+			@Override
+			void onEvent1() {
+				received[0] = Boolean.TRUE;
+			}
+		};
+		eventBus.addHandler( handler2, true );
+		Assert.assertNull( received[ 0 ] );
+	}
+
+
+
 	private static class Event1 extends Event<Event1.Handler> {
 
 		static abstract class Handler implements EventHandler {
@@ -294,5 +349,58 @@ public class UT_EventBus {
 		}
 	}
 
+
+	private static class EventWithCacheControl extends Event<EventWithCacheControl.Handler> {
+
+		static abstract class Handler implements EventHandler<EventWithCacheControl> {
+			abstract void onEventWithCacheControl();
+
+
+			@Override
+			public Class<EventWithCacheControl> getAssociatedType() {
+				return EventWithCacheControl.class;
+			}
+		}
+
+
+		@Override
+		public void preDispatch( EventCacheControl cacheControl ) {
+			super.preDispatch( cacheControl );
+
+			cacheControl.clearCacheForType( Event1.class );
+		}
+
+
+		@Override
+		public void dispatch( Handler handler ) {
+			handler.onEventWithCacheControl();
+		}
+	}
+
+
+	private static class UncachableEvent extends Event<UncachableEvent.Handler> {
+
+		static abstract class Handler implements EventHandler<UncachableEvent> {
+			abstract void onUncachableEvent();
+
+
+			@Override
+			public Class<UncachableEvent> getAssociatedType() {
+				return UncachableEvent.class;
+			}
+		}
+
+
+		@Override
+		public boolean isCachable() {
+			return false;
+		}
+
+
+		@Override
+		public void dispatch( Handler handler ) {
+			handler.onUncachableEvent();
+		}
+	}
 
 } // End of UT_EventBus class
