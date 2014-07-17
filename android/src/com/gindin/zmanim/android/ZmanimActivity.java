@@ -4,13 +4,17 @@
 
 package com.gindin.zmanim.android;
 
+import com.gindin.mvp.Presenter;
 import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.display.daily.DateDisplayModule;
+import com.gindin.zmanim.android.display.daily.EditLocationPrefsEvent;
+import com.gindin.zmanim.android.display.daily.LocationDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
@@ -22,7 +26,6 @@ import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -42,7 +45,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entry point to the Android application which displays zmanim.
@@ -50,7 +55,11 @@ import java.util.Date;
 public class ZmanimActivity
 	extends FragmentActivity {
 
+	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
+
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
+
+	private final List<Presenter<?>>                          loadedPresenters = new ArrayList<Presenter<?>>();
 
 	/** What date is currently being viewed? */
 	private HebrewDate                                        currentDate;
@@ -97,24 +106,6 @@ public class ZmanimActivity
 	private HebrewDateChangedEvent.Handler                    dateChangedHandler;
 
 	private ZmanimLocation                                    lastKnownLocation;
-
-	private LocationToAddressConverter                        locationToAddressConverter;
-
-	/** When the user clicks on the location, they're indicating they want to change it. */
-	private final View.OnClickListener                        locationClickListener = new View.OnClickListener() {
-		public void onClick( View view ) {
-			editLocationProviderPrefs();
-		}
-	};
-
-
-	/** When the user long-clicks on the location, they're indicating they want to see some details about it. */
-	private final View.OnLongClickListener                    locationLongClickListener = new View.OnLongClickListener() {
-		public boolean onLongClick( View view ) {
-			showLocationDetails();
-			return true;
-		}
-	};
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -180,15 +171,18 @@ public class ZmanimActivity
 		determiningLocationDialog.setMessage( "Determining location..." );
 		determiningLocationDialog.show();
 
-		eventBus = new EventBus();
+		eventBus = ZMANIM_EVENT_BUS;
 
 		// todo: Move to background thread????????
-		locationToAddressConverter = new LocationToAddressConverter( new Geocoder( this ), eventBus );
-
 		/////
 		// TODO: Move things things into Guice modules, etc....
-		DateDisplayModule dateDisplayModule = new DateDisplayModule( ZmanimActivity.this, eventBus );
-		dateDisplayModule.create();
+		new LocationToAddressConverter( new Geocoder( this ), eventBus );
+
+		DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
+		loadedPresenters.add( dateDisplayModule.create() );
+
+		LocationDisplayModule locationDisplayModule = new LocationDisplayModule( this, eventBus );
+		loadedPresenters.add( locationDisplayModule.create() );
 
 		SharedPreferences sharedPreferences = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
@@ -201,12 +195,7 @@ public class ZmanimActivity
 		// Now start listening for location changes...
 		rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
 
-		locationManager.determineLocation();
-
-		// Let the location manager know about the field that contains the current location.
-		final View locationField = findViewById( R.id.location );
-		locationField.setOnClickListener( locationClickListener );
-		locationField.setOnLongClickListener( locationLongClickListener );
+		refresh();
 	}
 
 
@@ -266,6 +255,11 @@ public class ZmanimActivity
 
 		eventBus.removeHandler( dateChangedHandler );
 
+		for ( Presenter<?> presenter : loadedPresenters ) {
+			presenter.destroy();
+		}
+		loadedPresenters.clear();
+
 		LogUtils.endSession( this );
 		
 		super.onDestroy();
@@ -289,13 +283,7 @@ public class ZmanimActivity
 			case ENABLE_LOCATION_SERVICES:
 				determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 				determiningLocationDialog.show();
-				locationManager.determineLocation();
-				break;
-
-			case EDIT_LOCATION_PREFERENCES:
-				if ( resultCode == RESULT_OK ) {
-					locationManager.determineLocation();
-				}
+				refresh();
 				break;
 
 			case PERSONAL_PREFERENCS:
@@ -529,10 +517,10 @@ public class ZmanimActivity
 
 			case R.id.personal_prefs:
 				personalPrefsManager.editPrefs();
-				break;
+				return true;
 
 			case R.id.location_prefs:
-				editLocationProviderPrefs();
+				eventBus.fire( new EditLocationPrefsEvent() );
 				return true;
 
 			case R.id.about:
@@ -605,7 +593,7 @@ public class ZmanimActivity
 
 	private void refresh() {
 		// This will force us to go re-query for our location.
-		locationManager.determineLocation();
+		eventBus.fire( new RequestLocationUpdateEvent() );
 	}
 
 	private void updateField(
@@ -626,33 +614,6 @@ public class ZmanimActivity
 		TextView view = (TextView)findViewById( field );
 		view.setText( text );
 	}
-
-
-	private void editLocationProviderPrefs() {
-		startActivityForResult( new Intent( this, LocationProviderPreferences.class ),
-			Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
-	}
-
-
-	private void showLocationDetails() {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder( this );
-		builder.setTitle( R.string.current_location_title );
-
-		String locationDetails;
-		if ( lastKnownLocation == null ) {
-			locationDetails = getResources().getString( R.string.unable_to_determine_location_error );
-		}
-		else {
-			locationDetails = lastKnownLocation.toString();
-		}
-
-		builder.setMessage( locationDetails );
-
-		final AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-
 
 
 

@@ -25,6 +25,12 @@ import java.util.Map;
  * Handles all things related to finding and knowing the location necessary to compute the Zmanim.
  *<p/>
  *
+ * Listens for:
+ *  <ul>
+ *    <li>RequestLocationUpdateEvent
+ *  </ul>
+ *<p/>
+ *
  * Events Fired:
  *  <ul>
  *    <li>RawLocationAcquiredEvent
@@ -59,6 +65,8 @@ public class ZmanimLocationManager {
 	/** Which provider are we currently using? */
 	private LocationAcquirer                                  currentAcquirer;
 
+	/** Listen for requests to get a new location. */
+	private final RequestLocationUpdateEvent.Handler          locationRequestHandler;
 
 
 	public ZmanimLocationManager(
@@ -72,11 +80,19 @@ public class ZmanimLocationManager {
 		this.locationManager = locationManager;
 
 		lastKnownLocationProvider = new LastKnownLocationProvider( locationManagementPrefs );
+
+		locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
+			@Override
+			public void onLocationUpdateRequested() {
+				determineLocation();
+			}
+		};
+		eventBus.addHandler( locationRequestHandler );
 	}
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	public void determineLocation() {
+	private void determineLocation() {
 
 		cancel();
 
