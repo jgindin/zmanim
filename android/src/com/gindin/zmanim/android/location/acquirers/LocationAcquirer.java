@@ -38,6 +38,11 @@ public abstract class LocationAcquirer {
 
 	private final SharedPreferences                           personalPrefs;
 
+	/**
+	 * Keep track of the last location which was acquired so that we can avoid firing spurious events.
+	 */
+	private ZmanimLocation                                    lastKnownLocation;
+
 
 	protected LocationAcquirer(
 		EventBus          eventBus,
@@ -98,18 +103,32 @@ public abstract class LocationAcquirer {
 
 
 	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation ) {
+
 		fireLocationAcquiredEvent( newLocation, null );
 	}
 
 
 	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation, LocationError error ) {
 
-		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-		if ( !useElevation ) {
-			newLocation.setElevation( 0.0 );
+		// Before we do anything, make sure that there's a significant change worthy of our time...
+		if ( ( error == null ) && ( newLocation != null ) && ( lastKnownLocation != null ) ) {
+
+			// Less than 1km? Don't bother...
+			// I suppose you could run into an issue if that 1km puts you in a different time zone
+			//  or something like that...
+			if ( newLocation.getGeodesicDistance( lastKnownLocation ) < 1000 ) {
+				return;
+			}
 		}
 
-		eventBus.fire( new LocationAcquiredEvent( newLocation, error ) );
+		lastKnownLocation = newLocation;
+
+		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+		if ( !useElevation && ( lastKnownLocation != null ) ) {
+			lastKnownLocation.setElevation( 0.0 );
+		}
+
+		eventBus.fire( new LocationAcquiredEvent( lastKnownLocation, error ) );
 	}
 
 

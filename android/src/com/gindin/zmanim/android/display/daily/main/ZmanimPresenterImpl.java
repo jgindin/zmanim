@@ -73,7 +73,10 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
 			@Override
 			public void onError( LocationError error, ZmanimLocation lastKnownLocation ) {
-				handleLocationChanged( lastKnownLocation );
+				// Don't bother updating if there's an error AND we already have a location.
+				if ( currentLocation == null ) {
+					handleLocationChanged( lastKnownLocation );
+				}
 			}
 		};
 		eventBus.addHandler( locationAcquiredHandler, true );
@@ -99,18 +102,6 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
 
 	private void handleLocationChanged( ZmanimLocation newLocation ) {
-
-		// Before we do anything, make sure that there's a significant change worthy of our time...
-		ZmanimLocation lastLocation = currentLocation;
-		if ( ( null != lastLocation ) && ( null != newLocation ) ) {
-
-			// Less than 1km? Don't bother...
-			// I suppose you could run into an issue if that 1km puts you in a different time zone
-			//  or something like that...
-			if ( newLocation.getGeodesicDistance( lastLocation ) < 1000 ) {
-				return;
-			}
-		}
 
 		currentLocation = newLocation;
 

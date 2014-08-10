@@ -52,7 +52,10 @@ class LocationPresenterImpl<V extends LocationView>
 
 			@Override
 			public void onError( LocationError error, ZmanimLocation lastKnownLocation ) {
-				handleLocationChanged( lastKnownLocation );
+				// Don't bother updating if there's an error AND we already have a location.
+				if ( currentLocation == null ) {
+					handleLocationChanged( lastKnownLocation );
+				}
 			}
 		};
 		eventBus.addHandler( locationAcquiredHandler, true );
