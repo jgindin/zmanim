@@ -45,9 +45,7 @@ public class LocationToAddressConverter {
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
 			public void onLocationAcquired( ZmanimLocation location ) {
-				if ( !location.isResolved() ) {
-					orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
-				}
+				handleLocationAcquired( location );
 			}
 
 
@@ -56,7 +54,7 @@ public class LocationToAddressConverter {
 				LocationError   error,
 				ZmanimLocation  lastKnownLocation
 			) {
-				// Don't need to do anything with this.
+				handleLocationAcquired( lastKnownLocation );
 			}
 		};
 		eventBus.addHandler( locationAcquiredHandler );
@@ -75,6 +73,13 @@ public class LocationToAddressConverter {
 
 		eventBus.removeHandler( locationAcquiredHandler );
 		eventBus.removeHandler( placeAcquiredHandler );
+	}
+
+
+	private void handleLocationAcquired( ZmanimLocation location ) {
+		if ( !location.isResolved() ) {
+			orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
+		}
 	}
 
 
