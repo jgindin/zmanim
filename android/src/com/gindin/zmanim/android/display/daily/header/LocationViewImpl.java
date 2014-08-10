@@ -52,8 +52,17 @@ class LocationViewImpl<P extends LocationPresenter>
 	}
 
 	@Override
-	public void displayLocation( String formattedLocation ) {
-		locationView.setText( formattedLocation );
+	public void displayLocation( final String formattedLocation ) {
+
+		owner.runOnUiThread(
+			new Runnable() {
+				@Override
+				public void run() {
+					locationView.setText( formattedLocation );
+				}
+			}
+		);
+
 	}
 
 

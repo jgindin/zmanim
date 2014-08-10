@@ -100,7 +100,7 @@ class LocationPresenterImpl<V extends LocationView>
 	private void handleLocationChanged( ZmanimLocation location ) {
 		currentLocation = location;
 
-		String locationName;
+		final String locationName;
 		if ( null == location ) {
 			locationName = resources.getString( R.string.unknown_location );
 		}

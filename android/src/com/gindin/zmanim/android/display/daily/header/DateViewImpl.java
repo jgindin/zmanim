@@ -64,12 +64,20 @@ class DateViewImpl<P extends DatePresenter>
 
 	@Override
 	public void displayDate(
-		String formattedHebrewDate,
-		String formattedSecularDate
+		final String formattedHebrewDate,
+		final String formattedSecularDate
 	) {
 
-		hebrewDateView.setText( formattedHebrewDate );
-		secularDateView.setText(  Html.fromHtml( "<u>" + formattedSecularDate + "</u>" ) );
+		owner.runOnUiThread(
+			new Runnable() {
+				@Override
+				public void run() {
+					hebrewDateView.setText( formattedHebrewDate );
+					secularDateView.setText(  Html.fromHtml( "<u>" + formattedSecularDate + "</u>" ) );
+				}
+			}
+		);
+
 	}
 
 
@@ -82,15 +90,23 @@ class DateViewImpl<P extends DatePresenter>
 
 
 	@Override
-	public void displayDescriptionOfTheDay( String descriptionOfTheDay ) {
+	public void displayDescriptionOfTheDay( final String descriptionOfTheDay ) {
 
-		if ( ( descriptionOfTheDay == null ) || descriptionOfTheDay.trim().isEmpty() ) {
-			owner.findViewById( R.id.holiday_row ).setVisibility( View.GONE );
-		}
-		else {
-			owner.findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
-			dateDescriptionView.setText( descriptionOfTheDay );
-		}
+		owner.runOnUiThread(
+			new Runnable() {
+				@Override
+				public void run() {
+
+					if ( ( descriptionOfTheDay == null ) || descriptionOfTheDay.trim().isEmpty() ) {
+						owner.findViewById( R.id.holiday_row ).setVisibility( View.GONE );
+					}
+					else {
+						owner.findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
+						dateDescriptionView.setText( descriptionOfTheDay );
+					}
+				}
+			}
+		);
 	}
 
 
