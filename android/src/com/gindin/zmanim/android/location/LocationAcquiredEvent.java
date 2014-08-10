@@ -78,4 +78,13 @@ public class LocationAcquiredEvent
 		}
 	}
 
+
+	@Override
+	public String toString() {
+		return "LocationAcquiredEvent{" +
+			"location=" + location +
+			", error=" + error +
+			'}';
+	}
+
 } // End of RawLocationAcquiredEvent class

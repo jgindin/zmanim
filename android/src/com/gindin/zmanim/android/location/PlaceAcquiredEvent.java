@@ -47,4 +47,12 @@ public class PlaceAcquiredEvent
 			handler.placeAcquired( place );
 	}
 
+
+	@Override
+	public String toString() {
+		return "PlaceAcquiredEvent{" +
+			"place=" + place +
+			'}';
+	}
+
 } // End of RawLocationAcquiredEvent class

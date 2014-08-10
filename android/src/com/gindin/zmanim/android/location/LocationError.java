@@ -42,4 +42,12 @@ public class LocationError {
 		this.message = message;
 	}
 
+
+	@Override
+	public String toString() {
+		return "LocationError{" +
+			"errorCode=" + errorCode +
+			", message='" + message + '\'' +
+			'}';
+	}
 }

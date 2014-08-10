@@ -38,4 +38,11 @@ public class HebrewDateChangedEvent
 		handler.onHebrewDateChanged( newDate );
 	}
 
+
+	@Override
+	public String toString() {
+		return "HebrewDateChangedEvent{" +
+			"newDate=" + newDate +
+			'}';
+	}
 } // End of HebrewDateChangedEvent class

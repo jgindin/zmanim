@@ -11,44 +11,48 @@ import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.Zmanim;
 import com.gindin.zmanim.zman.ZmanimFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
  */
-@SuppressWarnings( "UnusedDeclaration" )
+@SuppressWarnings( { "UnusedDeclaration", "ClassWithTooManyFields", "ClassWithTooManyMethods" } )
 public class HebrewDate
 	implements Comparable<HebrewDate> {
 
-	private int                                               hebrewYear;
-	@HebrewMonth.Constant
-	private int                                               hebrewMonth;
-	private int                                               hebrewDay;
+	private final int                                         hebrewYear;
 
-	private int                                               moladHours;
-	private int                                               moladMinutes;
-	private int                                               moladChalakim;
+	@HebrewMonth.Constant
+	private final int                                         hebrewMonth;
+
+	private final int                                         hebrewDay;
 
 	/** The Gregorian year */
-	private int                                               gregorianYear;
+	private final int                                         gregorianYear;
 
 	/**
 	 * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
 	 *  month 11 being December.
 	 */
 	@Constants.CalendarMonth
-	private int                                               gregorianMonth;
+	private final int                                         gregorianMonth;
 
 	/** The day of the Gregorian month */
-	private int                                               gregorianDayOfMonth;
+	private final int                                         gregorianDayOfMonth;
 
 	/** 1 == Sunday, 2 == Monday, etc... */
 	@Constants.CalendarDay
-	private int                                               dayOfWeek;
+	private final int                                         dayOfWeek;
 
 	/** Internal representation of the date. */
-	private int                                               gregorianAbsDate;
+	private final int                                         gregorianAbsDate;
+
+	private int                                               moladHours;
+	private int                                               moladMinutes;
+	private int                                               moladChalakim;
+
 
 	/** Cache the details lookup. */
 	private Details                                           dateDetails;
@@ -505,7 +509,7 @@ public class HebrewDate
 	// Base class overrides
 	
 	@Override
-	public int compareTo( HebrewDate otherDate ) {
+	public int compareTo( @NotNull HebrewDate otherDate ) {
 
 		// We use gregorian because with the Hebrew months, because Nisan is the first month, it gets more complex.
 		//  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN < ADAR...
@@ -567,6 +571,20 @@ public class HebrewDate
 		result = 31 * result + hebrewYear;
 		result = 31 * result + hebrewDay;
 		return result;
+	}
+
+
+	@Override
+	public String toString() {
+		return "HebrewDate{" +
+			"hebrewYear=" + hebrewYear +
+			", hebrewMonth=" + hebrewMonth +
+			", hebrewDay=" + hebrewDay +
+			", gregorianYear=" + gregorianYear +
+			", gregorianMonth=" + gregorianMonth +
+			", gregorianDayOfMonth=" + gregorianDayOfMonth +
+			", dateDetails=" + dateDetails +
+			'}';
 	}
 
 
