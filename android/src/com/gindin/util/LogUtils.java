@@ -128,11 +128,20 @@ public class LogUtils {
 
 
 	public static void logEvent(
-		String                    eventName,
-	  List<Pair<String,String>>  messages
+		String                      eventName,
+	  List<Pair<String,String>>   messages
 	) {
 
-		if ( !Version.isDevelopment() ) {
+		if ( Version.isDevelopment() ) {
+
+			StringBuilder msg = new StringBuilder();
+			for ( Pair<String, String> pair : messages ) {
+				msg.append( pair.first ).append( ": " ).append( pair.second );
+			}
+
+			Log.i( eventName, msg.toString() );
+		}
+		else {
 
 			Map<String,String> messageMap = new HashMap<String, String>();
 			if ( null != messages ) {
@@ -142,6 +151,17 @@ public class LogUtils {
 			}
 
 			FlurryAgent.onEvent( eventName, messageMap );
+		}
+	}
+
+
+	public static void debug(
+		String tag,
+	  String message
+	) {
+
+		if ( Version.isDevelopment() ) {
+			Log.i( tag, message );
 		}
 	}
 
