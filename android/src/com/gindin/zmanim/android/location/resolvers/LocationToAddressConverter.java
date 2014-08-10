@@ -10,6 +10,7 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 
+import android.content.SharedPreferences;
 import android.location.Geocoder;
 
 import java.util.ArrayList;
@@ -24,21 +25,22 @@ public class LocationToAddressConverter {
 
 	private final List<LocationResolver>                      orderedResolvers;
 
-	private final LocationAcquiredEvent.Handler            locationAcquiredHandler;
+	private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
 	private final PlaceAcquiredEvent.Handler                  placeAcquiredHandler;
 
 
 	public LocationToAddressConverter(
-		Geocoder geocoder,
-		EventBus eventBus
+		Geocoder          geocoder,
+		EventBus          eventBus,
+		SharedPreferences personalPrefs
 	) {
 
 		this.eventBus = eventBus;
 
 		orderedResolvers = new ArrayList<LocationResolver>();
-		orderedResolvers.add( new AndroidResolver( eventBus, geocoder ) );
-		orderedResolvers.add( new NominatimResolver( eventBus ) );
-		orderedResolvers.add( new PassthroughResolver( eventBus ) );
+		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
+		orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
+		orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
 
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override

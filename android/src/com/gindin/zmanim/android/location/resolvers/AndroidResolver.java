@@ -8,6 +8,7 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 
@@ -24,10 +25,11 @@ class AndroidResolver
 
 
 	AndroidResolver(
-		EventBus eventBus,
-		Geocoder geocoder
+		EventBus          eventBus,
+		Geocoder          geocoder,
+		SharedPreferences personalPrefs
 	) {
-		super( eventBus );
+		super( eventBus, personalPrefs );
 		this.geocoder = geocoder;
 	}
 

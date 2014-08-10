@@ -52,6 +52,8 @@ public class ZmanimLocationManager {
 	/** Everyone wants to see what preferences have been set. */
 	private final SharedPreferences                           locationManagementPrefs;
 
+	private final SharedPreferences                           personalPrefs;
+
 	/** System-wide, actual location manager. */
 	private final LocationManager                             locationManager;
 
@@ -72,11 +74,13 @@ public class ZmanimLocationManager {
 	public ZmanimLocationManager(
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs,
+		SharedPreferences personalPrefs,
 	  LocationManager   locationManager
 	) {
 
 		this.eventBus = eventBus;
 		this.locationManagementPrefs = locationManagementPrefs;
+		this.personalPrefs = personalPrefs;
 		this.locationManager = locationManager;
 
 		lastKnownLocationProvider = new LastKnownLocationProvider( locationManagementPrefs );
@@ -166,17 +170,13 @@ public class ZmanimLocationManager {
 
 	public boolean isProviderEnabled( String providerName ) {
 
-		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
-			return false;
-		}
-		else {
-			return locationManager.isProviderEnabled( providerName );
-		}
+		return !LastKnownLocationProvider.NAME.equals( providerName ) && locationManager.isProviderEnabled( providerName );
 	}
 
 
 	public void requestSingleUpdate( String providerName, LocationListener listener ) {
 
+		//noinspection StatementWithEmptyBody
 		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
 			// Don't allow this. It'll prevent the real providers from having a chance....
 		}
@@ -204,15 +204,15 @@ public class ZmanimLocationManager {
 		if ( provider == null ) {
 			switch ( type ) {
 				case FROM_DEVICE:
-					provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, this );
+					provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs, this );
 					break;
 
 				case LAT_LONG_FROM_USER:
-					provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs );
+					provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
 					break;
 
 				case NAME_FROM_USER:
-					provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs );
+					provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
 					break;
 
 				default:

@@ -6,7 +6,6 @@ package com.gindin.zmanim.android.zmanList;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
@@ -15,35 +14,28 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Wraps a zman row, making for quick & easy recycling.
+ * This class should really be deprecated...the view holder should *not* be performing calculations...
  */
-public abstract class ZmanRowWrapper {
+public abstract class CalculatingZmanRowHolder
+	extends ZmanRowHolder {
 
-	protected final TextView                                nameField;
-	protected final TextView                                descriptionField;
+	private final ZmanFormatter                               zmanFormatter;
 
-	private final TextView                                  timeField;
-
-	private ZmanAsyncCalculator                             currentCalculator;
-
-	private ZmanFormatter                                   zmanFormatter;
+	private ZmanAsyncCalculator                               currentCalculator;
 
 
-	public ZmanRowWrapper(
+
+	protected CalculatingZmanRowHolder(
 		View          zmanRowView,
 		ZmanFormatter zmanFormatter
 	) {
+		super( zmanRowView );
 		this.zmanFormatter = zmanFormatter;
-
-		nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
-		timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
-		descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
 	}
 
 
-	public void setZman(
-		Zman zman
-	) {
+	@Override
+	public void setZman( Zman zman ) {
 
 		// Cancel any currently executing calculation...
 		if ( ( null != currentCalculator ) && ( !currentCalculator.isCancelled() ) ) {
@@ -53,16 +45,9 @@ public abstract class ZmanRowWrapper {
 		// Start the new calculation
 		currentCalculator = new ZmanAsyncCalculator( zmanFormatter, timeField );
 		currentCalculator.execute( zman );
-		updateTextFields( zman );
+
+		super.setZman( zman );
 	}
-
-
-	/**
-	 * Must be implemented to set the name & description fields.
-	 *
-	 * @param zman the zman to use when setting the fields.
-	 */
-	protected abstract void updateTextFields( Zman zman );
 
 
 	/**
@@ -116,4 +101,5 @@ public abstract class ZmanRowWrapper {
 			}
 		}
 	}
-}
+
+} // End of CalculatingZmanRowHolder class

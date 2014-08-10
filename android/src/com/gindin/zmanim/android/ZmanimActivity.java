@@ -5,13 +5,13 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.mvp.Presenter;
-import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
-import com.gindin.zmanim.android.display.daily.DateDisplayModule;
-import com.gindin.zmanim.android.display.daily.EditLocationPrefsEvent;
-import com.gindin.zmanim.android.display.daily.LocationDisplayModule;
+import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
+import com.gindin.zmanim.android.display.daily.header.EditLocationPrefsEvent;
+import com.gindin.zmanim.android.display.daily.header.LocationDisplayModule;
+import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
@@ -19,12 +19,12 @@ import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
-import com.gindin.zmanim.android.prefs.*;
-import com.gindin.zmanim.android.zmanList.ZmanimDisplay;
+import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.ZmanFormatter;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -34,7 +34,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -64,10 +63,6 @@ public class ZmanimActivity
 	/** What date is currently being viewed? */
 	private HebrewDate                                        currentDate;
 
-	/** Controls how we format the zmanim. */
-	// TODO: Inject this
-	private ZmanFormatter                                     zmanFormatter;
-
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
 
@@ -85,14 +80,6 @@ public class ZmanimActivity
 
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
-
-	/**
-	 * Task used to build the UI. While we're in the process of (re)building the UI, this will be set. As soon as
-	 *  we're done, it's reset to null.
-	 */
-	private AsyncTask<LocationError, Void, LocationError>     buildUITask = null;
-
-	private ZmanimDisplay                                     zmanimDisplay;
 
 	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
 	private ListView                                          listView;
@@ -176,7 +163,9 @@ public class ZmanimActivity
 		// todo: Move to background thread????????
 		/////
 		// TODO: Move things things into Guice modules, etc....
-		new LocationToAddressConverter( new Geocoder( this ), eventBus );
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+
+		new LocationToAddressConverter( new Geocoder( this ), eventBus, personalPrefs );
 
 		DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
 		loadedPresenters.add( dateDisplayModule.create() );
@@ -184,9 +173,12 @@ public class ZmanimActivity
 		LocationDisplayModule locationDisplayModule = new LocationDisplayModule( this, eventBus );
 		loadedPresenters.add( locationDisplayModule.create() );
 
-		SharedPreferences sharedPreferences = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-		locationManager = new ZmanimLocationManager( eventBus, sharedPreferences, systemLocationManager );
+		locationManager = new ZmanimLocationManager( eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+
+		ZmanimDisplayModule zmanimDisplayModule = new ZmanimDisplayModule( this, eventBus, personalPrefsManager);
+		loadedPresenters.add( zmanimDisplayModule.create() );
 
 		setupViewListeners();
 
@@ -248,11 +240,6 @@ public class ZmanimActivity
 	@Override
 	protected void onDestroy() {
 
-		if ( null != zmanimDisplay ) {
-			zmanimDisplay.onDestroy();
-			zmanimDisplay = null;
-		}
-
 		eventBus.removeHandler( dateChangedHandler );
 
 		for ( Presenter<?> presenter : loadedPresenters ) {
@@ -293,6 +280,8 @@ public class ZmanimActivity
 	}
 
 
+	// TODO: GO AWAY!!!!
+	// \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
 	public ListView getListView() {
 
 		if ( null == listView ) {
@@ -307,6 +296,9 @@ public class ZmanimActivity
 		getListView().setAdapter( listAdapter );
 	}
 
+	// /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+	// TODO: GO AWAY!!!!
+
 
 	public void rebuildUI() {
 		rebuildUI( lastKnownLocation, null );
@@ -320,65 +312,13 @@ public class ZmanimActivity
 
 		lastKnownLocation = location;
 
-		if ( null != buildUITask ) {
-			buildUITask.cancel( false );
-		}
+		currentDate = HebrewCalendar.today();
+		eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
 
-		BaseAsyncClass.Callbacks<LocationError, Void, LocationError> callbacks = new BaseAsyncClass.Callbacks<LocationError, Void, LocationError>() {
+		buildFooter( error );
 
-			@Override protected void onPreExecute() {
-				super.onPreExecute();
-				determiningLocationDialog.setMessage( getString( R.string.updating_with_new_location ) );
-
-				// Only show the dialog if we don't already have a location. If we do, then it's OK...we'll update
-				//  everything once we've got the new data...
-				if ( ( null == lastKnownLocation ) && !determiningLocationDialog.isShowing() ) {
-					determiningLocationDialog.show();
-				}
-			}
-
-
-			@Override protected LocationError doInBackground(
-				BaseAsyncClass.ProgressPublisher<Void>  publisher,
-				LocationError...                        params
-			) {
-				boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-				zmanFormatter = new ZmanFormatter( showSeconds );
-
-				// Get the date here, but do NOT fire the event...we're on a background thread and that might not be good.
-				currentDate = HebrewCalendar.today();
-
-				return params[0];
-			}
-
-
-			@Override protected void onPostExecute( LocationError error ) {
-				super.onPostExecute( error );
-				try {
-					super.onPostExecute( error );
-
-					buildFooter( error );
-
-					// Now go ahead and fire the date change event.
-					eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
-
-					if ( null == zmanimDisplay ) {
-						zmanimDisplay = new ZmanimDisplay( ZmanimActivity.this, eventBus, zmanFormatter );
-					}
-					else {
-						zmanimDisplay.setZmanFormatter( zmanFormatter );
-					}
-				}
-				finally {
-					// Make sure to clean up!
-					determiningLocationDialog.dismiss();
-					buildUITask = null;
-				}
-			}
-		};
-
-		buildUITask = new BaseAsyncClass<LocationError, Void, LocationError>( callbacks );
-		buildUITask.execute( error );
+		// Make sure to clean up!
+		determiningLocationDialog.dismiss();
 	}
 
 

@@ -114,9 +114,9 @@ public class ZmanimDisplay {
 
 
 	private void updateListAdapater() {
-		ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
-		if ( null != listAdapter ) {
-			zmanimActivity.setAdapter( listAdapter );
+		ZmanimDisplayListAdapter zmanimDisplayListAdapter = getListAdapter( currentDate, currentLocation );
+		if ( null != zmanimDisplayListAdapter ) {
+			zmanimActivity.setAdapter( zmanimDisplayListAdapter );
 		}
 	}
 
@@ -147,14 +147,14 @@ public class ZmanimDisplay {
 		}
 		// TODO: End of block to move
 
-		ListAdapter listAdapter = getListAdapter( currentDate, currentLocation );
-		if ( null != listAdapter ) {
-			zmanimActivity.setAdapter( listAdapter );
+		ZmanimDisplayListAdapter zmanimDisplayListAdapter = getListAdapter( currentDate, currentLocation );
+		if ( null != zmanimDisplayListAdapter ) {
+			zmanimActivity.setAdapter( zmanimDisplayListAdapter );
 		}
 	}
 
 
-	private ListAdapter getListAdapter(
+	private ZmanimDisplayListAdapter getListAdapter(
 		HebrewDate      date,
 		ZmanimLocation  location
 	) {
@@ -173,7 +173,7 @@ public class ZmanimDisplay {
 
 		// TODO: Rather than creating a new ListAdapter *every* time, it seems that  we ought to be
 		// TODO:  able to update and reuse...
-		return new ListAdapter( zmanimActivity, Arrays.asList( zmanimToDisplay ) );
+		return new ZmanimDisplayListAdapter( zmanimActivity, Arrays.asList( zmanimToDisplay ) );
 	}
 
 
@@ -208,7 +208,7 @@ public class ZmanimDisplay {
 						selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
 					}
 
-					ListAdapter adapter = (ListAdapter)zmanimActivity.getListView().getAdapter();
+					ZmanimDisplayListAdapter adapter = (ZmanimDisplayListAdapter)zmanimActivity.getListView().getAdapter();
 					Zman zman = adapter.getItem( position );
 					selector.selectFrom( currentDate, currentLocation, zman.type, selectionCallback );
 				}
@@ -232,33 +232,33 @@ public class ZmanimDisplay {
 	}
 
 
-	private class ListAdapter
+	private class ZmanimDisplayListAdapter
 		extends ZmanimListAdapter {
 
-		private ListAdapter(
+		private ZmanimDisplayListAdapter(
 			Context context,
-			List<Zman>  zmanim
+			List<Zman> zmanim
 		) {
 			super( context, zmanim );
 		}
 
 
 		@Override
-		protected ZmanRowWrapper createRowWrapper( View rowView ) {
-			return new RowWrapper( rowView, zmanFormatter );
+		protected ZmanRowHolder createRowHolder( View rowView ) {
+			return new ZmanimDisplayRowHolder( rowView, zmanFormatter );
 		}
 
 	}
 
 
-	private static class RowWrapper
-		extends ZmanRowWrapper {
+	private static class ZmanimDisplayRowHolder
+		extends CalculatingZmanRowHolder {
 
-		private RowWrapper(
+		private ZmanimDisplayRowHolder(
 			View          zmanRowView,
-			ZmanFormatter zmanimCalendar
+			ZmanFormatter zmanFormatter
 		) {
-			super( zmanRowView, zmanimCalendar );
+			super( zmanRowView, zmanFormatter );
 		}
 
 

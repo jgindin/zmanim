@@ -101,8 +101,8 @@ public class ZmanimSelector {
 
 		final Zmanim zmanim = currentDate.getZmanim( currentLocation, type );
 		final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.asList() ) {
-			@Override protected ZmanRowWrapper createRowWrapper( View rowView ) {
-				return new SelectorRow( rowView, zmanFormatter );
+			@Override protected ZmanRowHolder createRowHolder( View rowView ) {
+				return new SelectorRowHolder( rowView, zmanFormatter );
 			}
 		};
 
@@ -123,10 +123,10 @@ public class ZmanimSelector {
 	}
 
 
-	private static class SelectorRow
-		extends ZmanRowWrapper {
+	private static class SelectorRowHolder
+		extends CalculatingZmanRowHolder {
 
-		private SelectorRow(
+		private SelectorRowHolder(
 			View          zmanRowView,
 			ZmanFormatter zmanFormatter
 		) {

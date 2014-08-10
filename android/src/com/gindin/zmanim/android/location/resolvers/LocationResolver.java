@@ -10,7 +10,10 @@ import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.location.ZmanimLocation;
+
+import android.content.SharedPreferences;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +30,15 @@ abstract class LocationResolver {
 
 	private final EventBus                                  eventBus;
 
+	private final SharedPreferences                         personalPrefs;
 
-	protected LocationResolver( EventBus eventBus ) {
+
+	protected LocationResolver(
+		EventBus          eventBus,
+	  SharedPreferences personalPrefs
+	) {
 		this.eventBus = eventBus;
+		this.personalPrefs = personalPrefs;
 	}
 
 
@@ -81,8 +90,9 @@ abstract class LocationResolver {
 		BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
 			protected ZmanimLocation doInBackground(
-				BaseAsyncClass.ProgressPublisher<Void> publisher,
-				ZmanimLocation...                   zmanimLocations
+				BaseAsyncClass.ProgressPublisher<Void>  publisher,
+				BaseAsyncClass.CancelChecker            cancelChecker,
+				ZmanimLocation...                       zmanimLocations
 			) {
 				return resolveFromCoordinatesInBackground( zmanimLocations[0] );
 			}
@@ -114,8 +124,9 @@ abstract class LocationResolver {
 		BaseAsyncClass.Callbacks<ZmanimLocation,Void,ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
 			protected ZmanimLocation doInBackground(
-				BaseAsyncClass.ProgressPublisher<Void> publisher,
-				ZmanimLocation...                   zmanimLocations
+				BaseAsyncClass.ProgressPublisher<Void>  publisher,
+				BaseAsyncClass.CancelChecker            cancelChecker,
+				ZmanimLocation...                       zmanimLocations
 			) {
 				return resolveFromNameInBackground( zmanimLocations[0] );
 			}
@@ -141,6 +152,12 @@ abstract class LocationResolver {
 			nextResolvers.get( 0 ).resolve( originalLocation, nextResolvers.subList( 1, nextResolvers.size() ) );
 		}
 		else {
+
+			boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+			if ( !useElevation && ( resolvedLocation != null ) ) {
+				resolvedLocation.setElevation( 0.0 );
+			}
+
 			eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
 
 			// Let's keep track of how often we use each resolver.

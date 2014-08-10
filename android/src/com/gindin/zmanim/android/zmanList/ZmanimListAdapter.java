@@ -4,13 +4,14 @@
 
 package com.gindin.zmanim.android.zmanList;
 
+import com.gindin.zmanim.android.R;
+import com.gindin.zmanim.zman.Zman;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.zman.Zman;
 
 import java.util.List;
 
@@ -60,26 +61,49 @@ public abstract class ZmanimListAdapter
 		ViewGroup parent
 	) {
 
+		final Zman zman = getItem( position );
+
 		final View childView;
-		final ZmanRowWrapper wrapper;
+		final ZmanRowHolder holder;
 
 		if ( null == convertView ) {
 
 			LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 			childView = inflater.inflate( R.layout.zman_list_row, parent, false );
 
-			wrapper = createRowWrapper( childView );
-			childView.setTag( wrapper );
+			holder = createRowHolder( childView );
+			childView.setTag( holder );
+
+			onNewViewCreated( childView, zman );
 		}
 		else {
+
+			// We can just reuse this view as-is.
 			childView = convertView;
-			wrapper = (ZmanRowWrapper)childView.getTag();
+			holder = (ZmanRowHolder)childView.getTag();
+
+			onViewRecycled( childView, zman );
 		}
 
-		final Zman zman = getItem( position );
-		wrapper.setZman( zman );
+		holder.setZman( zman );
 
 		return childView;
+	}
+
+
+	protected void onNewViewCreated(
+		View childView,
+		Zman zman
+	) {
+		// Nothing by default.
+	}
+
+
+	protected void onViewRecycled(
+		View childView,
+		Zman zman
+	) {
+		// Nothing by default.
 	}
 
 
@@ -89,7 +113,7 @@ public abstract class ZmanimListAdapter
 	 * @param rowView The actual view of the row.
 	 * @return The row wrapper, which will be used to avoid creating crazy numbers of row views.
 	 */
-	protected abstract ZmanRowWrapper createRowWrapper( View rowView );
+	protected abstract ZmanRowHolder createRowHolder( View rowView );
 
 
 } // End of ZmanimListAdapter

@@ -6,7 +6,6 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.util.location.LatitudeLongitudeParser;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.location.ZmanimLocation;
@@ -25,10 +24,11 @@ public class LatitudeLongitudeLocationAcquirer
 
 	public LatitudeLongitudeLocationAcquirer(
 		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs
+		SharedPreferences locationManagementPrefs,
+		SharedPreferences personalPrefs
 	) {
 
-		super( eventBus, locationManagementPrefs );
+		super( eventBus, locationManagementPrefs, personalPrefs );
 	}
 
 
@@ -48,7 +48,7 @@ public class LatitudeLongitudeLocationAcquirer
 			.inTimeZone( timeZone )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( newLocation ) );
+		fireLocationAcquiredEvent( newLocation );
 	}
 
 
@@ -63,8 +63,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			eventBus.fire( new LocationAcquiredEvent( null,
-				new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) ) );
+			fireLocationAcquiredEvent( null,  new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
 		}
 	}
 
@@ -80,8 +79,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			eventBus.fire( new LocationAcquiredEvent( null,
-				new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) ) );
+			fireLocationAcquiredEvent( null, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
 		}
 	}
 

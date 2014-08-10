@@ -5,7 +5,11 @@
 package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviders;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
+import com.gindin.zmanim.location.ZmanimLocation;
 
 import android.content.SharedPreferences;
 
@@ -32,13 +36,17 @@ public abstract class LocationAcquirer {
 
 	protected final SharedPreferences                         locationManagementPrefs;
 
+	private final SharedPreferences                           personalPrefs;
+
 
 	protected LocationAcquirer(
 		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs
+		SharedPreferences locationManagementPrefs,
+	  SharedPreferences personalPrefs
 	) {
 		this.eventBus = eventBus;
 		this.locationManagementPrefs = locationManagementPrefs;
+		this.personalPrefs = personalPrefs;
 	}
 
 
@@ -86,6 +94,22 @@ public abstract class LocationAcquirer {
 
 
 		return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
+	}
+
+
+	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation ) {
+		fireLocationAcquiredEvent( newLocation, null );
+	}
+
+
+	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation, LocationError error ) {
+
+		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+		if ( !useElevation ) {
+			newLocation.setElevation( 0.0 );
+		}
+
+		eventBus.fire( new LocationAcquiredEvent( newLocation, error ) );
 	}
 
 

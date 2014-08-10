@@ -20,10 +20,11 @@ public class StaticLocationAcquirer
 
 	public StaticLocationAcquirer(
 		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs
+		SharedPreferences locationManagementPrefs,
+		SharedPreferences personalPrefs
 	) {
 
-		super( eventBus, locationManagementPrefs );
+		super( eventBus, locationManagementPrefs, personalPrefs );
 	}
 
 

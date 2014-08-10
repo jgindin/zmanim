@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.Build;
 
@@ -88,8 +89,11 @@ class NominatimResolver
 
 
 
-	NominatimResolver( EventBus eventBus ) {
-		super( eventBus );
+	NominatimResolver(
+		EventBus          eventBus,
+		SharedPreferences personalPrefs
+	) {
+		super( eventBus, personalPrefs );
 	}
 
 

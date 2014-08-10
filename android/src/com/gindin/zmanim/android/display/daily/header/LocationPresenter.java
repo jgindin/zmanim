@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.display.daily;
+package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.Presenter;
 

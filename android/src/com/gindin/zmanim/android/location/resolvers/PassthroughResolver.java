@@ -7,6 +7,8 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 
+import android.content.SharedPreferences;
+
 /**
  * A resolver of last resort. Will simply resolve the location as itself.
  */
@@ -14,8 +16,11 @@ class PassthroughResolver
 	extends LocationResolver {
 
 
-	PassthroughResolver( EventBus eventBus ) {
-		super( eventBus );
+	PassthroughResolver(
+		EventBus          eventBus,
+		SharedPreferences personalPrefs
+	) {
+		super( eventBus, personalPrefs );
 	}
 
 

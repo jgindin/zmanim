@@ -17,10 +17,15 @@ public final class BaseAsyncClass<Params, Progress, Result>
 		void publish( Progress... progress );
 	}
 
+	public interface CancelChecker {
+		boolean isCancelled();
+	}
+
 	public static abstract class Callbacks<Params, Progress, Result> {
 
 		protected abstract Result doInBackground(
 			ProgressPublisher<Progress> publisher,
+			CancelChecker               cancelChecker,
 			Params...                   params
 		);
 
@@ -54,7 +59,13 @@ public final class BaseAsyncClass<Params, Progress, Result>
 				publishProgress( progress );
 			}
 		};
-		return callbacks.doInBackground( publisher, paramses );
+		CancelChecker cancelChecker = new CancelChecker() {
+			@Override
+			public boolean isCancelled() {
+				return BaseAsyncClass.this.isCancelled();
+			}
+		};
+		return callbacks.doInBackground( publisher, cancelChecker, paramses );
 	}
 
 
