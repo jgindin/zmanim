@@ -187,6 +187,11 @@ public class ZmanimActivity
 		// Now start listening for location changes...
 		rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
 
+		// Have to get setup for today.
+		// TODO:  We should actually be storing the date the user is viewing in the savedInstanceState!
+		currentDate = HebrewCalendar.today();
+		eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
+
 		refresh();
 	}
 
@@ -311,9 +316,6 @@ public class ZmanimActivity
 	) {
 
 		lastKnownLocation = location;
-
-		currentDate = HebrewCalendar.today();
-		eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
 
 		buildFooter( error );
 
