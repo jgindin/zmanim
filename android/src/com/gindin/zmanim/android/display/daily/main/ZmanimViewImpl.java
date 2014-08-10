@@ -81,11 +81,17 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 
 
 	@Override
-	public void displayZmanim( Zman[] zmanimForTheDay ) {
+	public void displayZmanim( final Zman[] zmanimForTheDay ) {
 
 		// TODO: Rather than creating a new ListAdapter *every* time, it seems that  we ought to be
 		// TODO:  able to update and reuse...
-		listView.setAdapter( new ZmanimViewListAdapter( owner, Arrays.asList( zmanimForTheDay )) );
+		owner.runOnUiThread(
+			new Runnable() {
+				public void run() {
+					listView.setAdapter( new ZmanimViewListAdapter( owner, Arrays.asList( zmanimForTheDay )) );
+				}
+			}
+		);
 	}
 
 
