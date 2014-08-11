@@ -6,6 +6,8 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
 
@@ -27,8 +29,9 @@ class PassthroughResolver
 	/**
 	 * Since we couldn't resolve this any other way, then the resolution here is just to leave it alone.
 	 */
+	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromCoordinatesInBackground( ZmanimLocation zmanimLocation ) {
+	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {
 		return zmanimLocation;
 	}
 
@@ -36,8 +39,9 @@ class PassthroughResolver
 	/**
 	 * Since we couldn't resolve this any other way, then the resolution here is just to leave it alone.
 	 */
+	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromNameInBackground( ZmanimLocation zmanimLocation ) {
+	protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation ) {
 		return zmanimLocation;
 	}
 

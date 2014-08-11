@@ -14,6 +14,7 @@ import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -62,7 +63,7 @@ class DatePresenterImpl<V extends DateView>
 			}
 
 			@Override
-			public void onError( LocationError error, ZmanimLocation lastKnownLocation ) {
+			public void onError( @NotNull LocationError error, @NotNull ZmanimLocation lastKnownLocation ) {
 				handleLocationChanged( lastKnownLocation );
 			}
 		};
@@ -104,9 +105,11 @@ class DatePresenterImpl<V extends DateView>
 	}
 
 
-	private void handleLocationChanged( ZmanimLocation location ) {
-		currentLocation = location;
-		displayDate();
+	private void handleLocationChanged( @NotNull ZmanimLocation location ) {
+		if ( !location.isInvalid ) {
+			currentLocation = location;
+			displayDate();
+		}
 	}
 
 

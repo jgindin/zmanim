@@ -9,6 +9,7 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
 
 import android.content.SharedPreferences;
 import android.location.Geocoder;
@@ -51,8 +52,8 @@ public class LocationToAddressConverter {
 
 			@Override
 			public void onError(
-				LocationError   error,
-				ZmanimLocation  lastKnownLocation
+				@NotNull LocationError   error,
+				@NotNull ZmanimLocation  lastKnownLocation
 			) {
 				handleLocationAcquired( lastKnownLocation );
 			}
@@ -76,8 +77,8 @@ public class LocationToAddressConverter {
 	}
 
 
-	private void handleLocationAcquired( ZmanimLocation location ) {
-		if ( !location.isResolved() ) {
+	private void handleLocationAcquired( @NotNull ZmanimLocation location ) {
+		if ( !location.isResolved() && !location.isInvalid ) {
 			orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
 		}
 	}

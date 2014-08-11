@@ -16,6 +16,7 @@ import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.Zmanim;
+import org.jetbrains.annotations.NotNull;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -72,7 +73,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 			}
 
 			@Override
-			public void onError( LocationError error, ZmanimLocation lastKnownLocation ) {
+			public void onError( @NotNull LocationError error, @NotNull ZmanimLocation lastKnownLocation ) {
 				// Don't bother updating if there's an error AND we already have a location.
 				if ( currentLocation == null ) {
 					handleLocationChanged( lastKnownLocation );
@@ -101,15 +102,17 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 	}
 
 
-	private void handleLocationChanged( ZmanimLocation newLocation ) {
+	private void handleLocationChanged( @NotNull ZmanimLocation newLocation ) {
 
-		currentLocation = newLocation;
+		if ( !newLocation.isInvalid ) {
+			currentLocation = newLocation;
 
-		if ( currentDate == null ) {
-			return;
+			if ( currentDate == null ) {
+				return;
+			}
+
+			notifyViewOfZmanim();
 		}
-
-		notifyViewOfZmanim();
 	}
 
 

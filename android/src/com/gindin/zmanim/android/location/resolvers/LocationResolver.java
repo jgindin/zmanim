@@ -12,6 +12,8 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
 
@@ -43,13 +45,9 @@ abstract class LocationResolver {
 
 
 	public final void resolve(
-		ZmanimLocation          location,
-		List<LocationResolver>  nextResolvers
+		@NotNull ZmanimLocation          location,
+		@NotNull List<LocationResolver>  nextResolvers
 	) {
-
-		if ( location == null ) {
-			return;
-		}
 
 		if ( location.hasCoordinates() ) {
 			resolveFromCoordinates( location, nextResolvers );
@@ -66,7 +64,8 @@ abstract class LocationResolver {
 	 *
 	 * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
 	 */
-	protected abstract ZmanimLocation resolveFromCoordinatesInBackground( ZmanimLocation zmanimLocation );
+	@Nullable
+	protected abstract ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation );
 
 	/**
 	 * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
@@ -74,7 +73,8 @@ abstract class LocationResolver {
 	 *
 	 * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
 	 */
-	protected abstract ZmanimLocation resolveFromNameInBackground( ZmanimLocation zmanimLocation );
+	@Nullable
+	protected abstract ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation );
 
 
 	/**
@@ -83,8 +83,8 @@ abstract class LocationResolver {
 	 *  will be fired.
 	 */
 	private void resolveFromCoordinates(
-		final ZmanimLocation          location,
-		final List<LocationResolver>  nextResolvers
+		@NotNull final ZmanimLocation          location,
+		@NotNull final List<LocationResolver>  nextResolvers
 	) {
 
 		BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
@@ -113,8 +113,8 @@ abstract class LocationResolver {
 	 * Given a descriptive place name, use geocoding to find the actual location.
 	 */
 	private void resolveFromName(
-		final ZmanimLocation          location,
-		final List<LocationResolver>  nextResolvers
+		@NotNull final ZmanimLocation          location,
+		@NotNull final List<LocationResolver>  nextResolvers
 	) {
 
 		if ( location.getLocationName().trim().length() == 0 ) {
@@ -143,9 +143,9 @@ abstract class LocationResolver {
 
 
 	private void handlePostExecute(
-		ZmanimLocation                originalLocation,
-		ZmanimLocation                resolvedLocation,
-		final List<LocationResolver>  nextResolvers
+		@NotNull ZmanimLocation                originalLocation,
+		@Nullable ZmanimLocation               resolvedLocation,
+		@NotNull final List<LocationResolver>  nextResolvers
 	) {
 
 		if ( ( resolvedLocation == null ) && !nextResolvers.isEmpty() ) {
@@ -153,15 +153,24 @@ abstract class LocationResolver {
 		}
 		else {
 
-			boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-			if ( !useElevation && ( resolvedLocation != null ) ) {
-				resolvedLocation.setElevation( 0.0 );
+			if ( ( resolvedLocation == null ) || resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
+				// If we never got this location resolved, don't fire an event.
+				LogUtils.logError( "LocationResolver", "No one resolved location!", null,
+					new Pair<String, String>( "Location", ( resolvedLocation == null ? "<null>" : resolvedLocation.toShortString() ) ) );
 			}
+			else {
 
-			eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
+				boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+				if ( !useElevation ) {
+					resolvedLocation.setElevation( 0.0 );
+				}
 
-			// Let's keep track of how often we use each resolver.
-			LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
+				eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
+
+				// Let's keep track of how often we use each resolver.
+				LogUtils.logEvent( "LocationResolved", Arrays.asList(
+					new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
+			}
 		}
 	}
 

@@ -23,6 +23,7 @@
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="project" />
     <orderEntry type="library" name="kosherjava" level="project" />
     <orderEntry type="library" name="support-v4" level="project" />
+    <orderEntry type="library" name="ij-annotations" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

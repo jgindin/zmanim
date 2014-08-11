@@ -8,6 +8,8 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -97,8 +99,9 @@ class NominatimResolver
 	}
 
 
+	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromCoordinatesInBackground( ZmanimLocation zmanimLocation ) {
+	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {
 
 		ZmanimLocation resolvedLocation;
 
@@ -119,8 +122,9 @@ class NominatimResolver
 	}
 
 
+	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromNameInBackground( ZmanimLocation zmanimLocation ) {
+	protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation ) {
 
 		ZmanimLocation resolvedLocation;
 

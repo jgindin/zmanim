@@ -127,7 +127,7 @@ public class DynamicLocationAcquirer
 	 * Check the various location providers for their last known locations, and try to use the most recent. May
 	 *  return null if none of the providers are able to give us anything.
 	 */
-	@SuppressWarnings( { "AutoBoxing", "AutoUnboxing" } )
+	@SuppressWarnings( { "AutoBoxing", "AutoUnboxing", "FeatureEnvy" } )
 	private ZmanimLocation getLastKnownLocation() {
 
 		List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<Pair<Location,Long>>();
@@ -157,8 +157,7 @@ public class DynamicLocationAcquirer
 		else {
 
 			location = new ZmanimLocation.Builder()
-				.inTimeZone( getTimeZoneFromPrefs() )
-				.build();
+				.invalidLocation();
 		}
 
 		return location;

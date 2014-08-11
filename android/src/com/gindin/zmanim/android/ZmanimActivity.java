@@ -25,6 +25,7 @@ import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -315,7 +316,9 @@ public class ZmanimActivity
 	  LocationError   error
 	) {
 
-		lastKnownLocation = location;
+		if ( !location.isInvalid ) {
+			lastKnownLocation = location;
+		}
 
 		buildFooter( error );
 
@@ -630,8 +633,8 @@ public class ZmanimActivity
 
 		@Override
 		public void onError(
-			final LocationError   error,
-			final ZmanimLocation  lastKnownLocation
+			@NotNull final LocationError   error,
+			@NotNull final ZmanimLocation  lastKnownLocation
 		) {
 
 			runOnUiThread(

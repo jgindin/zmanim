@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ij-annotations">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../common/libs/ij-annotations.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

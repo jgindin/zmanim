@@ -7,6 +7,8 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.util.LogUtils;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -35,7 +37,8 @@ class AndroidResolver
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	protected ZmanimLocation resolveFromCoordinatesInBackground( ZmanimLocation location ) {
+	@Nullable
+	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation location ) {
 
 		if ( !Geocoder.isPresent() ) {
 			return null;
@@ -69,8 +72,9 @@ class AndroidResolver
 	}
 
 
+	@Nullable
 	@SuppressWarnings( "FeatureEnvy" )
-	protected ZmanimLocation resolveFromNameInBackground( ZmanimLocation location ) {
+	protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation location ) {
 
 		if ( !Geocoder.isPresent() ) {
 			return null;

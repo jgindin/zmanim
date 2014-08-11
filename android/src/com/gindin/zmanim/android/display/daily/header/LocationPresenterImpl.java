@@ -11,6 +11,7 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviderPreferences;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -51,7 +52,7 @@ class LocationPresenterImpl<V extends LocationView>
 			}
 
 			@Override
-			public void onError( LocationError error, ZmanimLocation lastKnownLocation ) {
+			public void onError( @NotNull LocationError error, @NotNull ZmanimLocation lastKnownLocation ) {
 				// Don't bother updating if there's an error AND we already have a location.
 				if ( currentLocation == null ) {
 					handleLocationChanged( lastKnownLocation );
@@ -100,11 +101,12 @@ class LocationPresenterImpl<V extends LocationView>
 	}
 
 
-	private void handleLocationChanged( ZmanimLocation location ) {
+	private void handleLocationChanged( @NotNull ZmanimLocation location ) {
+
 		currentLocation = location;
 
 		final String locationName;
-		if ( null == location ) {
+		if ( location.isInvalid ) {
 			locationName = resources.getString( R.string.unknown_location );
 		}
 		else {

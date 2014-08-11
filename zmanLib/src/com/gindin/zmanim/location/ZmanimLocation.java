@@ -111,14 +111,25 @@ public class ZmanimLocation
 			return this;
 		}
 
+
+		public ZmanimLocation invalidLocation() {
+			return INVALID_LOCATION;
+		}
+
 		public ZmanimLocation build() {
 			return new ZmanimLocation( providerName, locationName, locationTime, timeZone, latitude, longitude, elevation, accuracy );
 		}
 	}
 
 
+	/**
+	 * Whenever we need an invalid location, this one instance will do.
+	 */
+	private static final ZmanimLocation                       INVALID_LOCATION = new ZmanimLocation();
+
+
 	/** When the location name is unknown, use this, and an appropriate substitution will be made. */
-	private final static String                               UNKNOWN_LOCATION = " _unk_ ";
+	private static final String                               UNKNOWN_LOCATION = " _unk_ ";
 
 	private static final String                               ZMANIM_PROVIDER = "Zmanim";
 
@@ -130,6 +141,12 @@ public class ZmanimLocation
 
 	/** How accurate do we believe this location to be? */
 	public final float                                        accuracy;
+
+	/**
+	 * True indicates this is a known invalid location; false simply means we believe it to be valid, but cannot be
+	 *  completely sure.
+	 */
+	public final boolean                                      isInvalid;
 
 
 	/**
@@ -152,6 +169,8 @@ public class ZmanimLocation
 	  double    altitude,
 	  float     accuracy
 	  ) {
+
+		this.isInvalid = false;
 
 		this.providerName = providerName;
 		this.locationTime = locationTime;
@@ -179,6 +198,19 @@ public class ZmanimLocation
 		else {
 			setTimeZone( locationTimeZone );
 		}
+	}
+
+
+	/**
+	 * Only used when we need to build an invalid location.
+	 */
+	private ZmanimLocation() {
+
+		this.isInvalid = true;
+		this.accuracy = -1;
+		this.providerName = UNKNOWN_LOCATION;
+		this.locationTime = 0;
+
 	}
 
 

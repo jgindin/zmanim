@@ -7,6 +7,8 @@ package com.gindin.zmanim.android.location;
 import com.gindin.util.eventBus.Event;
 import com.gindin.util.eventBus.EventHandler;
 import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An event fired when the current location has been acquired. If a handler needs to know if the location
@@ -30,8 +32,8 @@ public class LocationAcquiredEvent
 		 * @param lastKnownLocation The last known location.
 		 */
 		public abstract void onError(
-			LocationError   error,
-			ZmanimLocation  lastKnownLocation
+			@NotNull LocationError   error,
+			@NotNull ZmanimLocation  lastKnownLocation
 		);
 
 
@@ -60,8 +62,8 @@ public class LocationAcquiredEvent
 
 
 	public LocationAcquiredEvent(
-		ZmanimLocation location,
-		LocationError error
+		@NotNull  ZmanimLocation  location,
+		@Nullable LocationError   error
 	) {
 		this.location = location;
 		this.error = error;
