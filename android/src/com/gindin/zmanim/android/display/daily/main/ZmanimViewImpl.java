@@ -102,10 +102,7 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 	) {
 
 		ZmanimViewListAdapter adapter = (ZmanimViewListAdapter)listView.getAdapter();
-		ZmanViewRowHolder rowHolder = adapter.findRowHolder( zman.type );
-		if ( rowHolder != null ) {
-			rowHolder.updateTime( formattedTime );
-		}
+		adapter.updateTimeForZman( zman, formattedTime );
 	}
 
 
@@ -121,12 +118,33 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 	 	 */
 		private final Map<Zmanim.Type,ZmanViewRowHolder>        zmanZmanRowHolderMap = new HashMap<Zmanim.Type, ZmanViewRowHolder>();
 
+		/**
+		 * Have to keep track of the times; we only display times for the list items which are actually
+		 *  displayed, but when another time gets scrolled into view, we have to be able to update and
+		 *  show that time.
+		 */
+		private final Map<Zmanim.Type,String>                   formattedZmanTimes = new HashMap<Zmanim.Type, String>();
+
 
 		ZmanimViewListAdapter(
 			Context     context,
 			List<Zman>  zmanim
 		) {
 			super( context, zmanim );
+		}
+
+
+		void updateTimeForZman(
+			Zman    zman,
+			String  formattedTime
+		) {
+
+			formattedZmanTimes.put( zman.type, formattedTime );
+
+			ZmanViewRowHolder rowHolder = zmanZmanRowHolderMap.get( zman.type );
+			if ( rowHolder != null ) {
+				rowHolder.updateTime( formattedTime );
+			}
 		}
 
 
@@ -137,7 +155,10 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 		) {
 			super.onNewViewCreated( childView, zman );
 
-			zmanZmanRowHolderMap.put( zman.type, (ZmanViewRowHolder)childView.getTag() );
+			ZmanViewRowHolder zmanViewRowHolder = (ZmanViewRowHolder)childView.getTag();
+			zmanZmanRowHolderMap.put( zman.type, zmanViewRowHolder );
+
+			updateTime( zman, zmanViewRowHolder );
 		}
 
 
@@ -157,8 +178,10 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 				}
 			}
 
-			// Don't forget to update the map!
+			// Update the map, and then if we already know the time to display, show it!
 			zmanZmanRowHolderMap.put( zman.type, zmanRowHolder );
+
+			updateTime( zman, zmanRowHolder );
 		}
 
 
@@ -168,9 +191,18 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 		}
 
 
-		ZmanViewRowHolder findRowHolder( Zmanim.Type type ) {
+		private void updateTime(
+			Zman              zman,
+			ZmanViewRowHolder zmanRowHolder
+		) {
 
-			return zmanZmanRowHolderMap.get( type );
+			String formattedTime = formattedZmanTimes.get( zman.type );
+			if ( formattedTime == null ) {
+				// This will clear out the old time, and we'll update it when the calculation is complete.
+				formattedTime = "";
+			}
+
+			zmanRowHolder.updateTime( formattedTime );
 		}
 
 	}
@@ -186,11 +218,10 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 
 		@Override
 		protected void updateTextFields( Zman zman ) {
-			nameField.setText( zman.type.name );
-			descriptionField.setText( zman.name );
 
 			// The time will get displayed later...
-			timeField.setText( "" );
+			nameField.setText( zman.type.name );
+			descriptionField.setText( zman.name );
 		}
 
 

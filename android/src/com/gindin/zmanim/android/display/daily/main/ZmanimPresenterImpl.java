@@ -120,7 +120,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
 		List<Zmanim> daysZmanim = currentDate.getZmanim( currentLocation );
 		Zman[] zmanimToDisplay = new Zman[ daysZmanim.size() ];
-		for ( int i = 0; i < daysZmanim.size(); i++ ) {
+		for ( int i = 0, numZmanim = daysZmanim.size(); i < numZmanim; i++ ) {
 			zmanimToDisplay[i] = getZman( daysZmanim.get( i ) );
 		}
 
