@@ -16,10 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -38,6 +35,7 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 
 		super( owner );
 		listView = (ListView)owner.findViewById( android.R.id.list );
+		listView.setAdapter( new ZmanimViewListAdapter( owner, new ArrayList<Zman>() ) );
 
 		listView.setOnItemClickListener(
 			new AdapterView.OnItemClickListener() {
@@ -83,12 +81,11 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 	@Override
 	public void displayZmanim( final Zman[] zmanimForTheDay ) {
 
-		// TODO: Rather than creating a new ListAdapter *every* time, it seems that  we ought to be
-		// TODO:  able to update and reuse...
 		owner.runOnUiThread(
 			new Runnable() {
 				public void run() {
-					listView.setAdapter( new ZmanimViewListAdapter( owner, Arrays.asList( zmanimForTheDay )) );
+					ZmanimViewListAdapter adapter = (ZmanimViewListAdapter)listView.getAdapter();
+					adapter.updateZmanim( Arrays.asList( zmanimForTheDay ) );
 				}
 			}
 		);

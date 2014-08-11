@@ -36,6 +36,21 @@ public abstract class ZmanimListAdapter
 	}
 
 
+	public void updateZmanim(
+		List<Zman>  zmanim
+	) {
+
+		setNotifyOnChange( false );
+		clear();
+
+		// Can't use addAll() -- it wasn't added until API level 11...
+		for ( Zman zman : zmanim ) {
+			add( zman );
+		}
+
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public boolean hasStableIds() {
 		return true;
