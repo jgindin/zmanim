@@ -175,7 +175,7 @@ public abstract class Zmanim {
 				return new ShabbatEnds( zmanimCalculator );
 			}
 		},
-		NightChatzot( "Chatzot", "Halachic Midnight" ) {
+		NightChatzot( "Midnight", "Halachic Midnight" ) {
 			@Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
 				return new NightChatzot( zmanimCalculator );
 			}
