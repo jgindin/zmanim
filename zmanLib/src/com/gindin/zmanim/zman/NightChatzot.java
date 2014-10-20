@@ -15,7 +15,7 @@ class NightChatzot
 	extends Zmanim {
 
 	public NightChatzot( ZmanimCalculator zmanimCalculator ) {
-		super( Type.Chatzot, buildZmanim( zmanimCalculator ) );
+		super( Type.NightChatzot, buildZmanim( zmanimCalculator ) );
 	}
 
 
