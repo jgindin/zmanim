@@ -22,11 +22,18 @@ public abstract class SecularDateFormatter {
 
 	private static SecularDateFormatter                       FORMATTER;
 
+	private static SecularDateFormatter                       SHORT_FORMATTER;
+
 
 	public static SecularDateFormatter getInstance( Style formatterStyle ) {
 
 		switch ( formatterStyle ) {
 			case SHORT:
+				if ( SHORT_FORMATTER == null ) {
+					SHORT_FORMATTER = new ShortFormatter();
+				}
+				return SHORT_FORMATTER;
+
 			case DEFAULT:
 			case MEDIUM:
 			case LONG:
@@ -42,11 +49,8 @@ public abstract class SecularDateFormatter {
 	public abstract String format( HebrewDate date );
 
 
-	static class DefaultFormatter
+	private static class DefaultFormatter
 		extends SecularDateFormatter {
-
-		DefaultFormatter() {
-		}
 
 
 		@SuppressWarnings( "FeatureEnvy" )
@@ -142,5 +146,56 @@ public abstract class SecularDateFormatter {
 			return formattedDate.toString();
 		}
 	}
+
+
+	private static class ShortFormatter
+		extends SecularDateFormatter {
+
+		@SuppressWarnings( { "FeatureEnvy", "AutoBoxing" } )
+		@Override
+		public String format( HebrewDate date ) {
+
+			final StringBuilder formattedDate = new StringBuilder();
+
+			formattedDate
+				.append( String.format( "%2s/%2s/%2s", date.getGregorianMonth() + 1, date.getGregorianDayOfMonth(),
+					date.getGregorianYear() ) );
+
+			switch ( date.getDayOfWeek() ) {
+				case Calendar.SUNDAY:
+					formattedDate.append( " S" );
+					break;
+
+				case Calendar.MONDAY:
+					formattedDate.append( " M" );
+					break;
+
+				case Calendar.TUESDAY:
+					formattedDate.append( " T" );
+					break;
+
+				case Calendar.WEDNESDAY:
+					formattedDate.append( " W" );
+					break;
+
+				case Calendar.THURSDAY:
+					formattedDate.append( " R" );
+					break;
+
+				case Calendar.FRIDAY:
+					formattedDate.append( " F" );
+					break;
+
+				case Calendar.SATURDAY:
+					formattedDate.append( " B" );
+					break;
+
+			}
+
+			return formattedDate.toString();
+		}
+
+	}
+
 
 }  // End of SecularDateFormatter class

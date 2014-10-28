@@ -29,7 +29,7 @@ public class Shavuot
 		if ( HebrewMonth.SIVAN == date.getHebrewMonth() ) {
 			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 			if ( 5 == hebrewDayOfMonth ) {
-				return new Details.Erev( date, SHAVUOT );
+				return new Details.ErevYomTov( date, SHAVUOT );
 			}
 
 			if ( 6 == hebrewDayOfMonth ) {

@@ -65,7 +65,7 @@ public class Pesach
 
 
 	protected static class ErevPesachDetails
-		extends Details.Erev {
+		extends Details.ErevYomTov {
 
 		ErevPesachDetails(
 			HebrewDate  date

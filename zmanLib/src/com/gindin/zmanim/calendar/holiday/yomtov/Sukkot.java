@@ -37,7 +37,7 @@ public class Sukkot
 
 			switch ( hebrewDayOfMonth ) {
 				case 14:
-					return new Details.Erev( date, SUKKOT );
+					return new Details.ErevYomTov( date, SUKKOT );
 
 				case 15:
 					return new Details.YomTovDetails( date, SUKKOT, true );
@@ -67,29 +67,10 @@ public class Sukkot
 
 
 	private static final class HoshanaRabbaDetails
-		extends Details {
+		extends Details.ErevYomTov {
 
-		private HoshanaRabbaDetails( HebrewDate date ) {
-			super( date );
-		}
-
-
-		@Override
-		public boolean isErev() {
-			// This is Erev Shmini Atzeret...
-			return true;
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-			return true;
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			return isShabbat();
+		HoshanaRabbaDetails( HebrewDate date ) {
+			super( date, HOSHANA_RABBA );
 		}
 
 

@@ -53,6 +53,7 @@ public abstract class Details {
 		return false;
 	}
 
+	public boolean isYomTov() { return false; }
 
 	public boolean isPesach() {
 		return false;
@@ -101,6 +102,10 @@ public abstract class Details {
 	}
 
 
+	protected final HebrewDate getTodaysDate() {
+		return date;
+	}
+
 
 	public static class Erev
 		extends Details {
@@ -111,8 +116,8 @@ public abstract class Details {
 
 
 		public Erev(
-			HebrewDate date,
-			String name
+			HebrewDate  date,
+			String      name
 		) {
 			this( date, name, true );
 		}
@@ -136,7 +141,8 @@ public abstract class Details {
 
 		@Override
 		public boolean lightCandles() {
-			return candles;
+			// No candle lighting if we're coming straight out of Shabbat...
+			return ( candles && !isShabbat() ) || isErevShabbat();
 		}
 
 
@@ -198,6 +204,34 @@ public abstract class Details {
 	}
 
 
+	public static class ErevYomTov
+		extends Erev {
+
+		public ErevYomTov(
+			HebrewDate  date,
+			String      name
+		) {
+			super( date, name );
+		}
+
+
+		public ErevYomTov(
+			HebrewDate  date,
+			String      name,
+			boolean     candles
+		) {
+			super( date, name, candles );
+		}
+
+
+		@Override
+		public boolean sayHavdalah() {
+			// Erev of a holiday doesn't get havdalah, even when the erev is motsa'e Shabbat.
+			return false;
+		}
+	}
+
+
 	public static class YomTovDetails
 		extends Details {
 
@@ -223,10 +257,17 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isYomTov() {
+			return true;
+		}
+
+
+		@Override
 		public boolean lightCandles() {
 
 			// If we don't want to light candles for this yom tov, but it's erev Shabbat, then we DO light candles.
-			return ( lightCandles || isErevShabbat() );
+			//  Of course, if it is Shabbat then we do not light...
+			return ( !isShabbat() && ( lightCandles || isErevShabbat() ) );
 		}
 
 
@@ -356,7 +397,18 @@ public abstract class Details {
 			}
 		};
 
+
+		/** The details of the dates that are composed into this. */
 		private final List<Details>                             composedDates = new ArrayList<Details>();
+
+		/**
+		 * There are cases where the only way to determine something about today is by looking at tomorrow.
+		 *  E.g., should we say havdalah? Well, if today is Shabbat, then yes. Unless it's the first day
+		 *    of Pesach or Sukkot, that is...
+		 *  This field will be filledin lazily if it's needed.
+		 */
+		private Details                                         tomorrowsDetails;
+
 
 		CompositeDetails(
 			HebrewDate  date,
@@ -382,9 +434,9 @@ public abstract class Details {
 
 
 		@Override
-		public boolean lightCandles() {
+		public boolean isYomTov() {
 			for ( Details composedDate : composedDates ) {
-				if ( composedDate.lightCandles() ) {
+				if ( composedDate.isYomTov() ) {
 					return true;
 				}
 			}
@@ -394,14 +446,40 @@ public abstract class Details {
 
 
 		@Override
-		public boolean sayHavdalah() {
+		public boolean lightCandles() {
+
+			boolean light = false;
 			for ( Details composedDate : composedDates ) {
-				if ( composedDate.sayHavdalah() ) {
-					return true;
+				if ( composedDate.lightCandles() ) {
+					light = true;
+					break;
 				}
 			}
 
-			return false;
+			// No candle lighting if we're coming straight out of Shabbat...
+			return light && !isShabbat();
+		}
+
+
+		@Override
+		public boolean sayHavdalah() {
+
+			boolean havdalah = false;
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.sayHavdalah() ) {
+					havdalah = true;
+					break;
+				}
+			}
+
+			// If we want to say havdalah, but it's erev Shabbat, then we don't say havdalah.
+			// Also, if tomorrow is something (e.g., 2nd day of Pesach or Sukkot), then we also don't want to say
+			//  havdalah.
+			if ( tomorrowsDetails == null ) {
+				tomorrowsDetails = getTodaysDate().tomorrow().getDetails();
+			}
+
+			return ( havdalah && !isErevShabbat() && !tomorrowsDetails.isYomTov() );
 		}
 
 

@@ -189,9 +189,9 @@ public class UT_HebrewCalendar {
 			"2011 /  4 / 27 | yom      | no      | no       | Omer 8\n" +
 			"2011 /  4 / 28 | yom      | no      | no       | Omer 9\n" +
 			"2011 /  4 / 29 | erev     | yes     | no       | Omer 10\n" +
-			"2011 /  4 / 30 | erev     | no      | yes      | Shabbat / Erev Yom HaShoah / Omer 11\n" +
-			"2011 /  5 /  1 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
-			"2011 /  5 /  2 | yom      | no      | no       | Omer 13\n" +
+			"2011 /  4 / 30 | yom      | no      | yes      | Shabbat / Omer 11\n" +
+			"2011 /  5 /  1 | erev     | no      | no       | Erev Yom HaShoah / Omer 12\n" +
+			"2011 /  5 /  2 | yom      | no      | no       | Yom HaShoah / Omer 13\n" +
 			"2011 /  5 /  3 | erev     | no      | no       | Erev Rosh Chodesh Iyar / Omer 14\n" +
 			"2011 /  5 /  4 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
 			"2011 /  5 /  5 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
@@ -257,6 +257,8 @@ public class UT_HebrewCalendar {
 			"2011 /  8 /  9 | yom      | no      | no       | Tisha B'Av\n" +
 			"2011 /  8 / 12 | erev     | yes     | no       | \n" +
 			"2011 /  8 / 13 | yom      | no      | yes      | Shabbat\n" +
+			"2011 /  8 / 14 | erev     | no      | no       | Erev Tu B'Av\n" +
+			"2011 /  8 / 15 | yom      | no      | no       | Tu B'Av\n" +
 			"2011 /  8 / 19 | erev     | yes     | no       | \n" +
 			"2011 /  8 / 20 | yom      | no      | yes      | Shabbat\n" +
 			"2011 /  8 / 26 | erev     | yes     | no       | \n" +
@@ -383,9 +385,9 @@ public class UT_HebrewCalendar {
 			"2013 /  4 /  3 | yom      | no      | no       | Omer 8\n" +
 			"2013 /  4 /  4 | yom      | no      | no       | Omer 9\n" +
 			"2013 /  4 /  5 | erev     | yes     | no       | Omer 10\n" +
-			"2013 /  4 /  6 | erev     | no      | yes      | Shabbat / Erev Yom HaShoah / Omer 11\n" +
-			"2013 /  4 /  7 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
-			"2013 /  4 /  8 | yom      | no      | no       | Omer 13\n" +
+			"2013 /  4 /  6 | yom      | no      | yes      | Shabbat / Omer 11\n" +
+			"2013 /  4 /  7 | erev     | no      | no       | Erev Yom HaShoah / Omer 12\n" +
+			"2013 /  4 /  8 | yom      | no      | no       | Yom HaShoah / Omer 13\n" +
 			"2013 /  4 /  9 | erev     | no      | no       | Erev Rosh Chodesh Iyar / Omer 14\n" +
 			"2013 /  4 / 10 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
 			"2013 /  4 / 11 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
@@ -451,6 +453,8 @@ public class UT_HebrewCalendar {
 			"2013 /  7 / 16 | yom      | no      | no       | Tisha B'Av\n" +
 			"2013 /  7 / 19 | erev     | yes     | no       | \n" +
 			"2013 /  7 / 20 | yom      | no      | yes      | Shabbat\n" +
+			"2013 /  7 / 21 | erev     | no      | no       | Erev Tu B'Av\n" +
+			"2013 /  7 / 22 | yom      | no      | no       | Tu B'Av\n" +
 			"2013 /  7 / 26 | erev     | yes     | no       | \n" +
 			"2013 /  7 / 27 | yom      | no      | yes      | Shabbat\n" +
 			"2013 /  8 /  2 | erev     | yes     | no       | \n" +
@@ -591,9 +595,9 @@ public class UT_HebrewCalendar {
 			"2014 /  4 / 23 | yom      | no      | no       | Omer 8\n" +
 			"2014 /  4 / 24 | yom      | no      | no       | Omer 9\n" +
 			"2014 /  4 / 25 | erev     | yes     | no       | Omer 10\n" +
-			"2014 /  4 / 26 | erev     | no      | yes      | Shabbat / Erev Yom HaShoah / Omer 11\n" +
-			"2014 /  4 / 27 | yom      | no      | no       | Yom HaShoah / Omer 12\n" +
-			"2014 /  4 / 28 | yom      | no      | no       | Omer 13\n" +
+			"2014 /  4 / 26 | yom      | no      | yes      | Shabbat / Omer 11\n" +
+			"2014 /  4 / 27 | erev     | no      | no       | Erev Yom HaShoah / Omer 12\n" +
+			"2014 /  4 / 28 | yom      | no      | no       | Yom HaShoah / Omer 13\n" +
 			"2014 /  4 / 29 | erev     | no      | no       | Erev Rosh Chodesh Iyar / Omer 14\n" +
 			"2014 /  4 / 30 | yom      | no      | no       | Rosh Chodesh Iyar (1) / Omer 15\n" +
 			"2014 /  5 /  1 | yom      | no      | no       | Rosh Chodesh Iyar (2) / Omer 16\n" +
@@ -659,6 +663,8 @@ public class UT_HebrewCalendar {
 			"2014 /  8 /  5 | yom      | no      | no       | Tisha B'Av\n" +
 			"2014 /  8 /  8 | erev     | yes     | no       | \n" +
 			"2014 /  8 /  9 | yom      | no      | yes      | Shabbat\n" +
+			"2014 /  8 / 10 | erev     | no      | no       | Erev Tu B'Av\n" +
+			"2014 /  8 / 11 | yom      | no      | no       | Tu B'Av\n" +
 			"2014 /  8 / 15 | erev     | yes     | no       | \n" +
 			"2014 /  8 / 16 | yom      | no      | yes      | Shabbat\n" +
 			"2014 /  8 / 22 | erev     | yes     | no       | \n" +
@@ -769,7 +775,7 @@ public class UT_HebrewCalendar {
 			"2015 /  3 / 28 | yom      | no      | yes      | Shabbat\n" +
 			"2015 /  4 /  2 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
 			"2015 /  4 /  3 | erev     | yes     | no       | Ta'anit Bechorot / Erev Pesach\n" +
-			"2015 /  4 /  4 | yom      | yes     | yes      | Shabbat / Pesach\n" +
+			"2015 /  4 /  4 | yom      | no      | no       | Shabbat / Pesach\n" +
 			"2015 /  4 /  5 | yom      | no      | yes      | Pesach / Omer 1\n" +
 			"2015 /  4 /  6 | yom      | no      | no       | Chol HaMoed Pesach 3 / Omer 2\n" +
 			"2015 /  4 /  7 | yom      | no      | no       | Chol HaMoed Pesach 4 / Omer 3\n" +
@@ -818,7 +824,7 @@ public class UT_HebrewCalendar {
 			"2015 /  5 / 20 | yom      | no      | no       | Omer 46\n" +
 			"2015 /  5 / 21 | yom      | no      | no       | Omer 47\n" +
 			"2015 /  5 / 22 | erev     | yes     | no       | Omer 48\n" +
-			"2015 /  5 / 23 | erev     | yes     | yes      | Shabbat / Erev Shavuot / Omer 49\n" +
+			"2015 /  5 / 23 | erev     | no      | no       | Shabbat / Erev Shavuot / Omer 49\n" +
 			"2015 /  5 / 24 | yom      | yes     | no       | Shavuot\n" +
 			"2015 /  5 / 25 | yom      | no      | yes      | Shavuot\n" +
 			"2015 /  5 / 29 | erev     | yes     | no       | \n" +
@@ -845,7 +851,8 @@ public class UT_HebrewCalendar {
 			"2015 /  7 / 24 | erev     | yes     | no       | \n" +
 			"2015 /  7 / 25 | erev     | no      | yes      | Shabbat / Erev Tisha B'Av\n" +
 			"2015 /  7 / 26 | yom      | no      | no       | Tisha B'Av\n" +
-			"2015 /  7 / 31 | erev     | yes     | no       | \n" +
+			"2015 /  7 / 30 | erev     | no      | no       | Erev Tu B'Av\n" +
+			"2015 /  7 / 31 | erev     | yes     | no       | Tu B'Av\n" +
 			"2015 /  8 /  1 | yom      | no      | yes      | Shabbat\n" +
 			"2015 /  8 /  7 | erev     | yes     | no       | \n" +
 			"2015 /  8 /  8 | yom      | no      | yes      | Shabbat\n" +
@@ -976,7 +983,7 @@ public class UT_HebrewCalendar {
 			"2016 /  4 / 16 | yom      | no      | yes      | Shabbat\n" +
 			"2016 /  4 / 21 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
 			"2016 /  4 / 22 | erev     | yes     | no       | Ta'anit Bechorot / Erev Pesach\n" +
-			"2016 /  4 / 23 | yom      | yes     | yes      | Shabbat / Pesach\n" +
+			"2016 /  4 / 23 | yom      | no      | no       | Shabbat / Pesach\n" +
 			"2016 /  4 / 24 | yom      | no      | yes      | Pesach / Omer 1\n" +
 			"2016 /  4 / 25 | yom      | no      | no       | Chol HaMoed Pesach 3 / Omer 2\n" +
 			"2016 /  4 / 26 | yom      | no      | no       | Chol HaMoed Pesach 4 / Omer 3\n" +
@@ -1025,7 +1032,7 @@ public class UT_HebrewCalendar {
 			"2016 /  6 /  8 | yom      | no      | no       | Omer 46\n" +
 			"2016 /  6 /  9 | yom      | no      | no       | Omer 47\n" +
 			"2016 /  6 / 10 | erev     | yes     | no       | Omer 48\n" +
-			"2016 /  6 / 11 | erev     | yes     | yes      | Shabbat / Erev Shavuot / Omer 49\n" +
+			"2016 /  6 / 11 | erev     | no      | no       | Shabbat / Erev Shavuot / Omer 49\n" +
 			"2016 /  6 / 12 | yom      | yes     | no       | Shavuot\n" +
 			"2016 /  6 / 13 | yom      | no      | yes      | Shavuot\n" +
 			"2016 /  6 / 17 | erev     | yes     | no       | \n" +
@@ -1052,7 +1059,8 @@ public class UT_HebrewCalendar {
 			"2016 /  8 / 12 | erev     | yes     | no       | \n" +
 			"2016 /  8 / 13 | erev     | no      | yes      | Shabbat / Erev Tisha B'Av\n" +
 			"2016 /  8 / 14 | yom      | no      | no       | Tisha B'Av\n" +
-			"2016 /  8 / 19 | erev     | yes     | no       | \n" +
+			"2016 /  8 / 18 | erev     | no      | no       | Erev Tu B'Av\n" +
+			"2016 /  8 / 19 | erev     | yes     | no       | Tu B'Av\n" +
 			"2016 /  8 / 20 | yom      | no      | yes      | Shabbat\n" +
 			"2016 /  8 / 26 | erev     | yes     | no       | \n" +
 			"2016 /  8 / 27 | yom      | no      | yes      | Shabbat\n" +

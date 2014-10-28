@@ -4,47 +4,61 @@
 
 package com.gindin.zmanim.calendar.holiday;
 
-import org.junit.*;
+import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 
 /**
  *
  */
 public class UT_AbstractHoliday {
 
+	private static final SecularDateFormatter                 formatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.SHORT );
+
+
 	protected UT_AbstractHoliday() {
 		// Not instantiatable
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	protected void checkDate(
-		Details   details,
-		boolean   isErev,
-		boolean   lightCandles,
-		boolean   sayHavdalah
-	) {
+	protected final StringBuilder buildDetailsHeader() {
 
-		Assert.assertNotNull( details );
+		StringBuilder output = new StringBuilder();
+		output
+			.append( "Date         | Description                                   | Any   | Erev  | Erev Shabbat | Light | Shabbat | Yom Tov | Havdalah | Pesach | Omer  | Taanit |\n" )
+			.append( "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" );
 
-		// The caller may thing that this isn't an erev anything, but actually it's erev Shabbat...
-		Assert.assertTrue( isErev == details.isErev() || details.isErevShabbat() );
-
-		// Caller thinks we should (not) light candles, but we have to check:
-		//  - If the caller thinks we don't, but actually we do because it's Erev Shabbat?
-		Assert.assertTrue(
-			( lightCandles == details.lightCandles() ) ||
-			( !lightCandles && details.isErevShabbat() )
-		);
-
-		// Caller thinks we should (not) say havdalah, but we have to check:
-		//  - If the caller thinks we do, but actually we don't because it's Erev Shabbat?
-		//  - If the caller thinks we don't, but actually we do because it is Motzae Shabbat?
-		Assert.assertTrue(
-			( sayHavdalah == details.sayHavdalah() )    ||
-			( sayHavdalah && details.isErevShabbat() )  ||
-			( !sayHavdalah && details.isShabbat() )
-		);
-
+		return output;
 	}
+
+
+	@SuppressWarnings( "AutoBoxing" )
+	protected final void outputDetails( StringBuilder output, Details details ) {
+
+		output
+			.append( String.format( "%-10s", formatter.format( details.getTodaysDate() ) ) )
+			.append( " | " )
+			.append( String.format( "%-45s", details.getDescription() ) )
+			.append( " | " )
+			.append( String.format( "%-5s", details.isAnything() ) )
+			.append( " | " )
+			.append( String.format( "%-5s", details.isErev() ) )
+			.append( " | " )
+			.append( String.format( "%-12s", details.isErevShabbat() ) )
+			.append( " | " )
+			.append( String.format( "%-5s", details.lightCandles() ) )
+			.append( " | " )
+			.append( String.format( "%-7s", details.isShabbat() ) )
+			.append( " | " )
+			.append( String.format( "%-7s", details.isYomTov() ) )
+			.append( " | " )
+			.append( String.format( "%-8s", details.sayHavdalah() ) )
+			.append( " | " )
+			.append( String.format( "%-6s", details.isPesach() ) )
+			.append( " | " )
+			.append( String.format( "%-5s", details.isOmer() ) )
+			.append( " | " )
+			.append( String.format( "%-6s", details.isTaanit() ) )
+			.append( " |\n" );
+	}
+
 
 } // End of UT_AbstractHoliday class
