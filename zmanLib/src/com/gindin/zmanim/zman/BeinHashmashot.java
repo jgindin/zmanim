@@ -18,7 +18,7 @@ class BeinHashmashot
 
 
 	public BeinHashmashot( ZmanimCalculator zmanimCalculator ) {
-		super( Type.BeinHashmashot, buildZmanim( zmanimCalculator ) );
+		super( Type.BeinHashmashot, zmanimCalculator );
 	}
 
 
@@ -28,9 +28,8 @@ class BeinHashmashot
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

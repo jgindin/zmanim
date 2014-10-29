@@ -4,7 +4,6 @@
 
 package com.gindin.zmanim.zman;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,18 +18,15 @@ class FastEnds
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.FastEnd,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator ),
-				buildFastEndsZmanim( zmanimCalculator ) ) );
+		super( Type.FastEnd, zmanimCalculator );
 	}
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
-	private static List<Zman> buildFastEndsZmanim(
+	protected List<Zman> buildZmanimList(
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		List<Zman>  zmanim = new ArrayList<Zman>();
+		List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator );
 
 		zmanim.add(
 			new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {

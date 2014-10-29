@@ -15,13 +15,12 @@ class NightChatzot
 	extends Zmanim {
 
 	public NightChatzot( ZmanimCalculator zmanimCalculator ) {
-		super( Type.NightChatzot, buildZmanim( zmanimCalculator ) );
+		super( Type.NightChatzot, zmanimCalculator );
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
@@ -35,7 +34,6 @@ class NightChatzot
 
 		return zmanim;
 	}
-
 
 
 }  // End of NightChatzot class

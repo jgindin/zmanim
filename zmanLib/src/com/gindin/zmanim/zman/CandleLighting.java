@@ -21,7 +21,7 @@ class CandleLighting
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.CandleLighting, buildZmanim( zmanimCalculator ) );
+		super( Type.CandleLighting, zmanimCalculator );
 	}
 
 
@@ -32,9 +32,8 @@ class CandleLighting
 
 
 	@SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

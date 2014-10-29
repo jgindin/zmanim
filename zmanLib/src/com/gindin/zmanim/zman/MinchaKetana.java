@@ -21,7 +21,7 @@ class MinchaKetana
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.MinchaKetana, buildZmanim( zmanimCalculator ) );
+		super( Type.MinchaKetana, zmanimCalculator );
 	}
 
 
@@ -31,9 +31,8 @@ class MinchaKetana
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

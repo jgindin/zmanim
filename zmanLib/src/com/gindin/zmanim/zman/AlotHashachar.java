@@ -21,7 +21,7 @@ class AlotHashachar
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Alot, buildZmanim( zmanimCalculator ) );
+		super( Type.Alot, zmanimCalculator );
 	}
 
 
@@ -31,10 +31,8 @@ class AlotHashachar
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

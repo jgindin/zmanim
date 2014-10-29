@@ -21,13 +21,12 @@ class Hanetz
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Hanetz, buildZmanim( zmanimCalculator ) );
+		super( Type.Hanetz, zmanimCalculator );
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

@@ -21,7 +21,7 @@ class SofZmanShema
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.SofZmanShema, buildZmanim( zmanimCalculator ) );
+		super( Type.SofZmanShema, zmanimCalculator );
 	}
 
 
@@ -31,10 +31,8 @@ class SofZmanShema
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
@@ -69,8 +67,6 @@ class SofZmanShema
 				}
 			}
 		);
-
-//		sofZmanShema.addZman( zmanimCalculator.getSofZmanShmaFixedLocal(), "", "" );
 
 		zmanim.add(
 			new Zman( "GR'A", "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanShema, false ) {

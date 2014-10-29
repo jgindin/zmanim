@@ -20,7 +20,7 @@ class LatestMincha
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.LatestMincha, buildZmanim( zmanimCalculator ) );
+		super( Type.LatestMincha, zmanimCalculator );
 	}
 
 
@@ -31,9 +31,8 @@ class LatestMincha
 
 
 	@SuppressWarnings( { "FeatureEnvy" } )
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

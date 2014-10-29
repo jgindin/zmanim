@@ -21,7 +21,7 @@ public class SofZmanAchilatChametz
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.SofZmanAchilatChametz, buildZmanim( zmanimCalculator ) );
+		super( Type.SofZmanAchilatChametz, zmanimCalculator );
 	}
 
 
@@ -30,11 +30,9 @@ public class SofZmanAchilatChametz
 		return getByName( DEFAULT_ZMAN_NAME );
 	}
 
-	
-	
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

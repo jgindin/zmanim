@@ -20,7 +20,7 @@ public class SofZmanBiurChametz
 	SofZmanBiurChametz(
 		final ZmanimCalculator zmanimCalculator
 	) {
-		super( Type.SofZmanBiurChametz, buildZmanim( zmanimCalculator ) );
+		super( Type.SofZmanBiurChametz, zmanimCalculator );
 	}
 
 
@@ -30,9 +30,8 @@ public class SofZmanBiurChametz
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman> zmanim = new ArrayList<Zman>();
 

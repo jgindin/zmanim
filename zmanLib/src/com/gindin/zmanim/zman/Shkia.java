@@ -18,13 +18,12 @@ class Shkia
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Shkia, buildZmanim( zmanimCalculator ) );
+		super( Type.Shkia, zmanimCalculator );
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
@@ -38,5 +37,6 @@ class Shkia
 
 		return zmanim;
 	}
+
 
 }  // End of Shkia class

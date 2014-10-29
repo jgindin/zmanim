@@ -21,7 +21,7 @@ class PlagHaMincha
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.PlagHaMincha, buildZmanim( zmanimCalculator ) );
+		super( Type.PlagHaMincha, zmanimCalculator );
 	}
 
 
@@ -31,9 +31,8 @@ class PlagHaMincha
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

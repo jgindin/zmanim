@@ -21,7 +21,7 @@ class Talit
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Talit, buildZmanim( zmanimCalculator ) );
+		super( Type.Talit, zmanimCalculator );
 	}
 
 
@@ -31,10 +31,8 @@ class Talit
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 

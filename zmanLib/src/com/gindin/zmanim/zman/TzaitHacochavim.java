@@ -23,23 +23,29 @@ class TzaitHacochavim
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.TzaitHacochavim,
-			mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ),
-				buildExtraTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ) ) );
+		this( Type.TzaitHacochavim, zmanimCalculator );
 	}
 
 
-	protected TzaitHacochavim(
-		final Type              type,
-		final List<Zman>        zmanim
+	TzaitHacochavim(
+		final Type type,
+		final ZmanimCalculator zmanimCalculator
 	) {
-		super( type, zmanim );
+		super( type, zmanimCalculator );
 	}
 
 
 	@Override
 	public Zman getDefault() {
 		return getByName( DEFAULT_ZMAN_NAME );
+	}
+
+
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+
+		return mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ),
+			buildExtraTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ) );
 	}
 
 
@@ -56,10 +62,10 @@ class TzaitHacochavim
 	}
 
 
-	@SuppressWarnings( { "FeatureEnvy" } )
+	@SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
 	protected static List<Zman> buildStandardTzaitZmanim(
-		final Type            zmanType,
-		final ZmanimCalculator zmanimCalculator
+		final Type              zmanType,
+		final ZmanimCalculator  zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();

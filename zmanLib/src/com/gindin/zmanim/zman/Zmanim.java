@@ -15,18 +15,19 @@ public abstract class Zmanim {
 
 	public final Type                                         type;
 
-	/** The individual zmanim for this set. */
-	private final List<Zman>                                  allZmanim;
+	private final ZmanimCalculator                            zmanimCalculator;
 
+	/** The individual zmanim for this set. */
+	private List<Zman>                                        allZmanim;
 
 
 	protected Zmanim(
-		final Type        type,
-	  final List<Zman>  zmanim
+		final Type              type,
+		final ZmanimCalculator  zmanimCalculator
 	) {
 
 		this.type = type;
-		this.allZmanim = Collections.unmodifiableList( zmanim );
+		this.zmanimCalculator = zmanimCalculator;
 	}
 
 
@@ -41,9 +42,11 @@ public abstract class Zmanim {
 		String zmanName
 	) {
 
-		if ( null == zmanName ) {
+		if ( ( zmanName == null ) || zmanName.isEmpty() )  {
 			return null;
 		}
+
+		ensureZmanim();
 
 		for ( Zman zman : allZmanim ) {
 			if ( zmanName.equals( zman.name ) ) {
@@ -62,6 +65,8 @@ public abstract class Zmanim {
 	 */
 	public Zman getDefault() {
 
+		ensureZmanim();
+
 		for ( Zman zman : allZmanim ) {
 			if ( !zman.advanced ) {
 				return zman;
@@ -74,7 +79,25 @@ public abstract class Zmanim {
 
 
 	public List<Zman> asList() {
+		ensureZmanim();
 		return allZmanim;
+	}
+
+
+	/**
+	 * Called at most once to create the list of zmanim represented.
+	 */
+	protected abstract List<Zman> buildZmanimList( ZmanimCalculator zmanimCalculator );
+
+
+	/**
+	 * Called when the subclass
+	 */
+	private void ensureZmanim() {
+
+		if ( allZmanim == null ) {
+			allZmanim = Collections.unmodifiableList( buildZmanimList( zmanimCalculator ) );
+		}
 	}
 
 

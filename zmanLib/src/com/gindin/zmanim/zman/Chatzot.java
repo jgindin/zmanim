@@ -18,13 +18,12 @@ class Chatzot
 		final ZmanimCalculator zmanimCalculator
 	) {
 
-		super( Type.Chatzot, buildZmanim( zmanimCalculator ) );
+		super( Type.Chatzot, zmanimCalculator );
 	}
 
 
-	private static List<Zman> buildZmanim(
-		final ZmanimCalculator zmanimCalculator
-	) {
+	@Override
+	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
@@ -38,5 +37,6 @@ class Chatzot
 
 		return zmanim;
 	}
+
 
 }  // End of Chatzot class
