@@ -6,7 +6,6 @@ package com.gindin.zmanim.zman;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Format zmanim.
@@ -41,7 +40,7 @@ public class ZmanFormatter {
 
 		// This can return null in case the zman just doesn't apply. E.g., there are places where the Sun never
 		//  actually gets low enough to be able to calculate Alot @ 26degrees.
-		Date time = zman.getTime();
+		Calendar time = zman.getTime();
 		if ( null == time ) {
 			return "N/A";
 		}
@@ -83,8 +82,7 @@ public class ZmanFormatter {
 	 */
 	private static class ZmanRounder {
 	
-		private static final Calendar scratchCalendar = Calendar.getInstance();
-	
+
 		/**
 		 * Because the application does not show seconds to the user, we want to ensure that we're not going
 		 *  to cause an error. Therefore, for some zmanim, we want to ensure that the time which gets displayed
@@ -95,18 +93,14 @@ public class ZmanFormatter {
 		 *
 		 * @return the rounded zman.
 		 */
-		public Date roundToEarliestMinute(
-			Date zman
+		private Calendar roundToEarliestMinute(
+			Calendar zman
 		) {
+
+			zman.set( Calendar.SECOND, 0 );
+			zman.set( Calendar.MILLISECOND, 0 );
 	
-			// Synchronized because the methods in this class can be called from multiple threads, simultaneously...
-			synchronized ( scratchCalendar ) {
-				scratchCalendar.setTime( zman );
-				scratchCalendar.set( Calendar.SECOND, 0 );
-				scratchCalendar.set( Calendar.MILLISECOND, 0 );
-	
-				return scratchCalendar.getTime();
-			}
+			return zman;
 		}
 	
 	
@@ -120,20 +114,15 @@ public class ZmanFormatter {
 		 *
 		 * @return the rounded zman.
 		 */
-		public Date roundToLatestMinute(
-			Date zman
+		private Calendar roundToLatestMinute(
+			Calendar zman
 		) {
 	
-			// Synchronized because the methods in this class can be called from multiple threads, simultaneously...
-			synchronized ( scratchCalendar ) {
-				scratchCalendar.setTime( zman );
-	
-				scratchCalendar.add( Calendar.MINUTE, 1 );
-				scratchCalendar.set( Calendar.SECOND, 0 );
-				scratchCalendar.set( Calendar.MILLISECOND, 0 );
-	
-				return scratchCalendar.getTime();
-			}
+			zman.add( Calendar.MINUTE, 1 );
+			zman.set( Calendar.SECOND, 0 );
+			zman.set( Calendar.MILLISECOND, 0 );
+
+			return zman;
 		}
 	
 	} // End of ZmanRounder class

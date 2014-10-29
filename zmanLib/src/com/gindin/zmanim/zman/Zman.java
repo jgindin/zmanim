@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.zman;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -23,8 +24,8 @@ public abstract class Zman {
 	/** What type of zman is this? */
 	public final Zmanim.Type                                  type;
 
-	/** Keep the calculation cached until we're told to clear the cache. */
-	private Date                                              cachedTime;
+	/** Keep the calculation cached. */
+	private Calendar                                          cachedTime;
 
 
 	Zman(
@@ -52,7 +53,14 @@ public abstract class Zman {
 		this.advanced = advanced;
 	}
 
-	public Date getTime() {
+
+	/**
+	 * Obtain the time of the desired zman. Why a Calendar? Because there is no 'Time' class, and the Date class will
+	 *  simply use the default time zone, which means the time zone actually being used gets ignored.
+	 *
+	 * @return The time for the requested zman.
+	 */
+	public final Calendar getTime() {
 
 		synchronized ( this ) {
 			if ( null == cachedTime ) {
@@ -64,14 +72,8 @@ public abstract class Zman {
 	}
 
 
-	/**
-	 * @return Subclass must implement to return the actual time of the zman.
-	 */
-	protected abstract Date calculate();
-
-
 	@Override
-	public boolean equals( Object o ) {
+	public final boolean equals( Object o ) {
 		if ( this == o ) {
 			return true;
 		}
@@ -93,10 +95,34 @@ public abstract class Zman {
 
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		int result = name.hashCode();
 		result = 31 * result + type.hashCode();
 		return result;
 	}
+
+
+	/**
+	 * @return Subclass must implement to return the actual time of the zman.
+	 */
+	protected abstract Calendar calculate();
+
+
+	/**
+	 * This method is the supposed to be the most convenient way to bridge the Date-based world of the KosherJava API
+	 *  and our need for Calendar-based API.
+	 */
+	protected final Calendar toCalendar(
+		ZmanimCalculator  zmanimCalculator,
+		Date              zmanDate
+		) {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone( zmanimCalculator.getGeoLocation().getTimeZone() );
+		calendar.setTime( zmanDate );
+
+		return calendar;
+	}
+
 
 } // End of Zman interface

@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -31,6 +31,7 @@ class MinchaGedola
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
@@ -38,16 +39,16 @@ class MinchaGedola
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaGedola, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getMinchaGedola();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedola() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 16.1 deg", "Magen Avraham, based on the day starting and ending 16.1 degrees below the horizon.", Zmanim.Type.MinchaGedola, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getMinchaGedola16Point1Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedola16Point1Degrees() );
 				}
 			}
 		);
@@ -56,21 +57,19 @@ class MinchaGedola
 
 		zmanim.add(
 			new Zman( "MG'A 72 Minutes", "Magen Avraham, based onthe day starting 72 minutes before sunrise and ending 72 minutes after sunset.", Zmanim.Type.MinchaGedola ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getMinchaGedola72Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedola72Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.MinchaGedola ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getMinchaGedolaAteretTorah();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaAteretTorah() );
 				}
 			}
 		);
-
-//		minchaGedola.addZman( zmanimCalculator.getMinchaGedolaGreaterThan30(), "", "" );
 
 		return zmanim;
 	}

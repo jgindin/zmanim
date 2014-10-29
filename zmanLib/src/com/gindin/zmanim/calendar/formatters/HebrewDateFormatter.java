@@ -9,7 +9,7 @@ import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zmanim;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Knows how to provide various formats of a HebrewDate.
@@ -78,6 +78,7 @@ public abstract class HebrewDateFormatter {
 			StringBuilder buf = new StringBuilder();
 
 			if ( isAfterSunset( date, location ) ) {
+				//noinspection AssignmentToMethodParameter
 				date = date.tomorrow();
 				buf.append( "Or le " );
 			}
@@ -106,9 +107,9 @@ public abstract class HebrewDateFormatter {
 				return false;
 			}
 
-			final Date sunset = date.getZman( location, Zmanim.Type.Shkia ).getTime();
+			final Calendar sunset = date.getZman( location, Zmanim.Type.Shkia ).getTime();
 
-			return today.getTime().after( sunset );
+			return today.getTime().after( sunset.getTime() );
 		}
 
 	}  // End of ShortFormatter class

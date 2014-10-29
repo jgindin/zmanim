@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -31,6 +31,7 @@ class SofZmanShema
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
@@ -38,40 +39,40 @@ class SofZmanShema
 
 		zmanim.add(
 			new Zman( "3 Hours before Chatzot", "Shach in the Nekudas Hakesef (Yora Deah 184), Shevus Yaakov, Chasan Sofer and others.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShma3HoursBeforeChatzos();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShma3HoursBeforeChatzos() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "16.1 deg to Sunset", "Based on the day starting at at alot 16.1 degrees and ending at sunset.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaAlos16Point1ToSunset();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point1ToSunset() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "16.1 deg to tzait 7.083 deg", "Based on the day starting at at alot 16.1 degrees and ending at tzait 7.083 degrees.",Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting 1/10th of the day before sunrise and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaAteretTorah();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAteretTorah() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "GR'A", "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanShema, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaGRA();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaGRA() );
 				}
 			}
 		);
@@ -79,40 +80,40 @@ class SofZmanShema
 		// todo: deprecated
 		zmanim.add(
 			new Zman( "GR'A Kol Eliyahu", "Based on Kol Eliyahu on Berachos #173 (zman kriat shema is half the time from sunrise to fixed local chatzot).",Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaKolEliyahu();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaKolEliyahu() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A", "Based on alot being 72 minutes before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 120 Minutes", "Based on alot being 120 minutes or 1/6th of the day before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA120Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA120Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanShema, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA16Point1Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA16Point1Degrees() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 19.8 deg", "Based on alot being 19.8 degrees before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA19Point8Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA19Point8Degrees() );
 				}
 			}
 		);
@@ -121,40 +122,40 @@ class SofZmanShema
 
 		zmanim.add(
 			new Zman( "MG'A 72 Minutes Zmaniyot", "Based on alot being 72 minutes zmaniyot, or 1/10th of the day before sunrise.",Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA72MinutesZmanis();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA72MinutesZmanis() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 90 Minutes", "Based on alot being 90 minutes before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA90Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA90Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 90 Minutes Zmaniyot", "Based on alot being 90 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA90MinutesZmanis();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA90MinutesZmanis() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "96 Minutes", "Based on alot being 96 minutes before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA96Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA96Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "96 Minutes Zmaniyot", "Based on alot being 96 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanShema ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanShmaMGA96MinutesZmanis();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA96MinutesZmanis() );
 				}
 			}
 		);

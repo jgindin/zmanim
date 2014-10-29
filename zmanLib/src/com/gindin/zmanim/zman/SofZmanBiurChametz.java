@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -37,24 +37,24 @@ public class SofZmanBiurChametz
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Type.SofZmanBiurChametz ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanBiurChametzGRA();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzGRA() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 72 Minutes", "Based on alot being 72 minutes before sunrise.", Type.SofZmanBiurChametz ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanBiurChametzMGA72Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA72Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Type.SofZmanBiurChametz ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees() );
 				}
 			}
 		);

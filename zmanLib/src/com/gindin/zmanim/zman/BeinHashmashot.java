@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -28,6 +28,7 @@ class BeinHashmashot
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
@@ -35,32 +36,33 @@ class BeinHashmashot
 
 		zmanim.add(
 			new Zman( "13 Degrees", "Based on Rabainu Tam's calculation as the time the sun is 13° below geometric zenith (90°).", Zmanim.Type.BeinHashmashot ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getBainHasmashosRT13Point24Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getBainHasmashosRT13Point24Degrees() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "58.5 Minutes", "Based on Rabainu Tam's calculation as a 58.5 minute offset after sunset.", Zmanim.Type.BeinHashmashot ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getBainHasmashosRT58Point5Minutes();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getBainHasmashosRT58Point5Minutes() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "13.5 Minutes", "Based on 13.5 minutes (3/4 of an 18 minute mil before shkiah calculated as 7.083°.", Zmanim.Type.BeinHashmashot ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getBainHasmashosRT13Point5MinutesBefore7Point083Degrees();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator,
+						zmanimCalculator.getBainHasmashosRT13Point5MinutesBefore7Point083Degrees() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "2 Stars", "Based on Rabainu Tam's calculation in the opinion of the Divray Yosef (see Yisrael Vehazmanim) of 5/18th (27.77%) of the time between alot (calculated as 19.8° before sunrise) and sunrise.", Zmanim.Type.BeinHashmashot ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getBainHasmashosRT2Stars();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getBainHasmashosRT2Stars() );
 				}
 			}
 		);

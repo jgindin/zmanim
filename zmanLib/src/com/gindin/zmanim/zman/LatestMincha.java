@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -39,24 +39,24 @@ class LatestMincha
 
 		zmanim.add(
 			new Zman( "Mishna Berura", "Daily Halacha's representation of the Mishna Berura's ruling, that mincha must be FINISHED by sunset.", Zmanim.Type.LatestMincha ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getLatestMinchaMishnaBerura();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getLatestMinchaMishnaBerura() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "Daily Halacha's representation of Chacham Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5 shaot zmaniot minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getLatestMinchaOvadiaYosef();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getLatestMinchaOvadiaYosef() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "Hacham Ben Sion", "Daily Halacha's representation of Chacham Ben Sion Abba Shaul's ruling, that mincha can be prayed so long as you FINISH NO LATER THAN 26 minutes after sunset.", Zmanim.Type.LatestMincha, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getLatestMinchaBenSion();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getLatestMinchaBenSion() );
 				}
 			}
 		);

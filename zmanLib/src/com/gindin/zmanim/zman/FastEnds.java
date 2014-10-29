@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.zman;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -30,9 +30,9 @@ class FastEnds
 
 		zmanim.add(
 			new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {
-				@Override protected Date calculate() {
+				@Override protected Calendar calculate() {
 					//noinspection MagicNumber
-					return zmanimCalculator.getEndOfFast( 30 );
+					return toCalendar( zmanimCalculator, zmanimCalculator.getEndOfFast( 30 ) );
 				}
 			}
 		);

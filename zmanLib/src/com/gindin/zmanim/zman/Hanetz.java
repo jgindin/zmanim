@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,16 +32,16 @@ class Hanetz
 
 		zmanim.add(
 			new Zman( DEFAULT_ZMAN_NAME, "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSeaLevelSunrise();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSeaLevelSunrise() );
 				}
 			}
 		);
 
 		zmanim.add(
 			new Zman( "Sunrise (with elevation)", "The exact sunrise time, taking elevation into account..", Zmanim.Type.Hanetz, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getSunrise();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getSunrise() );
 				}
 			}
 		);

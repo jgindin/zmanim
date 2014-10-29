@@ -5,7 +5,7 @@
 package com.gindin.zmanim.zman;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -29,8 +29,8 @@ class Chatzot
 
 		zmanim.add(
 			new Zman( "Mid-day", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.Chatzot, false ) {
-				@Override protected Date calculate() {
-					return zmanimCalculator.getChatzos();
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getChatzos() );
 				}
 			}
 		);
