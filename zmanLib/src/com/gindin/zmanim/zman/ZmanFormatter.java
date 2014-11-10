@@ -72,7 +72,7 @@ public class ZmanFormatter {
 		}
 
 		synchronized ( this ) {
-			return timeFormatter.format( time );
+			return timeFormatter.format( time.getTime() );
 		}
 	}
 
