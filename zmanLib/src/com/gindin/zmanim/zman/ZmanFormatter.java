@@ -97,10 +97,14 @@ public class ZmanFormatter {
 			Calendar zman
 		) {
 
-			zman.set( Calendar.SECOND, 0 );
-			zman.set( Calendar.MILLISECOND, 0 );
+			// Make sure to work on a copy so we don't muck up the real thing!
+			Calendar copy = Calendar.getInstance();
+			copy.setTime( zman.getTime() );
+
+			copy.set( Calendar.SECOND, 0 );
+			copy.set( Calendar.MILLISECOND, 0 );
 	
-			return zman;
+			return copy;
 		}
 	
 	
@@ -118,12 +122,17 @@ public class ZmanFormatter {
 			Calendar zman
 		) {
 	
-			zman.add( Calendar.MINUTE, 1 );
-			zman.set( Calendar.SECOND, 0 );
-			zman.set( Calendar.MILLISECOND, 0 );
+			// Make sure to work on a copy so we don't muck up the real thing!
+			Calendar copy = Calendar.getInstance();
+			copy.setTime( zman.getTime() );
 
-			return zman;
+			copy.add( Calendar.MINUTE, 1 );
+			copy.set( Calendar.SECOND, 0 );
+			copy.set( Calendar.MILLISECOND, 0 );
+
+			return copy;
 		}
 	
 	} // End of ZmanRounder class
+
 }  // End of ZmanFormatter class
