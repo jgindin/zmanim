@@ -29,7 +29,7 @@ public class ZmanimLocation
 		private long                                            locationTime = System.currentTimeMillis();
 		private float                                           accuracy = -1;
 		private String                                          locationName = UNKNOWN_LOCATION;
-		private TimeZone                                        timeZone = null;
+		private TimeZone                                        timeZone = TimeZone.getDefault();
 		private double                                          latitude = 0.0;
 		private double                                          longitude = 0.0;
 		private double                                          elevation = 0.0;
@@ -51,7 +51,12 @@ public class ZmanimLocation
 		}
 
 		public Builder inTimeZone( TimeZone timeZone ) {
-			this.timeZone = timeZone;
+			if ( timeZone != null ) {
+				this.timeZone = timeZone;
+			}
+			else {
+				this.timeZone = TimeZone.getDefault();
+			}
 			return this;
 		}
 
