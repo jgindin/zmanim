@@ -45,7 +45,7 @@ public class ZmanimFactory {
 
 	private ZmanimFactory(
 		GeoLocation location,
-		HebrewDate date
+		HebrewDate  date
 	) {
 		this.zmanimCalculator = new ZmanimCalculator( location, date );
 	}
