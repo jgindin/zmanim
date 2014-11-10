@@ -9,6 +9,7 @@ import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.android.zmanList.ZmanimSelector;
 import com.gindin.zmanim.zman.ZmanFormatter;
 
 import android.content.Context;
@@ -37,10 +38,10 @@ public class ZmanimDisplayModule
 	@Override
 	public ZmanimPresenter<ZmanimView> create() {
 
-		ZmanimViewImpl view = new ZmanimViewImpl( activity );
-
 		boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
+
+		ZmanimViewImpl view = new ZmanimViewImpl( activity, new ZmanimSelector( activity, zmanFormatter ) );
 
 		SharedPreferences zmanSelectionPrefs = activity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 

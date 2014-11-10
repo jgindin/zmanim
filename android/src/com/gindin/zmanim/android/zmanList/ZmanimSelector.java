@@ -41,9 +41,6 @@ public class ZmanimSelector {
 	/** Only one instance of the dialog means only one instance of the list... */
 	private final ListView                                    listView;
 
-	/** When we're displaying a selection dialog, what type of zmanim are being selected? */
-	private Zmanim.Type                                       typeToSelectFrom;
-
 	/** When we're displaying a selection dialog, who do we notify when we're done? */
 	private SelectionCallback                                 typeSelectionCallback;
 
@@ -82,21 +79,20 @@ public class ZmanimSelector {
 					final ZmanimListAdapter adapter = (ZmanimListAdapter)listView.getAdapter();
 					Zman selection = adapter.getItem( position );
 					dialog.dismiss();
-					typeSelectionCallback.selected( typeToSelectFrom, selection );
+					typeSelectionCallback.selected( selection );
 				}
 			}
 		);
 	}
 
 
-	void selectFrom(
+	public void selectFrom(
 		HebrewDate              currentDate,
 		ZmanimLocation          currentLocation,
 		final Zmanim.Type       type,
 		final SelectionCallback callback
 	) {
 
-		typeToSelectFrom = type;
 		typeSelectionCallback = callback;
 
 		final Zmanim zmanim = currentDate.getZmanim( currentLocation, type );
@@ -117,8 +113,7 @@ public class ZmanimSelector {
 	public static interface SelectionCallback {
 
 		void selected(
-			Zmanim.Type type,
-			Zman        selection
+			Zman selection
 		);
 	}
 

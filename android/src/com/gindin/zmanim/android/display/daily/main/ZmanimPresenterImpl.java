@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.util.BaseAsyncClass;
+import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -88,6 +90,33 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 	public void destroy() {
 		getEventBus().removeHandler( dateChangeHandler );
 		getEventBus().removeHandler( locationAcquiredHandler );
+	}
+
+
+	@Override
+	public void userWantsToSeeZmanOptions( final Zman zman ) {
+
+		getView().showZmanOptions( zman, currentLocation, currentDate );
+	}
+
+
+	@Override
+	public void userChangedZman(
+		final Zman selection
+	) {
+
+		Zmanim.Type selectedType = selection.type;
+
+		final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
+		editor.putString( selectedType.name, selection.name );
+		editor.apply();
+
+		LogUtils.logEvent( "Zman Change", Arrays.asList( new Pair<String, String>( selectedType.name, selection.name ) ) );
+
+		// This is a bit of a hammer, but it works...
+		//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
+		//  apparently the List which backs the adapter doesn't support remove().
+		notifyViewOfZmanim();
 	}
 
 

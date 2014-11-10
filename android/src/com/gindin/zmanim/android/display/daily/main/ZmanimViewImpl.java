@@ -7,6 +7,9 @@ package com.gindin.zmanim.android.display.daily.main;
 import com.gindin.mvp.AbstractView;
 import com.gindin.zmanim.android.zmanList.ZmanRowHolder;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
+import com.gindin.zmanim.android.zmanList.ZmanimSelector;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.Zmanim;
 
@@ -27,13 +30,18 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 
 	private final ListView                                    listView;
 
+	/** Manages the selection process, allowing the user to select a different zman. */
+	private ZmanimSelector                                    selector;
+
 
 
 	public ZmanimViewImpl(
-		FragmentActivity owner
+		FragmentActivity      owner,
+		final ZmanimSelector  zmanimSelector
 	) {
 
 		super( owner );
+		selector = zmanimSelector;
 		listView = (ListView)owner.findViewById( android.R.id.list );
 		listView.setAdapter( new ZmanimViewListAdapter( owner, new ArrayList<Zman>() ) );
 
@@ -49,29 +57,7 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 
 					ZmanimViewListAdapter adapter = (ZmanimViewListAdapter)adapterView.getAdapter();
 					Zman zman = adapter.getItem( position );
-
-					// Notify presenter. Old code from ZmanimDisplay:
-//					if ( null == selector ) {
-//						selector = new ZmanimSelector( zmanimActivity, zmanFormatter );
-//					}
-//
-//					final ZmanimSelector.SelectionCallback selectionCallback = new ZmanimSelector.SelectionCallback() {
-//						public void selected( Zmanim.Type type, Zman selection ) {
-//
-//							final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
-//							editor.putString( type.name, selection.name );
-//							editor.apply();
-//
-//							LogUtils.logEvent( "Zman Change", Arrays.asList( new Pair<String, String>( type.name, selection.name ) ) );
-//
-//							// This is a bit of a hammer, but it works...
-//							//  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
-//							//  apparently the List which backs the adapter doesn't support remove().
-//							zmanimActivity.setAdapter( getListAdapter( currentDate, currentLocation ) );
-//						}
-//					};
-//
-//					selector.selectFrom( currentDate, currentLocation, zman.type, selectionCallback );
+					getPresenter().userWantsToSeeZmanOptions( zman );
 				}
 			}
 		);
@@ -102,6 +88,22 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
 		adapter.updateTimeForZman( zman, formattedTime );
 	}
 
+
+	@Override
+	public void showZmanOptions(
+		final Zman            zman,
+		final ZmanimLocation  currentLocation,
+		final HebrewDate      currentDate
+	) {
+
+		final ZmanimSelector.SelectionCallback selectionCallback = new ZmanimSelector.SelectionCallback() {
+			public void selected( Zman selection ) {
+				getPresenter().userChangedZman( selection );
+			}
+		};
+
+		selector.selectFrom( currentDate, currentLocation, zman.type, selectionCallback );
+	}
 
 
 	private static class ZmanimViewListAdapter

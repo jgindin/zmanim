@@ -5,6 +5,8 @@
 package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.View;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 
 /**
@@ -18,7 +20,6 @@ public interface ZmanimView<P extends ZmanimPresenter>
 	 * Provides the list of zmanim that apply to the day. At this point, however, the exact times
 	 *  may not have been calculated, and so the view must NOT ask any of these Zman objects for
 	 *  their times.
-	 * @param zmanimForTheDay
 	 */
 	void displayZmanim( Zman[] zmanimForTheDay );
 
@@ -26,5 +27,14 @@ public interface ZmanimView<P extends ZmanimPresenter>
 	 * Invoked after the time for this zman has been calculated.
 	 */
 	void displayTimeForZman( Zman zman, String formattedTime );
+
+	/**
+	 * Called when the user should be allowed to choose from the various options for the given zman.
+	 */
+	void showZmanOptions(
+		final Zman            zman,
+		final ZmanimLocation  currentLocation,
+		final HebrewDate      currentDate
+	);
 
 } // End of DailyView interface
