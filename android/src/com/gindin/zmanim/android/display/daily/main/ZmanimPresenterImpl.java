@@ -5,7 +5,6 @@
 package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.AbstractPresenter;
-import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
@@ -46,7 +45,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
 	private ZmanimLocation                                    currentLocation;
 
-	private AsyncTask<?,?,?>                                  zmanimCalculator;
+	private ZmanimCalculator                                  zmanimCalculator;
 
 
 	ZmanimPresenterImpl(
@@ -184,37 +183,36 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 			zmanimCalculator.cancel( true );
 		}
 
-		BaseAsyncClass.Callbacks<Zman,Pair<Zman,String>,Void> callbacks = new BaseAsyncClass.Callbacks<Zman, Pair<Zman,String>, Void>() {
-
-			@Override
-			protected Void doInBackground(
-				BaseAsyncClass.ProgressPublisher<Pair<Zman, String>>  publisher,
-				BaseAsyncClass.CancelChecker                          cancelChecker,
-				Zman...                                               zmanim
-			) {
-				for ( Zman zman : zmanim ) {
-					if ( cancelChecker.isCancelled() ) {
-						return null;
-					}
-
-					String formattedTime = zmanFormatter.formatZmanTime( zman );
-		      publisher.publish( new Pair<Zman, String>( zman, formattedTime ) );
-				}
-				return null;
-			}
-
-
-			@Override
-			protected void onProgressUpdate( Pair<Zman,String>... values ) {
-				for ( Pair<Zman, String> value : values ) {
-					getView().displayTimeForZman( value.first, value.second );
-				}
-			}
-		};
-
-		zmanimCalculator = new BaseAsyncClass<Zman, Pair<Zman, String>, Void>( callbacks );
+		zmanimCalculator = new ZmanimCalculator();
 		zmanimCalculator.execute( zmanimToDisplay );
 	}
 
+
+	private class ZmanimCalculator
+		extends AsyncTask<Zman, Pair<Zman, String>, Void> {
+
+		@Override
+		protected Void doInBackground( final Zman... zmanim ) {
+
+			for ( Zman zman : zmanim ) {
+				if ( isCancelled() ) {
+					return null;
+				}
+
+				String formattedTime = zmanFormatter.formatZmanTime( zman );
+	      publishProgress( new Pair<Zman, String>( zman, formattedTime ) );
+			}
+			return null;
+		}
+
+
+		@Override
+		protected void onProgressUpdate( final Pair<Zman, String>... values ) {
+			super.onProgressUpdate( values );
+			for ( Pair<Zman, String> value : values ) {
+				getView().displayTimeForZman( value.first, value.second );
+			}
+		}
+	}
 
 } // End of DailyPresenterImpl class

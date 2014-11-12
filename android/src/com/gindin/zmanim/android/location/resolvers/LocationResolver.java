@@ -4,7 +4,6 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.util.BaseAsyncClass;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
@@ -16,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,25 +87,21 @@ abstract class LocationResolver {
 		@NotNull final List<LocationResolver>  nextResolvers
 	) {
 
-		BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
+		AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
-			protected ZmanimLocation doInBackground(
-				BaseAsyncClass.ProgressPublisher<Void>  publisher,
-				BaseAsyncClass.CancelChecker            cancelChecker,
-				ZmanimLocation...                       zmanimLocations
-			) {
+			protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
 				return resolveFromCoordinatesInBackground( zmanimLocations[0] );
 			}
 
 
 			@Override
-			protected void onPostExecute( ZmanimLocation resolvedLocation ) {
+			protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
+				super.onPostExecute( resolvedLocation );
 				handlePostExecute( location, resolvedLocation, nextResolvers );
 			}
 		};
 
-		BaseAsyncClass<ZmanimLocation,Void,ZmanimLocation> async = new BaseAsyncClass<ZmanimLocation, Void, ZmanimLocation>( callbacks );
-		async.execute( location );
+		task.execute( location );
 	}
 
 
@@ -121,24 +117,21 @@ abstract class LocationResolver {
 			eventBus.fire( new LocationAcquiredEvent( location, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
 		}
 
-		BaseAsyncClass.Callbacks<ZmanimLocation,Void,ZmanimLocation> callbacks = new BaseAsyncClass.Callbacks<ZmanimLocation, Void, ZmanimLocation>() {
+		AsyncTask<ZmanimLocation,Void,ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
 			@Override
-			protected ZmanimLocation doInBackground(
-				BaseAsyncClass.ProgressPublisher<Void>  publisher,
-				BaseAsyncClass.CancelChecker            cancelChecker,
-				ZmanimLocation...                       zmanimLocations
-			) {
+			protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
 				return resolveFromNameInBackground( zmanimLocations[0] );
 			}
 
+
 			@Override
-			protected void onPostExecute( ZmanimLocation resolvedLocation ) {
+			protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
+				super.onPostExecute( resolvedLocation );
 				handlePostExecute( location, resolvedLocation, nextResolvers );
 			}
 		};
 
-		BaseAsyncClass<ZmanimLocation,Void,ZmanimLocation> async = new BaseAsyncClass<ZmanimLocation, Void, ZmanimLocation>( callbacks );
-		async.execute( location );
+		task.execute( location );
 	}
 
 
