@@ -103,6 +103,10 @@ class LocationPresenterImpl<V extends LocationView>
 
 	private void handleLocationChanged( @NotNull ZmanimLocation location ) {
 
+		if ( !location.isSignificantChangeFrom( currentLocation ) ) {
+			return;
+		}
+
 		currentLocation = location;
 
 		final String locationName;

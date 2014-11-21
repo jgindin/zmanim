@@ -132,7 +132,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
 	private void handleLocationChanged( @NotNull ZmanimLocation newLocation ) {
 
-		if ( !newLocation.isInvalid ) {
+		if ( !newLocation.isInvalid && newLocation.isSignificantChangeFrom( currentLocation ) ) {
 			currentLocation = newLocation;
 
 			if ( currentDate == null ) {

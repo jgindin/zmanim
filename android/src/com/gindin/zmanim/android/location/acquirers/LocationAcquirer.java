@@ -110,17 +110,6 @@ public abstract class LocationAcquirer {
 
 	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation, LocationError error ) {
 
-		// Before we do anything, make sure that there's a significant change worthy of our time...
-		if ( ( error == null ) && ( newLocation != null ) && ( lastKnownLocation != null ) ) {
-
-			// Less than 1km? Don't bother...
-			// I suppose you could run into an issue if that 1km puts you in a different time zone
-			//  or something like that...
-			if ( newLocation.getGeodesicDistance( lastKnownLocation ) < 1000 ) {
-				return;
-			}
-		}
-
 		lastKnownLocation = newLocation;
 
 		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );

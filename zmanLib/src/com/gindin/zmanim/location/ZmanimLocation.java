@@ -231,6 +231,20 @@ public class ZmanimLocation
 	}
 
 
+
+	public final boolean isSignificantChangeFrom( ZmanimLocation previousLocation ) {
+
+		if ( previousLocation == null ) {
+			return true;
+		}
+
+		// Less than 1km? Don't bother...
+		// I suppose you could run into an issue if that 1km puts you in a different time zone
+		//  or something like that...
+		return getGeodesicDistance( previousLocation ) >= 1000;
+	}
+
+
 	@Override
 	public String toString() {
 

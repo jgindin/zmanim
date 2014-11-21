@@ -106,7 +106,8 @@ class DatePresenterImpl<V extends DateView>
 
 
 	private void handleLocationChanged( @NotNull ZmanimLocation location ) {
-		if ( !location.isInvalid ) {
+
+		if ( !location.isInvalid && location.isSignificantChangeFrom( currentLocation ) ) {
 			currentLocation = location;
 			displayDate();
 		}
