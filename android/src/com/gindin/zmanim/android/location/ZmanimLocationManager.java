@@ -68,7 +68,7 @@ public class ZmanimLocationManager {
 	private LocationAcquirer                                  currentAcquirer;
 
 	/** Listen for requests to get a new location. */
-	private final RequestLocationUpdateEvent.Handler          locationRequestHandler;
+	private RequestLocationUpdateEvent.Handler                locationRequestHandler;
 
 
 	public ZmanimLocationManager(
@@ -92,6 +92,17 @@ public class ZmanimLocationManager {
 			}
 		};
 		eventBus.addHandler( locationRequestHandler );
+	}
+
+
+	public void onStop() {
+
+		if ( locationRequestHandler != null ) {
+			eventBus.removeHandler( locationRequestHandler );
+			locationRequestHandler = null;
+		}
+
+		cancel();
 	}
 
 
@@ -129,10 +140,11 @@ public class ZmanimLocationManager {
 	}
 
 
-	public void cancel() {
+	private void cancel() {
 
 		if ( currentAcquirer != null ) {
 			currentAcquirer.cancel();
+			currentAcquirer = null;
 		}
 	}
 

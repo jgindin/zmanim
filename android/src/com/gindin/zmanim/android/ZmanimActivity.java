@@ -40,7 +40,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -235,7 +234,8 @@ public class ZmanimActivity
 
 		// Might be null if we get stopped before we're fully started...
 		if ( null != locationManager ) {
-			locationManager.cancel();
+			locationManager.onStop();
+			locationManager = null;
 		}
 
 		determiningLocationDialog.dismiss();
@@ -284,26 +284,6 @@ public class ZmanimActivity
 				break;
 		}
 	}
-
-
-	// TODO: GO AWAY!!!!
-	// \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
-	public ListView getListView() {
-
-		if ( null == listView ) {
-			listView = (ListView)findViewById( android.R.id.list );
-		}
-
-		return listView;
-	}
-
-
-	public void setAdapter( ListAdapter listAdapter ) {
-		getListView().setAdapter( listAdapter );
-	}
-
-	// /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
-	// TODO: GO AWAY!!!!
 
 
 	public void rebuildUI() {
