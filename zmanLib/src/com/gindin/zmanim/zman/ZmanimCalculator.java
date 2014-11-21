@@ -50,17 +50,9 @@ public class ZmanimCalculator
 
 
 	/**
-	 * In Seattle, the Sephardic community which descends from the Island of Rhodes considers Shabbat to be
-	 *  out 45 minutes after sunset.
+	 * In Seattle, the Sephardic community considers Shabbat to be out 45 minutes after sunset.
 	 */
-	private static final int                                  MINUTES_AFTER_SUNSET_FOR_EB_TZAIT = 45;
-
-	/**
-	 * In Seattle, the Sephardic community which descends from the Turkey considers Shabbat to be
-	 *  out 42 minutes after sunset.
-	 */
-	private static final int                                  MINUTES_AFTER_SUNSET_FOR_SBH_TZAIT = 42;
-
+	private static final int                                  MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT = 45;
 
 	/**
 	 * Minutes in an hour.
@@ -124,13 +116,8 @@ public class ZmanimCalculator
 	}
 
 
-	public Date getTzaitEzraBessaroth() {
-		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_EB_TZAIT * MINUTE_MILLIS );
-	}
-
-
-	public Date getTzaitSephardicBikurHolim() {
-		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_SBH_TZAIT * MINUTE_MILLIS );
+	public Date getTzaitSeattleSephardic() {
+		return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT * MINUTE_MILLIS );
 	}
 
 

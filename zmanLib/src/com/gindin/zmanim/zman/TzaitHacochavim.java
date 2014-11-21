@@ -279,24 +279,16 @@ class TzaitHacochavim
 
 	@SuppressWarnings( { "FeatureEnvy" } )
 	protected static List<Zman> buildExtraTzaitZmanim(
-		final Type            zmanType,
-		final ZmanimCalculator zmanimCalculator
+		final Type              zmanType,
+		final ZmanimCalculator  zmanimCalculator
 	) {
 
 		List<Zman>  zmanim = new ArrayList<Zman>();
 
 		zmanim.add(
-			new Zman( "Seattle - SBH", "Based on the Turkish Seattle Sephardic community's tradition (42 minutes).", zmanType ) {
+			new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition (45 minutes).", zmanType ) {
 				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitSephardicBikurHolim() );
-				}
-			}
-		);
-
-		zmanim.add(
-			new Zman( "Seattle - EB", "Based on the Rhodesli Seattle Sephardic community's tradition (45 minutes).", zmanType ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitEzraBessaroth() );
+					return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitSeattleSephardic() );
 				}
 			}
 		);
