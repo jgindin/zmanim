@@ -34,6 +34,7 @@ atlassian-ide-plugin.xml
 \.idea/dictionaries/
 \.idea/copyright/profiles_settings.xml
 \.idea/findbugs-idea.xml
+\.idea/shelf/*
 
 
 # Ignore any backup files created by editors
