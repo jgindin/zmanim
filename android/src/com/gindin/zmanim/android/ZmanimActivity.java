@@ -185,9 +185,11 @@ public class ZmanimActivity
 		setupViewListeners();
 
 		dateChangedHandler = new HebrewDateChangeHandler();
+		eventBus.addHandler( dateChangedHandler );
 
 		// Now start listening for location changes...
 		rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
+		eventBus.addHandler( rawLocationAcquiredHandler );
 
 		// Have to get setup for today.
 		// TODO:  We should actually be storing the date the user is viewing in the savedInstanceState!
@@ -213,20 +215,12 @@ public class ZmanimActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// NOTE: We do NOT want any catchup events...that will throw us off, and have us off acquiring
-		//  locations again when we don't want to...
-		eventBus.addHandler( dateChangedHandler );
-		eventBus.addHandler( rawLocationAcquiredHandler );
 	}
 
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
-		eventBus.removeHandler( dateChangedHandler );
-		eventBus.removeHandler( rawLocationAcquiredHandler );
 	}
 
 
@@ -234,13 +228,6 @@ public class ZmanimActivity
 	@Override
 	protected void onStop() {
 
-		// Might be null if we get stopped before we're fully started...
-		if ( null != locationManager ) {
-			locationManager.onStop();
-			locationManager = null;
-		}
-
-		determiningLocationDialog.dismiss();
 		super.onStop();
 	}
 
@@ -249,6 +236,15 @@ public class ZmanimActivity
 	protected void onDestroy() {
 
 		eventBus.removeHandler( dateChangedHandler );
+		eventBus.removeHandler( rawLocationAcquiredHandler );
+
+		// Might be null if we get stopped before we're fully started...
+		if ( null != locationManager ) {
+			locationManager.onStop();
+			locationManager = null;
+		}
+
+		determiningLocationDialog.dismiss();
 
 		for ( Presenter<?> presenter : loadedPresenters ) {
 			presenter.destroy();
