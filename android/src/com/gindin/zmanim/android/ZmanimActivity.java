@@ -157,7 +157,7 @@ public class ZmanimActivity
 
 		determiningLocationDialog = new ProgressDialog( this );
 		determiningLocationDialog.setIndeterminate( true );
-		determiningLocationDialog.setMessage( "Determining location..." );
+		determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 		determiningLocationDialog.show();
 
 		eventBus = ZMANIM_EVENT_BUS;
