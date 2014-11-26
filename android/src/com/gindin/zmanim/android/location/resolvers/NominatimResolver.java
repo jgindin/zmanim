@@ -83,7 +83,8 @@ class NominatimResolver
 
 		// Work around pre-Froyo bugs in HTTP connection reuse. See
 		//  http://developer.android.com/reference/java/net/HttpURLConnection.html
-		if ( Integer.parseInt( Build.VERSION.SDK ) < Build.VERSION_CODES.FROYO ) {
+		// If this is null, then we're running some unit tests...
+		if ( ( Build.VERSION.SDK != null ) && Integer.parseInt( Build.VERSION.SDK ) < Build.VERSION_CODES.FROYO ) {
 			System.setProperty( "http.keepAlive", "false" );
 		}
 
