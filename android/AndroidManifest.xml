@@ -6,7 +6,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
 	android:versionCode="230"
-  android:versionName="3.5.230.86491bd72b31"
+  android:versionName="3.5.230.f65b7ded8bb6-DEV"
   android:installLocation="auto"
 >
 
@@ -35,14 +35,6 @@
     android:largeScreens="true"
     android:xlargeScreens="true"
 	/>
-
-	<!--
-	For debugging, swap in this version:
-		<application android:icon="@drawable/icon" android:label="Zmanim" android:debuggable="true">
-
-	Then run:
-	  ant -Dinstall-zmanim=true clean debug install-debug-to-device
-	-->
 
 	<application android:icon="@drawable/icon" android:label="Zmanim">
 		<activity
