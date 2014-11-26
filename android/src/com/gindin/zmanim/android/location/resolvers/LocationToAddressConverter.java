@@ -39,6 +39,7 @@ public class LocationToAddressConverter {
 		this.eventBus = eventBus;
 
 		orderedResolvers = new ArrayList<LocationResolver>();
+		orderedResolvers.add( new CachedLocationResolver( eventBus, personalPrefs ) );
 		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
 		orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
 		orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
@@ -70,10 +71,14 @@ public class LocationToAddressConverter {
 	}
 
 
-	public void destroy() {
+	public void onDestroy() {
 
 		eventBus.removeHandler( locationAcquiredHandler );
 		eventBus.removeHandler( placeAcquiredHandler );
+
+		for ( LocationResolver resolver : orderedResolvers ) {
+			resolver.onDestroy();
+		}
 	}
 
 

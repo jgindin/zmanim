@@ -30,9 +30,9 @@ import java.util.List;
 abstract class LocationResolver {
 
 
-	private final EventBus                                  eventBus;
+	protected final EventBus                                  eventBus;
 
-	private final SharedPreferences                         personalPrefs;
+	private final SharedPreferences                           personalPrefs;
 
 
 	protected LocationResolver(
@@ -42,6 +42,12 @@ abstract class LocationResolver {
 		this.eventBus = eventBus;
 		this.personalPrefs = personalPrefs;
 	}
+
+
+	/**
+	 * Called when the resolver is being destroyed.
+	 */
+	public abstract void onDestroy();
 
 
 	public final void resolve(

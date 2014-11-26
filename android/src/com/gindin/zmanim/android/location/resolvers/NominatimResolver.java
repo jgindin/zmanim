@@ -99,6 +99,12 @@ class NominatimResolver
 	}
 
 
+	@Override
+	public void onDestroy() {
+
+	}
+
+
 	@Nullable
 	@Override
 	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {

@@ -26,6 +26,12 @@ class PassthroughResolver
 	}
 
 
+	@Override
+	public void onDestroy() {
+
+	}
+
+
 	/**
 	 * Since we couldn't resolve this any other way, then the resolution here is just to leave it alone.
 	 */

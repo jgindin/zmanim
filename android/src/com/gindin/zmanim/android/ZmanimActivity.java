@@ -94,6 +94,8 @@ public class ZmanimActivity
 
 	private ZmanimLocation                                    lastKnownLocation;
 
+	private LocationToAddressConverter                        locationToAddressConverter;
+
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
 	//    onCreate
@@ -165,7 +167,7 @@ public class ZmanimActivity
 		// TODO: Move things things into Guice modules, etc....
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
-		new LocationToAddressConverter( new Geocoder( this ), eventBus, personalPrefs );
+		locationToAddressConverter = new LocationToAddressConverter( new Geocoder( this ), eventBus, personalPrefs );
 
 		DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
 		loadedPresenters.add( dateDisplayModule.create() );
@@ -252,6 +254,9 @@ public class ZmanimActivity
 			presenter.destroy();
 		}
 		loadedPresenters.clear();
+
+		locationToAddressConverter.onDestroy();
+		locationToAddressConverter = null;
 
 		LogUtils.endSession( this );
 		

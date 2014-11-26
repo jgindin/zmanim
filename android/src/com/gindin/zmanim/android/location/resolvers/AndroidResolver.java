@@ -36,6 +36,12 @@ class AndroidResolver
 	}
 
 
+	@Override
+	public void onDestroy() {
+		// Nothing to destroy here...
+	}
+
+
 	@SuppressWarnings( "FeatureEnvy" )
 	@Nullable
 	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation location ) {
