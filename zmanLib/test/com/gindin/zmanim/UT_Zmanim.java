@@ -213,8 +213,7 @@ public class UT_Zmanim {
 				"    Tzait Hacochavim - Geonim 5.95 deg               : 18:44:48\n" +
 				"    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:05\n" +
 				"    Tzait Hacochavim - Geonim 8.5 deg                : 19:00:02\n" +
-				"    Tzait Hacochavim - Seattle - SBH                 : 18:55:51\n" +
-				"    Tzait Hacochavim - Seattle - EB                  : 18:58:51\n" +
+				"    Tzait Hacochavim - Seattle Sephardic             : 18:58:51\n" +
 				"            Midnight - Mid-night                     :  0:54:22\n";
 
 		final String yeshivaUniversityExpected =
@@ -321,8 +320,7 @@ public class UT_Zmanim {
 			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:37:12\n" +
 			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:48\n" +
 			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:50:47\n" +
-			"    Tzait Hacochavim - Seattle - SBH                 : 18:51:40\n" +
-			"    Tzait Hacochavim - Seattle - EB                  : 18:54:40\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:54:40\n" +
 			"            Midnight - Mid-night                     :  0:40:57\n";
 
 		final String haRambanSynagogueExpected =
@@ -429,8 +427,7 @@ public class UT_Zmanim {
 			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:27:24\n" +
 			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:23\n" +
 			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:39:30\n" +
-			"    Tzait Hacochavim - Seattle - SBH                 : 18:44:58\n" +
-			"    Tzait Hacochavim - Seattle - EB                  : 18:47:58\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:47:58\n" +
 			"            Midnight - Mid-night                     :  0:24:17\n";
 
 		HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 19 );
@@ -558,8 +555,7 @@ public class UT_Zmanim {
 			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:36:14\n" +
 			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:34\n" +
 			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:51:35\n" +
-			"    Tzait Hacochavim - Seattle - SBH                 : 18:46:58\n" +
-			"    Tzait Hacochavim - Seattle - EB                  : 18:49:58\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:49:58\n" +
 			"            Midnight - Mid-night                     :  0:53:38\n"
 		);
 	}
@@ -676,8 +672,7 @@ public class UT_Zmanim {
 			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:34:35\n" +
 			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:40:56\n" +
 			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:49:57\n" +
-			"    Tzait Hacochavim - Seattle - SBH                 : 18:45:15\n" +
-			"    Tzait Hacochavim - Seattle - EB                  : 18:48:15\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:48:15\n" +
 			"            Havdalah - MG'A 120 Minutes              : 20:03:15\n" +
 			"            Havdalah - GR'A 120 Minutes Zmaniyot     : 19:46:44\n" +
 			"            Havdalah - 3.5 deg                       : 18:19:41\n" +
@@ -703,8 +698,7 @@ public class UT_Zmanim {
 			"            Havdalah - Geonim 5.95 deg               : 18:34:35\n" +
 			"            Havdalah - Geonim 7.083 deg              : 18:40:56\n" +
 			"            Havdalah - Geonim 8.5 deg                : 18:49:57\n" +
-			"            Havdalah - Seattle - SBH                 : 18:45:15\n" +
-			"            Havdalah - Seattle - EB                  : 18:48:15\n" +
+			"            Havdalah - Seattle Sephardic             : 18:48:15\n" +
 			"            Midnight - Mid-night                     :  0:53:31\n"
 		);
 	}
@@ -821,8 +815,7 @@ public class UT_Zmanim {
 				"    Tzait Hacochavim - Geonim 5.95 deg               : 20:14:04\n" +
 				"    Tzait Hacochavim - Geonim 7.083 deg              : 20:20:33\n" +
 				"    Tzait Hacochavim - Geonim 8.5 deg                : 20:29:53\n" +
-				"    Tzait Hacochavim - Seattle - SBH                 : 20:24:59\n" +
-				"    Tzait Hacochavim - Seattle - EB                  : 20:27:59\n" +
+				"    Tzait Hacochavim - Seattle Sephardic             : 20:27:59\n" +
 				"            Midnight - Mid-night                     :  1:11:32\n"
 		);
 	}
@@ -987,8 +980,7 @@ public class UT_Zmanim {
 				"    Tzait Hacochavim - Geonim 5.95 deg               : 20:29:02\n" +
 				"    Tzait Hacochavim - Geonim 7.083 deg              : 20:35:44\n" +
 				"    Tzait Hacochavim - Geonim 8.5 deg                : 20:45:26\n" +
-				"    Tzait Hacochavim - Seattle - SBH                 : 20:39:05\n" +
-				"    Tzait Hacochavim - Seattle - EB                  : 20:42:05\n" +
+				"    Tzait Hacochavim - Seattle Sephardic             : 20:42:05\n" +
 				"            Midnight - Mid-night                     :  1:08:51\n"
 		);
 	}
@@ -1128,8 +1120,7 @@ public class UT_Zmanim {
 			"    Tzait Hacochavim - Geonim 5.95 deg               : 17:03:58\n" +
 			"    Tzait Hacochavim - Geonim 7.083 deg              : 17:10:58\n" +
 			"    Tzait Hacochavim - Geonim 8.5 deg                : 17:20:50\n" +
-			"    Tzait Hacochavim - Seattle - SBH                 : 17:10:34\n" +
-			"    Tzait Hacochavim - Seattle - EB                  : 17:13:34\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 17:13:34\n" +
 			"            Midnight - Mid-night                     :  0:12:54\n"
 		);
 	}
