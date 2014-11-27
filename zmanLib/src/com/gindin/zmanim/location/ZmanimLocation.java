@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 import android.location.Address;
 import android.location.Location;
+import org.json.JSONException;
 
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +43,12 @@ public class ZmanimLocation
 		}
 
 		public Builder locationName( String locationName ) {
-			this.locationName = locationName;
+			if ( locationName == null ) {
+				this.locationName = UNKNOWN_LOCATION;
+			}
+			else {
+				this.locationName = locationName;
+			}
 			return this;
 		}
 
@@ -303,13 +310,56 @@ public class ZmanimLocation
 	}
 
 
-	private static String getLatitudeString( double latitude ) {
+	public Location toLocation() {
+
+		Location location = new Location( providerName );
+		location.setLatitude( getLatitude() );
+		location.setLongitude( getLongitude() );
+		location.setTime( locationTime );
+		location.setAccuracy( accuracy );
+		location.setAltitude( getElevation() );
+
+		return location;
+	}
+
+
+	/**
+	 * Writes this zmanim location to the specified output. Does NOT close the stream or perform any other operation to the stream.
+	 *
+	 * @throws IOException if there is any error writing to the stream.
+	 */
+	public void save( OutputStream output ) throws IOException {
+
+		DataOutputStream dataOutputStream = new DataOutputStream( output );
+
+		String json = ZmanLocationJSON.toJSON( this );
+		dataOutputStream.writeUTF( json );
+	}
+
+
+	/**
+	 * Loads a zmanim location from the specified input, assuming the stream is correctly positioned. Does NOT close the
+	 *  stream or perform any other operations to the stream.
+	 *
+	 * @throws IOException If there is any error interacting with the stream.
+	 * @throws JSONException If there is any error reading the location from the stream.
+	 */
+	public static ZmanimLocation load( InputStream input ) throws IOException, JSONException {
+
+		DataInputStream inputStream = new DataInputStream( input );
+		String json = inputStream.readUTF();
+
+		return ZmanLocationJSON.fromJSON( json );
+	}
+
+
+	static String getLatitudeString( double latitude ) {
 		//noinspection AutoBoxing
 		return String.format( "%.1f", latitude );
 	}
 
 
-	private static String getLongitudeString( double longitude ) {
+	static String getLongitudeString( double longitude ) {
 		//noinspection AutoBoxing
 		return String.format( "%.1f", longitude );
 	}

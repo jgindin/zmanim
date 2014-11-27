@@ -4,16 +4,17 @@
 
 package com.gindin.zmanim.android.location;
 
-import com.gindin.util.eventBus.EventBus;
-import com.gindin.zmanim.android.location.acquirers.*;
-import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
-import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
-import com.gindin.zmanim.android.prefs.LocationProviders;
-
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import com.gindin.util.eventBus.EventBus;
+import com.gindin.zmanim.android.location.acquirers.DynamicLocationAcquirer;
+import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
+import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
+import com.gindin.zmanim.android.location.acquirers.StaticLocationAcquirer;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,10 +73,11 @@ public class ZmanimLocationManager {
 
 
 	public ZmanimLocationManager(
+		Activity          activity,
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs,
 		SharedPreferences personalPrefs,
-	  LocationManager   locationManager
+		LocationManager   locationManager
 	) {
 
 		this.eventBus = eventBus;
@@ -83,7 +85,7 @@ public class ZmanimLocationManager {
 		this.personalPrefs = personalPrefs;
 		this.locationManager = locationManager;
 
-		lastKnownLocationProvider = new LastKnownLocationProvider( locationManagementPrefs );
+		lastKnownLocationProvider = new LastKnownLocationProvider( activity );
 
 		locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
 			@Override

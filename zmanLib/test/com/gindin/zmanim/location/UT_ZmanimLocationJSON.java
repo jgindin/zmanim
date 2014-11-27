@@ -1,0 +1,54 @@
+package com.gindin.zmanim.location;
+
+import org.json.JSONException;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.TimeZone;
+
+/**
+ *
+ */
+public class UT_ZmanimLocationJSON {
+
+	@Test
+	public void toJSON() {
+
+		ZmanimLocation location = new ZmanimLocation.Builder()
+			.locationName( "Seattle, Washington" )
+			.atLatitude( 47.62 )
+			.atLongitude( -122.33 )
+			.fromProvider( "Zmanim" )
+			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+			.build();
+
+		String json = ZmanLocationJSON.toJSON( location );
+		Assert.assertEquals(
+			"{\"lat\": \"47.6\",\n" +
+				"\"lon\": \"-122.3\",\n" +
+				"\"el\": \"0.0\",\n" +
+				"\"tz\": \"PST\",\n" +
+				"\"pv\": \"Zmanim\",\n" +
+				"\"ac\": \"-1.0\",\n" +
+				"\"name\": \"Seattle, Washington\"\n" +
+				"}",
+			json
+		);
+	}
+
+
+	@Test
+	public void fromJSON() throws JSONException {
+
+		ZmanimLocation location = ZmanLocationJSON.fromJSON(
+			"{\"lat\": \"47.6\",\n" +
+				"\"lon\": \"-122.3\",\n" +
+				"\"el\": \"0.0\",\n" +
+				"\"tz\": \"PST\",\n" +
+				"\"pv\": \"Zmanim\",\n" +
+				"\"ac\": \"-1.0\",\n" +
+				"\"name\": \"Seattle, Washington\"\n" +
+				"}"
+		);
+	}
+}

@@ -5,9 +5,15 @@
 package com.gindin.zmanim.android.location;
 
 
-import android.content.SharedPreferences;
-import android.location.Criteria;
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
+import com.gindin.util.LogUtils;
+import com.gindin.zmanim.location.ZmanimLocation;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * This is a pseudo-location provider that is used to keep track of the last known location. It cannot be a real location
@@ -15,89 +21,40 @@ import android.location.Location;
  *  that such permissions actually can only be granted if its installed in a package signed with the system key.
  *  See http://stackoverflow.com/questions/3394626/how-to-provide-your-own-locationprovider-on-android.
  */
-class LastKnownLocationProvider {
+public class LastKnownLocationProvider {
 
 	public static final String                                NAME = "LastKnownLocationProvider";
 
-	private static final String                               HAS_ACCURACY = "lastFixHasAccuracy";
-	private static final String                               ACCURACY = "lastFixAccuracy";
-
-	private static final String                               HAS_ALTITUDE = "lastfixHasAltitude";
-	private static final String                               ALTITUDE = "lastfixAltitude";
-
-	private static final String                               BEARING = "lastfixBearing";
-	private static final String                               HAS_BEARING = "lastfixHasBearing";
-
-	private static final String                               HAS_SPEED = "lastfixHasSpeed";
-	private static final String                               SPEED = "lastfixSpeed";
-
-	private static final String                               LATITUDE = "lastfixLatitude";
-	private static final String                               LONGITUDE = "lastfixLongitude";
-	private static final String                               PROVIDER_NAME = "lastFixProviderName";
-	private static final String                               TIME = "lastfixTime";
-
-
-	/** Stores data that we need between invocations. */
-	private final SharedPreferences                           preferences;
+	private final Activity                                    activity;
 
 
 	private Location                                          lastKnownLocation;
 
 
-	LastKnownLocationProvider( SharedPreferences preferences ) {
-		this.preferences = preferences;
+	LastKnownLocationProvider( Activity activity ) {
+		this.activity = activity;
 
-		String lastFixProviderName = preferences.getString( PROVIDER_NAME, null );
-		if ( null != lastFixProviderName ) {
+		FileInputStream input = null;
+		try {
+			input = activity.openFileInput( NAME );
+			ZmanimLocation location = ZmanimLocation.load( input );
 
-			lastKnownLocation = new Location( lastFixProviderName );
-			if ( preferences.getBoolean( HAS_ACCURACY, false ) ) {
-				lastKnownLocation.setAccuracy( preferences.getFloat( ACCURACY, 0 ) );
-			}
-
-			if ( preferences.getBoolean( HAS_ALTITUDE, false ) ) {
-				lastKnownLocation.setAltitude( Double.parseDouble( preferences.getString( ALTITUDE, "0" ) ) );
-			}
-
-			if ( preferences.getBoolean( HAS_BEARING, false ) ) {
-				lastKnownLocation.setBearing( preferences.getFloat( BEARING, 0.0f ) );
-			}
-
-			lastKnownLocation.setLatitude( Double.parseDouble( preferences.getString( LATITUDE, "0" ) ) );
-			lastKnownLocation.setLongitude( Double.parseDouble( preferences.getString( LONGITUDE, "0" ) ) );
-
-			if ( preferences.getBoolean( HAS_SPEED, false ) ) {
-				lastKnownLocation.setSpeed( preferences.getFloat( SPEED, 0.0f ) );
-			}
-
-			lastKnownLocation.setTime( preferences.getLong( TIME, 0 ) );
+			lastKnownLocation = location.toLocation();
 		}
-
-	}
-
-
-	public int getPowerRequirement() {
-		return Criteria.POWER_LOW;
-	}
-
-
-	public boolean supportsAltitude() {
-		return preferences.getBoolean( HAS_ALTITUDE, false );
-	}
-
-
-	public boolean supportsBearing() {
-		return preferences.getBoolean( HAS_BEARING, false );
-	}
-
-
-	public boolean supportsSpeed() {
-		return preferences.getBoolean( HAS_SPEED, false );
-	}
-
-
-	public float getAccuracy() {
-		return lastKnownLocation.getAccuracy();
+		catch ( Exception e ) {
+			// Oh well, we can't read the last location, so...we just will have to deal ...
+			LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
+		}
+		finally {
+			if ( input != null ) {
+				try {
+					input.close();
+				}
+				catch ( IOException e ) {
+					// Urgh. Oh well.
+				}
+			}
+		}
 	}
 
 
@@ -112,28 +69,27 @@ class LastKnownLocationProvider {
 			return;
 		}
 
-		final SharedPreferences.Editor editor = preferences.edit();
-
-		editor.putBoolean( HAS_ACCURACY, newLocation.hasAccuracy() );
-		editor.putFloat( ACCURACY, newLocation.getAccuracy() );
-
-		editor.putBoolean( HAS_ALTITUDE, newLocation.hasAltitude() );
-		editor.putString( ALTITUDE, Double.toString( newLocation.getAltitude() ) );
-
-		editor.putBoolean( HAS_BEARING, newLocation.hasBearing() );
-		editor.putFloat( BEARING, newLocation.getBearing() );
-
-		editor.putString( LATITUDE, Double.toString( newLocation.getLatitude() ) );
-		editor.putString( LONGITUDE, Double.toString( newLocation.getLongitude() ) );
-
-		editor.putString( PROVIDER_NAME, newLocation.getProvider() );
-
-		editor.putBoolean( HAS_SPEED, newLocation.hasSpeed() );
-		editor.putFloat( SPEED, newLocation.getSpeed() );
-
-		editor.putLong( TIME, newLocation.getTime() );
-
-		editor.apply();
+		FileOutputStream output = null;
+		try {
+			output = activity.openFileOutput( NAME, Context.MODE_PRIVATE );
+			ZmanimLocation zmanimLocation = new ZmanimLocation.Builder().from( newLocation ).build();
+			zmanimLocation.save( output );
+		}
+		catch ( Exception e ) {
+			// Just means we can't actually save the last location, and next time the user starts we'll have to go
+			//  query from scratch.
+			LogUtils.logError( "LKLP::update", "Can't open file.", e );
+		}
+		finally {
+			if ( output != null ) {
+				try {
+					output.close();
+				}
+				catch ( IOException e ) {
+					// Oh well.
+				}
+			}
+		}
 	}
 
 } // End of LocationProvider class

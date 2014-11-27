@@ -4,15 +4,20 @@
 
 package com.gindin.zmanim.android;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.Version;
+import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.location.ZmanimLocation;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**
@@ -39,6 +44,7 @@ class AppUpgrader {
 
 				personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
 				zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
+				upgradeLocationPrefs( zmanimActivity, lastKnownCodeVersion );
 			}
 			catch ( Throwable e ) {
 				//noinspection unchecked
@@ -52,6 +58,71 @@ class AppUpgrader {
 		final SharedPreferences.Editor editor = prefs.edit();
 		editor.putInt( LAST_KNOWN_CODE_VERSION, thisCodeVersion );
 		editor.apply();
+	}
+
+
+	private static void upgradeLocationPrefs(
+		ZmanimActivity    activity,
+		int               lastKnownCodeVersion
+	) {
+
+		if ( lastKnownCodeVersion > 230 ) {
+			return;
+		}
+
+		Location lastKnownLocation;
+
+		SharedPreferences locationPreferences = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		String lastFixProviderName = locationPreferences.getString( "lastFixProviderName", null );
+		if ( null != lastFixProviderName ) {
+
+			lastKnownLocation = new Location( lastFixProviderName );
+			if ( locationPreferences.getBoolean( "lastFixHasAccuracy", false ) ) {
+				lastKnownLocation.setAccuracy( locationPreferences.getFloat( "lastFixAccuracy", 0 ) );
+			}
+
+			if ( locationPreferences.getBoolean( "lastfixHasAltitude", false ) ) {
+				lastKnownLocation.setAltitude( Double.parseDouble( locationPreferences.getString( "lastfixAltitude", "0" ) ) );
+			}
+
+			if ( locationPreferences.getBoolean( "lastfixHasBearing", false ) ) {
+				lastKnownLocation.setBearing( locationPreferences.getFloat( "lastfixBearing", 0.0f ) );
+			}
+
+			lastKnownLocation.setLatitude( Double.parseDouble( locationPreferences.getString( "lastfixLatitude", "0" ) ) );
+			lastKnownLocation.setLongitude( Double.parseDouble( locationPreferences.getString( "lastfixLongitude", "0" ) ) );
+
+			if ( locationPreferences.getBoolean( "lastfixHasSpeed", false ) ) {
+				lastKnownLocation.setSpeed( locationPreferences.getFloat( "lastfixSpeed", 0.0f ) );
+			}
+
+			lastKnownLocation.setTime( locationPreferences.getLong( "lastfixTime", 0 ) );
+
+			ZmanimLocation location = new ZmanimLocation.Builder()
+				.from( lastKnownLocation )
+				.build();
+
+			OutputStream output = null;
+			try {
+				output = activity.openFileOutput( LastKnownLocationProvider.NAME, Context.MODE_PRIVATE );
+			  location.save( output );
+			}
+			catch ( IOException e ) {
+				// Oh well, we'll lose the last known location, and we'll have to acquire the current location.
+				LogUtils.logError( "AppUpgrader::locationPrefs", "Couldn't upgrade last location", e );
+			}
+			finally {
+				if ( output != null ) {
+					try {
+						output.close();
+					}
+					catch ( IOException e ) {
+						// too bad...
+					}
+				}
+			}
+		}
+
 	}
 
 }  // End of AppUpgrader class

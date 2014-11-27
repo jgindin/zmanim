@@ -177,7 +177,7 @@ public class ZmanimActivity
 
 		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-		locationManager = new ZmanimLocationManager( eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
 		ZmanimDisplayModule zmanimDisplayModule = new ZmanimDisplayModule( this, eventBus, personalPrefsManager);
 		loadedPresenters.add( zmanimDisplayModule.create() );
