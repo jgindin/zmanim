@@ -167,7 +167,7 @@ public class ZmanimActivity
 		// TODO: Move things things into Guice modules, etc....
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
-		locationToAddressConverter = new LocationToAddressConverter( new Geocoder( this ), eventBus, personalPrefs );
+		locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ), personalPrefs );
 
 		DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
 		loadedPresenters.add( dateDisplayModule.create() );

@@ -24,10 +24,10 @@ public class UT_ZmanimLocationJSON {
 
 		String json = ZmanLocationJSON.toJSON( location );
 		Assert.assertEquals(
-			"{\"lat\": \"47.6\",\n" +
-				"\"lon\": \"-122.3\",\n" +
+			"{\"lat\": \"47.62\",\n" +
+				"\"lon\": \"-122.33\",\n" +
 				"\"el\": \"0.0\",\n" +
-				"\"tz\": \"PST\",\n" +
+				"\"tz\": \"America/Los_Angeles\",\n" +
 				"\"pv\": \"Zmanim\",\n" +
 				"\"ac\": \"-1.0\",\n" +
 				"\"name\": \"Seattle, Washington\"\n" +
@@ -41,14 +41,24 @@ public class UT_ZmanimLocationJSON {
 	public void fromJSON() throws JSONException {
 
 		ZmanimLocation location = ZmanLocationJSON.fromJSON(
-			"{\"lat\": \"47.6\",\n" +
-				"\"lon\": \"-122.3\",\n" +
+			"{\"lat\": \"47.62\",\n" +
+				"\"lon\": \"-122.33\",\n" +
 				"\"el\": \"0.0\",\n" +
-				"\"tz\": \"PST\",\n" +
+				"\"tz\": \"America/Los_Angeles\",\n" +
 				"\"pv\": \"Zmanim\",\n" +
 				"\"ac\": \"-1.0\",\n" +
 				"\"name\": \"Seattle, Washington\"\n" +
 				"}"
 		);
+
+		ZmanimLocation expected = new ZmanimLocation.Builder()
+			.locationName( "Seattle, Washington" )
+			.atLatitude( 47.62 )
+			.atLongitude( -122.33 )
+			.fromProvider( "Zmanim" )
+			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+			.build();
+
+		Assert.assertEquals( expected, location );
 	}
 }

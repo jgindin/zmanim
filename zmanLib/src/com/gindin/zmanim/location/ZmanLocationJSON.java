@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -27,16 +26,16 @@ class ZmanLocationJSON {
 	public static String toJSON( ZmanimLocation location ) {
 
 		StringBuilder json = new StringBuilder( "{" );
-		append( json, LATITUDE, ZmanimLocation.getLatitudeString( location.getLatitude() ) );
+		append( json, LATITUDE, Double.toString( location.getLatitude() ) );
 		json.append( ",\n" );
 
-		append( json, LONGITUDE, ZmanimLocation.getLongitudeString( location.getLongitude() ) );
+		append( json, LONGITUDE, Double.toString( location.getLongitude() ) );
 		json.append( ",\n" );
 
 		append( json, ELEVATION, Double.toString( location.getElevation() ) );
 		json.append( ",\n" );
 
-		append( json, TIME_ZONE, location.getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
+		append( json, TIME_ZONE, location.getTimeZone().getID() );
 		json.append( ",\n" );
 
 		append( json, PROVIDER, location.providerName );
@@ -62,6 +61,12 @@ class ZmanLocationJSON {
 
 		JSONTokener tokener = new JSONTokener( json );
 		JSONObject root = (JSONObject)tokener.nextValue();
+
+		return fromJSON( root );
+	}
+
+
+	public static ZmanimLocation fromJSON( JSONObject root ) throws JSONException {
 
 		double latitude = root.getDouble( LATITUDE );
 		double longitude = root.getDouble( LONGITUDE );

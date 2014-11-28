@@ -4,6 +4,11 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -11,9 +16,9 @@ import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
-import android.content.SharedPreferences;
-import android.location.Geocoder;
-
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +36,38 @@ public class LocationToAddressConverter {
 
 
 	public LocationToAddressConverter(
-		Geocoder          geocoder,
+		final Activity          activity,
 		EventBus          eventBus,
+		Geocoder          geocoder,
 		SharedPreferences personalPrefs
 	) {
 
 		this.eventBus = eventBus;
 
+		CachedLocationResolver.IOFactory ioFactory = new CachedLocationResolver.IOFactory() {
+			@Override
+			public InputStream openInput() throws FileNotFoundException {
+				return activity.openFileInput( "CachedLocations" );
+			}
+
+
+			@Override
+			public OutputStream openOutput() throws FileNotFoundException {
+				return activity.openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
+			}
+
+
+			@Override
+			public void runInBackground( Runnable runnable ) {
+				new BackgroundTask().execute( runnable );
+			}
+		};
+
+		CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus, personalPrefs );
+		cachedLocationResolver.loadCache();
+
 		orderedResolvers = new ArrayList<LocationResolver>();
-		orderedResolvers.add( new CachedLocationResolver( eventBus, personalPrefs ) );
+		orderedResolvers.add( cachedLocationResolver );
 		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
 		orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
 		orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
@@ -88,5 +116,16 @@ public class LocationToAddressConverter {
 		}
 	}
 
+
+	private static class BackgroundTask
+		extends AsyncTask<Runnable, Void, Void> {
+
+		@Override
+		protected Void doInBackground( Runnable... runnables ) {
+			runnables[0].run();
+
+			return null;
+		}
+	}
 
 } // End of LocationToAddressConverter class
