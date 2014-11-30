@@ -37,33 +37,6 @@ public class UT_CachedLocationResolver {
 
 
 	@Test
-	public void addedToCache() {
-
-		ZmanimLocation location = new ZmanimLocation.Builder()
-			.atLatitude( 47.552827 )
-			.atLongitude( -122.267065 )
-			.locationName( "Ezra Bessaroth" )
-			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
-			.build();
-
-		eventBus.fire( new LocationAcquiredEvent( location ) );
-		Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
-
-		String output = ioFactory.getWhatWasWritten();
-		Assert.assertEquals(
-			"\u0000\u0000\u0000\u0001\u0000�{\"lat\": \"47.552827\",\n" +
-			"\"lon\": \"-122.267065\",\n" +
-			"\"el\": \"0.0\",\n" +
-			"\"tz\": \"America/Los_Angeles\",\n" +
-			"\"pv\": \"Zmanim\",\n" +
-			"\"ac\": \"-1.0\",\n" +
-			"\"name\": \"Ezra Bessaroth\"\n" +
-			"}",
-			output );
-	}
-
-
-	@Test
 	public void useCachedLocation() {
 
 		ZmanimLocation location = new ZmanimLocation.Builder()
@@ -128,29 +101,7 @@ public class UT_CachedLocationResolver {
 
 
 	@Test
-	public void loadFromCache() {
-
-		// TODO: I can't seem to get this test to work properly... I worked out that the length of the UTF string
-		// TODO:  being written ought to be 8F bytes (including the 2 bytes for the length of the string).
-		// TODO:  However, when that's the length put in there, we get an EOF exception. If I make the length
-		// TODO:  7F, then I get a JSON exception that the string is mal-formed. Any longer than that, and I get
-		// TODO   the EOF exception...
-		// TODO:  It does seem that the code really does work, though....
-
-/*
-		ioFactory.prepInput(
-			"\u0000\u0000\u0000\u0001\u0000\u008F{\"lat\": \"47.552827\",\n" +
-			"\"lon\": \"-122.267065\",\n" +
-			"\"el\": \"0.0\",\n" +
-			"\"tz\": \"America/Los_Angeles\",\n" +
-			"\"pv\": \"Zmanim\",\n" +
-			"\"ac\": \"-1.0\",\n" +
-			"\"name\": \"Ezra Bessaroth\"\n" +
-			"}"
-		);
-
-		cachedLocationResolver.loadCache();
-		Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
+	public void loadFromCache() throws IOException {
 
 		ZmanimLocation location = new ZmanimLocation.Builder()
 			.atLatitude( 47.552827 )
@@ -159,8 +110,17 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		Assert.assertEquals( location, cachedLocationResolver.locationCache.iterator().next() );
-*/
+		eventBus.fire( new LocationAcquiredEvent( location ) );
+
+		cachedLocationResolver.locationCache.clear();
+
+		ioFactory.prepInput( ioFactory.outputFile );
+
+		cachedLocationResolver.loadCache();
+		Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
+
+		ZmanimLocation cachedLocation = cachedLocationResolver.locationCache.iterator().next();
+		Assert.assertEquals( location, cachedLocation );
 	}
 
 
@@ -193,20 +153,36 @@ public class UT_CachedLocationResolver {
 	private static class TestIOFactory
 		implements CachedLocationResolver.IOFactory {
 
-		ByteArrayInputStream                                    input;
-		ByteArrayOutputStream                                   output;
+		private File                                            inputFile;
+		FileInputStream                                         input;
+
+		private File                                            outputFile;
+		FileOutputStream                                        output;
 
 
 		TestIOFactory() {
-			input = new ByteArrayInputStream( new byte[0] );
-			output = new ByteArrayOutputStream();
+			try {
+				inputFile = File.createTempFile( "ut_cached_location_", "input" );
+				inputFile.deleteOnExit();
+				input = new FileInputStream( inputFile );
+
+				outputFile = File.createTempFile( "ut_cached_location_", "output" );
+				outputFile.deleteOnExit();
+				output = new FileOutputStream( outputFile );
+			}
+			catch ( IOException e ) {
+				Assert.assertEquals( null, e );
+			}
 		}
 
 
-		void prepInput( String json ) {
-			input = new ByteArrayInputStream( json.getBytes() );
+		void prepInput( File prepFrom ) throws IOException {
 
-			System.out.println( json );
+			input = new FileInputStream( prepFrom );
+
+			outputFile = File.createTempFile( "ut_cached_location_", "output" );
+			outputFile.deleteOnExit();
+			output = new FileOutputStream( outputFile );
 		}
 
 
