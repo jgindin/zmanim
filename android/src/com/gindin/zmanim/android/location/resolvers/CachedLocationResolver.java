@@ -10,8 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This resolver listens for for other resolvers to do their work and caches the results. It is intended that this will
@@ -29,10 +28,10 @@ class CachedLocationResolver
 	interface IOFactory {
 
 		/** Obtain an input stream for reading the cached entries. */
-		InputStream openInput() throws FileNotFoundException;
+		InputStream openInput() throws IOException;
 
 		/** Obtain an output stream for writing a new set of cached entries. */
-		OutputStream openOutput() throws FileNotFoundException;
+		OutputStream openOutput() throws IOException;
 
 		/** The actual loading and saving must be done on a background thread. */
 		void runInBackground( Runnable runnable );
@@ -44,7 +43,7 @@ class CachedLocationResolver
 
 	private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
 
-	final Set<ZmanimLocation>                                 locationCache = new HashSet<ZmanimLocation>();
+	final LRULocationCache                                    locationCache = new LRULocationCache();
 
 
 	CachedLocationResolver(
@@ -175,10 +174,7 @@ class CachedLocationResolver
 			@Override
 			public void run() {
 
-				final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
-				synchronized ( locationCache ) {
-					copy.addAll( locationCache );
-				}
+				final Set<ZmanimLocation> copy = locationCache.newCopy();
 
 				DataOutputStream output = null;
 				try {
@@ -196,10 +192,12 @@ class CachedLocationResolver
 				finally {
 					if ( output != null ) {
 						try {
+							output.flush();
 							output.close();
 						}
 						catch ( IOException e ) {
 							// Oh well.
+							LogUtils.logError( "CLR::saveCache (closing)", e.getMessage(), e );
 						}
 					}
 				}
@@ -207,6 +205,82 @@ class CachedLocationResolver
 		};
 
 		ioFactory.runInBackground( saveCache );
+	}
+
+
+	/**
+	 * NOTE: This cache does NOT fully implement the proper Set semantics. For example, add() will always return true.
+	 */
+	static class LRULocationCache
+		implements Iterable<ZmanimLocation> {
+
+		private static final int                                MAX_SIZE = 25;
+
+		private final Map<ZmanimLocation,ZmanimLocation>        cache = new LinkedHashMap<ZmanimLocation, ZmanimLocation>( 16, 0.75f, true ) {
+			@Override
+			protected boolean removeEldestEntry( Entry<ZmanimLocation,ZmanimLocation> eldest ) {
+				return size() > MAX_SIZE;
+			}
+		};
+
+
+		public boolean add( ZmanimLocation zmanimLocation ) {
+
+			cache.put( zmanimLocation, zmanimLocation );
+			return true;
+		}
+
+
+		public boolean addAll( Collection<? extends ZmanimLocation> collection ) {
+			for ( ZmanimLocation location : collection ) {
+				add( location );
+			}
+
+			return true;
+		}
+
+
+		public void clear() {
+			cache.clear();
+		}
+
+
+		public boolean contains( Object o ) {
+			return cache.containsKey( o );
+		}
+
+
+		public boolean isEmpty() {
+			return cache.isEmpty();
+		}
+
+
+		public Iterator<ZmanimLocation> iterator() {
+			return cache.keySet().iterator();
+		}
+
+
+		public boolean remove( Object o ) {
+			return null != cache.remove( o );
+		}
+
+
+		public int size() {
+			return cache.size();
+		}
+
+
+		public Set<ZmanimLocation> newCopy() {
+			Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
+
+			synchronized ( this ) {
+				for ( ZmanimLocation location : cache.keySet() ) {
+					copy.add( location );
+				}
+			}
+
+			return copy;
+		}
 	}
 
 }

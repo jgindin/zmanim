@@ -149,6 +149,46 @@ public class UT_CachedLocationResolver {
 	}
 
 
+	@Test
+	public void lruTest() {
+
+		ZmanimLocation firstLocation = new ZmanimLocation.Builder()
+			.atLatitude( 47.552827 )
+			.atLongitude( -122.267065 )
+			.locationName( "Ezra Bessaroth" )
+			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+			.build();
+
+		eventBus.fire( new LocationAcquiredEvent( firstLocation ) );
+
+		for ( int i = 0; i < 25; i++ ) {
+			ZmanimLocation location = new ZmanimLocation.Builder()
+				.atLatitude( firstLocation.getLatitude() + i )
+				.atLongitude( firstLocation.getLongitude() + i )
+				.locationName( firstLocation.getLocationName() + "_" + i )
+				.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+				.build();
+
+			eventBus.fire( new LocationAcquiredEvent( location ) );
+		}
+
+		Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
+
+		ZmanimLocation location = new ZmanimLocation.Builder()
+			.atLatitude( firstLocation.getLatitude() + 25 )
+			.atLongitude( firstLocation.getLongitude() + 25 )
+			.locationName( firstLocation.getLocationName() + "_25" )
+			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+			.build();
+
+		eventBus.fire( new LocationAcquiredEvent( location ) );
+
+		Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
+		Assert.assertFalse( cachedLocationResolver.locationCache.contains( firstLocation ) );
+	}
+
+
+
 
 	private static class TestIOFactory
 		implements CachedLocationResolver.IOFactory {
@@ -158,22 +198,6 @@ public class UT_CachedLocationResolver {
 
 		private File                                            outputFile;
 		FileOutputStream                                        output;
-
-
-		TestIOFactory() {
-			try {
-				inputFile = File.createTempFile( "ut_cached_location_", "input" );
-				inputFile.deleteOnExit();
-				input = new FileInputStream( inputFile );
-
-				outputFile = File.createTempFile( "ut_cached_location_", "output" );
-				outputFile.deleteOnExit();
-				output = new FileOutputStream( outputFile );
-			}
-			catch ( IOException e ) {
-				Assert.assertEquals( null, e );
-			}
-		}
 
 
 		void prepInput( File prepFrom ) throws IOException {
@@ -187,13 +211,23 @@ public class UT_CachedLocationResolver {
 
 
 		@Override
-		public InputStream openInput() throws FileNotFoundException {
+		public InputStream openInput() throws IOException {
+
+			inputFile = File.createTempFile( "ut_cached_location_", "input" );
+			inputFile.deleteOnExit();
+			input = new FileInputStream( inputFile );
+
 			return input;
 		}
 
 
 		@Override
-		public OutputStream openOutput() throws FileNotFoundException {
+		public OutputStream openOutput() throws IOException {
+
+			outputFile = File.createTempFile( "ut_cached_location_", "output" );
+			outputFile.deleteOnExit();
+			output = new FileOutputStream( outputFile );
+
 			return output;
 		}
 
@@ -203,9 +237,5 @@ public class UT_CachedLocationResolver {
 			runnable.run();
 		}
 
-
-		public String getWhatWasWritten() {
-			return output.toString();
-		}
 	}
 }
