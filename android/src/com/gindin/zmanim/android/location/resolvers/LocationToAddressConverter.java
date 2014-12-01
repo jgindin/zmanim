@@ -69,7 +69,12 @@ public class LocationToAddressConverter {
 		orderedResolvers = new ArrayList<LocationResolver>();
 		orderedResolvers.add( cachedLocationResolver );
 		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
-		orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
+
+		// We're not using Nominatim because of the overly restrictive usage policy.
+		//orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
+
+		orderedResolvers.add( new MapQuestResolver( eventBus, personalPrefs ) );
+
 		orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
 
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {

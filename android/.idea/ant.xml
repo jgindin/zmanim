@@ -5,7 +5,8 @@
       <additionalClassPath>
         <entry dir="file:///opt/devtools/android/android-sdk-linux/tools/lib" />
       </additionalClassPath>
+      <executeOn event="afterCompilation" target="zmanim-reset-keys" />
+      <executeOn event="beforeCompilation" target="zmanim-replace-key-placeholders" />
     </buildFile>
   </component>
 </project>
-

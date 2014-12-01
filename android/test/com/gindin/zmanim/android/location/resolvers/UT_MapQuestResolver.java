@@ -10,11 +10,11 @@ import org.junit.Test;
 /**
  *
  */
-public class UT_Naminatim {
+public class UT_MapQuestResolver {
 
 	private EventBus                                          eventBus;
 
-	private NominatimResolver                                 resolver;
+	private MapQuestResolver                                  resolver;
 
 	private SharedPreferences                                 prefs;
 
@@ -23,7 +23,7 @@ public class UT_Naminatim {
 
 		eventBus = new EventBus();
 		prefs = new TestPrefs();
-		resolver = new NominatimResolver( eventBus, prefs );
+		resolver = new MapQuestResolver( eventBus, prefs );
 	}
 
 	@Test
@@ -32,11 +32,11 @@ public class UT_Naminatim {
 		test( 57.15, -2.15, "Aberdeen, Scotland" );
 		test( -34.917, 138.6, "North Adelaide, South Australia" );
 		test( 32.067, 34.767, "תל אביב-יפו, מחוז תל אביב" );
-		test( 47.62, -122.33, "Seattle, Washington" );
-		test( 40.78, -73.966, "NYC, New York" );
-		test( 37.78333, -122.433, "San Francisco, California" );
-		test( 33.48, -112.07, "Phoenix, Arizona" );
-		test( 45.4, -73.717, "Lachine, Québec" );
+		test( 47.62, -122.33, "Seattle, WA" );
+		test( 40.78, -73.966, "New York, NY" );
+		test( 37.78333, -122.433, "San Francisco, CA" );
+		test( 33.48, -112.07, "Phoenix, AZ" );
+		test( 45.4, -73.717, "Kahnawake, QC" );
 	}
 
 

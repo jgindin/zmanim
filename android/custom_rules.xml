@@ -22,7 +22,7 @@
 		Extension targets. Uncomment the ones where you want to do custom work
 		in between standard targets
 	 -->
-	<target name="-pre-build" depends="replace-version-placeholders,zmanim-replace-flurry-key-placeholders">
+	<target name="-pre-build" depends="replace-version-placeholders,zmanim-replace-key-placeholders">
 		<echo>-pre-build</echo>
 	</target>
 
@@ -39,7 +39,7 @@
 		<echo>-post-compile</echo>
 	</target>
 
-	<target name="-post-build" depends="zmanim-reset-flurry-key">
+	<target name="-post-build" depends="zmanim-reset-keys">
 		<echo>-post-build</echo>
 	</target>
 
@@ -53,20 +53,22 @@
  -->
 
 	<property file="flurry.properties"/>
-
+	<property file="../common/MapQuest.properties"/>
 
 	<!--
 	  We don't want to store our flurry key in the source code...after all, we're hosting the code in a public
 	  location! Instead, we write the code using a placeholder, and replace it here based on the contents of
 	  a file that is NEVER committed to svn...
 	-->
-	<target name="zmanim-replace-flurry-key-placeholders">
+	<target name="zmanim-replace-key-placeholders">
 		<replace file="src/com/gindin/util/LogUtils.java" token="FLURRY_KEY_GOES_HERE" value="${flurry.key}"/>
+		<replace file="src/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java" token="MAP_QUEST_KEY_GOES_HERE" value="${mapquest.key}"/>
 	</target>
 
 
-	<target name="zmanim-reset-flurry-key">
+	<target name="zmanim-reset-keys">
 		<replace file="src/com/gindin/util/LogUtils.java" token="${flurry.key}" value="FLURRY_KEY_GOES_HERE"/>
+		<replace file="src/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java" token="${mapquest.key}" value="MAP_QUEST_KEY_GOES_HERE"/>
 	</target>
 
 

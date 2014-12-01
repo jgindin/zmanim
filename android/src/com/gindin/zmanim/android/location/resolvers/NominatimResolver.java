@@ -4,27 +4,14 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
+import android.content.SharedPreferences;
+import android.location.Address;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import android.content.SharedPreferences;
-import android.location.Address;
-import android.os.Build;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +33,7 @@ import java.util.Locale;
  *  </ul>
  */
 class NominatimResolver
-	extends LocationResolver {
+	extends JsonQueryingResolver {
 
 	/** URL to make the request. */
 	private static final String                               NOMINATIM_URL = "http://nominatim.openstreetmap.org/";
@@ -79,18 +66,6 @@ class NominatimResolver
 */
 
 
-	static {
-
-		// Work around pre-Froyo bugs in HTTP connection reuse. See
-		//  http://developer.android.com/reference/java/net/HttpURLConnection.html
-		// If this is null, then we're running some unit tests...
-		if ( ( Build.VERSION.SDK != null ) && Integer.parseInt( Build.VERSION.SDK ) < Build.VERSION_CODES.FROYO ) {
-			System.setProperty( "http.keepAlive", "false" );
-		}
-
-	}
-
-
 
 	NominatimResolver(
 		EventBus          eventBus,
@@ -106,109 +81,63 @@ class NominatimResolver
 	}
 
 
-	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {
+	protected void fillInLatitudeAndLongitude(
+		String                      latitude,
+		String                      longitude,
+		List<Pair<String, String>>  params
+		) {
 
-		ZmanimLocation resolvedLocation;
-
-		try {
-			List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
-			params.add( new Pair<String, String>( LATITUDE_PARAM, Double.toString( zmanimLocation.getLatitude() ) ) );
-			params.add( new Pair<String, String>( LONGITUDE_PARAM, Double.toString( zmanimLocation.getLongitude() ) ) );
-
-			JSONObject json = makeRequest( REVERSE_LOOKUP_OPERATION, params );
-			resolvedLocation = buildLocation( zmanimLocation, json );
-		}
-		catch ( Exception e ) {
-			LogUtils.logError( "Nomatim::fromCoords", e.getMessage(), e );
-			return null;
-		}
-
-		return resolvedLocation;
+		params.add( new Pair<String, String>( LATITUDE_PARAM, latitude ) );
+		params.add( new Pair<String, String>( LONGITUDE_PARAM, longitude ) );
 	}
 
 
-	@Nullable
 	@Override
-	protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation ) {
-
-		ZmanimLocation resolvedLocation;
-
-		try {
-			List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
-			params.add( new Pair<String, String>( QUERY_PARAM, zmanimLocation.getLocationName() ) );
-
-			JSONObject json = makeRequest( SEARCH_OPERATION, params );
-			resolvedLocation = buildLocation( zmanimLocation, json );
-		}
-		catch ( Exception e ) {
-			LogUtils.logError( "Nomatim::fromName", e.getMessage(), e );
-			return null;
-		}
-
-		return resolvedLocation;
-	}
-
-
-	private JSONObject makeRequest( String operation, List<Pair<String,String>> params ) throws Exception {
-
-		// We know we always want JSON returned and we need all the gory details..
-		params.add( new Pair<String, String>( FORMAT_PARAM, "json" ) );
-		params.add( new Pair<String, String>( ADDRESS_DETAILS_PARAM, "1" ) );
-		params.add( new Pair<String, String>( EMAIL_PARAM, "zmanim.apps@gmail.com" ) );
-
-		StringBuilder queryParams = new StringBuilder();
-		for ( int index = 0; index < params.size(); index++ ) {
-
-			queryParams.append( ( index == 0 ) ? "?" : "&");
-
-			Pair<String,String> param = params.get( index );
-			queryParams.append( URLEncoder.encode( param.first ) ).append( "=" ).append( URLEncoder.encode( param.second ) );
-		}
-
-		URL url = new URL( NOMINATIM_URL + operation + queryParams.toString() );
-		HttpURLConnection connection = null;
-		try {
-			connection = (HttpURLConnection)url.openConnection();
-			connection.setDoInput( true );
-
-			InputStream input = new BufferedInputStream( connection.getInputStream() );
-			if ( !url.getHost().equals( connection.getURL().getHost() ) ) {
-				throw new IOException( "Unexpected redirection." );
-			}
-
-			StringBuilder response = new StringBuilder();
-			//noinspection MagicNumber
-			byte[] buf = new byte[ 1024 ];
-			while ( input.read( buf ) != -1 ) {
-				response.append( new String( buf ) );
-			}
-
-			Object jsonRoot = new JSONTokener( response.toString() ).nextValue();
-			if ( jsonRoot instanceof JSONArray ) {
-				jsonRoot = ((JSONArray)jsonRoot).getJSONObject( 0 );
-			}
-
-			if ( jsonRoot instanceof JSONObject ) {
-				return (JSONObject)jsonRoot;
-			}
-
-			return null;
-		}
-		finally {
-			if ( connection != null ) {
-				connection.disconnect();
-			}
-		}
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	private ZmanimLocation buildLocation(
-		ZmanimLocation  zmanimLocation,
-		JSONObject      jsonRoot
+	protected void fillInSearch(
+		ZmanimLocation              location,
+		List<Pair<String, String>>  params
 	) {
+
+		params.add( new Pair<String, String>( QUERY_PARAM, location.getLocationName() ) );
+	}
+
+
+	@Override
+	protected void addAdditionalParams(
+		Operation                   operation,
+		ZmanimLocation              unresolvedLocation,
+		List<Pair<String, String>>  params
+	) {
+
+		if ( operation == Operation.ReverseGeocode ) {
+			// We want all the details.
+			params.add( new Pair<String, String>( ADDRESS_DETAILS_PARAM, "1" ) );
+		}
+		else {
+			// Nothing else here.
+		}
+
+		// We know we always want JSON returned
+		params.add( new Pair<String, String>( FORMAT_PARAM, "json" ) );
+		params.add( new Pair<String, String>( EMAIL_PARAM, "zmanim.apps@gmail.com" ) );
+	}
+
+
+	@Override
+	protected String getRequestUrl( Operation operation ) {
+
+		if ( operation == Operation.ReverseGeocode ) {
+			return NOMINATIM_URL + REVERSE_LOOKUP_OPERATION;
+		}
+		else {
+			return NOMINATIM_URL + SEARCH_OPERATION;
+		}
+	}
+
+
+	@Override
+	protected Address addressFromJSON( JSONObject jsonRoot ) {
 
 		try {
 
@@ -232,12 +161,10 @@ class NominatimResolver
 			address.setAdminArea( jsonAddress.getString( STATE ) );
 			address.setPostalCode( jsonAddress.optString( POSTAL_CODE, null ) );
 
-			return new ZmanimLocation.Builder()
-				.from( zmanimLocation )
-				.resolvedTo( address )
-				.build();
+			return address;
 		}
 		catch ( Exception e ) {
+			LogUtils.logError( "NominatimResolver::addressFromJSON", e.getMessage(), e );
 			return null;
 		}
 	}
