@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.util.eventBus;
+package com.gindin.eventBus;
 
 /**
  * An event which can be fired on the event bus. The simplest and most common case is for each event to represent

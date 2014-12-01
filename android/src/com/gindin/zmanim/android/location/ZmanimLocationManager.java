@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.acquirers.DynamicLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;

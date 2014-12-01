@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.android.location.acquirers;
 
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.location.ZmanimLocation;

@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
-import com.gindin.util.location.LatitudeLongitudeParser;
+import com.gindin.location.LatitudeLongitudeParser;
 import com.gindin.zmanim.android.R;
 
 /**

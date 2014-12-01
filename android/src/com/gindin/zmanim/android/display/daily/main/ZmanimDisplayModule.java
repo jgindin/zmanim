@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.AbstractMvpModule;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;

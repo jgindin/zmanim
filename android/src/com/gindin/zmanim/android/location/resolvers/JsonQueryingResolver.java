@@ -5,7 +5,7 @@ import android.location.Address;
 import android.os.Build;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

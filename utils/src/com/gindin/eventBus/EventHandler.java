@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.util.eventBus;
+package com.gindin.eventBus;
 
 /**
  * The normal event handler has just one single method, something like onFoo(), which will be invoked when the

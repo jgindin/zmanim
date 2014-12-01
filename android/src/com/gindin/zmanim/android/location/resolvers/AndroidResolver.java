@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

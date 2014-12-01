@@ -6,7 +6,7 @@ package com.gindin.zmanim.android;
 
 import com.gindin.mvp.Presenter;
 import com.gindin.util.LogUtils;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
 import com.gindin.zmanim.android.display.daily.header.EditLocationPrefsEvent;

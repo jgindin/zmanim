@@ -4,8 +4,8 @@
 
 package com.gindin.zmanim.android.display.daily.header;
 
-import com.gindin.util.eventBus.Event;
-import com.gindin.util.eventBus.EventHandler;
+import com.gindin.eventBus.Event;
+import com.gindin.eventBus.EventHandler;
 
 /**
  * Fired when someone detects that the user wants to edit their location preferences.

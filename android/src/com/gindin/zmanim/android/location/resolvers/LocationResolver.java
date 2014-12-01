@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;

@@ -1,7 +1,7 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import android.content.SharedPreferences;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.junit.Assert;

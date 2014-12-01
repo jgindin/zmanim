@@ -4,9 +4,9 @@
 
 package com.gindin.zmanim.android.location;
 
-import com.gindin.util.eventBus.Event;
-import com.gindin.util.eventBus.EventCacheControl;
-import com.gindin.util.eventBus.EventHandler;
+import com.gindin.eventBus.Event;
+import com.gindin.eventBus.EventCacheControl;
+import com.gindin.eventBus.EventHandler;
 
 /**
  * Fired to request that the location be re-acquired, using whatever acquirer has already been configured.

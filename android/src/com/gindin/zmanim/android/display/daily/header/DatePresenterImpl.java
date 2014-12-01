@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractPresenter;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;

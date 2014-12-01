@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.util.eventBus;
+package com.gindin.eventBus;
 
 /**
  * Used to allow Events that need to clear specific cached events.

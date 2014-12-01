@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;

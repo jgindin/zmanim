@@ -4,8 +4,8 @@
 
 package com.gindin.zmanim.android.datePicker;
 
-import com.gindin.util.eventBus.Event;
-import com.gindin.util.eventBus.EventHandler;
+import com.gindin.eventBus.Event;
+import com.gindin.eventBus.EventHandler;
 import com.gindin.zmanim.calendar.HebrewDate;
 
 /**

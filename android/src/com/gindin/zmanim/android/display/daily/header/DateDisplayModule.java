@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractMvpModule;
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
 

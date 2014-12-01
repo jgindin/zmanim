@@ -4,7 +4,7 @@
 
 package com.gindin.mvp;
 
-import com.gindin.util.eventBus.EventBus;
+import com.gindin.eventBus.EventBus;
 
 /**
  * Abstract, base implementation of a Presenter.
