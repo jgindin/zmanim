@@ -5,8 +5,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.gindin.util"
-	android:versionCode="14"
-	android:versionName="3.5.14.86491bd72b31"
+	android:versionCode="17"
+	android:versionName="3.5.17.1f6c8e671456"
 >
 
 	<uses-sdk

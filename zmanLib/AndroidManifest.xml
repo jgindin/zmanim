@@ -5,8 +5,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gindin.zmanim"
-    android:versionCode="24"
-    android:versionName="3.5.24.32cc0dc90e5e"
+    android:versionCode="27"
+    android:versionName="3.5.27.1f6c8e671456"
   >
 
 	<uses-sdk
