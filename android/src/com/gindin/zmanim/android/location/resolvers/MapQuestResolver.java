@@ -9,6 +9,7 @@ import com.gindin.zmanim.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,6 +58,7 @@ class MapQuestResolver
 		List<Pair<String, String>>  params
 	) {
 
+		params.add( new Pair<String, String>( "location", URLEncoder.encode( location.getLocationName() ) ) );
 	}
 
 
@@ -70,6 +72,7 @@ class MapQuestResolver
 		params.add( new Pair<String, String>( "key", MAP_QUEST_KEY ) );
 		params.add( new Pair<String, String>( "outFormat", "json" ) );
 		params.add( new Pair<String, String>( "thumbMaps", "false" ) );
+		params.add( new Pair<String, String>( "maxResults", "1" ) );
 	}
 
 
@@ -102,8 +105,16 @@ class MapQuestResolver
 			JSONObject location = locations.getJSONObject( 0 );
 
 			Address address = new Address( Locale.getDefault() );
-			address.setCountryName( location.optString( "adminArea1" ) );   // Country
-			address.setAdminArea( location.optString( "adminArea3" ) );     // State
+			String countryName = location.optString( "adminArea1" );
+			// Special case handling for Israel...
+			if ( "IL".equals( countryName ) ) {
+				address.setCountryName( "Israel" );
+			}
+			else {
+				address.setCountryName( countryName );
+				address.setAdminArea( location.optString( "adminArea3" ) );     // State
+			}
+
 			address.setSubAdminArea( location.optString( "adminArea4" ) );  // County
 			address.setLocality( location.optString( "adminArea5" ) );      // City
 			address.setSubLocality( location.optString( "adminArea6" ) );   // Neighborhood

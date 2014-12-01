@@ -126,9 +126,10 @@ abstract class JsonQueryingResolver
 	) {
 
 		try {
-			addAdditionalParams( Operation.ReverseGeocode, zmanimLocation, params );
+			Operation operation = zmanimLocation.hasCoordinates() ? Operation.ReverseGeocode : Operation.Search;
+			addAdditionalParams( operation, zmanimLocation, params );
 
-			JSONObject json = makeRequest( getRequestUrl( Operation.ReverseGeocode ), params );
+			JSONObject json = makeRequest( getRequestUrl( operation ), params );
 			Address address = addressFromJSON( json );
 
 			return new ZmanimLocation.Builder()
@@ -158,7 +159,6 @@ abstract class JsonQueryingResolver
 			queryParams.append( ( index == 0 ) ? "?" : "&");
 
 			Pair<String,String> param = params.get( index );
-			//queryParams.append( URLEncoder.encode( param.first ) ).append( "=" ).append( URLEncoder.encode( param.second ) );
 			queryParams.append( param.first ).append( "=" ).append( param.second );
 		}
 

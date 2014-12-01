@@ -12,6 +12,7 @@ import com.gindin.util.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
@@ -99,7 +100,7 @@ class NominatimResolver
 		List<Pair<String, String>>  params
 	) {
 
-		params.add( new Pair<String, String>( QUERY_PARAM, location.getLocationName() ) );
+		params.add( new Pair<String, String>( QUERY_PARAM, URLEncoder.encode( location.getLocationName() ) ) );
 	}
 
 
