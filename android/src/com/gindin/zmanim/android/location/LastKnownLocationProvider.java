@@ -5,7 +5,6 @@
 package com.gindin.zmanim.android.location;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import com.gindin.util.LogUtils;
@@ -25,18 +24,18 @@ public class LastKnownLocationProvider {
 
 	public static final String                                NAME = "LastKnownLocationProvider";
 
-	private final Activity                                    activity;
+	private final Context                                     context;
 
 
 	private Location                                          lastKnownLocation;
 
 
-	LastKnownLocationProvider( Activity activity ) {
-		this.activity = activity;
+	LastKnownLocationProvider( Context context ) {
+		this.context = context;
 
 		FileInputStream input = null;
 		try {
-			input = activity.openFileInput( NAME );
+			input = context.openFileInput( NAME );
 			ZmanimLocation location = ZmanimLocation.load( input );
 
 			lastKnownLocation = location.toLocation();
@@ -71,7 +70,7 @@ public class LastKnownLocationProvider {
 
 		FileOutputStream output = null;
 		try {
-			output = activity.openFileOutput( NAME, Context.MODE_PRIVATE );
+			output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
 			ZmanimLocation zmanimLocation = new ZmanimLocation.Builder().from( newLocation ).build();
 			zmanimLocation.save( output );
 		}

@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.android.location;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -73,7 +73,7 @@ public class ZmanimLocationManager {
 
 
 	public ZmanimLocationManager(
-		Activity          activity,
+		Context           context,
 		EventBus          eventBus,
 		SharedPreferences locationManagementPrefs,
 		SharedPreferences personalPrefs,
@@ -85,7 +85,7 @@ public class ZmanimLocationManager {
 		this.personalPrefs = personalPrefs;
 		this.locationManager = locationManager;
 
-		lastKnownLocationProvider = new LastKnownLocationProvider( activity );
+		lastKnownLocationProvider = new LastKnownLocationProvider( context );
 
 		locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
 			@Override

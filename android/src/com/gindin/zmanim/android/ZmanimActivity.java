@@ -4,9 +4,23 @@
 
 package com.gindin.zmanim.android;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.*;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.Presenter;
 import com.gindin.util.LogUtils;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
 import com.gindin.zmanim.android.display.daily.header.EditLocationPrefsEvent;
@@ -15,7 +29,6 @@ import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
@@ -27,23 +40,6 @@ import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.location.Geocoder;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.*;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,8 +50,6 @@ import java.util.List;
 public class ZmanimActivity
 	extends FragmentActivity {
 
-	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
-
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
 	private final List<Presenter<?>>                          loadedPresenters = new ArrayList<Presenter<?>>();
@@ -65,9 +59,6 @@ public class ZmanimActivity
 
 	/** We want to detect swiping. */
 	private GestureDetector                                   gestureDetector;
-
-	// TODO: Inject this
-	private ZmanimLocationManager                             locationManager;
 
 	private LocationAcquiredEvent.Handler                     rawLocationAcquiredHandler;
 
@@ -81,9 +72,6 @@ public class ZmanimActivity
 	/** We use a progress dialog to let the user know we're working. */
 	private ProgressDialog                                    determiningLocationDialog;
 
-	/** The actual list view where the zmanim are displayed. Cached here to avoid multiple look ups since it should never change. */
-	private ListView                                          listView;
-
 	// TODO: Inject this
 	private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
 
@@ -95,6 +83,9 @@ public class ZmanimActivity
 	private ZmanimLocation                                    lastKnownLocation;
 
 	private LocationToAddressConverter                        locationToAddressConverter;
+
+	private ServiceStartedEvent.Handler                       serviceStartedHandler;
+
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -160,7 +151,7 @@ public class ZmanimActivity
 		determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
 		determiningLocationDialog.show();
 
-		eventBus = ZMANIM_EVENT_BUS;
+		eventBus = ZmanimService.ZMANIM_EVENT_BUS;
 
 		// todo: Move to background thread????????
 		/////
@@ -174,10 +165,6 @@ public class ZmanimActivity
 
 		LocationDisplayModule locationDisplayModule = new LocationDisplayModule( this, eventBus );
 		loadedPresenters.add( locationDisplayModule.create() );
-
-		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
 		ZmanimDisplayModule zmanimDisplayModule = new ZmanimDisplayModule( this, eventBus, personalPrefsManager);
 		loadedPresenters.add( zmanimDisplayModule.create() );
@@ -195,8 +182,6 @@ public class ZmanimActivity
 		// TODO:  We should actually be storing the date the user is viewing in the savedInstanceState!
 		currentDate = HebrewCalendar.today();
 		eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
-
-		refresh();
 	}
 
 
@@ -208,7 +193,21 @@ public class ZmanimActivity
 
 	@Override
 	protected void onStart() {
+
 		super.onStart();
+
+		serviceStartedHandler = new ServiceStartedEvent.Handler() {
+			@Override
+			public void onServiceStarted() {
+				refresh();
+			}
+		};
+
+		eventBus.addHandler( serviceStartedHandler );
+
+		Intent zmanimService = new Intent( this, ZmanimService.class );
+		zmanimService.putExtra( ZmanimService.Commands.START.name(), true );
+		startService( zmanimService );
 	}
 
 
@@ -228,6 +227,12 @@ public class ZmanimActivity
 	@Override
 	protected void onStop() {
 
+		eventBus.removeHandler( serviceStartedHandler );
+
+		Intent zmanimService = new Intent( this, ZmanimService.class );
+		zmanimService.putExtra( ZmanimService.Commands.STOP.name(), true );
+		startService( zmanimService );
+
 		super.onStop();
 	}
 
@@ -237,12 +242,6 @@ public class ZmanimActivity
 
 		eventBus.removeHandler( dateChangedHandler );
 		eventBus.removeHandler( rawLocationAcquiredHandler );
-
-		// Might be null if we get stopped before we're fully started...
-		if ( null != locationManager ) {
-			locationManager.onStop();
-			locationManager = null;
-		}
 
 		determiningLocationDialog.dismiss();
 

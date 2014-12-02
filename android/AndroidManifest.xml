@@ -29,6 +29,14 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+	<!--
+		Permissions necessary to support notifications.
+	-->
+<!--
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+-->
+
 	<supports-screens
 		android:smallScreens="true"
     android:normalScreens="true"
@@ -55,6 +63,24 @@
 			android:label="Personal Preferences"
 		/>
 
+
+		<!--
+			Register the receiver for the BOOT_COMPLETED notification.
+		-->
+<!--
+		<receiver android:name=".DeviceBootedReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"/>
+			</intent-filter>
+		</receiver>
+-->
+
+
+		<!--
+			Service that can run in the background to do things like schedule alarms so we can display notifications.
+		-->
+		<service android:name=".ZmanimService">
+		</service>
 	</application>
 
 </manifest>

@@ -1,0 +1,115 @@
+package com.gindin.zmanim.android;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.LocationManager;
+import android.os.IBinder;
+import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+
+/**
+ * This is the service we use to schedule notifications. In order to do that, however, the service has to have all
+ *  of the location determination code.
+ *
+ * So, this service is used in two different ways:
+ *  <ol>
+ *    <li>When the user invokes the Zmanim application, the main activity will get a hold of this service in order to
+ *          determine the user's current location.
+ *    <li>When we schedule an alarm, this service gets invoked so that we can display the notification and then schedule
+ *          the next alarm.
+ *  </ol>
+ */
+public class ZmanimService
+	extends Service {
+
+	public static enum Commands {
+		/** Request the service to start for the Zmanim Activity. */
+		START,
+
+		/** Notify the service that the Zmanim Activity is done. */
+		STOP
+	}
+
+
+	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
+
+	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
+
+	// TODO: Inject this
+	private ZmanimLocationManager                             locationManager;
+
+	/**
+	 * When we get a command to start comming from the Zmanim activity, then we know we're providing services for
+	 *  the user. In that case, we must make sure not to shut down until we receive an explicit command to do so.
+	 */
+	private boolean                                           servicingUser = false;
+
+	/**
+	 * When we get a command coming in because an alarm has gone off, then we do want to shut ourselves down
+	 *  once the notification is displayed and the next alarm scheduled. UNLESS we're also currently servicing
+	 *  the user, in which case we must not shut down.
+	 */
+	private boolean                                           servicingAlarm = false;
+
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
+		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+
+	}
+
+
+	@Override
+	public IBinder onBind( Intent intent ) {
+		return null;
+	}
+
+
+	@Override
+	public int onStartCommand(
+		Intent  intent,
+		int     flags,
+		int     startId
+	) {
+
+		boolean startingForUser = intent.getBooleanExtra( Commands.START.name(), false );
+		boolean stoppingForuser = intent.getBooleanExtra( Commands.STOP.name(), false );
+
+		if ( startingForUser ) {
+			servicingUser = true;
+			eventBus.fire( new ServiceStartedEvent() );
+		}
+		else if ( stoppingForuser ) {
+			servicingUser = false;
+			if ( !servicingAlarm ) {
+				stopSelf();
+			}
+		}
+		else {
+			servicingAlarm = true;
+		}
+
+		return super.onStartCommand( intent, flags, startId );
+	}
+
+
+	@Override
+	public void onDestroy() {
+
+		// Might be null if we get stopped before we're fully started...
+		if ( null != locationManager ) {
+			locationManager.onStop();
+			locationManager = null;
+		}
+
+		super.onDestroy();
+	}
+}
