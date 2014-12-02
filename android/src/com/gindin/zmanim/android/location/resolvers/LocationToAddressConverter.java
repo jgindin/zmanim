@@ -4,17 +4,18 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -70,9 +71,7 @@ public class LocationToAddressConverter {
 		orderedResolvers.add( cachedLocationResolver );
 		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
 
-		// We're not using Nominatim because of the overly restrictive usage policy.
-		//orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
-
+		orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
 		orderedResolvers.add( new MapQuestResolver( eventBus, personalPrefs ) );
 
 		orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );

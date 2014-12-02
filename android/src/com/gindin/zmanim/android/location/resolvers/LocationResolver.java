@@ -167,8 +167,7 @@ abstract class LocationResolver {
 				eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
 
 				// Let's keep track of how often we use each resolver.
-				LogUtils.logEvent( "LocationResolved", Arrays.asList(
-					new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
+				LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
 			}
 		}
 	}

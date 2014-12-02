@@ -1,17 +1,18 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.content.SharedPreferences;
-import android.location.Address;
-import android.os.Build;
+import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import android.content.SharedPreferences;
+import android.location.Address;
+import android.os.Build;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -130,6 +131,10 @@ abstract class JsonQueryingResolver
 			addAdditionalParams( operation, zmanimLocation, params );
 
 			JSONObject json = makeRequest( getRequestUrl( operation ), params );
+			if ( json == null ) {
+				return null;
+			}
+
 			Address address = addressFromJSON( json );
 
 			return new ZmanimLocation.Builder()
@@ -142,7 +147,6 @@ abstract class JsonQueryingResolver
 		}
 
 		return null;
-
 	}
 
 
@@ -182,6 +186,10 @@ abstract class JsonQueryingResolver
 
 			Object jsonRoot = new JSONTokener( response.toString() ).nextValue();
 			if ( jsonRoot instanceof JSONArray ) {
+				if ( ((JSONArray)jsonRoot).length() == 0 ) {
+					return null;
+				}
+
 				jsonRoot = ((JSONArray)jsonRoot).getJSONObject( 0 );
 			}
 
