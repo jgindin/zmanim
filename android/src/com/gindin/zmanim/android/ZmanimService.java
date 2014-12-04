@@ -1,14 +1,16 @@
 package com.gindin.zmanim.android;
 
+import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.location.LocationAcquiredEvent;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.IBinder;
-import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 /**
  * This is the service we use to schedule notifications. In order to do that, however, the service has to have all
@@ -25,12 +27,17 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 public class ZmanimService
 	extends Service {
 
+	private LocationAcquiredEvent.Handler locationAcquiredHandler;
+
 	public static enum Commands {
 		/** Request the service to start for the Zmanim Activity. */
-		START,
+		ACTIVITY_STARTED,
 
 		/** Notify the service that the Zmanim Activity is done. */
-		STOP
+		ACTIVITY_STOPPED,
+
+		/** Ask the service to schedule the next alarm. */
+		SCHEDULE_ALARM
 	}
 
 
@@ -42,7 +49,7 @@ public class ZmanimService
 	private ZmanimLocationManager                             locationManager;
 
 	/**
-	 * When we get a command to start comming from the Zmanim activity, then we know we're providing services for
+	 * When we get a command to start coming from the Zmanim activity, then we know we're providing services for
 	 *  the user. In that case, we must make sure not to shut down until we receive an explicit command to do so.
 	 */
 	private boolean                                           servicingUser = false;
@@ -63,7 +70,6 @@ public class ZmanimService
 		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
-
 	}
 
 
@@ -80,8 +86,8 @@ public class ZmanimService
 		int     startId
 	) {
 
-		boolean startingForUser = intent.getBooleanExtra( Commands.START.name(), false );
-		boolean stoppingForuser = intent.getBooleanExtra( Commands.STOP.name(), false );
+		boolean startingForUser = intent.getBooleanExtra( Commands.ACTIVITY_STARTED.name(), false );
+		boolean stoppingForuser = intent.getBooleanExtra( Commands.ACTIVITY_STOPPED.name(), false );
 
 		if ( startingForUser ) {
 			servicingUser = true;
