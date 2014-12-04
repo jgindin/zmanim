@@ -92,7 +92,6 @@ public class DynamicLocationAcquirer
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	public void acquire() {
 

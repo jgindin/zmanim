@@ -2,9 +2,16 @@ package com.gindin.zmanim.android;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
+import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.location.ZmanimLocation;
+import org.jetbrains.annotations.NotNull;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -88,6 +95,7 @@ public class ZmanimService
 
 		boolean startingForUser = intent.getBooleanExtra( Commands.ACTIVITY_STARTED.name(), false );
 		boolean stoppingForuser = intent.getBooleanExtra( Commands.ACTIVITY_STOPPED.name(), false );
+		boolean scheduleAlarm = intent.getBooleanExtra( Commands.SCHEDULE_ALARM.name(), false );
 
 		if ( startingForUser ) {
 			servicingUser = true;
@@ -99,7 +107,7 @@ public class ZmanimService
 				stopSelf();
 			}
 		}
-		else {
+		else if ( scheduleAlarm ) {
 			servicingAlarm = true;
 		}
 
@@ -118,4 +126,54 @@ public class ZmanimService
 
 		super.onDestroy();
 	}
+
+
+	private void scheduleNextAlarm() {
+
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+		if ( !personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true ) ) {
+			return;
+		}
+
+		// We have to figure out where we are in order to see when the next alarm is.
+		LocationAcquiredEvent.Handler locationAcquiredHandler = new LocationAcquiredHandler();
+		eventBus.addHandler( locationAcquiredHandler );
+
+		// Ask the location manager to do its best job figuring out where we are now, without using the cache.
+		//  When it fires the location acquired event, we'll use the location to work out when to schedule the
+		//  next alarm.
+		eventBus.fire( new RequestLocationUpdateEvent( true, false ) );
+	}
+
+
+	private void handleLocation( final ZmanimLocation location ) {
+
+		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
+		Intent runScheduledServiceIntent = new Intent( this, ZmanimService.class );
+		PendingIntent pendingIntent = PendingIntent.getService( this, 0, runScheduledServiceIntent, 0 );
+
+	}
+
+
+
+
+	private class LocationAcquiredHandler
+		extends LocationAcquiredEvent.Handler {
+
+		@Override
+		public void onLocationAcquired( ZmanimLocation location ) {
+			handleLocation( location );
+		}
+
+
+		@Override
+		public void onError(
+			@NotNull LocationError  error,
+			@NotNull ZmanimLocation lastKnownLocation
+		) {
+			handleLocation( lastKnownLocation );
+		}
+	}
+
+
 }

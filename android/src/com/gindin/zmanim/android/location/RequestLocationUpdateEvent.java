@@ -26,6 +26,49 @@ public class RequestLocationUpdateEvent
 	}
 
 
+	public static enum NeedActualLocation {
+
+	}
+
+	public static enum CachedLocation {
+		/** We prefer to use the cached location ASAP, and then continue to try and determine the actual location. */
+		PREFER,
+
+
+
+		FALLBACK
+	}
+
+
+	/**
+	 * Indicate that despite user preferences, the location being requested is the user's actual location.
+	 */
+	public final boolean                                      needsActualLocation;
+
+	/**
+	 * Indicate that if a cached location is available, we should use it immediately, but then continue to obtain
+	 *  the user's location, based on their preferences. (Unless, of course the needsActualLocation flag is set, in
+	 *  which case that takes precedence.)
+	 */
+	public final boolean                                      preferCachedLocation;
+
+
+
+	public RequestLocationUpdateEvent() {
+		needsActualLocation = false;
+		preferCachedLocation = true;
+	}
+
+
+	public RequestLocationUpdateEvent(
+		final boolean needsActualLocation,
+		final boolean preferCachedLocation
+	) {
+		this.needsActualLocation = needsActualLocation;
+		this.preferCachedLocation = preferCachedLocation;
+	}
+
+
 	@Override
 	public boolean isCachable() {
 		return false;
