@@ -6,8 +6,6 @@ package com.gindin.zmanim.android.prefs;
 
 import com.gindin.util.Version;
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.android.ZmanimService;
-import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -126,10 +124,6 @@ public class LocationProviderPreferences
 
 		setResult( changed ? RESULT_OK : RESULT_CANCELED );
 		finish();
-
-		if ( changed ) {
-			ZmanimService.ZMANIM_EVENT_BUS.fire( new RequestLocationUpdateEvent() );
-		}
 
 		super.onBackPressed();
 	}
