@@ -18,7 +18,8 @@ public class PersonalPreferences
 	public static enum Prefs {
 		SHOW_SECONDS,
 		USE_ELEVATION,
-		SHOW_NOTIFICATIONS
+		SHOW_NOTIFICATIONS,
+		NOTIFICATIONS_FOR_CURRENT_LOCATION
 	}
 
 

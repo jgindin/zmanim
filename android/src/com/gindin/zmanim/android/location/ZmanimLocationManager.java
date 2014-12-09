@@ -4,17 +4,18 @@
 
 package com.gindin.zmanim.android.location;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.acquirers.DynamicLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.StaticLocationAcquirer;
 import com.gindin.zmanim.android.prefs.LocationProviders;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,8 +90,8 @@ public class ZmanimLocationManager {
 
 		locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
 			@Override
-			public void onLocationUpdateRequested() {
-				determineLocation();
+			public void onLocationUpdateRequested( final RequestLocationUpdateEvent event ) {
+				determineLocation( event );
 			}
 		};
 		eventBus.addHandler( locationRequestHandler );
@@ -108,37 +109,43 @@ public class ZmanimLocationManager {
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	private void determineLocation() {
+	private void determineLocation( final RequestLocationUpdateEvent event ) {
 
 		cancel();
+		currentAcquirer = null;
 
-		boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
-		if ( useThis ) {
+		if ( event.locationDeterminationOverride == RequestLocationUpdateEvent.LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION ) {
 			currentAcquirer = getAcquirer( Type.FROM_DEVICE );
 		}
 		else {
 
-			useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
+			boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
 			if ( useThis ) {
-				currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
+				currentAcquirer = getAcquirer( Type.FROM_DEVICE );
 			}
 			else {
 
-				useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
+				useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
 				if ( useThis ) {
-					currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
+					currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
+				}
+				else {
+
+					useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
+					if ( useThis ) {
+						currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
+					}
 				}
 			}
 		}
 
 		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
-		if ( !useThis ) {
+		if ( currentAcquirer == null ) {
 			currentAcquirer = getAcquirer( Type.FROM_DEVICE );
 			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
 		}
 
-		currentAcquirer.acquire();
+		currentAcquirer.acquire( event.cachedLocationUsage );
 	}
 
 

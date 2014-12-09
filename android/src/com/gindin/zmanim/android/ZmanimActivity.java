@@ -4,20 +4,6 @@
 
 package com.gindin.zmanim.android;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.*;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.Presenter;
 import com.gindin.util.LogUtils;
@@ -32,6 +18,7 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
@@ -39,6 +26,21 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
+
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.*;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -206,7 +208,7 @@ public class ZmanimActivity
 		eventBus.addHandler( serviceStartedHandler );
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
-		zmanimService.putExtra( ZmanimService.Commands.START.name(), true );
+		zmanimService.putExtra( ZmanimService.Commands.ACTIVITY_STARTED.name(), true );
 		startService( zmanimService );
 	}
 
@@ -230,7 +232,7 @@ public class ZmanimActivity
 		eventBus.removeHandler( serviceStartedHandler );
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
-		zmanimService.putExtra( ZmanimService.Commands.STOP.name(), true );
+		zmanimService.putExtra( ZmanimService.Commands.ACTIVITY_STOPPED.name(), true );
 		startService( zmanimService );
 
 		super.onStop();
@@ -517,8 +519,20 @@ public class ZmanimActivity
 
 
 	private void refresh() {
+
+		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
+
+		RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
+		if ( !preferCachedLocation ) {
+			cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
+		}
+		else {
+			cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
+		}
+
 		// This will force us to go re-query for our location.
-		eventBus.fire( new RequestLocationUpdateEvent() );
+		eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
 	}
 
 	private void updateField(

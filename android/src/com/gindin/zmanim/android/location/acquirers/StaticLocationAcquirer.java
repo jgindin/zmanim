@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
+import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.location.ZmanimLocation;
 
@@ -29,7 +30,8 @@ public class StaticLocationAcquirer
 
 
 	@Override
-	public void acquire() {
+	public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
+
 		String place = locationManagementPrefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
 		ZmanimLocation location = new ZmanimLocation.Builder()
 			.locationName( place )

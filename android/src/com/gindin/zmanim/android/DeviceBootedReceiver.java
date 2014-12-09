@@ -17,7 +17,7 @@ public class DeviceBootedReceiver
 	) {
 
 		Intent zmanimService = new Intent( context, ZmanimService.class );
-		zmanimService.putExtra( ZmanimService.Commands.SCHEDULE_ALARM.name(), true );
+		zmanimService.putExtra( ZmanimService.Commands.FORCE_SCHEDULE_NEXT_ALARM.name(), true );
 		context.startService( zmanimService );
 	}
 

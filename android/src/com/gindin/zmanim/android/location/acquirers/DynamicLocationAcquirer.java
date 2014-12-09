@@ -4,8 +4,8 @@
 
 package com.gindin.zmanim.android.location.acquirers;
 
-import com.gindin.util.Pair;
 import com.gindin.eventBus.EventBus;
+import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.LocationProviders;
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 
 /**
  * Abstracts dealing with the Android LocationManager.
@@ -93,17 +95,18 @@ public class DynamicLocationAcquirer
 
 
 	@Override
-	public void acquire() {
+	public void acquire( final CachedLocationUsage cachedLocationUsage ) {
 
-		boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
-		if ( preferCachedLocation ) {
+		if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
 			ZmanimLocation lastKnownLocation = getLastKnownLocation();
 			if ( lastKnownLocation != null ) {
 				fireLocationAcquiredEvent( lastKnownLocation );
 			}
 		}
 
-		startListeningToLocations();
+		if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
+			startListeningToLocations();
+		}
 	}
 
 

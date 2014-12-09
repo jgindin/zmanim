@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.location.acquirers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.location.ZmanimLocation;
@@ -38,11 +39,6 @@ public abstract class LocationAcquirer {
 
 	private final SharedPreferences                           personalPrefs;
 
-	/**
-	 * Keep track of the last location which was acquired so that we can avoid firing spurious events.
-	 */
-	private ZmanimLocation                                    lastKnownLocation;
-
 
 	protected LocationAcquirer(
 		EventBus          eventBus,
@@ -58,7 +54,7 @@ public abstract class LocationAcquirer {
 	/**
 	 * Called to acquire the current location information.
 	 */
-	public abstract void acquire();
+	public abstract void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage );
 
 
 	/**
@@ -110,14 +106,12 @@ public abstract class LocationAcquirer {
 
 	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation, LocationError error ) {
 
-		lastKnownLocation = newLocation;
-
 		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-		if ( !useElevation && ( lastKnownLocation != null ) ) {
-			lastKnownLocation.setElevation( 0.0 );
+		if ( !useElevation && ( newLocation != null ) ) {
+			newLocation.setElevation( 0.0 );
 		}
 
-		eventBus.fire( new LocationAcquiredEvent( lastKnownLocation, error ) );
+		eventBus.fire( new LocationAcquiredEvent( newLocation, error ) );
 	}
 
 
