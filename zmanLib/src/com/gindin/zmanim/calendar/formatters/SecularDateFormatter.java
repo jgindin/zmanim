@@ -22,6 +22,8 @@ public abstract class SecularDateFormatter {
 
 	private static SecularDateFormatter                       FORMATTER;
 
+	private static SecularDateFormatter                       MEDIUM_FORMATTER;
+
 	private static SecularDateFormatter                       SHORT_FORMATTER;
 
 
@@ -34,8 +36,13 @@ public abstract class SecularDateFormatter {
 				}
 				return SHORT_FORMATTER;
 
-			case DEFAULT:
 			case MEDIUM:
+				if ( MEDIUM_FORMATTER == null ) {
+					MEDIUM_FORMATTER = new MediumFormatter();
+				}
+				return MEDIUM_FORMATTER;
+
+			case DEFAULT:
 			case LONG:
 				if ( null == FORMATTER ) {
 					FORMATTER = new DefaultFormatter();
@@ -155,11 +162,20 @@ public abstract class SecularDateFormatter {
 		@Override
 		public String format( HebrewDate date ) {
 
-			final StringBuilder formattedDate = new StringBuilder();
+			return String.format( "%2s/%2s/%2s", date.getGregorianMonth() + 1, date.getGregorianDayOfMonth(),
+				date.getGregorianYear() );
+		}
+	}
 
-			formattedDate
-				.append( String.format( "%2s/%2s/%2s", date.getGregorianMonth() + 1, date.getGregorianDayOfMonth(),
-					date.getGregorianYear() ) );
+
+	private static class MediumFormatter
+		extends ShortFormatter {
+
+		@SuppressWarnings( { "FeatureEnvy", "AutoBoxing" } )
+		@Override
+		public String format( HebrewDate date ) {
+
+			final StringBuilder formattedDate = new StringBuilder( super.format( date ) );
 
 			switch ( date.getDayOfWeek() ) {
 				case Calendar.SUNDAY:

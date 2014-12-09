@@ -72,6 +72,7 @@ public class ZmanFormatter {
 		}
 
 		synchronized ( this ) {
+			timeFormatter.setTimeZone( time.getTimeZone() );
 			return timeFormatter.format( time.getTime() );
 		}
 	}
@@ -99,6 +100,7 @@ public class ZmanFormatter {
 
 			// Make sure to work on a copy so we don't muck up the real thing!
 			Calendar copy = Calendar.getInstance();
+			copy.setTimeZone( zman.getTimeZone() );
 			copy.setTime( zman.getTime() );
 
 			copy.set( Calendar.SECOND, 0 );
@@ -124,6 +126,7 @@ public class ZmanFormatter {
 	
 			// Make sure to work on a copy so we don't muck up the real thing!
 			Calendar copy = Calendar.getInstance();
+			copy.setTimeZone( zman.getTimeZone() );
 			copy.setTime( zman.getTime() );
 
 			copy.add( Calendar.MINUTE, 1 );

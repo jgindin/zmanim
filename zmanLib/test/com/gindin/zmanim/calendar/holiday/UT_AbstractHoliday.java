@@ -11,7 +11,7 @@ import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
  */
 public class UT_AbstractHoliday {
 
-	private static final SecularDateFormatter                 formatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.SHORT );
+	private static final SecularDateFormatter                 formatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.MEDIUM );
 
 
 	protected UT_AbstractHoliday() {
