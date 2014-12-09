@@ -110,6 +110,15 @@ public final class EventBus {
 	}
 
 
+	/**
+	 * Determine if there are any handlers registered for the specified event.
+	 */
+	public <E extends Event<H>, H extends EventHandler<E>> boolean hasHandlers( Class<E> eventType ) {
+		List<?> handlers = handlerCollection.get( eventType );
+		return !handlers.isEmpty();
+	}
+
+
 	public <H extends EventHandler, E extends Event<H>> void fire( E event ) {
 
 		assert null != event;
