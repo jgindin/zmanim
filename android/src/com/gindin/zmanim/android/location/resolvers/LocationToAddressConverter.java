@@ -18,8 +18,8 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class LocationToAddressConverter {
 
 
 			@Override
-			public OutputStream openOutput() throws FileNotFoundException {
+			public FileOutputStream openOutput() throws FileNotFoundException {
 				return activity.openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
 			}
 

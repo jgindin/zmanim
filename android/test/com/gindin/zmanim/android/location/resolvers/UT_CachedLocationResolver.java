@@ -1,12 +1,13 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.content.SharedPreferences;
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import android.content.SharedPreferences;
 
 import java.io.*;
 import java.util.TimeZone;
@@ -222,7 +223,7 @@ public class UT_CachedLocationResolver {
 
 
 		@Override
-		public OutputStream openOutput() throws IOException {
+		public FileOutputStream openOutput() throws IOException {
 
 			outputFile = File.createTempFile( "ut_cached_location_", "output" );
 			outputFile.deleteOnExit();

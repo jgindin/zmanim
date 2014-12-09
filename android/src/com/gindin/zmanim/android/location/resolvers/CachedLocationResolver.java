@@ -1,13 +1,14 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.content.SharedPreferences;
-import com.gindin.util.LogUtils;
 import com.gindin.eventBus.EventBus;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import android.content.SharedPreferences;
 
 import java.io.*;
 import java.util.*;
@@ -31,7 +32,7 @@ class CachedLocationResolver
 		InputStream openInput() throws IOException;
 
 		/** Obtain an output stream for writing a new set of cached entries. */
-		OutputStream openOutput() throws IOException;
+		FileOutputStream openOutput() throws IOException;
 
 		/** The actual loading and saving must be done on a background thread. */
 		void runInBackground( Runnable runnable );
@@ -176,9 +177,11 @@ class CachedLocationResolver
 
 				final Set<ZmanimLocation> copy = locationCache.newCopy();
 
+				FileOutputStream fos = null;
 				DataOutputStream output = null;
 				try {
-					output = new DataOutputStream( new BufferedOutputStream( ioFactory.openOutput() ) );
+					fos = ioFactory.openOutput();
+					output = new DataOutputStream( new BufferedOutputStream( fos ) );
 
 					output.writeInt( copy.size() );
 
@@ -192,7 +195,11 @@ class CachedLocationResolver
 				finally {
 					if ( output != null ) {
 						try {
+
+							// According to The Busy Coder's Guide to Android, v6.2, we want to make sure that
+							//  we're calling sync on the FOS.
 							output.flush();
+							fos.getFD().sync();
 							output.close();
 						}
 						catch ( IOException e ) {
