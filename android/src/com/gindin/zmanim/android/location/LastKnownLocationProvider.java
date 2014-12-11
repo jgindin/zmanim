@@ -5,10 +5,11 @@
 package com.gindin.zmanim.android.location;
 
 
-import android.content.Context;
-import android.location.Location;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.location.ZmanimLocation;
+
+import android.content.Context;
+import android.location.Location;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -82,6 +83,8 @@ public class LastKnownLocationProvider {
 		finally {
 			if ( output != null ) {
 				try {
+					output.flush();
+					output.getFD().sync();
 					output.close();
 				}
 				catch ( IOException e ) {
