@@ -32,10 +32,15 @@
 	<!--
 		Permissions necessary to support notifications.
 	-->
-<!--
 	<uses-permission android:name="android.permission.VIBRATE" />
+
+	<!--
+		Permission so that we can schedule an alarm to check for upcoming zmanim as soon as the
+		device completes a reboot. Otherwise, we wouldn't be able to set any alarms until the
+		user decides to run the app.
+	-->
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
--->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<supports-screens
 		android:smallScreens="true"
@@ -67,13 +72,11 @@
 		<!--
 			Register the receiver for the BOOT_COMPLETED notification.
 		-->
-<!--
-		<receiver android:name=".DeviceBootedReceiver">
+		<receiver android:name=".ZmanimReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED"/>
 			</intent-filter>
 		</receiver>
--->
 
 
 		<!--
