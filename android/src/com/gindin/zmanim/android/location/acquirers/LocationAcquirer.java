@@ -98,20 +98,27 @@ public abstract class LocationAcquirer {
 	}
 
 
-	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation ) {
+	protected final void fireLocationAcquiredEvent(
+		ZmanimLocation  newLocation,
+		boolean         isCachedLocation
+	) {
 
-		fireLocationAcquiredEvent( newLocation, null );
+		fireLocationAcquiredEvent( newLocation, isCachedLocation, null );
 	}
 
 
-	protected final void fireLocationAcquiredEvent( ZmanimLocation newLocation, LocationError error ) {
+	protected final void fireLocationAcquiredEvent(
+		ZmanimLocation  newLocation,
+		final boolean   isCachedLocation,
+		LocationError   error
+	) {
 
 		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
 		if ( !useElevation && ( newLocation != null ) ) {
 			newLocation.setElevation( 0.0 );
 		}
 
-		eventBus.fire( new LocationAcquiredEvent( newLocation, error ) );
+		eventBus.fire( new LocationAcquiredEvent( newLocation, isCachedLocation, error ) );
 	}
 
 

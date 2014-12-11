@@ -47,12 +47,18 @@ class LocationPresenterImpl<V extends LocationView>
 
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
-			public void onLocationAcquired( ZmanimLocation location ) {
+			public void onLocationAcquired(
+				ZmanimLocation  location,
+				boolean         isCachedLocation
+			) {
 				handleLocationChanged( location );
 			}
 
 			@Override
-			public void onError( @NotNull LocationError error, @NotNull ZmanimLocation lastKnownLocation ) {
+			public void onError(
+				@NotNull LocationError  error,
+				@NotNull ZmanimLocation lastKnownLocation
+			) {
 				// Don't bother updating if there's an error AND we already have a location.
 				if ( currentLocation == null ) {
 					handleLocationChanged( lastKnownLocation );

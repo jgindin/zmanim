@@ -49,7 +49,7 @@ public class LatitudeLongitudeLocationAcquirer
 			.inTimeZone( timeZone )
 			.build();
 
-		fireLocationAcquiredEvent( newLocation );
+		fireLocationAcquiredEvent( newLocation, false );
 	}
 
 
@@ -64,7 +64,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			fireLocationAcquiredEvent( null,  new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
+			fireLocationAcquiredEvent( null, true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
 		}
 	}
 
@@ -80,7 +80,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			fireLocationAcquiredEvent( null, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
+			fireLocationAcquiredEvent( null, true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
 		}
 	}
 

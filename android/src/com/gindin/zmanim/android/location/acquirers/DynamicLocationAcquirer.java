@@ -100,7 +100,7 @@ public class DynamicLocationAcquirer
 		if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
 			ZmanimLocation lastKnownLocation = getLastKnownLocation();
 			if ( lastKnownLocation != null ) {
-				fireLocationAcquiredEvent( lastKnownLocation );
+				fireLocationAcquiredEvent( lastKnownLocation, true );
 			}
 		}
 
@@ -195,7 +195,7 @@ public class DynamicLocationAcquirer
 			.inTimeZone( getTimeZoneFromPrefs() )
 			.build();
 
-		fireLocationAcquiredEvent( location );
+		fireLocationAcquiredEvent( location, false );
 	}
 
 
@@ -208,7 +208,7 @@ public class DynamicLocationAcquirer
 		}
 
 		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-		fireLocationAcquiredEvent( getLastKnownLocation(), new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
+		fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
 	}
 
 
@@ -263,7 +263,7 @@ public class DynamicLocationAcquirer
 	private boolean isLocationEnabled() {
 
 		if ( null == locationManager ) {
-			fireLocationAcquiredEvent( getLastKnownLocation(), new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
+			fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
 			return false;
 		}
 
@@ -277,7 +277,7 @@ public class DynamicLocationAcquirer
 		}
 
 		if ( !foundAProvider ) {
-			fireLocationAcquiredEvent( getLastKnownLocation(), new LocationError( LocationError.Code.NO_PROVIDERS ) );
+			fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_PROVIDERS ) );
 			return false;
 		}
 

@@ -88,6 +88,7 @@ public class ZmanimActivity
 
 	private ServiceStartedEvent.Handler                       serviceStartedHandler;
 
+	private boolean                                           needToScheduleAlarams = true;
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -208,8 +209,11 @@ public class ZmanimActivity
 		eventBus.addHandler( serviceStartedHandler );
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
-		zmanimService.putExtra( ZmanimService.Commands.ACTIVITY_STARTED.name(), true );
+		zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
+		zmanimService.putExtra( ZmanimService.ActionParams.SCHEDULE_IF_NECESSARY.name(), needToScheduleAlarams );
 		startService( zmanimService );
+
+		needToScheduleAlarams = false;
 	}
 
 
@@ -232,7 +236,7 @@ public class ZmanimActivity
 		eventBus.removeHandler( serviceStartedHandler );
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
-		zmanimService.putExtra( ZmanimService.Commands.ACTIVITY_STOPPED.name(), true );
+		zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STOPPED.name() );
 		startService( zmanimService );
 
 		super.onStop();
@@ -535,6 +539,7 @@ public class ZmanimActivity
 		eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
 	}
 
+
 	private void updateField(
 		int     field,
 		String  text
@@ -613,7 +618,10 @@ public class ZmanimActivity
 		extends LocationAcquiredEvent.Handler {
 
 		@Override
-		public void onLocationAcquired( final ZmanimLocation location ) {
+		public void onLocationAcquired(
+			final ZmanimLocation  location,
+			final boolean         isCachedLocation
+		) {
 			runOnUiThread(
 				new Runnable() {
 					@Override
@@ -627,8 +635,8 @@ public class ZmanimActivity
 
 		@Override
 		public void onError(
-			@NotNull final LocationError   error,
-			@NotNull final ZmanimLocation  lastKnownLocation
+			@NotNull final LocationError  error,
+			@NotNull final ZmanimLocation lastKnownLocation
 		) {
 
 			runOnUiThread(

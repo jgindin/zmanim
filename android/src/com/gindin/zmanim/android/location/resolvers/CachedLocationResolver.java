@@ -57,14 +57,20 @@ class CachedLocationResolver
 
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
-			public void onLocationAcquired( ZmanimLocation newLocation ) {
+			public void onLocationAcquired(
+				ZmanimLocation  newLocation,
+				final boolean   isCachedLocation
+			) {
 				// This event is fired when (a) a location is acquired and (b) when a location is resolved.
 				//  We don't want to cache unresolved locations...there's no point.
 				if ( !newLocation.isResolved() ) {
 					return;
 				}
 
-				saveCache( newLocation );
+				// No sense saving the location if it was a cached location to begin with...
+				if ( !isCachedLocation ) {
+					saveCache( newLocation );
+				}
 			}
 
 

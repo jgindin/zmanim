@@ -36,17 +36,17 @@ public abstract class Zmanim {
 	 *
 	 * @param zmanName which zman to locate.
 	 *
-	 * @return the named zman, or null if it cannot be found.
+	 * @return the named zman, or the default zman if the specified name cannot be found.
 	 */
 	public Zman getByName(
 		String zmanName
 	) {
 
-		if ( ( zmanName == null ) || zmanName.isEmpty() )  {
-			return null;
-		}
-
 		ensureZmanim();
+
+		if ( ( zmanName == null ) || zmanName.isEmpty() )  {
+			return getDefault();
+		}
 
 		for ( Zman zman : allZmanim ) {
 			if ( zmanName.equals( zman.name ) ) {
@@ -54,7 +54,7 @@ public abstract class Zmanim {
 			}
 		}
 
-		return null;
+		return getDefault();
 	}
 
 

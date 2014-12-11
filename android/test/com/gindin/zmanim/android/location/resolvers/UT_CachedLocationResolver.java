@@ -47,7 +47,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 
 		ZmanimLocation location2 = new ZmanimLocation.Builder()
 			.atLatitude( 47.55 )
@@ -71,7 +71,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 
 		ZmanimLocation location2 = new ZmanimLocation.Builder()
 			.atLatitude( 47.56 )
@@ -95,7 +95,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 		Assert.assertEquals( 0, cachedLocationResolver.locationCache.size() );
 
 	}
@@ -111,7 +111,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 
 		cachedLocationResolver.locationCache.clear();
 
@@ -135,7 +135,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 
 		ZmanimLocation location2 = new ZmanimLocation.Builder()
 			.atLatitude( 47.55 )
@@ -144,7 +144,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location2 ) );
+		eventBus.fire( new LocationAcquiredEvent( location2, false ) );
 
 		Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
 	}
@@ -160,7 +160,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( firstLocation ) );
+		eventBus.fire( new LocationAcquiredEvent( firstLocation, false ) );
 
 		for ( int i = 0; i < 25; i++ ) {
 			ZmanimLocation location = new ZmanimLocation.Builder()
@@ -170,7 +170,7 @@ public class UT_CachedLocationResolver {
 				.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 				.build();
 
-			eventBus.fire( new LocationAcquiredEvent( location ) );
+			eventBus.fire( new LocationAcquiredEvent( location, false ) );
 		}
 
 		Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
@@ -182,7 +182,7 @@ public class UT_CachedLocationResolver {
 			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
 			.build();
 
-		eventBus.fire( new LocationAcquiredEvent( location ) );
+		eventBus.fire( new LocationAcquiredEvent( location, false ) );
 
 		Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
 		Assert.assertFalse( cachedLocationResolver.locationCache.contains( firstLocation ) );

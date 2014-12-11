@@ -78,15 +78,18 @@ public class LocationToAddressConverter {
 
 		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
 			@Override
-			public void onLocationAcquired( ZmanimLocation location ) {
+			public void onLocationAcquired(
+				ZmanimLocation  location,
+				boolean         isCachedLocation
+			) {
 				handleLocationAcquired( location );
 			}
 
 
 			@Override
 			public void onError(
-				@NotNull LocationError   error,
-				@NotNull ZmanimLocation  lastKnownLocation
+				@NotNull LocationError  error,
+				@NotNull ZmanimLocation lastKnownLocation
 			) {
 				handleLocationAcquired( lastKnownLocation );
 			}

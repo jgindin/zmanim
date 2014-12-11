@@ -120,7 +120,7 @@ abstract class LocationResolver {
 	) {
 
 		if ( location.getLocationName().trim().length() == 0 ) {
-			eventBus.fire( new LocationAcquiredEvent( location, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
+			eventBus.fire( new LocationAcquiredEvent( location, true, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
 		}
 
 		AsyncTask<ZmanimLocation,Void,ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
@@ -164,7 +164,7 @@ abstract class LocationResolver {
 					resolvedLocation.setElevation( 0.0 );
 				}
 
-				eventBus.fire( new LocationAcquiredEvent( resolvedLocation ) );
+				eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false ) );
 
 				// Let's keep track of how often we use each resolver.
 				LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );

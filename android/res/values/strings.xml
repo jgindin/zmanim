@@ -99,4 +99,6 @@
 		<item>West</item>
 	</string-array>
 
+	<string name="notification">%1$s at %2$s.</string>
+
 </resources>
