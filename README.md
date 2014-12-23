@@ -39,6 +39,9 @@ I can't say enough GREAT things about IntelliJIDEA. They've been nice enough to 
 
 Also checkout the [KosherJava](http://www.kosherjava.com/) website
 
+I've also recently switched to using [YouTrack](https://www.jetbrains.com/youtrack/), the Bug & Issue tracker from JetBrains. So far, I'm enjoying it!
+
+
 
 ### Who do I talk to? ###
 
