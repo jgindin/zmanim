@@ -37,8 +37,12 @@ I can't say enough GREAT things about IntelliJIDEA. They've been nice enough to 
 [IntelliJ IDEA](http://www.jetbrains.com/idea/features/code_analysis.html)
 ![IntelliJ IDEA](http://www.jetbrains.com/idea/opensource/img/all/banners/idea468x60_blue.gif)
 
+Also checkout the [KosherJava](http://www.kosherjava.com/) website
+
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* [Discussion Group](http://groups.google.com/group/android-zmanim)
+* [Follow Commits to this project](http://groups.google.com/group/android-zmanim-commits)
+* [View or enter a bug or feature idea](http://zmanim.myjetbrains.com/youtrack/dashboard) - Go ahead and just log in as a Guest!
+
