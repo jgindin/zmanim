@@ -112,7 +112,10 @@ class CachedLocationResolver
 
 	private ZmanimLocation findCachedMatch( ZmanimLocation zmanimLocation ) {
 
-		for ( ZmanimLocation cachedLocation : locationCache ) {
+		// Take a copy to avoid any possible ConcurrentModificationException.
+		Set<ZmanimLocation> copy = locationCache.newCopy();
+
+		for ( ZmanimLocation cachedLocation : copy ) {
 			if ( !zmanimLocation.isSignificantChangeFrom( cachedLocation ) && cachedLocation.hasName() ) {
 				return cachedLocation;
 			}
