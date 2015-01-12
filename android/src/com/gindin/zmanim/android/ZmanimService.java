@@ -69,13 +69,20 @@ public class ZmanimService
 	}
 
 
+	/**
+	 * String used to store & retrieve the time of the last zman we notified the user of.
+	 */
+	private static String                                     TIME_OF_LAST_NOTIFIED_ZMAN;
+
+
+
 	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
 
 	/**
 	 * If we check for the next zman, and it's more than 30 minutes away, just go ahead and schedule another
 	 *  check in 30 minutes.
 	 */
-	private static final int                                  MINUTES_BETWEEN_ALARMS = 30;
+	private static final int                                  MINUTES_BETWEEN_ALARMS = 45;
 	private static final long                                 NEXT_ALARM_CHECK_INTERVAL = ( MINUTES_BETWEEN_ALARMS * 60 * 1000L );
 
 	/**
@@ -105,6 +112,12 @@ public class ZmanimService
 	 */
 	private boolean                                           servicingAlarm = false;
 
+	/**
+	 * If we're invoked from some other intent, keep track of it. This way we can (a) not do something if we're already
+	 *  handling for an intent; and (b) cleanup if something goes really wrong.
+	 */
+	private Intent                                            handlingAlarmsFor;
+
 
 	@Override
 	public void onCreate() {
@@ -114,6 +127,19 @@ public class ZmanimService
 		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+
+		Thread.setDefaultUncaughtExceptionHandler(
+			new Thread.UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(
+					final Thread    thread,
+					final Throwable throwable
+				) {
+
+					releaseWakefulIntent();
+				}
+			}
+		);
 	}
 
 
@@ -134,8 +160,11 @@ public class ZmanimService
 		if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
 			servicingUser = true;
 
-			if ( intent.getBooleanExtra( ActionParams.SCHEDULE_IF_NECESSARY.name(), false ) ) {
-				listenForLocation( null );
+			if ( intent.getBooleanExtra( ActionParams.SCHEDULE_IF_NECESSARY.name(), false ) && userWantsNotifications() ) {
+				findCurrentLocation();
+			}
+			else {
+				listenForLocation();
 			}
 
 			eventBus.fire( new ServiceStartedEvent() );
@@ -152,7 +181,14 @@ public class ZmanimService
 			//  able to schedule the next alarm.
 			if ( locationAcquiredHandler == null ) {
 				servicingAlarm = true;
-				findCurrentLocation( intent );
+				handlingAlarmsFor = intent;
+
+				if ( userWantsNotifications() ) {
+					findCurrentLocation();
+				}
+				else {
+					releaseWakefulIntent();
+				}
 			}
 		}
 
@@ -173,15 +209,12 @@ public class ZmanimService
 	}
 
 
-	private void findCurrentLocation( final Intent wakefulIntent ) {
+	private void findCurrentLocation() {
 
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-		if ( !personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true ) ) {
-			return;
-		}
 
 		// We have to figure out where we are in order to see when the next alarm is.
-		listenForLocation( wakefulIntent );
+		listenForLocation();
 
 		// Ask the location manager to do its best job figuring out where we are now, without using the cache.
 		//  When it fires the location acquired event, we'll use the location to work out when to schedule the
@@ -198,15 +231,14 @@ public class ZmanimService
 	}
 
 
-	private void listenForLocation( final Intent wakefulIntent ) {
-		locationAcquiredHandler = new LocationAcquiredHandler( wakefulIntent );
+	private void listenForLocation() {
+		locationAcquiredHandler = new LocationAcquiredHandler();
 		eventBus.addHandler( locationAcquiredHandler );
 	}
 
 
 	private void handleLocation(
-		final ZmanimLocation  location,
-		final Intent          wakefulIntent
+		final ZmanimLocation  location
 	) {
 
 		eventBus.removeHandler( locationAcquiredHandler );
@@ -215,54 +247,59 @@ public class ZmanimService
 		Date now = new Date();
 		Zman nextZman = findNextZman( location, now );
 
-		long timeForNextAlaram = System.currentTimeMillis();
+		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
+		//  sure not to miss it...
+		boolean needPreciseWakeup = false;
+
+		long timeForNextAlarm = System.currentTimeMillis();
 		if ( nextZman == null ) {
 			// Uh oh...
 			LogUtils.logError( "schedule next alarm", "Unable to determine next zman!", new Throwable() );
 
-			// Well, try again in 30 minutes...
-			timeForNextAlaram += NEXT_ALARM_CHECK_INTERVAL;
+			// Well, try again later...
+			timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 		}
 		else {
 
 			// A few cases here:
-			//  1. There's no zman in the next 30 minutes: Just set the next alarm for 30 minutes from now.
-			//  2. There is a zman within 30 minutes:
+			//  1. There's no zman in the next interval: Just set the next alarm for the check interval from now.
+			//  2. There is a zman within check interval:
 			//    a. The zman is within 15 minutes: Show a notification. Find the next zman after that.
-			//        If it's less than 30 minutes away, schedule the next alarm so we wake up 15 minutes before
+			//        If it's less than the check interval away, schedule the next alarm so we wake up 15 minutes before
 			//          that next one.
-			//        Otherwise, schedule the alarm for 30 minutes from now.
-			//    b. The zman is more than 15 minutes away, but less than 30: Schedule the next alarm so we wake
+			//        Otherwise, schedule the alarm using our check interval.
+			//    b. The zman is more than 15 minutes away, but less than the check interval: Schedule the next alarm so we wake
 			//        up 15 minutes before.
 			long timeUntilNextZman = howLongUntil( now, nextZman );
 			if ( timeUntilNextZman >= NEXT_ALARM_CHECK_INTERVAL ) {
-				timeForNextAlaram += NEXT_ALARM_CHECK_INTERVAL;
+				timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 			}
-			else if ( timeUntilNextZman < DEFAULT_TIME_BEFORE_NEXT_ZMAN ) {
+			else if ( timeUntilNextZman <= DEFAULT_TIME_BEFORE_NEXT_ZMAN ) {
 				// Show the notification!
 				notifyUserOfUpcomingZman( nextZman );
 
 				// Find the next zman (after the one we're notifying about) and get our next alarm schedule appropriately...
-				nextZman = findNextZman( location, new Date( timeForNextAlaram + DEFAULT_TIME_BEFORE_NEXT_ZMAN ) );
+				nextZman = findNextZman( location, new Date( timeForNextAlarm + DEFAULT_TIME_BEFORE_NEXT_ZMAN ) );
 				if ( nextZman == null ) {
-					timeForNextAlaram += NEXT_ALARM_CHECK_INTERVAL;
+					timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 				}
 				else {
 					timeUntilNextZman = howLongUntil( now, nextZman );
 					if ( timeUntilNextZman >= NEXT_ALARM_CHECK_INTERVAL ) {
-						timeForNextAlaram += NEXT_ALARM_CHECK_INTERVAL;
+						timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 					}
 					else {
 						// We're close...reschedule for when we're going to want to show the notification...
-						timeForNextAlaram += ( timeUntilNextZman - DEFAULT_TIME_BEFORE_NEXT_ZMAN );
+						timeForNextAlarm = ( timeUntilNextZman - DEFAULT_TIME_BEFORE_NEXT_ZMAN );
+						needPreciseWakeup = true;
 					}
 				}
 			}
 			else {
 				// We're close...reschedule for when we're going to want to show the notification...
-				timeForNextAlaram += ( timeUntilNextZman - DEFAULT_TIME_BEFORE_NEXT_ZMAN );
+				timeForNextAlarm += ( timeUntilNextZman - DEFAULT_TIME_BEFORE_NEXT_ZMAN );
+				needPreciseWakeup = true;
 			}
-
 		}
 
 
@@ -270,18 +307,16 @@ public class ZmanimService
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, 0 );
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
-		alarmManager.set( AlarmManager.RTC, timeForNextAlaram, pendingIntent );
+		alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, timeForNextAlarm, pendingIntent );
 
 		if ( servicingAlarm ) {
 			servicingAlarm = false;
 		}
 
 		// Could be null if we're scheduling alarms because the Activity was created.
-		if ( wakefulIntent != null ) {
-			WakefulBroadcastReceiver.completeWakefulIntent( wakefulIntent );
-		}
-
+		releaseWakefulIntent();
 	}
+
 
 
 	/**
@@ -341,9 +376,22 @@ public class ZmanimService
 		final Zman nextZman
 	) {
 
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+
+		// Make sure we didn't already notify of this zman...
+		long timeOfLastNotifiedZman = personalPrefs.getLong( TIME_OF_LAST_NOTIFIED_ZMAN, 0 );
+		long timeOfThisZman = nextZman.getTime().getTimeInMillis();
+
+		if ( timeOfThisZman <= timeOfLastNotifiedZman ) {
+			// Looks like we already notified...
+			return;
+		}
+
+		personalPrefs.edit().putLong( TIME_OF_LAST_NOTIFIED_ZMAN, timeOfThisZman ).apply();
+
+
 		Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 
@@ -362,18 +410,27 @@ public class ZmanimService
 	}
 
 
+	private boolean userWantsNotifications() {
+
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+		return personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
+	}
+
+
+	private void releaseWakefulIntent() {
+
+		if ( handlingAlarmsFor != null ) {
+			WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
+			handlingAlarmsFor = null;
+		}
+	}
+
+
+
 	private class LocationAcquiredHandler
 		extends LocationAcquiredEvent.Handler {
 
-		/**
-		 * The wakeful intent which caused us to need to find out where we are. May be null if we're scheduling the
-		 *  alarm because the Activity has started.
-		 */
-		private final Intent                                    wakefulIntent;
-
-
-		LocationAcquiredHandler( final Intent wakefulIntent ) {
-			this.wakefulIntent = wakefulIntent;
+		LocationAcquiredHandler() {
 		}
 
 
@@ -382,7 +439,7 @@ public class ZmanimService
 			ZmanimLocation  location,
 			boolean         isCachedLocation
 		) {
-			handleLocation( location, wakefulIntent );
+			handleLocation( location );
 		}
 
 
@@ -391,7 +448,7 @@ public class ZmanimService
 			@NotNull LocationError  error,
 			@NotNull ZmanimLocation lastKnownLocation
 		) {
-			handleLocation( lastKnownLocation, wakefulIntent );
+			handleLocation( lastKnownLocation );
 		}
 	}
 
