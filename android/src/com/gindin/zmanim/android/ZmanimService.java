@@ -8,11 +8,10 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
+import com.gindin.zmanim.zman.ZmanUtils;
 import com.gindin.zmanim.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +25,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Date;
-import java.util.List;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.LocationDeterminationOverride;
@@ -244,8 +242,16 @@ public class ZmanimService
 		eventBus.removeHandler( locationAcquiredHandler );
 		locationAcquiredHandler = null;
 
+		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+		ZmanUtils.PreferredZmanTypeLookup lookup = new ZmanUtils.PreferredZmanTypeLookup() {
+			@Override
+			public String getPreferredZman( final Zmanim.Type type ) {
+				return zmanimSelectionPrefs.getString( type.name, null );
+			}
+		};
+
 		Date now = new Date();
-		Zman nextZman = findNextZman( location, now );
+		Zman nextZman = ZmanUtils.findNextZman( location, now, lookup );
 
 		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
 		//  sure not to miss it...
@@ -270,7 +276,7 @@ public class ZmanimService
 			//        Otherwise, schedule the alarm using our check interval.
 			//    b. The zman is more than 15 minutes away, but less than the check interval: Schedule the next alarm so we wake
 			//        up 15 minutes before.
-			long timeUntilNextZman = howLongUntil( now, nextZman );
+			long timeUntilNextZman = ZmanUtils.howLongUntil( now, nextZman );
 			if ( timeUntilNextZman >= NEXT_ALARM_CHECK_INTERVAL ) {
 				timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 			}
@@ -279,12 +285,12 @@ public class ZmanimService
 				notifyUserOfUpcomingZman( nextZman );
 
 				// Find the next zman (after the one we're notifying about) and get our next alarm schedule appropriately...
-				nextZman = findNextZman( location, new Date( timeForNextAlarm + DEFAULT_TIME_BEFORE_NEXT_ZMAN ) );
+				nextZman = ZmanUtils.findNextZman( location, nextZman, lookup );
 				if ( nextZman == null ) {
 					timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 				}
 				else {
-					timeUntilNextZman = howLongUntil( now, nextZman );
+					timeUntilNextZman = ZmanUtils.howLongUntil( now, nextZman );
 					if ( timeUntilNextZman >= NEXT_ALARM_CHECK_INTERVAL ) {
 						timeForNextAlarm += NEXT_ALARM_CHECK_INTERVAL;
 					}
@@ -315,60 +321,6 @@ public class ZmanimService
 
 		// Could be null if we're scheduling alarms because the Activity was created.
 		releaseWakefulIntent();
-	}
-
-
-
-	/**
-	 * Calculate the number of milliseconds between the given date and the zman.
-	 */
-	private long howLongUntil(
-		final Date now,
-		final Zman nextZman
-	) {
-
-		long nowTime = now.getTime();
-		long zmanTime = nextZman.getTime().getTime().getTime();
-
-		if ( nowTime > zmanTime ) {
-			return 0;
-		}
-
-		long diff = zmanTime - nowTime;
-		return diff;
-	}
-
-
-	private Zman findNextZman(
-		final ZmanimLocation  location,
-		final Date            notAfterTime
-	) {
-
-		SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
-
-		Zman nextZman = null;
-
-		HebrewDate today = HebrewCalendar.today();
-		List<Zmanim> todaysZmanim = today.getZmanim( location );
-		for ( Zmanim zmanim : todaysZmanim ) {
-			String zmanName = zmanimSelectionPrefs.getString( zmanim.type.name, null );
-			Zman zman;
-			if ( zmanName == null ) {
-				zman = zmanim.getDefault();
-			}
-			else {
-				zman = zmanim.getByName( zmanName );
-			}
-
-			Date time = zman.getTime().getTime();
-			if ( time.after( notAfterTime ) ) {
-				// We found the next zman!
-				nextZman = zman;
-				break;
-			}
-		}
-
-		return nextZman;
 	}
 
 
