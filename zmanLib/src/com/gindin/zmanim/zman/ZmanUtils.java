@@ -8,7 +8,7 @@ import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -30,15 +30,19 @@ public class ZmanUtils {
 
 	public static Zman findNextZman(
 		final ZmanimLocation          location,
-		final Date                    notAfterTime,
+		final Calendar                mustBeAfter,
 		final PreferredZmanTypeLookup preferredZmanTypeLookup
 	) {
 
 		Zman nextZman = null;
 
-		HebrewDate today = HebrewCalendar.today();
-		List<Zmanim> todaysZmanim = today.getZmanim( location );
-		for ( Zmanim zmanim : todaysZmanim ) {
+		// It seems like there may be some location where night Chatzot is before midnight. In that case
+		//  we won't find the next zman...
+		// There *is* an issue where we're asked to find the next zman after, say midnight. Problem is that
+		//  we miss night Chatzot, because that's on the previous day.
+		HebrewDate hebrewDate = HebrewCalendar.getForDate( mustBeAfter );
+		List<Zmanim> daysZmanim = hebrewDate.getZmanim( location );
+		for ( Zmanim zmanim : daysZmanim ) {
 			String zmanName = preferredZmanTypeLookup.getPreferredZman( zmanim.type );
 			Zman zman;
 			if ( zmanName == null ) {
@@ -48,8 +52,8 @@ public class ZmanUtils {
 				zman = zmanim.getByName( zmanName );
 			}
 
-			Date time = zman.getTime().getTime();
-			if ( time.after( notAfterTime ) ) {
+			Calendar time = zman.getTime();
+			if ( time.after( mustBeAfter ) ) {
 				// We found the next zman!
 				nextZman = zman;
 				break;
@@ -60,49 +64,15 @@ public class ZmanUtils {
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	public static Zman findNextZman(
-		final ZmanimLocation          location,
-	  final Zman                    currentZman,
-		final PreferredZmanTypeLookup preferredZmanTypeLookup
-	) {
-
-		int nextZmanType = currentZman.type.ordinal() + 1;
-		Zmanim nextZmanim;
-
-		HebrewDate today = HebrewCalendar.today();
-		List<Zmanim> todaysZmanim = today.getZmanim( location );
-		if ( nextZmanType < todaysZmanim.size() ) {
-			nextZmanim = todaysZmanim.get( nextZmanType );
-		}
-		else {
-			todaysZmanim = today.tomorrow().getZmanim( location );
-			nextZmanim = todaysZmanim.get( 0 );
-		}
-
-		Zman nextZman;
-		String zmanName = preferredZmanTypeLookup.getPreferredZman( nextZmanim.type );
-		if ( zmanName == null ) {
-			nextZman = nextZmanim.getDefault();
-		}
-		else {
-			nextZman = nextZmanim.getByName( zmanName );
-		}
-
-		return nextZman;
-	}
-
-
-
 	/**
 	 * Calculate the number of milliseconds between the given date and the zman.
 	 */
 	public static long howLongUntil(
-		final Date now,
-		final Zman nextZman
+		final Calendar  now,
+		final Zman      nextZman
 	) {
 
-		long nowTime = now.getTime();
+		long nowTime = now.getTime().getTime();
 		long zmanTime = nextZman.getTime().getTime().getTime();
 
 		if ( nowTime > zmanTime ) {

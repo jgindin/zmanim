@@ -4,9 +4,91 @@
 
 package com.gindin.zmanim.zman;
 
+import com.gindin.zmanim.calendar.HebrewCalendar;
+import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanim.location.ZmanimLocation;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
+
 /**
  *
  */
 public class UT_ZmanUtils {
+
+	private static final ZmanimLocation                       seattle;
+
+	private static final ZmanimLocation                       yeshivaUniviersity;
+
+
+	static {
+
+		seattle = new ZmanimLocation.Builder()
+			.atLatitude( 47.552827 )
+			.atLongitude( -122.267065 )
+			.locationName( "Ezra Bessaroth" )
+			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+			.build();
+
+		yeshivaUniviersity = new ZmanimLocation.Builder()
+			.atLatitude( 40.851546 )
+			.atLongitude( -73.928937 )
+			.locationName( "Yeshiva University" )
+			.inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
+			.build();
+	}
+
+
+	private ZmanUtils.PreferredZmanTypeLookup                 lookup;
+
+
+	@Before
+	public void setup() {
+
+		lookup = new ZmanUtils.PreferredZmanTypeLookup() {
+			@Override
+			public String getPreferredZman( Zmanim.Type type ) {
+				return null;
+			}
+		};
+	}
+
+
+	@Test
+	public void testFindingNextZmanAfterDate() {
+
+		HebrewDate hebrewDate = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 15 );
+		List<Zmanim> zmanimForDate = hebrewDate.getZmanim( seattle );
+
+		for ( Zmanim zmanim : zmanimForDate ) {
+			Zman zman = zmanim.getDefault();
+			Calendar zmanTime = zman.getTime();
+
+			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, lookup );
+			Assert.assertNotNull( "Didn't find nextZman after " + zman.type, nextZman );
+
+			Calendar nextZmanTime = nextZman.getTime();
+			Assert.assertTrue( nextZmanTime.after( zmanTime ) );
+		}
+	}
+
+
+	@Test
+	public void testFindNextZmanFromEndOfDay() {
+
+		// Make sure that when we're at the end of a day we'll find the next zman, even if its on the next day...
+		Calendar findAfter = Calendar.getInstance();
+		findAfter.setTimeZone( seattle.getTimeZone() );
+		findAfter.set( 2014, Calendar.DECEMBER, 21, 23, 0 );
+
+		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, lookup );
+		Assert.assertNotNull( nextZman );
+	}
+
+
 
 } // End of UT_ZmanUtils class
