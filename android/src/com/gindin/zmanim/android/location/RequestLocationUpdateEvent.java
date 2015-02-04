@@ -26,7 +26,7 @@ public class RequestLocationUpdateEvent
 	}
 
 
-	public static enum LocationDeterminationOverride {
+	public enum LocationDeterminationOverride {
 
 		/**
 		 * Use the normal procedure for determining the user's location.
@@ -40,7 +40,7 @@ public class RequestLocationUpdateEvent
 	}
 
 
-	public static enum CachedLocationUsage {
+	public enum CachedLocationUsage {
 
 		/**
 		 * We prefer to use the cached location ASAP, and then continue to try and determine the actual location.

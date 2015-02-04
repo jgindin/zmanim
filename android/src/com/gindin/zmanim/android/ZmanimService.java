@@ -1,13 +1,5 @@
 package com.gindin.zmanim.android;
 
-import android.app.*;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.location.LocationManager;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
@@ -22,6 +14,15 @@ import com.gindin.zmanim.zman.ZmanFormatter;
 import com.gindin.zmanim.zman.ZmanUtils;
 import com.gindin.zmanim.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
+
+import android.app.*;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.LocationManager;
+import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Calendar;
 
@@ -44,7 +45,7 @@ public class ZmanimService
 	extends Service {
 
 
-	public static enum Actions {
+	public enum Actions {
 		/** Request the service to start for the Zmanim Activity. */
 		ACTIVITY_STARTED,
 
@@ -56,7 +57,7 @@ public class ZmanimService
 	}
 
 
-	public static enum ActionParams {
+	public enum ActionParams {
 
 		/** Can be specified with the SCHEDULE_ALARM action to indicate the alarm should be scheduled no matter what. */
 		FORCE_SCHEDULE,
