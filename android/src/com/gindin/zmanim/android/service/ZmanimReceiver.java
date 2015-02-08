@@ -1,4 +1,4 @@
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.service;
 
 import android.content.Context;
 import android.content.Intent;

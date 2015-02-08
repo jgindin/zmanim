@@ -1,4 +1,4 @@
-package com.gindin.zmanim.android;
+package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.Event;
 import com.gindin.eventBus.EventHandler;

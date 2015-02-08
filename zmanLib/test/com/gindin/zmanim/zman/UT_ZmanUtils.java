@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *
+ * Tests for the ZmanUtils functionality.
  */
+@SuppressWarnings( "MagicNumber" )
 public class UT_ZmanUtils {
 
 	private static final ZmanimLocation                       seattle;
@@ -88,7 +89,5 @@ public class UT_ZmanUtils {
 		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, lookup );
 		Assert.assertNotNull( nextZman );
 	}
-
-
 
 } // End of UT_ZmanUtils class

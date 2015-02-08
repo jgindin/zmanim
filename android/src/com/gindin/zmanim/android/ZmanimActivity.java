@@ -22,6 +22,8 @@ import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.android.service.ServiceStartedEvent;
+import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
