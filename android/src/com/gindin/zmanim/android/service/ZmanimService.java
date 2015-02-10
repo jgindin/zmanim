@@ -245,17 +245,15 @@ public class ZmanimService
 			Zman nextZman = determineNextZman( location, now );
 			int nextWakeupDelta = determineNextWakeup( nextZman, now );
 
-			if ( nextWakeupDelta > 0 ) {
+			if ( nextWakeupDelta <= 0 ) {
 
-				scheduleNextWakeup( nextWakeupDelta, now );
-			}
-			else {
 				notifyUserOfUpcomingZman( nextZman );
 
 				nextZman = determineNextZman( location, nextZman.getTime() );
 				nextWakeupDelta = determineNextWakeup( nextZman, now );
-				scheduleNextWakeup( nextWakeupDelta, now );
 			}
+
+			scheduleNextWakeup( nextWakeupDelta, now );
 		}
 
 		releaseWakefulIntent();
