@@ -1126,6 +1126,258 @@ public class UT_Zmanim {
 	}
 
 
+	@Test
+	public void oakParkMichigan() {
+
+		// See YouTrack issue #90
+		ZmanimLocation oakPark = new ZmanimLocation.Builder()
+			.atLatitude( 42.5 )
+			.atLongitude( -83.2 )
+			.locationName( "Oak Park, Michigan" )
+			.inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
+			.build();
+
+		ZmanimLocation oakParkWithElevation = new ZmanimLocation.Builder()
+			.atLatitude( 42.5 )
+			.atLongitude( -83.2 )
+			.locationName( "Oak Park, Michigan" )
+			.inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
+			.atElevation( 189 )
+			.build();
+
+		HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.FEBRUARY, 13 );
+		verifyZmanim( oakPark, date, erevShabbatZmanim,
+			"Oak Park, Michigan\n" +
+			"      Alot Hashachar - 120 Minutes                   :  5:32:40\n" +
+			"      Alot Hashachar - 120 Minutes Zmaniyot          :  5:47:45\n" +
+			"      Alot Hashachar - 16.1 deg                      :  6:08:13\n" +
+			"      Alot Hashachar - 18 deg                        :  5:57:54\n" +
+			"      Alot Hashachar - 19.8 deg                      :  5:48:08\n" +
+			"      Alot Hashachar - 26 deg                        :  5:14:27\n" +
+			"      Alot Hashachar - 60 Minutes                    :  6:32:40\n" +
+			"      Alot Hashachar - 72 Minutes                    :  6:20:40\n" +
+			"      Alot Hashachar - GR'A 72 Minutes Zmaniyot      :  6:29:43\n" +
+			"      Alot Hashachar - 90 Minutes                    :  6:02:40\n" +
+			"      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:13:59\n" +
+			"      Alot Hashachar - 96 Minutes                    :  5:56:40\n" +
+			"      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:08:44\n" +
+			"       Talit/Tefilin - 10.2 deg                      :  6:40:26\n" +
+			"       Talit/Tefilin - 11 deg                        :  6:36:02\n" +
+			"       Talit/Tefilin - 11.5 deg                      :  6:33:18\n" +
+			"              Hanetz - Sunrise                       :  7:32:40\n" +
+			"              Hanetz - Sunrise (with elevation)      :  7:32:40\n" +
+			"      Sof Zman Shema - 3 Hours before Chatzot        :  9:47:25\n" +
+			"      Sof Zman Shema - 16.1 deg to Sunset            :  9:06:42\n" +
+			"      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:20\n" +
+			"      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:32:49\n" +
+			"      Sof Zman Shema - GR'A                          : 10:10:02\n" +
+			"      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:44\n" +
+			"      Sof Zman Shema - MG'A                          :  9:34:02\n" +
+			"      Sof Zman Shema - MG'A 120 Minutes              :  9:10:02\n" +
+			"      Sof Zman Shema - MG'A 16.1 deg                 :  9:27:48\n" +
+			"      Sof Zman Shema - MG'A 19.8 deg                 :  9:17:45\n" +
+			"      Sof Zman Shema - MG'A 72 Minutes Zmaniyot      :  9:38:34\n" +
+			"      Sof Zman Shema - MG'A 90 Minutes               :  9:25:02\n" +
+			"      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
+			"      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
+			"      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
+			"     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
+			"     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
+			"     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
+			"     Sof Zman Tefila - MG'A                          : 10:38:30\n" +
+			"     Sof Zman Tefila - MG'A 120 Minutes              : 10:22:30\n" +
+			"     Sof Zman Tefila - MG'A 16.1 deg                 : 10:34:19\n" +
+			"     Sof Zman Tefila - MG'A 19.8 deg                 : 10:27:38\n" +
+			"     Sof Zman Tefila - MG'A 72 Minutes Zmaniyot      : 10:41:31\n" +
+			"     Sof Zman Tefila - MG'A 90 Minutes               : 10:32:30\n" +
+			"     Sof Zman Tefila - MG'A 90 Minutes Zmaniyot      : 10:36:16\n" +
+			"     Sof Zman Tefila - MG'A 96 Minutes               : 10:30:30\n" +
+			"     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:34:31\n" +
+			"             Chatzot - Mid-day                       : 12:47:25\n" +
+			"       Mincha Gedola - GR'A                          : 13:13:38\n" +
+			"       Mincha Gedola - MG'A 16.1 deg                 : 13:20:38\n" +
+			"       Mincha Gedola - MG'A 72 Minutes               : 13:19:38\n" +
+			"       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:06:27\n" +
+			"       Mincha Ketana - GR'A                          : 15:51:01\n" +
+			"       Mincha Ketana - MG'A 16.1 deg                 : 16:40:13\n" +
+			"       Mincha Ketana - MG'A 72 Minutes               : 16:33:01\n" +
+			"       Mincha Ketana - Chacham Yosef Harari-Raful    : 16:09:34\n" +
+			"       Plag HaMincha - GR'A                          : 16:56:35\n" +
+			"       Plag HaMincha - MG'A 120 Minutes              : 18:31:35\n" +
+			"       Plag HaMincha - MG'A 120 Minutes Zmaniyot     : 18:19:38\n" +
+			"       Plag HaMincha - MG'A 16.1 deg                 : 18:03:23\n" +
+			"       Plag HaMincha - MG'A 18 deg                   : 18:11:33\n" +
+			"       Plag HaMincha - MG'A 19.8 deg                 : 18:19:17\n" +
+			"       Plag HaMincha - MG'A 26 deg                   : 18:45:57\n" +
+			"       Plag HaMincha - MG'A 60 Minutes               : 17:44:05\n" +
+			"       Plag HaMincha - MG'A 72 Minutes               : 17:53:35\n" +
+			"       Plag HaMincha - MG'A 72 Minutes Zmaniyot      : 17:46:25\n" +
+			"       Plag HaMincha - MG'A 90 Minutes               : 18:07:50\n" +
+			"       Plag HaMincha - MG'A 90 Minutes Zmaniyot      : 17:58:52\n" +
+			"       Plag HaMincha - MG'A 96 Minutes               : 18:12:35\n" +
+			"       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:02\n" +
+			"       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:25:51\n" +
+			"     Candle Lighting - 18 Minutes                    : 17:44:09\n" +
+			"     Candle Lighting - 15 Minutes                    : 17:47:09\n" +
+			"     Candle Lighting - 20 Minutes                    : 17:42:09\n" +
+			"     Candle Lighting - 21 Minutes                    : 17:41:09\n" +
+			"     Candle Lighting - 22 Minutes                    : 17:40:09\n" +
+			"     Candle Lighting - 30 Minutes                    : 17:32:09\n" +
+			"     Candle Lighting - 40 Minutes                    : 17:22:09\n" +
+			"               Shkia - Sunset                        : 18:02:09\n" +
+			"       Latest Mincha - Mishna Berura                 : 18:02:09\n" +
+			"       Latest Mincha - Hacham Ovadia Yosef           : 18:13:57\n" +
+			"       Latest Mincha - Hacham Ben Sion               : 18:28:09\n" +
+			"     Bein Hashmashot - 13 Degrees                    : 19:10:58\n" +
+			"     Bein Hashmashot - 58.5 Minutes                  : 19:00:39\n" +
+			"     Bein Hashmashot - 13.5 Minutes                  : 18:23:12\n" +
+			"     Bein Hashmashot - 2 Stars                       : 18:31:11\n" +
+			"    Tzait Hacochavim - MG'A 120 Minutes              : 20:02:09\n" +
+			"    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:47:04\n" +
+			"    Tzait Hacochavim - 3.5 deg                       : 18:17:12\n" +
+			"    Tzait Hacochavim - 6.5 deg                       : 18:33:56\n" +
+			"    Tzait Hacochavim - 8.5 deg                       : 18:44:59\n" +
+			"    Tzait Hacochavim - 16.1 deg                      : 19:26:32\n" +
+			"    Tzait Hacochavim - 18 deg                        : 19:36:51\n" +
+			"    Tzait Hacochavim - 19.8 deg                      : 19:46:37\n" +
+			"    Tzait Hacochavim - 26 deg                        : 20:20:19\n" +
+			"    Tzait Hacochavim - Chavas Yair and Divray Malkiel: 19:02:09\n" +
+			"    Tzait Hacochavim - Rambam / Rabainu Tam          : 19:14:09\n" +
+			"    Tzait Hacochavim - 72 Minutes Zmaniyot           : 19:05:06\n" +
+			"    Tzait Hacochavim - MG'A 90 Minutes               : 19:32:09\n" +
+			"    Tzait Hacochavim - GR'A 90 Minutes Zmaniyot      : 19:20:50\n" +
+			"    Tzait Hacochavim - 96 Minutes                    : 19:38:09\n" +
+			"    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:26:05\n" +
+			"    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:42:09\n" +
+			"    Tzait Hacochavim - Geonim 3.65 deg               : 18:18:03\n" +
+			"    Tzait Hacochavim - Geonim 4.37 deg               : 18:22:05\n" +
+			"    Tzait Hacochavim - Geonim 4.61 deg               : 18:23:25\n" +
+			"    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:29\n" +
+			"    Tzait Hacochavim - Geonim 5.88 deg               : 18:30:30\n" +
+			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:53\n" +
+			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:36:42\n" +
+			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
+			"            Midnight - Mid-night                     :  0:46:44\n"
+		);
+
+		verifyZmanim( oakParkWithElevation, date, erevShabbatZmanim,
+			"Oak Park, Michigan\n" +
+			"      Alot Hashachar - 120 Minutes                   :  5:32:40\n" +
+			"      Alot Hashachar - 120 Minutes Zmaniyot          :  5:47:45\n" +
+			"      Alot Hashachar - 16.1 deg                      :  6:08:13\n" +
+			"      Alot Hashachar - 18 deg                        :  5:57:54\n" +
+			"      Alot Hashachar - 19.8 deg                      :  5:48:08\n" +
+			"      Alot Hashachar - 26 deg                        :  5:14:27\n" +
+			"      Alot Hashachar - 60 Minutes                    :  6:32:40\n" +
+			"      Alot Hashachar - 72 Minutes                    :  6:20:40\n" +
+			"      Alot Hashachar - GR'A 72 Minutes Zmaniyot      :  6:29:43\n" +
+			"      Alot Hashachar - 90 Minutes                    :  6:02:40\n" +
+			"      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:13:59\n" +
+			"      Alot Hashachar - 96 Minutes                    :  5:56:40\n" +
+			"      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:08:44\n" +
+			"       Talit/Tefilin - 10.2 deg                      :  6:40:26\n" +
+			"       Talit/Tefilin - 11 deg                        :  6:36:02\n" +
+			"       Talit/Tefilin - 11.5 deg                      :  6:33:18\n" +
+			"              Hanetz - Sunrise                       :  7:32:40\n" +
+			"              Hanetz - Sunrise (with elevation)      :  7:30:09\n" +
+			"      Sof Zman Shema - 3 Hours before Chatzot        :  9:47:25\n" +
+			"      Sof Zman Shema - 16.1 deg to Sunset            :  9:06:42\n" +
+			"      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:20\n" +
+			"      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:32:49\n" +
+			"      Sof Zman Shema - GR'A                          : 10:10:02\n" +
+			"      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:44\n" +
+			"      Sof Zman Shema - MG'A                          :  9:34:02\n" +
+			"      Sof Zman Shema - MG'A 120 Minutes              :  9:10:02\n" +
+			"      Sof Zman Shema - MG'A 16.1 deg                 :  9:27:48\n" +
+			"      Sof Zman Shema - MG'A 19.8 deg                 :  9:17:45\n" +
+			"      Sof Zman Shema - MG'A 72 Minutes Zmaniyot      :  9:38:34\n" +
+			"      Sof Zman Shema - MG'A 90 Minutes               :  9:25:02\n" +
+			"      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
+			"      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
+			"      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
+			"     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
+			"     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
+			"     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
+			"     Sof Zman Tefila - MG'A                          : 10:38:30\n" +
+			"     Sof Zman Tefila - MG'A 120 Minutes              : 10:22:30\n" +
+			"     Sof Zman Tefila - MG'A 16.1 deg                 : 10:34:19\n" +
+			"     Sof Zman Tefila - MG'A 19.8 deg                 : 10:27:38\n" +
+			"     Sof Zman Tefila - MG'A 72 Minutes Zmaniyot      : 10:41:31\n" +
+			"     Sof Zman Tefila - MG'A 90 Minutes               : 10:32:30\n" +
+			"     Sof Zman Tefila - MG'A 90 Minutes Zmaniyot      : 10:36:16\n" +
+			"     Sof Zman Tefila - MG'A 96 Minutes               : 10:30:30\n" +
+			"     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:34:31\n" +
+			"             Chatzot - Mid-day                       : 12:47:25\n" +
+			"       Mincha Gedola - GR'A                          : 13:13:38\n" +
+			"       Mincha Gedola - MG'A 16.1 deg                 : 13:20:38\n" +
+			"       Mincha Gedola - MG'A 72 Minutes               : 13:19:38\n" +
+			"       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:06:27\n" +
+			"       Mincha Ketana - GR'A                          : 15:51:01\n" +
+			"       Mincha Ketana - MG'A 16.1 deg                 : 16:40:13\n" +
+			"       Mincha Ketana - MG'A 72 Minutes               : 16:33:01\n" +
+			"       Mincha Ketana - Chacham Yosef Harari-Raful    : 16:09:34\n" +
+			"       Plag HaMincha - GR'A                          : 16:56:35\n" +
+			"       Plag HaMincha - MG'A 120 Minutes              : 18:31:35\n" +
+			"       Plag HaMincha - MG'A 120 Minutes Zmaniyot     : 18:19:38\n" +
+			"       Plag HaMincha - MG'A 16.1 deg                 : 18:03:23\n" +
+			"       Plag HaMincha - MG'A 18 deg                   : 18:11:33\n" +
+			"       Plag HaMincha - MG'A 19.8 deg                 : 18:19:17\n" +
+			"       Plag HaMincha - MG'A 26 deg                   : 18:45:57\n" +
+			"       Plag HaMincha - MG'A 60 Minutes               : 17:44:05\n" +
+			"       Plag HaMincha - MG'A 72 Minutes               : 17:53:35\n" +
+			"       Plag HaMincha - MG'A 72 Minutes Zmaniyot      : 17:46:25\n" +
+			"       Plag HaMincha - MG'A 90 Minutes               : 18:07:50\n" +
+			"       Plag HaMincha - MG'A 90 Minutes Zmaniyot      : 17:58:52\n" +
+			"       Plag HaMincha - MG'A 96 Minutes               : 18:12:35\n" +
+			"       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:02\n" +
+			"       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:25:51\n" +
+			"     Candle Lighting - 18 Minutes                    : 17:44:09\n" +
+			"     Candle Lighting - 15 Minutes                    : 17:47:09\n" +
+			"     Candle Lighting - 20 Minutes                    : 17:42:09\n" +
+			"     Candle Lighting - 21 Minutes                    : 17:41:09\n" +
+			"     Candle Lighting - 22 Minutes                    : 17:40:09\n" +
+			"     Candle Lighting - 30 Minutes                    : 17:32:09\n" +
+			"     Candle Lighting - 40 Minutes                    : 17:22:09\n" +
+			"               Shkia - Sunset                        : 18:04:40\n" +
+			"       Latest Mincha - Mishna Berura                 : 18:02:09\n" +
+			"       Latest Mincha - Hacham Ovadia Yosef           : 18:13:57\n" +
+			"       Latest Mincha - Hacham Ben Sion               : 18:28:09\n" +
+			"     Bein Hashmashot - 13 Degrees                    : 19:10:58\n" +
+			"     Bein Hashmashot - 58.5 Minutes                  : 19:00:39\n" +
+			"     Bein Hashmashot - 13.5 Minutes                  : 18:23:12\n" +
+			"     Bein Hashmashot - 2 Stars                       : 18:31:11\n" +
+			"    Tzait Hacochavim - MG'A 120 Minutes              : 20:02:09\n" +
+			"    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:47:04\n" +
+			"    Tzait Hacochavim - 3.5 deg                       : 18:17:12\n" +
+			"    Tzait Hacochavim - 6.5 deg                       : 18:33:56\n" +
+			"    Tzait Hacochavim - 8.5 deg                       : 18:44:59\n" +
+			"    Tzait Hacochavim - 16.1 deg                      : 19:26:32\n" +
+			"    Tzait Hacochavim - 18 deg                        : 19:36:51\n" +
+			"    Tzait Hacochavim - 19.8 deg                      : 19:46:37\n" +
+			"    Tzait Hacochavim - 26 deg                        : 20:20:19\n" +
+			"    Tzait Hacochavim - Chavas Yair and Divray Malkiel: 19:02:09\n" +
+			"    Tzait Hacochavim - Rambam / Rabainu Tam          : 19:14:09\n" +
+			"    Tzait Hacochavim - 72 Minutes Zmaniyot           : 19:05:06\n" +
+			"    Tzait Hacochavim - MG'A 90 Minutes               : 19:32:09\n" +
+			"    Tzait Hacochavim - GR'A 90 Minutes Zmaniyot      : 19:20:50\n" +
+			"    Tzait Hacochavim - 96 Minutes                    : 19:38:09\n" +
+			"    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:26:05\n" +
+			"    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:42:09\n" +
+			"    Tzait Hacochavim - Geonim 3.65 deg               : 18:18:03\n" +
+			"    Tzait Hacochavim - Geonim 4.37 deg               : 18:22:05\n" +
+			"    Tzait Hacochavim - Geonim 4.61 deg               : 18:23:25\n" +
+			"    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:29\n" +
+			"    Tzait Hacochavim - Geonim 5.88 deg               : 18:30:30\n" +
+			"    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:53\n" +
+			"    Tzait Hacochavim - Geonim 7.083 deg              : 18:36:42\n" +
+			"    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
+			"    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
+			"            Midnight - Mid-night                     :  0:46:44\n"
+		);
+	}
+
+
 	private void verifyZmanim(
 		ZmanimLocation    location,
 		HebrewDate        date,
@@ -1145,8 +1397,10 @@ public class UT_Zmanim {
 		for ( Zmanim zmanim : zmanimForDay ) {
 			for ( Zman zman : zmanim.asList() ) {
 				Calendar zmanTime = zman.getTime();
-				output.append( String.format( "%20s - %-30s: %2d:%02d:%02d\n", zmanim.type.name, zman.name,
-					zmanTime.get( Calendar.HOUR_OF_DAY ), zmanTime.get( Calendar.MINUTE ), zmanTime.get( Calendar.SECOND ) ) );
+				if ( zmanTime != null ) {
+					output.append( String.format( "%20s - %-30s: %2d:%02d:%02d\n", zmanim.type.name, zman.name,
+						zmanTime.get( Calendar.HOUR_OF_DAY ), zmanTime.get( Calendar.MINUTE ), zmanTime.get( Calendar.SECOND ) ) );
+				}
 			}
 		}
 
