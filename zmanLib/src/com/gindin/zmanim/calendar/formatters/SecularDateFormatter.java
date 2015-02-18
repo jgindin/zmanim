@@ -44,13 +44,13 @@ public abstract class SecularDateFormatter {
 
 			case DEFAULT:
 			case LONG:
+			default:
 				if ( null == FORMATTER ) {
 					FORMATTER = new DefaultFormatter();
 				}
 				return FORMATTER;
 		}
 
-		return null;
 	}
 
 	public abstract String format( HebrewDate date );
