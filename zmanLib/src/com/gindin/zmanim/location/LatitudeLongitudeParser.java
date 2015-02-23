@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.location;
+package com.gindin.zmanim.location;
 
 /**
  * Used to parse a string into a latitude or a longitude.

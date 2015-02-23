@@ -4,15 +4,18 @@
 
 package com.gindin.zmanim.android.prefs;
 
+import com.gindin.zmanim.android.R;
+import com.gindin.zmanim.location.LatitudeLongitudeParser;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
-import com.gindin.location.LatitudeLongitudeParser;
-import com.gindin.zmanim.android.R;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * An Android Preference that allows for easy editing of a Latitude or Longitude.

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="android" name="Android">
-      <configuration>
-        <option name="LIBRARY_PROJECT" value="true" />
-        <option name="UPDATE_PROPERTY_FILES" value="true" />
-        <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -19,8 +10,7 @@
     </content>
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="Android 2.3.3 Google APIs" jdkType="Android SDK" />
-    <orderEntry type="library" name="support-v4" level="project" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="ij-annotations" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">

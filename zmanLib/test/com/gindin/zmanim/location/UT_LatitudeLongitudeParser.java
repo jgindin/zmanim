@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.location;
+package com.gindin.zmanim.location;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
