@@ -12,7 +12,7 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.location.ZmanimLocation;
 import com.gindin.zmanim.zman.Zman;
 import com.gindin.zmanim.zman.ZmanFormatter;
-import com.gindin.zmanim.zman.ZmanUtils;
+import com.gindin.zmanim.ZmanUtils;
 import com.gindin.zmanim.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +64,10 @@ public class ZmanimService
 		FORCE_SCHEDULE,
 
 		/** Specified by the Zmanim Activity when it's first created and invoking the ACTIVITY_STARTED action. */
-		SCHEDULE_IF_NECESSARY
+		SCHEDULE_IF_NECESSARY,
+
+		/** Used when there's a ZmanUtils.NotifiedZmanim attached to the intent. */
+		NOTIFIED_ZMANIM_EXTRA
 	}
 
 
@@ -88,12 +91,6 @@ public class ZmanimService
 	 */
 	private static final int                                  DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN = ( 15 * 60 * 1000 );
 
-	/**
-	 * In case the next wakeup is within this amount of time, just fudge it and go now...
-	 */
-	private static final int                                  WAKUP_FUDGE_FACTOR = ( 60 * 1000 );
-
-
 	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
 	// TODO: Inject this
@@ -115,8 +112,11 @@ public class ZmanimService
 	 */
 	private Intent                                            handlingAlarmsFor;
 
+	private ZmanUtils.PreferredZmanTypeLookup                 preferredZmanTypeLookup;
 
-	@Override
+	private ZmanUtils.ZmanNotificationCallback                zmanNotificationCallback;
+
+
 	public void onCreate() {
 		super.onCreate();
 
@@ -137,6 +137,34 @@ public class ZmanimService
 				}
 			}
 		);
+
+		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+		preferredZmanTypeLookup = new ZmanUtils.PreferredZmanTypeLookup() {
+			@Override
+			public String getPreferredZman( final Zmanim.Type type ) {
+				return zmanimSelectionPrefs.getString( type.name, null );
+			}
+		};
+
+
+		zmanNotificationCallback = new ZmanUtils.ZmanNotificationCallback() {
+			@Override
+			public void notifyUser(
+				final Zman nextZman
+			) {
+				notifyUserOfUpcomingZman( nextZman );
+			}
+
+
+			@Override
+			public void scheduleNextCheck(
+				final Calendar  now,
+				final int       timeUntilNextCheck,
+				final Zman      nextZman
+			) {
+				scheduleNextWakeup( timeUntilNextCheck, now );
+			}
+		};
 	}
 
 
@@ -242,55 +270,11 @@ public class ZmanimService
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone( location.getTimeZone() );
 
-			Zman nextZman = determineNextZman( location, now );
-			int nextWakeupDelta = determineNextWakeup( nextZman, now );
-
-			if ( nextWakeupDelta <= 0 ) {
-
-				notifyUserOfUpcomingZman( nextZman );
-
-				nextZman = determineNextZman( location, nextZman.getTime() );
-				nextWakeupDelta = determineNextWakeup( nextZman, now );
-			}
-
-			scheduleNextWakeup( nextWakeupDelta, now );
+			ZmanUtils.nextZmanAction( location, now, getNotifiedZmanim( now ), NEXT_ALARM_CHECK_INTERVAL, DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN,
+				preferredZmanTypeLookup, zmanNotificationCallback );
 		}
 
 		releaseWakefulIntent();
-	}
-
-
-	private Zman determineNextZman(
-		final ZmanimLocation  location,
-		final Calendar        now
-	) {
-
-		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(),
-			Context.MODE_PRIVATE );
-		ZmanUtils.PreferredZmanTypeLookup lookup = new ZmanUtils.PreferredZmanTypeLookup() {
-			@Override
-			public String getPreferredZman( final Zmanim.Type type ) {
-				return zmanimSelectionPrefs.getString( type.name, null );
-			}
-		};
-
-		return ZmanUtils.findNextZman( location, now, lookup );
-	}
-
-
-	private int determineNextWakeup(
-		Zman      nextZman,
-	  Calendar  now
-	) {
-
-		int nextWakeup = ZmanUtils.determineNextWakeup( nextZman, now, NEXT_ALARM_CHECK_INTERVAL, DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN );
-
-		// Make sure that if the next wake up is "soon" that we just go ahead and do it now...
-		if ( nextWakeup < ( WAKUP_FUDGE_FACTOR ) ) {
-			nextWakeup = 0;
-		}
-
-		return nextWakeup;
 	}
 
 
@@ -306,10 +290,33 @@ public class ZmanimService
 		final boolean needPreciseWakeup = ( nextWakeupDelta < NEXT_ALARM_CHECK_INTERVAL );
 
 		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
+		alarmIntent.putExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name(), getNotifiedZmanim( now ) );
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 		alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+	}
+
+
+	@NotNull
+	private ZmanUtils.NotifiedZmanim getNotifiedZmanim( final Calendar now ) {
+
+		ZmanUtils.NotifiedZmanim notifiedZmanim = null;
+		if ( handlingAlarmsFor != null ) {
+			notifiedZmanim = (ZmanUtils.NotifiedZmanim)handlingAlarmsFor.getSerializableExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
+		}
+
+		if ( notifiedZmanim != null ) {
+			if ( !notifiedZmanim.isForDate( now ) ) {
+				notifiedZmanim = null;
+			}
+		}
+
+		if ( notifiedZmanim == null ) {
+			notifiedZmanim = new ZmanUtils.NotifiedZmanim( now );
+		}
+
+		return notifiedZmanim;
 	}
 
 

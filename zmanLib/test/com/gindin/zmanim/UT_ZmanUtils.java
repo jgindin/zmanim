@@ -2,11 +2,13 @@
  * Copyright (c) 2015. Jay R. Gindin
  */
 
-package com.gindin.zmanim.zman;
+package com.gindin.zmanim;
 
 import com.gindin.zmanim.calendar.HebrewCalendar;
 import com.gindin.zmanim.calendar.HebrewDate;
 import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanim.zman.Zmanim;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +71,7 @@ public class UT_ZmanUtils {
 			Zman zman = zmanim.getDefault();
 			Calendar zmanTime = zman.getTime();
 
-			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, lookup );
+			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, new ZmanUtils.NotifiedZmanim( hebrewDate ), lookup );
 			Assert.assertNotNull( "Didn't find nextZman after " + zman.type, nextZman );
 
 			Calendar nextZmanTime = nextZman.getTime();
@@ -86,7 +88,7 @@ public class UT_ZmanUtils {
 		findAfter.setTimeZone( seattle.getTimeZone() );
 		findAfter.set( 2014, Calendar.DECEMBER, 21, 23, 0 );
 
-		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, lookup );
+		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, new ZmanUtils.NotifiedZmanim( findAfter ), lookup );
 		Assert.assertNotNull( nextZman );
 	}
 
