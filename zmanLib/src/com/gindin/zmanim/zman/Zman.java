@@ -111,11 +111,19 @@ public abstract class Zman {
 	/**
 	 * This method is the supposed to be the most convenient way to bridge the Date-based world of the KosherJava API
 	 *  and our need for Calendar-based API.
+	 *
+	 * @return a calendar representing the date & time of this zman; May be null if the zman cannot be calculated.
+	 *  See detailed explanation on top of the {@link net.sourceforge.zmanim.AstronomicalCalendar} as to the particular cases when sunrise,
+	 *  sunset and twilight cannot be calculated.
 	 */
 	protected final Calendar toCalendar(
 		ZmanimCalculator  zmanimCalculator,
 		Date              zmanDate
 		) {
+
+		if ( zmanDate == null ) {
+			return null;
+		}
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeZone( zmanimCalculator.getGeoLocation().getTimeZone() );
