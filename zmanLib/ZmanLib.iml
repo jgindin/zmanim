@@ -26,7 +26,7 @@
     <orderEntry type="library" scope="TEST" name="JUnit 4" level="project" />
     <orderEntry type="library" scope="TEST" name="json-20140107" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="ZmanUtils" />
     <orderEntry type="jdk" jdkName="Android 2.3.3 Google APIs" jdkType="Android SDK" />
     <orderEntry type="library" name="kosherjava" level="project" />
     <orderEntry type="library" name="ij-annotations" level="project" />
