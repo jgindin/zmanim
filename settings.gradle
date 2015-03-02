@@ -1,0 +1,3 @@
+include ':Android'
+include ':ZmanUtils'
+include ':ZmanLib'
