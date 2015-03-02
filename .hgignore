@@ -19,10 +19,10 @@ hg.number
 # Ignore generated files
 ^android/gen/
 ^android/bin/
-^utils/gen/
-^utils/bin/
-^zmanLib/gen/
-^zmanLib/bin/
+^ZmanUtils/gen/
+^ZmanUtils/bin/
+^ZmanLib/gen/
+^ZmanLib/bin/
 
 
 # IntelliJ Files that are per-user and should not be checked in.
