@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidZmanim.iml" filepath="$PROJECT_DIR$/AndroidZmanim.iml" />
       <module fileurl="file://$PROJECT_DIR$/../common/Common.iml" filepath="$PROJECT_DIR$/../common/Common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../zmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/../zmanLib/ZmanLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ZmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/../ZmanLib/ZmanLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ZmanUtils/ZmanUtils.iml" filepath="$PROJECT_DIR$/../ZmanUtils/ZmanUtils.iml" />
     </modules>
   </component>
