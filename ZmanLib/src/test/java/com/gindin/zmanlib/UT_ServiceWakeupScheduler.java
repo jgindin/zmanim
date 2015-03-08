@@ -2,9 +2,8 @@
  * Copyright (c) 2015. Jay R. Gindin
  */
 
-package com.gindin.zmanim;
+package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.ZmanUtils;
 import com.gindin.zmanlib.calendar.Constants;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
