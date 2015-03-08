@@ -14,7 +14,7 @@ import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import java.io.IOException;
 import java.io.OutputStream;

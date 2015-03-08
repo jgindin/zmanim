@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractView;
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewDate;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

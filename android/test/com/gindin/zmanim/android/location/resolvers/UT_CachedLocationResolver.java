@@ -2,7 +2,7 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

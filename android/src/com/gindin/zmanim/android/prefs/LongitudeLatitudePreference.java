@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.prefs;
 
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.location.LatitudeLongitudeParser;
+import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -5,11 +5,11 @@
 package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.location.LatitudeLongitudeParser;
+import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.SharedPreferences;
 import android.location.Location;

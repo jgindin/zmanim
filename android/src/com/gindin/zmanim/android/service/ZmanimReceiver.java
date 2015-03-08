@@ -1,6 +1,6 @@
 package com.gindin.zmanim.android.service;
 
-import com.gindin.zmanim.ZmanUtils;
+import com.gindin.zmanlib.ZmanUtils;
 
 import android.content.Context;
 import android.content.Intent;

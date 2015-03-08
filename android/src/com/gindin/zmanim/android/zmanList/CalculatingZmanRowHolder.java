@@ -6,8 +6,8 @@ package com.gindin.zmanim.android.zmanList;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.ZmanFormatter;
+import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.zman.ZmanFormatter;
 
 import android.os.AsyncTask;
 import android.view.View;

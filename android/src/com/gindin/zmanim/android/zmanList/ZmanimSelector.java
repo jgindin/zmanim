@@ -5,11 +5,11 @@
 package com.gindin.zmanim.android.zmanList;
 
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.ZmanFormatter;
-import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.zman.ZmanFormatter;
+import com.gindin.zmanlib.zman.Zmanim;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

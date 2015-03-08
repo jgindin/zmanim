@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.datePicker;
 
 import com.gindin.eventBus.Event;
 import com.gindin.eventBus.EventHandler;
-import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewDate;
 
 /**
  * Represents that a new date has been selected.

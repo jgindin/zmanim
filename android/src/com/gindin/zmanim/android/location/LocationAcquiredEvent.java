@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.location;
 
 import com.gindin.eventBus.Event;
 import com.gindin.eventBus.EventHandler;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

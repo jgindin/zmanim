@@ -10,7 +10,7 @@ import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviderPreferences;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 import android.content.Intent;

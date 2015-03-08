@@ -6,8 +6,8 @@ package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractMvpModule;
 import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
-import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
+import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
 
 import android.support.v4.app.FragmentActivity;
 

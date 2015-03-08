@@ -9,11 +9,11 @@ import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.formatters.HebrewDateFormatter;
-import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
+import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.Presenter;
-import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanlib.zman.Zman;
 
 /**
  * Deals with presenting to the user a single day's view of relevant Zmanim. Because it is for a single day,

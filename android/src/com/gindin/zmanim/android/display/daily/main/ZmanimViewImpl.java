@@ -8,10 +8,10 @@ import com.gindin.mvp.AbstractView;
 import com.gindin.zmanim.android.zmanList.ZmanRowHolder;
 import com.gindin.zmanim.android.zmanList.ZmanimListAdapter;
 import com.gindin.zmanim.android.zmanList.ZmanimSelector;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;

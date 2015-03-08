@@ -9,11 +9,11 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.ZmanFormatter;
-import com.gindin.zmanim.ZmanUtils;
-import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.zman.ZmanFormatter;
+import com.gindin.zmanlib.ZmanUtils;
+import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
 
 import android.app.*;

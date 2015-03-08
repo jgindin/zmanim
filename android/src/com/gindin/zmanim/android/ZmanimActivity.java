@@ -24,9 +24,9 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.android.service.ServiceStartedEvent;
 import com.gindin.zmanim.android.service.ZmanimService;
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 import android.app.Dialog;

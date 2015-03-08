@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.location;
 
 
 import com.gindin.util.LogUtils;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
 import android.location.Location;

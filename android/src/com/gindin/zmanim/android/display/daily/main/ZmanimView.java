@@ -5,9 +5,9 @@
 package com.gindin.zmanim.android.display.daily.main;
 
 import com.gindin.mvp.View;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
 
 /**
  * Knows how to render a set of zmanim for a single day and notify the presenter when the user initiates an interaction

@@ -6,7 +6,7 @@ package com.gindin.zmanim.android.prefs;
 
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.ZmanimActivity;
-import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
 import android.content.SharedPreferences;

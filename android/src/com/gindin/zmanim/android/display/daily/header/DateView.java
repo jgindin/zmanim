@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.View;
-import com.gindin.zmanim.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewDate;
 
 /**
  * Knows how to render the Hebrew & Secular dates, and notify the presenter when the user initiates an interaction

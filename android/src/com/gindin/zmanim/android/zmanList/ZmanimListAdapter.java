@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.zmanList;
 
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.zman.Zman;
+import com.gindin.zmanlib.zman.Zman;
 
 import android.content.Context;
 import android.view.LayoutInflater;

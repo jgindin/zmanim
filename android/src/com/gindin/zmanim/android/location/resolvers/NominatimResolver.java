@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.location.ZmanimLocation;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONObject;
 
 import android.content.SharedPreferences;

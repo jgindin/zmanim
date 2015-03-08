@@ -10,7 +10,7 @@ import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.zmanList.ZmanimSelector;
-import com.gindin.zmanim.zman.ZmanFormatter;
+import com.gindin.zmanlib.zman.ZmanFormatter;
 
 import android.content.Context;
 import android.content.SharedPreferences;

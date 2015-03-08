@@ -4,13 +4,13 @@
 
 package com.gindin.zmanim;
 
-import com.gindin.zmanim.calendar.HebrewCalendar;
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.formatters.SecularDateFormatter;
-import com.gindin.zmanim.location.ZmanimLocation;
-import com.gindin.zmanim.zman.Zman;
-import com.gindin.zmanim.zman.ZmanFormatter;
-import com.gindin.zmanim.zman.Zmanim;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.zman.ZmanFormatter;
+import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Assert;
 import org.junit.Test;
 
