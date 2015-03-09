@@ -8,7 +8,7 @@
 -->
 <project name="AndroidZmanim_CustomRules">
 
-	<property name="about.html" value="assets/com/gindin/zmanim/android/about.html"/>
+	<property name="about.html" value="src/main/assets/com/gindin/zmanim/android/about.html"/>
 	<import file="../common/versioning_rules.xml" optional="false"/>
 
 

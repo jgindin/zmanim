@@ -92,8 +92,5 @@
     </option>
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
-  <component name="TaskProjectConfiguration">
-    <server type="YouTrack" url="https://zmanim.myjetbrains.com/youtrack" />
-  </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
 </project>
