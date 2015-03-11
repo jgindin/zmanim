@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Android/AndroidZmanim.iml" filepath="$PROJECT_DIR$/Android/AndroidZmanim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/Common.iml" filepath="$PROJECT_DIR$/common/Common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/ZmanLib/ZmanLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" filepath="$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" />
+    </modules>
+  </component>
+</project>
