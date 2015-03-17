@@ -1,7 +1,3 @@
 <component name="CopyrightManager">
-  <settings default="Gindin">
-    <module2copyright>
-      <element module="All" copyright="Gindin" />
-    </module2copyright>
-  </settings>
+  <settings default="" />
 </component>

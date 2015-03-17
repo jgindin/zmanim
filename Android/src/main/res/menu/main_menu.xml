@@ -4,7 +4,17 @@
   ~ Copyright (c) 2014. Jay R. Gindin
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools" 
+	tools:context=".ZmanimActivity"
+	android:orderInCategory="100"
+>
+<!-- 
+should this be included in the menu above?
+	app:showAsAction="never"
+-->
 	<item
 		android:id="@+id/refresh"
 		android:title="@string/refresh_menu"
