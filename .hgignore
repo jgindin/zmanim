@@ -17,8 +17,8 @@ hg.number
 .*.swp$
 
 # Ignore generated files
-^android/gen/
-^android/bin/
+^Android/gen/
+^Android/bin/
 ^ZmanUtils/gen/
 ^ZmanUtils/bin/
 ^ZmanLib/gen/
