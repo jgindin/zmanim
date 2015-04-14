@@ -4,6 +4,7 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
     <file type="web" url="file:///home2/jgindin/src/gindin/MIGRATION/zmanim" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">

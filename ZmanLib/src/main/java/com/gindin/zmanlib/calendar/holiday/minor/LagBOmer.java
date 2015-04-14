@@ -4,10 +4,11 @@
 
 package com.gindin.zmanlib.calendar.holiday.minor;
 
-import com.gindin.zmanim.calendar.HebrewDate;
-import com.gindin.zmanim.calendar.HebrewMonth;
-import com.gindin.zmanim.calendar.holiday.Details;
-import com.gindin.zmanim.calendar.holiday.Observance;
+
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewMonth;
+import com.gindin.zmanlib.calendar.holiday.Details;
+import com.gindin.zmanlib.calendar.holiday.Observance;
 
 /**
  *

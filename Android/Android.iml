@@ -91,5 +91,7 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="KosherJava" level="project" />
     <orderEntry type="library" exported="" name="FlurryAgent" level="project" />
+    <orderEntry type="module" module-name="ZmanLib" exported="" />
+    <orderEntry type="module" module-name="ZmanUtils" exported="" />
   </component>
 </module>
