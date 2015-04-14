@@ -8,10 +8,10 @@
         <option name="gradleJvm" value="JDK 1.7" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Android" />
-            <option value="$PROJECT_DIR$/ZmanLib" />
-            <option value="$PROJECT_DIR$/ZmanUtils" />
+            <option value="/home2/jgindin/src/gindin/MIGRATION/zmanim" />
+            <option value="/home2/jgindin/src/gindin/MIGRATION/zmanim/Android" />
+            <option value="/home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanLib" />
+            <option value="/home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanUtils" />
           </set>
         </option>
       </GradleProjectSettings>
