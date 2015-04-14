@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android/AndroidZmanim.iml" filepath="$PROJECT_DIR$/Android/AndroidZmanim.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ZmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/ZmanLib/ZmanLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" filepath="$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" />
+      <module fileurl="file:///home2/jgindin/src/gindin/MIGRATION/zmanim/Android/Android.iml" filepath="/home2/jgindin/src/gindin/MIGRATION/zmanim/Android/Android.iml" />
+      <module fileurl="file:///home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanLib/ZmanLib.iml" filepath="/home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanLib/ZmanLib.iml" />
+      <module fileurl="file:///home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanUtils/ZmanUtils.iml" filepath="/home2/jgindin/src/gindin/MIGRATION/zmanim/ZmanUtils/ZmanUtils.iml" />
     </modules>
   </component>
 </project>

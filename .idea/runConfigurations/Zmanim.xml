@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Zmanim" type="AndroidRunConfigurationType" factoryName="Android Application">
-    <module name="AndroidZmanim" />
+    <module name="Android" />
     <option name="ACTIVITY_CLASS" value="com.gindin.zmanim.android.ZmanimActivity" />
     <option name="MODE" value="specific_activity" />
     <option name="DEPLOY" value="true" />
