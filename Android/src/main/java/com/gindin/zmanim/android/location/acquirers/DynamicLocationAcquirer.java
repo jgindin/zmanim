@@ -151,10 +151,17 @@ public class DynamicLocationAcquirer
 		ZmanimLocation location;
 		if ( bestLocation.first != null ) {
 
-			location = new ZmanimLocation.Builder()
-				.from( bestLocation.first )
+			ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+				.fromProvider( bestLocation.first.getProvider() )
 				.inTimeZone( getTimeZoneFromPrefs() )
-				.build();
+				.at( bestLocation.first.getTime() )
+				.atLatitude( bestLocation.first.getLatitude() )
+				.atLongitude( bestLocation.first.getLongitude() );
+
+			if ( bestLocation.first.hasAccuracy() ) builder.withAccuracy( bestLocation.first.getAccuracy() );
+			if ( bestLocation.first.hasAltitude() ) builder.atElevation( bestLocation.first.getAltitude() );
+
+			location = builder.build();
 		}
 		else {
 
@@ -190,10 +197,17 @@ public class DynamicLocationAcquirer
 
 		locationManager.saveLastLocation( newLocation );
 
-		ZmanimLocation location = new ZmanimLocation.Builder()
-			.from( newLocation )
+		ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+			.fromProvider( newLocation.getProvider() )
 			.inTimeZone( getTimeZoneFromPrefs() )
-			.build();
+			.at( newLocation.getTime() )
+			.atLatitude( newLocation.getLatitude() )
+			.atLongitude( newLocation.getLongitude() );
+
+		if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
+		if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
+
+		ZmanimLocation location = builder.build();
 
 		fireLocationAcquiredEvent( location, false );
 	}

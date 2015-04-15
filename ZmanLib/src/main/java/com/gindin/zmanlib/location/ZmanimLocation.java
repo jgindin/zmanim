@@ -6,9 +6,6 @@ package com.gindin.zmanlib.location;
 
 import net.sourceforge.zmanim.util.GeoLocation;
 import org.jetbrains.annotations.NotNull;
-
-import android.location.Address;
-import android.location.Location;
 import org.json.JSONException;
 
 import java.io.*;
@@ -99,30 +96,6 @@ public class ZmanimLocation
 				.withAccuracy( source.accuracy );
 		}
 
-		public Builder resolvedTo( Address address ) {
-			if ( address == null ) {
-				return this;
-			}
-
-			return this
-				.locationName( addressToLocationName( address ) )
-				.atLatitude( address.getLatitude() )
-				.atLongitude( address.getLongitude() );
-		}
-
-		public Builder from( Location location ) {
-			this
-				.fromProvider( location.getProvider() )
-				.at( location.getTime() )
-				.atLatitude( location.getLatitude() )
-				.atLongitude( location.getLongitude() );
-
-			if ( location.hasAccuracy() ) withAccuracy( location.getAccuracy() );
-			if ( location.hasAltitude() ) atElevation( location.getAltitude() );
-
-			return this;
-		}
-
 
 		public ZmanimLocation invalidLocation() {
 			return INVALID_LOCATION;
@@ -141,7 +114,7 @@ public class ZmanimLocation
 
 
 	/** When the location name is unknown, use this, and an appropriate substitution will be made. */
-	private static final String                               UNKNOWN_LOCATION = " _unk_ ";
+	public static final String                                UNKNOWN_LOCATION = " _unk_ ";
 
 	private static final String                               ZMANIM_PROVIDER = "Zmanim";
 
@@ -310,19 +283,6 @@ public class ZmanimLocation
 	}
 
 
-	public Location toLocation() {
-
-		Location location = new Location( providerName );
-		location.setLatitude( getLatitude() );
-		location.setLongitude( getLongitude() );
-		location.setTime( locationTime );
-		location.setAccuracy( accuracy );
-		location.setAltitude( getElevation() );
-
-		return location;
-	}
-
-
 	/**
 	 * Writes this zmanim location to the specified output. Does NOT close the stream or perform any other operation to the stream.
 	 *
@@ -365,67 +325,9 @@ public class ZmanimLocation
 	}
 
 
-	private static String toLatLongString( double latitude, double longitude ) {
+	public static String toLatLongString( double latitude, double longitude ) {
 		return getLatitudeString( latitude ) + " lat; " + getLongitudeString( longitude ) + " long";
 	}
 
-
-	private static String addressToLocationName( Address address ) {
-
-		String locationString = null;
-
-		if ( address == null ) {
-			return UNKNOWN_LOCATION;
-		}
-
-		final String adminArea = address.getAdminArea();
-		final String locality = address.getLocality();
-		final String postalCode = address.getPostalCode();
-		final int maxAddressLineIndex = address.getMaxAddressLineIndex();
-		final String country = address.getCountryName();
-
-		// There are cases where locality is null. No kiddin'...if you use the StaticLocationProvider, and choose
-		//  "Brooklyn, New York", the locality comes back null. Go figure...
-		//  (Well, that is the case, except that when the StaticLocationProvider goes to look up what the location is
-		//    it now stores the returned Address as the Extras in the Location. And, for some reason, *that* Address
-		//    comes back properly. Oh well...)
-		if ( ( null != locality ) && ( null != adminArea ) ) {
-			locationString = locality + ", " + adminArea;
-		}
-		else if ( null == locality ) {
-
-			if ( maxAddressLineIndex > 0 ) {
-
-				// Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
-				for ( int index = 0; index < maxAddressLineIndex; index++ ) {
-					String addrLine = address.getAddressLine( index );
-					if ( null == addrLine ) continue;
-
-					if ( ( null != postalCode ) && addrLine.contains( postalCode ) ) {
-						locationString = addrLine.substring( 0, addrLine.indexOf( postalCode ) );
-						break;
-					}
-				}
-			}
-			else if ( null != country ) {
-				// Yup. I forced a usage of 55.0, -1.6 and the only info we get back is "United Kingdom".
-				locationString = country;
-			}
-
-		}
-		else if ( null != country ) {
-			locationString = locality + ", " + country;
-		}
-		else {
-			locationString = locality;
-		}
-
-		// Final fallback...if we got nothing then just use the lat & long...
-		if ( null == locationString ) {
-			locationString = toLatLongString( address.getLatitude(), address.getLongitude() );
-		}
-
-		return locationString;
-	}
 
 }  // End of ZmanimLocation class

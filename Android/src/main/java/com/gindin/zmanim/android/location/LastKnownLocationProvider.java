@@ -38,8 +38,7 @@ public class LastKnownLocationProvider {
 		try {
 			input = context.openFileInput( NAME );
 			ZmanimLocation location = ZmanimLocation.load( input );
-
-			lastKnownLocation = location.toLocation();
+			lastKnownLocation = toLocation( location );
 		}
 		catch ( Exception e ) {
 			// Oh well, we can't read the last location, so...we just will have to deal ...
@@ -72,7 +71,17 @@ public class LastKnownLocationProvider {
 		FileOutputStream output = null;
 		try {
 			output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
-			ZmanimLocation zmanimLocation = new ZmanimLocation.Builder().from( newLocation ).build();
+
+			ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+				.fromProvider( newLocation.getProvider() )
+				.at( newLocation.getTime() )
+				.atLatitude( newLocation.getLatitude() )
+				.atLongitude( newLocation.getLongitude() );
+
+			if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
+			if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
+
+			ZmanimLocation zmanimLocation = builder.build();
 			zmanimLocation.save( output );
 		}
 		catch ( Exception e ) {
@@ -93,5 +102,19 @@ public class LastKnownLocationProvider {
 			}
 		}
 	}
+
+
+	private Location toLocation( ZmanimLocation zmanimLocation ) {
+
+		Location location = new Location( zmanimLocation.providerName );
+		location.setLatitude( zmanimLocation.getLatitude() );
+		location.setLongitude( zmanimLocation.getLongitude() );
+		location.setTime( zmanimLocation.locationTime );
+		location.setAccuracy( zmanimLocation.accuracy );
+		location.setAltitude( zmanimLocation.getElevation() );
+
+		return location;
+	}
+
 
 } // End of LocationProvider class

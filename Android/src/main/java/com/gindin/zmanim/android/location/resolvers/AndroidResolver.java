@@ -61,7 +61,9 @@ class AndroidResolver
 
 				return new ZmanimLocation.Builder()
 					.from( location )
-					.resolvedTo( address )
+					.locationName( addressToLocationName( address ) )
+					.atLatitude( address.getLatitude() )
+					.atLongitude( address.getLongitude() )
 					.build();
 			}
 		}
@@ -92,7 +94,9 @@ class AndroidResolver
 			if ( ( null != addresses ) && !addresses.isEmpty() ) {
 				final Address address = addresses.get( 0 );
 				return new ZmanimLocation.Builder()
-					.resolvedTo( address )
+					.locationName( addressToLocationName( address ) )
+					.atLatitude( address.getLatitude() )
+					.atLongitude( address.getLongitude() )
 					.inTimeZone( location.getTimeZone() )
 					.build();
 			}

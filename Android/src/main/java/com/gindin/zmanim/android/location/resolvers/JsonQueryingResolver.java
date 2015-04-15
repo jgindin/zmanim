@@ -139,7 +139,9 @@ abstract class JsonQueryingResolver
 
 			return new ZmanimLocation.Builder()
 				.from( zmanimLocation )
-				.resolvedTo( address )
+				.locationName( addressToLocationName( address ) )
+				.atLatitude( address.getLatitude() )
+				.atLongitude( address.getLongitude() )
 				.build();
 		}
 		catch ( Exception e ) {
