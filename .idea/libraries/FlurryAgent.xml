@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="FlurryAgent">
     <CLASSES>
-      <root url="jar:///home2/jgindin/src/gindin/MIGRATION/zmanim/Android/libs/FlurryAgent.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Android/libs/FlurryAgent.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

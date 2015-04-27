@@ -5,7 +5,9 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
-    <file type="web" url="file:///home2/jgindin/src/gindin/MIGRATION/zmanim" />
+    <file type="web" url="file://$PROJECT_DIR$/Android" />
+    <file type="web" url="file://$PROJECT_DIR$/ZmanLib" />
+    <file type="web" url="file://$PROJECT_DIR$/ZmanUtils" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />

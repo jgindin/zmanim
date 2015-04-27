@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="ij-annotations">
     <CLASSES>
-      <root url="jar:///home2/jgindin/src/gindin/MIGRATION/zmanim/Android/libs/ij-annotations.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Android/libs/ij-annotations.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
