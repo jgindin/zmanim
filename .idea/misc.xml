@@ -5,9 +5,6 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
-    <file type="web" url="file://$PROJECT_DIR$/Android" />
-    <file type="web" url="file://$PROJECT_DIR$/ZmanLib" />
-    <file type="web" url="file://$PROJECT_DIR$/ZmanUtils" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -24,5 +21,8 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="TaskProjectConfiguration">
+    <server type="YouTrack" url="https://zmanim.myjetbrains.com/youtrack" />
   </component>
 </project>

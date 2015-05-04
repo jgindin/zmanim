@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android/Android.iml" filepath="$PROJECT_DIR$/Android/Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BirkatAmazon/BirkatAmazon.iml" filepath="$PROJECT_DIR$/BirkatAmazon/BirkatAmazon.iml" />
+      <module fileurl="file:///home2/jgindin/src/gindin/zmanim/zmanim/ZehutYosef/ZehutYosef.iml" filepath="/home2/jgindin/src/gindin/zmanim/zmanim/ZehutYosef/ZehutYosef.iml" />
       <module fileurl="file://$PROJECT_DIR$/ZmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/ZmanLib/ZmanLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" filepath="$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/zmanim.iml" filepath="$PROJECT_DIR$/zmanim.iml" />

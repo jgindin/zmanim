@@ -1,4 +1,4 @@
 include ':ZmanUtils'
-include ':BirkatAmazon'
 include ':ZmanLib'
 include ':Android'
+include ':ZehutYosef'

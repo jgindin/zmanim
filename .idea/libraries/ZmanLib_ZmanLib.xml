@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ZmanLib.ZmanLib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ZmanLib/build/libs/ZmanLib.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
