@@ -6,12 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ZehutYosefActivity
-	extends ActionBarActivity
+	extends AppCompatActivity
 	implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	/**
@@ -20,9 +23,44 @@ public class ZehutYosefActivity
 	private NavigationDrawerFragment                          navigationDrawerFragment;
 
 	/**
-	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+	 * Used to store the last screen title. For use in {@link #restoreActionBar(CharSequence)}.
 	 */
 	private CharSequence                                      title;
+
+	private final List<Integer>                               sections;
+
+	/*
+
+                TextView text = (TextView)findViewById( R.id.text );
+
+                try {
+                        InputStream inputStream = getResources().openRawResource( R.raw.birkat_ammazon );
+                        BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream ) );
+
+                        StringBuilder buffer = new StringBuilder();
+                        String line;
+                        while ( ( line = reader.readLine() ) != null ) {
+                                buffer.append( line ).append( "\n" );
+                        }
+
+                        text.setText( buffer );
+                }
+                catch ( IOException e ) {
+                        e.printStackTrace();
+                }
+
+
+	 */
+
+
+	@SuppressWarnings( "AutoBoxing" )
+	public ZehutYosefActivity() {
+
+		sections = new ArrayList<>();
+		sections.add( R.string.title_birkat_amazon );
+		sections.add( R.string.mincha );
+		sections.add( R.string.arvit );
+	}
 
 
 	@Override
@@ -36,7 +74,8 @@ public class ZehutYosefActivity
 		// Set up the drawer.
 		navigationDrawerFragment.setUp(
 			R.id.navigation_drawer,
-			(DrawerLayout)findViewById( R.id.drawer_layout )
+			(DrawerLayout)findViewById( R.id.drawer_layout ),
+			sections
 		);
 	}
 
@@ -51,26 +90,16 @@ public class ZehutYosefActivity
 	}
 
 
-	public void onSectionAttached( int number ) {
-		switch ( number ) {
-			case 1:
-				title = getString( R.string.title_section1 );
-				break;
-			case 2:
-				title = getString( R.string.title_section2 );
-				break;
-			case 3:
-				title = getString( R.string.title_section3 );
-				break;
-		}
+	@Override
+	public void showGlobalContextActionBar() {
+		restoreActionBar( getString( R.string.app_name ) );
 	}
 
 
-	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
-		actionBar.setDisplayShowTitleEnabled( true );
-		actionBar.setTitle( title );
+	void onSectionAttached( int number ) {
+
+		//noinspection AutoUnboxing
+		title = getString( sections.get( number - 1 ) );
 	}
 
 
@@ -81,7 +110,7 @@ public class ZehutYosefActivity
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
 			getMenuInflater().inflate( R.menu.zehut_yosef, menu );
-			restoreActionBar();
+			restoreActionBar( title );
 			return true;
 		}
 		return super.onCreateOptionsMenu( menu );
@@ -102,6 +131,16 @@ public class ZehutYosefActivity
 
 		return super.onOptionsItemSelected( item );
 	}
+
+
+	private void restoreActionBar( CharSequence actionBarTitle ) {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
+		actionBar.setDisplayShowTitleEnabled( true );
+		actionBar.setTitle( actionBarTitle );
+	}
+
+
 
 
 	/**
@@ -145,8 +184,7 @@ public class ZehutYosefActivity
 		@Override
 		public void onAttach( Activity activity ) {
 			super.onAttach( activity );
-			( (ZehutYosefActivity)activity ).onSectionAttached(
-				getArguments().getInt( ARG_SECTION_NUMBER ) );
+			( (ZehutYosefActivity)activity ).onSectionAttached( getArguments().getInt( ARG_SECTION_NUMBER ) );
 		}
 	}
 
