@@ -1,13 +1,15 @@
 package com.gindin.zehutyosef;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RawRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,39 +29,15 @@ public class ZehutYosefActivity
 	 */
 	private CharSequence                                      title;
 
-	private final List<Integer>                               sections;
-
-	/*
-
-                TextView text = (TextView)findViewById( R.id.text );
-
-                try {
-                        InputStream inputStream = getResources().openRawResource( R.raw.birkat_ammazon );
-                        BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream ) );
-
-                        StringBuilder buffer = new StringBuilder();
-                        String line;
-                        while ( ( line = reader.readLine() ) != null ) {
-                                buffer.append( line ).append( "\n" );
-                        }
-
-                        text.setText( buffer );
-                }
-                catch ( IOException e ) {
-                        e.printStackTrace();
-                }
+	private final List<Section>                               sections;
 
 
-	 */
 
 
 	@SuppressWarnings( "AutoBoxing" )
 	public ZehutYosefActivity() {
 
 		sections = new ArrayList<>();
-		sections.add( R.string.title_birkat_amazon );
-		sections.add( R.string.mincha );
-		sections.add( R.string.arvit );
 	}
 
 
@@ -68,24 +46,36 @@ public class ZehutYosefActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_zehut_yosef );
 
+		sections.add( new Section( getString( R.string.title_birkat_amazon ), R.raw.birkat_ammazon ) );
+		sections.add( new Section( getString( R.string.mincha ), R.raw.birkat_ammazon ) );
+		sections.add( new Section( getString( R.string.arvit ), R.raw.birkat_ammazon ) );
+
 		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
 		title = getTitle();
+
+		List<String> sectionNames = new ArrayList<>();
+		for ( Section section : sections ) {
+			sectionNames.add( section.title );
+		}
 
 		// Set up the drawer.
 		navigationDrawerFragment.setUp(
 			R.id.navigation_drawer,
 			(DrawerLayout)findViewById( R.id.drawer_layout ),
-			sections
+			sectionNames
 		);
 	}
 
 
 	@Override
 	public void onNavigationDrawerItemSelected( int position ) {
+
 		// update the main content by replacing fragments
+		TextViewerFragment viewerFragment = sections.get( position ).getViewerFragment();
+
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
-			.replace( R.id.container, PlaceholderFragment.newInstance( position + 1 ) )
+			.replace( R.id.container, viewerFragment )
 			.commit();
 	}
 
@@ -96,10 +86,10 @@ public class ZehutYosefActivity
 	}
 
 
-	void onSectionAttached( int number ) {
+	void onSectionAttached( String sectionTitle ) {
 
 		//noinspection AutoUnboxing
-		title = getString( sections.get( number - 1 ) );
+		title = sectionTitle;
 	}
 
 
@@ -142,50 +132,36 @@ public class ZehutYosefActivity
 
 
 
+	private static class Section {
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment
-		extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this fragment.
-		 */
-		private static final String ARG_SECTION_NUMBER = "section_number";
+		@NonNull
+		private final String                                    title;
 
+		@RawRes
+		private final int                                       textResourceId;
 
-		/**
-		 * Returns a new instance of this fragment for the given section number.
-		 */
-		public static PlaceholderFragment newInstance( int sectionNumber ) {
-			PlaceholderFragment fragment = new PlaceholderFragment();
-			Bundle args = new Bundle();
-			args.putInt( ARG_SECTION_NUMBER, sectionNumber );
-			fragment.setArguments( args );
-			return fragment;
-		}
+		@Nullable
+		private TextViewerFragment                              viewerFragment;
 
 
-		public PlaceholderFragment() {
-		}
-
-
-		@Override
-		public View onCreateView(
-			LayoutInflater inflater,
-			ViewGroup container,
-			Bundle savedInstanceState
+		Section(
+			@NonNull  final String  title,
+			@RawRes   final int     textResourceId
 		) {
-			View rootView = inflater.inflate( R.layout.fragment_zehut_yosef, container, false );
-			return rootView;
+			this.title = title;
+			this.textResourceId = textResourceId;
 		}
 
 
-		@Override
-		public void onAttach( Activity activity ) {
-			super.onAttach( activity );
-			( (ZehutYosefActivity)activity ).onSectionAttached( getArguments().getInt( ARG_SECTION_NUMBER ) );
+		TextViewerFragment getViewerFragment() {
+
+			if ( viewerFragment == null ) {
+				viewerFragment = TextViewerFragment.newInstance( title, textResourceId );
+			}
+
+			return viewerFragment;
 		}
 	}
+
 
 }

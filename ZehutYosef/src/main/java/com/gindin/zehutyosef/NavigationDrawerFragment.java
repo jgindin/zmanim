@@ -80,8 +80,6 @@ public class NavigationDrawerFragment
 			fromSavedInstanceState = true;
 		}
 
-		// Select either the default item (0) or the last selected item.
-		selectItem( currentSelectedPosition );
 	}
 
 
@@ -126,19 +124,13 @@ public class NavigationDrawerFragment
 	 *
 	 * @param fragmentId   The android:id of this fragment in its activity's layout.
 	 * @param drawerLayout The DrawerLayout containing this fragment's UI.
-	 * @param sectionIdentifiers List of the identifiers of the sections that will be displayed.
+	 * @param sectionNames The names of the sections to be displayed.
 	 */
 	public void setUp(
 		int                 fragmentId,
 		DrawerLayout        drawerLayout,
-		final List<Integer> sectionIdentifiers
+		final List<String>  sectionNames
 	) {
-
-		String[] sectionNames = new String[ sectionIdentifiers.size() ];
-		for ( int i = 0; i < sectionNames.length; i++ ) {
-			//noinspection AutoUnboxing
-			sectionNames[i] = getString( sectionIdentifiers.get( i ) );
-		}
 
 		drawerListView.setAdapter( new ArrayAdapter<>(
 			getActionBar().getThemedContext(),
@@ -154,49 +146,15 @@ public class NavigationDrawerFragment
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		this.drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
-		// set up the drawer's list view with items and click listener
 
+		// set up the drawer's list view with items and click listener
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled( true );
 		actionBar.setHomeButtonEnabled( true );
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
-		drawerToggle = new ActionBarDrawerToggle(
-			getActivity(),                                  /* host Activity */
-			NavigationDrawerFragment.this.drawerLayout,     /* DrawerLayout object */
-			R.string.navigation_drawer_open,                       /* "open drawer" description for accessibility */
-			R.string.navigation_drawer_close                       /* "close drawer" description for accessibility */
-		) {
-			@Override
-			public void onDrawerClosed( View drawerView ) {
-				super.onDrawerClosed( drawerView );
-				if ( !isAdded() ) {
-					return;
-				}
-
-				getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-			}
-
-
-			@Override
-			public void onDrawerOpened( View drawerView ) {
-				super.onDrawerOpened( drawerView );
-				if ( !isAdded() ) {
-					return;
-				}
-
-				if ( !userLearnedDrawer ) {
-					// The user manually opened the drawer; store this flag to prevent auto-showing
-					// the navigation drawer automatically in the future.
-					userLearnedDrawer = true;
-					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-					sp.edit().putBoolean( PREF_USER_LEARNED_DRAWER, true ).apply();
-				}
-
-				getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-			}
-		};
+		drawerToggle = new NavBarDrawerToggle();
 
 		// If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
 		// per the navigation drawer design guidelines.
@@ -213,6 +171,9 @@ public class NavigationDrawerFragment
 		} );
 
 		this.drawerLayout.setDrawerListener( drawerToggle );
+
+		// Select either the default item (0) or the last selected item.
+		selectItem( currentSelectedPosition );
 	}
 
 
@@ -221,9 +182,11 @@ public class NavigationDrawerFragment
 		if ( drawerListView != null ) {
 			drawerListView.setItemChecked( position, true );
 		}
+
 		if ( drawerLayout != null ) {
 			drawerLayout.closeDrawer( fragmentContainerView );
 		}
+
 		if ( drawerCallbacks != null ) {
 			drawerCallbacks.onNavigationDrawerItemSelected( position );
 		}
@@ -313,5 +276,46 @@ public class NavigationDrawerFragment
 		 * just what's in the current screen.
 		 */
 		void showGlobalContextActionBar();
+	}
+
+
+
+	private class NavBarDrawerToggle
+		extends ActionBarDrawerToggle {
+
+		NavBarDrawerToggle() {
+			super( NavigationDrawerFragment.this.getActivity(), NavigationDrawerFragment.this.drawerLayout,
+				R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+		}
+
+
+		@Override
+		public void onDrawerClosed( View drawerView ) {
+			super.onDrawerClosed( drawerView );
+			if ( !isAdded() ) {
+				return;
+			}
+
+			getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+		}
+
+
+		@Override
+		public void onDrawerOpened( View drawerView ) {
+			super.onDrawerOpened( drawerView );
+			if ( !isAdded() ) {
+				return;
+			}
+
+			if ( !userLearnedDrawer ) {
+				// The user manually opened the drawer; store this flag to prevent auto-showing
+				// the navigation drawer automatically in the future.
+				userLearnedDrawer = true;
+				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+				sp.edit().putBoolean( PREF_USER_LEARNED_DRAWER, true ).apply();
+			}
+
+			getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+		}
 	}
 }
