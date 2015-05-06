@@ -1,14 +1,15 @@
 <resources>
 	<string name="app_name">Zehut Yosef</string>
 
-	<string name="title_birkat_amazon">Birkat Ammazon</string>
+	<string name="birkat_amazon">Birkat Ammazon</string>
+	<string name="meen_shalosh">Me\'en Shalosh</string>
 	<string name="mincha">Mincha</string>
 	<string name="arvit">Arvit</string>
 
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="action_example">Example action</string>
+	<string name="action_example" translatable="false">Example action</string>
 
 	<string name="action_settings">Settings</string>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Zehut Yosef</string>
+	<string name="arvit">ערבית</string>
+	<string name="mincha">מנחה</string>
+	<string name="meen_shalosh">מעין שלש</string>
+	<string name="birkat_amazon">ברכת המזון</string>
+</resources>

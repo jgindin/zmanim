@@ -46,9 +46,10 @@ public class ZehutYosefActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_zehut_yosef );
 
-		sections.add( new Section( getString( R.string.title_birkat_amazon ), R.raw.birkat_ammazon ) );
-		sections.add( new Section( getString( R.string.mincha ), R.raw.birkat_ammazon ) );
+		sections.add( new Section( getString( R.string.mincha ), R.raw.mincha ) );
 		sections.add( new Section( getString( R.string.arvit ), R.raw.birkat_ammazon ) );
+		sections.add( new Section( getString( R.string.birkat_amazon ), R.raw.birkat_ammazon ) );
+		sections.add( new Section( getString( R.string.meen_shalosh ), R.raw.meen_shalosh ) );
 
 		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
 		title = getTitle();
