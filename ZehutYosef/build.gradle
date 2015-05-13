@@ -1,16 +1,24 @@
 import org.moallemi.gradle.internal.VersionCodeType
+import java.text.DateFormat
 
 apply plugin: 'com.android.application'
 apply plugin: 'org.moallemi.advanced-build-version'
 apply from: 'zehut-yosef.gradle'
 
 
+// These methods inspired from https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij
 def hgVersion() {
   def hgVersion = 'hg log --limit 1 --template \'{node|short}\''.execute().text.trim();
   print( hgVersion )
 
   return "\"" + hgVersion + "\""
 }
+
+def buildTime() {
+    def DateFormat df = DateFormat.getDateTimeInstance()
+    df.setTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+    return "\"" + df.format( new Date() ) + "\"";
+  }
 
 
 advancedVersioning {
@@ -46,16 +54,21 @@ android {
 
   buildTypes {
 
+    // Adding fields to the BuildConfig inspired by http://toastdroid.com/2014/03/28/customizing-your-build-with-gradle/
+
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
       signingConfig signingConfigs.release
-      buildConfigField "String", "HG_VERSION", hgVersion()
+      buildConfigField "String", "HG_VERSION", "${hgVersion()}"
+      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
     }
 
     debug {
-      buildConfigField "String", "HG_VERSION", hgVersion()
+      buildConfigField "String", "HG_VERSION", "${hgVersion()}"
+      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
     }
+
   }
 }
 
