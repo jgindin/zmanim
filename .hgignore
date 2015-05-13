@@ -48,3 +48,10 @@ var/
 
 # Ignore local property files
 local.properties
+
+# Sensitive files which are symlinked in, but NEVER committed
+ common/flurry.properties
+ common/jay-gindin-android-apps.keystore
+ common/ProjectApiKey.txt
+ ZehutYosef/zehut-yosef.gradle
+
