@@ -3,6 +3,7 @@ package com.gindin.zehutyosef;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -70,10 +71,20 @@ public class NavigationDrawerFragment
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 
-		// Read in the flag indicating whether or not the user has demonstrated awareness of the
-		// drawer. See PREF_USER_LEARNED_DRAWER for details.
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-		userLearnedDrawer = sp.getBoolean( PREF_USER_LEARNED_DRAWER, false );
+		// Doing this work inline was causing a StrictMode violation.
+		AsyncTask<Void, Void, Void> readPrefsTask = new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground( final Void... params ) {
+				// Read in the flag indicating whether or not the user has demonstrated awareness of the
+				// drawer. See PREF_USER_LEARNED_DRAWER for details.
+				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+				userLearnedDrawer = sp.getBoolean( PREF_USER_LEARNED_DRAWER, false );
+
+				return null;
+			}
+		};
+
+		readPrefsTask.execute();
 
 		if ( savedInstanceState != null ) {
 			currentSelectedPosition = savedInstanceState.getInt( STATE_SELECTED_POSITION );
