@@ -101,10 +101,10 @@ public class NavigationDrawerFragment
 		drawerListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(
-				AdapterView<?> parent,
-				View view,
-				int position,
-				long id
+				AdapterView<?>  parent,
+				View            view,
+				int             position,
+				long            id
 			) {
 				selectItem( position );
 			}
@@ -177,22 +177,6 @@ public class NavigationDrawerFragment
 	}
 
 
-	private void selectItem( int position ) {
-		currentSelectedPosition = position;
-		if ( drawerListView != null ) {
-			drawerListView.setItemChecked( position, true );
-		}
-
-		if ( drawerLayout != null ) {
-			drawerLayout.closeDrawer( fragmentContainerView );
-		}
-
-		if ( drawerCallbacks != null ) {
-			drawerCallbacks.onNavigationDrawerItemSelected( position );
-		}
-	}
-
-
 	@Override
 	public void onAttach( Activity activity ) {
 		super.onAttach( activity );
@@ -258,8 +242,27 @@ public class NavigationDrawerFragment
 
 
 	private ActionBar getActionBar() {
-		return ( (AppCompatActivity)getActivity() ).getSupportActionBar();
+		// We know that we have an action bar...safe to ignore this warning.
+		//noinspection ConstantConditions
+		return ((AppCompatActivity)getActivity()).getSupportActionBar();
 	}
+
+
+	private void selectItem( int position ) {
+		currentSelectedPosition = position;
+		if ( drawerListView != null ) {
+			drawerListView.setItemChecked( position, true );
+		}
+
+		if ( drawerLayout != null ) {
+			drawerLayout.closeDrawer( fragmentContainerView );
+		}
+
+		if ( drawerCallbacks != null ) {
+			drawerCallbacks.onNavigationDrawerItemSelected( position );
+		}
+	}
+
 
 
 	/**

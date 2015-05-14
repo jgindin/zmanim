@@ -1,9 +1,9 @@
 package com.gindin.zehutyosef;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
-import android.support.annotation.RawRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -44,12 +44,17 @@ public class ZehutYosefActivity
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+
+		if ( BuildConfig.DEBUG ) {
+			StrictMode.enableDefaults();
+		}
+
 		setContentView( R.layout.activity_zehut_yosef );
 
-		sections.add( new Section( getString( R.string.mincha ), R.raw.mincha ) );
-		sections.add( new Section( getString( R.string.arvit ), R.raw.birkat_ammazon ) );
-		sections.add( new Section( getString( R.string.birkat_amazon ), R.raw.birkat_ammazon ) );
-		sections.add( new Section( getString( R.string.meen_shalosh ), R.raw.meen_shalosh ) );
+		sections.add( new Section( R.string.mincha ) );
+		sections.add( new Section( R.string.arvit ) );
+		sections.add( new Section( R.string.birkat_amazon ) );
+		sections.add( new Section( R.string.meen_shalosh ) );
 
 		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
 		title = getTitle();
@@ -87,10 +92,9 @@ public class ZehutYosefActivity
 	}
 
 
-	void onSectionAttached( String sectionTitle ) {
+	void onSectionAttached( @StringRes int sectionTitleId ) {
 
-		//noinspection AutoUnboxing
-		title = sectionTitle;
+		title = getString( sectionTitleId );
 	}
 
 
@@ -104,6 +108,7 @@ public class ZehutYosefActivity
 			restoreActionBar( title );
 			return true;
 		}
+
 		return super.onCreateOptionsMenu( menu );
 	}
 
@@ -133,31 +138,30 @@ public class ZehutYosefActivity
 
 
 
-	private static class Section {
+	private class Section {
 
-		@NonNull
-		private final String                                    title;
+		final String                                            title;
 
-		@RawRes
-		private final int                                       textResourceId;
+		@StringRes
+		private final int                                       titleId;
 
 		@Nullable
 		private TextViewerFragment                              viewerFragment;
 
 
 		Section(
-			@NonNull  final String  title,
-			@RawRes   final int     textResourceId
+			@StringRes int titleId
 		) {
-			this.title = title;
-			this.textResourceId = textResourceId;
+
+			this.title = getString( titleId );
+			this.titleId = titleId;
 		}
 
 
 		TextViewerFragment getViewerFragment() {
 
 			if ( viewerFragment == null ) {
-				viewerFragment = TextViewerFragment.newInstance( title, textResourceId );
+				viewerFragment = TextViewerFragment.newInstance( titleId );
 			}
 
 			return viewerFragment;
