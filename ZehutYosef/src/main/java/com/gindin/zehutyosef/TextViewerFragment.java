@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,12 @@ public abstract class TextViewerFragment
 	/** The fragment argument representing the section title for this fragment. */
 	private static final String                               ARG_SECTION_TITLE_ID = "section_title_id";
 
+
+
+	/** The text view we're actually rendering into. */
+	private TextView                                          textView;
+
+	private ZehutYosefActivity.FontInfo                       activeFont;
 
 
 	/**
@@ -93,7 +100,13 @@ public abstract class TextViewerFragment
 			@Override
 			protected void onPostExecute( final String text ) {
 				super.onPostExecute( text );
-				TextView textView = (TextView)rootView.findViewById( R.id.textView );
+
+				textView = (TextView)rootView.findViewById( R.id.textView );
+
+				if ( activeFont != null ) {
+					updateFont( activeFont );
+				}
+
 				textView.setText( text );
 			}
 		};
@@ -111,8 +124,22 @@ public abstract class TextViewerFragment
 	}
 
 
+	void updateFont( final ZehutYosefActivity.FontInfo newFont ) {
+
+		activeFont = newFont;
+
+		if ( textView != null ) {
+			textView.setTypeface( newFont.typeface );
+			textView.setTextSize( TypedValue.COMPLEX_UNIT_SP, newFont.size );
+		}
+	}
+
+
 	/**
 	 * Perform the work necessary to load the text. This WILL be called on a background thread.
+	 *
+	 * Generally, this method will be one or more calls to loadTextAsset(), which will take care of reading
+	 *  the specified file (as a path, relative to the assets directory).
 	 */
 	protected abstract String loadText();
 
@@ -148,4 +175,6 @@ public abstract class TextViewerFragment
 
 		return buffer.toString();
 	}
+
+
 }

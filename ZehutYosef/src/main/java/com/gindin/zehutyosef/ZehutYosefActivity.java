@@ -1,5 +1,7 @@
 package com.gindin.zehutyosef;
 
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
@@ -19,6 +21,16 @@ public class ZehutYosefActivity
 	extends AppCompatActivity
 	implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+	private static final List<FontInfo>                       FONT_INFOS = new ArrayList<>();
+
+	static {
+		FONT_INFOS.add( new FontInfo( R.id.font_shlomo,           "fonts/Shlomo.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.id.font_taamey_ashkenaz,  "fonts/TaameyAshkenaz-Medium.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.id.font_taamey_david,     "fonts/TaameyDavidCLM-Medium.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.id.font_taamey_frank,     "fonts/TaameyFrankCLM-Medium.ttf" ) );
+	}
+
+
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
@@ -29,12 +41,17 @@ public class ZehutYosefActivity
 	 */
 	private CharSequence                                      title;
 
+	/** Identify the font that is to be used. */
+	private FontInfo                                          activeFont = FONT_INFOS.get( 0 );
+
+	/** Remember which section is currently active. */
+	private Section                                           activeSection;
+
 	private final List<Section>                               sections;
 
 
 
 
-	@SuppressWarnings( "AutoBoxing" )
 	public ZehutYosefActivity() {
 
 		sections = new ArrayList<>();
@@ -95,6 +112,17 @@ public class ZehutYosefActivity
 	void onSectionAttached( @StringRes int sectionTitleId ) {
 
 		title = getString( sectionTitleId );
+
+		for ( Section section : sections ) {
+			if ( section.titleId == sectionTitleId ) {
+				activeSection = section;
+				break;
+			}
+		}
+
+		// Make sure it's using the correct font.
+		activeFont.load( getAssets() );
+		activeSection.getViewerFragment().updateFont( activeFont );
 	}
 
 
@@ -115,15 +143,33 @@ public class ZehutYosefActivity
 
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
+
+		// Handle action bar item clicks here. The action bar will automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if ( id == R.id.action_settings ) {
-			return true;
+		switch ( id ) {
+			case R.id.action_settings:
+				return true;
+
+			case R.id.font_shlomo:
+			case R.id.font_taamey_ashkenaz:
+			case R.id.font_taamey_david:
+			case R.id.font_taamey_frank:
+				updateFont( id );
+				return true;
+
+			case R.id.font_size_increase:
+				activeFont.size += 1.0;
+				activeSection.getViewerFragment().updateFont( activeFont );
+				return true;
+
+			case R.id.font_size_decrease:
+				activeFont.size -= 1.0;
+				activeSection.getViewerFragment().updateFont( activeFont );
+				return true;
 		}
+
 
 		return super.onOptionsItemSelected( item );
 	}
@@ -134,6 +180,51 @@ public class ZehutYosefActivity
 		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 		actionBar.setDisplayShowTitleEnabled( true );
 		actionBar.setTitle( actionBarTitle );
+	}
+
+
+	private void updateFont( final int fontId ) {
+
+		for ( FontInfo fontInfo : FONT_INFOS ) {
+			if ( fontInfo.id == fontId ) {
+				activeFont = fontInfo;
+				fontInfo.load( getAssets() );
+				break;
+			}
+		}
+
+		activeSection.getViewerFragment().updateFont( activeFont );
+	}
+
+
+
+	static class FontInfo {
+
+		final int                                               id;
+
+		final String                                            relativePath;
+
+		Typeface                                                typeface;
+
+		// Empirically, this is the default text size.
+		float                                                   size = 14f;
+
+
+		FontInfo(
+			final int     id,
+			final String  relativePath
+		) {
+			this.id = id;
+			this.relativePath = relativePath;
+		}
+
+
+		private void load( AssetManager assetManager ) {
+
+			if ( typeface == null ) {
+				typeface = Typeface.createFromAsset( assetManager, relativePath );
+			}
+		}
 	}
 
 
@@ -167,6 +258,5 @@ public class ZehutYosefActivity
 			return viewerFragment;
 		}
 	}
-
 
 }

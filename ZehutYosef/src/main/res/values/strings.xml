@@ -6,10 +6,17 @@
 	<string name="mincha">Mincha</string>
 	<string name="arvit">Arvit</string>
 
+	<string name="action_settings" translatable="false">Settings</string>
+	<string name="font_shlomo">Shlomo</string>
+	<string name="font_taamey_ashkenaz">Ashkenaz</string>
+	<string name="font_taamey_david">David</string>
+	<string name="font_taamey_frank">Frank</string>
+
+	<string name="font_size_increase">Increase</string>
+	<string name="font_size_decrease">Decrease</string>
+
 	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
 	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
 	<string name="action_example" translatable="false">Example action</string>
 
-	<string name="action_settings" translatable="false">Settings</string>
 </resources>

@@ -5,4 +5,10 @@
 	<string name="mincha">מנחה</string>
 	<string name="meen_shalosh">מעין שלש</string>
 	<string name="birkat_amazon">ברכת המזון</string>
+	<string name="font_taamey_ashkenaz">אשכנז</string>
+	<string name="font_taamey_david">דוד</string>
+	<string name="font_taamey_frank">פרנק</string>
+	<string name="font_shlomo">שלמה</string>
+	<string name="font_size_decrease">גדול</string>
+	<string name="font_size_increase">קטן</string>
 </resources>
