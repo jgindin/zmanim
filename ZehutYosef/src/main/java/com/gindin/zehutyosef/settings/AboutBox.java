@@ -1,4 +1,4 @@
-package com.gindin.zehutyosef.about;
+package com.gindin.zehutyosef.settings;
 
 import com.gindin.zehutyosef.BuildConfig;
 import com.gindin.zehutyosef.R;
@@ -48,7 +48,7 @@ public class AboutBox
 		loadText( owner.getAssets(), helpTextView );
 
 		AlertDialog.Builder builder = new AlertDialog.Builder( owner )
-			.setTitle( R.string.action_about )
+			.setTitle( R.string.action_about_title )
 			.setView( layout );
 
 		return builder.create();

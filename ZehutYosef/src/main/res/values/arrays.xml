@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="font_names">
+		<item>@string/font_shlomo</item>
+		<item>@string/font_taamey_frank</item>
+		<item>@string/font_taamey_david</item>
+		<item>@string/font_taamey_ashkenaz</item>
+	</string-array>
+
+	<string-array name="font_ids">
+		<item>font_shlomo</item>
+		<item>font_taamey_frank</item>
+		<item>font_taamey_david</item>
+		<item>font_taamey_ashkenaz</item>
+	</string-array>
+
+
+</resources>

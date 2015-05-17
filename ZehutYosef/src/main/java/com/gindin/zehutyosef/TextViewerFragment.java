@@ -118,6 +118,11 @@ public abstract class TextViewerFragment
 
 		loadTextTask.execute();
 
+		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
+		//  the middle of something pretty important.
+		// TODO: Make this a preference???
+		rootView.setKeepScreenOn( true );
+
 		return rootView;
 	}
 

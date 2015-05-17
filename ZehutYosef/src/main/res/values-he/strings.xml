@@ -11,5 +11,9 @@
 	<string name="font_shlomo">שלמה</string>
 	<string name="font_size_decrease">גדול</string>
 	<string name="font_size_increase">קטן</string>
-	<string name="action_about">About...</string>
+	<string name="action_about">TRANSLATE ME</string>
+	<string name="action_about_title">TRANSLATE ME</string>
+	<string name="font_settings_summary">TRANSLATE ME</string>
+	<string name="font_settings_title">TRANSLATE ME</string>
+	<string name="choose_font">TRANSLATE ME</string>
 </resources>

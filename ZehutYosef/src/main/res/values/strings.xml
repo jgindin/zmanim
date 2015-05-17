@@ -8,9 +8,9 @@
 
 	<string name="action_settings" translatable="false">Settings</string>
 	<string name="font_shlomo">Shlomo</string>
-	<string name="font_taamey_ashkenaz">Ashkenaz</string>
-	<string name="font_taamey_david">David</string>
-	<string name="font_taamey_frank">Frank</string>
+	<string name="font_taamey_ashkenaz">Taamey Ashkenaz</string>
+	<string name="font_taamey_david">Taamey David</string>
+	<string name="font_taamey_frank">Taamey Frank</string>
 
 	<string name="font_size_increase">Increase</string>
 	<string name="font_size_decrease">Decrease</string>
@@ -19,5 +19,10 @@
 	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 	<string name="action_example" translatable="false">Example action</string>
 	<string name="action_about">About...</string>
+	<string name="action_about_title">About Zehut Yosef</string>
+
+	<string name="font_settings_title">Font Settings</string>
+	<string name="font_settings_summary">Change the font used in the siddur</string>
+	<string name="choose_font">Select a Font</string>
 
 </resources>

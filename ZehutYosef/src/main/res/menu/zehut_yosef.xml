@@ -10,30 +10,6 @@
 		app:showAsAction="withText|ifRoom"
 	/>
 
-	<item
-		android:id="@+id/font_shlomo"
-		android:title="@string/font_shlomo"
-		android:orderInCategory="100"
-		app:showAsAction="never"
-	/>
-	<item
-		android:id="@+id/font_taamey_ashkenaz"
-		android:title="@string/font_taamey_ashkenaz"
-		android:orderInCategory="101"
-		app:showAsAction="never"
-	/>
-	<item
-		android:id="@+id/font_taamey_david"
-		android:title="@string/font_taamey_david"
-		android:orderInCategory="102"
-		app:showAsAction="never"
-	/>
-	<item
-		android:id="@+id/font_taamey_frank"
-		android:title="@string/font_taamey_frank"
-		android:orderInCategory="103"
-		app:showAsAction="never"
-	/>
 
 	<item
 		android:id="@+id/font_size_increase"

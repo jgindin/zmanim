@@ -1,12 +1,15 @@
 package com.gindin.zehutyosef;
 
-import com.gindin.zehutyosef.about.AboutBox;
+import com.gindin.zehutyosef.settings.AboutBox;
+import com.gindin.zehutyosef.settings.SettingsActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.StrictMode;
+import android.preference.PreferenceActivity;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
@@ -27,10 +30,10 @@ public class ZehutYosefActivity
 	private static final List<FontInfo>                       FONT_INFOS = new ArrayList<>();
 
 	static {
-		FONT_INFOS.add( new FontInfo( R.id.font_shlomo,           "fonts/Shlomo.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.id.font_taamey_ashkenaz,  "fonts/TaameyAshkenaz-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.id.font_taamey_david,     "fonts/TaameyDavidCLM-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.id.font_taamey_frank,     "fonts/TaameyFrankCLM-Medium.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.string.font_shlomo,           "fonts/Shlomo.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.string.font_taamey_ashkenaz,  "fonts/TaameyAshkenaz-Medium.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.string.font_taamey_david,     "fonts/TaameyDavidCLM-Medium.ttf" ) );
+		FONT_INFOS.add( new FontInfo( R.string.font_taamey_frank,     "fonts/TaameyFrankCLM-Medium.ttf" ) );
 	}
 
 
@@ -45,7 +48,7 @@ public class ZehutYosefActivity
 	private CharSequence                                      title;
 
 	/** Identify the font that is to be used. */
-	private FontInfo                                          activeFont = FONT_INFOS.get( 0 );
+	private FontInfo                                          activeFont;
 
 	/** Remember which section is currently active. */
 	private Section                                           activeSection;
@@ -66,7 +69,7 @@ public class ZehutYosefActivity
 		super.onCreate( savedInstanceState );
 
 		if ( BuildConfig.DEBUG ) {
-			Debug.startMethodTracing( "zehut-yosef" );
+//			Debug.startMethodTracing( "zehut-yosef" );
 			StrictMode.enableDefaults();
 		}
 
@@ -91,6 +94,13 @@ public class ZehutYosefActivity
 			(DrawerLayout)findViewById( R.id.drawer_layout ),
 			sectionNames
 		);
+
+
+		// This allows us to store the string representation of the font id, and then look it up.
+		SharedPreferences fontPrefs = getSharedPreferences( FontInfo.class.getName(), MODE_PRIVATE );
+		String defaultFont = fontPrefs.getString( "font_preference", "font_shlomo" );
+		int fontId = getResources().getIdentifier( defaultFont, "string", getPackageName() );
+		updateFont( fontId );
 	}
 
 
@@ -98,7 +108,7 @@ public class ZehutYosefActivity
 	protected void onDestroy() {
 
 		if ( BuildConfig.DEBUG ) {
-			Debug.stopMethodTracing();
+//			Debug.stopMethodTracing();
 		}
 
 		super.onDestroy();
@@ -165,13 +175,10 @@ public class ZehutYosefActivity
 
 		switch ( id ) {
 			case R.id.action_settings:
-				return true;
-
-			case R.id.font_shlomo:
-			case R.id.font_taamey_ashkenaz:
-			case R.id.font_taamey_david:
-			case R.id.font_taamey_frank:
-				updateFont( id );
+				// By adding this extra info to the intent, we skip the headers.
+				Intent intent = new Intent( this, SettingsActivity.class );
+				intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.Fonts.class.getName() );
+				startActivity( intent );
 				return true;
 
 			case R.id.font_size_increase:
@@ -213,7 +220,9 @@ public class ZehutYosefActivity
 			}
 		}
 
-		activeSection.getViewerFragment().updateFont( activeFont );
+		if ( activeSection != null ) {
+			activeSection.getViewerFragment().updateFont( activeFont );
+		}
 	}
 
 
