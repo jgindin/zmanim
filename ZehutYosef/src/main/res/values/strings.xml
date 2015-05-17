@@ -18,5 +18,6 @@
 	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
 	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 	<string name="action_example" translatable="false">Example action</string>
+	<string name="action_about">About...</string>
 
 </resources>

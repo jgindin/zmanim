@@ -1,5 +1,10 @@
 package com.gindin.zehutyosef;
 
+import com.gindin.zehutyosef.berachot.BirkatAmmazonViewerFragment;
+import com.gindin.zehutyosef.berachot.MeenShaloshViewerFragment;
+import com.gindin.zehutyosef.tefilla.ArvitViewerFragment;
+import com.gindin.zehutyosef.tefilla.MinchaViewerFragment;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;

@@ -11,4 +11,5 @@
 	<string name="font_shlomo">שלמה</string>
 	<string name="font_size_decrease">גדול</string>
 	<string name="font_size_increase">קטן</string>
+	<string name="action_about">About...</string>
 </resources>

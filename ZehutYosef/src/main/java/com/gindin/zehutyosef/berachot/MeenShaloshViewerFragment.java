@@ -1,4 +1,6 @@
-package com.gindin.zehutyosef;
+package com.gindin.zehutyosef.berachot;
+
+import com.gindin.zehutyosef.TextViewerFragment;
 
 /**
  *

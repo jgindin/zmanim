@@ -1,8 +1,11 @@
 package com.gindin.zehutyosef;
 
+import com.gindin.zehutyosef.about.AboutBox;
+
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -63,6 +66,7 @@ public class ZehutYosefActivity
 		super.onCreate( savedInstanceState );
 
 		if ( BuildConfig.DEBUG ) {
+			Debug.startMethodTracing( "zehut-yosef" );
 			StrictMode.enableDefaults();
 		}
 
@@ -87,6 +91,17 @@ public class ZehutYosefActivity
 			(DrawerLayout)findViewById( R.id.drawer_layout ),
 			sectionNames
 		);
+	}
+
+
+	@Override
+	protected void onDestroy() {
+
+		if ( BuildConfig.DEBUG ) {
+			Debug.stopMethodTracing();
+		}
+
+		super.onDestroy();
 	}
 
 
@@ -167,6 +182,11 @@ public class ZehutYosefActivity
 			case R.id.font_size_decrease:
 				activeFont.size -= 1.0;
 				activeSection.getViewerFragment().updateFont( activeFont );
+				return true;
+
+			case R.id.action_about:
+				AboutBox aboutBox = new AboutBox();
+				aboutBox.show( getSupportFragmentManager(), "about" );
 				return true;
 		}
 

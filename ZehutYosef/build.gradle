@@ -8,8 +8,7 @@ apply from: 'zehut-yosef.gradle'
 
 // These methods inspired from https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij
 def hgVersion() {
-  def hgVersion = 'hg log --limit 1 --template \'{node|short}\''.execute().text.trim();
-  print( hgVersion )
+  def hgVersion = 'hg log --limit 1 --template {node|short}'.execute().text.trim();
 
   return "\"" + hgVersion + "\""
 }
@@ -36,8 +35,8 @@ advancedVersioning {
   }
 }
 
-def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
+def appVersionName = advancedVersioning.versionName + "." + appVersionCode
 
 
 android {
