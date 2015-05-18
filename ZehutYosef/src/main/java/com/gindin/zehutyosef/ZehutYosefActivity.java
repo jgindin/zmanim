@@ -5,8 +5,6 @@ import com.gindin.zehutyosef.settings.Settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -27,14 +25,6 @@ public class ZehutYosefActivity
 	extends AppCompatActivity
 	implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-	private static final List<FontInfo>                       FONT_INFOS = new ArrayList<>();
-
-	static {
-		FONT_INFOS.add( new FontInfo( R.string.font_shlomo,           "fonts/Shlomo.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.string.font_taamey_ashkenaz,  "fonts/TaameyAshkenaz-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.string.font_taamey_david,     "fonts/TaameyDavidCLM-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( R.string.font_taamey_frank,     "fonts/TaameyFrankCLM-Medium.ttf" ) );
-	}
 
 
 	/**
@@ -55,7 +45,7 @@ public class ZehutYosefActivity
 
 	private final List<Section>                               sections;
 
-
+	private PrefsListener prefsListener;
 
 
 	public ZehutYosefActivity() {
@@ -98,11 +88,12 @@ public class ZehutYosefActivity
 
 		// Setup the shared preferences with the default values. Make sure the last param is false so that we don't overwrite
 		//  the user's changes.
+		prefsListener = new PrefsListener();
+		PreferenceManager.getDefaultSharedPreferences( this )
+			.registerOnSharedPreferenceChangeListener( prefsListener );
 		PreferenceManager.setDefaultValues( this, R.xml.preferences, false );
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( this );
-		String fontChoice = prefs.getString( Settings.Preference.FontChoice.key, "font_shlomo" );
-		updateFont( fontChoice );
+		updateFont( FontInfo.init( this ) );
 	}
 
 
@@ -112,6 +103,9 @@ public class ZehutYosefActivity
 		if ( BuildConfig.DEBUG ) {
 //			Debug.stopMethodTracing();
 		}
+
+		PreferenceManager.getDefaultSharedPreferences( this )
+			.unregisterOnSharedPreferenceChangeListener( prefsListener );
 
 		super.onDestroy();
 	}
@@ -180,16 +174,6 @@ public class ZehutYosefActivity
 				startActivity( new Intent( this, Settings.class ) );
 				return true;
 
-			case R.id.font_size_increase:
-				activeFont.size += 1.0;
-				activeSection.getViewerFragment().updateFont( activeFont );
-				return true;
-
-			case R.id.font_size_decrease:
-				activeFont.size -= 1.0;
-				activeSection.getViewerFragment().updateFont( activeFont );
-				return true;
-
 			case R.id.action_about:
 				AboutBox aboutBox = new AboutBox();
 				aboutBox.show( getSupportFragmentManager(), "about" );
@@ -211,52 +195,15 @@ public class ZehutYosefActivity
 
 	private void updateFont( final String fontChoice) {
 
-		int fontId = getResources().getIdentifier( fontChoice, "string", getPackageName() );
+		activeFont = FontInfo.getByIdName( fontChoice );
+		if ( activeFont != null ) {
+			activeFont.load( getAssets() );
 
-		for ( FontInfo fontInfo : FONT_INFOS ) {
-			if ( fontInfo.id == fontId ) {
-				activeFont = fontInfo;
-				fontInfo.load( getAssets() );
-				break;
-			}
-		}
-
-		if ( activeSection != null ) {
-			activeSection.getViewerFragment().updateFont( activeFont );
-		}
-	}
-
-
-
-	static class FontInfo {
-
-		final int                                               id;
-
-		final String                                            relativePath;
-
-		Typeface                                                typeface;
-
-		// Empirically, this is the default text size.
-		float                                                   size = 14f;
-
-
-		FontInfo(
-			final int     id,
-			final String  relativePath
-		) {
-			this.id = id;
-			this.relativePath = relativePath;
-		}
-
-
-		private void load( AssetManager assetManager ) {
-
-			if ( typeface == null ) {
-				typeface = Typeface.createFromAsset( assetManager, relativePath );
+			if ( activeSection != null ) {
+				activeSection.getViewerFragment().updateFont( activeFont );
 			}
 		}
 	}
-
 
 
 	private class Section {
@@ -302,8 +249,15 @@ public class ZehutYosefActivity
 			final String            key
 		) {
 
-			if ( key.equals( Settings.Preference.FontChoice.key ) ) {
+			if ( key.equals( Settings.PreferenceKey.FontChoice.key ) ) {
 				updateFont( sharedPreferences.getString( key, "font_shlomo" ) );
+			}
+			else if ( key.equals( Settings.PreferenceKey.FontSize.key ) ) {
+				int newSize = Integer.parseInt( sharedPreferences.getString( key, "14" ) );
+				activeFont.setSize( newSize );
+				if ( activeSection != null ) {
+					activeSection.getViewerFragment().updateFont( activeFont );
+				}
 			}
 		}
 	}

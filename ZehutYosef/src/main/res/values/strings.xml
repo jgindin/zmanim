@@ -11,9 +11,6 @@
 	<string name="font_taamey_david">Taamey David</string>
 	<string name="font_taamey_frank">Taamey Frank</string>
 
-	<string name="font_size_increase">Increase</string>
-	<string name="font_size_decrease">Decrease</string>
-
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -31,5 +28,8 @@
 	<string name="pref_keep_screen_on_summary">Ensure the screen stays on while using the Siddur.</string>
 	<string name="pref_full_screen_on_title">Use the Entire Screen</string>
 	<string name="pref_full_screen_on_summary">The Siddur will hide the notification bar.</string>
+	<string name="pref_fonts_size">Font Size</string>
+	<string name="pref_fonts_size_summary">Choose the size of the text in the Siddur</string>
+	<string name="pref_fonts_size_choose">Select a Size</string>
 
 </resources>

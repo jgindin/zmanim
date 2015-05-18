@@ -15,6 +15,16 @@
 			android:defaultValue="font_shlomo"
 		/>
 
+		<ListPreference
+			android:key="pref_font_size"
+			android:title="@string/pref_fonts_size"
+			android:summary="@string/pref_fonts_size_summary"
+			android:dialogTitle="@string/pref_fonts_size_choose"
+			android:entries="@array/font_sizes"
+			android:entryValues="@array/font_sizes"
+			android:defaultValue="14"
+		/>
+
 	</PreferenceCategory>
 
 

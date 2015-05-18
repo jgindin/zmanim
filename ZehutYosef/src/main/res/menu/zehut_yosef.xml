@@ -12,19 +12,6 @@
 
 
 	<item
-		android:id="@+id/font_size_increase"
-		android:title="@string/font_size_increase"
-		android:orderInCategory="104"
-		app:showAsAction="never"
-	/>
-	<item
-		android:id="@+id/font_size_decrease"
-		android:title="@string/font_size_decrease"
-		android:orderInCategory="105"
-		app:showAsAction="never"
-	/>
-
-	<item
 		android:id="@+id/action_settings"
 		android:title="@string/action_settings"
 		android:orderInCategory="500"

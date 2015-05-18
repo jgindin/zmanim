@@ -39,7 +39,7 @@ public abstract class TextViewerFragment
 	/** The text view we're actually rendering into. */
 	private TextView                                          textView;
 
-	private ZehutYosefActivity.FontInfo                       activeFont;
+	private FontInfo activeFont;
 
 
 	/**
@@ -124,7 +124,7 @@ public abstract class TextViewerFragment
 		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
 		//  the middle of something pretty important.
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-		boolean keepScreenOn = preferences.getBoolean( Settings.Preference.KeepScreenOn.key, true );
+		boolean keepScreenOn = preferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
 		rootView.setKeepScreenOn( keepScreenOn );
 
 		return rootView;
@@ -138,13 +138,13 @@ public abstract class TextViewerFragment
 	}
 
 
-	void updateFont( final ZehutYosefActivity.FontInfo newFont ) {
+	void updateFont( final FontInfo newFont ) {
 
 		activeFont = newFont;
 
 		if ( textView != null ) {
-			textView.setTypeface( newFont.typeface );
-			textView.setTextSize( TypedValue.COMPLEX_UNIT_SP, newFont.size );
+			textView.setTypeface( newFont.getTypeface() );
+			textView.setTextSize( TypedValue.COMPLEX_UNIT_SP, newFont.getSize() );
 		}
 	}
 
