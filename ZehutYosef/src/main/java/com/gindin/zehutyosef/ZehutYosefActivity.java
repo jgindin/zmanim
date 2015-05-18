@@ -1,7 +1,7 @@
 package com.gindin.zehutyosef;
 
 import com.gindin.zehutyosef.settings.AboutBox;
-import com.gindin.zehutyosef.settings.SettingsActivity;
+import com.gindin.zehutyosef.settings.Settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +9,7 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
@@ -96,11 +96,13 @@ public class ZehutYosefActivity
 		);
 
 
-		// This allows us to store the string representation of the font id, and then look it up.
-		SharedPreferences fontPrefs = getSharedPreferences( FontInfo.class.getName(), MODE_PRIVATE );
-		String defaultFont = fontPrefs.getString( "font_preference", "font_shlomo" );
-		int fontId = getResources().getIdentifier( defaultFont, "string", getPackageName() );
-		updateFont( fontId );
+		// Setup the shared preferences with the default values. Make sure the last param is false so that we don't overwrite
+		//  the user's changes.
+		PreferenceManager.setDefaultValues( this, R.xml.preferences, false );
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( this );
+		String fontChoice = prefs.getString( Settings.Preference.FontChoice.key, "font_shlomo" );
+		updateFont( fontChoice );
 	}
 
 
@@ -175,10 +177,7 @@ public class ZehutYosefActivity
 
 		switch ( id ) {
 			case R.id.action_settings:
-				// By adding this extra info to the intent, we skip the headers.
-				Intent intent = new Intent( this, SettingsActivity.class );
-				intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.Fonts.class.getName() );
-				startActivity( intent );
+				startActivity( new Intent( this, Settings.class ) );
 				return true;
 
 			case R.id.font_size_increase:
@@ -210,7 +209,9 @@ public class ZehutYosefActivity
 	}
 
 
-	private void updateFont( final int fontId ) {
+	private void updateFont( final String fontChoice) {
+
+		int fontId = getResources().getIdentifier( fontChoice, "string", getPackageName() );
 
 		for ( FontInfo fontInfo : FONT_INFOS ) {
 			if ( fontInfo.id == fontId ) {
@@ -285,6 +286,25 @@ public class ZehutYosefActivity
 			}
 
 			return viewerFragment;
+		}
+	}
+
+
+	// create shared prefs listener
+	// figure out why not selecting font...
+
+	private class PrefsListener
+		implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+		@Override
+		public void onSharedPreferenceChanged(
+			final SharedPreferences sharedPreferences,
+			final String            key
+		) {
+
+			if ( key.equals( Settings.Preference.FontChoice.key ) ) {
+				updateFont( sharedPreferences.getString( key, "font_shlomo" ) );
+			}
 		}
 	}
 

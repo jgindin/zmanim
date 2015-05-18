@@ -2,12 +2,15 @@ package com.gindin.zehutyosef;
 
 import com.gindin.zehutyosef.berachot.BirkatAmmazonViewerFragment;
 import com.gindin.zehutyosef.berachot.MeenShaloshViewerFragment;
+import com.gindin.zehutyosef.settings.Settings;
 import com.gindin.zehutyosef.tefilla.ArvitViewerFragment;
 import com.gindin.zehutyosef.tefilla.MinchaViewerFragment;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -120,8 +123,9 @@ public abstract class TextViewerFragment
 
 		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
 		//  the middle of something pretty important.
-		// TODO: Make this a preference???
-		rootView.setKeepScreenOn( true );
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+		boolean keepScreenOn = preferences.getBoolean( Settings.Preference.KeepScreenOn.key, true );
+		rootView.setKeepScreenOn( keepScreenOn );
 
 		return rootView;
 	}

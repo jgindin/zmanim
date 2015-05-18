@@ -6,7 +6,6 @@
 	<string name="mincha">Mincha</string>
 	<string name="arvit">Arvit</string>
 
-	<string name="action_settings" translatable="false">Settings</string>
 	<string name="font_shlomo">Shlomo</string>
 	<string name="font_taamey_ashkenaz">Taamey Ashkenaz</string>
 	<string name="font_taamey_david">Taamey David</string>
@@ -15,14 +14,22 @@
 	<string name="font_size_increase">Increase</string>
 	<string name="font_size_decrease">Decrease</string>
 
-	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+
 	<string name="action_example" translatable="false">Example action</string>
 	<string name="action_about">About...</string>
 	<string name="action_about_title">About Zehut Yosef</string>
+	<string name="action_settings" translatable="false">Settings</string>
 
-	<string name="font_settings_title">Font Settings</string>
-	<string name="font_settings_summary">Change the font used in the siddur</string>
+	<string name="pref_fonts_title">Font Settings</string>
+	<string name="pref_fonts_summary">Change the font used in the Siddur.</string>
 	<string name="choose_font">Select a Font</string>
+
+	<string name="pref_other_settings_title">Other Stuff</string>
+	<string name="pref_keep_screen_on_title">Keep Screen On</string>
+	<string name="pref_keep_screen_on_summary">Ensure the screen stays on while using the Siddur.</string>
+	<string name="pref_full_screen_on_title">Use the Entire Screen</string>
+	<string name="pref_full_screen_on_summary">The Siddur will hide the notification bar.</string>
 
 </resources>

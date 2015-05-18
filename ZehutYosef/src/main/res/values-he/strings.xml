@@ -13,7 +13,14 @@
 	<string name="font_size_increase">קטן</string>
 	<string name="action_about">TRANSLATE ME</string>
 	<string name="action_about_title">TRANSLATE ME</string>
-	<string name="font_settings_summary">TRANSLATE ME</string>
-	<string name="font_settings_title">TRANSLATE ME</string>
+	<string name="pref_fonts_summary">TRANSLATE ME</string>
+	<string name="pref_fonts_title">TRANSLATE ME</string>
 	<string name="choose_font">TRANSLATE ME</string>
+	<string name="pref_full_screen_on_summary">TRANSLATE ME</string>
+	<string name="pref_full_screen_on_title">TRANSLATE ME</string>
+	<string name="pref_keep_screen_on_summary">TRANSLATE ME</string>
+	<string name="pref_keep_screen_on_title">TRANSLATE ME</string>
+	<string name="pref_other_settings_title">TRANSLATE ME</string>
+	<string name="navigation_drawer_close">TRANSLATE ME</string>
+	<string name="navigation_drawer_open">TRANSLATE ME</string>
 </resources>
