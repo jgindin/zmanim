@@ -35,6 +35,7 @@ public abstract class HebrewDateFormatter {
 		LONG
 	}
 
+
 	public static HebrewDateFormatter getInstance( Style formatterStyle ) {
 
 		switch ( formatterStyle ) {
@@ -47,13 +48,13 @@ public abstract class HebrewDateFormatter {
 			case DEFAULT:
 			case MEDIUM:
 			case LONG:
+			default:
 				if ( null == LONG_FORMATTER ) {
 					LONG_FORMATTER = new LongFormatter();
 				}
 				return LONG_FORMATTER;
 		}
 
-		return null;
 	}
 
 	public abstract String format(
@@ -77,7 +78,7 @@ public abstract class HebrewDateFormatter {
 
 			StringBuilder buf = new StringBuilder();
 
-			if ( isAfterSunset( date, location ) ) {
+			if ( ( location != null ) && isAfterSunset( date, location ) ) {
 				//noinspection AssignmentToMethodParameter
 				date = date.tomorrow();
 				buf.append( "Or le " );

@@ -16,7 +16,6 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -240,11 +239,6 @@ public class NavigationDrawerFragment
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		if ( drawerToggle.onOptionsItemSelected( item ) ) {
-			return true;
-		}
-
-		if ( item.getItemId() == R.id.action_example ) {
-			Toast.makeText( getActivity(), "Example action.", Toast.LENGTH_SHORT ).show();
 			return true;
 		}
 

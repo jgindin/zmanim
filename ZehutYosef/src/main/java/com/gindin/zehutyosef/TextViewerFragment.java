@@ -39,7 +39,7 @@ public abstract class TextViewerFragment
 	/** The text view we're actually rendering into. */
 	private TextView                                          textView;
 
-	private FontInfo activeFont;
+	private FontInfo                                          activeFont;
 
 
 	/**

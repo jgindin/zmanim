@@ -2,6 +2,9 @@ package com.gindin.zehutyosef;
 
 import com.gindin.zehutyosef.settings.AboutBox;
 import com.gindin.zehutyosef.settings.Settings;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,12 +153,21 @@ public class ZehutYosefActivity
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
+
 		if ( !navigationDrawerFragment.isDrawerOpen() ) {
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
 			getMenuInflater().inflate( R.menu.zehut_yosef, menu );
 			restoreActionBar( title );
+
+			MenuItem dateItem = menu.findItem( R.id.date );
+			TextView dateView = (TextView)dateItem.getActionView();
+
+			HebrewDate today = HebrewCalendar.today();
+			HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
+			dateView.setText( formatter.format( today, null ) );
+
 			return true;
 		}
 
