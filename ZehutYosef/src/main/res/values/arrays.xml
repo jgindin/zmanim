@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:ignore="MissingTranslation"
+>
+
 	<string-array name="font_names">
 		<item>@string/font_shlomo</item>
 		<item>@string/font_taamey_frank</item>
