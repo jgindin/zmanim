@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
@@ -29,7 +30,17 @@ public class ZehutYosefActivity
 	extends AppCompatActivity
 	implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+	/** The sections of tefillah, berachot, etc... the user can choose. */
+	private final List<Section>                               sections;
 
+	/** The date for which all tefillah, etc..., are to be shown. */
+	@NonNull
+	private HebrewDate                                        hebrewDate;
+
+	/** Identify the font that is to be used. */
+	@SuppressWarnings( "NullableProblems" )
+	@NonNull
+	private FontInfo                                          activeFont;
 
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -41,20 +52,20 @@ public class ZehutYosefActivity
 	 */
 	private CharSequence                                      title;
 
-	/** Identify the font that is to be used. */
-	private FontInfo                                          activeFont;
-
 	/** Remember which section is currently active. */
 	private Section                                           activeSection;
 
-	private final List<Section>                               sections;
+	private PrefsListener                                     prefsListener;
 
-	private PrefsListener prefsListener;
 
 
 	public ZehutYosefActivity() {
 
 		sections = new ArrayList<>();
+
+		// Default to showing today.
+		//  (At some point we'll let the user change the date they're looking at...)
+		hebrewDate = HebrewCalendar.today();
 	}
 
 
@@ -68,6 +79,10 @@ public class ZehutYosefActivity
 		}
 
 		setContentView( R.layout.activity_zehut_yosef );
+
+		// Make sure we have a font. It may get updated / modified when we setup the shared prefs, but this will
+		//  ensure we don't have to worry about NPE.
+		updateFont( FontInfo.init( this ) );
 
 		sections.add( new Section( R.string.mincha ) );
 		sections.add( new Section( R.string.arvit ) );
@@ -96,17 +111,15 @@ public class ZehutYosefActivity
 		PreferenceManager.getDefaultSharedPreferences( this )
 			.registerOnSharedPreferenceChangeListener( prefsListener );
 		PreferenceManager.setDefaultValues( this, R.xml.preferences, false );
-
-		updateFont( FontInfo.init( this ) );
 	}
 
 
 	@Override
 	protected void onDestroy() {
 
-		if ( BuildConfig.DEBUG ) {
+//		if ( BuildConfig.DEBUG ) {
 //			Debug.stopMethodTracing();
-		}
+//		}
 
 		PreferenceManager.getDefaultSharedPreferences( this )
 			.unregisterOnSharedPreferenceChangeListener( prefsListener );
@@ -147,7 +160,9 @@ public class ZehutYosefActivity
 
 		// Make sure it's using the correct font.
 		activeFont.load( getAssets() );
-		activeSection.getViewerFragment().updateFont( activeFont );
+		TextViewerFragment viewerFragment = activeSection.getViewerFragment();
+		viewerFragment.setFont( activeFont );
+		viewerFragment.setDate( hebrewDate );
 	}
 
 
@@ -164,9 +179,8 @@ public class ZehutYosefActivity
 			MenuItem dateItem = menu.findItem( R.id.date );
 			TextView dateView = (TextView)dateItem.getActionView();
 
-			HebrewDate today = HebrewCalendar.today();
 			HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-			dateView.setText( formatter.format( today, null ) );
+			dateView.setText( formatter.format( hebrewDate, null ) );
 
 			return true;
 		}
@@ -209,12 +223,10 @@ public class ZehutYosefActivity
 	private void updateFont( final String fontChoice) {
 
 		activeFont = FontInfo.getByIdName( fontChoice );
-		if ( activeFont != null ) {
-			activeFont.load( getAssets() );
+		activeFont.load( getAssets() );
 
-			if ( activeSection != null ) {
-				activeSection.getViewerFragment().updateFont( activeFont );
-			}
+		if ( activeSection != null ) {
+			activeSection.getViewerFragment().setFont( activeFont );
 		}
 	}
 
@@ -269,7 +281,7 @@ public class ZehutYosefActivity
 				int newSize = Integer.parseInt( sharedPreferences.getString( key, "14" ) );
 				activeFont.setSize( newSize );
 				if ( activeSection != null ) {
-					activeSection.getViewerFragment().updateFont( activeFont );
+					activeSection.getViewerFragment().setFont( activeFont );
 				}
 			}
 		}

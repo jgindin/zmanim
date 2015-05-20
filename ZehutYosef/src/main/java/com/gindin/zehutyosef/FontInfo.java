@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +36,17 @@ public class FontInfo {
 
 
 
-	@Nullable
+	@NonNull
 	public static FontInfo getByIdName( String fontChoice ) {
 
-		for ( FontInfo fontInfo : FontInfo.FONT_INFOS ) {
+		for ( FontInfo fontInfo : FONT_INFOS ) {
 			if ( fontChoice.equals( fontInfo.id ) ) {
 				return fontInfo;
 			}
 		}
 
 		// TODO: We should log something here...
-		return null;
+		return FONT_INFOS.get( 0 );
 	}
 
 

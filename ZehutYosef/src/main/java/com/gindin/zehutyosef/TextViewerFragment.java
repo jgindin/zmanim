@@ -5,6 +5,7 @@ import com.gindin.zehutyosef.berachot.MeenShaloshViewerFragment;
 import com.gindin.zehutyosef.settings.Settings;
 import com.gindin.zehutyosef.tefilla.ArvitViewerFragment;
 import com.gindin.zehutyosef.tefilla.MinchaViewerFragment;
+import com.gindin.zmanlib.calendar.HebrewDate;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -40,6 +41,8 @@ public abstract class TextViewerFragment
 	private TextView                                          textView;
 
 	private FontInfo                                          activeFont;
+
+	private HebrewDate                                        date;
 
 
 	/**
@@ -112,7 +115,7 @@ public abstract class TextViewerFragment
 				textView = (TextView)rootView.findViewById( R.id.textView );
 
 				if ( activeFont != null ) {
-					updateFont( activeFont );
+					setFont( activeFont );
 				}
 
 				textView.setText( text );
@@ -138,7 +141,7 @@ public abstract class TextViewerFragment
 	}
 
 
-	void updateFont( final FontInfo newFont ) {
+	void setFont( final FontInfo newFont ) {
 
 		activeFont = newFont;
 
@@ -146,6 +149,16 @@ public abstract class TextViewerFragment
 			textView.setTypeface( newFont.getTypeface() );
 			textView.setTextSize( TypedValue.COMPLEX_UNIT_SP, newFont.getSize() );
 		}
+	}
+
+
+	void setDate( final HebrewDate date ) {
+		this.date = date;
+	}
+
+
+	protected HebrewDate getDate() {
+		return date;
 	}
 
 

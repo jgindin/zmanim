@@ -11,7 +11,7 @@ public class BirkatAmmazonViewerFragment
 	@Override
 	protected String loadText() {
 
-		return loadTextAsset( "berachot/birkat_ammazon.txt" );
+		return loadTextAsset( "berachot/birkat_ammazon/birkat_ammazon.txt" );
 	}
 
 } // End of BirkatAmmazonViewerFragment class
