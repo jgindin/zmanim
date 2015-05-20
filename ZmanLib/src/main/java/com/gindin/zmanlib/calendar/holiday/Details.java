@@ -46,9 +46,10 @@ public abstract class Details {
 	public abstract boolean sayHavdalah();
 
 
-	/**
-	 * Is this a Ta'anit?
-	 */
+	public boolean isRoshChodesh() {
+		return false;
+	}
+
 	public boolean isTaanit() {
 		return false;
 	}
@@ -58,6 +59,14 @@ public abstract class Details {
 	public boolean isPesach() {
 		return false;
 	}
+
+	public boolean isSukkot() { return false; }
+
+	public boolean isShminiAtzeret() { return false; }
+
+	public boolean isSimchatTorah() { return false; }
+
+	public boolean isShavuot() { return false; }
 
 
 	/**
@@ -484,6 +493,18 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isRoshChodesh() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isRoshChodesh() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
 		public boolean isShabbat() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isShabbat() ) {
@@ -511,6 +532,54 @@ public abstract class Details {
 		public boolean isPesach() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isPesach() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isSukkot() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isSukkot() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isShminiAtzeret() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isShminiAtzeret() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isSimchatTorah() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isSimchatTorah() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isShavuot() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isShavuot() ) {
 					return true;
 				}
 			}

@@ -40,22 +40,22 @@ public class Sukkot
 					return new Details.ErevYomTov( date, SUKKOT );
 
 				case 15:
-					return new Details.YomTovDetails( date, SUKKOT, true );
+					return new SukkotYomTovDetails( date, true );
 
 				case 16:
-					return new Details.YomTovDetails( date, SUKKOT, false );
+					return new SukkotYomTovDetails( date, false );
 
 				case 17:
 				case 18:
 				case 19:
 				case 20:
-					return new Details.CholHaMoedDetails( date, hebrewDayOfMonth - 14, SUKKOT, false );
+					return new SukkotCholHaModeDetails( date, hebrewDayOfMonth - 14 );
 
 				case 21:
 					return new HoshanaRabbaDetails( date );
 
 				case 22:
-					return new Details.YomTovDetails( date, SHMINI_ATZERET, true );
+					return new ShminiAtzeretDetails( date );
 
 				case 23:
 					return new Details.YomTovDetails( date, SIMCHAT_TORAH, false );
@@ -66,7 +66,43 @@ public class Sukkot
 	}
 
 
-	private static final class HoshanaRabbaDetails
+	private static class SukkotYomTovDetails
+		extends Details.YomTovDetails {
+
+		SukkotYomTovDetails(
+			final HebrewDate  date,
+		  final boolean     lightCandles
+		) {
+			super( date, SUKKOT, lightCandles );
+		}
+
+
+		@Override
+		public boolean isSukkot() {
+			return true;
+		}
+	}
+
+
+	private static class SukkotCholHaModeDetails
+		extends Details.CholHaMoedDetails {
+
+		SukkotCholHaModeDetails(
+			final HebrewDate  date,
+			final int         dayOfChag
+		) {
+			super( date, dayOfChag, SUKKOT, false );
+		}
+
+
+		@Override
+		public boolean isSukkot() {
+			return true;
+		}
+	}
+
+
+	private static class HoshanaRabbaDetails
 		extends Details.ErevYomTov {
 
 		HoshanaRabbaDetails( HebrewDate date ) {
@@ -75,8 +111,48 @@ public class Sukkot
 
 
 		@Override
+		public boolean isSukkot() {
+			return true;
+		}
+
+
+		@Override
 		public String getDescription() {
 			return SUKKOT + " 7 (" + HOSHANA_RABBA + ")";
+		}
+	}
+
+
+	private static class ShminiAtzeretDetails
+		extends Details.YomTovDetails {
+
+		public ShminiAtzeretDetails(
+			final HebrewDate date
+		) {
+			super( date, SHMINI_ATZERET, true );
+		}
+
+
+		@Override
+		public boolean isShminiAtzeret() {
+			return true;
+		}
+	}
+
+
+	private static class SimchatTorahDetails
+		extends Details.YomTovDetails {
+
+		SimchatTorahDetails(
+			final HebrewDate date
+		) {
+			super( date, SIMCHAT_TORAH, false );
+		}
+
+
+		@Override
+		public boolean isSimchatTorah() {
+			return true;
 		}
 	}
 

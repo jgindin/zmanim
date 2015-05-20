@@ -33,15 +33,33 @@ public class Shavuot
 			}
 
 			if ( 6 == hebrewDayOfMonth ) {
-				return new Details.YomTovDetails( date, SHAVUOT, true );
+				return new ShavuotDetails( date, true );
 			}
 
 			if ( 7 == hebrewDayOfMonth ) {
-				return new Details.YomTovDetails( date, SHAVUOT, false );
+				return new ShavuotDetails( date, false );
 			}
 		}
 
 		return null;
+	}
+
+
+	private static class ShavuotDetails
+		extends Details.YomTovDetails {
+
+		public ShavuotDetails(
+			final HebrewDate date,
+			final boolean lightCandles
+		) {
+			super( date, SHAVUOT, lightCandles );
+		}
+
+
+		@Override
+		public boolean isShavuot() {
+			return true;
+		}
 	}
 
 }  // End of Shavuot class

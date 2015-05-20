@@ -194,6 +194,12 @@ public class RoshChodesh
 		RoshChodeshDetails( HebrewDate date, String month ) {
 			super( date, ROSH_CHODESH + " " + month );
 		}
+
+
+		@Override
+		public boolean isRoshChodesh() {
+			return true;
+		}
 	}
 
 }  // End of RoshChodesh class
