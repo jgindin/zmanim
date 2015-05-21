@@ -141,6 +141,16 @@ public abstract class TextViewerFragment
 	}
 
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// Seems like this works more reliably. Dunno if it's because when the user goes out to the Settings, this
+		//  Fragment is paused, and updating the font doesn't take affect?
+		setFont( activeFont );
+	}
+
+
 	void setFont( final FontInfo newFont ) {
 
 		activeFont = newFont;
