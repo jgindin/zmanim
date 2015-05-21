@@ -56,6 +56,8 @@ public abstract class Details {
 
 	public boolean isYomTov() { return false; }
 
+	public boolean isCholHaMoed() { return false; }
+
 	public boolean isPesach() {
 		return false;
 	}
@@ -68,6 +70,11 @@ public abstract class Details {
 
 	public boolean isShavuot() { return false; }
 
+	public boolean isPurim() { return false; }
+
+	public boolean isChanukah() { return false; }
+
+	public boolean isRoshHashana() { return false; }
 
 	/**
 	 * A complete description of today's observance. Could be something simple like,
@@ -338,6 +345,12 @@ public abstract class Details {
 		public String getDescription() {
 			return CHOL_HA_MOED + name + " " + dayOfChag;
 		}
+
+
+		@Override
+		public boolean isCholHaMoed() {
+			return true;
+		}
 	}
 
 
@@ -446,6 +459,18 @@ public abstract class Details {
 		public boolean isYomTov() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isYomTov() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isCholHaMoed() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isCholHaMoed() ) {
 					return true;
 				}
 			}
@@ -580,6 +605,42 @@ public abstract class Details {
 		public boolean isShavuot() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isShavuot() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isPurim() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isPurim() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isChanukah() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isChanukah() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isRoshHashana() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isRoshHashana() ) {
 					return true;
 				}
 			}

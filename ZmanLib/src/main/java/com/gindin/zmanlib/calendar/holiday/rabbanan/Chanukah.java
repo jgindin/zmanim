@@ -62,6 +62,12 @@ public class Chanukah
 		private ChanukahDetails( HebrewDate date, int day ) {
 			super( date, CHANUKAH + " " + day );
 		}
+
+
+		@Override
+		public boolean isChanukah() {
+			return true;
+		}
 	}
 
 

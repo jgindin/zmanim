@@ -36,11 +36,28 @@ public class Purim
 				return new Details.Erev( date, PURIM, false );
 			}
 			if ( 14 == date.getHebrewDayOfMonth() ) {
-				return new Details.Yom( date, PURIM );
+				return new PurimDetails( date );
 			}
 		}
 
 		return null;
+	}
+
+
+	private static class PurimDetails
+		extends Details.Yom {
+
+		public PurimDetails(
+			final HebrewDate date
+		) {
+			super( date, PURIM );
+		}
+
+
+		@Override
+		public boolean isPurim() {
+			return true;
+		}
 	}
 
 }  // End of Purim class

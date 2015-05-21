@@ -57,6 +57,12 @@ public class RoshHashana
 		) {
 			super( date, ROSH_HASHANA, lightCandles );
 		}
+
+
+		@Override
+		public boolean isRoshHashana() {
+			return true;
+		}
 	}
 
 }  // End of RoshHashana class
