@@ -12,6 +12,7 @@ import java.util.List;
 class BirkatAmmazon {
 
 	
+	@SuppressWarnings( "FeatureEnvy" )
 	static List<String> getFileNamesForDate( HebrewDate date ) {
 		
 		List<String> files = new ArrayList<>();
@@ -42,7 +43,7 @@ class BirkatAmmazon {
 		final boolean isYomTov = dateDetails.isYomTov();
 		final boolean isCholHaMoed = dateDetails.isCholHaMoed();
 
-		files.add("berachot/birkat_ammazon/1_intro.txt" );
+		files.add( "berachot/birkat_ammazon/1_intro.txt" );
 		if ( isShabbat ) {
 			if ( isYomTov ) {
 				files.add( "berachot/birkat_ammazon/2_hav_lan_shabbat_yom_tov.txt" );

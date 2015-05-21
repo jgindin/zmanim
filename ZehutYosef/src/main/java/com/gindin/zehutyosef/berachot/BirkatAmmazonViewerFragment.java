@@ -10,13 +10,12 @@ import java.util.List;
 public class BirkatAmmazonViewerFragment
 	extends TextViewerFragment {
 
-	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	protected String loadText() {
 
 		List<String> files = BirkatAmmazon.getFileNamesForDate( getDate() );
-		String text = "";
 
+		String text = "";
 		for ( String file : files ) {
 			text += loadTextAsset( file );
 		}
