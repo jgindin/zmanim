@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -199,6 +200,7 @@ public abstract class TextViewerFragment
 
 		}
 		catch ( IOException e ) {
+			Log.e( "zehut-yosef", "Error loading: '" + assetPath + "'" );
 			if ( input != null ) {
 				try {
 					input.close();
@@ -207,7 +209,6 @@ public abstract class TextViewerFragment
 					// Oh well.
 				}
 			}
-			e.printStackTrace();
 		}
 
 		return buffer.toString();

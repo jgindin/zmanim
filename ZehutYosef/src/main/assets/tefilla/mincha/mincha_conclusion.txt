@@ -1,0 +1,4 @@
+This concludes the Minha (afternoon) service.
+
+Each one greets the other with ‘Buenas Tadres’, the response being ‘Buenas tengas, salud  i vida.’
+
