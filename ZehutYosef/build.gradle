@@ -43,8 +43,8 @@ android {
 
   compileSdkVersion 22
   buildToolsVersion "21.1.2"
+
   defaultConfig {
-    applicationId "com.gindin.zehutyosef"
     minSdkVersion 11
     targetSdkVersion 22
     versionCode appVersionCode
@@ -54,7 +54,6 @@ android {
   buildTypes {
 
     // Adding fields to the BuildConfig inspired by http://toastdroid.com/2014/03/28/customizing-your-build-with-gradle/
-
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
@@ -67,8 +66,18 @@ android {
       buildConfigField "String", "HG_VERSION", "${hgVersion()}"
       buildConfigField "String", "BUILD_TIME", "${buildTime()}"
     }
-
   }
+
+  productFlavors {
+    barMitzvah {
+      applicationId "com.gindin.barmitzvah"
+    }
+
+    zehutYosef {
+      applicationId "com.gindin.zehutyosef"
+    }
+  }
+
 }
 
 dependencies {
