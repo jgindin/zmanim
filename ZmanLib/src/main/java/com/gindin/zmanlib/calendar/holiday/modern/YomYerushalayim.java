@@ -43,7 +43,12 @@ public class YomYerushalayim
 		}
 
 		if ( 28 == date.getHebrewDayOfMonth() ) {
-			return new Details.Yom( date, NAME );
+			return new Details.Yom( date, NAME ) {
+				@Override
+				public boolean isYomYerushalayim() {
+					return true;
+				}
+			};
 		}
 
 		return null;

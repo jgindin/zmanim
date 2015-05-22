@@ -33,7 +33,12 @@ public class ShushanPurim
 			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
 			if ( 15 == date.getHebrewDayOfMonth() ) {
-				return new Details.Yom( date, SHUSHAN_PURIM );
+				return new Details.Yom( date, SHUSHAN_PURIM ) {
+					@Override
+					public boolean isShushanPurim() {
+						return true;
+					}
+				};
 			}
 		}
 

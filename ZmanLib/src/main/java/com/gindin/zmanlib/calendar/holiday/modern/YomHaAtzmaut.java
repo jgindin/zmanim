@@ -116,7 +116,12 @@ public class YomHaAtzmaut
 
 
 	private Details createYomDetails( HebrewDate date ) {
-		return new Details.Yom( date, NAME );
+		return new Details.Yom( date, NAME ) {
+			@Override
+			public boolean isYomHaAtzmaut() {
+				return true;
+			}
+		};
 	}
 
 }  // End of YomHaAtzmaut class

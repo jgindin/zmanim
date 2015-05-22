@@ -35,7 +35,12 @@ public class LagBOmer
 				return new Details.Erev( date, NAME, false );
 			}
 			else if ( 18 == hebrewDayOfMonth ) {
-				return new Details.Yom( date, NAME );
+				return new Details.Yom( date, NAME ) {
+					@Override
+					public boolean isLagBOmer() {
+						return true;
+					}
+				};
 			}
 		}
 

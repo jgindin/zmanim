@@ -324,6 +324,29 @@ public class HebrewDate
 	}
 
 
+	public boolean isGregorianLeapYear() {
+
+		// If the year isn't divisible by 4, it cannot be a leap year.
+		// But, if it is divisible by 100, it is NOT a leap year.
+		// But....if ti is divisible by 400, then it IS a leap year.
+
+		if ( gregorianYear % 4 != 0 ) {
+			return false;
+		}
+
+		//noinspection MagicNumber
+		if ( gregorianYear % 400 == 0 ) {
+			return true;
+		}
+
+		if ( gregorianYear % 100 == 0 ) {
+			return false;
+		}
+
+		return true;
+	}
+
+
 	/**
 	 * Returns this object's date as a java.util.Date object.
 	 *
@@ -495,7 +518,8 @@ public class HebrewDate
 	public HebrewDate forward( int numDays ) {
 		return HebrewCalendar.forward( this, numDays );
 	}
-	
+
+
 	public HebrewDate yesterday() {
 		return HebrewCalendar.back( this );
 	}

@@ -62,6 +62,8 @@ public abstract class Details {
 		return false;
 	}
 
+	public boolean isPesachSheni() { return false; }
+
 	public boolean isSukkot() { return false; }
 
 	public boolean isShminiAtzeret() { return false; }
@@ -72,9 +74,18 @@ public abstract class Details {
 
 	public boolean isPurim() { return false; }
 
+	public boolean isShushanPurim() { return false; }
+
 	public boolean isChanukah() { return false; }
 
 	public boolean isRoshHashana() { return false; }
+
+	public boolean isYomHaAtzmaut() { return false; }
+
+	public boolean isYomYerushalayim() { return false; }
+
+	public boolean isLagBOmer() { return false; }
+
 
 	/**
 	 * A complete description of today's observance. Could be something simple like,
@@ -566,6 +577,18 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isPesachSheni() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isPesachSheni() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
 		public boolean isSukkot() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isSukkot() ) {
@@ -626,6 +649,18 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isShushanPurim() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isShushanPurim() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
 		public boolean isChanukah() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isChanukah() ) {
@@ -641,6 +676,42 @@ public abstract class Details {
 		public boolean isRoshHashana() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isRoshHashana() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isYomHaAtzmaut() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isYomHaAtzmaut() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isYomYerushalayim() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isYomYerushalayim() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
+		public boolean isLagBOmer() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isLagBOmer() ) {
 					return true;
 				}
 			}
