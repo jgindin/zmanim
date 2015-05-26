@@ -20,7 +20,6 @@ public class MinchaViewerFragment
 		for ( String file : files ) {
 			text += loadTextAsset( file );
 		}
-
 		return text;
 
 	}

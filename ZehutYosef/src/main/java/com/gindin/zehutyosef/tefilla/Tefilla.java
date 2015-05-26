@@ -84,9 +84,9 @@ class Tefilla {
 
 		List<String> files = new ArrayList<>();
 
-		// Assembling Mincha:
+		// Assembling Arvit:
 
-		files.add( "tefilla/mincha/.txt" );
+		files.add( "tefilla/arvit/arvit.txt" );
 
 		return files;
 	}
