@@ -72,14 +72,11 @@ public class ZehutYosefActivity
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
 
 		if ( BuildConfig.DEBUG ) {
 //			Debug.startMethodTracing( "zehut-yosef" );
 			StrictMode.enableDefaults();
 		}
-
-		setContentView( R.layout.activity_zehut_yosef );
 
 		// Make sure we have a font. It may get updated / modified when we setup the shared prefs, but this will
 		//  ensure we don't have to worry about NPE.
@@ -90,8 +87,14 @@ public class ZehutYosefActivity
 		sections.add( new Section( R.string.birkat_amazon ) );
 		sections.add( new Section( R.string.meen_shalosh ) );
 
-		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
 		title = getTitle();
+
+		// Do this after the initial setup, because when we get rotated, the fragments are preserved and so don't have to go through
+		//  the whole lifecycle. This means that if we were to invoked super.onCreate() first from this method,
+		//  the fragments would get attached and try to call back to let us know this, but we wouldn't be ready
+		//  to handle it yet...
+		super.onCreate( savedInstanceState );
+		setContentView( R.layout.activity_zehut_yosef );
 
 		List<String> sectionNames = new ArrayList<>();
 		for ( Section section : sections ) {
@@ -99,11 +102,7 @@ public class ZehutYosefActivity
 		}
 
 		// Set up the drawer.
-		navigationDrawerFragment.setUp(
-			R.id.navigation_drawer,
-			(DrawerLayout)findViewById( R.id.drawer_layout ),
-			sectionNames
-		);
+		initDrawer( sectionNames );
 
 
 		// Setup the shared preferences with the default values. Make sure the last param is false so that we don't overwrite
@@ -221,6 +220,17 @@ public class ZehutYosefActivity
 
 
 		return super.onOptionsItemSelected( item );
+	}
+
+
+	private void initDrawer( final List<String> sectionNames ) {
+
+		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
+		navigationDrawerFragment.setUp(
+			R.id.navigation_drawer,
+			(DrawerLayout)findViewById( R.id.drawer_layout ),
+			sectionNames
+		);
 	}
 
 

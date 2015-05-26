@@ -36,7 +36,8 @@ public abstract class TextViewerFragment
 	/** The fragment argument representing the section title for this fragment. */
 	private static final String                               ARG_SECTION_TITLE_ID = "section_title_id";
 
-
+	/** The root of our view. Hold on to this to avoid unnecessary recreation. */
+	private View                                              rootView;
 
 	/** The text view we're actually rendering into. */
 	private TextView                                          textView;
@@ -100,36 +101,15 @@ public abstract class TextViewerFragment
 		Bundle          savedInstanceState
 	) {
 
-		final View rootView = inflater.inflate( R.layout.fragment_zehut_yosef, container, false );
+		if ( rootView == null ) {
+			rootView = inflater.inflate( R.layout.fragment_zehut_yosef, container, false );
 
-		AsyncTask<Void, Void, String> loadTextTask = new AsyncTask<Void, Void, String>() {
-			@Override
-			protected String doInBackground( final Void... params ) {
-				return loadText();
-			}
-
-
-			@Override
-			protected void onPostExecute( final String text ) {
-				super.onPostExecute( text );
-
-				textView = (TextView)rootView.findViewById( R.id.textView );
-
-				if ( activeFont != null ) {
-					setFont( activeFont );
-				}
-
-				textView.setText( text );
-			}
-		};
-
-		loadTextTask.execute();
-
-		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
-		//  the middle of something pretty important.
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-		boolean keepScreenOn = preferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
-		rootView.setKeepScreenOn( keepScreenOn );
+			// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
+			//  the middle of something pretty important.
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+			boolean keepScreenOn = preferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
+			rootView.setKeepScreenOn( keepScreenOn );
+		}
 
 		return rootView;
 	}
@@ -146,9 +126,37 @@ public abstract class TextViewerFragment
 	public void onResume() {
 		super.onResume();
 
-		// Seems like this works more reliably. Dunno if it's because when the user goes out to the Settings, this
-		//  Fragment is paused, and updating the font doesn't take affect?
-		setFont( activeFont );
+		if ( textView != null ) {
+			// Seems like this works more reliably. Dunno if it's because when the user goes out to the Settings, this
+			//  Fragment is paused, and updating the font doesn't take affect?
+			setFont( activeFont );
+		}
+		else {
+
+			textView = (TextView)rootView.findViewById( R.id.textView );
+
+			AsyncTask<Void, Void, String> loadTextTask = new AsyncTask<Void, Void, String>() {
+				@Override
+				protected String doInBackground( final Void... params ) {
+					return loadText();
+				}
+
+
+				@Override
+				protected void onPostExecute( final String text ) {
+					super.onPostExecute( text );
+
+					if ( activeFont != null ) {
+						setFont( activeFont );
+					}
+
+					textView.setText( text );
+				}
+			};
+
+			loadTextTask.execute();
+		}
+
 	}
 
 

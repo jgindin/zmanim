@@ -55,7 +55,7 @@ android {
 
     // Adding fields to the BuildConfig inspired by http://toastdroid.com/2014/03/28/customizing-your-build-with-gradle/
     release {
-      minifyEnabled false
+      minifyEnabled true
       proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
       signingConfig signingConfigs.release
       buildConfigField "String", "HG_VERSION", "${hgVersion()}"
