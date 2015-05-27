@@ -147,6 +147,7 @@ public class ZehutYosefActivity
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
+			.setCustomAnimations( android.R.anim.fade_in, android.R.anim.fade_out )
 			.replace( R.id.container, viewerFragment )
 			.commit();
 	}
@@ -161,6 +162,7 @@ public class ZehutYosefActivity
 	void onSectionAttached( @StringRes int sectionTitleId ) {
 
 		title = getString( sectionTitleId );
+		restoreActionBar( title );
 
 		for ( Section section : sections ) {
 			if ( section.titleId == sectionTitleId ) {

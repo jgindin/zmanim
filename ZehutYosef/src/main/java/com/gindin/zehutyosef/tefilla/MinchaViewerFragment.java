@@ -12,15 +12,13 @@ public class MinchaViewerFragment
 
 
 	@Override
-	protected String loadText() {
+	protected void loadText( final TextLoadingCallback callback ) {
 
 		List<String> files = Tefilla.getMinchaFileNamesForDate( getDate() );
 
-		String text = "";
 		for ( String file : files ) {
-			text += loadTextAsset( file );
+			callback.stream( loadTextAsset( file ) );
 		}
-		return text;
 
 	}
 

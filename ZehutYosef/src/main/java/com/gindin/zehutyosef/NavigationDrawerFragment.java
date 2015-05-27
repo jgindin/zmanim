@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -60,6 +61,7 @@ public class NavigationDrawerFragment
 
 	private boolean                                           userLearnedDrawer;
 
+	private Handler                                           switchItemHandler;
 
 
 	public NavigationDrawerFragment() {
@@ -69,6 +71,8 @@ public class NavigationDrawerFragment
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+
+		switchItemHandler = new Handler();
 
 		// Doing this work inline was causing a StrictMode violation.
 		AsyncTask<Void, Void, Void> readPrefsTask = new AsyncTask<Void, Void, Void>() {
@@ -253,7 +257,8 @@ public class NavigationDrawerFragment
 	}
 
 
-	private void selectItem( int position ) {
+	private void selectItem( final int position ) {
+
 		currentSelectedPosition = position;
 		if ( drawerListView != null ) {
 			drawerListView.setItemChecked( position, true );
@@ -264,7 +269,13 @@ public class NavigationDrawerFragment
 		}
 
 		if ( drawerCallbacks != null ) {
-			drawerCallbacks.onNavigationDrawerItemSelected( position );
+			switchItemHandler.postDelayed( new Runnable() {
+				@Override
+				public void run() {
+					drawerCallbacks.onNavigationDrawerItemSelected( position );
+				}
+			}, 250 );
+
 		}
 	}
 

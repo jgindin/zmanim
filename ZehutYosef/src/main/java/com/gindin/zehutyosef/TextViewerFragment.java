@@ -32,6 +32,11 @@ import java.io.InputStreamReader;
 public abstract class TextViewerFragment
 	extends Fragment {
 
+	protected interface TextLoadingCallback {
+
+		void stream( String text );
+	}
+
 
 	/** The fragment argument representing the section title for this fragment. */
 	private static final String                               ARG_SECTION_TITLE_ID = "section_title_id";
@@ -87,6 +92,13 @@ public abstract class TextViewerFragment
 
 
 	@Override
+	public void onAttach( Activity activity ) {
+		super.onAttach( activity );
+		((ZehutYosefActivity)activity).onSectionAttached( getArguments().getInt( ARG_SECTION_TITLE_ID ) );
+	}
+
+
+	@Override
 	public void onCreate( final Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 
@@ -116,13 +128,6 @@ public abstract class TextViewerFragment
 
 
 	@Override
-	public void onAttach( Activity activity ) {
-		super.onAttach( activity );
-		((ZehutYosefActivity)activity).onSectionAttached( getArguments().getInt( ARG_SECTION_TITLE_ID ) );
-	}
-
-
-	@Override
 	public void onResume() {
 		super.onResume();
 
@@ -134,23 +139,36 @@ public abstract class TextViewerFragment
 		else {
 
 			textView = (TextView)rootView.findViewById( R.id.textView );
+			if ( activeFont != null ) {
+				setFont( activeFont );
+			}
 
-			AsyncTask<Void, Void, String> loadTextTask = new AsyncTask<Void, Void, String>() {
+			AsyncTask<Void, String, Void> loadTextTask = new AsyncTask<Void, String, Void>() {
+
+				private final TextLoadingCallback                   callback = new TextLoadingCallback() {
+					@Override
+					public void stream( final String text ) {
+						publishProgress( text );
+						try {  Thread.sleep( 150 ); } catch ( InterruptedException e ) { /* never mind */ }
+					}
+				};
+
 				@Override
-				protected String doInBackground( final Void... params ) {
-					return loadText();
+				protected Void doInBackground( final Void... params ) {
+
+					loadText( callback );
+					return null;
 				}
 
+				@Override
+				protected void onProgressUpdate( final String... values ) {
+					super.onProgressUpdate( values );
+					textView.append( values[0] );
+				}
 
 				@Override
-				protected void onPostExecute( final String text ) {
-					super.onPostExecute( text );
-
-					if ( activeFont != null ) {
-						setFont( activeFont );
-					}
-
-					textView.setText( text );
+				protected void onPostExecute( final Void nothing ) {
+					super.onPostExecute( nothing );
 				}
 			};
 
@@ -160,7 +178,7 @@ public abstract class TextViewerFragment
 	}
 
 
-	void setFont( final FontInfo newFont ) {
+	final void setFont( final FontInfo newFont ) {
 
 		activeFont = newFont;
 
@@ -171,12 +189,14 @@ public abstract class TextViewerFragment
 	}
 
 
-	void setDate( final HebrewDate date ) {
+	final void setDate( final HebrewDate date ) {
+
+		// TODO: If the date changes, then need to signal that the text needs to be reloaded.
 		this.date = date;
 	}
 
 
-	protected HebrewDate getDate() {
+	protected final HebrewDate getDate() {
 		return date;
 	}
 
@@ -186,8 +206,10 @@ public abstract class TextViewerFragment
 	 *
 	 * Generally, this method will be one or more calls to loadTextAsset(), which will take care of reading
 	 *  the specified file (as a path, relative to the assets directory).
+	 *
+	 * @param callback Call as chunks of the text are available.
 	 */
-	protected abstract String loadText();
+	protected abstract void loadText( final TextLoadingCallback callback );
 
 
 
