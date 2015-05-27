@@ -1,35 +1,51 @@
 package com.gindin.zehutyosef;
 
+import com.gindin.zehutyosef.berachot.BirkatAmmazon;
+import com.gindin.zehutyosef.berachot.MeenShalosh;
 import com.gindin.zehutyosef.settings.AboutBox;
 import com.gindin.zehutyosef.settings.Settings;
+import com.gindin.zehutyosef.tefilla.Arvit;
+import com.gindin.zehutyosef.tefilla.Mincha;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ZehutYosefActivity
-	extends AppCompatActivity
-	implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+	extends AppCompatActivity {
 
 	/** The sections of tefillah, berachot, etc... the user can choose. */
 	private final List<Section>                               sections;
@@ -43,21 +59,15 @@ public class ZehutYosefActivity
 	@NonNull
 	private FontInfo                                          activeFont;
 
-	/**
-	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-	 */
-	private NavigationDrawerFragment                          navigationDrawerFragment;
-
-	/**
-	 * Used to store the last screen title. For use in {@link #restoreActionBar(CharSequence)}.
-	 */
-	private CharSequence                                      title;
 
 	/** Remember which section is currently active. */
 	private Section                                           activeSection;
 
 	private PrefsListener                                     prefsListener;
 
+	private Drawer                                            drawer;
+
+	private TextView                                          textContent;
 
 
 	public ZehutYosefActivity() {
@@ -78,16 +88,10 @@ public class ZehutYosefActivity
 			StrictMode.enableDefaults();
 		}
 
-		// Make sure we have a font. It may get updated / modified when we setup the shared prefs, but this will
-		//  ensure we don't have to worry about NPE.
-		updateFont( FontInfo.init( this ) );
-
-		sections.add( new Section( R.string.mincha ) );
-		sections.add( new Section( R.string.arvit ) );
-		sections.add( new Section( R.string.birkat_amazon ) );
-		sections.add( new Section( R.string.meen_shalosh ) );
-
-		title = getTitle();
+		sections.add( new Section( R.string.mincha, new Mincha() ) );
+		sections.add( new Section( R.string.arvit, new Arvit() ) );
+		sections.add( new Section( R.string.birkat_amazon, new BirkatAmmazon() ) );
+		sections.add( new Section( R.string.meen_shalosh, new MeenShalosh() ) );
 
 		// Do this after the initial setup, because when we get rotated, the fragments are preserved and so don't have to go through
 		//  the whole lifecycle. This means that if we were to invoked super.onCreate() first from this method,
@@ -96,13 +100,17 @@ public class ZehutYosefActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_zehut_yosef );
 
-		List<String> sectionNames = new ArrayList<>();
-		for ( Section section : sections ) {
-			sectionNames.add( section.title );
-		}
+		textContent = (TextView)findViewById( R.id.text_content );
+
+		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
+		//  the middle of something pretty important.
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+		boolean keepScreenOn = preferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
+		textContent.setKeepScreenOn( keepScreenOn );
+
 
 		// Set up the drawer.
-		initDrawer( sectionNames );
+		initDrawer( savedInstanceState );
 
 
 		// Setup the shared preferences with the default values. Make sure the last param is false so that we don't overwrite
@@ -115,6 +123,8 @@ public class ZehutYosefActivity
 		AsyncTask<Void, Void, Void> readPrefsTask = new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground( final Void... params ) {
+
+				activeFont = FontInfo.getByIdName( FontInfo.init( ZehutYosefActivity.this ) );
 				PreferenceManager.setDefaultValues( ZehutYosefActivity.this, R.xml.preferences, false );
 
 				return null;
@@ -140,158 +150,209 @@ public class ZehutYosefActivity
 
 
 	@Override
-	public void onNavigationDrawerItemSelected( int position ) {
-
-		// update the main content by replacing fragments
-		TextViewerFragment viewerFragment = sections.get( position ).getViewerFragment();
-
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction()
-			.setCustomAnimations( android.R.anim.fade_in, android.R.anim.fade_out )
-			.replace( R.id.container, viewerFragment )
-			.commit();
-	}
-
-
-	@Override
-	public void showGlobalContextActionBar() {
-		restoreActionBar( getString( R.string.app_name ) );
-	}
-
-
-	void onSectionAttached( @StringRes int sectionTitleId ) {
-
-		title = getString( sectionTitleId );
-		restoreActionBar( title );
-
-		for ( Section section : sections ) {
-			if ( section.titleId == sectionTitleId ) {
-				activeSection = section;
-				break;
-			}
-		}
-
-		// Make sure it's using the correct font.
-		activeFont.load( getAssets() );
-		TextViewerFragment viewerFragment = activeSection.getViewerFragment();
-		viewerFragment.setFont( activeFont );
-		viewerFragment.setDate( hebrewDate );
-	}
-
-
-	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 
-		if ( !navigationDrawerFragment.isDrawerOpen() ) {
-			// Only show items in the action bar relevant to this screen
-			// if the drawer is not showing. Otherwise, let the drawer
-			// decide what to show in the action bar.
-			getMenuInflater().inflate( R.menu.zehut_yosef, menu );
-			restoreActionBar( title );
+		getMenuInflater().inflate( R.menu.zehut_yosef, menu );
 
-			MenuItem dateItem = menu.findItem( R.id.date );
-			TextView dateView = (TextView)dateItem.getActionView();
+		MenuItem dateItem = menu.findItem( R.id.date );
+		TextView dateView = (TextView)dateItem.getActionView();
 
-			HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-			dateView.setText( formatter.format( hebrewDate, null ) );
+		HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
+		dateView.setText( formatter.format( hebrewDate, null ) );
 
-			return true;
-		}
-
-		return super.onCreateOptionsMenu( menu );
+		return true;
 	}
+
 
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item ) {
+	public void onBackPressed() {
 
-		// Handle action bar item clicks here. The action bar will automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		// Handle the back press :D close the drawer first and if the drawer is closed close the activity
+		if ( drawer != null && drawer.isDrawerOpen() ) {
+			drawer.closeDrawer();
+		}
+		else {
+			super.onBackPressed();
+		}
+	}
 
-		switch ( id ) {
-			case R.id.action_settings:
+
+	private void initDrawer( final Bundle savedInstanceState ) {
+
+		// Handle Toolbar
+		Toolbar toolbar = (Toolbar)findViewById( R.id.toolbar );
+		setSupportActionBar( toolbar );
+
+		IDrawerItem[] drawerItems = new IDrawerItem[ sections.size() ];
+		for ( int i = 0; i < drawerItems.length; i++ ) {
+			drawerItems[i] = sections.get( i ).asDrawerItem();
+		}
+
+		drawer = new DrawerBuilder()
+			.withActivity( this )
+			.withToolbar( toolbar )
+			.addDrawerItems( drawerItems )
+			.addStickyDrawerItems(
+				new SecondaryDrawerItem()
+					.withName( R.string.action_settings )
+					.withIcon( FontAwesome.Icon.faw_cog )
+					.withIdentifier( R.string.action_settings ),
+				new SecondaryDrawerItem()
+					.withName( R.string.action_about )
+					.withIcon( GoogleMaterial.Icon.gmd_help )
+					.withIdentifier( R.string.action_about )
+			)
+			.withOnDrawerItemClickListener(
+				new Drawer.OnDrawerItemClickListener() {
+					@Override
+					public boolean onItemClick(
+						final AdapterView<?>  adapterView,
+						final View            view,
+						final int             position,
+						final long            id,
+						final IDrawerItem     drawerItem
+					) {
+
+						handleItem( drawerItem );
+						drawer.closeDrawer();
+						return true;
+					}
+				}
+			)
+			.withSavedInstance( savedInstanceState )
+	    .withShowDrawerOnFirstLaunch( true )
+			.build();
+
+		drawer.setSelection( drawerItems[0] );
+	}
+
+
+	private void handleItem( final IDrawerItem drawerItem ) {
+
+		boolean handled = false;
+		switch ( drawerItem.getIdentifier() ) {
+			case R.string.action_settings:
 				startActivity( new Intent( this, Settings.class ) );
-				return true;
+				handled = true;
+				break;
 
-			case R.id.action_about:
+			case R.string.action_about:
 				AboutBox aboutBox = new AboutBox();
 				aboutBox.show( getSupportFragmentManager(), "about" );
-				return true;
+				handled = true;
+				break;
 		}
 
-
-		return super.onOptionsItemSelected( item );
-	}
-
-
-	private void initDrawer( final List<String> sectionNames ) {
-
-		navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById( R.id.navigation_drawer );
-		navigationDrawerFragment.setUp(
-			R.id.navigation_drawer,
-			(DrawerLayout)findViewById( R.id.drawer_layout ),
-			sectionNames
-		);
-	}
-
-
-	private void restoreActionBar( CharSequence actionBarTitle ) {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
-		actionBar.setDisplayShowTitleEnabled( true );
-		actionBar.setTitle( actionBarTitle );
-	}
-
-
-	private void updateFont( final String fontChoice) {
-
-		activeFont = FontInfo.getByIdName( fontChoice );
-		activeFont.load( getAssets() );
-
-		if ( activeSection != null ) {
-			activeSection.getViewerFragment().setFont( activeFont );
+		if ( !handled ) {
+			for ( Section section : sections ) {
+				if ( section.titleId == drawerItem.getIdentifier() ) {
+					activeSection = section;
+					section.load( getAssets(), textContent, hebrewDate );
+					break;
+				}
+			}
 		}
 	}
 
 
-	private class Section {
 
-		final String                                            title;
+	private static class Section {
+
 
 		@StringRes
 		private final int                                       titleId;
 
-		@Nullable
-		private TextViewerFragment                              viewerFragment;
+		private final DetermineText                             determineText;
 
 
 		Section(
-			@StringRes int titleId
+			@StringRes int  titleId,
+		  DetermineText   determineText
 		) {
 
-			this.title = getString( titleId );
 			this.titleId = titleId;
+			this.determineText = determineText;
 		}
 
 
-		TextViewerFragment getViewerFragment() {
+		IDrawerItem asDrawerItem() {
+			return new PrimaryDrawerItem().withName( titleId ).withIdentifier( titleId );
+		}
 
-			if ( viewerFragment == null ) {
-				viewerFragment = TextViewerFragment.newInstance( titleId );
+
+		public void load( final AssetManager assets, final TextView textContent, final HebrewDate date ) {
+
+			textContent.setText( "" );
+
+			AsyncTask<Void, Void, String> loadTextTask = new AsyncTask<Void, Void, String>() {
+
+				@Override
+				protected String doInBackground( final Void... params ) {
+
+					List<String> files = determineText.getTextFilesForDate( date );
+
+					String text = "";
+					for ( String file : files ) {
+						text += loadTextAsset( assets, file );
+					}
+
+					return text;
+				}
+
+
+				@Override
+				protected void onPostExecute( final String text ) {
+					super.onPostExecute( text );
+					textContent.setText( text );
+				}
+			};
+
+			loadTextTask.execute();
+		}
+
+
+		private String loadTextAsset(
+			final AssetManager  assets,
+			final String        assetPath
+		) {
+
+			StringBuilder buffer = new StringBuilder();
+
+			InputStream input = null;
+			try {
+				input = assets.open( assetPath );
+				BufferedReader reader = new BufferedReader( new InputStreamReader( input ) );
+
+				String line;
+				//noinspection NestedAssignment
+				while ( ( line = reader.readLine() ) != null ) {
+					buffer.append( line ).append( "\n" );
+				}
+
+			}
+			catch ( IOException e ) {
+				Log.e( "zehut-yosef", "Error loading: '" + assetPath + "'" );
+				if ( input != null ) {
+					try {
+						input.close();
+					}
+					catch ( IOException e1 ) {
+						// Oh well.
+					}
+				}
 			}
 
-			return viewerFragment;
+			return buffer.toString();
 		}
 	}
 
 
-	// create shared prefs listener
-	// figure out why not selecting font...
 
 	private class PrefsListener
 		implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+		@SuppressWarnings( "FeatureEnvy" )
 		@Override
 		public void onSharedPreferenceChanged(
 			final SharedPreferences sharedPreferences,
@@ -299,13 +360,15 @@ public class ZehutYosefActivity
 		) {
 
 			if ( key.equals( Settings.PreferenceKey.FontChoice.key ) ) {
-				updateFont( sharedPreferences.getString( key, "font_shlomo" ) );
+				activeFont = FontInfo.getByIdName( sharedPreferences.getString( key, "font_shlomo" ) );
+				activeFont.load( getAssets() );
+				textContent.setTypeface( activeFont.getTypeface() );
 			}
 			else if ( key.equals( Settings.PreferenceKey.FontSize.key ) ) {
 				int newSize = Integer.parseInt( sharedPreferences.getString( key, "14" ) );
 				activeFont.setSize( newSize );
 				if ( activeSection != null ) {
-					activeSection.getViewerFragment().setFont( activeFont );
+					textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
 				}
 			}
 		}

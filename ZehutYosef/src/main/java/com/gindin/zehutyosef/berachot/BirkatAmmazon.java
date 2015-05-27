@@ -1,5 +1,6 @@
 package com.gindin.zehutyosef.berachot;
 
+import com.gindin.zehutyosef.DetermineText;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.Details;
 
@@ -9,32 +10,17 @@ import java.util.List;
 /**
  * Separate out the details of which chunks to load so that we can easliy unit test.
  */
-class BirkatAmmazon {
+public class BirkatAmmazon
+	implements DetermineText {
 
-	
+
 	@SuppressWarnings( "FeatureEnvy" )
-	static List<String> getFileNamesForDate( HebrewDate date ) {
-		
+	@Override
+	public List<String> getTextFilesForDate( final HebrewDate date ) {
+
 		List<String> files = new ArrayList<>();
 		
 		// Assembling Birkat Ammazon:
-		// 1_intro
-		// 2_hav_lan or 2_hav_lan_shabbat or 2_hav_lan_shabbat_yom_tov or 2_hav_lan_yom_tov
-		// 3_vaydaber_elay
-		// 4_first_beracha_plus_nodeh
-		// ? 5_purim or 5_hanukkah
-		// 6_val_hakol_and_rachem
-		// ? 7_retzeh_shabbat
-		// ? 8_yaaleh_vayvao_rosh_hodesh or 8_yaaleh_vayvao_pesach or 8_yaaleh_vayvao_shavuot or 8_yaaleh_vayvao_sukkot or
-		//    8_yaaleh_vayvao_shmini_atzeret_simchat_torah or 8_yaaleh_vayvao_rosh_ashana
-		// 9_vtivneh_and_arachamans
-		// 10_arachaman_shabbat
-		// 10_arachaman_rosh_hodesh
-		// 10_arachaman_yom_tov
-		// 10_arachaman_chol_ha_moed
-		// 10_arachaman_sukkot
-		// 11_arachamans
-		// 12_conclusion_weekday or 12_conclusion_shabbat_rosh_hodesh_festivals
 
 		final Details dateDetails = date.getDetails();
 		final boolean isShabbat = dateDetails.isShabbat();

@@ -1,5 +1,6 @@
 package com.gindin.zehutyosef.tefilla;
 
+import com.gindin.zehutyosef.DetermineText;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.HebrewMonth;
@@ -13,7 +14,8 @@ import java.util.List;
  * Separate out the details of which chunks to load so that we can easliy unit test.
  */
 @SuppressWarnings( "MagicNumber" )
-class Tefilla {
+public abstract class Tefilla
+	implements DetermineText {
 
 	enum Type {
 		Shachrit,
@@ -22,78 +24,10 @@ class Tefilla {
 		Arvit
 	}
 
-	@SuppressWarnings( "FeatureEnvy" )
-	static List<String> getMinchaFileNamesForDate( HebrewDate date ) {
-
-		final boolean isFriday = ( date.getDayOfWeek() == Calendar.FRIDAY );
-		final boolean isAseretYameiTeshuva = isAseretYameiTeshuva( date );
-
-		List<String> files = new ArrayList<>();
-
-		// Assembling Mincha:
-		files.add( "tefilla/mincha/mincha_intro.txt" );
-		files.add( "tefilla/pitum_haketoret.txt" );
-
-		if ( isAseretYameiTeshuva ) {
-			files.add( "tefilla/pitum_haketoret_turk_asert_yamei_teshuva.txt" );
-		}
-
-		files.add( "tefilla/pitum_haketoret_conclusion.txt" );
-		files.add( "tefilla/ashre.txt" );
-
-		files.addAll( getAmidahFileNamesForDate( date, Type.Mincha ) );
-
-		if ( isAseretYameiTeshuva ) {
-			files.add( "tefilla/avinu_malkenu.txt" );
-		}
-
-		if ( doWeSayTachanun( date ) ) {
-			files.add( "tefilla/mincha/mincha_tachanun.txt" );
-		}
-
-		files.add( "tefilla/amonai_adonenu.txt" );
-
-		files.add( "tefilla/kaddish_titkabal.txt" );
-
-		if ( isFriday ) {
-			files.add( "tefilla/amonai_malach_geut_lavesh.txt" );
-		}
-		else {
-			files.add( "tefilla/lamnatzeach_binginot.txt" );
-		}
-
-		files.add( "tefilla/kaddish_yehe_shlama_raba.txt" );
-		files.add( "tefilla/alenu.txt" );
-
-		if ( isFriday ) {
-			files.add( "tefilla/mincha/mincha_conclusion_friday.txt" );
-		}
-		else {
-			files.add( "tefilla/mincha/mincha_conclusion.txt" );
-		}
-
-
-		return files;
-	}
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	static List<String> getArvitFileNamesForDate( HebrewDate date ) {
-
-		final Details dateDetails = date.getDetails();
-
-		List<String> files = new ArrayList<>();
-
-		// Assembling Arvit:
-
-		files.add( "tefilla/arvit/arvit.txt" );
-
-		return files;
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	private static List<String> getAmidahFileNamesForDate( HebrewDate date, Type tefillaType ) {
+	protected final List<String> getAmidahFileNamesForDate( HebrewDate date, Type tefillaType ) {
 
 		final Details dateDetails = date.getDetails();
 		final boolean isFastDay = dateDetails.isTaanit();
@@ -204,7 +138,7 @@ class Tefilla {
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	private static boolean doWeSayBarechenu(
+	protected final boolean doWeSayBarechenu(
 		HebrewDate  date,
 		Type        tefillaType
 	) {
@@ -235,7 +169,7 @@ class Tefilla {
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	private static boolean doWeSayMoridHaTal(
+	protected final boolean doWeSayMoridHaTal(
 		HebrewDate  date,
 		Type        tefillaType
 	) {
@@ -270,7 +204,7 @@ class Tefilla {
 	}
 
 
-	private static boolean isAseretYameiTeshuva( HebrewDate date ) {
+	protected final boolean isAseretYameiTeshuva( HebrewDate date ) {
 
 		int hebrewMonth = date.getHebrewMonth();
 		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
@@ -280,7 +214,7 @@ class Tefilla {
 
 
 	@SuppressWarnings( "FeatureEnvy" )
-	private static boolean doWeSayTachanun( HebrewDate date ) {
+	protected final boolean doWeSayTachanun( HebrewDate date ) {
 
 		// See pg. 43 of Zehut Yosef.
 

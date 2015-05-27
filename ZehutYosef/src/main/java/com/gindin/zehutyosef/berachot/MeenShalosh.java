@@ -1,5 +1,6 @@
 package com.gindin.zehutyosef.berachot;
 
+import com.gindin.zehutyosef.DetermineText;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.Details;
 
@@ -9,24 +10,18 @@ import java.util.List;
 /**
  * Separate out the details of which chunks to load so that we can easliy unit test.
  */
-class MeenShalosh {
+public class MeenShalosh
+	implements DetermineText {
 
 	@SuppressWarnings( "FeatureEnvy" )
-	static List<String> getFileNamesForDate( HebrewDate date ) {
+	@Override
+	public List<String> getTextFilesForDate( final HebrewDate date ) {
 
 		final Details dateDetails = date.getDetails();
 		
 		List<String> files = new ArrayList<>();
 	
 		// Assembling the before / after blessings:
-		//  1. meen_shalosh_before
-		//  2. meen_shalosh_after_intro
-		//  3. meen_shalosh_shabbat
-		//  4. meen_shalosh_rosh_chodesh
-		//  5. meen_shalosh_pesach or meen_shalosh_sukkot or meen_shalosh_shemini_atzeret_simchat_torah or meen_shalosh_shavuot
-		//  6. meen_shalosh_conclusion
-		//  7. other_before_and_after_blessings
-
 		files.add( "berachot/other_before_and_after_food/1_meen_shalosh_before.txt" );
 		files.add( "berachot/other_before_and_after_food/2_meen_shalosh_after_intro.txt" );
 
