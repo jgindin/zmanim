@@ -13,6 +13,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -102,13 +104,6 @@ public class ZehutYosefActivity
 
 		textContent = (TextView)findViewById( R.id.text_content );
 
-		// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
-		//  the middle of something pretty important.
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
-		boolean keepScreenOn = preferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
-		textContent.setKeepScreenOn( keepScreenOn );
-
-
 		// Set up the drawer.
 		initDrawer( savedInstanceState );
 
@@ -120,14 +115,26 @@ public class ZehutYosefActivity
 			.registerOnSharedPreferenceChangeListener( prefsListener );
 
 		// Doing this work inline was causing a StrictMode violation.
-		AsyncTask<Void, Void, Void> readPrefsTask = new AsyncTask<Void, Void, Void>() {
+		AsyncTask<Void, Void, Boolean> readPrefsTask = new AsyncTask<Void, Void, Boolean>() {
 			@Override
-			protected Void doInBackground( final Void... params ) {
+			protected Boolean doInBackground( final Void... params ) {
 
-				activeFont = FontInfo.getByIdName( FontInfo.init( ZehutYosefActivity.this ) );
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( ZehutYosefActivity.this );
+
+				activeFont = FontInfo.getByIdName( FontInfo.init( ZehutYosefActivity.this, prefs) );
 				PreferenceManager.setDefaultValues( ZehutYosefActivity.this, R.xml.preferences, false );
 
-				return null;
+				// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
+				//  the middle of something pretty important.
+				//noinspection AutoBoxing
+				return prefs.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
+			}
+
+
+			@Override
+			protected void onPostExecute( final Boolean keepScreenOn ) {
+				super.onPostExecute( keepScreenOn );
+				textContent.setKeepScreenOn( keepScreenOn );
 			}
 		};
 
@@ -189,9 +196,15 @@ public class ZehutYosefActivity
 			drawerItems[i] = sections.get( i ).asDrawerItem();
 		}
 
+		AccountHeader header = new AccountHeaderBuilder()
+			.withActivity( this )
+			.withHeaderBackground( R.drawable.header )
+			.build();
+
 		drawer = new DrawerBuilder()
 			.withActivity( this )
 			.withToolbar( toolbar )
+			.withAccountHeader( header )
 			.addDrawerItems( drawerItems )
 			.addStickyDrawerItems(
 				new SecondaryDrawerItem()
@@ -285,27 +298,31 @@ public class ZehutYosefActivity
 
 			textContent.setText( "" );
 
-			AsyncTask<Void, Void, String> loadTextTask = new AsyncTask<Void, Void, String>() {
+			AsyncTask<Void, String, Void> loadTextTask = new AsyncTask<Void, String, Void>() {
 
 				@Override
-				protected String doInBackground( final Void... params ) {
+				protected Void doInBackground( final Void... params ) {
+
+					// A little delay before we get going to let the drawer close back up...
+					try {  Thread.sleep( 300 ); } catch ( InterruptedException e ) { /* never mind */ }
 
 					List<String> files = determineText.getTextFilesForDate( date );
-
-					String text = "";
 					for ( String file : files ) {
-						text += loadTextAsset( assets, file );
+
+						String text = loadTextAsset( assets, file );
+						publishProgress( text );
+						try {  Thread.sleep( 150 ); } catch ( InterruptedException e ) { /* never mind */ }
 					}
 
-					return text;
+					return null;
 				}
-
 
 				@Override
-				protected void onPostExecute( final String text ) {
-					super.onPostExecute( text );
-					textContent.setText( text );
+				protected void onProgressUpdate( final String... values ) {
+					super.onProgressUpdate( values );
+					textContent.append( values[ 0 ] );
 				}
+
 			};
 
 			loadTextTask.execute();

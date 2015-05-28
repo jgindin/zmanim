@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -23,14 +22,13 @@ public class FontInfo {
 	/**
 	 * Initiializes all the fonts that we might use, and returns the key of the default font.
 	 */
-	public static String init( final Context context ) {
+	public static String init( final Context context, final SharedPreferences prefs ) {
 
 		FONT_INFOS.add( new FontInfo( "font_shlomo",           context.getString( R.string.font_shlomo ),          "fonts/Shlomo.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_taamey_ashkenaz",  context.getString( R.string.font_taamey_ashkenaz ), "fonts/TaameyAshkenaz-Medium.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_taamey_david",     context.getString( R.string.font_taamey_david ),    "fonts/TaameyDavidCLM-Medium.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_taamey_frank",     context.getString( R.string.font_taamey_frank ),    "fonts/TaameyFrankCLM-Medium.ttf" ) );
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( context );
 		return prefs.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).id );
 	}
 
