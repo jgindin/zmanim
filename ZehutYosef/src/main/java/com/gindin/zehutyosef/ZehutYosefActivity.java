@@ -188,7 +188,7 @@ public class ZehutYosefActivity
 	private void initDrawer( final Bundle savedInstanceState ) {
 
 		// Handle Toolbar
-		Toolbar toolbar = (Toolbar)findViewById( R.id.toolbar );
+		final Toolbar toolbar = (Toolbar)findViewById( R.id.toolbar );
 		setSupportActionBar( toolbar );
 
 		IDrawerItem[] drawerItems = new IDrawerItem[ sections.size() ];
@@ -262,7 +262,10 @@ public class ZehutYosefActivity
 				if ( section.titleId == drawerItem.getIdentifier() ) {
 					activeSection = section;
 					section.load( getAssets(), textContent, hebrewDate );
-					break;
+					getSupportActionBar().setTitle( section.titleId );
+				}
+				else {
+					section.cancel();
 				}
 			}
 		}
@@ -277,6 +280,8 @@ public class ZehutYosefActivity
 		private final int                                       titleId;
 
 		private final DetermineText                             determineText;
+
+		private LoadTextTask                                    loadTextTask;
 
 
 		Section(
@@ -294,75 +299,176 @@ public class ZehutYosefActivity
 		}
 
 
-		public void load( final AssetManager assets, final TextView textContent, final HebrewDate date ) {
+		void load( final AssetManager assets, final TextView textContent, final HebrewDate date ) {
 
 			textContent.setText( "" );
 
-			AsyncTask<Void, String, Void> loadTextTask = new AsyncTask<Void, String, Void>() {
-
+			loadTextTask = new LoadTextTask( date, determineText, assets, textContent ) {
 				@Override
-				protected Void doInBackground( final Void... params ) {
-
-					// A little delay before we get going to let the drawer close back up...
-					try {  Thread.sleep( 300 ); } catch ( InterruptedException e ) { /* never mind */ }
-
-					List<String> files = determineText.getTextFilesForDate( date );
-					for ( String file : files ) {
-
-						String text = loadTextAsset( assets, file );
-						publishProgress( text );
-						try {  Thread.sleep( 150 ); } catch ( InterruptedException e ) { /* never mind */ }
-					}
-
-					return null;
+				protected void onPostExecute( final Void aVoid ) {
+					super.onPostExecute( aVoid );
+					loadTextTask = null;
 				}
-
-				@Override
-				protected void onProgressUpdate( final String... values ) {
-					super.onProgressUpdate( values );
-					textContent.append( values[ 0 ] );
-				}
-
 			};
 
 			loadTextTask.execute();
 		}
 
 
-		private String loadTextAsset(
-			final AssetManager  assets,
-			final String        assetPath
-		) {
+		void cancel() {
 
-			StringBuilder buffer = new StringBuilder();
-
-			InputStream input = null;
-			try {
-				input = assets.open( assetPath );
-				BufferedReader reader = new BufferedReader( new InputStreamReader( input ) );
-
-				String line;
-				//noinspection NestedAssignment
-				while ( ( line = reader.readLine() ) != null ) {
-					buffer.append( line ).append( "\n" );
-				}
-
+			if ( loadTextTask != null ) {
+				loadTextTask.cancel( false );
+				loadTextTask = null;
 			}
-			catch ( IOException e ) {
-				Log.e( "zehut-yosef", "Error loading: '" + assetPath + "'" );
-				if ( input != null ) {
-					try {
-						input.close();
-					}
-					catch ( IOException e1 ) {
-						// Oh well.
-					}
-				}
-			}
-
-			return buffer.toString();
 		}
-	}
+
+
+
+		private static class LoadTextTask
+			extends AsyncTask<Void, LoadTextTask.Chunk, Void> {
+
+			private int                                           nextId = 0;
+
+			class Chunk {
+
+				final int                                           id;
+				final String                                        text;
+
+
+				Chunk(
+					final String text
+				) {
+					this.id = nextId;
+					this.text = text;
+
+					nextId++;
+				}
+			}
+
+
+			private final HebrewDate                              date;
+			private final DetermineText                           determineText;
+			private final AssetManager                            assets;
+			private final TextView                                textContent;
+
+			private final List<Chunk>                             bufferedChunks = new ArrayList<>();
+			private int                                           lastChunk = -1;
+
+
+
+			LoadTextTask(
+				final HebrewDate date,
+				final DetermineText determineText,
+				final AssetManager assets,
+				final TextView textContent
+			) {
+				this.date = date;
+				this.determineText = determineText;
+				this.assets = assets;
+				this.textContent = textContent;
+			}
+
+
+			@Override
+			protected Void doInBackground( final Void... params ) {
+
+				// A little delay before we get going to let the drawer close back up...
+				try {  Thread.sleep( 300 ); } catch ( InterruptedException e ) { /* never mind */ }
+
+				List<String> files = determineText.getTextFilesForDate( date );
+				for ( String file : files ) {
+
+					if ( isCancelled() ) {
+						return null;
+					}
+
+					String text = loadTextAsset( file );
+					publishProgress( new Chunk( text ) );
+					try {  Thread.sleep( 150 ); } catch ( InterruptedException e ) { /* never mind */ }
+				}
+
+				return null;
+			}
+
+
+			@Override
+			protected void onProgressUpdate( final Chunk... values ) {
+				super.onProgressUpdate( values );
+
+				Chunk chunk = values[0];
+				if ( chunk.id == ( lastChunk + 1 ) ) {
+					appendChunk( chunk );
+				}
+				else {
+					bufferedChunks.add( chunk );
+				}
+
+				while ( true ) {
+					if ( !drainBuffer() ) {
+						break;
+					}
+				}
+			}
+
+
+			private void appendChunk( Chunk chunk ) {
+				textContent.append( chunk.text );
+				lastChunk = chunk.id;
+			}
+
+
+			private boolean drainBuffer() {
+
+				for ( Chunk bufferedChunk : bufferedChunks ) {
+					if ( bufferedChunk.id == ( lastChunk + 1 ) ) {
+						appendChunk( bufferedChunk );
+						bufferedChunks.remove( bufferedChunk );
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+
+			private String loadTextAsset(
+				final String        assetPath
+			) {
+
+				StringBuilder buffer = new StringBuilder();
+
+				InputStream input = null;
+				try {
+					input = assets.open( assetPath );
+					BufferedReader reader = new BufferedReader( new InputStreamReader( input ) );
+
+					String line;
+					//noinspection NestedAssignment
+					while ( ( line = reader.readLine() ) != null ) {
+						buffer.append( line ).append( "\n" );
+					}
+
+				}
+				catch ( IOException e ) {
+					Log.e( "zehut-yosef", "Error loading: '" + assetPath + "'" );
+					if ( input != null ) {
+						try {
+							input.close();
+						}
+						catch ( IOException e1 ) {
+							// Oh well.
+						}
+					}
+				}
+
+				return buffer.toString();
+			}
+
+		} // End of LoadTextTask
+
+
+	} // End of Section
 
 
 
