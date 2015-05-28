@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class Tefilla
 	implements DetermineText {
 
+	@SuppressWarnings( "SpellCheckingInspection" )
 	enum Type {
 		Shachrit,
 		Musaf,
@@ -36,8 +37,6 @@ public abstract class Tefilla
 		List<String> files = new ArrayList<>();
 
 		// Assembling Amidah:
-		files.add( "tefilla/amidah/1_ticon_tefilati.txt" );
-		files.add( "tefilla/kaddish_chatzi.txt" );
 		files.add( "tefilla/amidah/2_1_magen_avraham_intro.txt" );
 
 		if ( isAseretYameiTeshuva ) {
@@ -61,7 +60,10 @@ public abstract class Tefilla
 		}
 
 		files.add( "tefilla/amidah/3_5_atah_gibor_conclusion.txt" );
-		files.add( "tefilla/amidah/4_1_kedusha_nakdishach.txt" );
+
+		if ( tefillaType == Type.Shachrit ) {
+			files.add( "tefilla/amidah/4_1_kedusha_nakdishach.txt" );
+		}
 
 		if ( isAseretYameiTeshuva ) {
 			files.add( "tefilla/amidah/4_2_kedusha_asert_yamei_teshuva.txt" );

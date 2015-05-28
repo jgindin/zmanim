@@ -31,6 +31,9 @@ public class Mincha
 		files.add( "tefilla/pitum_haketoret_conclusion.txt" );
 		files.add( "tefilla/ashre.txt" );
 
+		files.add( "tefilla/amidah/1_ticon_tefilati.txt" );
+		files.add( "tefilla/kaddish_chatzi.txt" );
+
 		files.addAll( getAmidahFileNamesForDate( date, Type.Mincha ) );
 
 		if ( isAseretYameiTeshuva ) {
