@@ -12,7 +12,7 @@
 			android:dialogTitle="@string/choose_font"
 			android:entries="@array/font_names"
 			android:entryValues="@array/font_ids"
-			android:defaultValue="font_shlomo"
+			android:defaultValue="font_taamey_david"
 		/>
 
 		<ListPreference

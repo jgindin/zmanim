@@ -483,7 +483,7 @@ public class ZehutYosefActivity
 		) {
 
 			if ( key.equals( Settings.PreferenceKey.FontChoice.key ) ) {
-				activeFont = FontInfo.getByIdName( sharedPreferences.getString( key, "font_shlomo" ) );
+				activeFont = FontInfo.getByIdName( sharedPreferences.getString( key, FontInfo.FONT_INFOS.get( 0 ).getId() ) );
 				activeFont.load( getAssets() );
 				textContent.setTypeface( activeFont.getTypeface() );
 			}

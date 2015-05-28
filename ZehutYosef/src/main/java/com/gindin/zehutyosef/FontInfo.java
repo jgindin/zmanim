@@ -24,9 +24,9 @@ public class FontInfo {
 	 */
 	public static String init( final Context context, final SharedPreferences prefs ) {
 
+		FONT_INFOS.add( new FontInfo( "font_taamey_david",     context.getString( R.string.font_taamey_david ),    "fonts/TaameyDavidCLM-Medium.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_shlomo",           context.getString( R.string.font_shlomo ),          "fonts/Shlomo.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_taamey_ashkenaz",  context.getString( R.string.font_taamey_ashkenaz ), "fonts/TaameyAshkenaz-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( "font_taamey_david",     context.getString( R.string.font_taamey_david ),    "fonts/TaameyDavidCLM-Medium.ttf" ) );
 		FONT_INFOS.add( new FontInfo( "font_taamey_frank",     context.getString( R.string.font_taamey_frank ),    "fonts/TaameyFrankCLM-Medium.ttf" ) );
 
 		return prefs.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).id );
@@ -89,6 +89,11 @@ public class FontInfo {
 
 	public String getName() {
 		return name;
+	}
+
+
+	public String getId() {
+		return id;
 	}
 
 

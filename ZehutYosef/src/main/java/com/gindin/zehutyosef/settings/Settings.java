@@ -75,10 +75,8 @@ public class Settings
 					if ( key.equals( PreferenceKey.FontChoice.key ) ) {
 						String fontIdName = sharedPreferences.getString( key, "" );
 						FontInfo fontInfo = FontInfo.getByIdName( fontIdName );
-						if ( fontInfo != null ) {
-							Preference pref = findPreference( key );
-							pref.setSummary( fontInfo.getName() );
-						}
+						Preference pref = findPreference( key );
+						pref.setSummary( fontInfo.getName() );
 					}
 					else if ( key.equals( PreferenceKey.FontSize.key ) ) {
 						Preference pref = findPreference( key );
