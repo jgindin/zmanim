@@ -248,12 +248,14 @@ public class ZehutYosefActivity
 			case R.string.action_settings:
 				startActivity( new Intent( this, Settings.class ) );
 				handled = true;
+				drawer.setSelection( activeSection.asDrawerItem() );
 				break;
 
 			case R.string.action_about:
 				AboutBox aboutBox = new AboutBox();
 				aboutBox.show( getSupportFragmentManager(), "about" );
 				handled = true;
+				drawer.setSelection( activeSection.asDrawerItem() );
 				break;
 		}
 
@@ -283,6 +285,8 @@ public class ZehutYosefActivity
 
 		private LoadTextTask                                    loadTextTask;
 
+		private PrimaryDrawerItem                               primaryDrawerItem;
+
 
 		Section(
 			@StringRes int  titleId,
@@ -295,7 +299,12 @@ public class ZehutYosefActivity
 
 
 		IDrawerItem asDrawerItem() {
-			return new PrimaryDrawerItem().withName( titleId ).withIdentifier( titleId );
+
+			if ( primaryDrawerItem == null ) {
+				primaryDrawerItem = new PrimaryDrawerItem().withName( titleId ).withIdentifier( titleId );
+			}
+
+			return primaryDrawerItem;
 		}
 
 
