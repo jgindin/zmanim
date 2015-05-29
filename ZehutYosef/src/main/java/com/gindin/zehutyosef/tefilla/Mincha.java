@@ -57,6 +57,7 @@ public class Mincha
 
 		files.add( "tefilla/kaddish_yehe_shlama_raba.txt" );
 		files.add( "tefilla/alenu.txt" );
+		files.add( "tefilla/uvtoratecha.txt" );
 
 		if ( isFriday ) {
 			files.add( "tefilla/mincha/mincha_conclusion_friday.txt" );

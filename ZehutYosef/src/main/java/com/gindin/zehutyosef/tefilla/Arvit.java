@@ -31,13 +31,7 @@ public class Arvit
 		}
 
 		files.add( "tefilla/arvit/mourning_intro.txt" );
-
-		if ( isRoshChodesh || isPurim ) {
-			files.add( "tefilla/arvit/utshuat_tzadikim_rosh_hodesh_purim.txt" );
-		}
-		else {
-			files.add( "tefilla/arvit/utshuat_tzadikim.txt" );
-		}
+		files.add( "tefilla/arvit/utshuat_tzadikim.txt" );
 
 		files.add( "tefilla/arvit/amonai_tzevaot.txt" );
 		files.add( "tefilla/kaddish_chatzi.txt" );
@@ -55,6 +49,9 @@ public class Arvit
 		files.add( "tefilla/kaddish_yehe_shlama_raba.txt" );
 		files.add( "tefilla/barekhu.txt" );
 		files.add( "tefilla/alenu.txt" );
+
+		// TODO: On Motzae Shabbat, we're done.
+		files.add( "tefilla/uvtoratecha.txt" );
 		files.add( "tefilla/ldavid_amonai_ori.txt" );
 		files.add( "tefilla/kaddish_yehe_shlama_raba.txt" );
 		files.add( "tefilla/arvit/arvit_conclusion.txt" );

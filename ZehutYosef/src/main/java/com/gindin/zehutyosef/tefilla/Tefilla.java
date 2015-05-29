@@ -111,6 +111,10 @@ public abstract class Tefilla
 		files.add( "tefilla/amidah/13_3_retzeh_conclusion.txt" );
 		files.add( "tefilla/amidah/14_1_modim_intro.txt" );
 
+		if ( tefillaType != Type.Arvit ) {
+			files.add( "tefilla/amidah/14_1_modim_drabanan.txt" );
+		}
+
 		if ( dateDetails.isChanukah() ) {
 			files.add( "tefilla/amidah/14_2_modim_chanukah.txt" );
 		}
@@ -133,6 +137,11 @@ public abstract class Tefilla
 		}
 
 		files.add( "tefilla/amidah/16_3_sim_shalom_conclusion.txt" );
+
+		if ( tefillaType != Type.Arvit ) {
+			files.add( "tefilla/amidah/17_end_of_amidah_instructions.txt" );
+		}
+
 		files.add( "tefilla/amidah/17_end_of_amidah.txt" );
 
 		return files;
