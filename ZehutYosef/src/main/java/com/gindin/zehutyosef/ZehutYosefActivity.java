@@ -134,11 +134,11 @@ public class ZehutYosefActivity
 			@Override
 			protected void onPostExecute( final Boolean keepScreenOn ) {
 				super.onPostExecute( keepScreenOn );
-				//noinspection AutoUnboxing
-				textContent.setKeepScreenOn( keepScreenOn );
-
 				// Wait until here so that we know our font is set....
 				drawer.setSelection( sections.get( 0 ).asDrawerItem() );
+
+				//noinspection AutoUnboxing
+				textContent.setKeepScreenOn( keepScreenOn );
 			}
 		};
 
@@ -504,6 +504,10 @@ public class ZehutYosefActivity
 				if ( activeSection != null ) {
 					textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
 				}
+			}
+			else if ( key.equals( Settings.PreferenceKey.KeepScreenOn.key ) ) {
+				boolean keepScreenOn = sharedPreferences.getBoolean( key, true );
+				textContent.setKeepScreenOn( keepScreenOn );
 			}
 		}
 	}
