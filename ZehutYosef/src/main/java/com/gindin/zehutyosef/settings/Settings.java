@@ -58,6 +58,10 @@ public class Settings
 		public void onCreate( final Bundle savedInstanceState ) {
 			super.onCreate( savedInstanceState );
 			addPreferencesFromResource( R.xml.preferences );
+
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+			updateFontName( preferences );
+			updateFontSize( preferences );
 		}
 
 
@@ -73,20 +77,34 @@ public class Settings
 				) {
 
 					if ( key.equals( PreferenceKey.FontChoice.key ) ) {
-						String fontIdName = sharedPreferences.getString( key, "" );
-						FontInfo fontInfo = FontInfo.getByIdName( fontIdName );
-						Preference pref = findPreference( key );
-						pref.setSummary( fontInfo.getName() );
+						updateFontName( sharedPreferences );
 					}
 					else if ( key.equals( PreferenceKey.FontSize.key ) ) {
-						Preference pref = findPreference( key );
-						pref.setSummary( sharedPreferences.getString( key, "14" ) );
+						updateFontSize( sharedPreferences );
 					}
 				}
 			};
 
 			PreferenceManager.getDefaultSharedPreferences( getActivity() )
 				.registerOnSharedPreferenceChangeListener( sharedPreferenceChangeListener );
+		}
+
+
+		private void updateFontName(
+			final SharedPreferences sharedPreferences
+		) {
+			String fontIdName = sharedPreferences.getString( PreferenceKey.FontChoice.key, "" );
+			FontInfo fontInfo = FontInfo.getByIdName( fontIdName );
+			Preference pref = findPreference( PreferenceKey.FontChoice.key );
+			pref.setSummary( fontInfo.getName() );
+		}
+
+
+		private void updateFontSize(
+			final SharedPreferences sharedPreferences
+		) {
+			Preference pref = findPreference( PreferenceKey.FontSize.key );
+			pref.setSummary( sharedPreferences.getString( PreferenceKey.FontSize.key, "14" ) );
 		}
 
 

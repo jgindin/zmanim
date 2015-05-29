@@ -134,7 +134,11 @@ public class ZehutYosefActivity
 			@Override
 			protected void onPostExecute( final Boolean keepScreenOn ) {
 				super.onPostExecute( keepScreenOn );
+				//noinspection AutoUnboxing
 				textContent.setKeepScreenOn( keepScreenOn );
+
+				// Wait until here so that we know our font is set....
+				drawer.setSelection( sections.get( 0 ).asDrawerItem() );
 			}
 		};
 
@@ -236,8 +240,6 @@ public class ZehutYosefActivity
 			.withSavedInstance( savedInstanceState )
 	    .withShowDrawerOnFirstLaunch( true )
 			.build();
-
-		drawer.setSelection( drawerItems[0] );
 	}
 
 
