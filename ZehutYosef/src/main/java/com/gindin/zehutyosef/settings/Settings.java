@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Activity for the user to configure their preferences.
@@ -62,6 +65,20 @@ public class Settings
 			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
 			updateFontName( preferences );
 			updateFontSize( preferences );
+		}
+
+
+		@Override
+		public View onCreateView(
+			final LayoutInflater inflater,
+			final ViewGroup container,
+			final Bundle savedInstanceState
+		) {
+
+			View v = super.onCreateView( inflater, container, savedInstanceState );
+			v.setFitsSystemWindows( true );
+
+			return v;
 		}
 
 
