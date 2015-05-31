@@ -115,30 +115,27 @@ public class ZehutYosefActivity
 			.registerOnSharedPreferenceChangeListener( prefsListener );
 
 		// Doing this work inline was causing a StrictMode violation.
-		AsyncTask<Void, Void, Boolean> readPrefsTask = new AsyncTask<Void, Void, Boolean>() {
+		AsyncTask<Void, Void, SharedPreferences> readPrefsTask = new AsyncTask<Void, Void, SharedPreferences>() {
 			@Override
-			protected Boolean doInBackground( final Void... params ) {
+			protected SharedPreferences doInBackground( final Void... params ) {
 
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( ZehutYosefActivity.this );
-
-				activeFont = FontInfo.getByIdName( FontInfo.init( ZehutYosefActivity.this, prefs) );
+				FontInfo.init( ZehutYosefActivity.this, prefs);
 				PreferenceManager.setDefaultValues( ZehutYosefActivity.this, R.xml.preferences, false );
 
-				// We really want the screen on while the user is on this screen. Otherwise it'll turn off while they're in
-				//  the middle of something pretty important.
-				//noinspection AutoBoxing
-				return prefs.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
+				return prefs;
 			}
 
 
 			@Override
-			protected void onPostExecute( final Boolean keepScreenOn ) {
-				super.onPostExecute( keepScreenOn );
+			protected void onPostExecute( final SharedPreferences prefs ) {
+				super.onPostExecute( prefs );
 				// Wait until here so that we know our font is set....
 				drawer.setSelection( sections.get( 0 ).asDrawerItem() );
 
-				//noinspection AutoUnboxing
-				textContent.setKeepScreenOn( keepScreenOn );
+				updateTypeface( prefs );
+				updateFontSize( prefs );
+				updateKeepScreenOn( prefs );
 			}
 		};
 
@@ -276,6 +273,36 @@ public class ZehutYosefActivity
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
+	private void updateTypeface(
+		final SharedPreferences sharedPreferences
+	) {
+		activeFont = FontInfo.getByIdName( sharedPreferences.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).getId() ) );
+		activeFont.load( getAssets() );
+		if ( textContent != null ) {
+			textContent.setTypeface( activeFont.getTypeface() );
+		}
+	}
+
+
+	private void updateFontSize(
+		final SharedPreferences sharedPreferences
+	) {
+		int newSize = Integer.parseInt( sharedPreferences.getString( Settings.PreferenceKey.FontSize.key, "14" ) );
+		activeFont.setSize( newSize );
+		if ( activeSection != null ) {
+			textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
+		}
+	}
+
+
+	private void updateKeepScreenOn(
+		final SharedPreferences sharedPreferences
+	) {
+		boolean keepScreenOn = sharedPreferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
+		textContent.setKeepScreenOn( keepScreenOn );
+	}
+
 
 	private static class Section {
 
@@ -311,8 +338,6 @@ public class ZehutYosefActivity
 
 
 		void load( final AssetManager assets, final TextView textContent, final HebrewDate date ) {
-
-			textContent.setText( "" );
 
 			loadTextTask = new LoadTextTask( date, determineText, assets, textContent ) {
 				@Override
@@ -407,8 +432,16 @@ public class ZehutYosefActivity
 			protected void onProgressUpdate( final Chunk... values ) {
 				super.onProgressUpdate( values );
 
+				if ( isCancelled() ) {
+					return;
+				}
+
 				Chunk chunk = values[0];
 				if ( chunk.id == ( lastChunk + 1 ) ) {
+					if ( chunk.id == 0 ) {
+						textContent.setText( "" );
+					}
+
 					appendChunk( chunk );
 				}
 				else {
@@ -494,20 +527,13 @@ public class ZehutYosefActivity
 		) {
 
 			if ( key.equals( Settings.PreferenceKey.FontChoice.key ) ) {
-				activeFont = FontInfo.getByIdName( sharedPreferences.getString( key, FontInfo.FONT_INFOS.get( 0 ).getId() ) );
-				activeFont.load( getAssets() );
-				textContent.setTypeface( activeFont.getTypeface() );
+				updateTypeface( sharedPreferences );
 			}
 			else if ( key.equals( Settings.PreferenceKey.FontSize.key ) ) {
-				int newSize = Integer.parseInt( sharedPreferences.getString( key, "14" ) );
-				activeFont.setSize( newSize );
-				if ( activeSection != null ) {
-					textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
-				}
+				updateFontSize( sharedPreferences );
 			}
 			else if ( key.equals( Settings.PreferenceKey.KeepScreenOn.key ) ) {
-				boolean keepScreenOn = sharedPreferences.getBoolean( key, true );
-				textContent.setKeepScreenOn( keepScreenOn );
+				updateKeepScreenOn( sharedPreferences );
 			}
 		}
 	}
