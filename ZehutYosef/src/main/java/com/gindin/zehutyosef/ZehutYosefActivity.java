@@ -388,9 +388,6 @@ public class ZehutYosefActivity
 			private final AssetManager                            assets;
 			private final TextView                                textContent;
 
-			private final List<Chunk>                             bufferedChunks = new ArrayList<>();
-			private int                                           lastChunk = -1;
-
 
 
 			LoadTextTask(
@@ -437,42 +434,11 @@ public class ZehutYosefActivity
 				}
 
 				Chunk chunk = values[0];
-				if ( chunk.id == ( lastChunk + 1 ) ) {
-					if ( chunk.id == 0 ) {
-						textContent.setText( "" );
-					}
-
-					appendChunk( chunk );
-				}
-				else {
-					bufferedChunks.add( chunk );
+				if ( chunk.id == 0 ) {
+					textContent.setText( "" );
 				}
 
-				while ( true ) {
-					if ( !drainBuffer() ) {
-						break;
-					}
-				}
-			}
-
-
-			private void appendChunk( Chunk chunk ) {
 				textContent.append( chunk.text );
-				lastChunk = chunk.id;
-			}
-
-
-			private boolean drainBuffer() {
-
-				for ( Chunk bufferedChunk : bufferedChunks ) {
-					if ( bufferedChunk.id == ( lastChunk + 1 ) ) {
-						appendChunk( bufferedChunk );
-						bufferedChunks.remove( bufferedChunk );
-						return true;
-					}
-				}
-
-				return false;
 			}
 
 
