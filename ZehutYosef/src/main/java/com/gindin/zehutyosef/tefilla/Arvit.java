@@ -35,6 +35,7 @@ public class Arvit
 
 		files.add( "tefilla/arvit/amonai_tzevaot.txt" );
 		files.add( "tefilla/kaddish_chatzi.txt" );
+		files.add( "tefilla/arvit/vehu_rachum.txt" );
 		files.add( "tefilla/barekhu.txt" );
 		files.add( "tefilla/arvit/arvit_shema_berakha_before.txt" );
 		files.add( "tefilla/shema.txt" );

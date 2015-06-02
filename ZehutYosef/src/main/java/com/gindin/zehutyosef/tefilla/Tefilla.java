@@ -61,7 +61,7 @@ public abstract class Tefilla
 
 		files.add( "tefilla/amidah/3_5_atah_gibor_conclusion.txt" );
 
-		if ( tefillaType == Type.Shachrit ) {
+		if ( ( tefillaType == Type.Shachrit ) || ( tefillaType == Type.Mincha ) ) {
 			files.add( "tefilla/amidah/4_1_kedusha_nakdishach.txt" );
 		}
 
