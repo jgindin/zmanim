@@ -121,7 +121,6 @@ public class ZehutYosefActivity
 
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( ZehutYosefActivity.this );
 				FontInfo.init( ZehutYosefActivity.this, prefs);
-				PreferenceManager.setDefaultValues( ZehutYosefActivity.this, R.xml.preferences, false );
 
 				return prefs;
 			}
@@ -133,6 +132,7 @@ public class ZehutYosefActivity
 				// Wait until here so that we know our font is set....
 				drawer.setSelection( sections.get( 0 ).asDrawerItem() );
 
+				// NOTE: the typeface MUST be updated first, as that ensures that we have a font!
 				updateTypeface( prefs );
 				updateFontSize( prefs );
 				updateKeepScreenOn( prefs );
@@ -279,9 +279,7 @@ public class ZehutYosefActivity
 	) {
 		activeFont = FontInfo.getByIdName( sharedPreferences.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).getId() ) );
 		activeFont.load( getAssets() );
-		if ( textContent != null ) {
-			textContent.setTypeface( activeFont.getTypeface() );
-		}
+		textContent.setTypeface( activeFont.getTypeface() );
 	}
 
 
@@ -290,9 +288,7 @@ public class ZehutYosefActivity
 	) {
 		int newSize = Integer.parseInt( sharedPreferences.getString( Settings.PreferenceKey.FontSize.key, "14" ) );
 		activeFont.setSize( newSize );
-		if ( activeSection != null ) {
-			textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
-		}
+		textContent.setTextSize( TypedValue.COMPLEX_UNIT_SP, activeFont.getSize() );
 	}
 
 
