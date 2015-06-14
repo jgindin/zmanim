@@ -33,7 +33,10 @@ public class Arvit
 		files.add( "tefilla/arvit/mourning_intro.txt" );
 		files.add( "tefilla/arvit/utshuat_tzadikim.txt" );
 
-		files.add( "tefilla/arvit/amonai_tzevaot.txt" );
+		if ( !isRoshChodesh ) {
+			files.add( "tefilla/arvit/amonai_tzevaot.txt" );
+		}
+
 		files.add( "tefilla/kaddish_chatzi.txt" );
 		files.add( "tefilla/arvit/vehu_rachum.txt" );
 		files.add( "tefilla/barekhu.txt" );

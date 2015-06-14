@@ -19,6 +19,9 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -28,6 +31,8 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -71,6 +77,11 @@ public class ZehutYosefActivity
 
 	private TextView                                          textContent;
 
+	private SecularDatePickerFragment                         datePickerFragment;
+	private DatePickerDialog.OnDateSetListener                dateChangeListener;
+
+	private TextView dateView;
+
 
 	public ZehutYosefActivity() {
 
@@ -91,7 +102,7 @@ public class ZehutYosefActivity
 		}
 
 		sections.add( new Section( R.string.mincha, new Mincha() ) );
-		sections.add( new Section( R.string.arvit, new Arvit() ) );
+		sections.add( new ArvitSection( R.string.arvit, new Arvit() ) );
 		sections.add( new Section( R.string.birkat_amazon, new BirkatAmmazon() ) );
 		sections.add( new Section( R.string.meen_shalosh, new MeenShalosh() ) );
 
@@ -163,14 +174,20 @@ public class ZehutYosefActivity
 		getMenuInflater().inflate( R.menu.zehut_yosef, menu );
 
 		MenuItem dateItem = menu.findItem( R.id.date );
-		TextView dateView = (TextView)dateItem.getActionView();
+		dateView = (TextView)dateItem.getActionView();
+		dateView.setPadding( 0, 0, 50, 0 );
 
-		HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-		dateView.setText( formatter.format( hebrewDate, null ) );
+		updateHebrewDate();
+
+		dateView.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick( final View v ) {
+				handleDateClick();
+			}
+		} );
 
 		return true;
 	}
-
 
 
 	@Override
@@ -262,7 +279,7 @@ public class ZehutYosefActivity
 			for ( Section section : sections ) {
 				if ( section.titleId == drawerItem.getIdentifier() ) {
 					activeSection = section;
-					section.load( getAssets(), textContent, hebrewDate );
+					section.load( hebrewDate, getAssets(), textContent );
 					getSupportActionBar().setTitle( section.titleId );
 				}
 				else {
@@ -271,6 +288,39 @@ public class ZehutYosefActivity
 			}
 		}
 	}
+
+
+	private void handleDateClick() {
+
+		if ( dateChangeListener == null ) {
+			dateChangeListener = new DatePickerDialog.OnDateSetListener() {
+				@Override
+				public void onDateSet(
+					final DatePicker view,
+					final int year,
+					final int monthOfYear,
+					final int dayOfMonth
+				) {
+
+					hebrewDate = HebrewCalendar.getForDate( year, monthOfYear, dayOfMonth );
+					updateHebrewDate();
+				}
+			};
+		}
+
+		if ( datePickerFragment == null ) {
+			datePickerFragment = new SecularDatePickerFragment( dateChangeListener );
+		}
+
+		datePickerFragment.promptForNewDate( getSupportFragmentManager(), hebrewDate );
+	}
+
+
+	private void updateHebrewDate() {
+		HebrewDateFormatter formatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
+		dateView.setText( formatter.format( hebrewDate, null ) );
+	}
+
 
 
 	@SuppressWarnings( "FeatureEnvy" )
@@ -333,7 +383,11 @@ public class ZehutYosefActivity
 		}
 
 
-		void load( final AssetManager assets, final TextView textContent, final HebrewDate date ) {
+		void load(
+			final HebrewDate    date,
+			final AssetManager  assets,
+			final TextView      textContent
+		) {
 
 			loadTextTask = new LoadTextTask( date, determineText, assets, textContent ) {
 				@Override
@@ -478,6 +532,28 @@ public class ZehutYosefActivity
 
 
 
+	private class ArvitSection extends Section {
+
+		ArvitSection(
+			@StringRes final int  titleId,
+			final DetermineText   determineText
+		) {
+			super( titleId, determineText );
+		}
+
+
+		@Override
+		void load(
+			final HebrewDate    date,
+			final AssetManager  assets,
+			final TextView      textContent
+		) {
+			super.load( date.tomorrow(), assets, textContent );
+		}
+	}
+
+
+
 	private class PrefsListener
 		implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -498,6 +574,56 @@ public class ZehutYosefActivity
 				updateKeepScreenOn( sharedPreferences );
 			}
 		}
+	}
+
+
+	@SuppressLint( "ValidFragment" )
+	public static class SecularDatePickerFragment
+		extends DialogFragment {
+
+		private final DatePickerDialog.OnDateSetListener        listener;
+
+		private DatePickerDialog                                datePickerDialog;
+
+		private HebrewDate                                      startingDate;
+
+
+		SecularDatePickerFragment( final DatePickerDialog.OnDateSetListener listener ) {
+			this.listener = listener;
+		}
+
+
+		void promptForNewDate(
+			final FragmentManager fragmentManager,
+			final HebrewDate      currentDate
+		) {
+
+			startingDate = currentDate;
+			if ( datePickerDialog != null ) {
+				updateForDate();
+			}
+
+			show( fragmentManager, "datePicker" );
+		}
+
+
+		@NonNull
+		@Override
+		public Dialog onCreateDialog( final Bundle savedInstanceState ) {
+			datePickerDialog = new DatePickerDialog( getActivity(), listener, 2015, 04, 30 );
+
+			updateForDate();
+
+			return datePickerDialog;
+		}
+
+
+		@SuppressWarnings( "FeatureEnvy" )
+		private void updateForDate() {
+			datePickerDialog.getDatePicker().updateDate( startingDate.getGregorianYear(),
+				startingDate.getGregorianMonth(), startingDate.getGregorianDayOfMonth() );
+		}
+
 	}
 
 }
