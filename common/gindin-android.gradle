@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.moallemi.advanced-build-version'
+
+
+import java.text.DateFormat
+
+
+// These methods inspired from https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij
+def hgVersion() {
+  def hgVersion = 'hg log --limit 1 --template {node|short}'.execute().text.trim();
+
+  return "\"" + hgVersion + "\""
+}
+
+def buildTime() {
+    def DateFormat df = DateFormat.getDateTimeInstance()
+    df.setTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
+    return "\"" + df.format( new Date() ) + "\"";
+  }
+
+
+advancedVersioning {
+
+  /*
+    I'd really like this to be in here, but for some reason the gradle build does *not* like the
+    import of the VersionCodeType...
+  codeOptions {
+    versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
+  }
+  */
+  outputOptions {
+    renameOutput true
+    nameFormat '${appName}-${flavorName}-${buildType}-${versionName}'
+  }
+}
+
+ext.appVersionCode = advancedVersioning.versionCode
+ext.appVersionName = advancedVersioning.versionName + "." + appVersionCode
+
+
+android {
+
+  buildTypes {
+
+    // Adding fields to the BuildConfig inspired by http://toastdroid.com/2014/03/28/customizing-your-build-with-gradle/
+    release {
+      buildConfigField "String", "HG_VERSION", "${hgVersion()}"
+      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
+    }
+
+    debug {
+      buildConfigField "String", "HG_VERSION", "${hgVersion()}"
+      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
+    }
+  }
+
+}
