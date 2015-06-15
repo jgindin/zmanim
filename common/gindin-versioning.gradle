@@ -1,0 +1,30 @@
+/**
+ * Configures the versioning for the app.
+ *
+ * Each app needs 3 lines prior to applying this file which look something like:
+ *
+ *    project.ext.set( "majorVersion", 1 )
+ *    project.ext.set( "minorVersion", 0 )
+ *    project.ext.set( "versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP )
+ *
+ */
+
+apply plugin: 'org.moallemi.advanced-build-version'
+
+advancedVersioning {
+
+  nameOptions {
+    versionMajor project.majorVersion
+    versionMinor project.minorVersion
+  }
+  codeOptions {
+    versionCodeType project.versionCodeType
+  }
+  outputOptions {
+    renameOutput true
+    nameFormat '${appName}-${flavorName}-${buildType}-${versionName}'
+  }
+}
+
+ext.appVersionCode = advancedVersioning.versionCode
+ext.appVersionName = advancedVersioning.versionName + "." + appVersionCode

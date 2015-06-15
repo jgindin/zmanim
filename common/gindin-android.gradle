@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.moallemi.advanced-build-version'
-
 
 import java.text.DateFormat
 
@@ -18,24 +16,6 @@ def buildTime() {
     return "\"" + df.format( new Date() ) + "\"";
   }
 
-
-advancedVersioning {
-
-  /*
-    I'd really like this to be in here, but for some reason the gradle build does *not* like the
-    import of the VersionCodeType...
-  codeOptions {
-    versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-  }
-  */
-  outputOptions {
-    renameOutput true
-    nameFormat '${appName}-${flavorName}-${buildType}-${versionName}'
-  }
-}
-
-ext.appVersionCode = advancedVersioning.versionCode
-ext.appVersionName = advancedVersioning.versionName + "." + appVersionCode
 
 
 android {
