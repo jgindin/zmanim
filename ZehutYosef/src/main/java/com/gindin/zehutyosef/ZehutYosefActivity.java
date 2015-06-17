@@ -146,11 +146,19 @@ public class ZehutYosefActivity
 				// NOTE: the typeface MUST be updated first, as that ensures that we have a font!
 				updateTypeface( prefs );
 				updateFontSize( prefs );
-				updateKeepScreenOn( prefs );
 			}
 		};
 
 		readPrefsTask.execute();
+	}
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( ZehutYosefActivity.this );
+		updateKeepScreenOn( prefs );
 	}
 
 
