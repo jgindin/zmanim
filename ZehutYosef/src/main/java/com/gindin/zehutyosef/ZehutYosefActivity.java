@@ -183,6 +183,9 @@ public class ZehutYosefActivity
 
 		MenuItem dateItem = menu.findItem( R.id.date );
 		dateView = (TextView)dateItem.getActionView();
+
+		// 50px is empirically a good number.
+		//noinspection MagicNumber
 		dateView.setPadding( 0, 0, 50, 0 );
 
 		updateHebrewDate();
@@ -288,6 +291,10 @@ public class ZehutYosefActivity
 				if ( section.titleId == drawerItem.getIdentifier() ) {
 					activeSection = section;
 					section.load( hebrewDate, getAssets(), textContent );
+
+					// Not sure how getSupportActionBar() could return null...we have one, so it should always be there.
+					//  I think it is declared as @Nullable because an activity doesn't *have* to have one.
+					//noinspection ConstantConditions
 					getSupportActionBar().setTitle( section.titleId );
 				}
 				else {
@@ -422,6 +429,9 @@ public class ZehutYosefActivity
 		private static class LoadTextTask
 			extends AsyncTask<Void, LoadTextTask.Chunk, Void> {
 
+			private static final int                              INITIAL_DELAY = 300;
+			private static final int                              INTER_CHUNK_DELAY = 150;
+
 			private int                                           nextId = 0;
 
 			class Chunk {
@@ -465,7 +475,7 @@ public class ZehutYosefActivity
 			protected Void doInBackground( final Void... params ) {
 
 				// A little delay before we get going to let the drawer close back up...
-				try {  Thread.sleep( 300 ); } catch ( InterruptedException e ) { /* never mind */ }
+				try {  Thread.sleep( INITIAL_DELAY ); } catch ( InterruptedException e ) { /* never mind */ }
 
 				List<String> files = determineText.getTextFilesForDate( date );
 				for ( String file : files ) {
@@ -476,7 +486,7 @@ public class ZehutYosefActivity
 
 					String text = loadTextAsset( file );
 					publishProgress( new Chunk( text ) );
-					try {  Thread.sleep( 150 ); } catch ( InterruptedException e ) { /* never mind */ }
+					try {  Thread.sleep( INTER_CHUNK_DELAY ); } catch ( InterruptedException e ) { /* never mind */ }
 				}
 
 				return null;
@@ -618,7 +628,8 @@ public class ZehutYosefActivity
 		@NonNull
 		@Override
 		public Dialog onCreateDialog( final Bundle savedInstanceState ) {
-			datePickerDialog = new DatePickerDialog( getActivity(), listener, 2015, 04, 30 );
+			//noinspection MagicNumber
+			datePickerDialog = new DatePickerDialog( getActivity(), listener, 2015, 4, 30 );
 
 			updateForDate();
 
