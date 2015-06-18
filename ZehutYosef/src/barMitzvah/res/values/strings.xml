@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Eli\'s Bar Mitzvah</string>
-
+	<string name="action_about_title">About Eli\'s Bar Mitzvah App</string>
 </resources>

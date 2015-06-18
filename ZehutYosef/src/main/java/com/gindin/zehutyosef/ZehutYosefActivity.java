@@ -2,13 +2,13 @@ package com.gindin.zehutyosef;
 
 import com.gindin.zehutyosef.berachot.BirkatAmmazon;
 import com.gindin.zehutyosef.berachot.MeenShalosh;
-import com.gindin.zehutyosef.settings.AboutBox;
 import com.gindin.zehutyosef.settings.Settings;
 import com.gindin.zehutyosef.tefilla.Arvit;
 import com.gindin.zehutyosef.tefilla.Mincha;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
@@ -80,7 +80,9 @@ public class ZehutYosefActivity
 	private SecularDatePickerFragment                         datePickerFragment;
 	private DatePickerDialog.OnDateSetListener                dateChangeListener;
 
-	private TextView dateView;
+	private TextView                                          dateView;
+
+	private LibsBuilder                                       aboutBuilder;
 
 
 	public ZehutYosefActivity() {
@@ -275,14 +277,19 @@ public class ZehutYosefActivity
 			case R.string.action_settings:
 				startActivity( new Intent( this, Settings.class ) );
 				handled = true;
-				drawer.setSelection( activeSection.asDrawerItem() );
+				drawer.setSelection( activeSection.asDrawerItem(), false );
 				break;
 
 			case R.string.action_about:
-				AboutBox aboutBox = new AboutBox();
-				aboutBox.show( getSupportFragmentManager(), "about" );
+
+				if ( aboutBuilder == null ) {
+					aboutBuilder = createAbout();
+				}
+
+				aboutBuilder.start( this );
+
 				handled = true;
-				drawer.setSelection( activeSection.asDrawerItem() );
+				drawer.setSelection( activeSection.asDrawerItem(), false );
 				break;
 		}
 
@@ -302,6 +309,27 @@ public class ZehutYosefActivity
 				}
 			}
 		}
+	}
+
+
+	private LibsBuilder createAbout() {
+
+		String description = getString( R.string.about_description_text ) + "<br />" +
+			getString( R.string.about_copyright ) + "<br />" +
+			getString( R.string.about_see_site ) + "<br /><br />" +
+			getString( R.string.about_zehut_yosef_copyright ) + "<br /><br />" +
+			"<small><i>Type: " + BuildConfig.BUILD_TYPE + "; Built on: " + BuildConfig.BUILD_TIME + "</i></small>";
+
+		// TODO: Need to create a pull request that will allow specification of a Comparator<Library>
+		// TODO:  so the libraries can be sorted the way I want...
+		return new LibsBuilder()
+			.withFields( "define_zmanim", "define_kosherjava", "define_materialdrawer", "define_AboutLibraries" )
+			.withAutoDetect( false )
+			.withAboutAppName( getString( R.string.app_name ) )
+			.withAboutDescription( description )
+			.withAboutVersionShownCode( false )
+			.withActivityTheme( R.style.EliPurple )
+			.withActivityTitle( getString( R.string.action_about_title ) );
 	}
 
 

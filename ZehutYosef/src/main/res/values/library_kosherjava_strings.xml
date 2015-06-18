@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_kosherjava"></string>
+	<!-- Author section -->
+	<string name="library_kosherjava_author">Eliyahu Hershfeld</string>
+	<string name="library_kosherjava_authorWebsite">www.kosherjava.com/</string>
+	<!-- Library section -->
+	<string name="library_kosherjava_libraryName">KosherJava</string>
+	<string name="library_kosherjava_libraryDescription">The Zmanim (“times” referring to the calculations of time that govern the start and end time of Jewish prayers and holidays) project is a Java API for generating zmanim from within Java programs.</string>
+	<string name="library_kosherjava_libraryWebsite">http://www.kosherjava.com/</string>
+	<string name="library_kosherjava_libraryVersion">1.3.0</string>
+	<!-- OpenSource section -->
+	<string name="library_kosherjava_isOpenSource">true</string>
+	<string name="library_kosherjava_repositoryLink">https://code.google.com/p/kosherjava/</string>
+	<!-- ClassPath for autoDetect section -->
+	<string name="library_kosherjava_classPath"></string>
+	<!-- License section -->
+	<string name="libray_kosherjava_licenseVersion">LGPL 2.1</string>
+	<string name="libray_kosherjava_licenseLink">https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html</string>
+	<string name="libray_kosherjava_licenseContent">
+		This library is free software; you can redistribute it and/or
+		modify it under the terms of the GNU Lesser General Public
+		License as published by the Free Software Foundation; either
+		version 2.1 of the License, or (at your option) any later version.
+
+		This library is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+		Lesser General Public License for more details.
+
+		You should have received a copy of the GNU Lesser General Public
+		License along with this library; if not, write to the Free Software
+		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+	</string>
+	<!-- Custom variables section -->
+</resources>
