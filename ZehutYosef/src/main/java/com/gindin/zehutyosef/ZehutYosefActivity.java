@@ -8,14 +8,12 @@ import com.gindin.zehutyosef.tefilla.Mincha;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
-import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
@@ -24,18 +22,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,10 +39,6 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +47,7 @@ public class ZehutYosefActivity
 	extends AppCompatActivity {
 
 	/** The sections of tefillah, berachot, etc... the user can choose. */
-	private final List<Section>                               sections;
+	private final List<SidurSection>                          sections;
 
 	/** The date for which all tefillah, etc..., are to be shown. */
 	@NonNull
@@ -69,7 +60,7 @@ public class ZehutYosefActivity
 
 
 	/** Remember which section is currently active. */
-	private Section                                           activeSection;
+	private SidurSection                                      activeSection;
 
 	private PrefsListener                                     prefsListener;
 
@@ -82,7 +73,7 @@ public class ZehutYosefActivity
 
 	private TextView                                          dateView;
 
-	private LibsBuilder                                       aboutBuilder;
+	private About                                             aboutBuilder;
 
 
 	public ZehutYosefActivity() {
@@ -103,10 +94,10 @@ public class ZehutYosefActivity
 			StrictMode.enableDefaults();
 		}
 
-		sections.add( new Section( R.string.mincha, new Mincha() ) );
+		sections.add( new SidurSection( R.string.mincha, new Mincha() ) );
 		sections.add( new ArvitSection( R.string.arvit, new Arvit() ) );
-		sections.add( new Section( R.string.birkat_amazon, new BirkatAmmazon() ) );
-		sections.add( new Section( R.string.meen_shalosh, new MeenShalosh() ) );
+		sections.add( new SidurSection( R.string.birkat_amazon, new BirkatAmmazon() ) );
+		sections.add( new SidurSection( R.string.meen_shalosh, new MeenShalosh() ) );
 
 		// Do this after the initial setup, because when we get rotated, the fragments are preserved and so don't have to go through
 		//  the whole lifecycle. This means that if we were to invoked super.onCreate() first from this method,
@@ -283,10 +274,10 @@ public class ZehutYosefActivity
 			case R.string.action_about:
 
 				if ( aboutBuilder == null ) {
-					aboutBuilder = createAbout();
+					aboutBuilder = new About();
 				}
 
-				aboutBuilder.start( this );
+				aboutBuilder.show( this );
 
 				handled = true;
 				drawer.setSelection( activeSection.asDrawerItem(), false );
@@ -294,42 +285,21 @@ public class ZehutYosefActivity
 		}
 
 		if ( !handled ) {
-			for ( Section section : sections ) {
-				if ( section.titleId == drawerItem.getIdentifier() ) {
+			for ( SidurSection section : sections ) {
+				if ( section.getTitleId() == drawerItem.getIdentifier() ) {
 					activeSection = section;
 					section.load( hebrewDate, getAssets(), textContent );
 
 					// Not sure how getSupportActionBar() could return null...we have one, so it should always be there.
 					//  I think it is declared as @Nullable because an activity doesn't *have* to have one.
 					//noinspection ConstantConditions
-					getSupportActionBar().setTitle( section.titleId );
+					getSupportActionBar().setTitle( section.getTitleId() );
 				}
 				else {
 					section.cancel();
 				}
 			}
 		}
-	}
-
-
-	private LibsBuilder createAbout() {
-
-		String description = getString( R.string.about_description_text ) + "<br />" +
-			getString( R.string.about_copyright ) + "<br />" +
-			getString( R.string.about_see_site ) + "<br /><br />" +
-			getString( R.string.about_zehut_yosef_copyright ) + "<br /><br />" +
-			"<small><i>Type: " + BuildConfig.BUILD_TYPE + "; Built on: " + BuildConfig.BUILD_TIME + "</i></small>";
-
-		// TODO: Need to create a pull request that will allow specification of a Comparator<Library>
-		// TODO:  so the libraries can be sorted the way I want...
-		return new LibsBuilder()
-			.withFields( "define_zmanim", "define_kosherjava", "define_materialdrawer", "define_AboutLibraries" )
-			.withAutoDetect( false )
-			.withAboutAppName( getString( R.string.app_name ) )
-			.withAboutDescription( description )
-			.withAboutVersionShownCode( false )
-			.withActivityTheme( R.style.EliPurple )
-			.withActivityTitle( getString( R.string.action_about_title ) );
 	}
 
 
@@ -391,213 +361,6 @@ public class ZehutYosefActivity
 		boolean keepScreenOn = sharedPreferences.getBoolean( Settings.PreferenceKey.KeepScreenOn.key, true );
 		textContent.setKeepScreenOn( keepScreenOn );
 	}
-
-
-	private static class Section {
-
-
-		@StringRes
-		private final int                                       titleId;
-
-		private final DetermineText                             determineText;
-
-		private LoadTextTask                                    loadTextTask;
-
-		private PrimaryDrawerItem                               primaryDrawerItem;
-
-
-		Section(
-			@StringRes int  titleId,
-		  DetermineText   determineText
-		) {
-
-			this.titleId = titleId;
-			this.determineText = determineText;
-		}
-
-
-		IDrawerItem asDrawerItem() {
-
-			if ( primaryDrawerItem == null ) {
-				primaryDrawerItem = new PrimaryDrawerItem().withName( titleId ).withIdentifier( titleId );
-			}
-
-			return primaryDrawerItem;
-		}
-
-
-		void load(
-			final HebrewDate    date,
-			final AssetManager  assets,
-			final TextView      textContent
-		) {
-
-			loadTextTask = new LoadTextTask( date, determineText, assets, textContent ) {
-				@Override
-				protected void onPostExecute( final Void aVoid ) {
-					super.onPostExecute( aVoid );
-					loadTextTask = null;
-				}
-			};
-
-			loadTextTask.execute();
-		}
-
-
-		void cancel() {
-
-			if ( loadTextTask != null ) {
-				loadTextTask.cancel( false );
-				loadTextTask = null;
-			}
-		}
-
-
-
-		private static class LoadTextTask
-			extends AsyncTask<Void, LoadTextTask.Chunk, Void> {
-
-			private static final int                              INITIAL_DELAY = 300;
-			private static final int                              INTER_CHUNK_DELAY = 150;
-
-			private int                                           nextId = 0;
-
-			class Chunk {
-
-				final int                                           id;
-				final String                                        text;
-
-
-				Chunk(
-					final String text
-				) {
-					this.id = nextId;
-					this.text = text;
-
-					nextId++;
-				}
-			}
-
-
-			private final HebrewDate                              date;
-			private final DetermineText                           determineText;
-			private final AssetManager                            assets;
-			private final TextView                                textContent;
-
-
-
-			LoadTextTask(
-				final HebrewDate date,
-				final DetermineText determineText,
-				final AssetManager assets,
-				final TextView textContent
-			) {
-				this.date = date;
-				this.determineText = determineText;
-				this.assets = assets;
-				this.textContent = textContent;
-			}
-
-
-			@Override
-			protected Void doInBackground( final Void... params ) {
-
-				// A little delay before we get going to let the drawer close back up...
-				try {  Thread.sleep( INITIAL_DELAY ); } catch ( InterruptedException e ) { /* never mind */ }
-
-				List<String> files = determineText.getTextFilesForDate( date );
-				for ( String file : files ) {
-
-					if ( isCancelled() ) {
-						return null;
-					}
-
-					String text = loadTextAsset( file );
-					publishProgress( new Chunk( text ) );
-					try {  Thread.sleep( INTER_CHUNK_DELAY ); } catch ( InterruptedException e ) { /* never mind */ }
-				}
-
-				return null;
-			}
-
-
-			@Override
-			protected void onProgressUpdate( final Chunk... values ) {
-				super.onProgressUpdate( values );
-
-				if ( isCancelled() ) {
-					return;
-				}
-
-				Chunk chunk = values[0];
-				if ( chunk.id == 0 ) {
-					textContent.setText( "" );
-				}
-
-				textContent.append( chunk.text );
-			}
-
-
-			private String loadTextAsset(
-				final String        assetPath
-			) {
-
-				StringBuilder buffer = new StringBuilder();
-
-				InputStream input = null;
-				try {
-					input = assets.open( assetPath );
-					BufferedReader reader = new BufferedReader( new InputStreamReader( input ) );
-
-					String line;
-					//noinspection NestedAssignment
-					while ( ( line = reader.readLine() ) != null ) {
-						buffer.append( line ).append( "\n" );
-					}
-
-				}
-				catch ( IOException e ) {
-					Log.e( "zehut-yosef", "Error loading: '" + assetPath + "'" );
-					if ( input != null ) {
-						try {
-							input.close();
-						}
-						catch ( IOException e1 ) {
-							// Oh well.
-						}
-					}
-				}
-
-				return buffer.toString();
-			}
-
-		} // End of LoadTextTask
-
-
-	} // End of Section
-
-
-
-	private class ArvitSection extends Section {
-
-		ArvitSection(
-			@StringRes final int  titleId,
-			final DetermineText   determineText
-		) {
-			super( titleId, determineText );
-		}
-
-
-		@Override
-		void load(
-			final HebrewDate    date,
-			final AssetManager  assets,
-			final TextView      textContent
-		) {
-			super.load( date.tomorrow(), assets, textContent );
-		}
-	}
-
 
 
 	private class PrefsListener

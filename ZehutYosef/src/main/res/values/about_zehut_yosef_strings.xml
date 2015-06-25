@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_zehut_yosef" translatable="false"></string>
+	<!-- Author section -->
+	<string name="library_zehut_yosef_author" translatable="false">Isaac Azose</string>
+	<string name="library_zehut_yosef_authorWebsite" translatable="false">http://www.isaacazose.com/SiddurZehutYosef.html</string>
+	<!-- Library section -->
+	<string name="library_zehut_yosef_libraryName" translatable="false">Zehut Yosef</string>
+	<string name="library_zehut_yosef_libraryDescription">
+		<![CDATA[
+		This project is made possible by the Zehut Yosef Siddur, generously provided by Hazzan Emeritus Isaac Azose.
+		Published by Sephardic Traditions Foundation, Inc.<br/>
+		<small>Zehut Yosef Copyright &#0169; 2002, Isaac Azose. Rights of the copyright holder will be strictly enforced.</small><br/>
+		]]>
+	</string>
+	<string name="library_zehut_yosef_libraryWebsite" translatable="false">http://www.isaacazose.com/SiddurZehutYosef.html</string>
+	<string name="library_zehut_yosef_libraryVersion" translatable="false">2015</string>
+	<!-- OpenSource section -->
+	<string name="library_zehut_yosef_isOpenSource" translatable="false">false</string>
+	<!-- ClassPath for autoDetect section -->
+	<string name="library_zehut_yosef_classPath" translatable="false"></string>
+	<!-- License section -->
+	<string name="library_zehut_yosef_licenseId" translatable="false">proprietary</string>
+	<!-- Custom variables section -->
+</resources>

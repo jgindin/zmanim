@@ -1,6 +1,6 @@
 package com.gindin.zehutyosef.tefilla;
 
-import com.gindin.zehutyosef.DetermineText;
+import com.gindin.zehutyosef.SectionText;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
  *
  */
 public class Shachrit
-	implements DetermineText {
+	implements SectionText {
 
 
 	@Override
-	public List<String> getTextFilesForDate( final HebrewDate date ) {
+	public List<TextInfo> getTextInfoForDate( final HebrewDate date ) {
 		return null;
 	}
 

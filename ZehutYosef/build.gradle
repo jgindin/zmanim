@@ -2,7 +2,15 @@ import org.moallemi.gradle.internal.VersionCodeType
 
 
 apply from: '../common/gindin-android.gradle'
-apply from: 'zehut-yosef.gradle'
+
+// Wrap with try/catch so the build is working even if the signing stuff is missing.
+//  Got this idea from Mike Penz's AboutLibraries
+try {
+  apply from: 'zehut-yosef.gradle'
+}
+catch (ex) {
+}
+
 
 project.ext.set( "majorVersion", 1 )
 project.ext.set( "minorVersion", 0 )
@@ -51,12 +59,12 @@ dependencies {
   compile 'com.android.support:appcompat-v7:22.2.0'
 
   /* https://github.com/mikepenz/MaterialDrawer */
-  compile('com.mikepenz:materialdrawer:3.0.7@aar') {
+  compile('com.mikepenz:materialdrawer:3.0.8@aar') {
     transitive = true
   }
 
   /* https://github.com/mikepenz/AboutLibraries */
-  compile('com.mikepenz:aboutlibraries:5.0.4@aar') {
+  compile('com.mikepenz:aboutlibraries:5.0.5@aar') {
       transitive = true
   }
   compile project( ':ZmanLib' )

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_zmanim" translatable="false"></string>
+	<!-- Author section -->
+	<string name="library_zmanim_author" translatable="false">Jay Gindin</string>
+	<string name="library_zmanim_authorWebsite" translatable="false">https://zmanim.myjetbrains.com</string>
+	<!-- Library section -->
+	<string name="library_zmanim_libraryName" translatable="false">Zmanim</string>
+	<string name="library_zmanim_libraryDescription">Calculates and displays the zmanim (significant times during the day for Jews).</string>
+	<string name="library_zmanim_libraryWebsite" translatable="false">https://bitbucket.org/jgindin/zmanim</string>
+	<string name="library_zmanim_libraryVersion" translatable="false">4.0.245</string>
+	<!-- OpenSource section -->
+	<string name="library_zmanim_isOpenSource" translatable="false">true</string>
+	<string name="library_zmanim_repositoryLink" translatable="false">https://bitbucket.org/jgindin/zmanim</string>
+	<!-- ClassPath for autoDetect section -->
+	<string name="library_zmanim_classPath" translatable="false"></string>
+	<!-- License section -->
+	<string name="library_zmanim_licenseId" translatable="false">apache_2_0</string>
+	<!-- Custom variables section -->
+</resources>

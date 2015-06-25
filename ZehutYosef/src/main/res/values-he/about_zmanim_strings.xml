@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<!-- Library section -->
+	<string name="library_zmanim_libraryDescription">Calculates and displays the zmanim (significant times during the day for Jews).</string>
+</resources>
