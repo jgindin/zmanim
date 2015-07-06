@@ -64,7 +64,7 @@ dependencies {
   }
 
   /* https://github.com/mikepenz/AboutLibraries */
-  compile('com.mikepenz:aboutlibraries:5.0.5@aar') {
+  compile('com.mikepenz:aboutlibraries:5.0.6@aar') {
       transitive = true
   }
   compile project( ':ZmanLib' )

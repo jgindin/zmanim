@@ -62,6 +62,13 @@ class About {
 				return 0;
 			}
 
+			if ( "Isaac Azose".equals( lhAuthor ) ) {
+				return -1;
+			}
+			if ( "Isaac Azose".equals( rhAuthor ) ) {
+				return 1;
+			}
+
 			if ( "Jay Gindin".equals( lhAuthor ) ) {
 				return -1;
 			}
