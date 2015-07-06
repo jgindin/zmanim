@@ -1,10 +1,12 @@
 package com.gindin.zehutyosef.tefilla;
 
-import com.gindin.zehutyosef.SectionText;
+import com.gindin.zehutyosef.Section;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.HebrewMonth;
 import com.gindin.zmanlib.calendar.holiday.Details;
+
+import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 @SuppressWarnings( "MagicNumber" )
 public abstract class Tefilla
-	implements SectionText {
+	extends Section {
 
 	@SuppressWarnings( "SpellCheckingInspection" )
 	enum Type {
@@ -26,123 +28,129 @@ public abstract class Tefilla
 	}
 
 
+	protected Tefilla(
+		@StringRes final int  titleId
+	) {
+		super( titleId );
+	}
+
 
 	@SuppressWarnings( "FeatureEnvy" )
-	protected final List<TextInfo> getAmidahFileNamesForDate( HebrewDate date, Type tefillaType ) {
+	protected final List<TextChunk> getAmidahFileNamesForDate( HebrewDate date, Type tefillaType ) {
 
 		final Details dateDetails = date.getDetails();
 		final boolean isFastDay = dateDetails.isTaanit();
 		final boolean isAseretYameiTeshuva = isAseretYameiTeshuva( date );
 
-		List<TextInfo> files = new ArrayList<>();
+		List<TextChunk> files = new ArrayList<>();
 
 		// Assembling Amidah:
-		files.add( new TextInfo( "tefilla/amidah/2_1_magen_avraham_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/2_1_magen_avraham_intro.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "tefilla/amidah/2_2_magen_avraham_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/2_2_magen_avraham_asert_yamei_teshuva.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/2_3_magen_avraham_conclusion.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/3_1_atah_gibor_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/2_3_magen_avraham_conclusion.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/3_1_atah_gibor_intro.txt" ) );
 
 		if ( doWeSayMoridHaTal( date, tefillaType ) ) {
-			files.add( new TextInfo( "tefilla/amidah/3_2_atah_gibor_summer.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/3_2_atah_gibor_summer.txt" ) );
 		}
 		else {
-			files.add( new TextInfo( "tefilla/amidah/3_2_atah_gibor_winter.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/3_2_atah_gibor_winter.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/3_3_atah_gibor_middle.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/3_3_atah_gibor_middle.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "tefilla/amidah/3_4_atah_gibor_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/3_4_atah_gibor_asert_yamei_teshuva.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/3_5_atah_gibor_conclusion.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/3_5_atah_gibor_conclusion.txt" ) );
 
 		if ( ( tefillaType == Type.Shachrit ) || ( tefillaType == Type.Mincha ) ) {
-			files.add( new TextInfo( "tefilla/amidah/4_1_kedusha_nakdishach.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/4_1_kedusha_nakdishach.txt" ) );
 		}
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "tefilla/amidah/4_2_kedusha_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/4_2_kedusha_asert_yamei_teshuva.txt" ) );
 		}
 		else {
-			files.add( new TextInfo( "tefilla/amidah/4_2_kedusha.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/4_2_kedusha.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/5_atah_honen_thru_goel_yisrael.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/5_atah_honen_thru_goel_yisrael.txt" ) );
 
 		if ( isFastDay ) {
-			files.add( new TextInfo( "tefilla/amidah/6_fast_day_hazzan_insertion.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/6_fast_day_hazzan_insertion.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/7_refaenu.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/7_refaenu.txt" ) );
 
 		if ( doWeSayBarechenu( date, tefillaType ) ) {
-			files.add( new TextInfo( "tefilla/amidah/8_barechenu.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/8_barechenu.txt" ) );
 		}
 		else {
-			files.add( new TextInfo( "tefilla/amidah/8_barech_alenu.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/8_barech_alenu.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/9_tikah_bshofar.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/10_hashiva.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/9_tikah_bshofar.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/10_hashiva.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "amidah/10_hashiva_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "amidah/10_hashiva_asert_yamei_teshuva.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/11_lamalshinim_thru_et_zemach.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/12_1_shma_kolenu_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/11_lamalshinim_thru_et_zemach.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/12_1_shma_kolenu_intro.txt" ) );
 
 		if ( isFastDay ) {
-			files.add( new TextInfo( "tefilla/amidah/12_2_shma_kolenu_fast_day.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/12_2_shma_kolenu_fast_day.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/12_3_shma_kolenu_conclusion.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/13_1_retzeh_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/12_3_shma_kolenu_conclusion.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/13_1_retzeh_intro.txt" ) );
 
 		if ( dateDetails.isRoshChodesh() ) {
-			files.add( new TextInfo( "tefilla/amidah/13_2_retzeh_rosh_chodesh.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/13_2_retzeh_rosh_chodesh.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/13_3_retzeh_conclusion.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/14_1_modim_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/13_3_retzeh_conclusion.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/14_1_modim_intro.txt" ) );
 
 		if ( tefillaType != Type.Arvit ) {
-			files.add( new TextInfo( "tefilla/amidah/14_1_modim_drabanan.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/14_1_modim_drabanan.txt" ) );
 		}
 
 		if ( dateDetails.isChanukah() ) {
-			files.add( new TextInfo( "tefilla/amidah/14_2_modim_chanukah.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/14_2_modim_chanukah.txt" ) );
 		}
 		else if ( dateDetails.isPurim() ) {
-			files.add( new TextInfo( "tefilla/amidah/14_2_modim_purim.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/14_2_modim_purim.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/14_3_modim_middle.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/14_3_modim_middle.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "tefilla/amidah/14_4_modim_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/14_4_modim_asert_yamei_teshuva.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/14_5_modim_conclusion.txt" ) );
-//		files.add( new TextInfo( "tefilla/amidah/15_birkat_cohanim NEED THIS.txt" ) );
-		files.add( new TextInfo( "tefilla/amidah/16_1_sim_shalom_intro.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/14_5_modim_conclusion.txt" ) );
+//		files.add( new TextChunk( "tefilla/amidah/15_birkat_cohanim NEED THIS.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/16_1_sim_shalom_intro.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextInfo( "tefilla/amidah/16_2_sim_shalom_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/16_2_sim_shalom_asert_yamei_teshuva.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/16_3_sim_shalom_conclusion.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/16_3_sim_shalom_conclusion.txt" ) );
 
 		if ( tefillaType != Type.Arvit ) {
-			files.add( new TextInfo( "tefilla/amidah/17_end_of_amidah_instructions.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/17_end_of_amidah_instructions.txt" ) );
 		}
 
-		files.add( new TextInfo( "tefilla/amidah/17_end_of_amidah.txt" ) );
+		files.add( new TextChunk( "tefilla/amidah/17_end_of_amidah.txt" ) );
 
 		return files;
 	}

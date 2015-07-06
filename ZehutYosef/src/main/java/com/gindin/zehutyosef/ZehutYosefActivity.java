@@ -47,7 +47,7 @@ public class ZehutYosefActivity
 	extends AppCompatActivity {
 
 	/** The sections of tefillah, berachot, etc... the user can choose. */
-	private final List<SidurSection>                          sections;
+	private final List<Section>                          sections;
 
 	/** The date for which all tefillah, etc..., are to be shown. */
 	@NonNull
@@ -60,7 +60,7 @@ public class ZehutYosefActivity
 
 
 	/** Remember which section is currently active. */
-	private SidurSection                                      activeSection;
+	private Section activeSection;
 
 	private PrefsListener                                     prefsListener;
 
@@ -94,10 +94,10 @@ public class ZehutYosefActivity
 			StrictMode.enableDefaults();
 		}
 
-		sections.add( new SidurSection( R.string.mincha, new Mincha() ) );
-		sections.add( new ArvitSection( R.string.arvit, new Arvit() ) );
-		sections.add( new SidurSection( R.string.birkat_amazon, new BirkatAmmazon() ) );
-		sections.add( new SidurSection( R.string.meen_shalosh, new MeenShalosh() ) );
+		sections.add( new Mincha() );
+		sections.add( new Arvit() );
+		sections.add( new BirkatAmmazon() );
+		sections.add( new MeenShalosh() );
 
 		// Do this after the initial setup, because when we get rotated, the fragments are preserved and so don't have to go through
 		//  the whole lifecycle. This means that if we were to invoked super.onCreate() first from this method,
@@ -285,7 +285,7 @@ public class ZehutYosefActivity
 		}
 
 		if ( !handled ) {
-			for ( SidurSection section : sections ) {
+			for ( Section section : sections ) {
 				if ( section.getTitleId() == drawerItem.getIdentifier() ) {
 					activeSection = section;
 					section.load( hebrewDate, getAssets(), textContent );
