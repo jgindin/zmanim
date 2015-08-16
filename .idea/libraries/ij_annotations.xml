@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ij-annotations">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Android/libs/ij-annotations.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
