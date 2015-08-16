@@ -1,0 +1,31 @@
+http://www.fontsaddict.com/
+
+Ezra SIL SR
+  MIT/X11 License
+  http://www.fontsaddict.com/fontface/ezra-sil-sr.ttf
+  SILEOTSR.ttf
+  https://github.com/aharonium/fonts/blob/master/Fonts/Hebrew%20Letters%20with%20Vowels%20and%20Cantillation/SIL%20(OFL)/Ezra%20SIL/SILEOTSR.ttf
+  
+Free Serif
+  GNU/GPL
+  http://www.fontsaddict.com/fontface/free-serif.ttf
+  FreeSerif.ttf
+  
+Bitstream CyberBase
+  Freeware
+  http://www.fontsaddict.com/fontface/bitstream-cyberbase.ttf
+  
+MendelSiddurMW Bold
+  Freeware
+  http://www.fontsaddict.com/fontface/mendelsiddurmw-bold.TTF
+  
+TaameyDavid
+  GNU/GPL v2
+  https://github.com/aharonium/fonts/blob/master/Fonts/Hebrew%20Letters%20with%20Vowels%20and%20Cantillation/Culmus%20Project%20(GPL%2BFE)/Yoram%20Gnat%20(GPL%2BFE)/Taamey-Culmus/TaameyDavid/TaameyDavidCLM-Medium.ttf
+
+
+Shlomo
+  OFL: http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL
+  https://sites.google.com/site/orlaeinayim/introduction-to-fonts-with-hebrew-cantillation-marks
+  https://github.com/aharonium/fonts/tree/master/Fonts/Hebrew%20Letters%20with%20Vowels%20and%20Cantillation/Shlomo%20Orbach%20(OFL)
+  
