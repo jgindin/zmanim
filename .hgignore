@@ -35,6 +35,7 @@ atlassian-ide-plugin.xml
 \.idea/copyright/profiles_settings.xml
 \.idea/findbugs-idea.xml
 \.idea/shelf/*
+\.idea/libraries/*
 
 
 # Ignore any backup files created by editors
@@ -54,4 +55,6 @@ local.properties
 ^common/jay-gindin-android-apps.keystore
 ^common/ProjectApiKey.txt
 ^ZehutYosef/zehut-yosef.gradle
+^Android/zmanim.gradle
+
 

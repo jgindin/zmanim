@@ -8,7 +8,7 @@ apply from: '../common/gindin-android.gradle'
 try {
   apply from: 'zehut-yosef.gradle'
 }
-catch ( ex ) {
+catch ( ignored ) {
 }
 
 

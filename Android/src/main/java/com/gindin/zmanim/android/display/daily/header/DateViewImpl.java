@@ -84,7 +84,10 @@ class DateViewImpl<P extends DatePresenter>
 	@Override
 	public void allowUserToChangeDate( HebrewDate currentDate ) {
 
-		ChangeDateFragment changeDateFragment = new ChangeDateFragment( currentDate, dateSetListener );
+		// Yes...I know that I should be using Fragment#setArguments, but that's just overkill.
+		ChangeDateFragment changeDateFragment = new ChangeDateFragment();
+		changeDateFragment.init( currentDate, dateSetListener );
+
 		changeDateFragment.show( owner.getSupportFragmentManager(), "secularDatePicker" );
 	}
 
@@ -110,16 +113,20 @@ class DateViewImpl<P extends DatePresenter>
 	}
 
 
-	private static class ChangeDateFragment
+	public static class ChangeDateFragment
 		extends DialogFragment {
 
-		private final HebrewDate                                  currentDate;
+		private HebrewDate                                  currentDate;
 
-		private final DatePickerDialog.OnDateSetListener          dateSetListener;
+		private DatePickerDialog.OnDateSetListener          dateSetListener;
 
 
+		public ChangeDateFragment() {
+			setRetainInstance( true );
+		}
 
-		ChangeDateFragment(
+
+		void init(
 			HebrewDate                          currentDate,
 			DatePickerDialog.OnDateSetListener  dateSetListener
 		) {

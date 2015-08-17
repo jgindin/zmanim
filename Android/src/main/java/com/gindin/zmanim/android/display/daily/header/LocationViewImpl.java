@@ -10,6 +10,7 @@ import com.gindin.zmanim.android.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -69,30 +70,34 @@ class LocationViewImpl<P extends LocationPresenter>
 	@Override
 	public void showLocationDetails( String locationDetails ) {
 
-		ShowLocationDetailsDialogFragment fragment = new ShowLocationDetailsDialogFragment( locationDetails );
+		ShowLocationDetailsDialogFragment fragment = new ShowLocationDetailsDialogFragment();
+		Bundle args = new Bundle();
+		args.putString( ShowLocationDetailsDialogFragment.LOCATION_ARG, locationDetails );
+
+		fragment.setArguments( args );
 		fragment.show( owner.getSupportFragmentManager(), "showLocationDetails" );
 	}
 
 
 
-	private static class ShowLocationDetailsDialogFragment
+	public static class ShowLocationDetailsDialogFragment
 		extends DialogFragment {
 
-		private final String                                    locationDetails;
+		static final String                                     LOCATION_ARG = "location";
 
 
-		ShowLocationDetailsDialogFragment( String locationDetails ) {
-			this.locationDetails = locationDetails;
+		public ShowLocationDetailsDialogFragment() {
 		}
 
 
+		@NonNull
 		@Override
 		public Dialog onCreateDialog( Bundle savedInstanceState ) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
 			builder.setTitle( R.string.current_location_title );
 
-			builder.setMessage( locationDetails );
+			builder.setMessage( getArguments().getString( LOCATION_ARG ) );
 
 			return builder.create();
 		}
