@@ -25,7 +25,15 @@ android {
   buildToolsVersion "21.1.2"
 
   defaultConfig {
-    applicationId "gindin.com.zmanim"
+    applicationId "com.gindin.zmanim.android"
+
+    /*
+     * NOTES:
+     *	  1. In order for the supports-screens to work right, we have to specify the target SDK of at least 11.
+     *		2. If minSdkVersion is >= 13, then the behavior of AsyncTask is CHANGED!
+     *					See http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
+     *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
+     */
     minSdkVersion 10
     targetSdkVersion 22
 
@@ -50,6 +58,6 @@ android {
 
 dependencies {
   compile fileTree( include: ['*.jar'], dir: 'libs' )
-  compile 'com.android.support:appcompat-v7:22.2.0'
+  compile 'com.android.support:appcompat-v7:22.2.1'
   compile project( ':ZmanLib' )
 }
