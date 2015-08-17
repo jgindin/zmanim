@@ -26,13 +26,19 @@ public class PersonalPrefsManager
 	@Override
 	@SuppressWarnings( { "MagicNumber" } )
 	public void onHandleUpgrade(
-		int             thisCodeVersion,
-		int             lastKnownCodeVersion
+		int   thisCodeVersion,
+		int   lastKnownCodeVersion
 	) {
 
 		if ( lastKnownCodeVersion <= 66 ) {
 			final SharedPreferences.Editor editor = prefs.edit();
 			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+			editor.apply();
+		}
+
+		if ( lastKnownCodeVersion <= 229 ) {
+			final SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
 			editor.apply();
 		}
 	}

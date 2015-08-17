@@ -338,6 +338,12 @@ public class ZmanimService
 		personalPrefs.edit().putLong( TIME_OF_LAST_NOTIFIED_ZMAN, timeOfThisZman ).apply();
 
 
+		// One more check that the user actually wants to know about this zman...
+		boolean userWantsThisNotification = personalPrefs.getBoolean( nextZman.type.name(), true );
+		if ( !userWantsThisNotification ) {
+			return;
+		}
+
 		Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );

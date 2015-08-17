@@ -5,21 +5,27 @@
 
 <resources>
 	<string name="app_name">Zmanim</string>
-	<string name="Alot">Alot (Dawn)</string>
+
+	<string name="Alot">Alot Hashachar</string>
 	<string name="Talit">Talit/Tefilin</string>
-	<string name="Hanetz">Hanetz (Sunrise)</string>
+	<string name="Hanetz">Hanetz</string>
 	<string name="SofZmanShema">Sof Zman Shema</string>
 	<string name="SofZmanTefilah">Sof Zman Tefila</string>
-	<string name="Chatzot">Chatzot (Mid-Day)</string>
+	<string name="AchilatChametz">Achilat Chametz</string>
+	<string name="BiurChametz">Biur Chametz</string>
+	<string name="Chatzot">Chatzot</string>
 	<string name="MinchaGedola">Mincha Gedola</string>
 	<string name="MinchaKetana">Mincha Ketana</string>
-	<string name="Plag">Plag HaMincha</string>
-	<string name="BeinHashemashot">Bein Hashemashot</string>
-	<string name="Shkiah">Shkia (Sunset)</string>
+	<string name="PlagHaMincha">Plag HaMincha</string>
 	<string name="Candles">Candle Lighting</string>
+	<string name="Shkia">Shkia</string>
+	<string name="BeinHashmashot">Bein Hashmashot</string>
 	<string name="Mincha">Latest Mincha</string>
-	<string name="Tzait">Tzait Hacochavim (Nightfall)</string>
+	<string name="FastEnds">Fast Ends</string>
+	<string name="Tzait">Tzait Hacochavim</string>
 	<string name="Havdalah">Havdalah</string>
+	<string name="Midnight">Midnight</string>
+
 	<string name="ShaahZmanit">Sha\'ah Zmanit (Halachic Hour)</string>
 
 	<string name="about_menu">About</string>
@@ -85,6 +91,9 @@
 	<string name="show_seconds_pref_summary">Will not round the zmanim times to the nearest minute.</string>
 	<string name="use_elevation_pref_title">Use Elevation</string>
 	<string name="use_elevation_pref_summary">Take elevation into account for zmanim calculations.</string>
+	<string name="show_notifications_pref_title">Show Notifications</string>
+	<string name="show_notifications_pref_summary">Alert for upcoming zmanim</string>
+	<string name="notifications_category">Notifications</string>
 
 	<string name="lat_long_editor_degrees_text">Degrees:</string>
 	<string name="lat_long_editor_minutes_text">Minutes:</string>

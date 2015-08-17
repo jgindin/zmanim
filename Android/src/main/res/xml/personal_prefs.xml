@@ -19,15 +19,167 @@
 		android:key="SHOW_SECONDS"
 	  android:title="@string/show_seconds_pref_title"
 	  android:summary="@string/show_seconds_pref_summary"
-	  android:checked="true"
+	  android:defaultValue="false"
 	/>
 
 	<CheckBoxPreference
 		android:key="USE_ELEVATION"
 	  android:title="@string/use_elevation_pref_title"
 	  android:summary="@string/use_elevation_pref_summary"
-	  android:checked="true"
+	  android:defaultValue="false"
 	/>
 
+	<PreferenceCategory
+		android:title="@string/notifications_category"
+		android:orderingFromXml="true"
+	>
+
+		<!--
+		  I'd like for this to be a nice switch and then clicking on it opens another prefs screen.
+		  That would require API 14 for the switch and API 11 to open another fragment.
+		-->
+		<CheckBoxPreference
+			android:key="SHOW_NOTIFICATIONS"
+			android:title="@string/show_notifications_pref_title"
+			android:summary="@string/show_notifications_pref_summary"
+			android:defaultValue="true"
+			android:disableDependentsState="false"
+		/>
+
+		<!-- The keys here are the names of the Zmanim.Type enum. -->
+		<CheckBoxPreference
+			android:key="Alot"
+			android:title="@string/Alot"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="Talit"
+			android:title="@string/Talit"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="Hanetz"
+			android:title="@string/Hanetz"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="SofZmanShema"
+			android:title="@string/SofZmanShema"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="SofZmanTefila"
+			android:title="@string/SofZmanTefilah"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="SofZmanAchilatChametz"
+			android:title="@string/AchilatChametz"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="SofZmanBiurChametz"
+			android:title="@string/BiurChametz"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="Chatzot"
+			android:title="@string/Chatzot"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="MinchaGedola"
+			android:title="@string/MinchaGedola"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="MinchaKetana"
+			android:title="@string/MinchaKetana"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="PlagHaMincha"
+			android:title="@string/PlagHaMincha"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="CandleLighting"
+			android:title="@string/Candles"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="Shkia"
+			android:title="@string/Shkia"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="BeinHashmashot"
+			android:title="@string/BeinHashmashot"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="LatestMincha"
+			android:title="@string/Mincha"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="FastEnd"
+			android:title="@string/FastEnds"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="TzaitHacochavim"
+			android:title="@string/Tzait"
+			android:defaultValue="true"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="ShabbatEnd"
+			android:title="@string/Havdalah"
+			android:defaultValue="false"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+		<CheckBoxPreference
+			android:key="NightChatzot"
+			android:title="@string/Midnight"
+			android:defaultValue="false"
+			android:dependency="SHOW_NOTIFICATIONS"
+		/>
+
+	</PreferenceCategory>
 
 </PreferenceScreen>
