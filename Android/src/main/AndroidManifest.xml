@@ -5,22 +5,9 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
-	android:versionCode="246"
-  android:versionName="4.0.246.c8125610320c"
   android:installLocation="auto"
 >
 
-	<!--
-	  NOTES:
-			1. In order for the supports-screens to work right, we have to specify the target SDK of at least 11.
-			2. If minSdkVersion is >= 13, then the behavior of AsyncTask is CHANGED!
-					See http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
-					For minSdkVersion >= 11, there's some other interesting stuff in that article...
-	-->
-	<uses-sdk
-		android:minSdkVersion="10"
-		android:targetSdkVersion="15"
-	/>
 
 	<!--
 		Taken from http://www.devx.com/wireless/Article/40524 for accessing coarse location
@@ -49,7 +36,7 @@
     android:xlargeScreens="true"
 	/>
 
-	<application android:icon="@drawable/icon" android:label="Zmanim">
+	<application android:icon="@drawable/icon" android:label="Zmanim" android:allowBackup="true">
 		<activity
 			android:name=".ZmanimActivity"
 		>
