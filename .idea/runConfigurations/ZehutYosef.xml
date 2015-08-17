@@ -9,7 +9,7 @@
     <option name="USE_LAST_SELECTED_DEVICE" value="false" />
     <option name="PREFERRED_AVD" value="" />
     <option name="USE_COMMAND_LINE" value="true" />
-    <option name="COMMAND_LINE" value="-qemu -m 2047 -enable-kvm" />
+    <option name="COMMAND_LINE" value="-no-audio -qemu -m 2047 -enable-kvm" />
     <option name="WIPE_USER_DATA" value="false" />
     <option name="DISABLE_BOOT_ANIMATION" value="false" />
     <option name="NETWORK_SPEED" value="full" />
