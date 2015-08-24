@@ -15,6 +15,15 @@
             <option value="$PROJECT_DIR$/ZmanUtils" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Android" />
+            <option value="$PROJECT_DIR$/ZehutYosef" />
+            <option value="$PROJECT_DIR$/ZmanLib" />
+            <option value="$PROJECT_DIR$/ZmanUtils" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

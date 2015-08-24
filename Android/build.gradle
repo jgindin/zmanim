@@ -19,7 +19,6 @@ project.ext.set( "versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP )
 apply from: '../common/gindin-versioning.gradle'
 
 
-
 android {
   compileSdkVersion 22
   buildToolsVersion "21.1.2"
@@ -39,10 +38,20 @@ android {
 
     versionCode appVersionCode
     versionName appVersionName
+
+    String replace = appVersionName;
+
+    copy {
+      from( 'src/template/assets/com/gindin/zmanim/android/about.html' ) {
+        filter{ String line -> line.replace( "@@VERSION@@", replace ) }
+      }
+      into 'src/main/assets/com/gindin/zmanim/android'
+    }
   }
 
   buildTypes {
     release {
+
       minifyEnabled false
       proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
       signingConfig signingConfigs.release
@@ -57,7 +66,5 @@ android {
 }
 
 dependencies {
-  compile fileTree( include: ['*.jar'], dir: 'libs' )
-  compile 'com.android.support:appcompat-v7:22.2.1'
-  compile project( ':ZmanLib' )
+
 }
