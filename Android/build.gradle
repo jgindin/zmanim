@@ -68,3 +68,29 @@ android {
 dependencies {
 
 }
+
+
+
+Properties flurry = new Properties()
+flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
+String key = flurry[ 'flurry.key' ]
+
+task replacePlaceholders << {
+
+  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: "FLURRY_KEY_GOES_HERE", value: key )
+}
+
+
+task resetPlaceholders << {
+
+  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: key, value: "FLURRY_KEY_GOES_HERE" )
+}
+
+
+/* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
+gradle.projectsEvaluated {
+
+  compileReleaseJava.dependsOn( "replacePlaceholders" )
+
+  assembleRelease.dependsOn( "resetPlaceholders" )
+}

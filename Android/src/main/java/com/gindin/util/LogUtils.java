@@ -31,7 +31,8 @@ public class LogUtils {
 	) {
 
 		if ( !Version.isDevelopment() ) {
-			FlurryAgent.onStartSession( context, "FLURRY_KEY_GOES_HERE" );
+			FlurryAgent.init( context, "FLURRY_KEY_GOES_HERE" );
+			FlurryAgent.onStartSession( context );
 		}
 		else {
 			// Just so we *KNOW* we're dealing with a dev version...
@@ -91,7 +92,7 @@ public class LogUtils {
 	) {
 		//noinspection NullArgumentToVariableArgMethod
 		logError( where, message, error, null );
-	}	
+	}
 
 	public static void logError(
 		String                  where,
