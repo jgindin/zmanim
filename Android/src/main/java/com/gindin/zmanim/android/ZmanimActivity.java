@@ -37,7 +37,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.*;
@@ -52,7 +52,7 @@ import java.util.List;
  * Entry point to the Android application which displays zmanim.
  */
 public class ZmanimActivity
-	extends FragmentActivity {
+	extends AppCompatActivity {
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 

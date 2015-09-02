@@ -5,9 +5,11 @@
 package com.gindin.zmanim.android.prefs;
 
 import com.gindin.zmanim.android.Activities;
+import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 
 import android.content.SharedPreferences;
+import android.support.annotation.StringRes;
 
 /**
  * Takes care of dealing with the user's preferences--invoking the activity, notifying the main app
@@ -25,10 +27,12 @@ public class PersonalPrefsManager
 
 	@Override
 	@SuppressWarnings( { "MagicNumber" } )
-	public void onHandleUpgrade(
+	public @StringRes	int onHandleUpgrade(
 		int   thisCodeVersion,
 		int   lastKnownCodeVersion
 	) {
+
+		int upgradeNotesId = -1;
 
 		if ( lastKnownCodeVersion <= 66 ) {
 			final SharedPreferences.Editor editor = prefs.edit();
@@ -40,7 +44,11 @@ public class PersonalPrefsManager
 			final SharedPreferences.Editor editor = prefs.edit();
 			editor.putBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
 			editor.apply();
+
+			upgradeNotesId = R.string.notification_info;
 		}
+
+		return upgradeNotesId;
 	}
 
 

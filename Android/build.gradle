@@ -21,7 +21,7 @@ apply from: '../common/gindin-versioning.gradle'
 
 android {
   compileSdkVersion 22
-  buildToolsVersion "21.1.2"
+  buildToolsVersion "22.0.1"
 
   defaultConfig {
     applicationId "com.gindin.zmanim.android"
@@ -67,6 +67,11 @@ android {
 
 dependencies {
 
+  compile 'com.android.support:design:22.2.1'
+
+  // This library only works with SDK 11+
+  //  see https://github.com/MrBIMC/MaterialSeekBarPreference
+//  compile 'com.pavelsikun:material-seekbar-preference:0.10'
 }
 
 

@@ -10,6 +10,7 @@ import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.StringRes;
 
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ZmanimSelectionPrefsManager
 
 
 	@SuppressWarnings( { "MagicNumber" } )
-	public void onHandleUpgrade(
+	public @StringRes	int onHandleUpgrade(
 		int   thisCodeVersion,
 		int   lastKnownCodeVersion
 	) {
@@ -96,6 +97,8 @@ public class ZmanimSelectionPrefsManager
 				editor.apply();
 			}
 		}
+
+		return -1;
 	}
 
 

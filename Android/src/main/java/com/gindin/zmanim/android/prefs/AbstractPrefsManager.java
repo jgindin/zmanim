@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceActivity;
+import android.support.annotation.StringRes;
 
 import java.util.Map;
 
@@ -49,8 +50,10 @@ public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? e
 	 *
 	 * @param thisCodeVersion The current code version
 	 * @param lastKnownCodeVersion The last code version which was installed
+	 *
+	 * @return Identifier of release notes to display or -1 if there are none.
 	 */
-	public abstract void onHandleUpgrade(
+	public abstract @StringRes int onHandleUpgrade(
 		int thisCodeVersion,
 		int lastKnownCodeVersion
 	);

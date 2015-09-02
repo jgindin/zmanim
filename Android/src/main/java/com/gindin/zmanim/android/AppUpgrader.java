@@ -16,6 +16,10 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,9 +47,12 @@ class AppUpgrader {
 		if ( thisCodeVersion > lastKnownCodeVersion ) {
 			try {
 
-				personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
-				zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
+				int personalPrefsUpgradeId = personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
+				int zmanPrefsUpgradeId = zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
 				upgradeLocationPrefs( zmanimActivity, lastKnownCodeVersion );
+
+				showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, R.string.upgrade_from_229 );
+
 			}
 			catch ( Throwable e ) {
 				//noinspection unchecked
@@ -62,6 +69,7 @@ class AppUpgrader {
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private static void upgradeLocationPrefs(
 		ZmanimActivity    activity,
 		int               lastKnownCodeVersion
@@ -131,6 +139,45 @@ class AppUpgrader {
 			}
 		}
 
+	}
+
+
+	private static void showUpgradeNotes(
+			final ZmanimActivity  zmanimActivity,
+			final @StringRes int ... noteIds
+	) {
+
+		if ( ( noteIds == null ) || ( noteIds.length == 0 ) ) {
+			return;
+		}
+
+		String header = zmanimActivity.getString( R.string.upgrade_header );
+		final Snackbar snackbar = Snackbar
+			.make( zmanimActivity.findViewById( android.R.id.content ), header, Snackbar.LENGTH_INDEFINITE );
+
+		View.OnClickListener listener = new View.OnClickListener() {
+			@Override
+			public void onClick( final View v ) {
+
+				StringBuilder message = new StringBuilder();
+				for ( int noteId : noteIds ) {
+					if ( noteId != -1 ) {
+						message.append( zmanimActivity.getString( noteId ) ).append( "\n\n" );
+					}
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder( zmanimActivity );
+				builder
+					.setTitle( R.string.upgrade_header )
+					.setMessage( message )
+					.create()
+					.show();
+			}
+		};
+
+
+		snackbar.setAction( "View", listener );
+		snackbar.show();
 	}
 
 }  // End of AppUpgrader class

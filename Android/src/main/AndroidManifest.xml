@@ -36,7 +36,13 @@
     android:xlargeScreens="true"
 	/>
 
-	<application android:icon="@drawable/icon" android:label="Zmanim" android:allowBackup="true">
+	<application
+		android:icon="@drawable/icon"
+		android:label="Zmanim"
+		android:allowBackup="true"
+		android:theme="@style/Theme.AppCompat"
+	>
+
 		<activity
 			android:name=".ZmanimActivity"
 		>
