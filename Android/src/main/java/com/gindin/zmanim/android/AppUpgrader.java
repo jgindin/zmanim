@@ -6,7 +6,6 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.util.Version;
 import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
@@ -39,7 +38,7 @@ class AppUpgrader {
 	) {
 
 		// Compare our version to the the last known version and see if anything needs to be upgraded.
-		int thisCodeVersion = Version.androidCodeVersion;
+		int thisCodeVersion = BuildConfig.VERSION_CODE;
 
 		SharedPreferences prefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.VERSION.name(), Context.MODE_PRIVATE );
 		int lastKnownCodeVersion = prefs.getInt( LAST_KNOWN_CODE_VERSION, -1 );
@@ -51,7 +50,12 @@ class AppUpgrader {
 				int zmanPrefsUpgradeId = zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
 				upgradeLocationPrefs( zmanimActivity, lastKnownCodeVersion );
 
-				showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, R.string.upgrade_from_229 );
+				int thisUpgradeId = -1;
+				if ( lastKnownCodeVersion < 279 ) {
+					thisUpgradeId = R.string.upgrade_from_279;
+				}
+
+				showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, thisUpgradeId );
 
 			}
 			catch ( Throwable e ) {
@@ -164,6 +168,10 @@ class AppUpgrader {
 					if ( noteId != -1 ) {
 						message.append( zmanimActivity.getString( noteId ) ).append( "\n\n" );
 					}
+				}
+
+				if ( message.length() == 0 ) {
+					return;
 				}
 
 				AlertDialog.Builder builder = new AlertDialog.Builder( zmanimActivity );

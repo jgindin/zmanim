@@ -4,7 +4,7 @@
 
 package com.gindin.zmanim.android.prefs;
 
-import com.gindin.util.Version;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 
 import android.content.Context;
@@ -99,7 +99,7 @@ public class LocationProviderPreferences
 		overridingSystemTimeZone( overrideSystemTimeZone.isChecked() );
 
 		// Only want the "prefer cached location" property for debugging...
-		if ( !Version.isDevelopment() ) {
+		if ( !BuildConfig.DEBUG ) {
 
 			// See http://stackoverflow.com/questions/2240326/remove-hide-a-preference-from-the-screen
 			PreferenceCategory category = (PreferenceCategory)findPreference( LocationProviders.DYNAMIC_LOCATION_CATEGORY.name() );

@@ -112,6 +112,6 @@
 
 	<string name="upgrade_header">What\'s New</string>
 	<string name="notification_info">Zmanim Notifications are now available and enabled by default. Change which zmanim show alerts in the Preferences.</string>
-	<string name="upgrade_from_229">Numerous fixes for location acquisition. </string>
+	<string name="upgrade_from_279">Numerous fixes for location acquisition. </string>
 
 </resources>

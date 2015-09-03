@@ -5,6 +5,7 @@
 package com.gindin.util;
 
 import com.flurry.android.FlurryAgent;
+import com.gindin.zmanim.android.BuildConfig;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,7 +31,7 @@ public class LogUtils {
 		final Activity context
 	) {
 
-		if ( !Version.isDevelopment() ) {
+		if ( !BuildConfig.DEBUG ) {
 			FlurryAgent.init( context, "FLURRY_KEY_GOES_HERE" );
 			FlurryAgent.onStartSession( context );
 		}
@@ -78,7 +79,7 @@ public class LogUtils {
 		Context context
 	) {
 
-		if ( !Version.isDevelopment() ) {
+		if ( !BuildConfig.DEBUG ) {
 			FlurryAgent.onEndSession( context );
 		}
 	}
@@ -103,7 +104,7 @@ public class LogUtils {
 
 		String stackTrace = ( null == error ? null: exceptionToString( error ) );
 
-		if ( Version.isDevelopment() ) {
+		if ( BuildConfig.DEBUG ) {
 			Log.e( where, "Msg: " + message + "\nStack: " + stackTrace );
 		}
 		else {
@@ -133,7 +134,7 @@ public class LogUtils {
 	  List<Pair<String,String>>   messages
 	) {
 
-		if ( Version.isDevelopment() ) {
+		if ( BuildConfig.DEBUG ) {
 
 			StringBuilder msg = new StringBuilder();
 			for ( Pair<String, String> pair : messages ) {
@@ -161,7 +162,7 @@ public class LogUtils {
 	  String message
 	) {
 
-		if ( Version.isDevelopment() ) {
+		if ( BuildConfig.DEBUG ) {
 			Log.i( tag, message );
 		}
 	}
