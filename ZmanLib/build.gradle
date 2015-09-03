@@ -2,8 +2,9 @@ apply plugin: 'java'
 
 
 dependencies {
-    compile fileTree( include: ['*.jar'], dir: 'libs' )
-    compile 'org.json:json:20140107'
-    compile project( ':ZmanUtils' )
-    testCompile 'junit:junit:4.11'
+  compile fileTree( include: ['*.jar'], dir: 'libs' )
+  compile 'org.json:json:20140107'
+  compile project( ':ZmanUtils' )
+
+  testCompile 'junit:junit:4.12'
 }

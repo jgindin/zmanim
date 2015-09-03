@@ -72,6 +72,8 @@ dependencies {
   // This library only works with SDK 11+
   //  see https://github.com/MrBIMC/MaterialSeekBarPreference
 //  compile 'com.pavelsikun:material-seekbar-preference:0.10'
+
+  testCompile 'junit:junit:4.12'
 }
 
 

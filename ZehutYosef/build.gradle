@@ -56,15 +56,12 @@ android {
 }
 
 dependencies {
-
   /* https://github.com/mikepenz/MaterialDrawer */
   compile( 'com.mikepenz:materialdrawer:3.0.8@aar' ) {
     transitive = true
   }
-
   /* https://github.com/mikepenz/AboutLibraries */
   compile( 'com.mikepenz:aboutlibraries:5.1.1@aar' ) {
     transitive = true
   }
-
 }
