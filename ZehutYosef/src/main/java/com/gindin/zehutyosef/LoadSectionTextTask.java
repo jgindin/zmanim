@@ -21,7 +21,7 @@ class LoadSectionTextTask
 
 	private static final int                                  INITIAL_DELAY = 300;
 
-	private static final int                                  INTER_CHUNK_DELAY = 150;
+	private static final int                                  INTER_CHUNK_DELAY = 25;
 
 
 	class LoadedTextHolder {

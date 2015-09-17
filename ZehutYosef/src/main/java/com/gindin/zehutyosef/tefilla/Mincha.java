@@ -1,10 +1,8 @@
 package com.gindin.zehutyosef.tefilla;
 
 import com.gindin.zehutyosef.R;
-import com.gindin.zmanlib.calendar.HebrewDate;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -20,10 +18,16 @@ public class Mincha
 
 
 	@Override
-	public List<TextChunk> getTextInfoForDate( final HebrewDate date ) {
+	protected TefillaType getTefillaType() {
+		return TefillaType.Mincha;
+	}
 
-		final boolean isFriday = ( date.getDayOfWeek() == Calendar.FRIDAY );
-		final boolean isAseretYameiTeshuva = isAseretYameiTeshuva( date );
+
+	@SuppressWarnings( "FeatureEnvy" )
+	@Override
+	protected List<TextChunk> getTefillaText( final DoWeSay doWeSay ) {
+
+		final boolean isAseretYameiTeshuva = doWeSay.aseretYameiTeshuvaInsertions();
 
 		List<TextChunk> files = new ArrayList<>();
 
@@ -41,13 +45,13 @@ public class Mincha
 		files.add( new TextChunk( "tefilla/amidah/1_ticon_tefilati.txt" ) );
 		files.add( new TextChunk( "tefilla/kaddish_chatzi.txt" ) );
 
-		files.addAll( getAmidahFileNamesForDate( date, Type.Mincha ) );
+		files.addAll( getAmidahFileNamesForDate( doWeSay ) );
 
 		if ( isAseretYameiTeshuva ) {
 			files.add( new TextChunk( "tefilla/avinu_malkenu.txt" ) );
 		}
 
-		if ( doWeSayTachanun( date ) ) {
+		if ( doWeSay.tachanun() ) {
 			files.add( new TextChunk( "tefilla/mincha/mincha_tachanun.txt" ) );
 		}
 
@@ -55,7 +59,7 @@ public class Mincha
 
 		files.add( new TextChunk( "tefilla/kaddish_titkabal.txt" ) );
 
-		if ( isFriday ) {
+		if ( doWeSay.erevShabbatModifications() ) {
 			files.add( new TextChunk( "tefilla/amonai_malach_geut_lavesh.txt" ) );
 		}
 		else {
@@ -66,7 +70,7 @@ public class Mincha
 		files.add( new TextChunk( "tefilla/alenu.txt" ) );
 		files.add( new TextChunk( "tefilla/uvtoratecha.txt" ) );
 
-		if ( isFriday ) {
+		if ( doWeSay.erevShabbatModifications() ) {
 			files.add( new TextChunk( "tefilla/mincha/mincha_conclusion_friday.txt" ) );
 		}
 		else {

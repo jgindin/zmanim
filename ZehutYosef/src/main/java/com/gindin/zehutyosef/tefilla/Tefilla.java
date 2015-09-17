@@ -1,15 +1,11 @@
 package com.gindin.zehutyosef.tefilla;
 
 import com.gindin.zehutyosef.Section;
-import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
 
 import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -19,14 +15,6 @@ import java.util.List;
 public abstract class Tefilla
 	extends Section {
 
-	@SuppressWarnings( "SpellCheckingInspection" )
-	enum Type {
-		Shachrit,
-		Musaf,
-		Mincha,
-		Arvit
-	}
-
 
 	protected Tefilla(
 		@StringRes final int  titleId
@@ -35,12 +23,27 @@ public abstract class Tefilla
 	}
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	protected final List<TextChunk> getAmidahFileNamesForDate( HebrewDate date, Type tefillaType ) {
+	protected abstract TefillaType getTefillaType();
 
-		final Details dateDetails = date.getDetails();
-		final boolean isFastDay = dateDetails.isTaanit();
-		final boolean isAseretYameiTeshuva = isAseretYameiTeshuva( date );
+
+	protected abstract List<TextChunk> getTefillaText( final DoWeSay doWeSay );
+
+
+	@Override
+	protected final List<TextChunk> getTextInfoForDate( final HebrewDate date ) {
+
+		DoWeSay doWeSay = new DoWeSay( date, getTefillaType() );
+
+		return getTefillaText( doWeSay );
+	}
+
+
+	@SuppressWarnings( "FeatureEnvy" )
+	protected final List<TextChunk> getAmidahFileNamesForDate( DoWeSay doWeSay ) {
+
+		final TefillaType tefillaType = getTefillaType();
+		final boolean isAseretYameiTeshuva = doWeSay.aseretYameiTeshuvaInsertions();
+		final boolean isTaanit = doWeSay.taanitDayInsertions();
 
 		List<TextChunk> files = new ArrayList<>();
 
@@ -54,7 +57,7 @@ public abstract class Tefilla
 		files.add( new TextChunk( "tefilla/amidah/2_3_magen_avraham_conclusion.txt" ) );
 		files.add( new TextChunk( "tefilla/amidah/3_1_atah_gibor_intro.txt" ) );
 
-		if ( doWeSayMoridHaTal( date, tefillaType ) ) {
+		if ( doWeSay.moridHaTal() ) {
 			files.add( new TextChunk( "tefilla/amidah/3_2_atah_gibor_summer.txt" ) );
 		}
 		else {
@@ -69,7 +72,7 @@ public abstract class Tefilla
 
 		files.add( new TextChunk( "tefilla/amidah/3_5_atah_gibor_conclusion.txt" ) );
 
-		if ( ( tefillaType == Type.Shachrit ) || ( tefillaType == Type.Mincha ) ) {
+		if ( ( tefillaType == TefillaType.Shachrit ) || ( tefillaType == TefillaType.Mincha ) ) {
 			files.add( new TextChunk( "tefilla/amidah/4_1_kedusha_nakdishach.txt" ) );
 		}
 
@@ -82,13 +85,13 @@ public abstract class Tefilla
 
 		files.add( new TextChunk( "tefilla/amidah/5_atah_honen_thru_goel_yisrael.txt" ) );
 
-		if ( isFastDay ) {
+		if ( isTaanit ) {
 			files.add( new TextChunk( "tefilla/amidah/6_fast_day_hazzan_insertion.txt" ) );
 		}
 
 		files.add( new TextChunk( "tefilla/amidah/7_refaenu.txt" ) );
 
-		if ( doWeSayBarechenu( date, tefillaType ) ) {
+		if ( doWeSay.barechenu() ) {
 			files.add( new TextChunk( "tefilla/amidah/8_barechenu.txt" ) );
 		}
 		else {
@@ -96,37 +99,39 @@ public abstract class Tefilla
 		}
 
 		files.add( new TextChunk( "tefilla/amidah/9_tikah_bshofar.txt" ) );
-		files.add( new TextChunk( "tefilla/amidah/10_hashiva.txt" ) );
 
 		if ( isAseretYameiTeshuva ) {
-			files.add( new TextChunk( "amidah/10_hashiva_asert_yamei_teshuva.txt" ) );
+			files.add( new TextChunk( "tefilla/amidah/10_hashiva_asert_yamei_teshuva.txt" ) );
+		}
+		else {
+			files.add( new TextChunk( "tefilla/amidah/10_hashiva.txt" ) );
 		}
 
 		files.add( new TextChunk( "tefilla/amidah/11_lamalshinim_thru_et_zemach.txt" ) );
 		files.add( new TextChunk( "tefilla/amidah/12_1_shma_kolenu_intro.txt" ) );
 
-		if ( isFastDay ) {
+		if ( isTaanit ) {
 			files.add( new TextChunk( "tefilla/amidah/12_2_shma_kolenu_fast_day.txt" ) );
 		}
 
 		files.add( new TextChunk( "tefilla/amidah/12_3_shma_kolenu_conclusion.txt" ) );
 		files.add( new TextChunk( "tefilla/amidah/13_1_retzeh_intro.txt" ) );
 
-		if ( dateDetails.isRoshChodesh() ) {
+		if ( doWeSay.roshChodeshAdditions() ) {
 			files.add( new TextChunk( "tefilla/amidah/13_2_retzeh_rosh_chodesh.txt" ) );
 		}
 
 		files.add( new TextChunk( "tefilla/amidah/13_3_retzeh_conclusion.txt" ) );
 		files.add( new TextChunk( "tefilla/amidah/14_1_modim_intro.txt" ) );
 
-		if ( tefillaType != Type.Arvit ) {
+		if ( tefillaType != TefillaType.Arvit ) {
 			files.add( new TextChunk( "tefilla/amidah/14_1_modim_drabanan.txt" ) );
 		}
 
-		if ( dateDetails.isChanukah() ) {
+		if ( doWeSay.chanukahAdditions() ) {
 			files.add( new TextChunk( "tefilla/amidah/14_2_modim_chanukah.txt" ) );
 		}
-		else if ( dateDetails.isPurim() ) {
+		else if ( doWeSay.purimAdditions() ) {
 			files.add( new TextChunk( "tefilla/amidah/14_2_modim_purim.txt" ) );
 		}
 
@@ -146,7 +151,7 @@ public abstract class Tefilla
 
 		files.add( new TextChunk( "tefilla/amidah/16_3_sim_shalom_conclusion.txt" ) );
 
-		if ( tefillaType != Type.Arvit ) {
+		if ( tefillaType != TefillaType.Arvit ) {
 			files.add( new TextChunk( "tefilla/amidah/17_end_of_amidah_instructions.txt" ) );
 		}
 
@@ -155,136 +160,5 @@ public abstract class Tefilla
 		return files;
 	}
 
-
-	@SuppressWarnings( "FeatureEnvy" )
-	protected final boolean doWeSayBarechenu(
-		HebrewDate  date,
-		Type        tefillaType
-	) {
-
-		HebrewDate nextYear = HebrewCalendar.getForDate( date.getGregorianYear() + 1, Calendar.JANUARY, 1 );
-		final boolean isLeapYear = nextYear.isGregorianLeapYear();
-
-		HebrewDate startOfSummer = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 16 );
-		HebrewDate endOfSummer = HebrewCalendar.getForDate( date.getGregorianYear(), Calendar.DECEMBER, isLeapYear ? 5 : 4 );
-
-		final boolean barechenu;
-		if ( date.compareTo( startOfSummer ) >= 0 ) {
-			// If we're saying Arvit, then we must be strictly before the end of summer. For Shachrit or Mincha,
-			//  it could be that day...
-			if ( tefillaType == Type.Arvit ) {
-				barechenu = ( date.compareTo( endOfSummer ) < 0 );
-			}
-			else {
-				barechenu = ( date.compareTo( endOfSummer ) <= 0 );
-			}
-		}
-		else {
-			barechenu = false;
-		}
-
-		return barechenu;
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	protected final boolean doWeSayMoridHaTal(
-		HebrewDate  date,
-		Type        tefillaType
-	) {
-
-		HebrewDate firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 15 );
-
-		// If this year is before the last day of Elul, then we have to check against *next year's* shmini Atzeret...
-		HebrewDate shminiAtzeret;
-		HebrewDate endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ELUL, 29 );
-		if ( date.compareTo( endOfYear ) <= 0 ) {
-			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear() + 1, HebrewMonth.TISHREI, 22 );
-		}
-		else {
-			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.TISHREI, 22 );
-		}
-
-
-		if ( ( date.compareTo( firstDayOfPesach ) > 0 ) && ( date.compareTo( shminiAtzeret ) < 0 ) ) {
-			return true;
-		}
-
-		// Now, check the edge cases...
-		if ( date.compareTo( firstDayOfPesach ) == 0 ) {
-			return ( tefillaType != Type.Shachrit );
-		}
-
-		if ( date.compareTo( shminiAtzeret ) == 0 ) {
-			return ( tefillaType == Type.Shachrit );
-		}
-
-		return false;
-	}
-
-
-	protected final boolean isAseretYameiTeshuva( HebrewDate date ) {
-
-		int hebrewMonth = date.getHebrewMonth();
-		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-
-		return ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 1 ) && ( hebrewDayOfMonth <= 10 );
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	protected final boolean doWeSayTachanun( HebrewDate date ) {
-
-		// See pg. 43 of Zehut Yosef.
-
-		Details details = date.getDetails();
-		if ( details.isShabbat() || details.isRoshChodesh() || details.isPesach() || details.isShavuot() || details.isSukkot() ) {
-			return false;
-		}
-
-		int hebrewMonth = date.getHebrewMonth();
-		if ( hebrewMonth == HebrewMonth.NISSAN ) {
-			return false;
-		}
-
-		if ( details.isYomHaAtzmaut() || details.isPesachSheni() || details.isLagBOmer() || details.isYomYerushalayim() ) {
-			return false;
-		}
-
-		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-		if ( ( hebrewMonth == HebrewMonth.SIVAN ) && ( hebrewDayOfMonth <= 12 ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.AV ) && ( ( hebrewDayOfMonth == 9 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.ELUL ) && ( hebrewDayOfMonth == 29 ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 9 ) ) {
-			return false;
-		}
-
-		if ( details.isChanukah() ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.SHEVAT ) && ( hebrewDayOfMonth == 15 ) ) {
-			return false;
-		}
-
-		if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-			return false;
-		}
-
-		if ( details.isPurim() || details.isShushanPurim() ) {
-			return false;
-		}
-
-		return true;
-	}
 
 } // End of MeenShalosh class

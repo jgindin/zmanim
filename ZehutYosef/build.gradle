@@ -64,4 +64,6 @@ dependencies {
   compile( 'com.mikepenz:aboutlibraries:5.1.1@aar' ) {
     transitive = true
   }
+
+  testCompile 'junit:junit:4.12'
 }

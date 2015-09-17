@@ -2,7 +2,6 @@ package com.gindin.zehutyosef.tefilla;
 
 import com.gindin.zehutyosef.R;
 import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.holiday.Details;
 
 import android.content.res.AssetManager;
 import android.widget.TextView;
@@ -33,27 +32,29 @@ public class Arvit
 
 
 	@Override
-	public List<TextChunk> getTextInfoForDate( final HebrewDate date ) {
+	protected TefillaType getTefillaType() {
+		return TefillaType.Arvit;
+	}
 
-		final Details dateDetails = date.getDetails();
-		final boolean isPurim = dateDetails.isPurim();
-		final boolean isRoshChodesh = dateDetails.isRoshChodesh();
+
+	@Override
+	protected List<TextChunk> getTefillaText( final DoWeSay doWeSay ) {
 
 		List<TextChunk> files = new ArrayList<>();
 
 		// Assembling Arvit:
-		if ( isRoshChodesh ) {
+		if ( doWeSay.roshChodeshAdditions() ) {
 			files.add( new TextChunk( "tefilla/arvit/rosh_hodesh_intro.txt" ) );
 		}
 
-		if ( isPurim ) {
+		if ( doWeSay.purimAdditions() ) {
 			files.add( new TextChunk( "tefilla/arvit/purim_intro.txt" ) );
 		}
 
 		files.add( new TextChunk( "tefilla/arvit/mourning_intro.txt" ) );
 		files.add( new TextChunk( "tefilla/arvit/utshuat_tzadikim.txt" ) );
 
-		if ( !isRoshChodesh ) {
+		if ( !doWeSay.roshChodeshAdditions() ) {
 			files.add( new TextChunk( "tefilla/arvit/amonai_tzevaot.txt" ) );
 		}
 
@@ -65,7 +66,7 @@ public class Arvit
 		files.add( new TextChunk( "tefilla/arvit/arvit_shema_berakha_after.txt" ) );
 		files.add( new TextChunk( "tefilla/kaddish_chatzi.txt" ) );
 
-		files.addAll( getAmidahFileNamesForDate( date, Type.Arvit ) );
+		files.addAll( getAmidahFileNamesForDate( doWeSay ) );
 
 		files.add( new TextChunk( "tefilla/arvit/yehi_shem.txt" ) );
 		files.add( new TextChunk( "tefilla/kaddish_titkabal.txt" ) );
