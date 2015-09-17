@@ -80,6 +80,8 @@ public abstract class Details {
 
 	public boolean isRoshHashana() { return false; }
 
+	public boolean isYomKippur() { return  false; }
+
 	public boolean isYomHaAtzmaut() { return false; }
 
 	public boolean isYomYerushalayim() { return false; }

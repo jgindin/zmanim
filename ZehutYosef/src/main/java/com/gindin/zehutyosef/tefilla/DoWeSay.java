@@ -110,17 +110,28 @@ class DoWeSay {
 
 		// See pg. 43 of Zehut Yosef.
 
-		Details details = date.getDetails();
-		if ( details.isShabbat() || details.isRoshChodesh() || details.isPesach() || details.isShavuot() || details.isSukkot() ) {
+		Details today = date.getDetails();
+		if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot()
+			|| today.isChanukah() || today.isPurim() || today.isShushanPurim() ) {
 			return false;
 		}
+
+		if ( tefillaType == TefillaType.Mincha ) {
+			Details tomorrow = date.tomorrow().getDetails();
+			if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
+				tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
+				tomorrow.isPurim() || tomorrow.isShushanPurim()	) {
+				return false;
+			}
+		}
+
 
 		int hebrewMonth = date.getHebrewMonth();
 		if ( hebrewMonth == HebrewMonth.NISSAN ) {
 			return false;
 		}
 
-		if ( details.isYomHaAtzmaut() || details.isPesachSheni() || details.isLagBOmer() || details.isYomYerushalayim() ) {
+		if ( today.isYomHaAtzmaut() || today.isPesachSheni() || today.isLagBOmer() || today.isYomYerushalayim() ) {
 			return false;
 		}
 
@@ -137,11 +148,11 @@ class DoWeSay {
 			return false;
 		}
 
-		if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 9 ) ) {
+		if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 11 ) ) {
 			return false;
 		}
 
-		if ( details.isChanukah() ) {
+		if ( today.isChanukah() ) {
 			return false;
 		}
 
@@ -149,12 +160,8 @@ class DoWeSay {
 			return false;
 		}
 
-		if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-			return false;
-		}
-
 		//noinspection RedundantIfStatement
-		if ( details.isPurim() || details.isShushanPurim() ) {
+		if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
 			return false;
 		}
 

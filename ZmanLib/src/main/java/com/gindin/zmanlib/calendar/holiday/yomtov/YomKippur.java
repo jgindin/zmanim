@@ -63,6 +63,12 @@ public class YomKippur
 
 
 		@Override
+		public boolean isYomKippur() {
+			return true;
+		}
+
+
+		@Override
 		public boolean lightCandles() {
 			return false;
 		}
