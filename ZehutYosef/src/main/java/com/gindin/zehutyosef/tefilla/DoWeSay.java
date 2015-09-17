@@ -69,20 +69,29 @@ class DoWeSay {
 	@SuppressWarnings( "FeatureEnvy" )
 	final boolean moridHaTal() {
 
-		HebrewDate firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 15 );
+		HebrewDate firstDayOfPesach;
+		HebrewDate shminiAtzeret;
+
+		// First, check if we're before or after the Jewish New Year.
+		//  - If we're before, then the 1st day of Pesach that we're going to check against is in the same Hebrew year,
+		//    and the Shmini Atzeret we compare against is the next Hebrew year.
+		//  - Otherwise, we're comparing against the previous Hebrew year's Pesach and the current Hebrew year's
+		//    Shmini Atzeret.
+		//
+		HebrewDate endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ELUL, 29 );
 
 		// Make sure we're not in the new Hebrew year, but 'old' gregorian year...
-		if ( firstDayOfPesach.getGregorianYear() != date.getGregorianYear() ) {
-			firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 15 );
+		if ( endOfYear.getGregorianYear() != date.getGregorianYear() ) {
+			endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.ELUL, 29 );
 		}
 
-		// If this year is before the last day of Elul, then we have to check against *next year's* shmini Atzeret...
-		HebrewDate shminiAtzeret;
-		HebrewDate endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ELUL, 29 );
+
 		if ( date.compareTo( endOfYear ) <= 0 ) {
+			firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 15 );
 			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear() + 1, HebrewMonth.TISHREI, 22 );
 		}
 		else {
+			firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 15 );
 			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.TISHREI, 22 );
 		}
 

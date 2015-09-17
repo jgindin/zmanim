@@ -687,6 +687,18 @@ public abstract class Details {
 
 
 		@Override
+		public boolean isYomKippur() {
+			for ( Details composedDate : composedDates ) {
+				if ( composedDate.isYomKippur() ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		@Override
 		public boolean isYomHaAtzmaut() {
 			for ( Details composedDate : composedDates ) {
 				if ( composedDate.isYomHaAtzmaut() ) {
