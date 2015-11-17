@@ -49,3 +49,6 @@ I've also recently switched to using [YouTrack](https://www.jetbrains.com/youtra
 * [Follow Commits to this project](http://groups.google.com/group/android-zmanim-commits)
 * [View or enter a bug or feature idea](http://zmanim.myjetbrains.com/youtrack/dashboard) - Go ahead and just log in as a Guest!
 
+
+### Developers ###
+So far, just one -- jgindin. I am responsible for everything, good & bad. Feature requests are welcome, though my time is somewhat limited...
