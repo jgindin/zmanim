@@ -68,6 +68,7 @@ android {
 dependencies {
 
   compile 'com.android.support:design:22.2.1'
+  compile 'com.android.support:appcompat-v7:22.2.1'
 
   // This library only works with SDK 11+
   //  see https://github.com/MrBIMC/MaterialSeekBarPreference
@@ -80,24 +81,37 @@ dependencies {
 
 Properties flurry = new Properties()
 flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
-String key = flurry[ 'flurry.key' ]
+String flurryKey = flurry[ 'flurry.key' ]
 
 task replacePlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: "FLURRY_KEY_GOES_HERE", value: flurryKey )
+}
 
-  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: "FLURRY_KEY_GOES_HERE", value: key )
+task resetPlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: flurryKey, value: "FLURRY_KEY_GOES_HERE" )
 }
 
 
-task resetPlaceholders << {
+Properties mapQuest = new Properties()
+mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
+String mapQuestKey = flurry[ 'mapquest.key' ]
 
-  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: key, value: "FLURRY_KEY_GOES_HERE" )
+task replaceMapQuestPlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java", token: "MAP_QUEST_KEY_GOES_HERE", value: mapQuestKey )
+}
+
+task resetMapQuestPlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java", token: mapQuestKey, value: "MAP_QUEST_KEY_GOES_HERE" )
 }
 
 
 /* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
 gradle.projectsEvaluated {
 
+  compileDebugJava.dependsOn( "replaceMapQuestPlaceholders")
+  compileReleaseJava.dependsOn( "replaceMapQuestPlaceholders")
   compileReleaseJava.dependsOn( "replacePlaceholders" )
 
+  assemble.dependsOn( "resetMapQuestPlaceholders")
   assembleRelease.dependsOn( "resetPlaceholders" )
 }
