@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.prefs;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
+import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
@@ -46,6 +47,21 @@ public class PersonalPrefsManager
 			editor.apply();
 
 			upgradeNotesId = R.string.notification_info;
+		}
+
+
+		if ( lastKnownCodeVersion <= 281 ) {
+
+			// Early beta versions only allowed the alerts to be on or off.
+			final SharedPreferences.Editor editor = prefs.edit();
+
+			for ( Zmanim.Type type : Zmanim.Type.values() ) {
+				boolean notifcationEnabled = prefs.getBoolean( type.name(), true );
+				editor.remove( type.name() );
+				editor.putInt( type.name(), notifcationEnabled ? 15 : -1 );
+			}
+
+			editor.apply();
 		}
 
 		return upgradeNotesId;
