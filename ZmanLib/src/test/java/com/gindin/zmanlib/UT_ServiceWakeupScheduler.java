@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -177,6 +178,7 @@ public class UT_ServiceWakeupScheduler {
 		Assert.assertEquals( 0, timeUntilNextCheck );
 	}
 
+
 	@Test
 	public void testAsTimeGoesOnInexact() {
 
@@ -218,13 +220,7 @@ public class UT_ServiceWakeupScheduler {
 
 		// I'm going to try and be somewhat realistic here. We'll say someone woke up and turned on their
 		//  phone at 6:34am...
-		testTime.set( 2014, Calendar.DECEMBER, 7, 6, 34, 0 );
-		testTime.set( Calendar.MILLISECOND, 0 );
-
-		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
-
-
-		//////////////////////////////////////////////////////
+		//
 		//  Zman                Time        Alert (-15 min)
 		//  ------------------  --------    ---------------
 		//  Alot Hashachar       6:02:50     5:47
@@ -242,84 +238,11 @@ public class UT_ServiceWakeupScheduler {
 		//  Tzait Hacochavim    17:03:01    16:48
 		//  Midnight            00:00:57    23:45
 
+		testTime.set( 2014, Calendar.DECEMBER, 7, 6, 34, 0 );
+		testTime.set( Calendar.MILLISECOND, 0 );
+		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
 
-		final StringBuilder output = new StringBuilder();
-		//              123456789012345678901234567890123456789012345678901234567890
-		output.append( "Time      | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" );
-		output.append( "----------|-----------------------------------------------|-----------------|----------------|---------------|\n" );
-
-		final int testCompleteIndex = 0;
-		final int notifiedIndex = 1;
-		final boolean[] testFlags = new boolean[2];
-
-		final ZmanFormatter zmanFormatter = new ZmanFormatter( true );
-		ZmanUtils.PreferredZmanTypeLookup lookup = new ZmanUtils.PreferredZmanTypeLookup() {
-			@Override
-			public String getPreferredZman( Zmanim.Type type ) {
-				return null;
-			}
-		};
-
-		final ZmanUtils.NotifiedZmanim notifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
-
-		ZmanUtils.ZmanNotificationCallback zmanNotificationCallback = new ZmanUtils.ZmanNotificationCallback() {
-			@Override
-			public void notifyUser(
-				final Zman nextZman
-			) {
-				testFlags[ notifiedIndex ] = true;
-
-				long delta = nextZman.getTime().getTimeInMillis() - testTime.getTimeInMillis();
-				long minUntilZman = ( delta / ( 1000 * 60 ) );
-				long remainingMs = ( delta - ( minUntilZman * ( 1000 * 60 ) ) );
-				long secs = ( remainingMs / 1000 );
-				remainingMs = ( remainingMs - secs * 1000 );
-
-				output.append( String.format( " %-45s |", "Notify: " + nextZman.type + "@"
-					+ zmanFormatter.formatZmanTime( nextZman ) + " (" + minUntilZman + ":" + secs + ":" + remainingMs + ")" ) );
-
-				if ( nextZman.type == Zmanim.Type.NightChatzot ) {
-					testFlags[ testCompleteIndex ] = true;
-				}
-			}
-
-			@Override
-			public void scheduleNextCheck(
-				final Calendar  now,
-				final int       timeUntilNextCheck,
-				final Zman      nextZman
-			) {
-
-				if ( !testFlags[ notifiedIndex ] ) {
-					output.append( String.format( " %-45s |", "Sleep" ) );
-				}
-
-				output.append( String.format( " %-15s |", nextZman.type ) );
-				output.append( String.format( " %14s | ",  zmanFormatter.formatZmanTime( nextZman ) ) );
-
-				int minUntilNextCheck = ( timeUntilNextCheck / ( 1000 * 60 ) );
-				int remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( 1000 * 60 ) ) );
-				int secs = ( remainingMs / 1000 );
-				remainingMs = ( remainingMs - secs * 1000 );
-
-				output.append( String.format( " %02d:%02d:%03d    |", minUntilNextCheck, secs, remainingMs ) );
-				testTime.add( Calendar.MILLISECOND, timeUntilNextCheck );
-			}
-		};
-
-
-
-		while ( !testFlags[ testCompleteIndex ] ) {
-
-			testFlags[ notifiedIndex ] = false;
-			output.append( String.format( " %1$tH:%1$tM:%1$tS |", testTime ) );
-			ZmanUtils.nextZmanAction( seattle, testTime, notifiedZmanim, thirtyMinutesInterval, fifteenMinutesNotification,
-				lookup, zmanNotificationCallback );
-			output.append( "\n" );
-		}
-
-
-		String expected =
+		runDay( hebrewDate,
 			"Time      | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" +
 			"----------|-----------------------------------------------|-----------------|----------------|---------------|\n" +
 			" 06:34:00 | Notify: Talit@6:39:55 AM (5:55:244)           | Hanetz          |     7:42:53 AM |  30:00:000    |\n" +
@@ -361,22 +284,187 @@ public class UT_ServiceWakeupScheduler {
 			" 22:25:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
 			" 22:55:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
 			" 23:25:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  20:56:081    |\n" +
-			" 23:45:58 | Notify: NightChatzot@12:00:58 AM (15:0:0)     | Alot            |     6:03:46 AM |  30:00:000    |\n";
+			" 23:45:58 | Notify: NightChatzot@12:00:58 AM (15:0:0)     | Alot            |     6:03:46 AM |  30:00:000    |\n",
+
+			Arrays.asList( Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
+				Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia,
+				Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
+		);
+	}
+
+
+	@Test
+	public void december_25_2015() {
+
+		// In this case, the user never turns their phone off...
+		testTime.set( 2015, Calendar.DECEMBER, 25, 0, 1, 0 );
+		testTime.set( Calendar.MILLISECOND, 0 );
+		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
+
+		runDay( hebrewDate,
+			"Time      | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" +
+			"----------|-----------------------------------------------|-----------------|----------------|---------------|\n" +
+			" 00:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 00:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 01:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 01:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 02:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 02:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 03:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 03:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 04:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 04:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 05:01:00 | Sleep                                         | Alot            |     6:14:53 AM |  30:00:000    |\n" +
+			" 05:31:00 | Sleep                                         | Alot            |     6:14:53 AM |  28:53:812    |\n" +
+			" 05:59:53 | Notify: Alot@6:14:53 AM (15:0:0)              | Talit           |     6:52:14 AM |  30:00:000    |\n" +
+			" 06:29:53 | Sleep                                         | Talit           |     6:52:14 AM |  07:20:325    |\n" +
+			" 06:37:14 | Notify: Talit@6:52:14 AM (15:0:0)             | Hanetz          |     7:55:57 AM |  30:00:000    |\n" +
+			" 07:07:14 | Sleep                                         | Hanetz          |     7:55:57 AM |  30:00:000    |\n" +
+			" 07:37:14 | Sleep                                         | Hanetz          |     7:55:57 AM |  03:42:961    |\n" +
+			" 07:40:57 | Notify: Hanetz@7:55:57 AM (15:0:0)            | SofZmanShema    |     9:12:04 AM |  30:00:000    |\n" +
+			" 08:10:57 | Sleep                                         | SofZmanShema    |     9:12:04 AM |  30:00:000    |\n" +
+			" 08:40:57 | Sleep                                         | SofZmanShema    |     9:12:04 AM |  16:07:049    |\n" +
+			" 08:57:04 | Notify: SofZmanShema@9:12:04 AM (15:0:0)      | SofZmanTefila   |    10:44:49 AM |  30:00:000    |\n" +
+			" 09:27:04 | Sleep                                         | SofZmanTefila   |    10:44:49 AM |  30:00:000    |\n" +
+			" 09:57:04 | Sleep                                         | SofZmanTefila   |    10:44:49 AM |  30:00:000    |\n" +
+			" 10:27:04 | Sleep                                         | SofZmanTefila   |    10:44:49 AM |  02:44:927    |\n" +
+			" 10:29:49 | Notify: SofZmanTefila@10:44:49 AM (15:0:0)    | Chatzot         |    12:09:15 PM |  30:00:000    |\n" +
+			" 10:59:49 | Sleep                                         | Chatzot         |    12:09:15 PM |  30:00:000    |\n" +
+			" 11:29:49 | Sleep                                         | Chatzot         |    12:09:15 PM |  24:25:988    |\n" +
+			" 11:54:15 | Notify: Chatzot@12:09:15 PM (15:0:0)          | MinchaGedola    |    12:30:21 PM |  21:06:497    |\n" +
+			" 12:15:21 | Notify: MinchaGedola@12:30:21 PM (15:0:0)     | MinchaKetana    |     2:37:00 PM |  30:00:000    |\n" +
+			" 12:45:21 | Sleep                                         | MinchaKetana    |     2:37:00 PM |  30:00:000    |\n" +
+			" 13:15:21 | Sleep                                         | MinchaKetana    |     2:37:00 PM |  30:00:000    |\n" +
+			" 13:45:21 | Sleep                                         | MinchaKetana    |     2:37:00 PM |  30:00:000    |\n" +
+			" 14:15:21 | Sleep                                         | MinchaKetana    |     2:37:00 PM |  06:38:982    |\n" +
+			" 14:22:00 | Notify: MinchaKetana@2:37:00 PM (15:0:0)      | PlagHaMincha    |     3:29:46 PM |  30:00:000    |\n" +
+			" 14:52:00 | Sleep                                         | PlagHaMincha    |     3:29:46 PM |  22:46:242    |\n" +
+			" 15:14:46 | Notify: PlagHaMincha@3:29:46 PM (15:0:0)      | CandleLighting  |     4:04:33 PM |  30:00:000    |\n" +
+			" 15:44:46 | Sleep                                         | CandleLighting  |     4:04:33 PM |  04:46:243    |\n" +
+			" 15:49:33 | Notify: CandleLighting@4:04:33 PM (15:0:0)    | Shkia           |     4:22:33 PM |  18:00:000    |\n" +
+			" 16:07:33 | Notify: Shkia@4:22:33 PM (15:0:0)             | LatestMincha    |     4:32:02 PM |  09:29:916    |\n" +
+			" 16:17:02 | Notify: LatestMincha@4:32:02 PM (15:0:0)      | BeinHashmashot  |     4:56:56 PM |  24:53:372    |\n" +
+			" 16:41:56 | Notify: BeinHashmashot@4:56:56 PM (15:0:0)    | TzaitHacochavim |     5:15:10 PM |  18:14:022    |\n" +
+			" 17:00:10 | Notify: TzaitHacochavim@5:15:10 PM (15:0:0)   | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 17:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 18:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 18:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 19:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 19:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 20:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 20:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 21:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 21:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 22:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 22:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 23:00:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  30:00:000    |\n" +
+			" 23:30:10 | Sleep                                         | NightChatzot    |    12:09:24 AM |  24:14:285    |\n" +
+			" 23:54:24 | Notify: NightChatzot@12:09:24 AM (15:0:0)     | Alot            |     6:15:15 AM |  30:00:000    |\n",
+
+			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
+				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
+				Zmanim.Type.PlagHaMincha, Zmanim.Type.CandleLighting, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
+				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
+		);
+	}
+
+
+	private void runDay(
+		final HebrewDate        hebrewDate,
+		final String            expected,
+	  final List<Zmanim.Type> expectedZmanim
+	) {
+		final StringBuilder output = new StringBuilder();
+		//              123456789012345678901234567890123456789012345678901234567890
+		output.append( "Time      | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" );
+		output.append( "----------|-----------------------------------------------|-----------------|----------------|---------------|\n" );
+
+		final ZmanUtils.NotifiedZmanim notifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
+
+		final MutableBoolean testComplete = new MutableBoolean();
+		final MutableBoolean notified = new MutableBoolean();
+
+		final ZmanFormatter zmanFormatter = new ZmanFormatter( true );
+		ZmanUtils.PreferredZmanTypeLookup lookup = new ZmanUtils.PreferredZmanTypeLookup() {
+			@Override
+			public String getPreferredZman( Zmanim.Type type ) {
+				return null;
+			}
+		};
+
+		ZmanUtils.ZmanNotificationCallback zmanNotificationCallback = new ZmanUtils.ZmanNotificationCallback() {
+			@Override
+			public void notifyUser(
+				final Zman nextZman
+			) {
+				notified.value = true;
+
+				long delta = nextZman.getTime().getTimeInMillis() - testTime.getTimeInMillis();
+				long minUntilZman = ( delta / ( 1000 * 60 ) );
+				long remainingMs = ( delta - ( minUntilZman * ( 1000 * 60 ) ) );
+				long secs = ( remainingMs / 1000 );
+				remainingMs = ( remainingMs - secs * 1000 );
+
+				output.append( String.format( " %-45s |", "Notify: " + nextZman.type + "@"
+					+ zmanFormatter.formatZmanTime( nextZman ) + " (" + minUntilZman + ":" + secs + ":" + remainingMs + ")" ) );
+
+				if ( nextZman.type == Zmanim.Type.NightChatzot ) {
+					testComplete.value = true;
+				}
+			}
+
+			@Override
+			public void scheduleNextCheck(
+				final Calendar  now,
+				final int       timeUntilNextCheck,
+				final Zman      nextZman
+			) {
+
+				if ( !notified.value ) {
+					output.append( String.format( " %-45s |", "Sleep" ) );
+				}
+
+				output.append( String.format( " %-15s |", nextZman.type ) );
+				output.append( String.format( " %14s | ",  zmanFormatter.formatZmanTime( nextZman ) ) );
+
+				int minUntilNextCheck = ( timeUntilNextCheck / ( 1000 * 60 ) );
+				int remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( 1000 * 60 ) ) );
+				int secs = ( remainingMs / 1000 );
+				remainingMs = ( remainingMs - secs * 1000 );
+
+				output.append( String.format( " %02d:%02d:%03d    |", minUntilNextCheck, secs, remainingMs ) );
+				testTime.add( Calendar.MILLISECOND, timeUntilNextCheck );
+			}
+		};
+
+
+		while ( !testComplete.value ) {
+
+			notified.value = false;
+			output.append( String.format( " %1$tH:%1$tM:%1$tS |", testTime ) );
+			ZmanUtils.nextZmanAction( seattle, testTime, notifiedZmanim, thirtyMinutesInterval, fifteenMinutesNotification,
+				lookup, zmanNotificationCallback );
+			output.append( "\n" );
+		}
+
 
 		Assert.assertEquals( expected, output.toString() );
 
 		// Make sure we notified for all the zmanim of the day...
 		List<Zmanim> todaysZmanim = hebrewDate.getZmanim( seattle );
 		for ( Zmanim zmanim : todaysZmanim ) {
-
-			// We know that this test doesn't include Alot Hashachar...
-			if ( zmanim.type == Zmanim.Type.Alot ) {
-				Assert.assertFalse( notifiedZmanim.contains( zmanim.type ) );
-			}
-			else {
+			if ( expectedZmanim.contains( zmanim.type ) ) {
 				Assert.assertTrue( notifiedZmanim.contains( zmanim.type ) );
 			}
+			else {
+				Assert.assertFalse( notifiedZmanim.contains( zmanim.type ) );
+			}
 		}
+	}
+
+
+	private static final class MutableBoolean {
+		boolean value = false;
 	}
 
 }

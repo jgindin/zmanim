@@ -9,6 +9,8 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -50,9 +52,10 @@ public class ZmanUtils {
 
 		/**
 		 * Indicates that the next check should be scheduled.
-		 *  @param now The current time.
+		 *
+		 * @param now The current time.
 		 * @param timeUntilNextCheck How long from now until the next check is to be scheduled.
-		 * @param nextZman
+		 * @param nextZman What is the next zman?
 		 */
 		void scheduleNextCheck(
 			Calendar now,
@@ -172,12 +175,13 @@ public class ZmanUtils {
 	 * Given the specified location and time, what is the next zman of interest?
 	 *
 	 * @param location Where are we?
-	 * @param now What time is it?
+	 * @param now What time is it? May be rolled to the next day in case there's nothing left today.
 	 * @param notifiedZmanim Which zmanim have been notified already for the specified date?
 	 * @param preferredZmanTypeLookup How to find out the preferred zman for a given type
 	 *
 	 * @return the next zman
 	 */
+	@NotNull
 	static Zman findNextZman(
 		final ZmanimLocation          location,
 		final Calendar                now,
@@ -185,40 +189,18 @@ public class ZmanUtils {
 		final PreferredZmanTypeLookup preferredZmanTypeLookup
 	) {
 
-		Zman nextZman = null;
-
-		// It seems like there may be some location where night Chatzot is before midnight. In that case
-		//  we won't find the next zman...
-		// There *is* an issue where we're asked to find the next zman after, say midnight. Problem is that
-		//  we miss night Chatzot, because that's on the previous day.
-		HebrewDate hebrewDate = HebrewCalendar.getForDate( now );
-		List<Zmanim> daysZmanim = hebrewDate.getZmanim( location );
-		for ( Zmanim zmanim : daysZmanim ) {
-			String zmanName = preferredZmanTypeLookup.getPreferredZman( zmanim.type );
-			Zman zman;
-			if ( zmanName == null ) {
-				zman = zmanim.getDefault();
-			}
-			else {
-				zman = zmanim.getByName( zmanName );
-			}
-
-			Calendar time = zman.getTime();
-			if ( time.after( now ) ) {
-				// We found the next zman! BUT... there's a case like the following:
-				//  1. Shkia is at 4:18pm, so we alert at 4:03pm
-				//  2. Latest mincha is at 4:27pm, so we alert at 4:12pm
-				//  3. When we perform the alert for Shkia, we set the next time to check as 4:12pm. Well, that's
-				//    before shkia, so we can't tell that we don't need to alert.
-				//
-				// This data structure is intended to help with this problem.
-				if ( !notifiedZmanim.contains( zman.type ) ) {
-					nextZman = zman;
-					break;
-				}
-			}
+		// if nextZman is null, we need to roll to tomorrow and re-check...
+		Zman nextZman = findNextZman_internal( location, now, notifiedZmanim, preferredZmanTypeLookup );
+		if ( nextZman == null ) {
+			// move to the next day and try again!
+			now.roll( Calendar.DAY_OF_MONTH, true );
+			now.set( Calendar.HOUR_OF_DAY, 0 );
+			now.set( Calendar.MINUTE, 0 );
+			now.set( Calendar.SECOND, 0 );
+			nextZman = findNextZman_internal( location, now, notifiedZmanim, preferredZmanTypeLookup );
 		}
 
+		assert nextZman != null;
 		return nextZman;
 	}
 
@@ -263,6 +245,59 @@ public class ZmanUtils {
 		}
 
 		return nextWakeupDelta;
+	}
+
+
+	@Nullable
+	private static Zman findNextZman_internal(
+		final ZmanimLocation          location,
+		final Calendar                now,
+		final NotifiedZmanim          notifiedZmanim,
+		final PreferredZmanTypeLookup preferredZmanTypeLookup
+	) {
+
+		Zman nextZman = null;
+
+		// It seems like there may be some location where night Chatzot is before midnight. In that case
+		//  we won't find the next zman...
+		// There *is* an issue where we're asked to find the next zman after, say midnight. Problem is that
+		//  we miss night Chatzot, because that's on the previous day.
+		HebrewDate hebrewDate = HebrewCalendar.getForDate( now );
+		List<Zmanim> daysZmanim = hebrewDate.getZmanim( location );
+		for ( Zmanim zmanim : daysZmanim ) {
+			String zmanName = preferredZmanTypeLookup.getPreferredZman( zmanim.type );
+			Zman zman;
+			if ( zmanName == null ) {
+				zman = zmanim.getDefault();
+			}
+			else {
+				zman = zmanim.getByName( zmanName );
+			}
+
+			Calendar time = zman.getTime();
+			if ( time.after( now ) ) {
+				// We found the next zman! BUT... there's a case like the following:
+				//  1. Shkia is at 4:18pm, so we alert at 4:03pm
+				//  2. Latest mincha is at 4:27pm, so we alert at 4:12pm
+				//  3. When we perform the alert for Shkia, we set the next time to check as 4:12pm. Well, that's
+				//    before shkia, so we can't tell that we don't need to alert.
+				//
+				// This data structure is intended to help with this problem.
+				//
+				// However, if the zman is actually for the next day, then we haven't started tracking those yet,
+				//  so...go ahead and select that one.
+				if ( !notifiedZmanim.isForDate( time ) ) {
+					nextZman = zman;
+					break;
+				}
+				if ( !notifiedZmanim.contains( zman.type ) ) {
+					nextZman = zman;
+					break;
+				}
+			}
+		}
+
+		return nextZman;
 	}
 
 
