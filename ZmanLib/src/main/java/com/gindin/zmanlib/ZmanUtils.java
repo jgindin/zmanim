@@ -87,15 +87,6 @@ public class ZmanUtils {
 		}
 
 
-		@SuppressWarnings( "FeatureEnvy" )
-		public NotifiedZmanim( final HebrewDate hebrewDate ) {
-
-			this.year = hebrewDate.getGregorianYear();
-			this.month = hebrewDate.getGregorianMonth();
-			this.date = hebrewDate.getHebrewDayOfMonth();
-		}
-
-
 		/**
 		 * Once the user has been notified about the specified type, then this method
 		 */
@@ -286,13 +277,27 @@ public class ZmanUtils {
 				//
 				// However, if the zman is actually for the next day, then we haven't started tracking those yet,
 				//  so...go ahead and select that one.
+				//
+				// We also have to handle the case where there's another zman that's actually earlier than this
+				//  one (especially when we take into account the interval for alerting).
+				if ( nextZman != null ) {
+					if ( zman.getTime().before( nextZman.getTime() )) {
+						// Yeah, this one is before, but we've already notified for it, so move on to the next one.
+						if ( notifiedZmanim.contains( zman.type ) ) {
+							continue;
+						}
+					}
+					else {
+						// This zman is after the one we already found. It's not what we want...
+						continue;
+					}
+				}
+
 				if ( !notifiedZmanim.isForDate( time ) ) {
 					nextZman = zman;
-					break;
 				}
-				if ( !notifiedZmanim.contains( zman.type ) ) {
+				else if ( !notifiedZmanim.contains( zman.type ) ) {
 					nextZman = zman;
-					break;
 				}
 			}
 		}

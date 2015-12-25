@@ -4,7 +4,6 @@
 
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.ZmanUtils;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -72,7 +71,7 @@ public class UT_ZmanUtils {
 			Zman zman = zmanim.getDefault();
 			Calendar zmanTime = zman.getTime();
 
-			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, new ZmanUtils.NotifiedZmanim( hebrewDate ), lookup );
+			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, new ZmanUtils.NotifiedZmanim( zmanTime ), lookup );
 			Assert.assertNotNull( "Didn't find nextZman after " + zman.type, nextZman );
 
 			Calendar nextZmanTime = nextZman.getTime();
