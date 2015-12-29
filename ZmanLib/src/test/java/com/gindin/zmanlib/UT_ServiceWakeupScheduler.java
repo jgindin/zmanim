@@ -701,7 +701,8 @@ public class UT_ServiceWakeupScheduler {
 		final MutableBoolean notified = new MutableBoolean();
 
 		final ZmanFormatter zmanFormatter = new ZmanFormatter( true );
-		ZmanUtils.PreferredZmanTypeLookup lookup = new ZmanUtils.PreferredZmanTypeLookup() {
+
+		ZmanUtils.ZmanCallback zmanCallback = new ZmanUtils.ZmanCallback() {
 			@Override
 			public String getPreferredZman( Zmanim.Type type ) {
 				switch ( type ) {
@@ -715,9 +716,8 @@ public class UT_ServiceWakeupScheduler {
 						return null;
 				}
 			}
-		};
 
-		ZmanUtils.ZmanNotificationCallback zmanNotificationCallback = new ZmanUtils.ZmanNotificationCallback() {
+
 			@Override
 			public void notifyUser(
 				final Zman nextZman
@@ -772,7 +772,7 @@ public class UT_ServiceWakeupScheduler {
 			notified.value = false;
 			output.append( String.format( "%1$tD %1$tH:%1$tM:%1$tS |", testTime ) );
 			ZmanUtils.nextZmanAction( seattle, testTime, notifiedZmanim, thirtyMinutesInterval, fifteenMinutesNotification,
-				lookup, zmanNotificationCallback );
+				zmanCallback );
 			output.append( "\n" );
 		}
 

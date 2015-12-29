@@ -42,7 +42,15 @@ public class ZmanUtils {
 	/**
 	 * Used in conjunction with #determineNextWakeup in case the user actually should be notified about an upcoming zman.
 	 */
-	public interface ZmanNotificationCallback {
+	public interface ZmanCallback {
+
+		/**
+		 * @return For the given type, what is the name of the zman the user prefers to use? May be null to indicate
+		 *  the default is to be used.
+		 *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
+		 */
+		@Nullable
+		String getPreferredZman( Zmanim.Type type );
 
 		/**
 		 * The user should be notified about the specified zman.
@@ -59,9 +67,9 @@ public class ZmanUtils {
 		 * @param nextZman What is the next zman?
 		 */
 		void scheduleNextCheck(
-			Calendar now,
-			int timeUntilNextCheck,
-			final Zman nextZman
+			Calendar  now,
+			int       timeUntilNextCheck,
+			Zman      nextZman
 		);
 	}
 
@@ -135,8 +143,7 @@ public class ZmanUtils {
 	 * @param notifiedZmanim Which zmanim have been notified already for the specified date?
 	 * @param alarmCheckInterval How often do we plan on making these checks?
 	 * @param timeToAlertBeforeZman How long before the next zman does the user want to be alerted?
-	 * @param preferredZmanTypeLookup How to find out the preferred zman for a given type
-	 * @param zmanNotificationCallback Whom to notify of the appropriate next action(s)
+	 * @param zmanCallback Whom to notify of the appropriate next action(s)
 	 */
 	public static void nextZmanAction(
 		final ZmanimLocation            location,
@@ -144,22 +151,21 @@ public class ZmanUtils {
 		final NotifiedZmanim            notifiedZmanim,
 		final int                       alarmCheckInterval,
 		final int                       timeToAlertBeforeZman,
-		final PreferredZmanTypeLookup   preferredZmanTypeLookup,
-		final ZmanNotificationCallback  zmanNotificationCallback
+		final ZmanCallback              zmanCallback
 	) {
 
-		Zman nextZman = findNextZman( location, now, notifiedZmanim, preferredZmanTypeLookup );
+		Zman nextZman = findNextZman( location, now, notifiedZmanim, zmanCallback );
 		int nextWakeupDelta = ZmanUtils.determineNextWakeup( nextZman, now, alarmCheckInterval, timeToAlertBeforeZman );
 
 		if ( nextWakeupDelta <= 0 ) {
-			zmanNotificationCallback.notifyUser( nextZman );
+			zmanCallback.notifyUser( nextZman );
 			notifiedZmanim.notified( nextZman );
 
-			nextZman = ZmanUtils.findNextZman( location, nextZman.getTime(), notifiedZmanim, preferredZmanTypeLookup );
+			nextZman = ZmanUtils.findNextZman( location, nextZman.getTime(), notifiedZmanim, zmanCallback );
 			nextWakeupDelta = ZmanUtils.determineNextWakeup( nextZman, now, alarmCheckInterval, timeToAlertBeforeZman );
 		}
 
-		zmanNotificationCallback.scheduleNextCheck( now, nextWakeupDelta, nextZman );
+		zmanCallback.scheduleNextCheck( now, nextWakeupDelta, nextZman );
 	}
 
 
@@ -169,27 +175,27 @@ public class ZmanUtils {
 	 * @param location Where are we?
 	 * @param now What time is it? May be rolled to the next day in case there's nothing left today.
 	 * @param notifiedZmanim Which zmanim have been notified already for the specified date?
-	 * @param preferredZmanTypeLookup How to find out the preferred zman for a given type
+	 * @param zmanCallback How to find out the preferred zman for a given type
 	 *
 	 * @return the next zman
 	 */
 	@NotNull
 	static Zman findNextZman(
-		final ZmanimLocation          location,
-		final Calendar                now,
-		final NotifiedZmanim          notifiedZmanim,
-		final PreferredZmanTypeLookup preferredZmanTypeLookup
+		final ZmanimLocation      location,
+		final Calendar            now,
+		final NotifiedZmanim      notifiedZmanim,
+		final ZmanCallback        zmanCallback
 	) {
 
 		// if nextZman is null, we need to roll to tomorrow and re-check...
-		Zman nextZman = findNextZman_internal( location, now, notifiedZmanim, preferredZmanTypeLookup );
+		Zman nextZman = findNextZman_internal( location, now, notifiedZmanim, zmanCallback );
 		if ( nextZman == null ) {
 			// move to the next day and try again!
 			now.roll( Calendar.DAY_OF_MONTH, true );
 			now.set( Calendar.HOUR_OF_DAY, 0 );
 			now.set( Calendar.MINUTE, 0 );
 			now.set( Calendar.SECOND, 0 );
-			nextZman = findNextZman_internal( location, now, notifiedZmanim, preferredZmanTypeLookup );
+			nextZman = findNextZman_internal( location, now, notifiedZmanim, zmanCallback );
 		}
 
 		assert nextZman != null;
@@ -242,10 +248,10 @@ public class ZmanUtils {
 
 	@Nullable
 	private static Zman findNextZman_internal(
-		final ZmanimLocation          location,
-		final Calendar                now,
-		final NotifiedZmanim          notifiedZmanim,
-		final PreferredZmanTypeLookup preferredZmanTypeLookup
+		final ZmanimLocation    location,
+		final Calendar          now,
+		final NotifiedZmanim    notifiedZmanim,
+		final ZmanCallback      zmanCallback
 	) {
 
 		Zman nextZman = null;
@@ -257,7 +263,7 @@ public class ZmanUtils {
 		HebrewDate hebrewDate = HebrewCalendar.getForDate( now );
 		List<Zmanim> daysZmanim = hebrewDate.getZmanim( location );
 		for ( Zmanim zmanim : daysZmanim ) {
-			String zmanName = preferredZmanTypeLookup.getPreferredZman( zmanim.type );
+			String zmanName = zmanCallback.getPreferredZman( zmanim.type );
 			Zman zman;
 			if ( zmanName == null ) {
 				zman = zmanim.getDefault();

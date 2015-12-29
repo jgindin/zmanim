@@ -112,9 +112,7 @@ public class ZmanimService
 	 */
 	private Intent                                            handlingAlarmsFor;
 
-	private ZmanUtils.PreferredZmanTypeLookup                 preferredZmanTypeLookup;
-
-	private ZmanUtils.ZmanNotificationCallback                zmanNotificationCallback;
+	private ZmanUtils.ZmanCallback                            zmanCallback;
 
 
 	public void onCreate() {
@@ -139,15 +137,14 @@ public class ZmanimService
 		);
 
 		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
-		preferredZmanTypeLookup = new ZmanUtils.PreferredZmanTypeLookup() {
+
+		zmanCallback = new ZmanUtils.ZmanCallback() {
 			@Override
 			public String getPreferredZman( final Zmanim.Type type ) {
 				return zmanimSelectionPrefs.getString( type.name, null );
 			}
-		};
 
 
-		zmanNotificationCallback = new ZmanUtils.ZmanNotificationCallback() {
 			@Override
 			public void notifyUser(
 				final Zman nextZman
@@ -272,7 +269,7 @@ public class ZmanimService
 			now.setTimeZone( location.getTimeZone() );
 
 			ZmanUtils.nextZmanAction( location, now, getNotifiedZmanim( now ), NEXT_ALARM_CHECK_INTERVAL, DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN,
-				preferredZmanTypeLookup, zmanNotificationCallback );
+				zmanCallback );
 		}
 
 		releaseWakefulIntent();
