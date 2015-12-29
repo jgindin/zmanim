@@ -34,6 +34,7 @@ public class ZmanUtils {
 		 *  the default is to be used.
 		 *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
 		 */
+		@Nullable
 		String getPreferredZman( Zmanim.Type type );
 	}
 

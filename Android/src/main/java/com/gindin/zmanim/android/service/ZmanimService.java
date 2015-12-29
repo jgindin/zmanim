@@ -9,10 +9,10 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanlib.ZmanUtils;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
-import com.gindin.zmanlib.ZmanUtils;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
 
@@ -339,7 +339,7 @@ public class ZmanimService
 
 
 		// One more check that the user actually wants to know about this zman...
-		boolean userWantsThisNotification = personalPrefs.getBoolean( nextZman.type.name(), true );
+		boolean userWantsThisNotification = ( personalPrefs.getInt( nextZman.type.name(), -1 ) >= 0 );
 		if ( !userWantsThisNotification ) {
 			return;
 		}
