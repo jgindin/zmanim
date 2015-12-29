@@ -185,7 +185,8 @@ public class ZmanimService
 		if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
 			servicingUser = true;
 
-			boolean showNotifications = intent.getBooleanExtra( ActionParams.SCHEDULE_IF_NECESSARY.name(), false ) && userWantsNotifications();
+			boolean scheduleIfNecessary = intent.getBooleanExtra( ActionParams.SCHEDULE_IF_NECESSARY.name(), false );
+			boolean showNotifications = scheduleIfNecessary && userWantsNotifications();
 			findCurrentLocation( showNotifications );
 
 			eventBus.fire( new ServiceStartedEvent() );
@@ -245,7 +246,7 @@ public class ZmanimService
 		//  When it fires the location acquired event, we'll use the location to work out when to schedule the
 		//  next alarm.
 		LocationDeterminationOverride locationDeterminationOverride;
-		if ( personalPrefs.getBoolean( PersonalPreferences.Prefs.NOTIFICATIONS_FOR_CURRENT_LOCATION.name(), true ) ) {
+		if ( personalPrefs.getBoolean( PersonalPreferences.Prefs.NOTIFICATIONS_FOR_CURRENT_LOCATION.name(), false ) ) {
 			locationDeterminationOverride = LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION;
 		}
 		else {
