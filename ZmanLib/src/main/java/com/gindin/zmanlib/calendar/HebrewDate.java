@@ -36,14 +36,14 @@ public class HebrewDate
 	 * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
 	 *  month 11 being December.
 	 */
-	@Constants.CalendarMonth
+	@CalendarMonth
 	private final int                                         gregorianMonth;
 
 	/** The day of the Gregorian month */
 	private final int                                         gregorianDayOfMonth;
 
 	/** 1 == Sunday, 2 == Monday, etc... */
-	@Constants.CalendarDay
+	@CalendarDay
 	private final int                                         dayOfWeek;
 
 	/** Internal representation of the date. */
@@ -62,14 +62,14 @@ public class HebrewDate
 
 
 	HebrewDate(
-		int hebrewYear,
+		int                       hebrewYear,
 		@HebrewMonth.Constant int hebrewMonth,
-		int hebrewDay,
-		int gregorianYear,
-		@Constants.CalendarMonth int gregorianMonth,
-		int gregorianDayOfMonth,
-		@Constants.CalendarDay int dayOfWeek,
-		int gregorianAbsDate
+		int                       hebrewDay,
+		int                       gregorianYear,
+		@CalendarMonth int        gregorianMonth,
+		int                       gregorianDayOfMonth,
+		@CalendarDay int          dayOfWeek,
+		int                       gregorianAbsDate
 	) {
 		this( hebrewYear, hebrewMonth, hebrewDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate, 0, 0, 0 );
 	}
@@ -78,15 +78,15 @@ public class HebrewDate
 	HebrewDate(
 		int hebrewYear,
 		@HebrewMonth.Constant int hebrewMonth,
-		int hebrewDay,
-		int gregorianYear,
-		@Constants.CalendarMonth int gregorianMonth,
-		int gregorianDayOfMonth,
-		@Constants.CalendarDay int dayOfWeek,
-		int gregorianAbsDate,
-		int moladHours,
-		int moladMinutes,
-		int moladChalakim
+		int                       hebrewDay,
+		int                       gregorianYear,
+		@CalendarMonth int        gregorianMonth,
+		int                       gregorianDayOfMonth,
+		@CalendarDay int          dayOfWeek,
+		int                       gregorianAbsDate,
+		int                       moladHours,
+		int                       moladMinutes,
+		int                       moladChalakim
 	) {
 
 		this.hebrewYear = hebrewYear;
@@ -291,7 +291,7 @@ public class HebrewDate
 	/**
 	 * @return the day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc...
 	 */
-	@Constants.CalendarDay
+	@CalendarDay
 	public int getDayOfWeek() {
 		return dayOfWeek;
 	}
@@ -308,7 +308,7 @@ public class HebrewDate
 	/**
 	 * @return A month which can be directly compared to the months as defined in java.util.Calendar.
 	 */
-	@Constants.CalendarMonth
+	@CalendarMonth
 	public int getGregorianMonth() {
 		return gregorianMonth;
 	}

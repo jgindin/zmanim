@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import org.junit.*;
@@ -736,11 +736,11 @@ public class UT_RoshChodesh
 
 
 	private void assertIsRoshChodesh(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		boolean twoDays,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		boolean             twoDays,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();
@@ -767,9 +767,9 @@ public class UT_RoshChodesh
 
 
 	private void assertIsNotRoshChodesh(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );

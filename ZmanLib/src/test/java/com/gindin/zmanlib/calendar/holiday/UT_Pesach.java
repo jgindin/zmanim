@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.minor.LagBOmer;
@@ -295,10 +295,10 @@ public class UT_Pesach
 	}
 
 	private void assertPesach(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();
@@ -359,10 +359,10 @@ public class UT_Pesach
 
 
 	private void assertPesachSheni(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();
@@ -383,10 +383,10 @@ public class UT_Pesach
 
 
 	private void assertOmer(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		int expectedDayOfOmer
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		int                 expectedDayOfOmer
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
@@ -397,9 +397,9 @@ public class UT_Pesach
 
 
 	private void assertNotOmer(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, day );
@@ -410,10 +410,10 @@ public class UT_Pesach
 
 
 	private void assertLagBOmer(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();

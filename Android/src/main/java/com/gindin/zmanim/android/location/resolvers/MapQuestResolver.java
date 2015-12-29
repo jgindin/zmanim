@@ -1,13 +1,14 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.content.SharedPreferences;
-import android.location.Address;
+import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.content.SharedPreferences;
+import android.location.Address;
 
 import java.net.URLEncoder;
 import java.util.List;

@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.rabbanan.Chanukah;
@@ -124,10 +124,10 @@ public class UT_Chanukah
 	}
 
 	private void runTest(
-		int year,
-		@Constants.CalendarMonth int chanukahMonth,
-		int startingDay,
-		String expected
+		int                 year,
+		@CalendarMonth int  chanukahMonth,
+		int                 startingDay,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();

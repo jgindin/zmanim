@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.minor.TuBAv;
@@ -138,10 +138,10 @@ public class UT_Minor
 	
 	
 	private void runTuBShvatTest(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();
@@ -161,10 +161,10 @@ public class UT_Minor
 	
 	
 	private void runTuBAvTest(
-		int year,
-		@Constants.CalendarMonth int month,
-		int day,
-		String expected
+		int                 year,
+		@CalendarMonth int  month,
+		int                 day,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();

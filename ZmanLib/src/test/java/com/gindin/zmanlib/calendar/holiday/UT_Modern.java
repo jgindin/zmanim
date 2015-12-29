@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.modern.YomHaAtzmaut;
@@ -157,14 +157,14 @@ public class UT_Modern
 
 
 	private void testModernHolidays(
-		int year,
-		@Constants.CalendarMonth int yomHaShoahMonth,
-		int yomHaShoahDay,
-		@Constants.CalendarMonth int yomHaZikaronMonth,
-		int yomHaZikaronDay,
-		@Constants.CalendarMonth int yomYerushalyimMonth,
-		int yomYerushalyimDay,
-		String expected
+		int                 year,
+		@CalendarMonth int  yomHaShoahMonth,
+		int                 yomHaShoahDay,
+		@CalendarMonth int  yomHaZikaronMonth,
+		int                 yomHaZikaronDay,
+		@CalendarMonth int  yomYerushalyimMonth,
+		int                 yomYerushalyimDay,
+		String              expected
 	) {
 
 		StringBuilder output = buildDetailsHeader();

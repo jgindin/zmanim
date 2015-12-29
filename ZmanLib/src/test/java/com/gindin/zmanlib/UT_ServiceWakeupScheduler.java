@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -44,12 +44,11 @@ public class UT_ServiceWakeupScheduler {
 
 
 	private static Zman findDefaultZman(
-		Zmanim.Type     type,
-		ZmanimLocation  location,
-	  int             year,
-		@Constants.CalendarMonth
-		int             month,
-	  int             day
+		Zmanim.Type           type,
+		ZmanimLocation        location,
+	  int                   year,
+		@CalendarMonth	int   month,
+	  int                   day
 	) {
 
 		HebrewDate hebrewDate = HebrewCalendar.getForDate( year, month, day );

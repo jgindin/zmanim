@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.Constants;
+import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.taaniyot.*;
@@ -113,11 +113,10 @@ public class UT_Taaniyot {
 
 
 	private void assertIsTaanit(
-		Observance  observance,
-		int         year,
-		@Constants.CalendarMonth
-		int         month,
-		int         dayOfMonth
+		Observance          observance,
+		int                 year,
+		@CalendarMonth int  month,
+		int                 dayOfMonth
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );
@@ -142,11 +141,10 @@ public class UT_Taaniyot {
 
 
 	private void assertIsNotTaanit(
-		Observance  observance,
-		int         year,
-		@Constants.CalendarMonth
-		int         month,
-		int         dayOfMonth
+		Observance          observance,
+		int                 year,
+		@CalendarMonth int  month,
+		int                 dayOfMonth
 	) {
 
 		HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );

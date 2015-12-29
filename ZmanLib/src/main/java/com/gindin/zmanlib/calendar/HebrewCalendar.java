@@ -179,7 +179,7 @@ public class HebrewCalendar {
 		int month = computeGregorianMonthFromAbsoluteDate( gregorianAbsDate, year );
 		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( gregorianAbsDate, year, month );
 
-		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
+		@CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // reset day of week
 
 		return new HebrewDate( jewishYear, jewishMonth, jewishDayOfMonth,
 			year, month, dayOfMonth, dayOfWeek, gregorianAbsDate );
@@ -197,9 +197,9 @@ public class HebrewCalendar {
 	 * @throws IllegalArgumentException if the date would fall prior to the January 1, 1 AD
 	 */
 	public static HebrewDate getForDate(
-		int gregorianYear,
-	  @Constants.CalendarMonth int gregorianMonth,
-	  int gregorianDayOfMonth
+		int                 gregorianYear,
+	  @CalendarMonth int  gregorianMonth,
+	  int                 gregorianDayOfMonth
 	) {
 
 		if ( gregorianYear < 1 ) {
@@ -212,7 +212,7 @@ public class HebrewCalendar {
 		int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
 		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
 
-		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+		@CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
 		return new HebrewDate( jewishYear, jewishMonth, jewishDay,
 			gregorianYear, gregorianMonth, gregorianDayOfMonth,
@@ -236,7 +236,7 @@ public class HebrewCalendar {
 				+ calendar.get( Calendar.YEAR ) + " BCE is invalid." );
 		}
 
-		@Constants.CalendarMonth int gregorianMonth = calendar.get( Calendar.MONTH );
+		@CalendarMonth int gregorianMonth = calendar.get( Calendar.MONTH );
 		int gregorianDayOfMonth = calendar.get( Calendar.DATE );
 		int gregorianYear = calendar.get( Calendar.YEAR );
 
@@ -254,7 +254,7 @@ public class HebrewCalendar {
 		
 		int absDate = moladToAbsDate( molad );
 		int year = computeGregorianYearFromAbsoluteDate( absDate );
-		@Constants.CalendarMonth int month = computeGregorianMonthFromAbsoluteDate( absDate, year );
+		@CalendarMonth int month = computeGregorianMonthFromAbsoluteDate( absDate, year );
 		int dayOfMonth = computeGregorianDayOfMonthFromAbsoluteDate( absDate, year, month );
 		int gregorianAbsDate = gregorianDateToAbsDate( year, month, dayOfMonth ); // init date
 
@@ -263,7 +263,7 @@ public class HebrewCalendar {
 		@HebrewMonth.Constant int jewishMonth = computeJewishMonthFromAbsoluteDate( gregorianAbsDate, jewishYear );
 		int jewishDay = computeJewishDayFromAbsoluteDate( gregorianAbsDate, jewishYear, jewishMonth );
 
-		@Constants.CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
+		@CalendarDay int dayOfWeek = Math.abs( gregorianAbsDate % 7 ) + 1; // set day of week
 
 		// long chalakimSince = getChalakimSinceMoladTohu(year, HebrewCalendar.TISHREI);// tishrei
 		int conjunctionDay = (int)( molad / CHALAKIM_PER_DAY );
@@ -327,7 +327,7 @@ public class HebrewCalendar {
 		int newJewishMonth = today.getHebrewMonth();
 		int newJewishDay = today.getHebrewDayOfMonth();
 
-		@Constants.CalendarDay int newDayOfWeek = today.getDayOfWeek();
+		@CalendarDay int newDayOfWeek = today.getDayOfWeek();
 
 		for ( int update = 0; update < numDays; update++ ) {
 
@@ -429,13 +429,13 @@ public class HebrewCalendar {
 	) {
 
 		int newGregorianYear = today.getGregorianYear();
-		@Constants.CalendarMonth int newGregorianMonth = today.getGregorianMonth();
+		@CalendarMonth int newGregorianMonth = today.getGregorianMonth();
 		int newGregorianDayOfMonth = today.getGregorianDayOfMonth();
 
 		int newJewishYear = today.getHebrewYear();
 		@HebrewMonth.Constant int newJewishMonth = today.getHebrewMonth();
 		int newJewishDay = today.getHebrewDayOfMonth();
-		@Constants.CalendarDay int newDayOfWeek = 0;
+		@CalendarDay int newDayOfWeek = 0;
 
 
 		for ( int update = 0; update < numDays; update++  ) {
@@ -550,13 +550,13 @@ public class HebrewCalendar {
 	}
 
 
-	@Constants.CalendarMonth
+	@CalendarMonth
 	private static int computeGregorianMonthFromAbsoluteDate(
 		int absDate,
 		int year
 	) {
 
-		@Constants.CalendarMonth int month = 0; // Search forward month by month from January
+		@CalendarMonth int month = 0; // Search forward month by month from January
 		while ( absDate > gregorianDateToAbsDate( year, month, getLastDayOfGregorianMonth( month, year ) ) ) {
 			month++;
 		}
