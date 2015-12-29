@@ -28,6 +28,7 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -300,8 +301,8 @@ public class ZmanimActivity
 
 
 	private void rebuildUI(
-		ZmanimLocation  location,
-	  LocationError   error
+		ZmanimLocation            location,
+		@Nullable LocationError   error
 	) {
 
 		if ( !location.isInvalid ) {
@@ -316,7 +317,7 @@ public class ZmanimActivity
 
 
 	private void buildFooter(
-		final LocationError error
+		@Nullable final LocationError error
 	) {
 
 		if ( null == error ) {
