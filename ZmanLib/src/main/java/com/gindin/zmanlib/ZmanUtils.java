@@ -23,21 +23,6 @@ import java.util.Set;
  */
 public class ZmanUtils {
 
-	/**
-	 * Used in conjunction with #findNextZman to allow control over which of the various zmanim for the given
-	 *  type is preferred by the user.
-	 */
-	public interface PreferredZmanTypeLookup {
-
-		/**
-		 * @return For the given type, what is the name of the zman the user prefers to use? May be null to indicate
-		 *  the default is to be used.
-		 *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
-		 */
-		@Nullable
-		String getPreferredZman( Zmanim.Type type );
-	}
-
 
 	/**
 	 * Used in conjunction with #determineNextWakeup in case the user actually should be notified about an upcoming zman.
@@ -45,12 +30,24 @@ public class ZmanUtils {
 	public interface ZmanCallback {
 
 		/**
+		 * Used in conjunction with #findNextZman to allow control over which of the various zmanim for the given
+		 *  type is preferred by the user.
+		 *
 		 * @return For the given type, what is the name of the zman the user prefers to use? May be null to indicate
 		 *  the default is to be used.
 		 *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
 		 */
 		@Nullable
 		String getPreferredZman( Zmanim.Type type );
+
+
+		/**
+		 * @return For the given type, how far in advance (in minutes) does the user want to be notified? May be less than
+		 *  zero to indicate no notification.
+		 */
+		int getZmanAlertTime(
+			Zmanim.Type type
+		);
 
 		/**
 		 * The user should be notified about the specified zman.

@@ -62,6 +62,12 @@ public class UT_ZmanUtils {
 
 
 			@Override
+			public int getZmanAlertTime( final Zmanim.Type type ) {
+				return -1;
+			}
+
+
+			@Override
 			public void notifyUser( final Zman nextZman ) {
 			}
 

@@ -118,8 +118,8 @@ public class ZmanimService
 	public void onCreate() {
 		super.onCreate();
 
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+		final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+		final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
@@ -142,6 +142,12 @@ public class ZmanimService
 			@Override
 			public String getPreferredZman( final Zmanim.Type type ) {
 				return zmanimSelectionPrefs.getString( type.name, null );
+			}
+
+
+			@Override
+			public int getZmanAlertTime( final Zmanim.Type type ) {
+				return personalPrefs.getInt( type.name, -1 );
 			}
 
 
