@@ -6,8 +6,7 @@ import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Assert;
 
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -16,12 +15,12 @@ class WakeupSchedulerBase_MutliDay
 	extends WakeupSchedulerBaseTest {
 
 	protected void runDays(
-		final Calendar testTime,
-		final HebrewDate startDate,
+		final Calendar                testTime,
+		final HebrewDate              startDate,
 		final HebrewDate              endDate,
+		final ZmanUtils.ZmanCallback  perTestCallback,
 		final String                  expected,
-	  final List<Zmanim.Type> expectedZmanim,
-	  final ZmanUtils.ZmanCallback  perTestCallback
+	  final Map<HebrewDate,List<Zmanim.Type>> expectedZmanim
 	) {
 
 		final StringBuilder output = new StringBuilder();
@@ -92,16 +91,23 @@ class WakeupSchedulerBase_MutliDay
 		};
 
 
-		ZmanUtils.NotifiedZmanim notifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
+		Map<HebrewDate, ZmanUtils.NotifiedZmanim> notifiedZmanim = new HashMap<>();
+		ZmanUtils.NotifiedZmanim  currentDayNotifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
+		HebrewDate                currentDate = startDate;
+
+		notifiedZmanim.put( currentDate, currentDayNotifiedZmanim );
+
 		while ( !testComplete.value ) {
 
-			if ( !notifiedZmanim.isForDate( testTime ) ) {
-				notifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
+			if ( !currentDayNotifiedZmanim.isForDate( testTime ) ) {
+				currentDayNotifiedZmanim = new ZmanUtils.NotifiedZmanim( testTime );
+				currentDate = currentDate.tomorrow();
+				notifiedZmanim.put( currentDate, currentDayNotifiedZmanim );
 			}
 
 			notified.value = false;
 			output.append( String.format( "%1$tD %1$tH:%1$tM:%1$tS |", testTime ) );
-			ZmanUtils.nextZmanAction( seattle, testTime, notifiedZmanim, thirtyMinutesInterval, fifteenMinutesNotification,
+			ZmanUtils.nextZmanAction( seattle, testTime, currentDayNotifiedZmanim, thirtyMinutesInterval, fifteenMinutesNotification,
 				zmanCallback );
 			output.append( "\n" );
 		}
@@ -110,15 +116,23 @@ class WakeupSchedulerBase_MutliDay
 		Assert.assertEquals( expected, output.toString() );
 
 		// Make sure we notified for all the zmanim of the day...
-		List<Zmanim> todaysZmanim = startDate.getZmanim( seattle );
-		for ( Zmanim zmanim : todaysZmanim ) {
-			if ( expectedZmanim.contains( zmanim.type ) ) {
-				Assert.assertTrue( notifiedZmanim.contains( zmanim.type ) );
-			}
-			else {
-				Assert.assertFalse( notifiedZmanim.contains( zmanim.type ) );
+		for ( Map.Entry<HebrewDate, ZmanUtils.NotifiedZmanim> entry : notifiedZmanim.entrySet() ) {
+			currentDate = entry.getKey();
+			currentDayNotifiedZmanim = entry.getValue();
+
+			List<Zmanim> todaysZmanim = currentDate.getZmanim( seattle );
+			final List<Zmanim.Type> expectedTypes = expectedZmanim.get( currentDate );
+
+			for ( Zmanim zmanim : todaysZmanim ) {
+				if ( expectedTypes.contains( zmanim.type ) ) {
+					Assert.assertTrue( currentDate + " should have had " + zmanim.type, currentDayNotifiedZmanim.contains( zmanim.type ) );
+				}
+				else {
+					Assert.assertFalse( currentDate + " should NOT have had " + zmanim.type, currentDayNotifiedZmanim.contains( zmanim.type ) );
+				}
 			}
 		}
+
 	}
 
 
