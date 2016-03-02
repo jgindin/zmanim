@@ -14,7 +14,10 @@ import java.util.*;
 public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 	extends WakeupSchedulerBase_MutliDay {
 
+	private static final int                                  FIFTEEN_MINUTES = 15;
 
+
+	@SuppressWarnings( "MagicNumber" )
 	@Test
 	public void december_7_2014() {
 
@@ -97,6 +100,7 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 	}
 
 
+	@SuppressWarnings( "MagicNumber" )
 	@Test
 	public void december_21_2015_1_week() {
 
@@ -580,17 +584,17 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case Alot:
 					return -1;
 				case Talit:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case Hanetz:
 					return -1;
 				case SofZmanShema:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case SofZmanTefila:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case SofZmanAchilatChametz:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case SofZmanBiurChametz:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case Chatzot:
 					return -1;
 				case MinchaGedola:
@@ -598,17 +602,17 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case MinchaKetana:
 					return -1;
 				case PlagHaMincha:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case CandleLighting:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case Shkia:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case BeinHashmashot:
 					return -1;
 				case LatestMincha:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case FastEnd:
-					return 15;
+					return FIFTEEN_MINUTES;
 				case TzaitHacochavim:
 					return -1;
 				case ShabbatEnd:
