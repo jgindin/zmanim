@@ -362,6 +362,19 @@ public class HebrewDate
 
 
 	/**
+	 * Get a calendar which matches the Gregorian date represented by this Hebrew date.
+	 *
+	 * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
+	 */
+	public Calendar getCalendar() {
+		Calendar cal = Calendar.getInstance();
+		syncCalendar( cal );
+
+		return cal;
+	}
+
+
+	/**
 	 * Updates the specified calendar to match the Gregorian date represented by this Hebrew date.
 	 *
 	 * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
