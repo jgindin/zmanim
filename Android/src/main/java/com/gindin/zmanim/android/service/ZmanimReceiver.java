@@ -1,6 +1,6 @@
 package com.gindin.zmanim.android.service;
 
-import com.gindin.zmanlib.ZmanUtils;
+import com.gindin.zmanlib.NotifiedZmanim;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +30,7 @@ public class ZmanimReceiver
 		// Unfortunately, when the intent is scheduled, the alarm intent gets the extra, and then
 		//  from in here we have to create the intent that actually does the work. Because of that,
 		//  we have to pass along this extra...
-		ZmanUtils.NotifiedZmanim notifiedZmanim = (ZmanUtils.NotifiedZmanim)intent.getSerializableExtra( ZmanimService.ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
+		NotifiedZmanim notifiedZmanim = (NotifiedZmanim)intent.getSerializableExtra( ZmanimService.ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
 		zmanimService.putExtra( ZmanimService.ActionParams.NOTIFIED_ZMANIM_EXTRA.name(), notifiedZmanim );
 
 		startWakefulService( context, zmanimService );

@@ -9,6 +9,8 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanlib.NotifiedZmanim;
+import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.ZmanUtils;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
@@ -86,11 +88,6 @@ public class ZmanimService
 	 */
 	private static final int                                  NEXT_ALARM_CHECK_INTERVAL = ( 45 * 60 * 1000 );
 
-	/**
-	 * In the absence of any directive from the user, we'll notify 15 minutes before an upcoming zman.
-	 */
-	private static final int                                  DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN = ( 15 * 60 * 1000 );
-
 	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
 	// TODO: Inject this
@@ -112,7 +109,7 @@ public class ZmanimService
 	 */
 	private Intent                                            handlingAlarmsFor;
 
-	private ZmanUtils.ZmanCallback                            zmanCallback;
+	private ZmanCallback zmanCallback;
 
 
 	public void onCreate() {
@@ -138,7 +135,7 @@ public class ZmanimService
 
 		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
-		zmanCallback = new ZmanUtils.ZmanCallback() {
+		zmanCallback = new ZmanCallback() {
 			@Override
 			public String getPreferredZman( final Zmanim.Type type ) {
 				return zmanimSelectionPrefs.getString( type.name, null );
@@ -274,8 +271,7 @@ public class ZmanimService
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone( location.getTimeZone() );
 
-			ZmanUtils.nextZmanAction( location, now, getNotifiedZmanim( now ), NEXT_ALARM_CHECK_INTERVAL, DEFAULT_ALERT_TIME_BEFORE_NEXT_ZMAN,
-				zmanCallback );
+			ZmanUtils.nextZmanAction( location, now, getNotifiedZmanim( now ), NEXT_ALARM_CHECK_INTERVAL, zmanCallback );
 		}
 
 		releaseWakefulIntent();
@@ -303,11 +299,11 @@ public class ZmanimService
 
 
 	@NotNull
-	private ZmanUtils.NotifiedZmanim getNotifiedZmanim( final Calendar now ) {
+	private NotifiedZmanim getNotifiedZmanim( final Calendar now ) {
 
-		ZmanUtils.NotifiedZmanim notifiedZmanim = null;
+		NotifiedZmanim notifiedZmanim = null;
 		if ( handlingAlarmsFor != null ) {
-			notifiedZmanim = (ZmanUtils.NotifiedZmanim)handlingAlarmsFor.getSerializableExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
+			notifiedZmanim = (NotifiedZmanim)handlingAlarmsFor.getSerializableExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
 		}
 
 		if ( notifiedZmanim != null ) {
@@ -317,7 +313,7 @@ public class ZmanimService
 		}
 
 		if ( notifiedZmanim == null ) {
-			notifiedZmanim = new ZmanUtils.NotifiedZmanim( now );
+			notifiedZmanim = new NotifiedZmanim( now );
 		}
 
 		return notifiedZmanim;

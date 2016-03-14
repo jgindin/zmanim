@@ -25,6 +25,9 @@ import java.util.List;
 public class UT_ServiceWakeupScheduler
 	extends WakeupSchedulerBaseTest {
 
+	private static final FifteenMinuteBeforeZmanCallback      zmanCallback = new FifteenMinuteBeforeZmanCallback();
+
+
 	private static Zman findDefaultZman(
 		Zmanim.Type           type,
 		ZmanimLocation        location,
@@ -71,8 +74,7 @@ public class UT_ServiceWakeupScheduler
 
 		Calendar testTime = configureTestTime( 2015, Calendar.FEBRUARY, 3, 16, 20 );
 
-		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 
 		// We set the clock to 4:20pm; shkia is at 5:13 so we would expect to get notified at 4:58 (fifteen minutes).
 		//  That delta is 38 minutes. Since we're testing with a 30 minute check interval, the next check ought
@@ -86,8 +88,7 @@ public class UT_ServiceWakeupScheduler
 
 		Calendar testTime = configureTestTime( 2015, Calendar.FEBRUARY, 3, 16, 40 );
 
-		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 
 		// We set the clock to 4:40pm; shkia is at 5:13 so we would expect to get notified at 4:58 (fifteen minutes).
 		//  That delta is 18 minutes. Since we're testing with a 30 minute check interval, the next check ought
@@ -103,8 +104,7 @@ public class UT_ServiceWakeupScheduler
 
 		Calendar testTime = configureTestTime( 2015, Calendar.FEBRUARY, 3, 16, 50 );
 
-		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		final int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 
 		// We set the clock to 4:50pm; shkia is at 5:13 so we would expect to get notified at 4:58 (fifteen minutes).
 		//  That delta is roughly 8 minutes.
@@ -123,8 +123,7 @@ public class UT_ServiceWakeupScheduler
 		//  4:44pm
 		//  4:58pm
 
-		int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 		int expectedTimeUntilNextCheck = thirtyMinutesInterval;
 		Assert.assertEquals( expectedTimeUntilNextCheck, timeUntilNextCheck );
 
@@ -132,8 +131,7 @@ public class UT_ServiceWakeupScheduler
 		testTime.add( Calendar.MILLISECOND, timeUntilNextCheck );
 
 		// It should now be 4:44pm, leaving 14 minutes until the next wake-up, which is when we would expect the alert.
-		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 		expectedTimeUntilNextCheck = 874064; // About 14 minutes...
 		Assert.assertEquals( expectedTimeUntilNextCheck, timeUntilNextCheck );
 
@@ -141,8 +139,7 @@ public class UT_ServiceWakeupScheduler
 		testTime.add( Calendar.MILLISECOND, timeUntilNextCheck );
 
 		// It should now be 4:58pm, right when we want to alert.
-		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,zmanCallback );
 		Assert.assertEquals( 0, timeUntilNextCheck );
 	}
 
@@ -156,8 +153,7 @@ public class UT_ServiceWakeupScheduler
 		//  4:44pm
 		//  4:58pm
 
-		int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		int timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 		int expectedTimeUntilNextCheck = thirtyMinutesInterval;
 		Assert.assertEquals( expectedTimeUntilNextCheck, timeUntilNextCheck );
 
@@ -165,8 +161,7 @@ public class UT_ServiceWakeupScheduler
 		testTime.add( Calendar.MILLISECOND, timeUntilNextCheck + 2000 );
 
 		// It should now be 4:44pm, leaving 14 minutes until the next wake-up, which is when we would expect the alert.
-		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 		expectedTimeUntilNextCheck = 872064; // About 14 minutes...
 		Assert.assertEquals( expectedTimeUntilNextCheck, timeUntilNextCheck );
 
@@ -174,10 +169,19 @@ public class UT_ServiceWakeupScheduler
 		testTime.add( Calendar.MILLISECOND, timeUntilNextCheck + 3333 );
 
 		// It should now be 4:58pm, right when we want to alert.
-		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval,
-			fifteenMinutesNotification );
+		timeUntilNextCheck = ZmanUtils.determineNextWakeup( shkia, testTime, thirtyMinutesInterval, zmanCallback );
 		Assert.assertTrue( timeUntilNextCheck < 0 );
 	}
 
 
+	private static class FifteenMinuteBeforeZmanCallback
+		extends ZmanCallback.Adapter {
+
+		static final int                                        fifteenMinutesNotification = ( 15 * 60 * 1000 );
+
+		@Override
+		public int getZmanAlertTime( Zmanim.Type type ) {
+			return fifteenMinutesNotification;
+		}
+	}
 }

@@ -9,7 +9,6 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,40 +46,12 @@ public class UT_ZmanUtils {
 	}
 
 
-	private ZmanUtils.ZmanCallback                            zmanCallback;
+	private ZmanCallback zmanCallback;
 
 
 	@Before
 	public void setup() {
-
-		zmanCallback = new ZmanUtils.ZmanCallback() {
-			@Nullable
-			@Override
-			public String getPreferredZman( final Zmanim.Type type ) {
-				return null;
-			}
-
-
-			@Override
-			public int getZmanAlertTime( final Zmanim.Type type ) {
-				return -1;
-			}
-
-
-			@Override
-			public void notifyUser( final Zman nextZman ) {
-			}
-
-
-			@Override
-			public void scheduleNextCheck(
-				final Calendar  now,
-				final int       timeUntilNextCheck,
-				final Zman      nextZman
-			) {
-
-			}
-		};
+		zmanCallback = new ZmanCallback.Adapter();
 	}
 
 
@@ -94,8 +65,7 @@ public class UT_ZmanUtils {
 			Zman zman = zmanim.getDefault();
 			Calendar zmanTime = zman.getTime();
 
-			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, new ZmanUtils.NotifiedZmanim( zmanTime ),
-				zmanCallback );
+			Zman nextZman = ZmanUtils.findNextZman( seattle, zmanTime, new NotifiedZmanim( zmanTime ), zmanCallback );
 			Assert.assertNotNull( "Didn't find nextZman after " + zman.type, nextZman );
 
 			Calendar nextZmanTime = nextZman.getTime();
@@ -112,8 +82,7 @@ public class UT_ZmanUtils {
 		findAfter.setTimeZone( seattle.getTimeZone() );
 		findAfter.set( 2014, Calendar.DECEMBER, 21, 23, 0 );
 
-		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, new ZmanUtils.NotifiedZmanim( findAfter ),
-			zmanCallback );
+		Zman nextZman = ZmanUtils.findNextZman( seattle,  findAfter, new NotifiedZmanim( findAfter ), zmanCallback );
 		Assert.assertNotNull( nextZman );
 	}
 

@@ -27,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import com.gindin.zmanlib.ZmanUtils;
 
 /**
  * Copied from: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
@@ -53,17 +54,17 @@ public class SeekBarPreference
 
 
 	public SeekBarPreference(
-		Context context,
-		AttributeSet attrs
+		Context       context,
+		AttributeSet  attrs
 	) {
 		this( context, attrs, 0 );
 	}
 
 
 	public SeekBarPreference(
-		Context context,
-		AttributeSet attrs,
-		int defStyle
+		Context       context,
+		AttributeSet  attrs,
+		int           defStyle
 	) {
 		super( context, attrs, defStyle );
 		setLayoutResource( R.layout.preference_seekbar );
@@ -76,7 +77,7 @@ public class SeekBarPreference
 		seekBar = (SeekBar)view.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
 		seekBar.setOnSeekBarChangeListener( this );
-		seekBar.setMax( 60 );
+		seekBar.setMax( ZmanUtils.MAX_ALERT_TIME );
 
 		currentValueDisplay = (TextView)view.findViewById( R.id.summary );
 		updateDisplay();
@@ -88,11 +89,11 @@ public class SeekBarPreference
 			public void onClick( final View v ) {
 				// Reflects the new value
 				if ( enabled.isChecked() ) {
-					setValue( 15 );
+					setValue( ZmanUtils.DEFAULT_ALERT_TIME );
 					seekBar.setEnabled( true );
 				}
 				else {
-					setValue( -1 );
+					setValue( ZmanUtils.NO_ALERT );
 					seekBar.setEnabled( false );
 				}
 			}
@@ -112,9 +113,9 @@ public class SeekBarPreference
 
 	@Override
 	public void onProgressChanged(
-		SeekBar seekBar,
-		int progress,
-		boolean fromUser
+		SeekBar   seekBar,
+		int       progress,
+		boolean   fromUser
 	) {
 		if ( !fromUser ) {
 			return;
@@ -147,7 +148,7 @@ public class SeekBarPreference
 			value = ((Integer)defaultValue).intValue();
 		}
 		else {
-			value = 15;
+			value = ZmanUtils.DEFAULT_ALERT_TIME;
 		}
 
 		setValue( restoreValue ? getPersistedInt( progress ) : value );

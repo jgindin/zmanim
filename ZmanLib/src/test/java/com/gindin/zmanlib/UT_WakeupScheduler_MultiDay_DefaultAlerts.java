@@ -1,12 +1,7 @@
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.calendar.HebrewCalendar;
-import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.zman.Zmanim;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
-
-import java.util.*;
 
 /**
  *
@@ -14,44 +9,11 @@ import java.util.*;
 public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 	extends WakeupSchedulerBase_MutliDay {
 
-	private static final int                                  FIFTEEN_MINUTES = 15;
 
-
-	@SuppressWarnings( "MagicNumber" )
 	@Test
-	public void december_7_2014() {
+	public void december_7_2014_15_minute_alerts() {
 
-		// I'm going to try and be somewhat realistic here. We'll say someone woke up and turned on their
-		//  phone at 6:34am...
-		//
-		//  Zman                Time        Alert (-15 min)
-		//  ------------------  --------    ---------------
-		//  Alot Hashachar       6:02:50     5:47
-		//  Talit/Tefilin        6:39:53     6:24
-		//  HaNetz               7:42:51     7:27
-		//  Sof Zman Shema       9:01:39     8:46
-		//  Sof Zman Tefila     10:34:34    10:19
-		//  Chatzot             12:00:26    11:45
-		//  Mincha Gedola       12:21:54    12:06
-		//  Mincha Ketana       14:30:42    14:15
-		//  Plag HaMincha       15:24:21    15:09
-		//  Shkia               16:18:01    16:03
-		//  Latest Mincha       16:27:41    16:12
-		//  Bein Hashmashot     16:52:05    16:37
-		//  Tzait Hacochavim    17:03:01    16:48
-		//  Midnight            00:00:57    23:45
-
-		Calendar testTime = configureTestTime( 2014, Calendar.DECEMBER, 7, 6, 34 );
-		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
-
-		Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
-		expectedZmanim.put( hebrewDate,
-			Arrays.asList( Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
-				Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia,
-				Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		runDays( testTime, hebrewDate, hebrewDate, new DefaultZmanCallback(),
+		december_7_2014( new AlwaysFifteenMinuteAlertsZmanCallback(),
 			"Time              | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" +
 			"------------------|-----------------------------------------------|-----------------|----------------|---------------|\n" +
 			"12/07/14 06:34:00 | Notify: Talit@6:39:55 AM (5:55:244)           | Hanetz          |     7:42:53 AM |  30:00:000    |\n" +
@@ -93,74 +55,67 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 			"12/07/14 22:25:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
 			"12/07/14 22:55:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
 			"12/07/14 23:25:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  20:56:081    |\n" +
-			"12/07/14 23:45:58 | Notify: NightChatzot@12:00:58 AM (15:0:0)     | Alot            |     6:03:46 AM |  30:00:000    |\n",
-
-			expectedZmanim
+			"12/07/14 23:45:58 | Notify: NightChatzot@12:00:58 AM (15:0:0)     | Alot            |     6:03:46 AM |  30:00:000    |\n"
 		);
 	}
 
 
-	@SuppressWarnings( "MagicNumber" )
+	@Test
+	public void december_7_2014_default_product_alerts() {
+
+		december_7_2014( new DefaultAlertsZmanCallback(),
+			"Time              | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" +
+			"------------------|-----------------------------------------------|-----------------|----------------|---------------|\n" +
+			"12/07/14 06:34:00 | Notify: Talit@6:39:55 AM (5:55:244)           | Hanetz          |     7:42:53 AM |  30:00:000    |\n" +
+			"12/07/14 07:04:00 | Sleep                                         | Hanetz          |     7:42:53 AM |  30:00:000    |\n" +
+			"12/07/14 07:34:00 | Sleep                                         | Hanetz          |     7:42:53 AM |  08:53:481    |\n" +
+			"12/07/14 07:42:53 | Sleep                                         | SofZmanShema    |     9:01:40 AM |  30:00:000    |\n" +
+			"12/07/14 08:12:53 | Sleep                                         | SofZmanShema    |     9:01:40 AM |  30:00:000    |\n" +
+			"12/07/14 08:42:53 | Sleep                                         | SofZmanShema    |     9:01:40 AM |  03:46:642    |\n" +
+			"12/07/14 08:46:40 | Notify: SofZmanShema@9:01:40 AM (15:0:0)      | SofZmanTefila   |    10:34:35 AM |  30:00:000    |\n" +
+			"12/07/14 09:16:40 | Sleep                                         | SofZmanTefila   |    10:34:35 AM |  30:00:000    |\n" +
+			"12/07/14 09:46:40 | Sleep                                         | SofZmanTefila   |    10:34:35 AM |  30:00:000    |\n" +
+			"12/07/14 10:16:40 | Sleep                                         | SofZmanTefila   |    10:34:35 AM |  02:55:558    |\n" +
+			"12/07/14 10:19:35 | Notify: SofZmanTefila@10:34:35 AM (15:0:0)    | Chatzot         |    12:00:26 PM |  30:00:000    |\n" +
+			"12/07/14 10:49:35 | Sleep                                         | Chatzot         |    12:00:26 PM |  30:00:000    |\n" +
+			"12/07/14 11:19:35 | Sleep                                         | Chatzot         |    12:00:26 PM |  30:00:000    |\n" +
+			"12/07/14 11:49:35 | Sleep                                         | Chatzot         |    12:00:26 PM |  10:51:100    |\n" +
+			"12/07/14 12:00:26 | Sleep                                         | MinchaGedola    |    12:21:54 PM |  21:27:775    |\n" +
+			"12/07/14 12:21:54 | Sleep                                         | MinchaKetana    |     2:30:41 PM |  30:00:000    |\n" +
+			"12/07/14 12:51:54 | Sleep                                         | MinchaKetana    |     2:30:41 PM |  30:00:000    |\n" +
+			"12/07/14 13:21:54 | Sleep                                         | MinchaKetana    |     2:30:41 PM |  30:00:000    |\n" +
+			"12/07/14 13:51:54 | Sleep                                         | MinchaKetana    |     2:30:41 PM |  30:00:000    |\n" +
+			"12/07/14 14:21:54 | Sleep                                         | MinchaKetana    |     2:30:41 PM |  08:46:650    |\n" +
+			"12/07/14 14:30:41 | Sleep                                         | PlagHaMincha    |     3:24:20 PM |  30:00:000    |\n" +
+			"12/07/14 15:00:41 | Sleep                                         | PlagHaMincha    |     3:24:20 PM |  08:39:437    |\n" +
+			"12/07/14 15:09:20 | Notify: PlagHaMincha@3:24:20 PM (15:0:0)      | Shkia           |     4:18:00 PM |  30:00:000    |\n" +
+			"12/07/14 15:39:20 | Sleep                                         | Shkia           |     4:18:00 PM |  23:39:443    |\n" +
+			"12/07/14 16:03:00 | Notify: Shkia@4:18:00 PM (15:0:0)             | LatestMincha    |     4:27:39 PM |  09:39:487    |\n" +
+			"12/07/14 16:12:39 | Notify: LatestMincha@4:27:39 PM (15:0:0)      | BeinHashmashot  |     4:52:04 PM |  30:00:000    |\n" +
+			"12/07/14 16:42:39 | Sleep                                         | BeinHashmashot  |     4:52:04 PM |  09:24:788    |\n" +
+			"12/07/14 16:52:04 | Sleep                                         | TzaitHacochavim |     5:10:02 PM |  17:57:775    |\n" +
+			"12/07/14 17:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 17:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 18:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 18:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 19:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 19:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 20:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 20:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 21:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 21:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 22:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 22:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 23:10:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  30:00:000    |\n" +
+			"12/07/14 23:40:02 | Sleep                                         | NightChatzot    |    12:00:58 AM |  20:56:081    |\n"
+		);
+	}
+
+
 	@Test
 	public void december_21_2015_1_week() {
 
-		// In this case, the user never turns their phone off...
-		Calendar testTime = configureTestTime( 2015, Calendar.DECEMBER, 21, 0, 1 );
-		HebrewDate startTest = HebrewCalendar.getForDate( testTime );
-		HebrewDate endTest = HebrewCalendar.getForDate( 2015, Calendar.DECEMBER, 28 );
-
-		Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
-		expectedZmanim.put( startTest,
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 1 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha, Zmanim.Type.FastEnd,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 2 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 3 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 4 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.CandleLighting, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 5 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.ShabbatEnd, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 6 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-
-		runDays( testTime, startTest, endTest, new DefaultZmanCallback(),
+		december_21_2015_1_week( new AlwaysFifteenMinuteAlertsZmanCallback(),
 			"Time              | Action                                        | Next Zman       | Next Zman Time | Next (M:S:ms) |\n" +
 			"------------------|-----------------------------------------------|-----------------|----------------|---------------|\n" +
 			"12/21/15 00:01:00 | Sleep                                         | Alot            |     6:13:06 AM |  30:00:000    |\n" +
@@ -550,43 +505,39 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 			"12/27/15 22:31:32 | Sleep                                         | NightChatzot    |    12:10:22 AM |  30:00:000    |\n" +
 			"12/27/15 23:01:32 | Sleep                                         | NightChatzot    |    12:10:22 AM |  30:00:000    |\n" +
 			"12/27/15 23:31:32 | Sleep                                         | NightChatzot    |    12:10:22 AM |  23:50:272    |\n" +
-			"12/27/15 23:55:22 | Notify: NightChatzot@12:10:22 AM (15:0:0)     | Alot            |     6:15:51 AM |  30:00:000    |\n",
-
-			expectedZmanim
+			"12/27/15 23:55:22 | Notify: NightChatzot@12:10:22 AM (15:0:0)     | Alot            |     6:15:51 AM |  30:00:000    |\n"
 		);
 	}
 
 
-	private static class DefaultZmanCallback
-		extends ZmanCallbackAdapter {
+	private static class AlwaysFifteenMinuteAlertsZmanCallback
+		extends ZmanCallbackForTests {
 
-		@Nullable
+
 		@Override
-		public String getPreferredZman( final Zmanim.Type type ) {
-			switch ( type ) {
-				case ShabbatEnd:
-					return "Seattle Sephardic";
+		public int getZmanAlertTime( final Zmanim.Type type ) {
 
-				case FastEnd:
-					return "Seattle Sephardic";
-
-				default:
-					return null;
-			}
+			return FIFTEEN_MINUTES;
 		}
+	}
+
+
+	private static class DefaultAlertsZmanCallback
+		extends ZmanCallbackForTests {
 
 
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
 
 			// Intended to match the default values in personal_prefs.xml.
+			//noinspection Duplicates
 			switch ( type ) {
 				case Alot:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case Talit:
 					return FIFTEEN_MINUTES;
 				case Hanetz:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case SofZmanShema:
 					return FIFTEEN_MINUTES;
 				case SofZmanTefila:
@@ -596,11 +547,11 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case SofZmanBiurChametz:
 					return FIFTEEN_MINUTES;
 				case Chatzot:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case MinchaGedola:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case MinchaKetana:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case PlagHaMincha:
 					return FIFTEEN_MINUTES;
 				case CandleLighting:
@@ -608,21 +559,21 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case Shkia:
 					return FIFTEEN_MINUTES;
 				case BeinHashmashot:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case LatestMincha:
 					return FIFTEEN_MINUTES;
 				case FastEnd:
 					return FIFTEEN_MINUTES;
 				case TzaitHacochavim:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case ShabbatEnd:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 				case NightChatzot:
-					return -1;
+					return ZmanUtils.NO_ALERT;
 			}
 
 			assert false;
-			return -1;
+			return ZmanUtils.NO_ALERT;
 		}
 	}
 

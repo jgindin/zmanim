@@ -12,123 +12,24 @@ import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utilities for working with zmanim.
  */
 public class ZmanUtils {
 
+	public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
 
-	/**
-	 * Used in conjunction with #determineNextWakeup in case the user actually should be notified about an upcoming zman.
-	 */
-	public interface ZmanCallback {
+	/** What's the longest time before a zman that we'll allow an alert? */
+	public static final int                                   MAX_ALERT_TIME = 60 * MIN_TO_MS_CONVERSION;
 
-		/**
-		 * Used in conjunction with #findNextZman to allow control over which of the various zmanim for the given
-		 *  type is preferred by the user.
-		 *
-		 * @return For the given type, what is the name of the zman the user prefers to use? May be null to indicate
-		 *  the default is to be used.
-		 *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
-		 */
-		@Nullable
-		String getPreferredZman( Zmanim.Type type );
+	/** When we offer a default, this is what we start with. */
+	public static final int                                   DEFAULT_ALERT_TIME = 15 * MIN_TO_MS_CONVERSION;
 
+	/** Sentinel value to indicate the user doesn't want an alert for the zman. */
+	public static final int                                   NO_ALERT = -1;
 
-		/**
-		 * @return For the given type, how far in advance (in minutes) does the user want to be notified? May be less than
-		 *  zero to indicate no notification.
-		 */
-		int getZmanAlertTime(
-			Zmanim.Type type
-		);
-
-		/**
-		 * The user should be notified about the specified zman.
-		 */
-		void notifyUser(
-			Zman nextZman
-		);
-
-		/**
-		 * Indicates that the next check should be scheduled.
-		 *
-		 * @param now The current time.
-		 * @param timeUntilNextCheck How long from now until the next check is to be scheduled.
-		 * @param nextZman What is the next zman?
-		 */
-		void scheduleNextCheck(
-			Calendar  now,
-			int       timeUntilNextCheck,
-			Zman      nextZman
-		);
-	}
-
-
-	public static class NotifiedZmanim
-		implements Serializable {
-
-		/** The date this applies to. */
-		private final int                                       year;
-		private final int                                       month;
-		private final int                                       date;
-
-		/** Which of the zmanim types have already been notified? */
-		private final Set<Zmanim.Type>                          notifiedTypes = new HashSet<Zmanim.Type>();
-
-
-		public NotifiedZmanim(
-			final Calendar day
-		) {
-
-			this.year = day.get( Calendar.YEAR );
-			this.month = day.get( Calendar.MONTH );
-			this.date = day.get( Calendar.DATE );
-		}
-
-
-		/**
-		 * Once the user has been notified about the specified type, then this method
-		 */
-		private void notified(
-			final Zman zman
-		) {
-
-			notifiedTypes.add( zman.type );
-		}
-
-
-		public boolean isForDate( final Calendar other ) {
-
-			int otherYear = other.get( Calendar.YEAR );
-			if ( year != otherYear ) {
-				return false;
-			}
-
-			int otherMonth = other.get( Calendar.MONTH );
-			if ( month != otherMonth ) {
-				return false;
-			}
-
-			int otherDate = other.get( Calendar.DATE );
-			if ( date != otherDate ) {
-				return false;
-			}
-
-			return true;
-		}
-
-
-		boolean contains( final Zmanim.Type type ) {
-			return notifiedTypes.contains( type );
-		}
-	}
 
 
 	/**
@@ -139,7 +40,6 @@ public class ZmanUtils {
 	 * @param now What time is it?
 	 * @param notifiedZmanim Which zmanim have been notified already for the specified date?
 	 * @param alarmCheckInterval How often do we plan on making these checks?
-	 * @param timeToAlertBeforeZman How long before the next zman does the user want to be alerted?
 	 * @param zmanCallback Whom to notify of the appropriate next action(s)
 	 */
 	public static void nextZmanAction(
@@ -147,19 +47,18 @@ public class ZmanUtils {
 		final Calendar                  now,
 		final NotifiedZmanim            notifiedZmanim,
 		final int                       alarmCheckInterval,
-		final int                       timeToAlertBeforeZman,
 		final ZmanCallback              zmanCallback
 	) {
 
 		Zman nextZman = findNextZman( location, now, notifiedZmanim, zmanCallback );
-		int nextWakeupDelta = ZmanUtils.determineNextWakeup( nextZman, now, alarmCheckInterval, timeToAlertBeforeZman );
+		int nextWakeupDelta = determineNextWakeup( nextZman, now, alarmCheckInterval, zmanCallback );
 
 		if ( nextWakeupDelta <= 0 ) {
 			zmanCallback.notifyUser( nextZman );
 			notifiedZmanim.notified( nextZman );
 
-			nextZman = ZmanUtils.findNextZman( location, nextZman.getTime(), notifiedZmanim, zmanCallback );
-			nextWakeupDelta = ZmanUtils.determineNextWakeup( nextZman, now, alarmCheckInterval, timeToAlertBeforeZman );
+			nextZman = findNextZman( location, nextZman.getTime(), notifiedZmanim, zmanCallback );
+			nextWakeupDelta = determineNextWakeup( nextZman, now, alarmCheckInterval, zmanCallback );
 		}
 
 		zmanCallback.scheduleNextCheck( now, nextWakeupDelta, nextZman );
@@ -184,8 +83,9 @@ public class ZmanUtils {
 		final ZmanCallback        zmanCallback
 	) {
 
-		// if nextZman is null, we need to roll to tomorrow and re-check...
 		Zman nextZman = findNextZman_internal( location, now, notifiedZmanim, zmanCallback );
+
+		// if nextZman is null, we need to roll to tomorrow and re-check...
 		if ( nextZman == null ) {
 			// move to the next day and try again!
 			now.roll( Calendar.DAY_OF_MONTH, true );
@@ -206,19 +106,24 @@ public class ZmanUtils {
 	 * @param nextZman What is the next zman?
 	 * @param now What time is it now?
 	 * @param alarmCheckInterval How often do we plan on making these checks?
-	 * @param timeToAlertBeforeZman How long before the next zman does the user want to be alerted?
+	 * @param zmanCallback How long before the next zman does the user want to be alerted?
 	 *
 	 * @return The number of milliseconds from now until the next check to see if its time to notify the user. May
 	 *  be negative if there isn't enough time between the next zman and now to satisfy the desired timeToAlertBeforeZman.
 	 */
 	static int determineNextWakeup(
-		final Zman      nextZman,
-		final Calendar  now,
-		final int       alarmCheckInterval,
-		final int       timeToAlertBeforeZman
+		final Zman          nextZman,
+		final Calendar      now,
+		final int           alarmCheckInterval,
+		final ZmanCallback  zmanCallback
 	) {
 
-		final int timeUntilNextZman = ZmanUtils.howLongUntil( nextZman, now );
+		final int timeUntilNextZman = howLongUntilZman( now, nextZman );
+		int timeToAlertBeforeZman = zmanCallback.getZmanAlertTime( nextZman.type ) * MIN_TO_MS_CONVERSION;
+		if ( timeToAlertBeforeZman < 0 ) {
+			timeToAlertBeforeZman = 0;
+		}
+
 		final int timeUntilDesiredAlert = timeUntilNextZman - timeToAlertBeforeZman;
 
 		// What time is the next wake-up?
@@ -243,6 +148,7 @@ public class ZmanUtils {
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Nullable
 	private static Zman findNextZman_internal(
 		final ZmanimLocation    location,
@@ -311,12 +217,12 @@ public class ZmanUtils {
 
 
 	/**
-	 * Calculate the number of milliseconds between the given date and the zman. If it cannot be calculated for any
+	 * Calculate the milliseconds of minutes between the given date and the zman. If it cannot be calculated for any
 	 *  reason, we'll return Integer.MAX_VALUE.
 	 */
-	private static int howLongUntil(
-		final Zman      nextZman,
-		final Calendar  now
+	private static int howLongUntilZman(
+		final Calendar  now,
+		final Zman      nextZman
 	) {
 
 		// Just in case something has gone wrong, it will be a long time...
