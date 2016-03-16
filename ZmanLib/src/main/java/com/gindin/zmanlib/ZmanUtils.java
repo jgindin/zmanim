@@ -54,14 +54,14 @@ public class ZmanUtils {
 		int nextWakeupDelta = determineNextWakeup( nextZman, now, alarmCheckInterval, zmanCallback );
 
 		if ( nextWakeupDelta <= 0 ) {
-			zmanCallback.notifyUser( nextZman );
+			zmanCallback.notifyUser( now, nextZman );
 			notifiedZmanim.notified( nextZman );
 
 			nextZman = findNextZman( location, nextZman.getTime(), notifiedZmanim, zmanCallback );
 			nextWakeupDelta = determineNextWakeup( nextZman, now, alarmCheckInterval, zmanCallback );
 		}
 
-		zmanCallback.scheduleNextCheck( now, nextWakeupDelta, nextZman );
+		zmanCallback.scheduleNextCheck( now, nextWakeupDelta );
 	}
 
 
@@ -251,7 +251,6 @@ public class ZmanUtils {
 	 */
 	private ZmanUtils() {
 	}
-
 
 
 } // End of ZmanUtils class

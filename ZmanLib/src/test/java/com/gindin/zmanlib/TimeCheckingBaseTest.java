@@ -12,93 +12,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  *
  */
-public abstract class TimeCheckingBaseTest {
-
-	protected static final ZmanimLocation                     seattle;
-
-	protected static final ZmanimLocation                     yeshivaUniviersity;
-
-
-	static {
-
-		seattle = new ZmanimLocation.Builder()
-			.atLatitude( 47.552827 )
-			.atLongitude( -122.267065 )
-			.locationName( "Ezra Bessaroth" )
-			.inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
-			.build();
-
-		yeshivaUniviersity = new ZmanimLocation.Builder()
-			.atLatitude( 40.851546 )
-			.atLongitude( -73.928937 )
-			.locationName( "Yeshiva University" )
-			.inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
-			.build();
-	}
-
-
-	protected void outputHeader(
-		StringBuilder   buffer,
-		HebrewDate      startDate,
-		ZmanimLocation  location
-	) {
-
-		Zmanim zmanim = getZmanimForDate( startDate, location );
-		List<Zman> zmans = zmanim.asList();
-		int maxLength = computeColumnWidth( zmans );
-
-		buffer.append( "Date           |" );
-		for ( Zman zman : zmans ) {
-			String name = zman.name;
-			int padding = ( maxLength - ( name.length() ) ) / 2;
-			pad( buffer, padding );
-			buffer.append( name );
-
-			pad( buffer, maxLength - padding - name.length() );
-
-			buffer.append( "|" );
-		}
-
-		buffer.append( "\n" );
-
-		buffer.append( "---------------|" );
-		for ( Zman zman : zmans ) {
-			for ( int i = 0; i < maxLength; i++ ) {
-				buffer.append( "-" );
-			}
-			buffer.append( "|" );
-		}
-
-		buffer.append( "\n" );
-	}
-
-
-	private int computeColumnWidth( final List<Zman> zmans ) {
-
-		int maxLength = -1;
-		for ( Zman zman : zmans ) {
-			maxLength = Math.max( maxLength, zman.name.length() );
-		}
-
-		// Make sure there's some padding.
-		maxLength = Math.max( 14, maxLength + 2 );
-		return maxLength;
-	}
-
-
-	private void pad(
-		final StringBuilder buffer,
-		final int           padding
-	) {
-		for ( int i = 0; i < padding; i++ ) {
-			buffer.append( " " );
-		}
-	}
+abstract class TimeCheckingBaseTest {
 
 
 	protected abstract Zmanim.Type getTypeForTest();
@@ -208,6 +126,65 @@ public abstract class TimeCheckingBaseTest {
 		}
 
 		Assert.assertEquals( expected, output.toString() );
+	}
+
+
+	private void outputHeader(
+		StringBuilder   buffer,
+		HebrewDate      startDate,
+		ZmanimLocation  location
+	) {
+
+		Zmanim zmanim = getZmanimForDate( startDate, location );
+		List<Zman> zmans = zmanim.asList();
+		int maxLength = computeColumnWidth( zmans );
+
+		buffer.append( "Date           |" );
+		for ( Zman zman : zmans ) {
+			String name = zman.name;
+			int padding = ( maxLength - ( name.length() ) ) / 2;
+			pad( buffer, padding );
+			buffer.append( name );
+
+			pad( buffer, maxLength - padding - name.length() );
+
+			buffer.append( "|" );
+		}
+
+		buffer.append( "\n" );
+
+		buffer.append( "---------------|" );
+		for ( Zman zman : zmans ) {
+			for ( int i = 0; i < maxLength; i++ ) {
+				buffer.append( "-" );
+			}
+			buffer.append( "|" );
+		}
+
+		buffer.append( "\n" );
+	}
+
+
+	private int computeColumnWidth( final List<Zman> zmans ) {
+
+		int maxLength = -1;
+		for ( Zman zman : zmans ) {
+			maxLength = Math.max( maxLength, zman.name.length() );
+		}
+
+		// Make sure there's some padding.
+		maxLength = Math.max( 14, maxLength + 2 );
+		return maxLength;
+	}
+
+
+	private void pad(
+		final StringBuilder buffer,
+		final int           padding
+	) {
+		for ( int i = 0; i < padding; i++ ) {
+			buffer.append( " " );
+		}
 	}
 
 

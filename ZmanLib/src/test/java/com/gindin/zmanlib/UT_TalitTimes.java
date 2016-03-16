@@ -12,6 +12,10 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.Calendar;
 
+import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
+import static com.gindin.zmanlib.UT_ZmanUtils.yeshivaUniversity;
+
+
 /**
  * This is a unit test, but also a helpful mechanism to dump out the tallit & tefilin times to help plan
  *  for winter month shachrit.
@@ -667,7 +671,7 @@ public class UT_TalitTimes
 			" 3/18/2015     | 6:13:16 AM   | 6:09:00 AM   | 6:06:19 AM   | \n" +
 			"               | 6:14 AM      | 6:10 AM      | 6:07 AM      | \n";
 
-		runTest( date, lastDate, yeshivaUniviersity, expected );
+		runTest( date, lastDate, yeshivaUniversity, expected );
 
 	}
 

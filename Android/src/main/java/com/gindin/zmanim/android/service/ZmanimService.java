@@ -150,8 +150,13 @@ public class ZmanimService
 
 			@Override
 			public void notifyUser(
-				final Zman nextZman
+				Calendar  now,
+				Zman      nextZman
 			) {
+
+				final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
+				notifiedZmanim.notified( nextZman );
+
 				notifyUserOfUpcomingZman( nextZman );
 			}
 
@@ -159,8 +164,7 @@ public class ZmanimService
 			@Override
 			public void scheduleNextCheck(
 				final Calendar  now,
-				final int       timeUntilNextCheck,
-				final Zman      nextZman
+				final int       timeUntilNextCheck
 			) {
 				scheduleNextWakeup( timeUntilNextCheck, now );
 			}

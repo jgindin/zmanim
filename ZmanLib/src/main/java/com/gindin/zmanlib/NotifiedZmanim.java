@@ -51,9 +51,9 @@ public final class NotifiedZmanim
 
 
 	/**
-	 * Once the user has been notified about the specified type, then this method
+	 * Once the user has been notified about the specified type, then this method is invoked to note that notification.
 	 */
-	void notified(
+	public void notified(
 		final Zman zman
 	) {
 
@@ -61,7 +61,7 @@ public final class NotifiedZmanim
 	}
 
 
-	boolean contains( final Zmanim.Type type ) {
+	public boolean contains( final Zmanim.Type type ) {
 		return notifiedTypes.contains( type );
 	}
 }

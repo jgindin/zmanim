@@ -35,7 +35,8 @@ public interface ZmanCallback {
 	 * The user should be notified about the specified zman.
 	 */
 	void notifyUser(
-		Zman nextZman
+		Calendar  now,
+		Zman      nextZman
 	);
 
 	/**
@@ -43,12 +44,10 @@ public interface ZmanCallback {
 	 *
 	 * @param now The current time.
 	 * @param timeUntilNextCheck How long from now until the next check is to be scheduled.
-	 * @param nextZman What is the next zman?
 	 */
 	void scheduleNextCheck(
 		Calendar  now,
-		int       timeUntilNextCheck,
-		Zman      nextZman
+		int       timeUntilNextCheck
 	);
 
 
@@ -69,15 +68,17 @@ public interface ZmanCallback {
 
 
 		@Override
-		public void notifyUser( final Zman nextZman ) {
+		public void notifyUser(
+			Calendar  now,
+			Zman      nextZman
+		) {
 		}
 
 
 		@Override
 		public void scheduleNextCheck(
-			final Calendar now,
-			final int       timeUntilNextCheck,
-			final Zman      nextZman
+			final Calendar  now,
+			final int       timeUntilNextCheck
 		) {
 		}
 	}

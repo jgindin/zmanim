@@ -8,6 +8,8 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.Calendar;
 
+import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
+
 /**
  *
  */
