@@ -56,9 +56,7 @@ public class PersonalPrefsManager
 			final SharedPreferences.Editor editor = prefs.edit();
 
 			for ( Zmanim.Type type : Zmanim.Type.values() ) {
-				boolean notifcationEnabled = prefs.getBoolean( type.name(), true );
 				editor.remove( type.name() );
-				editor.putInt( type.name(), notifcationEnabled ? 15 : -1 );
 			}
 
 			editor.apply();
