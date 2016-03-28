@@ -45,8 +45,6 @@ public class SeekBarPreference
 
 	private int                                               progress;
 
-	private View.OnClickListener                              enabledListener;
-
 
 	public SeekBarPreference( Context context ) {
 		this( context, null, 0 );
@@ -77,14 +75,14 @@ public class SeekBarPreference
 		seekBar = (SeekBar)view.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
 		seekBar.setOnSeekBarChangeListener( this );
-		seekBar.setMax( ZmanUtils.MAX_ALERT_TIME );
+		seekBar.setMax( ZmanUtils.MAX_ALERT_TIME / ZmanUtils.MIN_TO_MS_CONVERSION );
 
 		currentValueDisplay = (TextView)view.findViewById( R.id.summary );
 		updateDisplay();
 
 		enabled = (CheckBox)view.findViewById( R.id.enable );
 		enabled.setChecked( progress >= 0 );
-		enabledListener = new View.OnClickListener() {
+		View.OnClickListener enabledListener = new View.OnClickListener() {
 			@Override
 			public void onClick( final View v ) {
 				// Reflects the new value
@@ -98,6 +96,7 @@ public class SeekBarPreference
 				}
 			}
 		};
+
 		enabled.setOnClickListener( enabledListener );
 	}
 
@@ -145,10 +144,11 @@ public class SeekBarPreference
 
 		int value;
 		if ( defaultValue instanceof Integer ) {
+			//noinspection UnnecessaryUnboxing
 			value = ((Integer)defaultValue).intValue();
 		}
 		else {
-			value = ZmanUtils.DEFAULT_ALERT_TIME;
+			value = ZmanUtils.NO_ALERT;
 		}
 
 		setValue( restoreValue ? getPersistedInt( progress ) : value );
