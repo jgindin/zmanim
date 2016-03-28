@@ -73,7 +73,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/mockable-android-22.jar" />
-      <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/proguard-rules" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/resources" />
@@ -81,8 +80,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/reports" />
-      <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/test-results" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
