@@ -32,6 +32,16 @@ public interface ZmanCallback {
 	);
 
 	/**
+	 * Has the user been notified of the specified zman for the specified date?
+	 *
+	 * @return true if notification has happened; false otherwise.
+	 */
+	boolean hasBeenNotified(
+		Calendar  now,
+		Zman      zman
+	);
+
+	/**
 	 * The user should be notified about the specified zman.
 	 */
 	void notifyUser(
@@ -64,6 +74,15 @@ public interface ZmanCallback {
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
 			return ZmanUtils.NO_ALERT;
+		}
+
+
+		@Override
+		public boolean hasBeenNotified(
+			Calendar  now,
+			Zman      zman
+		) {
+			return false;
 		}
 
 

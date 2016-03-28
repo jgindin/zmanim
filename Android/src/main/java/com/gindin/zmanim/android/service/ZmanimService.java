@@ -149,6 +149,17 @@ public class ZmanimService
 
 
 			@Override
+			public boolean hasBeenNotified(
+				Calendar  now,
+				Zman      zman
+			) {
+
+				final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
+				return notifiedZmanim.contains( zman.type );
+			}
+
+
+			@Override
 			public void notifyUser(
 				Calendar  now,
 				Zman      nextZman

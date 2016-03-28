@@ -17,11 +17,19 @@ import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
  */
 abstract class WakeupSchedulerBase_MutliDay {
 
+	interface TestResultsCallback {
+
+		String getExpectedOutput();
+
+		Map<HebrewDate,List<Zmanim.Type>> getExpectedNotifiedZmanim( HebrewDate date );
+	}
+
+
 
 	@SuppressWarnings( "MagicNumber" )
 	void december_7_2014(
-		final ZmanCallback  perTestCallback,
-		final String        expected
+		final ZmanCallback          perTestCallback,
+		final TestResultsCallback   testResultsCallback
 	) {
 
 		// I'm going to try and be somewhat realistic here. We'll say someone woke up and turned on their
@@ -48,21 +56,15 @@ abstract class WakeupSchedulerBase_MutliDay {
 		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
 		Calendar endTest = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 8, 0, 0 );
 
-		Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
-		expectedZmanim.put( hebrewDate,
-			Arrays.asList( Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
-				Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia,
-				Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		runDays( testTime, endTest, perTestCallback, expected, expectedZmanim );
+		runDays( testTime, endTest, perTestCallback, testResultsCallback.getExpectedOutput(),
+			testResultsCallback.getExpectedNotifiedZmanim( hebrewDate ) );
 	}
 
 
 	@SuppressWarnings( "MagicNumber" )
 	void december_21_2015_1_week(
-		final ZmanCallback  perTestCallback,
-		final String        expected
+		final ZmanCallback          perTestCallback,
+		final TestResultsCallback   testResultsCallback
 	) {
 
 		// In this case, the user never turns their phone off...
@@ -70,58 +72,8 @@ abstract class WakeupSchedulerBase_MutliDay {
 		HebrewDate startTest = HebrewCalendar.getForDate( testTime );
 		Calendar endTest = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 28, 0, 0 );
 
-		Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
-		expectedZmanim.put( startTest,
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 1 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha, Zmanim.Type.FastEnd,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 2 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 3 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 4 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.CandleLighting, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 5 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.ShabbatEnd, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-		expectedZmanim.put( startTest.forward( 6 ),
-			Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz, Zmanim.Type.SofZmanShema,
-				Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot, Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-				Zmanim.Type.PlagHaMincha, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
-				Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
-		);
-
-
-		runDays( testTime, endTest, perTestCallback, expected, expectedZmanim );
+		runDays( testTime, endTest, perTestCallback, testResultsCallback.getExpectedOutput(),
+			testResultsCallback.getExpectedNotifiedZmanim( startTest ) );
 	}
 
 
@@ -141,7 +93,6 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 		RunDaysZmanCallback zmanCallback = new RunDaysZmanCallback( perTestCallback, testTime, output, endDate );
 
-
 		while ( !zmanCallback.testComplete ) {
 
 			output.append( String.format( "%1$tD %1$tH:%1$tM:%1$tS |", testTime ) );
@@ -153,7 +104,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 				zmanCallback.notifiedZmanim.put( forDate, notifiedZmanim );
 			}
 
-			ZmanUtils.nextZmanAction( seattle, testTime, notifiedZmanim, UT_ZmanUtils.thirtyMinutesInterval, zmanCallback );
+			ZmanUtils.run( seattle, testTime, zmanCallback );
 
 			output.append( "\n" );
 		}
@@ -166,24 +117,18 @@ abstract class WakeupSchedulerBase_MutliDay {
 		// Make sure we notified for all the zmanim of the day...
 		for ( Map.Entry<HebrewDate, NotifiedZmanim> entry : zmanCallback.notifiedZmanim.entrySet() ) {
 			HebrewDate currentDate = entry.getKey();
-			NotifiedZmanim currentDayNotifiedZmanim = entry.getValue();
+			NotifiedZmanim actuallyNotifiedZmanim = entry.getValue();
 
-			List<Zmanim> todaysZmanim = currentDate.getZmanim( seattle );
-			final List<Zmanim.Type> expectedTypes = new ArrayList<>( expectedZmanim.get( currentDate ) );
+			final List<Zmanim.Type> expectedNotificationTypes = new ArrayList<>( expectedZmanim.get( currentDate ) );
 
-			// First, we'll check that all of today's zmanim are expected...
-			for ( Zmanim zmanim : todaysZmanim ) {
-				final boolean removed = expectedTypes.remove( zmanim.type );
-				if ( removed && ( perTestCallback.getZmanAlertTime( zmanim.type ) > 0 ) ) {
-					Assert.assertTrue( dateFormatter.format( currentDate ) + " should have had " + zmanim.type, currentDayNotifiedZmanim.contains( zmanim.type ) );
-				}
-				else {
-					Assert.assertFalse( dateFormatter.format( currentDate ) + " should NOT have had " + zmanim.type, currentDayNotifiedZmanim.contains( zmanim.type ) );
-				}
+			Iterator<Zmanim.Type> iter = expectedNotificationTypes.iterator();
+			while ( iter.hasNext() ) {
+				final Zmanim.Type next = iter.next();
+				Assert.assertTrue( "Didn't notify for " + next + " on " + dateFormatter.format( currentDate ), actuallyNotifiedZmanim.contains( next ) );
+				iter.remove();
 			}
 
-			// Make sure we found all the expected zmanim.
-			Assert.assertTrue( "Didn't find: " + expectedTypes, expectedTypes.isEmpty() );
+			Assert.assertTrue( expectedNotificationTypes.toString(), expectedNotificationTypes.isEmpty() );
 		}
 
 	}
@@ -244,6 +189,17 @@ abstract class WakeupSchedulerBase_MutliDay {
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
 			return perTestCallback.getZmanAlertTime( type );
+		}
+
+
+		@Override
+		public boolean hasBeenNotified(
+			Calendar  now,
+			Zman      zman
+		) {
+
+			final NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
+			return notifiedForDay != null && notifiedForDay.contains( zman.type );
 		}
 
 
