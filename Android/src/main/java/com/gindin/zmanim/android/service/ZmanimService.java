@@ -82,12 +82,6 @@ public class ZmanimService
 
 	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
 
-	/**
-	 * If we check for the next zman, and it's more than 45 minutes away, just go ahead and schedule another
-	 *  check in 45 minutes.
-	 */
-	private static final int                                  NEXT_ALARM_CHECK_INTERVAL = ( 45 * 60 * 1000 );
-
 	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
 	// TODO: Inject this
@@ -302,7 +296,7 @@ public class ZmanimService
 
 		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
 		//  sure not to miss it...
-		final boolean needPreciseWakeup = ( nextWakeupDelta < NEXT_ALARM_CHECK_INTERVAL );
+		final boolean needPreciseWakeup = ( nextWakeupDelta < ZmanUtils.CHECK_INTERVAL );
 
 		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
 		alarmIntent.putExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name(), getNotifiedZmanim( now ) );

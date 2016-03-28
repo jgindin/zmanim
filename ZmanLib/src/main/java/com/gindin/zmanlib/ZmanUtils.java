@@ -29,7 +29,7 @@ public class ZmanUtils {
 	public static final int                                   NO_ALERT = -1;
 
 	/** How often should we be checking for something to do? */
-	private static final int                                  CHECK_INTERVAL = MAX_ALERT_TIME / 2;
+	public static final int                                   CHECK_INTERVAL = MAX_ALERT_TIME / 2;
 
 	/** If we wake up within a short time of needing to alert anyways, just do it. */
 	private static final int                                  ALERT_FUDGE_FACTOR = 15 * 1000;
