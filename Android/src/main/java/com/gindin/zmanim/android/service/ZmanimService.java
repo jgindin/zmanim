@@ -286,7 +286,7 @@ public class ZmanimService
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone( location.getTimeZone() );
 
-			ZmanUtils.nextZmanAction( location, now, getNotifiedZmanim( now ), NEXT_ALARM_CHECK_INTERVAL, zmanCallback );
+			ZmanUtils.run( location, now, zmanCallback );
 		}
 
 		releaseWakefulIntent();
