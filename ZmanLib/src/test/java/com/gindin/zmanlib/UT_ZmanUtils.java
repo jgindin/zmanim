@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Tests for the ZmanUtils functionality.
+ * Tests for the ZmanNotificationScheduler functionality.
  */
 @SuppressWarnings( "MagicNumber" )
 public class UT_ZmanUtils {
@@ -66,7 +66,7 @@ public class UT_ZmanUtils {
 		findAfter.set( 2015, Calendar.DECEMBER, 21, 23, 54 );
 
 /*
-		final ZmanNotification zmanNotification = ZmanUtils.determineNextNotification( seattle, findAfter,
+		final ZmanNotification zmanNotification = ZmanNotificationScheduler.determineNextNotification( seattle, findAfter,
 			new NotifiedZmanim( findAfter ), thirtyMinutesInterval, new AlwaysFifteenMinuteAlertsZmanCallback() );
 		Assert.assertNotNull( zmanNotification );
 		Assert.assertNotNull( zmanNotification.zmanToNotify );

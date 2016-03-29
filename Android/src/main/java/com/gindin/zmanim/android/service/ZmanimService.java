@@ -11,7 +11,7 @@ import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.NotifiedZmanim;
 import com.gindin.zmanlib.ZmanCallback;
-import com.gindin.zmanlib.ZmanUtils;
+import com.gindin.zmanlib.ZmanNotificationScheduler;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
@@ -68,7 +68,7 @@ public class ZmanimService
 		/** Specified by the Zmanim Activity when it's first created and invoking the ACTIVITY_STARTED action. */
 		SCHEDULE_IF_NECESSARY,
 
-		/** Used when there's a ZmanUtils.NotifiedZmanim attached to the intent. */
+		/** Used when there's a NotifiedZmanim attached to the intent. */
 		NOTIFIED_ZMANIM_EXTRA
 	}
 
@@ -280,7 +280,7 @@ public class ZmanimService
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone( location.getTimeZone() );
 
-			ZmanUtils.run( location, now, zmanCallback );
+			ZmanNotificationScheduler.run( location, now, zmanCallback );
 		}
 
 		releaseWakefulIntent();
@@ -296,7 +296,7 @@ public class ZmanimService
 
 		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
 		//  sure not to miss it...
-		final boolean needPreciseWakeup = ( nextWakeupDelta < ZmanUtils.CHECK_INTERVAL );
+		final boolean needPreciseWakeup = ( nextWakeupDelta < ZmanNotificationScheduler.CHECK_INTERVAL );
 
 		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
 		alarmIntent.putExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name(), getNotifiedZmanim( now ) );

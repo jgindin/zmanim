@@ -625,11 +625,11 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 			//noinspection Duplicates
 			switch ( type ) {
 				case Alot:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case Talit:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case Hanetz:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case SofZmanShema:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case SofZmanTefila:
@@ -639,11 +639,11 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case SofZmanBiurChametz:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case Chatzot:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case MinchaGedola:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case MinchaKetana:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case PlagHaMincha:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case CandleLighting:
@@ -651,21 +651,21 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				case Shkia:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case BeinHashmashot:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case LatestMincha:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case FastEnd:
 					return UT_ZmanUtils.FIFTEEN_MINUTES;
 				case TzaitHacochavim:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case ShabbatEnd:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 				case NightChatzot:
-					return ZmanUtils.NO_ALERT;
+					return ZmanNotificationScheduler.NO_ALERT;
 			}
 
 			assert false;
-			return ZmanUtils.NO_ALERT;
+			return ZmanNotificationScheduler.NO_ALERT;
 		}
 	}
 

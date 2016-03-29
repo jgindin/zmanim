@@ -27,7 +27,7 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import com.gindin.zmanlib.ZmanUtils;
+import com.gindin.zmanlib.ZmanNotificationScheduler;
 
 /**
  * Copied from: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
@@ -75,7 +75,7 @@ public class SeekBarPreference
 		seekBar = (SeekBar)view.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
 		seekBar.setOnSeekBarChangeListener( this );
-		seekBar.setMax( ZmanUtils.MAX_ALERT_TIME / ZmanUtils.MIN_TO_MS_CONVERSION );
+		seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
 
 		currentValueDisplay = (TextView)view.findViewById( R.id.summary );
 		updateDisplay();
@@ -87,11 +87,11 @@ public class SeekBarPreference
 			public void onClick( final View v ) {
 				// Reflects the new value
 				if ( enabled.isChecked() ) {
-					setValue( ZmanUtils.DEFAULT_ALERT_TIME );
+					setValue( ZmanNotificationScheduler.DEFAULT_ALERT_TIME );
 					seekBar.setEnabled( true );
 				}
 				else {
-					setValue( ZmanUtils.NO_ALERT );
+					setValue( ZmanNotificationScheduler.NO_ALERT );
 					seekBar.setEnabled( false );
 				}
 			}
@@ -148,7 +148,7 @@ public class SeekBarPreference
 			value = ((Integer)defaultValue).intValue();
 		}
 		else {
-			value = ZmanUtils.NO_ALERT;
+			value = ZmanNotificationScheduler.NO_ALERT;
 		}
 
 		setValue( restoreValue ? getPersistedInt( progress ) : value );

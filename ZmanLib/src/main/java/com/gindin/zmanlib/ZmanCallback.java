@@ -73,7 +73,7 @@ public interface ZmanCallback {
 
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
-			return ZmanUtils.NO_ALERT;
+			return ZmanNotificationScheduler.NO_ALERT;
 		}
 
 

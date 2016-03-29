@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Utilities for working with zmanim.
  */
-public class ZmanUtils {
+public class ZmanNotificationScheduler {
 
 	public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
 
@@ -205,7 +205,7 @@ public class ZmanUtils {
 	/**
 	 * Private ctor so the class cannot be instantiated.
 	 */
-	private ZmanUtils() {
+	private ZmanNotificationScheduler() {
 	}
 
 

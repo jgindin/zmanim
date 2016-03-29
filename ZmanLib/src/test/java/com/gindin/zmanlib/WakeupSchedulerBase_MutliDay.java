@@ -104,7 +104,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 				zmanCallback.notifiedZmanim.put( forDate, notifiedZmanim );
 			}
 
-			ZmanUtils.run( seattle, testTime, zmanCallback );
+			ZmanNotificationScheduler.run( seattle, testTime, zmanCallback );
 
 			output.append( "\n" );
 		}
@@ -226,8 +226,8 @@ abstract class WakeupSchedulerBase_MutliDay {
 			notified = true;
 
 			long delta = nextZman.getTime().getTimeInMillis() - now.getTimeInMillis();
-			long minUntilZman = ( delta / ( ZmanUtils.MIN_TO_MS_CONVERSION ) );
-			long remainingMs = ( delta - ( minUntilZman * ( ZmanUtils.MIN_TO_MS_CONVERSION ) ) );
+			long minUntilZman = ( delta / ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) );
+			long remainingMs = ( delta - ( minUntilZman * ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) ) );
 			long secs = ( remainingMs / 1000 );
 			remainingMs = ( remainingMs - secs * 1000 );
 
@@ -250,8 +250,8 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 			notified = false;
 
-			int minUntilNextCheck = ( timeUntilNextCheck / ( ZmanUtils.MIN_TO_MS_CONVERSION ) );
-			int remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( ZmanUtils.MIN_TO_MS_CONVERSION ) ) );
+			int minUntilNextCheck = ( timeUntilNextCheck / ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) );
+			int remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) ) );
 			int secs = ( remainingMs / 1000 );
 			remainingMs = ( remainingMs - secs * 1000 );
 
