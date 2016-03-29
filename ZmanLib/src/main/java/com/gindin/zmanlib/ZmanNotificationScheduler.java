@@ -19,11 +19,15 @@ public class ZmanNotificationScheduler {
 
 	public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
 
+	public static final int                                   FIFTEEN_MINUTES = 15;
+
+	public static final int                                   ONE_HOUR = 60;
+
 	/** What's the longest time before a zman that we'll allow an alert? */
-	public static final int                                   MAX_ALERT_TIME = 60 * MIN_TO_MS_CONVERSION;
+	public static final int                                   MAX_ALERT_TIME = ONE_HOUR * MIN_TO_MS_CONVERSION;
 
 	/** When we offer a default, this is what we start with. */
-	public static final int                                   DEFAULT_ALERT_TIME = 15 * MIN_TO_MS_CONVERSION;
+	public static final int                                   DEFAULT_ALERT_TIME = FIFTEEN_MINUTES * MIN_TO_MS_CONVERSION;
 
 	/** Sentinel value to indicate the user doesn't want an alert for the zman. */
 	public static final int                                   NO_ALERT = -1;
@@ -208,6 +212,58 @@ public class ZmanNotificationScheduler {
 	private ZmanNotificationScheduler() {
 	}
 
+
+
+	public static final class NotificationDefaults {
+
+		public int getDefaultZmanAlertTime( final Zmanim.Type type ) {
+
+			switch ( type ) {
+				case Alot:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case Talit:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case Hanetz:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case SofZmanShema:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case SofZmanTefila:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case SofZmanAchilatChametz:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case SofZmanBiurChametz:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case Chatzot:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case MinchaGedola:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case MinchaKetana:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case PlagHaMincha:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case CandleLighting:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case Shkia:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case BeinHashmashot:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case LatestMincha:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case FastEnd:
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+				case TzaitHacochavim:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case ShabbatEnd:
+					return ZmanNotificationScheduler.NO_ALERT;
+				case NightChatzot:
+					return ZmanNotificationScheduler.NO_ALERT;
+			}
+
+			assert false;
+			return ZmanNotificationScheduler.NO_ALERT;
+		}
+
+	}
 
 	private static final class ZmanNotification {
 

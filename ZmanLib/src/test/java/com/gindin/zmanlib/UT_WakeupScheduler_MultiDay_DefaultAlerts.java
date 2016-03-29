@@ -617,55 +617,12 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 	private static class DefaultAlertsZmanCallback
 		extends UT_ZmanUtils.ZmanCallbackForTests {
 
+		private final ZmanNotificationScheduler.NotificationDefaults  notificationDefaults = new ZmanNotificationScheduler.NotificationDefaults();
+
 
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
-
-			// Intended to match the default values in personal_prefs.xml.
-			//noinspection Duplicates
-			switch ( type ) {
-				case Alot:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case Talit:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case Hanetz:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case SofZmanShema:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case SofZmanTefila:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case SofZmanAchilatChametz:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case SofZmanBiurChametz:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case Chatzot:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case MinchaGedola:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case MinchaKetana:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case PlagHaMincha:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case CandleLighting:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case Shkia:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case BeinHashmashot:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case LatestMincha:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case FastEnd:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
-				case TzaitHacochavim:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case ShabbatEnd:
-					return ZmanNotificationScheduler.NO_ALERT;
-				case NightChatzot:
-					return ZmanNotificationScheduler.NO_ALERT;
-			}
-
-			assert false;
-			return ZmanNotificationScheduler.NO_ALERT;
+			return notificationDefaults.getDefaultZmanAlertTime( type );
 		}
 	}
 

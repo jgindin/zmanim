@@ -527,17 +527,17 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 				case Talit:
 					return UT_ZmanUtils.ZERO_MINUTES;
 				case Shkia:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 				case LatestMincha:
 					return UT_ZmanUtils.THIRTY_MINUTES;
 				case BeinHashmashot:
-					return UT_ZmanUtils.ONE_HOUR;
+					return ZmanNotificationScheduler.ONE_HOUR;
 				case TzaitHacochavim:
 					return UT_ZmanUtils.TWENTY_MINUTES;
 				case CandleLighting:
 					return UT_ZmanUtils.TWENTY_MINUTES;
 				case FastEnd:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 			}
 
 			assert false;
@@ -555,17 +555,17 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 				case Alot:
 					return ZmanNotificationScheduler.NO_ALERT;
 				case Talit:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 				case Hanetz:
 					return ZmanNotificationScheduler.NO_ALERT;
 				case SofZmanShema:
 					return UT_ZmanUtils.THIRTY_MINUTES;
 				case SofZmanTefila:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 				case SofZmanAchilatChametz:
-					return UT_ZmanUtils.ONE_HOUR;
+					return ZmanNotificationScheduler.ONE_HOUR;
 				case SofZmanBiurChametz:
-					return UT_ZmanUtils.ONE_HOUR;
+					return ZmanNotificationScheduler.ONE_HOUR;
 				case Chatzot:
 					return ZmanNotificationScheduler.NO_ALERT;
 				case MinchaGedola:
@@ -573,9 +573,9 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 				case MinchaKetana:
 					return ZmanNotificationScheduler.NO_ALERT;
 				case PlagHaMincha:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 				case CandleLighting:
-					return UT_ZmanUtils.FIFTEEN_MINUTES;
+					return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 				case Shkia:
 					return UT_ZmanUtils.ZERO_MINUTES;
 				case BeinHashmashot:

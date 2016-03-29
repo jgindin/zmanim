@@ -29,13 +29,9 @@ public class UT_ZmanUtils {
 
 	static final int                                          FIVE_MINUTES = 5;
 
-	static final int                                          FIFTEEN_MINUTES = 15;
-
 	static final int                                          TWENTY_MINUTES = 20;
 
 	static final int                                          THIRTY_MINUTES = 30;
-
-	static final int                                          ONE_HOUR = 60;
 
 
 	static {
@@ -107,7 +103,7 @@ public class UT_ZmanUtils {
 
 		@Override
 		public int getZmanAlertTime( final Zmanim.Type type ) {
-			return FIFTEEN_MINUTES;
+			return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 		}
 	}
 
