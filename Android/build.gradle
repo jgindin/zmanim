@@ -94,7 +94,7 @@ task resetFlurryKeyPlaceholders << {
 
 Properties mapQuest = new Properties()
 mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
-String mapQuestKey = flurry[ 'mapquest.key' ]
+String mapQuestKey = mapQuest[ 'mapquest.key' ]
 
 task replaceMapQuestPlaceholders << {
   ant.replace( file: "src/main/java/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java", token: "MAP_QUEST_KEY_GOES_HERE", value: mapQuestKey )
@@ -108,11 +108,11 @@ task resetMapQuestPlaceholders << {
 /* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
 gradle.projectsEvaluated {
 
-  compileDebugJava.dependsOn( "replaceMapQuestPlaceholders")
-  compileReleaseJava.dependsOn( "replaceMapQuestPlaceholders")
+  compileDebugJava.dependsOn( "replaceMapQuestPlaceholders" )
+  compileReleaseJava.dependsOn( "replaceMapQuestPlaceholders" )
   compileReleaseJava.dependsOn( "replaceFlurryKeyPlaceholders" )
 
-  assembleDebug.dependsOn( "resetMapQuestPlaceholders")
-  assembleRelease.dependsOn( "resetMapQuestPlaceholders")
+  assembleDebug.dependsOn( "resetMapQuestPlaceholders" )
+  assembleRelease.dependsOn( "resetMapQuestPlaceholders" )
   assembleRelease.dependsOn( "resetFlurryKeyPlaceholders" )
 }
