@@ -50,7 +50,7 @@ public class PersonalPrefsManager
 		}
 
 
-		if ( lastKnownCodeVersion <= 281 ) {
+		if ( lastKnownCodeVersion <= 283 ) {
 
 			// Early beta versions only allowed the alerts to be on or off.
 			final SharedPreferences.Editor editor = prefs.edit();
