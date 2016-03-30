@@ -57,7 +57,7 @@ public class ZmanimActivity
 
 	private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
 
-	private final List<Presenter<?>>                          loadedPresenters = new ArrayList<Presenter<?>>();
+	private final List<Presenter<?>>                          loadedPresenters = new ArrayList<>();
 
 	/** What date is currently being viewed? */
 	private HebrewDate                                        currentDate;
@@ -91,7 +91,7 @@ public class ZmanimActivity
 
 	private ServiceStartedEvent.Handler                       serviceStartedHandler;
 
-	private boolean                                           needToScheduleAlarams = true;
+	private boolean                                           needToScheduleAlarms = true;
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -213,10 +213,10 @@ public class ZmanimActivity
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
 		zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
-		zmanimService.putExtra( ZmanimService.ActionParams.SCHEDULE_IF_NECESSARY.name(), needToScheduleAlarams );
+		zmanimService.putExtra( ZmanimService.ActionParams.SCHEDULE_IF_NECESSARY.name(), needToScheduleAlarms );
 		startService( zmanimService );
 
-		needToScheduleAlarams = false;
+		needToScheduleAlarms = false;
 	}
 
 
