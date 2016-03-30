@@ -78,8 +78,6 @@ public class ZmanimService
 	 */
 	private static final String                               TIME_OF_LAST_NOTIFIED_ZMAN = "lastNotifiedZman";
 
-
-
 	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
 
 	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
@@ -103,7 +101,13 @@ public class ZmanimService
 	 */
 	private Intent                                            handlingAlarmsFor;
 
-	private ZmanCallback zmanCallback;
+	private ZmanCallback                                      zmanCallback;
+
+	/**
+	 * DO NOT access this directly! Always use the getNotifiedZmanim method to ensure using for the correct date!
+	 */
+	private NotifiedZmanim                                    notifiedZmanim;
+
 
 
 	public void onCreate() {
@@ -310,8 +314,7 @@ public class ZmanimService
 	@NotNull
 	private NotifiedZmanim getNotifiedZmanim( final Calendar now ) {
 
-		NotifiedZmanim notifiedZmanim = null;
-		if ( handlingAlarmsFor != null ) {
+		if ( ( handlingAlarmsFor != null ) && ( notifiedZmanim == null ) ) {
 			notifiedZmanim = (NotifiedZmanim)handlingAlarmsFor.getSerializableExtra( ActionParams.NOTIFIED_ZMANIM_EXTRA.name() );
 		}
 
@@ -329,32 +332,22 @@ public class ZmanimService
 	}
 
 
+	/**
+	 * Displays a notification of the upcoming zman.
+	 *<p/>
+	 *
+	 * This method assumes that if it is called, it's because the notification is supposed to be shown. In other words,
+	 *  it's up to the caller to ensure that we should really be notifying the user.
+	 *
+	 * @param nextZman the upcoming zman to notify the user about.
+	 */
 	private void notifyUserOfUpcomingZman(
 		final Zman nextZman
 	) {
 
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-
-		// Make sure we didn't already notify of this zman...
-		long timeOfLastNotifiedZman = personalPrefs.getLong( TIME_OF_LAST_NOTIFIED_ZMAN, 0 );
-		long timeOfThisZman = nextZman.getTime().getTimeInMillis();
-
-		if ( timeOfThisZman <= timeOfLastNotifiedZman ) {
-			// Looks like we already notified...
-			return;
-		}
-
-		personalPrefs.edit().putLong( TIME_OF_LAST_NOTIFIED_ZMAN, timeOfThisZman ).apply();
-
-
-		// One more check that the user actually wants to know about this zman...
-		boolean userWantsThisNotification = ( personalPrefs.getInt( nextZman.type.name(), -1 ) >= 0 );
-		if ( !userWantsThisNotification ) {
-			return;
-		}
-
 		Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
+		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 

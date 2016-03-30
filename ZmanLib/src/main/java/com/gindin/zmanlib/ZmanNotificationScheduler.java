@@ -10,7 +10,9 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Utilities for working with zmanim.
@@ -36,7 +38,7 @@ public class ZmanNotificationScheduler {
 	public static final int                                   CHECK_INTERVAL = MAX_ALERT_TIME / 2;
 
 	/** If we wake up within a short time of needing to alert anyways, just do it. */
-	private static final int                                  ALERT_FUDGE_FACTOR = 15 * 1000;
+	private static final int                                  ALERT_FUDGE_FACTOR = 90 * 1000;
 
 
 	/**
@@ -157,11 +159,12 @@ public class ZmanNotificationScheduler {
 		for ( ZmanNotification zmanNotification : restOfTodaysZmanim ) {
 
 			final Zman zman = zmanNotification.zman;
-			final Integer msUntilZman = zmanNotification.timeToNotify;
 			final int zmanAlertTime = zmanCallback.getZmanAlertTime( zman.type ) * MIN_TO_MS_CONVERSION;
 
 			if ( zmanAlertTime >= 0 ) {
 				final int msToZmanNotification;
+
+				final Integer msUntilZman = zmanNotification.timeToNotify;
 				if ( zmanAlertTime > msUntilZman ) {
 					msToZmanNotification = 0;
 				}
