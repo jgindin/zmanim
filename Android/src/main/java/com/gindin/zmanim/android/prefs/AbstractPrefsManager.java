@@ -76,7 +76,7 @@ public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? e
 
 		final Map<String, ?> prefsAfterEditing = prefs.getAll();
 		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
-			onPrefsChanged();
+			activity.personalPrefsChanged();
 		}
 
 		prefsBeforeEditing = null;
@@ -99,12 +99,5 @@ public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? e
 	 */
 	protected abstract Activities getPrefActivity();
 
-
-	/**
-	 * Called after the preferences are done being edited. Default action is to rebuild the entire UI.
-	 */
-	protected void onPrefsChanged() {
-		activity.rebuildUI();
-	}
 
 }  // End of AbstractPrefsManager class
