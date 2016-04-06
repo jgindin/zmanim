@@ -621,7 +621,7 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
 			return notificationDefaults.getDefaultZmanAlertTime( type );
 		}
 	}

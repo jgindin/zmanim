@@ -131,8 +131,8 @@ public class ZmanimService
 
 
 			@Override
-			public int getZmanAlertTime( final Zmanim.Type type ) {
-				return personalPrefs.getInt( type.name, -1 );
+			public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
+				return personalPrefs.getInt( type.name(), -1 );
 			}
 
 
@@ -287,14 +287,14 @@ public class ZmanimService
 
 		getNotifiedZmanim( now ).save( getFilesDir() );
 
-		final long nextWakeup = now.getTimeInMillis() + nextWakeupDelta;
+		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
+		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
 
 		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
 		//  sure not to miss it...
-		final boolean needPreciseWakeup = ( nextWakeupDelta < ZmanNotificationScheduler.CHECK_INTERVAL );
+		boolean needPreciseWakeup = ( nextWakeupDelta < ZmanNotificationScheduler.CHECK_INTERVAL );
 
-		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
-		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
+		long nextWakeup = now.getTimeInMillis() + nextWakeupDelta;
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 		alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );

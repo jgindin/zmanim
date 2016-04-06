@@ -27,7 +27,7 @@ public interface ZmanCallback {
 	 * @return For the given type, how far in advance (in minutes) does the user want to be notified? May be less than
 	 *  zero to indicate no notification.
 	 */
-	int getZmanAlertTime(
+	int howManyMinutesToAlertBefore(
 		Zmanim.Type type
 	);
 
@@ -72,7 +72,7 @@ public interface ZmanCallback {
 
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
 			return ZmanNotificationScheduler.NO_ALERT;
 		}
 

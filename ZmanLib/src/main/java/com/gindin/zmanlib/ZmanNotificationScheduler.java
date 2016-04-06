@@ -12,6 +12,7 @@ import com.gindin.zmanlib.zman.Zmanim;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public class ZmanNotificationScheduler {
 		final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim, zmanCallback );
 
 		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
-		if ( nextZmanNotification.timeToNotify <= ALERT_FUDGE_FACTOR ) {
+		if ( nextZmanNotification.msUntilAction <= ALERT_FUDGE_FACTOR ) {
 			zmanCallback.notifyUser( now, nextZmanNotification.zman );
 
 			// That zman will no longer be a candidate, so go run again...
@@ -90,7 +91,7 @@ public class ZmanNotificationScheduler {
 		else {
 
 			// Schedule the next check...
-			zmanCallback.scheduleNextCheck( now, nextZmanNotification.timeToNotify );
+			zmanCallback.scheduleNextCheck( now, nextZmanNotification.msUntilAction );
 		}
 
 	}
@@ -100,7 +101,7 @@ public class ZmanNotificationScheduler {
 	/**
 	 * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
 	 *
-	 * @return For each remaining zman, the ZmanNotification.timeToNotify represents the amount of time (in ms) until the zman occurs.
+	 * @return For each remaining zman, the ZmanNotification.msUntilAction represents the amount of time (in ms) until the zman occurs.
 	 */
 	private static List<ZmanNotification> findTheRestOfTheDaysZmanim(
 		final ZmanimLocation    location,
@@ -118,6 +119,8 @@ public class ZmanNotificationScheduler {
 		//    - Are after the current time;
 		List<ZmanNotification> candidates = new ArrayList<>();
 
+		final long nowTime = now.getTime().getTime();
+
 		for ( Zmanim zmanim : daysZmanim ) {
 			String zmanName = zmanCallback.getPreferredZman( zmanim.type );
 			Zman zman;
@@ -129,14 +132,12 @@ public class ZmanNotificationScheduler {
 			}
 
 			if ( !zmanCallback.hasBeenNotified( now, zman ) ) {
-				final int howLongUntil = howLongUntilZman( now, zman );
+				final int msUntilZman = computeMsUntilZman( nowTime, zman );
 
-				// If we've missed this one by "just a bit" then since we didn't notify for it, we probably missed it...
-				if ( howLongUntil > -ALERT_FUDGE_FACTOR ) {
-
-					//noinspection AutoBoxing
-					candidates.add( new ZmanNotification( zman, howLongUntil ) );
-				}
+				// Yes...if we haven't notified for this zman, then add it to the list. Even if we managed to miss the
+				//  time we wanted to alert, at least we can alert as soon as we know about it.
+				//noinspection AutoBoxing
+				candidates.add( new ZmanNotification( zman, msUntilZman ) );
 			}
 		}
 
@@ -159,17 +160,19 @@ public class ZmanNotificationScheduler {
 		for ( ZmanNotification zmanNotification : restOfTodaysZmanim ) {
 
 			final Zman zman = zmanNotification.zman;
-			final int zmanAlertTime = zmanCallback.getZmanAlertTime( zman.type ) * MIN_TO_MS_CONVERSION;
+			final int minutesToAlertBefore = zmanCallback.howManyMinutesToAlertBefore( zman.type );
 
-			if ( zmanAlertTime >= 0 ) {
+			if ( minutesToAlertBefore >= 0 ) {
+				final int msToAlertBefore = minutesToAlertBefore * MIN_TO_MS_CONVERSION;
+
 				final int msToZmanNotification;
 
-				final Integer msUntilZman = zmanNotification.timeToNotify;
-				if ( zmanAlertTime > msUntilZman ) {
+				final int msUntilZman = zmanNotification.msUntilAction;
+				if ( msToAlertBefore > msUntilZman ) {
 					msToZmanNotification = 0;
 				}
 				else {
-					msToZmanNotification = msUntilZman - zmanAlertTime;
+					msToZmanNotification = msUntilZman - msToAlertBefore;
 				}
 
 				if ( msToZmanNotification < msToNextNotification ) {
@@ -186,21 +189,23 @@ public class ZmanNotificationScheduler {
 	/**
 	 * Calculate the milliseconds of minutes between the given date and the zman. If it cannot be calculated for any
 	 *  reason, we'll return Integer.MAX_VALUE.
+	 *
+	 * @param now Expected to be the result of Calendar.getTime().getTime(); this is done since the common case is
+	 *              to call this method in a loop, and it seemed quite unnecessary to call this so many times.
 	 */
-	private static int howLongUntilZman(
-		final Calendar  now,
+	private static int computeMsUntilZman(
+		final long      now,
 		final Zman      nextZman
 	) {
 
 		// Just in case something has gone wrong, it will be a long time...
-		if ( ( nextZman == null ) || ( now == null ) ) {
+		if ( nextZman == null ) {
 			return Integer.MAX_VALUE;
 		}
 
-		long nowTime = now.getTime().getTime();
 		long zmanTime = nextZman.getTime().getTime().getTime();
 
-		long delta = zmanTime - nowTime;
+		long delta = zmanTime - now;
 		if ( delta > Integer.MAX_VALUE ) {
 			return Integer.MAX_VALUE;
 		}
@@ -271,15 +276,24 @@ public class ZmanNotificationScheduler {
 	private static final class ZmanNotification {
 
 		final Zman                                              zman;
-		final int                                               timeToNotify;
+		final int                                               msUntilAction;
 
 
 		ZmanNotification(
 			Zman  zman,
-			int   timeToNotify
+			int msUntilAction
 		) {
 			this.zman = zman;
-			this.timeToNotify = timeToNotify;
+			this.msUntilAction = msUntilAction;
+		}
+
+
+		@Override
+		public String toString() {
+			return "ZmanNotification{" +
+				"zman=" + ( zman == null ? "<next zman too far away>" : zman.type ) +
+				", msUntilAction=" + msUntilAction + " (" + new Date( System.currentTimeMillis() + msUntilAction ) + ")" +
+				'}';
 		}
 	}
 

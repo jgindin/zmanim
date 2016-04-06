@@ -507,7 +507,7 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 		extends UT_ZmanUtils.ZmanCallbackForTests {
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
 
 			switch ( type ) {
 				case Alot:
@@ -549,7 +549,7 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 		extends UT_ZmanUtils.ZmanCallbackForTests {
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
 
 			switch ( type ) {
 				case Alot:
