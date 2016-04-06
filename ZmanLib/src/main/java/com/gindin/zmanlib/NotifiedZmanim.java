@@ -3,7 +3,7 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +13,11 @@ import java.util.Set;
  */
 public final class NotifiedZmanim
 	implements Serializable {
+
+	private static final long                                 serialVersionUID = 8982487060417217170L;
+
+	/** Name of the file created to store the notified zmanim. */
+	private static final String                               NOTIFIED_ZMANIM_FILE_NAME = "notifiedZmanim";
 
 	/** The date this applies to. */
 	private final int                                         year;
@@ -27,6 +32,15 @@ public final class NotifiedZmanim
 		final Calendar day
 	) {
 
+		this.year = day.get( Calendar.YEAR );
+		this.month = day.get( Calendar.MONTH );
+		this.date = day.get( Calendar.DATE );
+	}
+
+
+	private NotifiedZmanim() {
+
+		final Calendar day = Calendar.getInstance();
 		this.year = day.get( Calendar.YEAR );
 		this.month = day.get( Calendar.MONTH );
 		this.date = day.get( Calendar.DATE );
@@ -64,4 +78,52 @@ public final class NotifiedZmanim
 	public boolean contains( final Zmanim.Type type ) {
 		return notifiedTypes.contains( type );
 	}
+
+
+	public boolean save( File filesDir ) {
+
+		boolean saved;
+
+		File storedData = new File( filesDir, NOTIFIED_ZMANIM_FILE_NAME );
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( storedData, false ) );
+			oos.writeObject( this );
+			oos.flush();
+			oos.close();
+
+			saved = true;
+		}
+		catch ( IOException e ) {
+			// Urgh. Can't save... We're going to lose our state...
+			//e.printStackTrace();
+			saved = false;
+		}
+
+		return saved;
+	}
+
+
+	public static NotifiedZmanim restore( File filesDir ) {
+
+		NotifiedZmanim restored;
+
+		File storedData = new File( filesDir, NOTIFIED_ZMANIM_FILE_NAME );
+		if ( !storedData.canRead() ) {
+			restored = new NotifiedZmanim();
+		}
+		else {
+			try {
+				ObjectInputStream ois = new ObjectInputStream( new FileInputStream( storedData ) );
+				restored = (NotifiedZmanim)ois.readObject();
+
+				ois.close();
+			}
+			catch ( Exception e ) {
+				restored = new NotifiedZmanim();
+			}
+		}
+
+		return restored;
+	}
+
 }

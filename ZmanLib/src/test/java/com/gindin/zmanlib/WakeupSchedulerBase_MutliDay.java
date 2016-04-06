@@ -187,8 +187,8 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
-			return perTestCallback.getZmanAlertTime( type );
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
+			return perTestCallback.howManyMinutesToAlertBefore( type );
 		}
 
 

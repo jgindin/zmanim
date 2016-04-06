@@ -102,7 +102,7 @@ public class UT_ZmanUtils {
 		extends ZmanCallbackForTests {
 
 		@Override
-		public int getZmanAlertTime( final Zmanim.Type type ) {
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
 			return ZmanNotificationScheduler.FIFTEEN_MINUTES;
 		}
 	}

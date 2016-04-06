@@ -50,7 +50,7 @@
 		<com.gindin.prefs.SeekBarPreference
 			android:key="Alot"
 			android:title="@string/Alot"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
@@ -64,7 +64,7 @@
 		<com.gindin.prefs.SeekBarPreference
 			android:key="Hanetz"
 			android:title="@string/Hanetz"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
@@ -99,21 +99,21 @@
 		<com.gindin.prefs.SeekBarPreference
 			android:key="Chatzot"
 			android:title="@string/Chatzot"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
 		<com.gindin.prefs.SeekBarPreference
 			android:key="MinchaGedola"
 			android:title="@string/MinchaGedola"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
 		<com.gindin.prefs.SeekBarPreference
 			android:key="MinchaKetana"
 			android:title="@string/MinchaKetana"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
@@ -134,14 +134,14 @@
 		<com.gindin.prefs.SeekBarPreference
 			android:key="Shkia"
 			android:title="@string/Shkia"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
 		<com.gindin.prefs.SeekBarPreference
 			android:key="BeinHashmashot"
 			android:title="@string/BeinHashmashot"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
@@ -162,21 +162,21 @@
 		<com.gindin.prefs.SeekBarPreference
 			android:key="TzaitHacochavim"
 			android:title="@string/Tzait"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
 		<com.gindin.prefs.SeekBarPreference
 			android:key="ShabbatEnd"
 			android:title="@string/Havdalah"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
 		<com.gindin.prefs.SeekBarPreference
 			android:key="NightChatzot"
 			android:title="@string/Midnight"
-			android:defaultValue="-1"
+			android:defaultValue="15"
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 

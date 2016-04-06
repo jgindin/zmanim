@@ -91,7 +91,6 @@ public class ZmanimActivity
 
 	private ServiceStartedEvent.Handler                       serviceStartedHandler;
 
-	private boolean                                           needToScheduleAlarms = true;
 
 
 	//  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -213,10 +212,7 @@ public class ZmanimActivity
 
 		Intent zmanimService = new Intent( this, ZmanimService.class );
 		zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
-		zmanimService.putExtra( ZmanimService.ActionParams.SCHEDULE_IF_NECESSARY.name(), needToScheduleAlarms );
 		startService( zmanimService );
-
-		needToScheduleAlarms = false;
 	}
 
 
@@ -292,11 +288,6 @@ public class ZmanimActivity
 				personalPrefsManager.personalPrefsChanged();
 				break;
 		}
-	}
-
-
-	public void rebuildUI() {
-		rebuildUI( lastKnownLocation, null );
 	}
 
 
@@ -562,6 +553,15 @@ public class ZmanimActivity
 		view.setText( text );
 	}
 
+
+	public void personalPrefsChanged() {
+
+		Intent zmanimService = new Intent( this, ZmanimService.class );
+		zmanimService.setAction( ZmanimService.Actions.SCHEDULE_ALARM.name() );
+		zmanimService.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
+
+		rebuildUI( lastKnownLocation, null );
+	}
 
 
 	private class ZmanimGestureListener
