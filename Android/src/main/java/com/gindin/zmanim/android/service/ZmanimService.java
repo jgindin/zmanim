@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -297,7 +298,13 @@ public class ZmanimService
 		long nextWakeup = now.getTimeInMillis() + nextWakeupDelta;
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
-		alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+
+		if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT ) {
+			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+		}
+		else {
+			alarmManager.setExact( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+		}
 	}
 
 
