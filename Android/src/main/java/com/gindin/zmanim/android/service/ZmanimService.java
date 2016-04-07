@@ -1,6 +1,7 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
@@ -29,7 +30,9 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.LocationDeterminationOverride;
@@ -299,11 +302,11 @@ public class ZmanimService
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
-		if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT ) {
-			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
+			alarmManager.setExact( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
 		}
 		else {
-			alarmManager.setExact( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
 		}
 	}
 
@@ -348,7 +351,15 @@ public class ZmanimService
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 
-		String notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
+		String notificationText;
+		if ( BuildConfig.DEBUG ) {
+			notificationText = getString( R.string.notification_debug, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ),
+				DateFormat.getTimeInstance().format( new Date() ) );
+		}
+		else {
+			notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
+		}
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this )
 			.setContentTitle( getString( R.string.app_name ) )
 			.setContentText( notificationText )

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="notification_debug">%1$s at %2$s. (%3$s)</string>
+
+</resources>
