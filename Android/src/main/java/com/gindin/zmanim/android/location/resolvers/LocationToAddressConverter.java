@@ -60,14 +60,16 @@ public class LocationToAddressConverter {
 
 			@Override
 			public void runInBackground( Runnable runnable ) {
-				new BackgroundTask().execute( runnable );
+				// Urgh. API 11 adds "execute( Runnable )". Since my min API is 10, that method doesn't exist,
+				//  and we get a NoSuchMethodError... Adding a 'null' argument is enough to get it to do the right thing...
+				new BackgroundTask().execute( runnable, null );
 			}
 		};
 
 		CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus, personalPrefs );
 		cachedLocationResolver.loadCache();
 
-		orderedResolvers = new ArrayList<LocationResolver>();
+		orderedResolvers = new ArrayList<>();
 		orderedResolvers.add( cachedLocationResolver );
 		orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
 
