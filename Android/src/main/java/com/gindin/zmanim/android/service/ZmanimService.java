@@ -30,9 +30,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.LocationDeterminationOverride;
@@ -127,51 +125,7 @@ public class ZmanimService
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
-		zmanCallback = new ZmanCallback() {
-			@Override
-			public String getPreferredZman( final Zmanim.Type type ) {
-				return zmanimSelectionPrefs.getString( type.name, null );
-			}
-
-
-			@Override
-			public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
-				return personalPrefs.getInt( type.name(), -1 );
-			}
-
-
-			@Override
-			public boolean hasBeenNotified(
-				Calendar  now,
-				Zman      zman
-			) {
-
-				final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
-				return notifiedZmanim.contains( zman.type );
-			}
-
-
-			@Override
-			public void notifyUser(
-				Calendar  now,
-				Zman      nextZman
-			) {
-
-				final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
-				notifiedZmanim.notified( nextZman );
-
-				notifyUserOfUpcomingZman( nextZman );
-			}
-
-
-			@Override
-			public void scheduleNextCheck(
-				final Calendar  now,
-				final int       timeUntilNextCheck
-			) {
-				scheduleNextWakeup( timeUntilNextCheck, now );
-			}
-		};
+		zmanCallback = new PrefsBasedZmanCallback( zmanimSelectionPrefs, personalPrefs );
 	}
 
 
@@ -303,7 +257,15 @@ public class ZmanimService
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-			alarmManager.setExact( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+			if ( needPreciseWakeup ) {
+				alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+			}
+			else {
+				alarmManager.setWindow( AlarmManager.RTC_WAKEUP,
+					nextWakeup - ZmanNotificationScheduler.ALERT_FUDGE_FACTOR,
+					nextWakeup + ZmanNotificationScheduler.ALERT_FUDGE_FACTOR,
+					pendingIntent );
+			}
 		}
 		else {
 			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
@@ -350,14 +312,10 @@ public class ZmanimService
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
+		String notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
 
-		String notificationText;
 		if ( BuildConfig.DEBUG ) {
-			notificationText = getString( R.string.notification_debug, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ),
-				DateFormat.getTimeInstance().format( new Date() ) );
-		}
-		else {
-			notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
+			notificationText += " (" + zmanCallback.howManyMinutesToAlertBefore( nextZman.type ) + ")";
 		}
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this )
@@ -425,4 +383,66 @@ public class ZmanimService
 	}
 
 
+
+	private class PrefsBasedZmanCallback
+		implements ZmanCallback {
+
+		private final SharedPreferences                         zmanimSelectionPrefs;
+
+		private final SharedPreferences                         personalPrefs;
+
+
+		PrefsBasedZmanCallback(
+			SharedPreferences zmanimSelectionPrefs,
+			SharedPreferences personalPrefs
+		) {
+			this.zmanimSelectionPrefs = zmanimSelectionPrefs;
+			this.personalPrefs = personalPrefs;
+		}
+
+
+		@Override
+		public String getPreferredZman( final Zmanim.Type type ) {
+			return zmanimSelectionPrefs.getString( type.name, null );
+		}
+
+
+		@Override
+		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
+			return personalPrefs.getInt( type.name(), -1 );
+		}
+
+
+		@Override
+		public boolean hasBeenNotified(
+			Calendar  now,
+			Zman      zman
+		) {
+
+			final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
+			return notifiedZmanim.contains( zman.type );
+		}
+
+
+		@Override
+		public void notifyUser(
+			Calendar  now,
+			Zman      nextZman
+		) {
+
+			final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
+			notifiedZmanim.notified( nextZman );
+
+			notifyUserOfUpcomingZman( nextZman );
+		}
+
+
+		@Override
+		public void scheduleNextCheck(
+			final Calendar  now,
+			final int       timeUntilNextCheck
+		) {
+			scheduleNextWakeup( timeUntilNextCheck, now );
+		}
+	}
 }
