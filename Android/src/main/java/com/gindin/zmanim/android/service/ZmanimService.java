@@ -256,16 +256,11 @@ public class ZmanimService
 
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-			if ( needPreciseWakeup ) {
-				alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-			}
-			else {
-				alarmManager.setWindow( AlarmManager.RTC_WAKEUP,
-					nextWakeup - ZmanNotificationScheduler.ALERT_FUDGE_FACTOR,
-					nextWakeup + ZmanNotificationScheduler.ALERT_FUDGE_FACTOR,
-					pendingIntent );
-			}
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+			alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+		}
+		else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
+			alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
 		}
 		else {
 			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
