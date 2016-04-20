@@ -20,8 +20,8 @@ apply from: '../common/gindin-versioning.gradle'
 
 android {
 
-  compileSdkVersion 22
-  buildToolsVersion "22.0.1"
+  compileSdkVersion 23
+  buildToolsVersion "23.0.3"
 
   defaultConfig {
     minSdkVersion 14
@@ -57,7 +57,7 @@ android {
 
 dependencies {
 
-  compile 'com.android.support:appcompat-v7:22.2.1'
+  compile 'com.android.support:appcompat-v7:23.2.1'
 
   /* https://github.com/mikepenz/MaterialDrawer */
   compile( 'com.mikepenz:materialdrawer:3.0.8@aar' ) {
