@@ -27,15 +27,15 @@ hg.number
 
 # IntelliJ Files that are per-user and should not be checked in.
 atlassian-ide-plugin.xml
-\.idea/workspace.xml
-\.idea/codeStyleSettings.xml
-\.idea/scopes/scope_settings.xml
-\.idea/uiDesigner.xml
-\.idea/dictionaries/
-\.idea/copyright/profiles_settings.xml
-\.idea/findbugs-idea.xml
-\.idea/shelf/*
-\.idea/libraries/*
+^.idea/workspace.xml
+^.idea/uiDesigner.xml
+^.idea/dictionaries
+^.idea/copyright/profiles_settings.xml
+^.idea/findbugs-idea.xml
+^.idea/shelf/
+^.idea/libraries/
+^.idea/modules
+^.idea/dataSources.xml
 
 
 # Ignore any backup files created by editors
