@@ -12,11 +12,8 @@
         <option name="SELECTED_TEST_ARTIFACT" value="_unit_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleBarMitzvahDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileBarMitzvahDebugSources" />
-        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleBarMitzvahDebugUnitTest" />
-        <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileBarMitzvahDebugUnitTestSources" />
         <afterSyncTasks>
           <task>generateBarMitzvahDebugSources</task>
-          <task>mockableAndroidJar</task>
         </afterSyncTasks>
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -44,6 +41,12 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvahDebug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvahDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvahDebug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/source/r/androidTest/barMitzvah/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/source/aidl/androidTest/barMitzvah/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/source/buildConfig/androidTest/barMitzvah/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/source/rs/androidTest/barMitzvah/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/res/rs/androidTest/barMitzvah/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/generated/res/generated/androidTest/barMitzvah/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/assets" type="java-resource" />
@@ -51,6 +54,13 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/assets" type="java-test-resource" />
@@ -79,6 +89,13 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/assets" type="java-test-resource" />
@@ -103,19 +120,21 @@
       <excludeFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="TEST" name="mockable-android-22" level="project" />
     <orderEntry type="library" exported="" name="iconics-1.1.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
-    <orderEntry type="library" exported="" name="aboutlibraries-5.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="mockable-android-23" level="project" />
     <orderEntry type="library" exported="" name="materialdrawer-3.0.8" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="aboutlibraries-5.1.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
     <orderEntry type="module" module-name="ZmanLib" exported="" />
     <orderEntry type="module" module-name="ZmanUtils" exported="" />
   </component>
