@@ -25,9 +25,9 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 /**
  * Copied from: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
@@ -41,7 +41,7 @@ public class SeekBarPreference
 
 	private CheckBox                                          enabled;
 	private SeekBar                                           seekBar;
-	private TextView                                          currentValueDisplay;
+	private EditText                                          currentValueDisplay;
 
 	private int                                               defaultValue;
 	private int                                               progress;
@@ -73,13 +73,26 @@ public class SeekBarPreference
 	@Override
 	protected void onBindView( View view ) {
 		super.onBindView( view );
+
 		seekBar = (SeekBar)view.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
 		seekBar.setOnSeekBarChangeListener( this );
 		seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
 
-		currentValueDisplay = (TextView)view.findViewById( R.id.summary );
-		updateDisplay();
+		currentValueDisplay = (EditText)view.findViewById( R.id.value );
+		final View.OnFocusChangeListener valueChangedFocusListener = new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(
+				View    view,
+				boolean hasFocus
+			) {
+
+				if ( !hasFocus ) {
+					int alertTime = Integer.valueOf( currentValueDisplay.getText().toString() );
+					setValue( alertTime );
+				}
+			}
+		};
 
 		enabled = (CheckBox)view.findViewById( R.id.enable );
 		enabled.setChecked( progress >= 0 );
@@ -87,18 +100,22 @@ public class SeekBarPreference
 			@Override
 			public void onClick( final View v ) {
 				// Reflects the new value
+				enableControls( enabled.isChecked() );
 				if ( enabled.isChecked() ) {
 					setValue( defaultValue );
-					seekBar.setEnabled( true );
 				}
 				else {
 					setValue( ZmanNotificationScheduler.NO_ALERT );
-					seekBar.setEnabled( false );
 				}
 			}
 		};
 
+		// Forces everything to get setup correctly.
+		initView();
+
+		// Add the listeners now, so we don't get anything while initializing.
 		enabled.setOnClickListener( enabledListener );
+		currentValueDisplay.setOnFocusChangeListener( valueChangedFocusListener );
 	}
 
 
@@ -106,6 +123,7 @@ public class SeekBarPreference
 	protected void onPrepareForRemoval() {
 
 		enabled.setOnClickListener( null );
+		currentValueDisplay.setOnFocusChangeListener( null );
 
 		super.onPrepareForRemoval();
 	}
@@ -156,6 +174,31 @@ public class SeekBarPreference
 	}
 
 
+	@Override
+	protected Object onGetDefaultValue(
+		TypedArray  a,
+		int         index
+	) {
+		defaultValue = a.getInt( index, 0 );
+		return defaultValue;
+	}
+
+
+	private void initView() {
+
+		enableControls( enabled.isChecked() );
+		updateDisplay();
+	}
+
+
+	private void enableControls( boolean enabled ) {
+
+		seekBar.setEnabled( enabled );
+		currentValueDisplay.setEnabled( enabled );
+	}
+
+
+
 	private void setValue( int value ) {
 		if ( shouldPersist() ) {
 			persistInt( value );
@@ -174,21 +217,15 @@ public class SeekBarPreference
 
 
 	private void updateDisplay() {
-		if ( progress >= 0 ) {
-			currentValueDisplay.setText( progress + " min" );
+
+		if ( !enabled.isChecked() ) {
+			currentValueDisplay.getText().clear();
+		}
+		else if ( progress >= 0 ) {
+			currentValueDisplay.setText( String.valueOf( progress ) );
 		}
 		else {
-			currentValueDisplay.setText( "" );
+			currentValueDisplay.setText( String.valueOf( defaultValue ) );
 		}
-	}
-
-
-	@Override
-	protected Object onGetDefaultValue(
-		TypedArray a,
-		int index
-	) {
-		defaultValue = a.getInt( index, 0 );
-		return defaultValue;
 	}
 }

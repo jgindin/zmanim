@@ -1,37 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:gravity="center_vertical"
+	android:layout_height="wrap_content"
 >
-
-	<CheckBox
-		android:id="@+id/enable"
-		android:layout_width="0dp"
-		android:layout_weight="10"
-		android:layout_height="wrap_content"
-	/>
 
 	<TextView
 		android:id="@android:id/title"
-		android:layout_width="0dp"
-		android:layout_weight="25"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:text="Some Zman Here"
+		android:layout_marginLeft="4dp"
+		android:textStyle="bold"
+		android:singleLine="true"
+    android:textSize="16sp"
 	/>
 
-	<SeekBar
-		android:id="@+id/seekbar"
-		android:layout_width="0dp"
-		android:layout_weight="50"
-		android:layout_height="wrap_content"
-	/>
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_vertical"
+	>
 
-	<TextView
-		android:id="@+id/summary"
-		android:layout_width="0dp"
-		android:layout_weight="15"
-		android:layout_height="wrap_content"
-	/>
+		<CheckBox
+			android:id="@+id/enable"
+			android:layout_width="0dp"
+			android:layout_weight="10"
+			android:layout_height="wrap_content"
+		/>
+
+		<SeekBar
+			android:id="@+id/seekbar"
+			android:layout_width="0dp"
+			android:layout_weight="50"
+			android:layout_height="wrap_content"
+		/>
+
+		<EditText
+			android:id="@+id/value"
+			android:layout_width="0dp"
+			android:layout_weight="15"
+			android:layout_height="wrap_content"
+			android:inputType="numberDecimal"/>
+
+		<TextView
+			android:id="@+id/min"
+			android:layout_width="0dp"
+			android:layout_weight="10"
+			android:layout_height="wrap_content"
+		  android:text="@string/minutes"
+		/>
+	</LinearLayout>
 
 </LinearLayout>
