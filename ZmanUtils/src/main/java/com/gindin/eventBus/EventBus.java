@@ -190,7 +190,7 @@ public final class EventBus {
 		}
 		catch ( Exception e ) {
 			// TODO: Need some way of logging this problem...
-			System.out.println( e.getMessage() );
+//			System.out.println( e.getMessage() );
 		}
 	}
 
