@@ -42,7 +42,7 @@ public class LastKnownLocationProvider {
 		}
 		catch ( Exception e ) {
 			// Oh well, we can't read the last location, so...we just will have to deal ...
-			LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
+//			LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
 		}
 		finally {
 			if ( input != null ) {
