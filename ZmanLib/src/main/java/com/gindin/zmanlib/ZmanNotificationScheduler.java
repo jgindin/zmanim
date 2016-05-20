@@ -204,7 +204,13 @@ public class ZmanNotificationScheduler {
 			return Integer.MAX_VALUE;
 		}
 
-		long zmanTime = nextZman.getTime().getTime().getTime();
+		final Calendar nextZmanTime = nextZman.getTime();
+		if ( nextZmanTime == null ) {
+			// There are some zmanim which just cannot be calculated for a given location.
+			return Integer.MAX_VALUE;
+		}
+
+		long zmanTime = nextZmanTime.getTime().getTime();
 
 		long delta = zmanTime - now;
 		if ( delta > Integer.MAX_VALUE ) {
