@@ -27,6 +27,7 @@ import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +39,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -131,15 +133,23 @@ public class ZmanimActivity
 
 		// Enable this to get more detailed info regarding disk or network access occurring on the UI thread.
 		//  See http://stackoverflow.com/questions/704311/android-how-do-i-investigate-an-anr.
-/*
-		StrictMode.setVmPolicy(
-			new StrictMode.VmPolicy.Builder()
-				.detectAll()
-        .penaltyLog()
-        .penaltyDeath()
-        .build()
-		);
-*/
+		if ( BuildConfig.DEBUG ) {
+
+			StrictMode.setThreadPolicy(
+				new StrictMode.ThreadPolicy.Builder()
+					.detectAll()
+	        .penaltyLog()
+	        .build()
+			);
+
+			StrictMode.setVmPolicy(
+				new StrictMode.VmPolicy.Builder()
+					.detectAll()
+	        .penaltyLog()
+	        .penaltyDeath()
+	        .build()
+			);
+		}
 
 		super.onCreate( savedInstanceState );
 
