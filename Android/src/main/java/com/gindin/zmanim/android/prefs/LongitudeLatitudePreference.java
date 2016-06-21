@@ -81,11 +81,14 @@ public class LongitudeLatitudePreference
 		// Configuring the spinner comes straight from the Android JavaDocs:
 		//  http://developer.android.com/guide/topics/ui/controls/spinner.html
 		int arrayResource;
+		String labelText;
 		if ( showingLatitude ) {
 			arrayResource = R.array.lat_long_editor_north_south;
+			labelText = getContext().getString( R.string.lat_long_editor_ns_text );
 		}
 		else {
 			arrayResource = R.array.lat_long_editor_east_west;
+			labelText = getContext().getString( R.string.lat_long_editor_ew_text );
 		}
 
 		ArrayAdapter adapter = ArrayAdapter.createFromResource( getContext(), arrayResource, android.R.layout.simple_spinner_item );
@@ -93,6 +96,9 @@ public class LongitudeLatitudePreference
 
 		Spinner spinner = (Spinner)view.findViewById( R.id.lat_long_editor_ns_ew_picker );
 		spinner.setAdapter( adapter );
+
+		TextView label = (TextView)view.findViewById( R.id.lat_long_editor_ns_text );
+		label.setText( labelText );
 
 		LatitudeLongitudeParser.Direction direction = valueHolder.getDirection();
 		if ( ( LatitudeLongitudeParser.Direction.NORTH == direction ) || ( LatitudeLongitudeParser.Direction.EAST == direction ) ) {
