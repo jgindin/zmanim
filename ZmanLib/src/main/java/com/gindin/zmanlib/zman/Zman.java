@@ -109,7 +109,7 @@ public abstract class Zman {
 
 
 	/**
-	 * This method is the supposed to be the most convenient way to bridge the Date-based world of the KosherJava API
+	 * This method is the most convenient way to bridge the Date-based world of the KosherJava API
 	 *  and our need for Calendar-based API.
 	 *
 	 * @return a calendar representing the date & time of this zman; May be null if the zman cannot be calculated.
