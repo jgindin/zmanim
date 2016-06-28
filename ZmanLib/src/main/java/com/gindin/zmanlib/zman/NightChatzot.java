@@ -32,6 +32,14 @@ class NightChatzot
 			}
 		);
 
+		zmanim.add(
+			new Zman( "Fixed Local Mid-Night", "R. Moshe Feinstein and Aruch Ha-Shulchan, based on chatzot being fixed at solar noon.", Type.NightChatzot, true ) {
+				@Override protected Calendar calculate() {
+					return toCalendar( zmanimCalculator, zmanimCalculator.getFixedLocalNightChatzos() );
+				}
+			}
+		);
+
 		return zmanim;
 	}
 

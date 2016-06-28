@@ -156,4 +156,24 @@ public class ZmanimCalculator
 		return getTimeOffset( sunset, ( sunrise.getTime() - sunset.getTime() ) / 2 );
 	}
 
+
+	/**
+	 * Calculates the middle of the night as a 12 hours after the fixed local chatzot.
+	 *
+	 * @return the Date representing the local middle of the night.
+	 * @see #getFixedLocalChatzos()
+	 */
+	public Date getFixedLocalNightChatzos() {
+		Date localFixedChatzot = getFixedLocalChatzos();
+		long midnight = localFixedChatzot.getTime() + ( 12 * MINUTES_PER_HOUR * MINUTE_MILLIS );
+
+		return new Date( midnight );
+	}
+
+
+	public Date getNightChatzos6HoursAfterTzait() {
+		// todo: it seems the only way to calculate this is to know how the user has defined Tzeit!
+		return null;
+	}
+
 }  // End of ZmanimCalculator class
