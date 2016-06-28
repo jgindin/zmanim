@@ -92,6 +92,7 @@ class DatePresenterImpl<V extends DateView>
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	@Override
 	public void userChangedDate(
 		int year,
@@ -140,11 +141,15 @@ class DatePresenterImpl<V extends DateView>
 	}
 
 
+	@SuppressWarnings( "FeatureEnvy" )
 	private void displayDateDescription() {
 
 		String description;
 		if ( currentDate == null ) {
 			description = null;
+		}
+		else if ( currentDate.isAfterSunset( currentLocation ) ) {
+			description = currentDate.tomorrow().getDescription();
 		}
 		else {
 			description = currentDate.getDescription();

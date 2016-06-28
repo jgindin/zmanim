@@ -7,6 +7,8 @@ package com.gindin.zmanim.android.display.daily.header;
 import com.gindin.mvp.View;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Knows how to render the Hebrew & Secular dates, and notify the presenter when the user initiates an interaction
  *  with either one of them.
@@ -25,7 +27,7 @@ public interface DateView<P extends DatePresenter>
 	void allowUserToChangeDate( HebrewDate currentDate );
 
 	/** Instructs the view do render a description for the day. May be null to indicate no description. */
-	void displayDescriptionOfTheDay( String descriptionOfTheDay );
+	void displayDescriptionOfTheDay( @Nullable String descriptionOfTheDay );
 
 
 } // End of DateView interface

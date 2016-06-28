@@ -12,6 +12,7 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 import com.gindin.zmanlib.zman.ZmanimFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -371,6 +372,33 @@ public class HebrewDate
 		syncCalendar( cal );
 
 		return cal;
+	}
+
+
+	/**
+	 * Check if the current time, given the specified location, is after sunset.
+	 *
+	 * @param location Where in the world to check. Should not be null, but in case it is, this method assumes that
+	 *  we are NOT after sunset.
+	 *
+	 * @return true if this HebrewDate represents a time after sunset for the current day.
+	 */
+	public boolean isAfterSunset(
+		@Nullable ZmanimLocation  location
+	) {
+
+		if ( location == null ) {
+			return false;
+		}
+
+		HebrewDate today = HebrewCalendar.today();
+		if ( 0 != today.compareTo( this ) ) {
+			return false;
+		}
+
+		final Calendar sunset = getZman( location, Zmanim.Type.Shkia ).getTime();
+
+		return today.getTime().after( sunset.getTime() );
 	}
 
 

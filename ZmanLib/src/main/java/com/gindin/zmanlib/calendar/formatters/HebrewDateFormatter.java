@@ -4,12 +4,8 @@
 
 package com.gindin.zmanlib.calendar.formatters;
 
-import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import com.gindin.zmanlib.zman.Zmanim;
-
-import java.util.Calendar;
 
 /**
  * Knows how to provide various formats of a HebrewDate.
@@ -78,7 +74,7 @@ public abstract class HebrewDateFormatter {
 
 			StringBuilder buf = new StringBuilder();
 
-			if ( ( location != null ) && isAfterSunset( date, location ) ) {
+			if ( ( location != null ) && date.isAfterSunset( location ) ) {
 				//noinspection AssignmentToMethodParameter
 				date = date.tomorrow();
 				buf.append( "Or le " );
@@ -96,22 +92,6 @@ public abstract class HebrewDateFormatter {
 			return buf.toString();
 		}
 
-
-		@SuppressWarnings( "FeatureEnvy" )
-		private boolean isAfterSunset(
-			HebrewDate      date,
-			ZmanimLocation  location
-		) {
-
-			HebrewDate today = HebrewCalendar.today();
-			if ( 0 != today.compareTo( date ) ) {
-				return false;
-			}
-
-			final Calendar sunset = date.getZman( location, Zmanim.Type.Shkia ).getTime();
-
-			return today.getTime().after( sunset.getTime() );
-		}
 
 	}  // End of ShortFormatter class
 

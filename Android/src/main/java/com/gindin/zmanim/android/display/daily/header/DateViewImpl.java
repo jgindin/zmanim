@@ -8,6 +8,8 @@ import com.gindin.mvp.AbstractView;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
+import org.jetbrains.annotations.Nullable;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -93,7 +95,7 @@ class DateViewImpl<P extends DatePresenter>
 
 
 	@Override
-	public void displayDescriptionOfTheDay( final String descriptionOfTheDay ) {
+	public void displayDescriptionOfTheDay( @Nullable final String descriptionOfTheDay ) {
 
 		owner.runOnUiThread(
 			new Runnable() {
