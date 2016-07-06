@@ -32,9 +32,6 @@ public class ZmanNotificationScheduler {
 	/** What's the longest time before a zman that we'll allow an alert? */
 	public static final int                                   MAX_ALERT_TIME = ONE_HOUR * MIN_TO_MS_CONVERSION;
 
-	/** When we offer a default, this is what we start with. */
-	public static final int                                   DEFAULT_ALERT_TIME = FIFTEEN_MINUTES * MIN_TO_MS_CONVERSION;
-
 	/** Sentinel value to indicate the user doesn't want an alert for the zman. */
 	public static final int                                   NO_ALERT = -1;
 
