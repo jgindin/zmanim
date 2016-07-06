@@ -29,8 +29,9 @@
     <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
     <ConfigurationWrapper RunnerId="Run" />
     <method>
-      <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="replaceMapQuestPlaceholders" externalProjectPath="$PROJECT_DIR$/Android" vmOptions="" scriptParameters="" />
       <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resetMapQuestPlaceholders" externalProjectPath="$PROJECT_DIR$/Android" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
