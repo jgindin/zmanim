@@ -23,6 +23,11 @@ android {
   compileSdkVersion 23
   buildToolsVersion "23.0.3"
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
   defaultConfig {
     applicationId "com.gindin.zmanim.android"
 
@@ -107,9 +112,9 @@ task resetMapQuestPlaceholders << {
 /* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
 gradle.projectsEvaluated {
 
-  compileDebugJava.dependsOn( "replaceMapQuestPlaceholders" )
-  compileReleaseJava.dependsOn( "replaceMapQuestPlaceholders" )
-  compileReleaseJava.dependsOn( "replaceFlurryKeyPlaceholders" )
+  compileDebugSources.dependsOn( "replaceMapQuestPlaceholders" )
+  compileReleaseSources.dependsOn( "replaceMapQuestPlaceholders" )
+  compileReleaseSources.dependsOn( "replaceFlurryKeyPlaceholders" )
 
   assembleDebug.dependsOn( "resetMapQuestPlaceholders" )
   assembleRelease.dependsOn( "resetMapQuestPlaceholders" )
