@@ -7,10 +7,10 @@ package com.gindin.zmanim.android.prefs;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.ZmanimActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceActivity;
 import android.support.annotation.StringRes;
 
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  *
  */
-public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? extends PreferenceActivity>> {
+public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? extends Activity>> {
 
 	/** Need to know the activity so we can do things like build dialogs and spawn other activities. */
 	protected final ZmanimActivity                            activity;

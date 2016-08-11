@@ -44,7 +44,10 @@
 			android:layout_width="0dp"
 			android:layout_weight="15"
 			android:layout_height="wrap_content"
-			android:inputType="numberDecimal"/>
+			android:inputType="number"
+			android:singleLine="true"
+		  android:maxLength="2"
+		/>
 
 		<TextView
 			android:id="@+id/min"

@@ -4,7 +4,7 @@
   ~ Copyright (c) 2014. Jay R. Gindin
   -->
 
-<PreferenceScreen
+<android.support.v7.preference.PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orderingFromXml="true"
   android:title="@string/personal_prefs"
@@ -15,21 +15,21 @@
 		SHOW_SECONDS).
 	-->
 
-	<CheckBoxPreference
+	<android.support.v7.preference.CheckBoxPreference
 		android:key="SHOW_SECONDS"
 	  android:title="@string/show_seconds_pref_title"
 	  android:summary="@string/show_seconds_pref_summary"
 	  android:defaultValue="false"
 	/>
 
-	<CheckBoxPreference
+	<android.support.v7.preference.CheckBoxPreference
 		android:key="USE_ELEVATION"
 	  android:title="@string/use_elevation_pref_title"
 	  android:summary="@string/use_elevation_pref_summary"
 	  android:defaultValue="false"
 	/>
 
-	<PreferenceCategory
+	<android.support.v7.preference.PreferenceCategory
 		android:title="@string/notifications_category"
 		android:orderingFromXml="true"
 	>
@@ -38,7 +38,7 @@
 		  I'd like for this to be a nice switch and then clicking on it opens another prefs screen.
 		  That would require API 14 for the switch and API 11 to open another fragment.
 		-->
-		<CheckBoxPreference
+		<android.support.v7.preference.CheckBoxPreference
 			android:key="SHOW_NOTIFICATIONS"
 			android:title="@string/show_notifications_pref_title"
 			android:summary="@string/show_notifications_pref_summary"
@@ -180,6 +180,6 @@
 			android:dependency="SHOW_NOTIFICATIONS"
 		/>
 
-	</PreferenceCategory>
+	</android.support.v7.preference.PreferenceCategory>
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>
