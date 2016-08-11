@@ -57,7 +57,7 @@ android {
 
 dependencies {
 
-  compile 'com.android.support:appcompat-v7:23.2.1'
+  compile 'com.android.support:appcompat-v7:23.3.0'
 
   /* https://github.com/mikepenz/MaterialDrawer */
   compile( 'com.mikepenz:materialdrawer:3.0.8@aar' ) {
