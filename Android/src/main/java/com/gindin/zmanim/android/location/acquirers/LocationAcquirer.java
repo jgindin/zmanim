@@ -13,6 +13,7 @@ import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import java.util.TimeZone;
 
@@ -77,7 +78,8 @@ public abstract class LocationAcquirer {
 	/**
 	 * @return The timezone specified by the user in the preferences, or null if we're to use the system time zone.
 	 */
-	protected final TimeZone getTimeZoneFromPrefs() {
+	@Nullable
+  protected final TimeZone getTimeZoneFromPrefs() {
 
 		if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
 			return null;
@@ -92,7 +94,6 @@ public abstract class LocationAcquirer {
 		if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
 			return null;
 		}
-
 
 		return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
 	}

@@ -17,10 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 
@@ -151,9 +148,11 @@ public class DynamicLocationAcquirer
 		ZmanimLocation location;
 		if ( bestLocation.first != null ) {
 
+			final TimeZone timeZone = getTimeZoneFromPrefs();
+
 			ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
 				.fromProvider( bestLocation.first.getProvider() )
-				.inTimeZone( getTimeZoneFromPrefs() )
+				.inTimeZone( timeZone )
 				.at( bestLocation.first.getTime() )
 				.atLatitude( bestLocation.first.getLatitude() )
 				.atLongitude( bestLocation.first.getLongitude() );
@@ -197,9 +196,11 @@ public class DynamicLocationAcquirer
 
 		locationManager.saveLastLocation( newLocation );
 
-		ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+    final TimeZone timeZone = getTimeZoneFromPrefs();
+
+    ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
 			.fromProvider( newLocation.getProvider() )
-			.inTimeZone( getTimeZoneFromPrefs() )
+			.inTimeZone( timeZone )
 			.at( newLocation.getTime() )
 			.atLatitude( newLocation.getLatitude() )
 			.atLongitude( newLocation.getLongitude() );

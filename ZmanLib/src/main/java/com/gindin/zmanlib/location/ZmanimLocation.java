@@ -6,6 +6,7 @@ package com.gindin.zmanlib.location;
 
 import net.sourceforge.zmanim.util.GeoLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 
 import java.io.*;
@@ -54,7 +55,11 @@ public class ZmanimLocation
 			return this;
 		}
 
-		public Builder inTimeZone( TimeZone timeZone ) {
+
+    /**
+     * @param timeZone if null, the default time zone will be used.
+     */
+		public Builder inTimeZone( @Nullable TimeZone timeZone ) {
 			if ( timeZone != null ) {
 				this.timeZone = timeZone;
 			}
