@@ -451,15 +451,19 @@ public class ZmanimService
 
 		@Override
 		public void notifyUser(
-			Calendar    now,
-			final Zman  nextZman
+			final Calendar  now,
+			final Zman      nextZman
 		) {
 
 			getNotifiedZmanim( now, new NotifiedZmanim.Callback() {
         @Override
         public void onNotifiedZmanimAvailable() {
           notifiedZmanim.notified( nextZman );
-          notifyUserOfUpcomingZman( nextZman );
+
+          // If the zman has already passed, do not bother the user...
+          if ( nextZman.getTime().compareTo( now ) >= 0 ) {
+            notifyUserOfUpcomingZman( nextZman );
+          }
         }
       } );
 		}
