@@ -215,7 +215,7 @@ public class ZmanimLocationManager {
 
 	public void saveLastLocation( Location lastLocation ) {
 
-		lastKnownLocationProvider.update( lastLocation );
+		lastKnownLocationProvider.save( lastLocation );
 	}
 
 

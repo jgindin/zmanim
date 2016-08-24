@@ -10,6 +10,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,8 +28,9 @@ public class LastKnownLocationProvider {
 
 	private final Context                                     context;
 
-
 	private Location                                          lastKnownLocation;
+
+  private SaveLocationTask                                  currentlyRunningSaveTask = null;
 
 
 	LastKnownLocationProvider( Context context ) {
@@ -62,49 +64,22 @@ public class LastKnownLocationProvider {
 	}
 
 
-	public void update( Location newLocation ) {
+	public void save( Location newLocation ) {
 
-		if ( null == newLocation ) {
-			return;
-		}
+    if ( null == newLocation ) {
+      return;
+    }
 
-		FileOutputStream output = null;
-		try {
-			output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
+    if ( currentlyRunningSaveTask != null ) {
+      currentlyRunningSaveTask.cancel( false );
+    }
 
-			ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-				.fromProvider( newLocation.getProvider() )
-				.at( newLocation.getTime() )
-				.atLatitude( newLocation.getLatitude() )
-				.atLongitude( newLocation.getLongitude() );
-
-			if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
-			if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
-
-			ZmanimLocation zmanimLocation = builder.build();
-			zmanimLocation.save( output );
-		}
-		catch ( Exception e ) {
-			// Just means we can't actually save the last location, and next time the user starts we'll have to go
-			//  query from scratch.
-			LogUtils.logError( "LKLP::update", "Can't open file.", e );
-		}
-		finally {
-			if ( output != null ) {
-				try {
-					output.flush();
-					output.getFD().sync();
-					output.close();
-				}
-				catch ( IOException e ) {
-					// Oh well.
-				}
-			}
-		}
+    currentlyRunningSaveTask = new SaveLocationTask();
+    currentlyRunningSaveTask.execute( newLocation );
 	}
 
 
-	private Location toLocation( ZmanimLocation zmanimLocation ) {
+  private Location toLocation( ZmanimLocation zmanimLocation ) {
 
 		Location location = new Location( zmanimLocation.providerName );
 		location.setLatitude( zmanimLocation.getLatitude() );
@@ -117,4 +92,52 @@ public class LastKnownLocationProvider {
 	}
 
 
+  private void saveInBackground( Location newLocation ) {
+
+    FileOutputStream output = null;
+    try {
+      output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
+
+      ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+        .fromProvider( newLocation.getProvider() )
+        .at( newLocation.getTime() )
+        .atLatitude( newLocation.getLatitude() )
+        .atLongitude( newLocation.getLongitude() );
+
+      if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
+      if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
+
+      ZmanimLocation zmanimLocation = builder.build();
+      zmanimLocation.save( output );
+    }
+    catch ( Exception e ) {
+      // Just means we can't actually save the last location, and next time the user starts we'll have to go
+      //  query from scratch.
+      LogUtils.logError( "LKLP::save", "Can't open file.", e );
+    }
+    finally {
+      if ( output != null ) {
+        try {
+          output.flush();
+          output.getFD().sync();
+          output.close();
+        }
+        catch ( IOException e ) {
+          // Oh well.
+        }
+      }
+    }
+  }
+
+
+  private class SaveLocationTask
+    extends AsyncTask<Location, Void, Void> {
+
+    @Override
+    protected Void doInBackground( Location... params ) {
+      saveInBackground( params[0] );
+
+      return null;
+    }
+  }
 } // End of LocationProvider class

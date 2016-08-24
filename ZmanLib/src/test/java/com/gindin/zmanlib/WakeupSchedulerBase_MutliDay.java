@@ -119,16 +119,27 @@ abstract class WakeupSchedulerBase_MutliDay {
 			HebrewDate currentDate = entry.getKey();
 			NotifiedZmanim actuallyNotifiedZmanim = entry.getValue();
 
-			final List<Zmanim.Type> expectedNotificationTypes = new ArrayList<>( expectedZmanim.get( currentDate ) );
+      final List<Zmanim.Type> types = expectedZmanim.get( currentDate );
+      if ( types == null ) {
+        // This can happen and is OK, as long as it is the same as the expected end date.
+        Assert.assertTrue( currentDate.compareTo( HebrewCalendar.getForDate( endDate ) ) == 0 );
 
-			Iterator<Zmanim.Type> iter = expectedNotificationTypes.iterator();
-			while ( iter.hasNext() ) {
-				final Zmanim.Type next = iter.next();
-				Assert.assertTrue( "Didn't notify for " + next + " on " + dateFormatter.format( currentDate ), actuallyNotifiedZmanim.contains( next ) );
-				iter.remove();
-			}
+        // ...but make sure that nothing was actually notified...
+        Assert.assertTrue( actuallyNotifiedZmanim.isEmpty() );
+      }
+      else {
 
-			Assert.assertTrue( expectedNotificationTypes.toString(), expectedNotificationTypes.isEmpty() );
+        final List<Zmanim.Type> expectedNotificationTypes = new ArrayList<>( types );
+
+  			Iterator<Zmanim.Type> iter = expectedNotificationTypes.iterator();
+  			while ( iter.hasNext() ) {
+  				final Zmanim.Type next = iter.next();
+  				Assert.assertTrue( "Didn't notify for " + next + " on " + dateFormatter.format( currentDate ), actuallyNotifiedZmanim.contains( next ) );
+  				iter.remove();
+  			}
+
+  			Assert.assertTrue( expectedNotificationTypes.toString(), expectedNotificationTypes.isEmpty() );
+      }
 		}
 
 	}
@@ -209,18 +220,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 			Zman      nextZman
 		) {
 
-			NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
-			if ( notifiedForDay == null ) {
-
-				Calendar today = Calendar.getInstance();
-				today.setTimeInMillis( now.getTimeInMillis() );
-				today.setTimeZone( now.getTimeZone() );
-
-				notifiedForDay = new NotifiedZmanim( today );
-
-				notifiedZmanim.put( HebrewCalendar.getForDate( today ), notifiedForDay );
-			}
-
+			NotifiedZmanim notifiedForDay = getNotifiedZmanim( now );
 			notifiedForDay.notified( nextZman );
 
 			notified = true;
@@ -235,6 +235,23 @@ abstract class WakeupSchedulerBase_MutliDay {
 				zmanFormatter.formatZmanTime( nextZman ) + " (" + minUntilZman + ":" + secs + ":" + remainingMs + ")" ) );
 
 			testComplete = isTestComplete( now, endDate );
+		}
+
+
+		private NotifiedZmanim getNotifiedZmanim( Calendar now ) {
+
+			NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
+			if ( notifiedForDay == null ) {
+
+				Calendar today = Calendar.getInstance();
+				today.setTimeInMillis( now.getTimeInMillis() );
+				today.setTimeZone( now.getTimeZone() );
+
+				notifiedForDay = new NotifiedZmanim( today );
+
+				notifiedZmanim.put( HebrewCalendar.getForDate( today ), notifiedForDay );
+			}
+			return notifiedForDay;
 		}
 
 
@@ -263,7 +280,18 @@ abstract class WakeupSchedulerBase_MutliDay {
 		}
 
 
-		private boolean isTestComplete(
+    @Override
+    public void ensureNotifiedZmanimAreAvailable(
+      Calendar                now,
+      NotifiedZmanim.Callback callback
+    ) {
+
+      getNotifiedZmanim( now );
+      callback.onNotifiedZmanimAvailable();
+    }
+
+
+    private boolean isTestComplete(
 			final Calendar  currentTestTime,
 			final Calendar  endDate
 		) {

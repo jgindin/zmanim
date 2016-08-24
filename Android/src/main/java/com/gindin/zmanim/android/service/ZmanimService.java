@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -243,9 +244,13 @@ public class ZmanimService
 		final Calendar  now
 	) {
 
-		getNotifiedZmanim( now ).save( getFilesDir() );
+    NotifiedZmanim nz = ensureNotifiedZmanimForToday( now, notifiedZmanim );
+    if ( nz != null ) {
+      SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
+      task.execute( nz );
+    }
 
-		Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
+    Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
 
 		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
@@ -268,28 +273,54 @@ public class ZmanimService
 	}
 
 
-	@NotNull
-	private NotifiedZmanim getNotifiedZmanim( final Calendar now ) {
+	private void getNotifiedZmanim( final Calendar now, final NotifiedZmanim.Callback callback ) {
 
 		if ( notifiedZmanim == null ) {
-			notifiedZmanim = NotifiedZmanim.restore( getFilesDir() );
-		}
+			AsyncTask<Void, Void, NotifiedZmanim> restoreTask = new AsyncTask<Void, Void, NotifiedZmanim>() {
+        @Override
+        protected NotifiedZmanim doInBackground( Void... params ) {
+          NotifiedZmanim nz = NotifiedZmanim.restore( getFilesDir() );
+          return ensureNotifiedZmanimForToday( now, nz );
+        }
 
-		if ( notifiedZmanim != null ) {
-			if ( !notifiedZmanim.isForDate( now ) ) {
-				notifiedZmanim = null;
-			}
-		}
 
-		if ( notifiedZmanim == null ) {
-			notifiedZmanim = new NotifiedZmanim( now );
-		}
+        @Override
+        protected void onPostExecute( NotifiedZmanim result ) {
+          super.onPostExecute( result );
+          notifiedZmanim = result;
+          callback.onNotifiedZmanimAvailable();
+        }
+      };
 
-		return notifiedZmanim;
+      restoreTask.execute( (Void[])null );
+		}
+		else {
+		  ensureNotifiedZmanimForToday( now, notifiedZmanim );
+		  callback.onNotifiedZmanimAvailable();
+    }
 	}
 
 
-	/**
+  @SuppressWarnings( "AssignmentToMethodParameter" )
+  private NotifiedZmanim ensureNotifiedZmanimForToday( final Calendar now, NotifiedZmanim nz ) {
+
+    if ( nz != null ) {
+      if ( !nz.isForDate( now ) ) {
+        nz = null;
+      }
+    }
+
+    if ( nz == null ) {
+      nz = new NotifiedZmanim( now );
+    }
+
+    notifiedZmanim = nz;
+
+    return notifiedZmanim;
+  }
+
+
+  /**
 	 * Displays a notification of the upcoming zman.
 	 *<p/>
 	 *
@@ -346,8 +377,7 @@ public class ZmanimService
 	}
 
 
-
-	private class LocationAcquiredHandler
+  private class LocationAcquiredHandler
 		extends LocationAcquiredEvent.Handler {
 
 		/** Does the user want us to show notifications? */
@@ -414,21 +444,24 @@ public class ZmanimService
 			Zman      zman
 		) {
 
-			final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
-			return notifiedZmanim.contains( zman.type );
+			final NotifiedZmanim nz = ensureNotifiedZmanimForToday( now, notifiedZmanim );
+			return nz.contains( zman.type );
 		}
 
 
 		@Override
 		public void notifyUser(
-			Calendar  now,
-			Zman      nextZman
+			Calendar    now,
+			final Zman  nextZman
 		) {
 
-			final NotifiedZmanim notifiedZmanim = getNotifiedZmanim( now );
-			notifiedZmanim.notified( nextZman );
-
-			notifyUserOfUpcomingZman( nextZman );
+			getNotifiedZmanim( now, new NotifiedZmanim.Callback() {
+        @Override
+        public void onNotifiedZmanimAvailable() {
+          notifiedZmanim.notified( nextZman );
+          notifyUserOfUpcomingZman( nextZman );
+        }
+      } );
 		}
 
 
@@ -439,5 +472,28 @@ public class ZmanimService
 		) {
 			scheduleNextWakeup( timeUntilNextCheck, now );
 		}
-	}
+
+
+    @Override
+    public void ensureNotifiedZmanimAreAvailable(
+      Calendar                now,
+      NotifiedZmanim.Callback callback
+    ) {
+      // Simply invoking this method will do the right thing for us...
+      getNotifiedZmanim( now, callback );
+    }
+  }
+
+
+  private class SaveNotifiedZmanimTask
+    extends AsyncTask<NotifiedZmanim, Void, Void> {
+
+    @Override
+    protected Void doInBackground( NotifiedZmanim... params ) {
+      params[0].save( getFilesDir() );
+
+      return null;
+    }
+  }
+
 }

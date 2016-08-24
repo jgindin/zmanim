@@ -14,6 +14,16 @@ import java.util.Set;
 public final class NotifiedZmanim
 	implements Serializable {
 
+
+  /**
+   * Necessary because we may have to load the zmanim which have already been notified in the background. So this interface
+   *  serves to allow the caller to know when the notified zmanim are actually available.
+   */
+  public interface Callback {
+	  void onNotifiedZmanimAvailable();
+  }
+
+
 	private static final long                                 serialVersionUID = 8982487060417217170L;
 
 	/** Name of the file created to store the notified zmanim. */
@@ -78,6 +88,14 @@ public final class NotifiedZmanim
 	public boolean contains( final Zmanim.Type type ) {
 		return notifiedTypes.contains( type );
 	}
+
+
+  /**
+   * @return true if no zmanim have been notified yet for the represented date.
+   */
+	public boolean isEmpty() {
+	  return notifiedTypes.isEmpty();
+  }
 
 
 	public boolean save( File filesDir ) {
