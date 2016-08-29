@@ -146,7 +146,6 @@ public class ZmanimActivity
 				new StrictMode.VmPolicy.Builder()
 					.detectAll()
 	        .penaltyLog()
-	        .penaltyDeath()
 	        .build()
 			);
 		}

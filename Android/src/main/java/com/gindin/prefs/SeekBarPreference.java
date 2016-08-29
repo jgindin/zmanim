@@ -21,7 +21,13 @@ import com.gindin.zmanlib.ZmanNotificationScheduler;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.Preference;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -30,14 +36,13 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 /**
- * Copied from: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
+ * Inspired by: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
  * <p/>
  * See also:
  *  preference_seekbar.xml
  */
 public class SeekBarPreference
-	extends Preference
-	implements OnSeekBarChangeListener {
+	extends Preference {
 
 	private CheckBox                                          enabled;
 	private SeekBar                                           seekBar;
@@ -46,8 +51,14 @@ public class SeekBarPreference
 	private int                                               defaultValue;
 	private int                                               progress;
 
+	private CurrentValueTextWatcher                           currentValueTextWatcher;
 
-	public SeekBarPreference( Context context ) {
+	private SeekBarListener                                   seekBarListener;
+
+  private View.OnClickListener                              enabledClickListener;
+
+
+  public SeekBarPreference( Context context ) {
 		this( context, null, 0 );
 	}
 
@@ -61,61 +72,94 @@ public class SeekBarPreference
 
 
 	public SeekBarPreference(
-		Context       context,
-		AttributeSet  attrs,
-		int           defStyle
+    Context                 context,
+    @Nullable AttributeSet  attrs,
+    int                     defStyle
 	) {
 		super( context, attrs, defStyle );
 		setLayoutResource( R.layout.preference_seekbar );
+
+    currentValueTextWatcher = new CurrentValueTextWatcher();
+    seekBarListener = new SeekBarListener();
+
+    enabledClickListener = new EnabledClickListener();
 	}
 
 
-	@Override
-	protected void onBindView( View view ) {
-		super.onBindView( view );
+  @Override
+  public void onDependencyChanged(
+    Preference  dependency,
+    boolean     disableDependent
+  ) {
 
-		seekBar = (SeekBar)view.findViewById( R.id.seekbar );
+    super.onDependencyChanged( dependency, disableDependent );
+
+    if ( isViewReady() ) {
+      enabled.setEnabled( !disableDependent );
+      enableControls( !disableDependent );
+    }
+  }
+
+
+  @Override
+  protected Parcelable onSaveInstanceState() {
+    final Parcelable superState = super.onSaveInstanceState();
+
+    // Check whether this Preference is persistent (continually saved)
+    if ( isPersistent() ) {
+      // No need to save instance state since it's persistent, use superclass state
+      return superState;
+    }
+
+    // Create instance of custom BaseSavedState
+    final SavedState myState = new SavedState( superState );
+    // Set the state's value with the class member that holds current setting value
+    myState.value = progress;
+
+    return myState;
+  }
+
+
+  @Override
+  protected void onRestoreInstanceState( Parcelable state ) {
+
+    // Check whether we saved the state in onSaveInstanceState
+    if ( state == null || !state.getClass().equals( SavedState.class ) ) {
+      // Didn't save the state, so call superclass
+      super.onRestoreInstanceState( state );
+      return;
+    }
+
+    // Cast state to custom BaseSavedState and pass to superclass
+    SavedState myState = (SavedState)state;
+    super.onRestoreInstanceState( myState.getSuperState() );
+
+    // Set this Preference's widget to reflect the restored state
+    progress = myState.value;
+    initView();
+  }
+
+
+  @Override
+  public void onBindViewHolder( PreferenceViewHolder holder ) {
+    super.onBindViewHolder( holder );
+
+    View holderView = holder.itemView;
+
+		seekBar = (SeekBar)holderView.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
-		seekBar.setOnSeekBarChangeListener( this );
 		seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
 
-		currentValueDisplay = (EditText)view.findViewById( R.id.value );
-		final View.OnFocusChangeListener valueChangedFocusListener = new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(
-				View    view,
-				boolean hasFocus
-			) {
-
-				if ( !hasFocus ) {
-					int alertTime = Integer.valueOf( currentValueDisplay.getText().toString() );
-					setValue( alertTime );
-				}
-			}
-		};
-
-		enabled = (CheckBox)view.findViewById( R.id.enable );
-		enabled.setChecked( progress >= 0 );
-		View.OnClickListener enabledListener = new View.OnClickListener() {
-			@Override
-			public void onClick( final View v ) {
-				// Reflects the new value
-				enableControls( enabled.isChecked() );
-				if ( enabled.isChecked() ) {
-					setValue( defaultValue );
-				}
-				else {
-					setValue( ZmanNotificationScheduler.NO_ALERT );
-				}
-			}
-		};
+		currentValueDisplay = (EditText)holderView.findViewById( R.id.value );
+		enabled = (CheckBox)holderView.findViewById( R.id.enable );
 
 		// Forces everything to get setup correctly.
 		initView();
 
 		// Add the listeners now, so we don't get anything while initializing.
-		enabled.setOnClickListener( enabledListener );
-		currentValueDisplay.setOnFocusChangeListener( valueChangedFocusListener );
+    enabled.setOnClickListener( enabledClickListener );
+		seekBar.setOnSeekBarChangeListener( seekBarListener );
+		currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
 	}
 
 
@@ -123,35 +167,10 @@ public class SeekBarPreference
 	protected void onPrepareForRemoval() {
 
 		enabled.setOnClickListener( null );
-		currentValueDisplay.setOnFocusChangeListener( null );
+		seekBar.setOnSeekBarChangeListener( null );
+		currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
 
 		super.onPrepareForRemoval();
-	}
-
-
-	@Override
-	public void onProgressChanged(
-		SeekBar   seekBar,
-		int       progress,
-		boolean   fromUser
-	) {
-		if ( !fromUser ) {
-			return;
-		}
-
-		setValue( progress );
-	}
-
-
-	@Override
-	public void onStartTrackingTouch( SeekBar seekBar ) {
-		// not used
-	}
-
-
-	@Override
-	public void onStopTrackingTouch( SeekBar seekBar ) {
-		// not used
 	}
 
 
@@ -170,7 +189,7 @@ public class SeekBarPreference
 			value = ZmanNotificationScheduler.NO_ALERT;
 		}
 
-		setValue( restoreValue ? getPersistedInt( progress ) : value );
+		setValue( restoreValue ? getPersistedInt( progress ) : value, true );
 	}
 
 
@@ -184,48 +203,215 @@ public class SeekBarPreference
 	}
 
 
-	private void initView() {
+  private void initView() {
 
-		enableControls( enabled.isChecked() );
-		updateDisplay();
+    final boolean thisAlertIsEnabled = progress >= 0;
+    enabled.setChecked( thisAlertIsEnabled );
+
+    final boolean areAlertsEnabled = getSharedPreferences().getBoolean( getDependency(), true );
+    enableControls( areAlertsEnabled && thisAlertIsEnabled );
+    updateValueDisplay();
+  }
+
+
+  private void enableControls( boolean isEnabled ) {
+
+    // Do NOT try to call setEnabled() on 'this' -- since we call this method from onBindViewHolder() and other times
+    //  while performing a layout, it will cause an exception.
+		seekBar.setEnabled( isEnabled );
+		currentValueDisplay.setEnabled( isEnabled );
 	}
 
 
-	private void enableControls( boolean enabled ) {
-
-		seekBar.setEnabled( enabled );
-		currentValueDisplay.setEnabled( enabled );
-	}
-
-
-
-	private void setValue( int value ) {
+	private void setValue( int value, boolean updateValueDisplay ) {
 		if ( shouldPersist() ) {
 			persistInt( value );
 		}
 
 		if ( value != progress ) {
 			progress = value;
-			notifyChanged();
 
-			// Will be null when we're setting up. The onSetInitialValue gets called before onBindView.
-			if ( currentValueDisplay != null ) {
-				updateDisplay();
+      // The onSetInitialValue gets called before onBindView.
+			if ( updateValueDisplay && isViewReady() ) {
+
+			  // NOTE: I put the notifyChanged() in here because we do NOT want to invoke it if we're not updating the display.
+        //  That case will happen while we're setting up, and the view may be in the process of performing a layout.
+        //  If that happens, the view will throw an IllegalStateException...
+        notifyChanged();
+				updateValueDisplay();
 			}
 		}
 	}
 
 
-	private void updateDisplay() {
+	private void updateValueDisplay() {
 
-		if ( !enabled.isChecked() ) {
-			currentValueDisplay.getText().clear();
-		}
-		else if ( progress >= 0 ) {
-			currentValueDisplay.setText( String.valueOf( progress ) );
-		}
-		else {
-			currentValueDisplay.setText( String.valueOf( defaultValue ) );
-		}
+		if ( progress >= 0 ) {
+
+      // Don't do anything we don't have to do. (Note if the value is blank, it won't parse to an int, and we'll blow up...)
+      int alertValue = getAlertValue();
+
+      if ( progress != alertValue ) {
+        currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
+        currentValueDisplay.setText( String.valueOf( progress ) );
+        currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
+      }
+    }
 	}
+
+
+  private boolean isViewReady() {
+    // Will be null when we're setting up.
+	  return currentValueDisplay != null;
+  }
+
+
+  private int getAlertValue() {
+    final String value = currentValueDisplay.getText().toString();
+    return ( value.isEmpty() ? ZmanNotificationScheduler.NO_ALERT : Integer.parseInt( value ) );
+  }
+
+
+	/**
+	 * Listen for the user to slide the seek bar, and make sure the text value is updated.
+	 */
+	private class SeekBarListener
+		implements OnSeekBarChangeListener {
+
+	  boolean                                                 isTracking = false;
+
+		@Override
+		public void onProgressChanged(
+			SeekBar   seekBar,
+			int       progress,
+			boolean   fromUser
+		) {
+			if ( !fromUser ) {
+				return;
+			}
+
+			setValue( progress, true );
+		}
+
+
+		@Override
+		public void onStartTrackingTouch( SeekBar seekBar ) {
+		  isTracking = true;
+		}
+
+
+		@Override
+		public void onStopTrackingTouch( SeekBar seekBar ) {
+		  isTracking = false;
+		}
+
+	}
+
+
+	/**
+	 * Listen for the user to enter a value in the text box, and make sure the seek bar is updated.
+	 */
+	private class CurrentValueTextWatcher
+		implements TextWatcher {
+
+		@Override
+		public void beforeTextChanged(
+			CharSequence s,
+			int start,
+			int count,
+			int after
+		) {
+
+      if ( !seekBarListener.isTracking ) {
+        seekBar.setOnSeekBarChangeListener( null );
+      }
+    }
+
+
+		@Override
+		public void onTextChanged(
+			CharSequence s,
+			int start,
+			int before,
+			int count
+		) {
+
+		}
+
+
+		@Override
+		public void afterTextChanged( Editable s ) {
+
+      if ( !seekBarListener.isTracking ) {
+        int alertTime = getAlertValue();
+        setValue( alertTime, false );
+
+        seekBar.setOnSeekBarChangeListener( seekBarListener );
+      }
+    }
+	}
+
+
+  /**
+   * Save/restore the data. See https://developer.android.com/guide/topics/ui/settings.html
+   */
+  private static class SavedState
+    extends BaseSavedState {
+
+    int value;
+
+
+    SavedState( Parcelable superState ) {
+      super( superState );
+    }
+
+
+    SavedState( Parcel source ) {
+      super( source );
+      // Get the current preference's value
+      value = source.readInt();  // Change this to read the appropriate data type
+    }
+
+
+    @Override
+    public void writeToParcel(
+      Parcel  dest,
+      int     flags
+    ) {
+      super.writeToParcel( dest, flags );
+      // Write the preference's value
+      dest.writeInt( value );  // Change this to write the appropriate data type
+    }
+
+
+    // Standard creator object using an instance of this class
+    public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+
+      public SavedState createFromParcel( Parcel in ) {
+        return new SavedState( in );
+      }
+
+
+      public SavedState[] newArray( int size ) {
+        return new SavedState[ size ];
+      }
+    };
+ }
+
+
+  private class EnabledClickListener
+    implements View.OnClickListener
+  {
+    @Override
+    public void onClick( final View v ) {
+      // Reflects the new value
+      final boolean isThisAlertEnabled = enabled.isChecked();
+      enableControls( isThisAlertEnabled );
+
+      if ( progress < 0 ) {
+        progress = defaultValue;
+        updateValueDisplay();
+      }
+    }
+  }
 }

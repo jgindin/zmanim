@@ -23,10 +23,6 @@ android {
   compileSdkVersion 23
   buildToolsVersion "23.0.3"
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
 
   defaultConfig {
     applicationId "com.gindin.zmanim.android"
@@ -72,11 +68,16 @@ android {
 
 dependencies {
 
-  compile 'com.android.support:design:23.3.0'
-  compile 'com.android.support:appcompat-v7:23.3.0'
+  compile 'com.android.support:design:23.4.0'
+  compile 'com.android.support:appcompat-v7:23.4.0'
+  compile 'com.android.support:preference-v7:23.4.0'
 
   //  see https://github.com/jgindin/MaterialSeekBarPreference
   //compile 'com.gindin:material-seekbar-preference:0.13'
+
+  // https://github.com/Gericop/Android-Support-Preference-V7-Fix
+  //compile 'com.takisoft.fix:preference-v7:24.1.1.1'
+
 
   testCompile 'junit:junit:4.12'
 }
