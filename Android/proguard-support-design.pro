@@ -1,0 +1,1 @@
+/home/jgindin/src/android-proguard-snippets/libraries/proguard-support-design.pro

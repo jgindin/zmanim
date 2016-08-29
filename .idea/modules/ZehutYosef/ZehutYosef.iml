@@ -61,13 +61,6 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/barMitzvah/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/assets" type="java-test-resource" />
@@ -75,6 +68,13 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/testBarMitzvah/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTestBarMitzvah/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/debug/assets" type="java-resource" />
@@ -96,13 +96,6 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/main/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/assets" type="java-test-resource" />
@@ -110,6 +103,13 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/androidTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../ZehutYosef/src/test/rs" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/../../../ZehutYosef/build/intermediates/bundles" />
