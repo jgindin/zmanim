@@ -92,6 +92,8 @@ class NominatimResolver
 		List<Pair<String, String>>  params
 	) {
 
+		params.add( new Pair<String, String>( "key", MapQuestResolver.MAP_QUEST_KEY ) );
+
 		// We want all the details.
 		params.add( new Pair<String, String>( "addressdetails", "1" ) );
 

@@ -23,7 +23,7 @@ class MapQuestResolver
 	extends JsonQueryingResolver {
 
 	/** Filled in with the real key at build time. */
-	private static final String                               MAP_QUEST_KEY = "MAP_QUEST_KEY_GOES_HERE";
+	static final String                                       MAP_QUEST_KEY = "MAP_QUEST_KEY_GOES_HERE";
 
 
 
