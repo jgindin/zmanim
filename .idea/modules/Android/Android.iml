@@ -77,6 +77,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../Android/src/androidTest/rs" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/blame" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Android/build/intermediates/dependency-cache" />

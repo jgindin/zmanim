@@ -61,16 +61,6 @@ public interface ZmanCallback {
 	);
 
 
-  /**
-   * Can be used to force the notified zmanim for the specified time to be loaded, thereby allowing subsequent
-   *  operations (at least for the same day) to proceed without worrying about possibly asynchronously loading
-   *  the notified zmanim.
-   */
-	void ensureNotifiedZmanimAreAvailable(
-    Calendar                now,
-    NotifiedZmanim.Callback callback
-  );
-
 
 	class Adapter
 		implements ZmanCallback {
@@ -111,13 +101,5 @@ public interface ZmanCallback {
 			final int       timeUntilNextCheck
 		) {
 		}
-
-
-    @Override
-    public void ensureNotifiedZmanimAreAvailable(
-      Calendar now,
-      NotifiedZmanim.Callback callback
-    ) {
-    }
   }
 }

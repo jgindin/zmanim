@@ -280,17 +280,6 @@ abstract class WakeupSchedulerBase_MutliDay {
 		}
 
 
-    @Override
-    public void ensureNotifiedZmanimAreAvailable(
-      Calendar                now,
-      NotifiedZmanim.Callback callback
-    ) {
-
-      getNotifiedZmanim( now );
-      callback.onNotifiedZmanimAvailable();
-    }
-
-
     private boolean isTestComplete(
 			final Calendar  currentTestTime,
 			final Calendar  endDate

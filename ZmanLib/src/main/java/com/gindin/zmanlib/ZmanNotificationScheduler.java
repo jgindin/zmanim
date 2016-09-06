@@ -42,6 +42,9 @@ public class ZmanNotificationScheduler {
 
 	/**
 	 * Based on the location and current time, figure out which zman is the next for which the user wants a notification.
+	 *<p/>
+   *
+   * Because of the work done in this method, it is assumed that it will NOT be invoked on the main thread.
 	 *
 	 * @param location Where are we?
 	 * @param now What time is it?
@@ -54,74 +57,47 @@ public class ZmanNotificationScheduler {
 		final ZmanCallback      zmanCallback
 	) {
 
-	  zmanCallback.ensureNotifiedZmanimAreAvailable( now, new NotifiedZmanim.Callback() {
-      @Override
-      public void onNotifiedZmanimAvailable() {
-        runWithNotifiedZmanim( location, now, zmanCallback, true );
-      }
-    } );
+		// Get all the rest of the day's zmanim.
+		List<ZmanNotification> restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now, zmanCallback );
+
+		// If there are no more zmanim, then we have to roll to the next day, and check again.
+		if ( restOfTheDaysZmanim.isEmpty() ) {
+			now.add( Calendar.DATE, 1 );
+			now.set( Calendar.HOUR_OF_DAY, 0 );
+			now.set( Calendar.MINUTE, 0 );
+			now.set( Calendar.SECOND, 0 );
+			now.set( Calendar.MILLISECOND, 0 );
+
+			restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now, zmanCallback );
+		}
+
+		//  If there are no candidates, then just schedule another check, and we're done.
+		if ( restOfTheDaysZmanim.isEmpty() ) {
+			zmanCallback.scheduleNextCheck( now, CHECK_INTERVAL );
+			return;
+		}
+
+
+		// We have some candidates, and we know that they are sooner than the max alert time.
+		final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim, zmanCallback );
+
+		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
+		if ( nextZmanNotification.msUntilAction <= ALERT_FUDGE_FACTOR ) {
+			zmanCallback.notifyUser( now, nextZmanNotification.zman );
+
+			// That zman will no longer be a candidate, so go run again...
+			run( location, now, zmanCallback );
+		}
+		else {
+
+			// Schedule the next check...
+			zmanCallback.scheduleNextCheck( now, nextZmanNotification.msUntilAction );
+		}
+
 	}
 
 
-  /**
-   * Once this method is invoked, we know we've been able to load the appropriate set of zmanim for which we've
-   *  already notified the user.
-   */
-  private static void runWithNotifiedZmanim(
-    final ZmanimLocation  location,
-    final Calendar        now,
-    final ZmanCallback    zmanCallback,
-    final boolean         okToRollDate
-  ) {
-
-    // Get all the rest of the day's zmanim.
-    List<ZmanNotification> restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now, zmanCallback );
-
-    // If there are no more zmanim, then we have to roll to the next day, and check again.
-    if ( restOfTheDaysZmanim.isEmpty() && okToRollDate ) {
-      now.add( Calendar.DATE, 1 );
-      now.set( Calendar.HOUR_OF_DAY, 0 );
-      now.set( Calendar.MINUTE, 0 );
-      now.set( Calendar.SECOND, 0 );
-      now.set( Calendar.MILLISECOND, 0 );
-
-      zmanCallback.ensureNotifiedZmanimAreAvailable( now, new NotifiedZmanim.Callback() {
-         @Override
-         public void onNotifiedZmanimAvailable() {
-           runWithNotifiedZmanim( location, now, zmanCallback, false );
-         }
-       } );
-
-      return;
-    }
-
-
-    //  If there are no candidates, then just schedule another check, and we're done.
-    if ( restOfTheDaysZmanim.isEmpty() ) {
-      zmanCallback.scheduleNextCheck( now, CHECK_INTERVAL );
-      return;
-    }
-
-
-    // We have some candidates, and we know that they are sooner than the max alert time.
-    final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim, zmanCallback );
-
-    // If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
-    if ( nextZmanNotification.msUntilAction <= ALERT_FUDGE_FACTOR ) {
-      zmanCallback.notifyUser( now, nextZmanNotification.zman );
-
-      // That zman will no longer be a candidate, so go run again...
-      run( location, now, zmanCallback );
-    }
-    else {
-
-      // Schedule the next check...
-      zmanCallback.scheduleNextCheck( now, nextZmanNotification.msUntilAction );
-    }
-  }
-
-
-  /**
+	/**
 	 * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
 	 *
 	 * @return For each remaining zman, the ZmanNotification.msUntilAction represents the amount of time (in ms) until the zman occurs.

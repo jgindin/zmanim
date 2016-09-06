@@ -227,16 +227,34 @@ public class ZmanimService
 		eventBus.removeHandler( locationAcquiredHandler );
 		locationAcquiredHandler = null;
 
-		if ( showNotifications ) {
+    if ( !showNotifications ) {
+      releaseWakefulIntent();
+    }
+    else {
 
-			Calendar now = Calendar.getInstance();
-			now.setTimeZone( location.getTimeZone() );
+      AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground( Void... params ) {
 
-			ZmanNotificationScheduler.run( location, now, zmanCallback );
-		}
+          Calendar now = Calendar.getInstance();
+          now.setTimeZone( location.getTimeZone() );
+          ZmanNotificationScheduler.run( location, now, zmanCallback );
 
-		releaseWakefulIntent();
-	}
+          return null;
+        }
+
+
+        @Override
+        protected void onPostExecute( Void aVoid ) {
+          super.onPostExecute( aVoid );
+          releaseWakefulIntent();
+        }
+      };
+
+      schedulerTask.execute( (Void[])null );
+    }
+
+  }
 
 
 	private void scheduleNextWakeup(
@@ -244,11 +262,9 @@ public class ZmanimService
 		final Calendar  now
 	) {
 
-    NotifiedZmanim nz = ensureNotifiedZmanimForToday( now, notifiedZmanim );
-    if ( nz != null ) {
-      SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
-      task.execute( nz );
-    }
+    getNotifiedZmanim( now );
+    SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
+    task.execute( notifiedZmanim );
 
     Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
@@ -273,51 +289,26 @@ public class ZmanimService
 	}
 
 
-	private void getNotifiedZmanim( final Calendar now, final NotifiedZmanim.Callback callback ) {
+  /**
+   * Because of the process to possibly load the previously notified zmanim, it is assumed that this method will NOT
+   *  be invoked on the main thread.
+   */
+	private void getNotifiedZmanim( final Calendar now ) {
 
 		if ( notifiedZmanim == null ) {
-			AsyncTask<Void, Void, NotifiedZmanim> restoreTask = new AsyncTask<Void, Void, NotifiedZmanim>() {
-        @Override
-        protected NotifiedZmanim doInBackground( Void... params ) {
-          NotifiedZmanim nz = NotifiedZmanim.restore( getFilesDir() );
-          return ensureNotifiedZmanimForToday( now, nz );
-        }
-
-
-        @Override
-        protected void onPostExecute( NotifiedZmanim result ) {
-          super.onPostExecute( result );
-          notifiedZmanim = result;
-          callback.onNotifiedZmanimAvailable();
-        }
-      };
-
-      restoreTask.execute( (Void[])null );
+			notifiedZmanim = NotifiedZmanim.restore( getFilesDir() );
 		}
-		else {
-		  ensureNotifiedZmanimForToday( now, notifiedZmanim );
-		  callback.onNotifiedZmanimAvailable();
-    }
+
+		if ( notifiedZmanim != null ) {
+			if ( !notifiedZmanim.isForDate( now ) ) {
+				notifiedZmanim = null;
+			}
+		}
+
+		if ( notifiedZmanim == null ) {
+			notifiedZmanim = new NotifiedZmanim( now );
+		}
 	}
-
-
-  @SuppressWarnings( "AssignmentToMethodParameter" )
-  private NotifiedZmanim ensureNotifiedZmanimForToday( final Calendar now, NotifiedZmanim nz ) {
-
-    if ( nz != null ) {
-      if ( !nz.isForDate( now ) ) {
-        nz = null;
-      }
-    }
-
-    if ( nz == null ) {
-      nz = new NotifiedZmanim( now );
-    }
-
-    notifiedZmanim = nz;
-
-    return notifiedZmanim;
-  }
 
 
   /**
@@ -444,8 +435,8 @@ public class ZmanimService
 			Zman      zman
 		) {
 
-			final NotifiedZmanim nz = ensureNotifiedZmanimForToday( now, notifiedZmanim );
-			return nz.contains( zman.type );
+			getNotifiedZmanim( now );
+			return notifiedZmanim.contains( zman.type );
 		}
 
 
@@ -455,17 +446,10 @@ public class ZmanimService
 			final Zman      nextZman
 		) {
 
-			getNotifiedZmanim( now, new NotifiedZmanim.Callback() {
-        @Override
-        public void onNotifiedZmanimAvailable() {
-          notifiedZmanim.notified( nextZman );
+			getNotifiedZmanim( now );
+			notifiedZmanim.notified( nextZman );
 
-          // If the zman has already passed, do not bother the user...
-          if ( nextZman.getTime().compareTo( now ) >= 0 ) {
-            notifyUserOfUpcomingZman( nextZman );
-          }
-        }
-      } );
+			notifyUserOfUpcomingZman( nextZman );
 		}
 
 
@@ -476,16 +460,6 @@ public class ZmanimService
 		) {
 			scheduleNextWakeup( timeUntilNextCheck, now );
 		}
-
-
-    @Override
-    public void ensureNotifiedZmanimAreAvailable(
-      Calendar                now,
-      NotifiedZmanim.Callback callback
-    ) {
-      // Simply invoking this method will do the right thing for us...
-      getNotifiedZmanim( now, callback );
-    }
   }
 
 
