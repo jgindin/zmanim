@@ -56,9 +56,7 @@ android {
 }
 
 dependencies {
-
   compile 'com.android.support:appcompat-v7:23.3.0'
-
   /* https://github.com/mikepenz/MaterialDrawer */
   compile( 'com.mikepenz:materialdrawer:3.0.8@aar' ) {
     transitive = true
@@ -67,6 +65,5 @@ dependencies {
   compile( 'com.mikepenz:aboutlibraries:5.1.1@aar' ) {
     transitive = true
   }
-
   testCompile 'junit:junit:4.12'
 }

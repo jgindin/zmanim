@@ -6,8 +6,7 @@ targetCompatibility = 1.7
 
 dependencies {
   compile fileTree( include: ['*.jar'], dir: 'libs' )
-  compile 'org.json:json:20140107'
   compile project( ':ZmanUtils' )
-
+  compile 'org.json:json:20160810'
   testCompile 'junit:junit:4.12'
 }

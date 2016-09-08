@@ -20,9 +20,8 @@ apply from: '../common/gindin-versioning.gradle'
 
 
 android {
-  compileSdkVersion 23
-  buildToolsVersion "23.0.3"
-
+  compileSdkVersion 24
+  buildToolsVersion "24.0.2"
 
   defaultConfig {
     applicationId "com.gindin.zmanim.android"
@@ -76,20 +75,18 @@ android {
 
   productFlavors {
   }
+
 }
 
 dependencies {
-
-  compile 'com.android.support:design:23.4.0'
-  compile 'com.android.support:appcompat-v7:23.4.0'
-  compile 'com.android.support:preference-v7:23.4.0'
+  compile 'com.android.support:design:24.2.0'
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support:preference-v7:24.2.0'
 
   //  see https://github.com/jgindin/MaterialSeekBarPreference
   //compile 'com.gindin:material-seekbar-preference:0.13'
-
   // https://github.com/Gericop/Android-Support-Preference-V7-Fix
   //compile 'com.takisoft.fix:preference-v7:24.1.1.1'
-
 
   testCompile 'junit:junit:4.12'
 }
