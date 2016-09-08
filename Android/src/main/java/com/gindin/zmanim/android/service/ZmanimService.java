@@ -449,7 +449,10 @@ public class ZmanimService
 			getNotifiedZmanim( now );
 			notifiedZmanim.notified( nextZman );
 
-			notifyUserOfUpcomingZman( nextZman );
+			// If the zman has already passed, do not bother the user...
+	   if ( nextZman.getTime().compareTo( now ) >= 0 ) {
+	     notifyUserOfUpcomingZman( nextZman );
+	   }
 		}
 
 
