@@ -38,7 +38,7 @@
 	/>
 
 	<application
-		android:icon="@drawable/icon"
+		android:icon="@mipmap/ic_launcher"
 		android:label="Zmanim"
 		android:allowBackup="true"
 		android:theme="@style/AppTheme"

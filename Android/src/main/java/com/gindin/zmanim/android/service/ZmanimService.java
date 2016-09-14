@@ -338,7 +338,7 @@ public class ZmanimService
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this )
 			.setContentTitle( getString( R.string.app_name ) )
 			.setContentText( notificationText )
-			.setSmallIcon( R.drawable.icon )
+			.setSmallIcon( R.drawable.ic_stat_alarm_clock )
 			.setTicker( notificationText )
 			.setAutoCancel( true )
 			.setDefaults( Notification.DEFAULT_ALL )
