@@ -224,12 +224,14 @@ public class SeekBarPreference
 
 
 	private void setValue( int value, boolean updateValueDisplay ) {
-		if ( shouldPersist() ) {
-			persistInt( value );
-		}
 
 		if ( value != progress ) {
-			progress = value;
+
+      if ( shouldPersist() ) {
+         persistInt( value );
+       }
+
+       progress = value;
 
       // The onSetInitialValue gets called before onBindView.
 			if ( updateValueDisplay && isViewReady() ) {
@@ -244,7 +246,7 @@ public class SeekBarPreference
 	}
 
 
-	private void updateValueDisplay() {
+  private void updateValueDisplay() {
 
 		if ( progress >= 0 ) {
 
@@ -369,7 +371,7 @@ public class SeekBarPreference
     SavedState( Parcel source ) {
       super( source );
       // Get the current preference's value
-      value = source.readInt();  // Change this to read the appropriate data type
+      value = source.readInt();
     }
 
 
@@ -380,7 +382,7 @@ public class SeekBarPreference
     ) {
       super.writeToParcel( dest, flags );
       // Write the preference's value
-      dest.writeInt( value );  // Change this to write the appropriate data type
+      dest.writeInt( value );
     }
 
 
@@ -400,18 +402,26 @@ public class SeekBarPreference
 
 
   private class EnabledClickListener
-    implements View.OnClickListener
-  {
+    implements View.OnClickListener {
+
     @Override
     public void onClick( final View v ) {
       // Reflects the new value
       final boolean isThisAlertEnabled = enabled.isChecked();
       enableControls( isThisAlertEnabled );
 
-      if ( progress < 0 ) {
-        progress = defaultValue;
-        updateValueDisplay();
+      int newValue;
+      if ( isThisAlertEnabled ) {
+        newValue = getAlertValue();
+        if ( newValue == ZmanNotificationScheduler.NO_ALERT ) {
+          newValue = defaultValue;
+        }
       }
+      else {
+        newValue = ZmanNotificationScheduler.NO_ALERT;
+      }
+
+      setValue( newValue, true );
     }
   }
 }
