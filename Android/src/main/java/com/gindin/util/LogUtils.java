@@ -4,17 +4,17 @@
 
 package com.gindin.util;
 
-import com.flurry.android.FlurryAgent;
 import com.gindin.zmanim.android.BuildConfig;
 
-import android.app.Activity;
+import com.flurry.android.FlurryAgent;
+import org.acra.ACRA;
+
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,50 +28,13 @@ public class LogUtils {
 
 
 	public static void startSession(
-		final Activity context
+		final Context context
 	) {
 
 		if ( !BuildConfig.DEBUG ) {
 			FlurryAgent.init( context, "FLURRY_KEY_GOES_HERE" );
 			FlurryAgent.onStartSession( context );
 		}
-		else {
-			// Just so we *KNOW* we're dealing with a dev version...
-			Toast toast = Toast.makeText( context, "No flurry...this is dev...", Toast.LENGTH_LONG );
-			toast.show();
-		}
-
-
-		Thread.setDefaultUncaughtExceptionHandler(
-			new Thread.UncaughtExceptionHandler() {
-				public void uncaughtException(
-					Thread    t,
-					Throwable e
-				) {
-
-					String where = ( null == t ? "null thread" : t.getName() );
-					logError( "UEH", where, e );
-
-/*
-					// This could be useful when hitting a problem that only reproduces in production builds..
-					final String display =  "Where: " + where + "; e: " + exceptionToString( e );
-
-					context.runOnUiThread(
-						new Runnable() {
-							@Override
-							public void run() {
-								AlertDialog.Builder builder = new AlertDialog.Builder( context );
-								builder.setMessage( display );
-								builder.create().show();
-							}
-						}
-					);
-*/
-
-				}
-			}
-		);
-
 	}
 
 
@@ -85,7 +48,6 @@ public class LogUtils {
 	}
 
 
-
 	public static void logError(
 		String    where,
 		String    message,
@@ -95,6 +57,7 @@ public class LogUtils {
 		logError( where, message, error, null );
 	}
 
+
 	public static void logError(
 		String                  where,
 		String                  message,
@@ -102,30 +65,23 @@ public class LogUtils {
 		Pair<String, String>... moreInfo
 	) {
 
-		String stackTrace = ( null == error ? null: exceptionToString( error ) );
 
 		if ( BuildConfig.DEBUG ) {
-			Log.e( where, "Msg: " + message + "\nStack: " + stackTrace );
+			Log.e( where, "Msg: " + message, error );
 		}
 		else {
 
-			List<Pair<String,String>> messages = new ArrayList<Pair<String, String>>();
-			messages.add( new Pair<String, String>( "Where", where ) );
-			messages.add( new Pair<String, String>( "Message", message ) );
-			if ( null != error ) {
-				messages.add( new Pair<String, String>( "Stack", stackTrace ) );
-			}
+      ACRA.getErrorReporter().putCustomData( "Where", where );
+      ACRA.getErrorReporter().putCustomData( "Message", message );
 
 			if ( null != moreInfo ) {
-				Collections.addAll( messages, moreInfo );
-			}
+        for ( Pair<String, String> info : moreInfo ) {
+          ACRA.getErrorReporter().putCustomData( info.first, info.second );
+        }
+      }
 
-			//noinspection unchecked
-			logEvent( "Error", messages );
-
-			FlurryAgent.onError( where, message, "" );
+			ACRA.getErrorReporter().handleException( error );
 		}
-
 	}
 
 
@@ -152,7 +108,7 @@ public class LogUtils {
 				}
 			}
 
-			FlurryAgent.onEvent( eventName, messageMap );
+			FlurryAgent.logEvent( eventName, messageMap );
 		}
 	}
 
@@ -168,59 +124,14 @@ public class LogUtils {
 	}
 
 
-	/**
-	 * The idea here is that flurry messages are short. Really short. So, don't waste space with well-known
-	 *  strings that don't offer value. Especially when trying to figure out what an exception was...
-	 *
-	 * @param message The message that needs to get cleaned up & shortened.
-	 *
-	 * @return The 'cleaned' version of the input.
-	 */
-	private static String cleanMessage( String message ) {
+  public static void setContext(
+    String key,
+    String data
+  ) {
 
-		String cleaned;
-		cleaned = message.replace( "com.gindin.zmanim.android.zmanList", "c.g.z.a.z" );
-		cleaned = cleaned.replace( "com.gindin.zmanim.android.location", "c.g.z.a.l" );
-		cleaned = cleaned.replace( "com.gindin.zmanim.android", "c.g.z.a" );
-		cleaned = cleaned.replace( "com.gindin.zmanlib.calendar", "c.g.z.c" );
-		cleaned = cleaned.replace( "com.gindin.zmanlib.zman", "c.g.z.z" );
-		cleaned = cleaned.replace( "com.gindin.zmanim", "c.g.z" );
-		cleaned = cleaned.replace( "com.gindin.util", "c.g.u" );
-		cleaned = cleaned.replace( "com.gindin", "c.g" );
-
-		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerSetException", "j.u.c.FT$S.iSE" );
-		cleaned = cleaned.replace( "java.util.concurrent.FutureTask$Sync.innerRun", "j.u.c.FT$S.iR" );
-    cleaned = cleaned.replace( "java.util.concurrent.FutureTask.setException", "j.u.c.FT.sE" );
-		cleaned = cleaned.replace( "java.util.concurrent.FutureTask.run", "j.u.c.FT.r" );
-		cleaned = cleaned.replace( "java.util.concurrent", "j.u.c" );
-		cleaned = cleaned.replace( "java.util", "j.u" );
-		cleaned = cleaned.replace( "java.lang.NullPointerException", "NPE" );
-		cleaned = cleaned.replace( "java.lang.RuntimeException", "RE" );
-		cleaned = cleaned.replace( "java.lang", "j.l" );
-		cleaned = cleaned.replace( "java.", "j." );
-
-		cleaned = cleaned.replace( "android.os.AsyncTask", "a.o.AT" );
-		cleaned = cleaned.replace( "android.os", "a.o" );
-
-		cleaned = cleaned.replace( "An error occurred while executing", "Error" );
-
-		return cleaned;
-	}
-
-
-	private static String exceptionToString( Throwable error ) {
-
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter( sw );
-
-		if ( null == error.getCause() ) {
-			error.printStackTrace( pw );
-		}
-		else {
-			error.getCause().printStackTrace( pw );
-		}
-
-		return cleanMessage( sw.toString() );
-	}
+    if ( !BuildConfig.DEBUG ) {
+      ACRA.getErrorReporter().putCustomData( key, data );
+    }
+  }
 
 }  // End of LogUtils class

@@ -26,6 +26,7 @@ import com.gindin.zmanim.android.service.ServiceStartedEvent;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.jetbrains.annotations.NotNull;
@@ -151,8 +152,6 @@ public class ZmanimActivity
 		}
 
 		super.onCreate( savedInstanceState );
-
-		LogUtils.startSession( this );
 
 		personalPrefsManager = new PersonalPrefsManager( this );
 
@@ -622,6 +621,10 @@ public class ZmanimActivity
 		@Override
 		public void onHebrewDateChanged( HebrewDate newDate ) {
 			currentDate = newDate;
+
+      final String formattedDate = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.LONG )
+        .format( newDate, lastKnownLocation );
+      LogUtils.setContext( "HebrewDate", formattedDate  );
 		}
 	}
 
@@ -634,6 +637,9 @@ public class ZmanimActivity
 			final ZmanimLocation  location,
 			final boolean         isCachedLocation
 		) {
+
+		  LogUtils.setContext( "Location", location.toShortString() );
+
 			runOnUiThread(
 				new Runnable() {
 					@Override

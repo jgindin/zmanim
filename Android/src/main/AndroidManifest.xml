@@ -42,6 +42,7 @@
 		android:label="Zmanim"
 		android:allowBackup="true"
 		android:theme="@style/AppTheme"
+	  android:name="ZmanimApplication"
 	>
 
 		<activity

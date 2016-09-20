@@ -83,6 +83,9 @@ dependencies {
   compile 'com.android.support:appcompat-v7:24.2.0'
   compile 'com.android.support:preference-v7:24.2.0'
 
+  // ACRA
+  compile 'ch.acra:acra:4.9.0'
+
   //  see https://github.com/jgindin/MaterialSeekBarPreference
   //compile 'com.gindin:material-seekbar-preference:0.13'
   // https://github.com/Gericop/Android-Support-Preference-V7-Fix
@@ -119,14 +122,31 @@ task resetMapQuestPlaceholders << {
 }
 
 
+Properties acraProps = new Properties()
+acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
+String reporteruser = acraProps[ 'acra.user' ]
+String reporterpassword = acraProps[ 'acra.password' ]
+task replaeAcraPlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "[reporteruser]", value: reporteruser )
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "[reporterpassword]", value: reporterpassword )
+}
+
+task resetAcraPlaceholders << {
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", value: "[reporteruser]", token: reporteruser )
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", value: "[reporterpassword]", token: reporterpassword )
+}
+
+
 /* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
 gradle.projectsEvaluated {
 
   compileDebugSources.dependsOn( "replaceMapQuestPlaceholders" )
   compileReleaseSources.dependsOn( "replaceMapQuestPlaceholders" )
   compileReleaseSources.dependsOn( "replaceFlurryKeyPlaceholders" )
+  compileReleaseSources.dependsOn( "replaeAcraPlaceholders" )
 
   assembleDebug.dependsOn( "resetMapQuestPlaceholders" )
   assembleRelease.dependsOn( "resetMapQuestPlaceholders" )
   assembleRelease.dependsOn( "resetFlurryKeyPlaceholders" )
+  assembleRelease.dependsOn( "resetAcraPlaceholders" )
 }
