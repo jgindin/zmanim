@@ -36,6 +36,7 @@ atlassian-ide-plugin.xml
 ^.idea/libraries/
 ^.idea/modules
 ^.idea/dataSources.xml
+^.idea/issues.xml
 
 
 # Ignore any backup files created by editors
