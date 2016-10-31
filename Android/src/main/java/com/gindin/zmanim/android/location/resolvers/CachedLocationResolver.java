@@ -146,8 +146,11 @@ class CachedLocationResolver
 						locationCache.addAll( copy );
 					}
 				}
+				catch( FileNotFoundException fnfe ) {
+					// This seems to happen when the cache file doesn't exist.
+				}
 				catch ( Exception e ) {
-					LogUtils.logError( "CLR::saveCache", e.getMessage(), e );
+					LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
 				}
 				finally {
 					if ( input != null ) {
