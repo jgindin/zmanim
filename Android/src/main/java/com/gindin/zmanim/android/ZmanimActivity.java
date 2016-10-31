@@ -153,6 +153,8 @@ public class ZmanimActivity
 
 		super.onCreate( savedInstanceState );
 
+		LogUtils.startSession( this );
+
 		personalPrefsManager = new PersonalPrefsManager( this );
 
 		AppUpgrader.handle( this, personalPrefsManager, new ZmanimSelectionPrefsManager( this ) );

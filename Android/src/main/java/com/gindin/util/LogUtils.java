@@ -32,7 +32,6 @@ public class LogUtils {
 	) {
 
 		if ( !BuildConfig.DEBUG ) {
-			FlurryAgent.init( context, "FLURRY_KEY_GOES_HERE" );
 			FlurryAgent.onStartSession( context );
 		}
 	}
@@ -80,7 +79,9 @@ public class LogUtils {
         }
       }
 
-			ACRA.getErrorReporter().handleException( error );
+      // We want this to be silent...it's something we're interested in logging, but the user
+			//  shouldn't know/care...
+			ACRA.getErrorReporter().handleSilentException( error );
 		}
 	}
 

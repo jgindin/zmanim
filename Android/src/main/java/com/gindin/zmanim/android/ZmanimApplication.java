@@ -1,7 +1,6 @@
 package com.gindin.zmanim.android;
 
-import com.gindin.util.LogUtils;
-
+import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -26,7 +25,8 @@ import android.widget.Toast;
 
   // Your usual ACRA configuration
   mode = ReportingInteractionMode.TOAST,
-  resToastText = R.string.crash_toast_text
+  resToastText = R.string.crash_toast_text,
+  alsoReportToAndroidFramework = true
 )
 public class ZmanimApplication
   extends Application {
@@ -38,7 +38,11 @@ public class ZmanimApplication
 
     if ( !BuildConfig.DEBUG ) {
       ACRA.init( this );
-      LogUtils.startSession( base );
+
+      new FlurryAgent.Builder()
+        .withLogEnabled( false )
+        .withCaptureUncaughtExceptions( false )
+        .build( this, "FLURRY_KEY_GOES_HERE" );
     }
     else {
       // Just so we *KNOW* we're dealing with a dev version...

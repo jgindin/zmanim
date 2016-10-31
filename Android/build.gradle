@@ -52,20 +52,22 @@ android {
   buildTypes {
     release {
 
-      minifyEnabled true
+//      minifyEnabled true
 
       /*
        * Library-specific proguard files.
        * See https://github.com/krschultz/android-proguard-snippets.
        */
-      proguardFile 'proguard-flurry.pro'
-      proguardFile 'proguard-google-play-services.pro'
-      proguardFile 'proguard-support-design.pro'
-      proguardFile 'proguard-support-v7-appcompat.pro'
-      proguardFile "proguard-project.pro"
+//      proguardFile 'proguard-flurry.pro'
+//      proguardFile 'proguard-google-play-services.pro'
+//      proguardFile 'proguard-support-design.pro'
+//      proguardFile 'proguard-support-v7-appcompat.pro'
+//      proguardFile "proguard-project.pro"
 
       /* Reminder: Use the default proguard from the SDK, and then add in our custom proguard rules. */
-      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
+//      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
+
+
       signingConfig signingConfigs.release
     }
 
@@ -79,13 +81,17 @@ android {
 }
 
 dependencies {
+  compile project( ':ZmanUtils' )
+
   compile 'com.android.support:design:24.2.0'
   compile 'com.android.support:appcompat-v7:24.2.0'
   compile 'com.android.support:preference-v7:24.2.0'
 
   // ACRA
-  compile 'ch.acra:acra:4.9.0'
+  compile 'ch.acra:acra:4.9.1'
 
+  // Flurry
+  compile 'com.flurry.android:analytics:6.5.0'
   //  see https://github.com/jgindin/MaterialSeekBarPreference
   //compile 'com.gindin:material-seekbar-preference:0.13'
   // https://github.com/Gericop/Android-Support-Preference-V7-Fix
@@ -101,11 +107,11 @@ flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flu
 String flurryKey = flurry[ 'flurry.key' ]
 
 task replaceFlurryKeyPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: "FLURRY_KEY_GOES_HERE", value: flurryKey )
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "FLURRY_KEY_GOES_HERE", value: flurryKey )
 }
 
 task resetFlurryKeyPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/util/LogUtils.java", token: flurryKey, value: "FLURRY_KEY_GOES_HERE" )
+  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: flurryKey, value: "FLURRY_KEY_GOES_HERE" )
 }
 
 
