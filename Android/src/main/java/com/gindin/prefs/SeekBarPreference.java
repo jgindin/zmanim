@@ -35,6 +35,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Inspired by: http://stackoverflow.com/questions/9012305/is-there-a-way-to-add-a-seekbar-to-my-actual-preference-screen/30236143#30236143
  * <p/>
@@ -43,6 +46,15 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
  */
 public class SeekBarPreference
 	extends Preference {
+
+  /**
+   * Problem is that these {@link SeekBarPreference} objects get recycled. We know when this is happening because
+   *  onBindViewHolder() is called and we'll already have our widgets assigned. So, at this point, we can easily
+   *  cleanup any listeners, etc... The problem is that the SeekBarPreference which used to use those widgets never
+   *  does find out that it's views are being recycled for someone else to use. So, when this instance is being
+   *  bound, we'll see if someone else used to have these widgets, and tell them to cleanup.
+   */
+  private static Map<EditText, SeekBarPreference>           cache = new HashMap<>();
 
 	private CheckBox                                          enabled;
 	private SeekBar                                           seekBar;
@@ -58,11 +70,13 @@ public class SeekBarPreference
   private View.OnClickListener                              enabledClickListener;
 
 
+  @SuppressWarnings( "unused" )
   public SeekBarPreference( Context context ) {
 		this( context, null, 0 );
 	}
 
 
+  @SuppressWarnings( "unused" )
 	public SeekBarPreference(
 		Context       context,
 		AttributeSet  attrs
@@ -84,6 +98,17 @@ public class SeekBarPreference
 
     enabledClickListener = new EnabledClickListener();
 	}
+
+
+  @Override
+  public void onDetached() {
+    cleanup();
+
+    // Someone has to clear the cache...
+    cache.clear();
+
+    super.onDetached();
+  }
 
 
   @Override
@@ -142,16 +167,20 @@ public class SeekBarPreference
 
   @Override
   public void onBindViewHolder( PreferenceViewHolder holder ) {
+
+    cleanup();
+
     super.onBindViewHolder( holder );
 
-    View holderView = holder.itemView;
-
-		seekBar = (SeekBar)holderView.findViewById( R.id.seekbar );
+		seekBar = (SeekBar)holder.findViewById( R.id.seekbar );
 		seekBar.setProgress( progress );
 		seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
 
-		currentValueDisplay = (EditText)holderView.findViewById( R.id.value );
-		enabled = (CheckBox)holderView.findViewById( R.id.enable );
+		currentValueDisplay = (EditText)holder.findViewById( R.id.value );
+		enabled = (CheckBox)holder.findViewById( R.id.enable );
+
+    updateCache();
+
 
 		// Forces everything to get setup correctly.
 		initView();
@@ -163,13 +192,37 @@ public class SeekBarPreference
 	}
 
 
-	@Override
+  private void updateCache() {
+
+    final SeekBarPreference other = cache.remove( currentValueDisplay );
+    if ( ( other != null ) && ( other != this ) ) {
+      other.cleanup();
+    }
+
+    cache.put( currentValueDisplay, this );
+  }
+
+
+  private void cleanup() {
+
+    if ( seekBar != null ) {
+      seekBar.setOnSeekBarChangeListener( null );
+    }
+
+    if ( enabled != null ) {
+      enabled.setOnClickListener( null );
+    }
+
+    if ( currentValueDisplay != null ) {
+      currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
+    }
+  }
+
+
+  @Override
 	protected void onPrepareForRemoval() {
 
-		enabled.setOnClickListener( null );
-		seekBar.setOnSeekBarChangeListener( null );
-		currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
-
+    cleanup();
 		super.onPrepareForRemoval();
 	}
 
@@ -189,7 +242,7 @@ public class SeekBarPreference
 			value = ZmanNotificationScheduler.NO_ALERT;
 		}
 
-		setValue( restoreValue ? getPersistedInt( progress ) : value, true );
+		setValue( restoreValue ? getPersistedInt( progress ) : value );
 	}
 
 
@@ -210,7 +263,7 @@ public class SeekBarPreference
 
     final boolean areAlertsEnabled = getSharedPreferences().getBoolean( getDependency(), true );
     enableControls( areAlertsEnabled && thisAlertIsEnabled );
-    updateValueDisplay();
+    updateValueDisplay( true );
   }
 
 
@@ -223,30 +276,26 @@ public class SeekBarPreference
 	}
 
 
-	private void setValue( int value, boolean updateValueDisplay ) {
+	private void setValue( int value ) {
 
 		if ( value != progress ) {
 
-      if ( shouldPersist() ) {
-         persistInt( value );
-       }
-
+       persistInt( value );
        progress = value;
 
       // The onSetInitialValue gets called before onBindView.
-			if ( updateValueDisplay && isViewReady() ) {
-
-			  // NOTE: I put the notifyChanged() in here because we do NOT want to invoke it if we're not updating the display.
-        //  That case will happen while we're setting up, and the view may be in the process of performing a layout.
-        //  If that happens, the view will throw an IllegalStateException...
-        notifyChanged();
-				updateValueDisplay();
-			}
+      // NOTE: The 'best practice' says you should notify here, but... we're OK. We don't need to do anything until
+      //  all the preferences are set.
+//			if ( isViewReady() ) {
+//        notifyChanged();
+//			}
 		}
 	}
 
 
-  private void updateValueDisplay() {
+  private void updateValueDisplay( boolean initialUpdate ) {
+
+    currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
 
 		if ( progress >= 0 ) {
 
@@ -254,12 +303,22 @@ public class SeekBarPreference
       int alertValue = getAlertValue();
 
       if ( progress != alertValue ) {
-        currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
         currentValueDisplay.setText( String.valueOf( progress ) );
-        currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
       }
     }
-	}
+    else {
+      currentValueDisplay.setText( "" );
+    }
+
+    if ( !initialUpdate ) {
+      currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
+    }
+  }
+
+
+  private void updateSeekBar() {
+    seekBar.setProgress( progress );
+  }
 
 
   private boolean isViewReady() {
@@ -292,7 +351,8 @@ public class SeekBarPreference
 				return;
 			}
 
-			setValue( progress, true );
+			setValue( progress );
+      updateValueDisplay( false );
 		}
 
 
@@ -346,7 +406,8 @@ public class SeekBarPreference
 
       if ( !seekBarListener.isTracking ) {
         int alertTime = getAlertValue();
-        setValue( alertTime, false );
+        setValue( alertTime );
+        updateSeekBar();
 
         seekBar.setOnSeekBarChangeListener( seekBarListener );
       }
@@ -421,7 +482,9 @@ public class SeekBarPreference
         newValue = ZmanNotificationScheduler.NO_ALERT;
       }
 
-      setValue( newValue, true );
+      setValue( newValue );
+      updateValueDisplay( false );
+      updateSeekBar();
     }
   }
 }
