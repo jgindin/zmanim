@@ -184,14 +184,7 @@ public final class EventBus {
 
 
 	private <H extends EventHandler, E extends Event<H>> void dispatchEvent( E event, H handler ) {
-
-		try {
-			event.dispatch( handler );
-		}
-		catch ( Exception e ) {
-			// TODO: Need some way of logging this problem...
-//			System.out.println( e.getMessage() );
-		}
+    event.dispatch( handler );
 	}
 
 
