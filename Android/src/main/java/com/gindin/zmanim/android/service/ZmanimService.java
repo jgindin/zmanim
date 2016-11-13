@@ -106,7 +106,9 @@ public class ZmanimService
 	public void onCreate() {
 		super.onCreate();
 
-		Thread.setDefaultUncaughtExceptionHandler(
+    final Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+
+    Thread.setDefaultUncaughtExceptionHandler(
 			new Thread.UncaughtExceptionHandler() {
 				@Override
 				public void uncaughtException(
@@ -115,6 +117,8 @@ public class ZmanimService
 				) {
 
 					releaseWakefulIntent();
+
+					exceptionHandler.uncaughtException( thread, throwable );
 				}
 			}
 		);
