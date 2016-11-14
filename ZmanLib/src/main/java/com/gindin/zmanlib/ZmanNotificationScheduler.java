@@ -21,7 +21,7 @@ import java.util.List;
 public class ZmanNotificationScheduler {
 
 	/** If we wake up within a short time of needing to alert anyways, just do it. */
-	public static final int                                   ALERT_FUDGE_FACTOR = 90 * 1000;
+	public static final int                                   ALERT_FUDGE_FACTOR = 30 * 1000;
 
 	public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
 
