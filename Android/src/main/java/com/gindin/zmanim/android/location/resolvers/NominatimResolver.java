@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONObject;
 
@@ -92,7 +93,7 @@ class NominatimResolver
 		List<Pair<String, String>>  params
 	) {
 
-		params.add( new Pair<String, String>( "key", MapQuestResolver.MAP_QUEST_KEY ) );
+		params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
 
 		// We want all the details.
 		params.add( new Pair<String, String>( "addressdetails", "1" ) );

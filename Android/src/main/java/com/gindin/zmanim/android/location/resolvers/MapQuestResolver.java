@@ -3,6 +3,7 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,9 +22,6 @@ import java.util.Locale;
  */
 class MapQuestResolver
 	extends JsonQueryingResolver {
-
-	/** Filled in with the real key at build time. */
-	static final String                                       MAP_QUEST_KEY = "MAP_QUEST_KEY_GOES_HERE";
 
 
 
@@ -70,7 +68,7 @@ class MapQuestResolver
 		List<Pair<String, String>>  params
 	) {
 
-		params.add( new Pair<String, String>( "key", MAP_QUEST_KEY ) );
+		params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
 		params.add( new Pair<String, String>( "outFormat", "json" ) );
 		params.add( new Pair<String, String>( "thumbMaps", "false" ) );
 		params.add( new Pair<String, String>( "maxResults", "1" ) );

@@ -18,10 +18,26 @@ project.ext.set( "versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP )
 
 apply from: '../common/gindin-versioning.gradle'
 
+/*
+ * Stuff that we need to load...
+ */
+Properties flurry = new Properties()
+flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
+String flurryKey = "\"" + flurry[ 'flurry.key' ] + "\""
+
+Properties mapQuest = new Properties()
+mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
+String mapQuestKey = "\"" + mapQuest[ 'mapquest.key' ] + "\""
+
+Properties acraProps = new Properties()
+acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
+String acraUser = "\"" + acraProps[ 'acra.user' ] + "\""
+String acraPassword = "\"" + acraProps[ 'acra.password' ] + "\""
+
 
 android {
   compileSdkVersion 24
-  buildToolsVersion "24.0.2"
+  buildToolsVersion "24.0.3"
 
   defaultConfig {
     applicationId "com.gindin.zmanim.android"
@@ -52,6 +68,11 @@ android {
   buildTypes {
     release {
 
+      buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
+      buildConfigField "String", "FLURRY_KEY", "${flurryKey}"
+      buildConfigField "String", "ACRA_KEY", "${acraPassword}"
+      buildConfigField "String", "ACRA_USER", "${acraUser}"
+
       minifyEnabled false
 
       /*
@@ -73,6 +94,10 @@ android {
     }
 
     debug {
+      buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
+      buildConfigField "String", "FLURRY_KEY", "\"DEV\""
+      buildConfigField "String", "ACRA_KEY", "\"DEV\""
+      buildConfigField "String", "ACRA_USER", "\"DEV\""
     }
   }
 
@@ -99,61 +124,4 @@ dependencies {
   //compile 'com.takisoft.fix:preference-v7:24.1.1.1'
 
   testCompile 'junit:junit:4.12'
-}
-
-
-
-Properties flurry = new Properties()
-flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
-String flurryKey = flurry[ 'flurry.key' ]
-
-task replaceFlurryKeyPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "FLURRY_KEY_GOES_HERE", value: flurryKey )
-}
-
-task resetFlurryKeyPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: flurryKey, value: "FLURRY_KEY_GOES_HERE" )
-}
-
-
-Properties mapQuest = new Properties()
-mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
-String mapQuestKey = mapQuest[ 'mapquest.key' ]
-
-task replaceMapQuestPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java", token: "MAP_QUEST_KEY_GOES_HERE", value: mapQuestKey )
-}
-
-task resetMapQuestPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/location/resolvers/MapQuestResolver.java", token: mapQuestKey, value: "MAP_QUEST_KEY_GOES_HERE" )
-}
-
-
-Properties acraProps = new Properties()
-acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
-String reporteruser = acraProps[ 'acra.user' ]
-String reporterpassword = acraProps[ 'acra.password' ]
-task replaeAcraPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "[reporteruser]", value: reporteruser )
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", token: "[reporterpassword]", value: reporterpassword )
-}
-
-task resetAcraPlaceholders << {
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", value: "[reporteruser]", token: reporteruser )
-  ant.replace( file: "src/main/java/com/gindin/zmanim/android/ZmanimApplication.java", value: "[reporterpassword]", token: reporterpassword )
-}
-
-
-/* See http://stackoverflow.com/questions/16853130/run-task-before-compilation-using-android-gradle-plugin */
-gradle.projectsEvaluated {
-
-  compileDebugSources.dependsOn( "replaceMapQuestPlaceholders" )
-  compileReleaseSources.dependsOn( "replaceMapQuestPlaceholders" )
-  compileReleaseSources.dependsOn( "replaceFlurryKeyPlaceholders" )
-  compileReleaseSources.dependsOn( "replaeAcraPlaceholders" )
-
-  assembleDebug.dependsOn( "resetMapQuestPlaceholders" )
-  assembleRelease.dependsOn( "resetMapQuestPlaceholders" )
-  assembleRelease.dependsOn( "resetFlurryKeyPlaceholders" )
-  assembleRelease.dependsOn( "resetAcraPlaceholders" )
 }
