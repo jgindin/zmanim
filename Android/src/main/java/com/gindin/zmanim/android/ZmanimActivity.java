@@ -640,7 +640,7 @@ public class ZmanimActivity
 			final boolean         isCachedLocation
 		) {
 
-		  LogUtils.setContext( "Location", location.toShortString() );
+		  LogUtils.setContext( "Location", location.toString() );
 
 			runOnUiThread(
 				new Runnable() {
