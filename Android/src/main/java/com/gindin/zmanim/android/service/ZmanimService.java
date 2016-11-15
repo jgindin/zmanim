@@ -351,6 +351,12 @@ public class ZmanimService
 		final Zman nextZman
 	) {
 
+	  // Make sure any previous notification is removed. It seems that this is normally not necessary,
+    //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
+    //  dismissed...
+    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
+	  notificationManager.cancel( 1 );
+
 		Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
@@ -371,7 +377,6 @@ public class ZmanimService
 			.setDefaults( Notification.DEFAULT_ALL )
 			.setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
 
-		NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
 		notificationManager.notify( 1, builder.build() );
 	}
 
