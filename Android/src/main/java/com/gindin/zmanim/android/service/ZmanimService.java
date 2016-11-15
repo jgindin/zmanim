@@ -1,6 +1,7 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
@@ -31,6 +32,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Calendar;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
@@ -72,6 +75,9 @@ public class ZmanimService
 
 
 	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
+
+	/** Use for debugging to send some data to ACRA when we hit an unexpected error removing the locationAcquiredHandler... */
+  private static final String                               REMOVE_LOCATION_ACQUIRED_HANDLER_KEY = "remove locationAcquiredHandler";
 
 	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
@@ -203,6 +209,8 @@ public class ZmanimService
 
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
+    LogUtils.setContext( REMOVE_LOCATION_ACQUIRED_HANDLER_KEY, null );
+
 		// We have to figure out where we are in order to see when the next alarm is.
 		locationAcquiredHandler = new LocationAcquiredHandler( showNotifications );
 		eventBus.addHandler( locationAcquiredHandler );
@@ -228,10 +236,25 @@ public class ZmanimService
 		final boolean         showNotifications
 	) {
 
-		eventBus.removeHandler( locationAcquiredHandler );
-		locationAcquiredHandler = null;
+		if ( locationAcquiredHandler != null ) {
+			eventBus.removeHandler( locationAcquiredHandler );
+			locationAcquiredHandler = null;
 
-    if ( !showNotifications ) {
+			// Since we're seeing an issue where we get asked to handle the event, and yet the handler
+			//  is null, just remember where this is called from.
+			Throwable t = new Throwable();
+			StringWriter sw = new StringWriter();
+			t.printStackTrace( new PrintWriter( sw ) );
+			LogUtils.setContext( REMOVE_LOCATION_ACQUIRED_HANDLER_KEY, sw.toString() );
+		}
+		else {
+			// This is NOT supposed to happen. Send
+			LogUtils.logError( "handleLocation", "locationAcquiredHandler is already null!", new Throwable() );
+			releaseWakefulIntent();
+			return;
+		}
+
+		if ( !showNotifications ) {
       releaseWakefulIntent();
     }
     else {
