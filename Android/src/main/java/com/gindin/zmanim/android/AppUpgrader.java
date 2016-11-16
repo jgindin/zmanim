@@ -155,6 +155,18 @@ class AppUpgrader {
 			return;
 		}
 
+		boolean haveANote = false;
+    for ( int noteId : noteIds ) {
+      if ( noteId != -1 ) {
+        haveANote = true;
+        break;
+      }
+    }
+
+    if ( !haveANote ) {
+      return;
+    }
+
 		String header = zmanimActivity.getString( R.string.upgrade_header );
 		final Snackbar snackbar = Snackbar
 			.make( zmanimActivity.findViewById( android.R.id.content ), header, Snackbar.LENGTH_INDEFINITE );
