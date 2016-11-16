@@ -35,8 +35,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Calendar;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
@@ -262,19 +260,11 @@ public class ZmanimService
 		if ( locationAcquiredHandler != null ) {
 			eventBus.removeHandler( locationAcquiredHandler );
 			locationAcquiredHandler = null;
-
-			// Since we're seeing an issue where we get asked to handle the event, and yet the handler
-			//  is null, just remember where this is called from.
-			Throwable t = new Throwable();
-			StringWriter sw = new StringWriter();
-			t.printStackTrace( new PrintWriter( sw ) );
-			LogUtils.setContext( REMOVE_LOCATION_ACQUIRED_HANDLER_KEY, sw.toString() );
 		}
 		else {
 			// This is NOT supposed to happen. Send some data to try and diagnose.
       //  UPDATE: Yet, now all of a sudden, I am seeing it! For me, this is happening after I go into the emulator
       //    settings and change the time to test some alerting functionality...
-			LogUtils.logError( "handleLocation", "locationAcquiredHandler is already null!", new Throwable() );
 			releaseWakefulIntent();
 			return;
 		}
