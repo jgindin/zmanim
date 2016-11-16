@@ -130,8 +130,13 @@ public class LogUtils {
     String data
   ) {
 
-    if ( !BuildConfig.DEBUG ) {
-      ACRA.getErrorReporter().putCustomData( key, data );
+    if ( BuildConfig.DEBUG ) {
+      if ( data != null ) {
+        Log.e( key, data );
+      }
+    }
+    else {
+	    ACRA.getErrorReporter().putCustomData( key, data );
     }
   }
 
