@@ -14,6 +14,7 @@ import java.util.List;
 /**
  *
  */
+@SuppressWarnings( "Duplicates" )
 public class UT_EventBus {
 
 
@@ -203,10 +204,50 @@ public class UT_EventBus {
 		Event1 event1 = new Event1();
 		eventBus.fire( event1 );
 
+		Assert.assertEquals( 3, handlersInOrder.size() );
 		Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
 		Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
 		Assert.assertEquals( handler3, handlersInOrder.get( 2 ) );
 	}
+
+
+	@Test
+  public void removeHandlerDuringPostponedEvent() {
+
+    final List<EventHandler> handlersInOrder = new ArrayList<EventHandler>();
+
+    final Event2.Handler handler2 = new Event2.Handler() {
+  			@Override
+  			void onEvent2() {
+        handlersInOrder.add( this );
+
+        Event3 event3 = new Event3();
+        eventBus.fire( event3 );
+      }
+    };
+
+    final Event1.Handler handler1 = new Event1.Handler() {
+  			@Override
+  			void onEvent1() {
+        handlersInOrder.add( this );
+
+        eventBus.removeHandler( this );
+
+        Event2 event2 = new Event2();
+        eventBus.fire( event2 );
+      }
+    };
+
+    eventBus.addHandler( handler1 );
+    eventBus.addHandler( handler2 );
+
+    Event1 event1 = new Event1();
+    eventBus.fire( event1 );
+
+    Assert.assertEquals( 2, handlersInOrder.size() );
+    Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
+    Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
+  }
 
 
 	@Test
