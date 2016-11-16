@@ -46,6 +46,14 @@
 			android:disableDependentsState="false"
 		/>
 
+    <android.support.v7.preference.CheckBoxPreference
+      android:key="DISABLE_NOTIFICATIONS_ON_SHABBAT"
+      android:title="@string/disable_notifications_on_shabbat_pref_title"
+      android:summary="@string/disable_notifications_on_shabbat_pref_summary"
+      android:defaultValue="true"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
+
 		<!-- The keys here are the names of the Zmanim.Type enum. -->
 		<com.gindin.prefs.SeekBarPreference
 			android:key="Alot"

@@ -1,5 +1,6 @@
 package com.gindin.zmanlib;
 
+import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.Nullable;
@@ -45,9 +46,10 @@ public interface ZmanCallback {
 	 * The user should be notified about the specified zman.
 	 */
 	void notifyUser(
-		Calendar  now,
-		Zman      nextZman
-	);
+    ZmanimLocation  location,
+    Calendar        now,
+    Zman            nextZman
+  );
 
 	/**
 	 * Requests that the next check should be scheduled.
@@ -89,9 +91,10 @@ public interface ZmanCallback {
 
 		@Override
 		public void notifyUser(
-			Calendar  now,
-			Zman      nextZman
-		) {
+      ZmanimLocation  location,
+      Calendar        now,
+      Zman            nextZman
+    ) {
 		}
 
 

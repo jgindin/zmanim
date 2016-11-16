@@ -3,6 +3,7 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
@@ -216,9 +217,10 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 		@Override
 		public void notifyUser(
-			Calendar  now,
-			Zman      nextZman
-		) {
+      ZmanimLocation  location,
+      Calendar        now,
+      Zman            nextZman
+    ) {
 
 			NotifiedZmanim notifiedForDay = getNotifiedZmanim( now );
 			notifiedForDay.notified( nextZman );

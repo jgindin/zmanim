@@ -14,6 +14,9 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.NotifiedZmanim;
 import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.ZmanNotificationScheduler;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
@@ -268,7 +271,9 @@ public class ZmanimService
 			LogUtils.setContext( REMOVE_LOCATION_ACQUIRED_HANDLER_KEY, sw.toString() );
 		}
 		else {
-			// This is NOT supposed to happen. Send
+			// This is NOT supposed to happen. Send some data to try and diagnose.
+      //  UPDATE: Yet, now all of a sudden, I am seeing it! For me, this is happening after I go into the emulator
+      //    settings and change the time to test some alerting functionality...
 			LogUtils.logError( "handleLocation", "locationAcquiredHandler is already null!", new Throwable() );
 			releaseWakefulIntent();
 			return;
@@ -494,18 +499,18 @@ public class ZmanimService
 
 		@Override
 		public void notifyUser(
-			final Calendar  now,
-			final Zman      nextZman
-		) {
+      final ZmanimLocation  location,
+      final Calendar        now,
+      final Zman            nextZman
+    ) {
 
 			getNotifiedZmanim( now );
 			notifiedZmanim.notified( nextZman );
 
-			// If the zman has already passed, do not bother the user...
-	   if ( nextZman.getTime().compareTo( now ) >= 0 ) {
-	     notifyUserOfUpcomingZman( nextZman );
-	   }
-		}
+      if ( shouldActuallyNotify( location, now, nextZman ) ) {
+        notifyUserOfUpcomingZman( nextZman );
+      }
+    }
 
 
 		@Override
@@ -515,6 +520,44 @@ public class ZmanimService
 		) {
 			scheduleNextWakeup( timeUntilNextCheck, now );
 		}
+
+
+		private boolean shouldActuallyNotify(
+      final ZmanimLocation  location,
+      final Calendar        now,
+      final Zman            nextZman
+    ) {
+
+      // If the zman has already passed, do not bother the user...
+      if ( nextZman.getTime().compareTo( now ) < 0 ) {
+        return false;
+      }
+
+      SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+      boolean disableOnShabbat = personalPrefs
+        .getBoolean( PersonalPreferences.Prefs.DISABLE_NOTIFICATIONS_ON_SHABBAT.name(), true );
+
+      if ( !disableOnShabbat ) {
+        return true;
+      }
+
+      HebrewDate today = HebrewCalendar.getForDate( now );
+      Details todayDetails = today.getDetails();
+      HebrewDate tomorrow = today.tomorrow();
+      final Details tomorrowDetails = tomorrow.getDetails();
+
+      // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
+      if ( todayDetails.isShabbat() && today.isAfterSunset( location ) && !tomorrowDetails.isYomTov() ) {
+        return true;
+      }
+
+      // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
+      if ( todayDetails.isYomTov() && today.isAfterSunset( location ) && !tomorrowDetails.isYomTov() ) {
+        return true;
+      }
+
+      return ( !todayDetails.isShabbat() && !todayDetails.isYomTov() );
+    }
   }
 
 
