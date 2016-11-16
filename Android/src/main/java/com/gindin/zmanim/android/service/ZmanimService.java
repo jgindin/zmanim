@@ -153,7 +153,11 @@ public class ZmanimService
 		int     startId
 	) {
 
-		String action = intent.getAction();
+	  // NOTE: It helps to read the JavaDocs -- it clearly states that:
+    //    [the intent parameter] may be null if the service is being restarted after
+    //    its process has gone away...
+		String action = ( intent == null ? "" : intent.getAction() );
+
 		if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
 			servicingUser = true;
 
@@ -188,7 +192,23 @@ public class ZmanimService
 			}
 		}
 
-		return super.onStartCommand( intent, flags, startId );
+		// In case the process is killed while running, what should happen? "The Busy Coder's Guide to
+    //  Android Development", v6.9, explains in the "Services and the Command Pattern" chapter, that
+    //  the options are:
+    //  1. START_STICKY, meaning that the service should be moved back into the
+    //      started state (as if onStartCommand() had been called), but do not re-deliver
+    //      the Intent to onStartCommand()
+    //  2. START_REDELIVER_INTENT, meaning that the service should be restarted via a
+    //      call to onStartCommand() , supplying the same Intent as was delivered this time
+    //  3. START_NOT_STICKY, meaning that the service should remain stopped until
+    //      explicitly started by application code
+    //
+    // Note that by doing nothing, "The Guide" (in "Embedding a Web Server" chapter), goes on to
+    //  say that:
+    //    ...the default implementation of onStartCommand() returns START_STICKY, which means
+    //    that Android will keep trying to restart our service after our process gets terminated.
+    //    This is a ridiculous default value and goes a long way towards explaining Android’s memory issues.
+		return START_NOT_STICKY;
 	}
 
 
