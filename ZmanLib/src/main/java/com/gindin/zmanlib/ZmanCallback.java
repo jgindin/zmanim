@@ -42,6 +42,19 @@ public interface ZmanCallback {
 		Zman      zman
 	);
 
+  /**
+   * Prior to actually notifying the user, figure out if this is a notification the user
+   *  should receive.
+   *
+   * @return true if the user should be notified; false otherwise.
+   */
+  boolean shouldActuallyNotify(
+      final ZmanimLocation  location,
+      final Calendar        now,
+      final Zman            nextZman
+    );
+
+
 	/**
 	 * The user should be notified about the specified zman.
 	 */
@@ -89,7 +102,17 @@ public interface ZmanCallback {
 		}
 
 
-		@Override
+    @Override
+    public boolean shouldActuallyNotify(
+      ZmanimLocation location,
+      Calendar now,
+      Zman nextZman
+    ) {
+      return true;
+    }
+
+
+    @Override
 		public void notifyUser(
       ZmanimLocation  location,
       Calendar        now,

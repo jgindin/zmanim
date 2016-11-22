@@ -83,7 +83,9 @@ public class ZmanNotificationScheduler {
 
 		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
 		if ( nextZmanNotification.msUntilAction <= ALERT_FUDGE_FACTOR ) {
-			zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
+			if ( zmanCallback.shouldActuallyNotify( location, now, nextZmanNotification.zman ) ) {
+        zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
+      }
 
 			// That zman will no longer be a candidate, so go run again...
 			run( location, now, zmanCallback );

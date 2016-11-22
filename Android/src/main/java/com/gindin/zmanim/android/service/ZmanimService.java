@@ -496,10 +496,7 @@ public class ZmanimService
 
 			getNotifiedZmanim( now );
 			notifiedZmanim.notified( nextZman );
-
-      if ( shouldActuallyNotify( location, now, nextZman ) ) {
-        notifyUserOfUpcomingZman( nextZman );
-      }
+      notifyUserOfUpcomingZman( nextZman );
     }
 
 
@@ -512,14 +509,17 @@ public class ZmanimService
 		}
 
 
-		private boolean shouldActuallyNotify(
+		@SuppressWarnings( "FeatureEnvy" )
+    @Override
+		public boolean shouldActuallyNotify(
       final ZmanimLocation  location,
       final Calendar        now,
       final Zman            nextZman
     ) {
 
       // If the zman has already passed, do not bother the user...
-      if ( nextZman.getTime().compareTo( now ) < 0 ) {
+      final int timeDiff = nextZman.getTime().compareTo( now );
+      if ( ( timeDiff < 0 ) && ( Math.abs( timeDiff ) > ZmanNotificationScheduler.ALERT_FUDGE_FACTOR ) ) {
         return false;
       }
 

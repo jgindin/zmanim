@@ -215,7 +215,17 @@ abstract class WakeupSchedulerBase_MutliDay {
 		}
 
 
-		@Override
+    @Override
+    public boolean shouldActuallyNotify(
+      ZmanimLocation location,
+      Calendar now,
+      Zman nextZman
+    ) {
+      return true;
+    }
+
+
+    @Override
 		public void notifyUser(
       ZmanimLocation  location,
       Calendar        now,
