@@ -1,10 +1,10 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.eventBus.EventBus;
-import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -127,7 +127,8 @@ class MapQuestResolver
 
 		}
 		catch ( Exception e ) {
-			LogUtils.logError( "MapQuestResolver::addressFromJSON", e.getMessage(), e );
+			// Don't log an error...it can fail if we don't get anything back.
+			//LogUtils.logError( "MapQuestResolver::addressFromJSON", e.getMessage(), e );
 			return null;
 		}
 	}
