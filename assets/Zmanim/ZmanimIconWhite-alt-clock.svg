@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="Zmanim Icon White.svg"
-   inkscape:export-filename="/home/abraham/Downloads/Zmanim Icon 512 White.png"
-   inkscape:export-xdpi="960"
-   inkscape:export-ydpi="960">
+   inkscape:export-filename="/home/abraham/Google Drive/Work/Graphic Design/Logos/Zmanim/Zmanim Icon White.png"
+   inkscape:export-xdpi="60"
+   inkscape:export-ydpi="60">
   <defs
      id="defs2987">
     <filter
@@ -818,9 +818,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="16"
-     inkscape:cx="19.466613"
-     inkscape:cy="19.765323"
+     inkscape:zoom="12.4375"
+     inkscape:cx="24"
+     inkscape:cy="24"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -927,7 +927,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -952,30 +952,12 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="sun"
-     style="display:inline">
-    <path
-       sodipodi:type="arc"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
-       id="path3823"
-       sodipodi:cx="14"
-       sodipodi:cy="14"
-       sodipodi:rx="10"
-       sodipodi:ry="10"
-       d="M 24,14 A 10,10 0 1 1 4,14 10,10 0 1 1 24,14 z"
-       transform="matrix(0.57352622,0,0,0.57352622,26.36376,19.577506)" />
-  </g>
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="hills"
-     style="display:inline">
-    <path
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="M 5.125,30.664063 C 6.25,38.332031 13.979128,43.398323 21.709597,43.878791 32.639285,45.886604 43.3125,37.519531 43.9375,26.328125 30.088257,30.088979 19.716088,19.942201 5.125,30.664063 z"
-       id="path4210"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
-  </g>
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer6"

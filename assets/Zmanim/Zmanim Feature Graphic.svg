@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="feature graphic.svg"
-   inkscape:export-filename="/home/abraham/Desktop/feature graphic.png"
+   inkscape:export-filename="/home/abraham/Google Drive/Work/Graphic Design/Logos/Zmanim/feature graphic.png"
    inkscape:export-xdpi="360"
    inkscape:export-ydpi="360">
   <defs
@@ -490,7 +490,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="4"
      inkscape:cx="108.78214"
-     inkscape:cy="79.162011"
+     inkscape:cy="39.162011"
      inkscape:document-units="px"
      inkscape:current-layer="layer7"
      showgrid="false"
@@ -498,8 +498,8 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-global="true"
-     inkscape:window-width="1855"
-     inkscape:window-height="1056"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
      inkscape:window-x="65"
      inkscape:window-y="24"
      inkscape:window-maximized="1">
@@ -549,43 +549,32 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Text">
-    <path
-       style="fill:#000000;fill-opacity:0.15068497;stroke:none"
-       d="M 98.5,63 214.75,125 256,125 256,52.147727 233.5,40.25 228.26169,46.949382 216,40.25 213.12856,45.25757 203.25,40.25 202.04547,45.414263 191.75,40.25 191.25327,47.550977 178,40.25 176.40607,48.984277 161.25,40.25 156.32853,46.659067 144,40.25 137.39809,46.19217 126.25,40.25 123.58381,45.063385 114.75,40.25 108.49445,49.231903 98.5,43.75 l 12.75,-1.5 z"
-       id="path3111"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccccccccccccccccccccc" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Righteous;-inkscape-font-specification:Roboto Bold"
-       x="97.26918"
-       y="62.966824"
+       x="92.76918"
+       y="62.716824"
        id="text4885"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4887"
-         x="97.26918"
-         y="62.966824"
-         style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;letter-spacing:2.28999995999999983px;fill:#ffffff;fill-opacity:1;font-family:Roboto;-inkscape-font-specification:Roboto Bold">ZMANIM</tspan></text>
-    <path
-       style="fill:#000000;fill-opacity:0.05022831;stroke:none"
-       d="M 145.25,73.25 243.03765,125 256,125 l 0,-43.134416 -24.42253,-12.947991 -1.85615,0.353554 -0.70711,0.707107 -5.52427,-2.961008 -0.39775,0.618718 2.39788,1.358648 -0.70061,0.601405 -1.56469,-0.811004 -0.34053,1.212871 -5.66988,-2.980638 -0.48613,0.574524 1.94454,1.193242 -0.17551,0.930752 -1.50387,-0.842363 -0.32639,1.230408 -2.28106,-1.274602 -1.5468,0.353553 -0.79259,0.784977 -2.12422,-1.005947 -1.81197,0.353553 -0.61068,0.957116 -2.70388,-1.443252 -0.82512,1.25922 -2.22428,-1.25922 0.0624,1.119843 -2.0069,-0.98726 -1.5468,0.08839 -1.11399,0.901125 -1.71443,-0.901125 -1.94455,0 -0.83969,0.972272 1.28163,0.751301 -0.90202,0.26023 -3.87095,-1.983803 -1.89382,-0.0073 -2.4814,-1.230184 -0.54956,2.924031 -3.47211,-1.907565 -0.44194,0.928078 -1.32582,-0.883883 -1.59943,0.904851 -5.25911,-3.137786 -0.61028,0.951303 -1.23744,-0.618718 -0.66291,2.828427 -1.37002,-0.883884 -0.99056,0.432241 -1.13076,-0.564823 c -0.72884,0.263563 -1.48491,0.481733 -1.87152,1.315667 l -2.01757,-1.094696 -1.94454,0.176776 -0.57453,0.707107 -1.81196,-0.928077 -1.72357,0.176776 -0.57452,0.662913 -1.81196,-0.928078 -1.63519,0.353553 -3.40295,-1.767766 z"
-       id="path3883"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" />
+         x="92.76918"
+         y="62.716824"
+         style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;letter-spacing:2.28999996px;fill:#ffffff;fill-opacity:1;font-family:Roboto;-inkscape-font-specification:Roboto Bold">ZMANIM</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:8px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto Light"
-       x="156.36612"
-       y="73.056305"
+       x="197.46817"
+       y="75.806305"
        id="text3108"
        sodipodi:linespacing="125%"
-       transform="matrix(1,0,-0.15317258,1,0,0)"><tspan
+       transform="matrix(1,0,-0.26084871,1,0,0)"><tspan
          sodipodi:role="line"
          id="tspan3110"
-         x="156.36612"
-         y="73.056305"
-         style="font-size:8px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Roboto;-inkscape-font-specification:Roboto Light">According to any opinion</tspan></text>
+         x="197.46817"
+         y="75.806305"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;letter-spacing:0.5px;fill:#ffffff;fill-opacity:1;font-family:Roboto;-inkscape-font-specification:Roboto Light"
+         dx="0">Is it time?</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
