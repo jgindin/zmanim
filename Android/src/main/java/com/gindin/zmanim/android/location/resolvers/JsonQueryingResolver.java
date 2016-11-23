@@ -117,10 +117,13 @@ abstract class JsonQueryingResolver
 	 * Called to convert the JSON retrieved from the web service into an address object that we can then convert
 	 *  into a ZmanimLocation.
 	 */
+	@Nullable
 	protected abstract Address addressFromJSON( JSONObject json );
 
 
 
+	@Nullable
+	@SuppressWarnings( "FeatureEnvy" )
 	private ZmanimLocation resolveLocation(
 		ZmanimLocation              zmanimLocation,
 		List<Pair<String, String>>  params
@@ -137,13 +140,15 @@ abstract class JsonQueryingResolver
 
 			Address address = addressFromJSON( json );
 
-			return new ZmanimLocation.Builder()
-				.from( zmanimLocation )
-				.locationName( addressToLocationName( address ) )
-				.atLatitude( address.getLatitude() )
-				.atLongitude( address.getLongitude() )
-				.build();
-		}
+      if ( address != null ) {
+        return new ZmanimLocation.Builder()
+          .from( zmanimLocation )
+          .locationName( addressToLocationName( address ) )
+          .atLatitude( address.getLatitude() )
+          .atLongitude( address.getLongitude() )
+          .build();
+      }
+    }
 		catch ( Exception e ) {
 			LogUtils.logError( "resolveFromCoords", e.getMessage(), e );
 		}
@@ -153,6 +158,7 @@ abstract class JsonQueryingResolver
 
 
 
+  @Nullable
 	private JSONObject makeRequest(
 		String                    urlString,
 		List<Pair<String,String>> params

@@ -103,7 +103,7 @@ class AndroidResolver
 		catch ( IOException ioe ) {
 			// Docs for Geocoder.getFromLocationName say this happens when there's no network connectivity, or
 			//  there's some other I/O error. In any case, it can happen...
-			LogUtils.logError( "AR::updateLocationFromPlace", "", ioe );
+			//LogUtils.logError( "AR::updateLocationFromPlace", "", ioe );
 		}
 		catch ( Exception e ) {
 			LogUtils.logError( "AR::updateLocationFromPlace", "", e );
