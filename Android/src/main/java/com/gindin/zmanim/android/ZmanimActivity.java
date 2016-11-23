@@ -570,7 +570,12 @@ public class ZmanimActivity
 		zmanimService.setAction( ZmanimService.Actions.SCHEDULE_ALARM.name() );
 		zmanimService.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
 
-		rebuildUI( lastKnownLocation, null );
+		// Have to guard against a bit of a corner case ... the first time the user uses the application,
+    //  if we don't have a location and they go into the preferences, make a change, and then come back,
+    //  we'll want to rebuild the UI; but if we don't have a location, we can't...
+		if ( lastKnownLocation != null ) {
+			rebuildUI( lastKnownLocation, null );
+		}
 	}
 
 
