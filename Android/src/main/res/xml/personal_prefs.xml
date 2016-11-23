@@ -47,10 +47,10 @@
 		/>
 
     <android.support.v7.preference.CheckBoxPreference
-      android:key="DISABLE_NOTIFICATIONS_ON_SHABBAT"
-      android:title="@string/disable_notifications_on_shabbat_pref_title"
-      android:summary="@string/disable_notifications_on_shabbat_pref_summary"
-      android:defaultValue="true"
+      android:key="ENABLE_NOTIFICATIONS_ON_SHABBAT"
+      android:title="@string/enable_notifications_on_shabbat_pref_title"
+      android:summary="@string/enable_notifications_on_shabbat_pref_summary"
+      android:defaultValue="false"
       android:dependency="SHOW_NOTIFICATIONS"
     />
 

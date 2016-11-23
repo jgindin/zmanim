@@ -524,10 +524,10 @@ public class ZmanimService
       }
 
       SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-      boolean disableOnShabbat = personalPrefs
-        .getBoolean( PersonalPreferences.Prefs.DISABLE_NOTIFICATIONS_ON_SHABBAT.name(), true );
+      boolean enableOnShabbat = personalPrefs
+        .getBoolean( PersonalPreferences.Prefs.ENABLE_NOTIFICATIONS_ON_SHABBAT.name(), false );
 
-      if ( !disableOnShabbat ) {
+      if ( enableOnShabbat ) {
         return true;
       }
 

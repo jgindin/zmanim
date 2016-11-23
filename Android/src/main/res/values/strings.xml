@@ -93,8 +93,8 @@
 	<string name="use_elevation_pref_summary">Take elevation into account for zmanim calculations.</string>
 	<string name="show_notifications_pref_title">Show Notifications</string>
 	<string name="show_notifications_pref_summary">Alert for upcoming zmanim.</string>
-	<string name="disable_notifications_on_shabbat_pref_title">Notifications on Shabbat</string>
-  <string name="disable_notifications_on_shabbat_pref_summary">Uncheck to receive notifications even on Shabbat and Yom Tov.</string>
+	<string name="enable_notifications_on_shabbat_pref_title">Notifications on Shabbat</string>
+  <string name="enable_notifications_on_shabbat_pref_summary">Check to receive notifications even on Shabbat and Yom Tov.</string>
 	<string name="notifications_category">Notifications</string>
 
 	<string name="lat_long_editor_degrees_text">Degrees:</string>
