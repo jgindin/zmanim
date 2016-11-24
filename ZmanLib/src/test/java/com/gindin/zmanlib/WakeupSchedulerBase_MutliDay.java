@@ -204,7 +204,14 @@ abstract class WakeupSchedulerBase_MutliDay {
 		}
 
 
-		@Override
+    @Override
+    public boolean shouldNotifyOnShabbat() {
+			// For testing purposes, we'll want all the notifications.
+      return true;
+    }
+
+
+    @Override
 		public boolean hasBeenNotified(
 			Calendar  now,
 			Zman      zman
@@ -213,16 +220,6 @@ abstract class WakeupSchedulerBase_MutliDay {
 			final NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
 			return notifiedForDay != null && notifiedForDay.contains( zman.type );
 		}
-
-
-    @Override
-    public boolean shouldActuallyNotify(
-      ZmanimLocation location,
-      Calendar now,
-      Zman nextZman
-    ) {
-      return true;
-    }
 
 
     @Override

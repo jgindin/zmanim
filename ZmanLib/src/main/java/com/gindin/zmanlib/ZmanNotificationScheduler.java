@@ -6,6 +6,7 @@ package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
@@ -77,15 +78,12 @@ public class ZmanNotificationScheduler {
 			return;
 		}
 
-
 		// We have some candidates, and we know that they are sooner than the max alert time.
 		final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim, zmanCallback );
 
 		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
-		if ( nextZmanNotification.msUntilAction <= ALERT_FUDGE_FACTOR ) {
-			if ( zmanCallback.shouldActuallyNotify( location, now, nextZmanNotification.zman ) ) {
-        zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
-      }
+		if ( ( nextZmanNotification.zman != null ) && shouldActuallyNotify( location, now, nextZmanNotification.zman, zmanCallback ) ) {
+      zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
 
 			// That zman will no longer be a candidate, so go run again...
 			run( location, now, zmanCallback );
@@ -120,8 +118,6 @@ public class ZmanNotificationScheduler {
 		//    - Are after the current time;
 		List<ZmanNotification> candidates = new ArrayList<>();
 
-		final long nowTime = now.getTime().getTime();
-
 		for ( Zmanim zmanim : daysZmanim ) {
 			String zmanName = zmanCallback.getPreferredZman( zmanim.type );
 			Zman zman;
@@ -132,13 +128,16 @@ public class ZmanNotificationScheduler {
 				zman = zmanim.getByName( zmanName );
 			}
 
-			if ( !zmanCallback.hasBeenNotified( now, zman ) ) {
-				final int msUntilZman = computeMsUntilZman( nowTime, zman );
+			// Make sure the zman is before the current time and we haven't already notified...
+      //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
+      //  just missed it, we'll still add it as a candidate.
+      long timeDiff = ( zman.getTime().getTimeInMillis()+ ALERT_FUDGE_FACTOR ) - now.getTimeInMillis();
+      if ( ( timeDiff > 0 ) && !zmanCallback.hasBeenNotified( now, zman ) ) {
 
 				// Yes...if we haven't notified for this zman, then add it to the list. Even if we managed to miss the
 				//  time we wanted to alert, at least we can alert as soon as we know about it.
 				//noinspection AutoBoxing
-				candidates.add( new ZmanNotification( zman, msUntilZman ) );
+				candidates.add( new ZmanNotification( zman, now ) );
 			}
 		}
 
@@ -187,41 +186,56 @@ public class ZmanNotificationScheduler {
 	}
 
 
-	/**
-	 * Calculate the milliseconds of minutes between the given date and the zman. If it cannot be calculated for any
-	 *  reason, we'll return Integer.MAX_VALUE.
-	 *
-	 * @param now Expected to be the result of Calendar.getTime().getTime(); this is done since the common case is
-	 *              to call this method in a loop, and it seemed quite unnecessary to call this so many times.
-	 */
-	private static int computeMsUntilZman(
-		final long      now,
-		final Zman      nextZman
-	) {
+  /**
+   * Prior to actually notifying the user, figure out if this is a notification the user
+   *  should receive.
+   *
+   * @return true if the user should be notified; false otherwise.
+   */
+  @SuppressWarnings( "FeatureEnvy" )
+  private static boolean shouldActuallyNotify(
+    final ZmanimLocation  location,
+    final Calendar        now,
+    final Zman            nextZman,
+    final ZmanCallback    zmanCallback
+  ) {
 
-		// Just in case something has gone wrong, it will be a long time...
-		if ( nextZman == null ) {
-			return Integer.MAX_VALUE;
-		}
+  // If we've already notified for this one, then don't notify again.
+    if ( zmanCallback.hasBeenNotified( now, nextZman ) ) {
+      return false;
+    }
 
-		final Calendar nextZmanTime = nextZman.getTime();
-		if ( nextZmanTime == null ) {
-			// There are some zmanim which just cannot be calculated for a given location.
-			return Integer.MAX_VALUE;
-		}
+    // If the zman has just "recently" passed, go ahead and notify.
+    // If the zman is still a ways off, don't notify.
+    final long timeDiff = now.getTimeInMillis() - nextZman.getTime().getTimeInMillis();
+    if (  Math.abs( timeDiff ) > ZmanNotificationScheduler.ALERT_FUDGE_FACTOR ) {
+      return false;
+    }
 
-		long zmanTime = nextZmanTime.getTime().getTime();
+    if ( zmanCallback.shouldNotifyOnShabbat() ) {
+      return true;
+    }
 
-		long delta = zmanTime - now;
-		if ( delta > Integer.MAX_VALUE ) {
-			return Integer.MAX_VALUE;
-		}
+    HebrewDate today = HebrewCalendar.getForDate( now );
+    Details todayDetails = today.getDetails();
+    HebrewDate tomorrow = today.tomorrow();
+    final Details tomorrowDetails = tomorrow.getDetails();
 
-		return (int)delta;
-	}
+    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isShabbat() && today.isAfterSunset( location ) && !tomorrowDetails.isYomTov() ) {
+      return true;
+    }
+
+    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isYomTov() && today.isAfterSunset( location ) && !tomorrowDetails.isYomTov() ) {
+      return true;
+    }
+
+    return ( !todayDetails.isShabbat() && !todayDetails.isYomTov() );
+  }
 
 
-	/**
+  /**
 	 * Private ctor so the class cannot be instantiated.
 	 */
 	private ZmanNotificationScheduler() {
@@ -280,28 +294,74 @@ public class ZmanNotificationScheduler {
 
 	}
 
-	private static final class ZmanNotification {
+  /**
+   * Contains information about an upcoming notification.
+   */
+  static final class ZmanNotification {
 
-		final Zman                                              zman;
-		final int                                               msUntilAction;
+    final Zman                                         zman;
 
-
-		ZmanNotification(
-			Zman  zman,
-			int msUntilAction
-		) {
-			this.zman = zman;
-			this.msUntilAction = msUntilAction;
-		}
+    final int                                          msUntilAction;
 
 
-		@Override
-		public String toString() {
-			return "ZmanNotification{" +
-				"zman=" + ( zman == null ? "<next zman too far away>" : zman.type ) +
-				", msUntilAction=" + msUntilAction + " (" + new Date( System.currentTimeMillis() + msUntilAction ) + ")" +
-				'}';
-		}
-	}
+    ZmanNotification(
+      Zman  zman,
+      int   msToNextNotification
+    ) {
+      this.zman = zman;
+      this.msUntilAction = msToNextNotification;
+    }
+
+
+    ZmanNotification(
+      Zman      zman,
+      Calendar  now
+    ) {
+      this( zman, computeMsUntilZman( zman, now.getTimeInMillis() ) );
+    }
+
+
+    @Override
+    public String toString() {
+      return "ZmanNotification{" +
+        "zman=" + ( zman == null ? "<next zman too far away>" : zman.type ) +
+        ", msUntilAction=" + msUntilAction + " (" + new Date( System.currentTimeMillis() + msUntilAction ) + ")" +
+        '}';
+    }
+
+
+    /**
+     * Calculate the milliseconds of minutes between the given date and the zman. If it cannot be calculated for any
+     *  reason, we'll return Integer.MAX_VALUE.
+     *
+     * @param now Expected to be the result of Calendar.getTime().getTime(); this is done since the common case is
+     *              to call this method in a loop, and it seemed quite unnecessary to call this so many times.
+     */
+    private static int computeMsUntilZman(
+      final Zman nextZman,
+      final long now
+    ) {
+
+      // Just in case something has gone wrong, it will be a long time...
+      if ( nextZman == null ) {
+        return Integer.MAX_VALUE;
+      }
+
+      final Calendar nextZmanTime = nextZman.getTime();
+      if ( nextZmanTime == null ) {
+        // There are some zmanim which just cannot be calculated for a given location.
+        return Integer.MAX_VALUE;
+      }
+
+      long zmanTime = nextZmanTime.getTimeInMillis();
+
+      long delta = zmanTime - now;
+      if ( delta > Integer.MAX_VALUE ) {
+        return Integer.MAX_VALUE;
+      }
+
+      return (int)delta;
+    }
+  }
 
 } // End of ZmanUtils class

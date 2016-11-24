@@ -32,6 +32,11 @@ public interface ZmanCallback {
 		Zmanim.Type type
 	);
 
+  /**
+   * @return true if the user has indicated they want notifications even on Shabbat & Yom Tov.
+   */
+	boolean shouldNotifyOnShabbat();
+
 	/**
 	 * Has the user been notified of the specified zman for the specified date?
 	 *
@@ -41,18 +46,6 @@ public interface ZmanCallback {
 		Calendar  now,
 		Zman      zman
 	);
-
-  /**
-   * Prior to actually notifying the user, figure out if this is a notification the user
-   *  should receive.
-   *
-   * @return true if the user should be notified; false otherwise.
-   */
-  boolean shouldActuallyNotify(
-      final ZmanimLocation  location,
-      final Calendar        now,
-      final Zman            nextZman
-    );
 
 
 	/**
@@ -93,23 +86,19 @@ public interface ZmanCallback {
 		}
 
 
-		@Override
+    @Override
+    public boolean shouldNotifyOnShabbat() {
+      return true;
+    }
+
+
+    @Override
 		public boolean hasBeenNotified(
 			Calendar  now,
 			Zman      zman
 		) {
 			return false;
 		}
-
-
-    @Override
-    public boolean shouldActuallyNotify(
-      ZmanimLocation location,
-      Calendar now,
-      Zman nextZman
-    ) {
-      return true;
-    }
 
 
     @Override
