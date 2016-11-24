@@ -25,20 +25,6 @@ hg.number
 ^ZmanLib/bin/
 
 
-# IntelliJ Files that are per-user and should not be checked in.
-atlassian-ide-plugin.xml
-^.idea/workspace.xml
-^.idea/uiDesigner.xml
-^.idea/dictionaries
-^.idea/copyright/profiles_settings.xml
-^.idea/findbugs-idea.xml
-^.idea/shelf/
-^.idea/libraries/
-^.idea/modules
-^.idea/dataSources.xml
-^.idea/issues.xml
-
-
 # Ignore any backup files created by editors
 .*~
 
@@ -59,3 +45,47 @@ local.properties
 ^Android/zmanim.gradle
 
 
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/jsLibraryMappings.xml
+^.idea/uiDesigner.xml
+^.idea/copyright/profiles_settings.xml
+^.idea/findbugs-idea.xml
+^.idea/shelf/
+^.idea/modules
+^.idea/issues.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
