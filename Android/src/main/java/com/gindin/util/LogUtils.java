@@ -136,7 +136,12 @@ public class LogUtils {
       }
     }
     else {
-	    ACRA.getErrorReporter().putCustomData( key, data );
+	    if ( data == null ) {
+		    ACRA.getErrorReporter().removeCustomData( key );
+	    }
+	    else {
+		    ACRA.getErrorReporter().putCustomData( key, data );
+	    }
     }
   }
 
