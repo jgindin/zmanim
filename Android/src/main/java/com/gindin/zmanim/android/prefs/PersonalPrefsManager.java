@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.prefs;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
-import com.gindin.zmanlib.ZmanNotificationScheduler;
+import com.gindin.zmanlib.NotificationDefaults;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.SharedPreferences;
@@ -56,7 +56,7 @@ public class PersonalPrefsManager
 			// Early beta versions only allowed the alerts to be on or off.
 			final SharedPreferences.Editor editor = prefs.edit();
 
-			ZmanNotificationScheduler.NotificationDefaults notificationDefaults = new ZmanNotificationScheduler.NotificationDefaults();
+			NotificationDefaults notificationDefaults = new NotificationDefaults();
 
 			for ( Zmanim.Type type : Zmanim.Type.values() ) {
 				editor.remove( type.name() );

@@ -93,6 +93,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 
 		RunDaysZmanCallback zmanCallback = new RunDaysZmanCallback( perTestCallback, testTime, output, endDate );
+    ZmanNotificationScheduler scheduler = new ZmanNotificationScheduler( zmanCallback );
 
 		while ( !zmanCallback.testComplete ) {
 
@@ -105,7 +106,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 				zmanCallback.notifiedZmanim.put( forDate, notifiedZmanim );
 			}
 
-			ZmanNotificationScheduler.run( seattle, testTime, zmanCallback );
+			scheduler.run( seattle, testTime );
 
 			output.append( "\n" );
 		}

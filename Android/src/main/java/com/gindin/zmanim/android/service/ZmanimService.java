@@ -1,7 +1,6 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
@@ -94,7 +93,8 @@ public class ZmanimService
 	 */
 	private Intent                                            handlingAlarmsFor;
 
-	private ZmanCallback                                      zmanCallback;
+	private ZmanNotificationScheduler                         zmanNotificationScheduler;
+
 
 	/**
 	 * DO NOT access this directly! Always use the getNotifiedZmanim method to ensure using for the correct date!
@@ -130,7 +130,8 @@ public class ZmanimService
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
-		zmanCallback = new PrefsBasedZmanCallback( zmanimSelectionPrefs, personalPrefs );
+    ZmanCallback zmanCallback = new PrefsBasedZmanCallback( zmanimSelectionPrefs, personalPrefs );
+    zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
 	}
 
 
@@ -271,7 +272,7 @@ public class ZmanimService
 
           Calendar now = Calendar.getInstance();
           now.setTimeZone( location.getTimeZone() );
-          ZmanNotificationScheduler.run( location, now, zmanCallback );
+          zmanNotificationScheduler.run( location, now );
 
           return null;
         }
@@ -286,7 +287,6 @@ public class ZmanimService
 
       schedulerTask.execute( (Void[])null );
     }
-
   }
 
 
@@ -369,10 +369,6 @@ public class ZmanimService
 		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
 		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 		String notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
-
-		if ( BuildConfig.DEBUG ) {
-			notificationText += " (" + zmanCallback.howManyMinutesToAlertBefore( nextZman.type ) + ")";
-		}
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this )
 			.setContentTitle( getString( R.string.app_name ) )

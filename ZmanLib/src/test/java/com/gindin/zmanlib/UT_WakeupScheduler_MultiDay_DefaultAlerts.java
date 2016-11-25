@@ -25,7 +25,7 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 				return
 					"Time              | Action                                        | Next (M:S:ms) |\n" +
 					"------------------|-----------------------------------------------|---------------|\n" +
-					"12/07/14 06:34:00 | Notify: Alot@6:02:51 AM (-31:-8:-624)         | Notify: Talit@6:39:55 AM (5:55:244)           | 30:00:000     |\n" +
+					"12/07/14 06:34:00 | Notify: Talit@6:39:55 AM (5:55:244)           | 30:00:000     |\n" +
 					"12/07/14 07:04:00 | Sleep                                         | 23:53:481     |\n" +
 					"12/07/14 07:27:53 | Notify: Hanetz@7:42:53 AM (15:0:0)            | 30:00:000     |\n" +
 					"12/07/14 07:57:53 | Sleep                                         | 30:00:000     |\n" +
@@ -616,7 +616,7 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 	private static class DefaultAlertsZmanCallback
 		extends UT_ZmanUtils.ZmanCallbackForTests {
 
-		private final ZmanNotificationScheduler.NotificationDefaults  notificationDefaults = new ZmanNotificationScheduler.NotificationDefaults();
+		private final NotificationDefaults notificationDefaults = new NotificationDefaults();
 
 
 		@Override
