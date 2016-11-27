@@ -70,8 +70,10 @@ public class ZmanNotificationScheduler {
 		final Calendar          now
 	) {
 
+    HebrewDate hebrewDate = HebrewCalendar.getForDate( now );
+
 		// Get all the rest of the day's zmanim.
-		List<ZmanNotification> restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now );
+		List<ZmanNotification> restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now, hebrewDate );
 
 		// If there are no more zmanim, then we have to roll to the next day, and check again.
 		if ( restOfTheDaysZmanim.isEmpty() ) {
@@ -81,8 +83,14 @@ public class ZmanNotificationScheduler {
 			now.set( Calendar.SECOND, 0 );
 			now.set( Calendar.MILLISECOND, 0 );
 
-			restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now );
+      hebrewDate = HebrewCalendar.getForDate( now );
+			restOfTheDaysZmanim = findTheRestOfTheDaysZmanim( location, now, hebrewDate );
 		}
+
+    // NOTE: It's possible that we rolled to the next Gregorian date, and so now when we go to find
+    //  the day's zmanim, we're not going to find last night's chatzot.
+    //  For now, this is going to be a bug...
+
 
 		//  If there are no candidates, then just schedule another check, and we're done.
 		if ( restOfTheDaysZmanim.isEmpty() ) {
@@ -94,7 +102,7 @@ public class ZmanNotificationScheduler {
 		final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim );
 
 		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
-		if ( shouldActuallyNotify( location, now, nextZmanNotification ) ) {
+		if ( shouldActuallyNotify( location, now, nextZmanNotification, hebrewDate ) ) {
 
       zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
 
@@ -117,12 +125,12 @@ public class ZmanNotificationScheduler {
 	 */
 	private List<ZmanNotification> findTheRestOfTheDaysZmanim(
 		final ZmanimLocation    location,
-		final Calendar          now
+		final Calendar          now,
+    final HebrewDate        hebrewDate
 	) {
 
 		// Basic idea here...
 		//  1. Get the zmanim for today
-		HebrewDate hebrewDate = HebrewCalendar.getForDate( now );
 		List<Zmanim> daysZmanim = hebrewDate.getZmanim( location );
 
 		//  2. Find all the zmanim that:
@@ -207,7 +215,8 @@ public class ZmanNotificationScheduler {
   private boolean shouldActuallyNotify(
     final ZmanimLocation    location,
     final Calendar          now,
-    final ZmanNotification  zmanNotification
+    final ZmanNotification  zmanNotification,
+    final HebrewDate        today
   ) {
 
     // If there's no zman in the notification, then it's too far away.
@@ -228,7 +237,6 @@ public class ZmanNotificationScheduler {
       return true;
     }
 
-    HebrewDate today = HebrewCalendar.getForDate( now );
     Details todayDetails = today.getDetails();
     HebrewDate tomorrow = today.tomorrow();
     final Details tomorrowDetails = tomorrow.getDetails();
