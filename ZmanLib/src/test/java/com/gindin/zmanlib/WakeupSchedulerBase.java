@@ -16,7 +16,7 @@ import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
 /**
  *
  */
-abstract class WakeupSchedulerBase_MutliDay {
+abstract class WakeupSchedulerBase {
 
 	interface TestResultsCallback {
 
@@ -26,43 +26,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 	}
 
 
-
-	@SuppressWarnings( "MagicNumber" )
-	void december_7_2014(
-		final ZmanCallback          perTestCallback,
-		final TestResultsCallback   testResultsCallback
-	) {
-
-		// I'm going to try and be somewhat realistic here. We'll say someone woke up and turned on their
-		//  phone at 6:34am...
-		//
-		//  Zman                Time        Alert (-15 min)
-		//  ------------------  --------    ---------------
-		//  Alot Hashachar       6:02:50     5:47
-		//  Talit/Tefilin        6:39:53     6:24
-		//  HaNetz               7:42:51     7:27
-		//  Sof Zman Shema       9:01:39     8:46
-		//  Sof Zman Tefila     10:34:34    10:19
-		//  Chatzot             12:00:26    11:45
-		//  Mincha Gedola       12:21:54    12:06
-		//  Mincha Ketana       14:30:42    14:15
-		//  Plag HaMincha       15:24:21    15:09
-		//  Shkia               16:18:01    16:03
-		//  Latest Mincha       16:27:41    16:12
-		//  Bein Hashmashot     16:52:05    16:37
-		//  Tzait Hacochavim    17:03:01    16:48
-		//  Midnight            00:00:57    23:45
-
-		Calendar testTime = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 7, 6, 34 );
-		HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
-		Calendar endTest = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 8, 0, 0 );
-
-		runDays( testTime, endTest, perTestCallback, testResultsCallback.getExpectedOutput(),
-			testResultsCallback.getExpectedNotifiedZmanim( hebrewDate ) );
-	}
-
-
-	@SuppressWarnings( "MagicNumber" )
+  @SuppressWarnings( "MagicNumber" )
 	void december_21_2015_1_week(
 		final ZmanCallback          perTestCallback,
 		final TestResultsCallback   testResultsCallback
@@ -73,18 +37,20 @@ abstract class WakeupSchedulerBase_MutliDay {
 		HebrewDate startTest = HebrewCalendar.getForDate( testTime );
 		Calendar endTest = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 28, 0, 0 );
 
-		runDays( testTime, endTest, perTestCallback, testResultsCallback.getExpectedOutput(),
-			testResultsCallback.getExpectedNotifiedZmanim( startTest ) );
+		runDays( testTime, endTest, perTestCallback, testResultsCallback );
 	}
 
 
-	private void runDays(
-		final Calendar                          testTime,
-		final Calendar                          endDate,
-		final ZmanCallback                      perTestCallback,
-		final String                            expected,
-	  final Map<HebrewDate,List<Zmanim.Type>> expectedZmanim
+	void runDays(
+		final Calendar              testTime,
+		final Calendar              endDate,
+		final ZmanCallback          perTestCallback,
+    final TestResultsCallback   testResultsCallback
 	) {
+
+    HebrewDate hebrewDate = HebrewCalendar.getForDate( testTime );
+    final Map<HebrewDate, List<Zmanim.Type>> expectedZmanim =
+      testResultsCallback.getExpectedNotifiedZmanim( hebrewDate );
 
 		final StringBuilder output = new StringBuilder();
 		//              123456789012345678901234567890123456789012345678901234567890
@@ -112,9 +78,10 @@ abstract class WakeupSchedulerBase_MutliDay {
 		}
 
 
-		Assert.assertEquals( expected, output.toString() );
+    final String expected = testResultsCallback.getExpectedOutput();
+    Assert.assertEquals( expected, output.toString() );
 
-		final SecularDateFormatter dateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.SHORT );
+    final SecularDateFormatter dateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.SHORT );
 
 		// Make sure we notified for all the zmanim of the day...
 		for ( Map.Entry<HebrewDate, NotifiedZmanim> entry : zmanCallback.notifiedZmanim.entrySet() ) {
@@ -207,8 +174,7 @@ abstract class WakeupSchedulerBase_MutliDay {
 
     @Override
     public boolean shouldNotifyOnShabbat() {
-			// For testing purposes, we'll want all the notifications.
-      return true;
+      return perTestCallback.shouldNotifyOnShabbat();
     }
 
 
@@ -301,4 +267,4 @@ abstract class WakeupSchedulerBase_MutliDay {
 
 	}
 
-} // End of WakeupSchedulerBase_MutliDay class
+} // End of WakeupSchedulerBase class

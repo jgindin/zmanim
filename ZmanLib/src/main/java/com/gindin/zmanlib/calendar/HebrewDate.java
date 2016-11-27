@@ -11,6 +11,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 import com.gindin.zmanlib.zman.ZmanimFactory;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -375,8 +376,38 @@ public class HebrewDate
 	}
 
 
+  /**
+ 	 * Check if the specified time, given the specified location, is after the time of the specified zman.
+ 	 *
+   * @param currentTime The time to check against.
+   * @param type The zman we're checking.
+ 	 * @param location Where in the world to check. Should not be null, but in case it is, this
+   *  method assumes that we are NOT after the zman.
+ 	 *
+ 	 * @return true if this HebrewDate represents a time after the zman for the current day.
+ 	 */
+	public boolean isAfter(
+    Calendar                  currentTime,
+	  Zmanim.Type               type,
+    @Nullable ZmanimLocation  location
+  ) {
+
+    if ( location == null ) {
+      return false;
+    }
+
+    HebrewDate currentDate = HebrewCalendar.getForDate( currentTime );
+    if ( 0 != currentDate.compareTo( this ) ) {
+      return false;
+    }
+
+    final Calendar zmanTime = getZman( location, type ).getTime();
+    return currentTime.getTime().after( zmanTime.getTime() );
+  }
+
+
 	/**
-	 * Check if the current time, given the specified location, is after sunset.
+	 * Check if the current SYSTEM time, given the specified location, is after sunset.
 	 *
 	 * @param location Where in the world to check. Should not be null, but in case it is, this method assumes that
 	 *  we are NOT after sunset.
@@ -387,18 +418,7 @@ public class HebrewDate
 		@Nullable ZmanimLocation  location
 	) {
 
-		if ( location == null ) {
-			return false;
-		}
-
-		HebrewDate today = HebrewCalendar.today();
-		if ( 0 != today.compareTo( this ) ) {
-			return false;
-		}
-
-		final Calendar sunset = getZman( location, Zmanim.Type.Shkia ).getTime();
-
-		return today.getTime().after( sunset.getTime() );
+	  return isAfter( getCalendar(), Zmanim.Type.Shkia, location );
 	}
 
 

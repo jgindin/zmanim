@@ -4,16 +4,13 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
  */
-public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
-	extends WakeupSchedulerBase_MutliDay {
+public class UT_WakeupScheduler_ConfiguredAlerts
+	extends WakeupSchedulerBase {
 
 
 	@Test
@@ -81,7 +78,9 @@ public class UT_WakeupScheduler_MultiDay_ConfiguredAlerts
 			}
 		};
 
-		december_7_2014( new OverlappingAlertsZmanCallback(), testResultsCallback );
+    Calendar testTime = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 7, 6, 34 );
+    Calendar endTest = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 8, 0, 0 );
+		runDays( testTime, endTest, new OverlappingAlertsZmanCallback(), testResultsCallback );
 	}
 
 

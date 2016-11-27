@@ -4,16 +4,13 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
  */
-public class UT_WakeupScheduler_MultiDay_DefaultAlerts
-	extends WakeupSchedulerBase_MutliDay {
+public class UT_WakeupScheduler_DefaultAlerts
+	extends WakeupSchedulerBase {
 
 
 	@Test
@@ -83,7 +80,9 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 		};
 
 
-		december_7_2014( new UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback(), testResultsCallback );
+		Calendar testTime = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 7, 6, 34 );
+    Calendar endTest = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 8, 0, 0 );
+		runDays( testTime, endTest, new UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback(), testResultsCallback );
 	}
 
 
@@ -151,7 +150,9 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 		};
 
 
-		december_7_2014( new DefaultAlertsZmanCallback(), testResultsCallback );
+		Calendar testTime = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 7, 6, 34 );
+    Calendar endTest = UT_ZmanUtils.configureTestTime( 2014, Calendar.DECEMBER, 8, 0, 0 );
+		runDays( testTime, endTest, new DefaultAlertsZmanCallback(), testResultsCallback );
 	}
 
 
@@ -613,7 +614,7 @@ public class UT_WakeupScheduler_MultiDay_DefaultAlerts
 
 
 
-	private static class DefaultAlertsZmanCallback
+	public static class DefaultAlertsZmanCallback
 		extends UT_ZmanUtils.ZmanCallbackForTests {
 
 		private final NotificationDefaults notificationDefaults = new NotificationDefaults();
