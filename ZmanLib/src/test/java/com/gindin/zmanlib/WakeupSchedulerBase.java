@@ -34,7 +34,6 @@ abstract class WakeupSchedulerBase {
 
 		// In this case, the user never turns their phone off...
 		Calendar testTime = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 21, 0, 1 );
-		HebrewDate startTest = HebrewCalendar.getForDate( testTime );
 		Calendar endTest = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 28, 0, 0 );
 
 		runDays( testTime, endTest, perTestCallback, testResultsCallback );

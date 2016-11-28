@@ -501,6 +501,341 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 	}
 
 
+	@Test
+  public void shabbatWithAlerts_winter() {
+
+    TestResultsCallback testResultsCallback = new TestResultsCallback() {
+      @Override
+      public String getExpectedOutput() {
+        return
+          "Time              | Action                                        | Next (M:S:ms) |\n" +
+          "------------------|-----------------------------------------------|---------------|\n" +
+          "12/25/15 00:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 00:31:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 01:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 01:31:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 02:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 02:31:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 03:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 03:31:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 04:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 04:31:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 05:01:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 05:31:00 | Sleep                                         | 28:53:812     |\n" +
+          "12/25/15 05:59:53 | Notify: Alot@6:14:53 AM (15:0:0)              | 30:00:000     |\n" +
+          "12/25/15 06:29:53 | Sleep                                         | 07:20:325     |\n" +
+          "12/25/15 06:37:14 | Notify: Talit@6:52:14 AM (15:0:0)             | 30:00:000     |\n" +
+          "12/25/15 07:07:14 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 07:37:14 | Sleep                                         | 03:42:961     |\n" +
+          "12/25/15 07:40:57 | Notify: Hanetz@7:55:57 AM (15:0:0)            | 30:00:000     |\n" +
+          "12/25/15 08:10:57 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 08:40:57 | Sleep                                         | 16:07:049     |\n" +
+          "12/25/15 08:57:04 | Notify: SofZmanShema@9:12:04 AM (15:0:0)      | 30:00:000     |\n" +
+          "12/25/15 09:27:04 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 09:57:04 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 10:27:04 | Sleep                                         | 02:44:927     |\n" +
+          "12/25/15 10:29:49 | Notify: SofZmanTefila@10:44:49 AM (15:0:0)    | 30:00:000     |\n" +
+          "12/25/15 10:59:49 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 11:29:49 | Sleep                                         | 24:25:988     |\n" +
+          "12/25/15 11:54:15 | Notify: Chatzot@12:09:15 PM (15:0:0)          | 21:06:497     |\n" +
+          "12/25/15 12:15:21 | Notify: MinchaGedola@12:30:21 PM (15:0:0)     | 30:00:000     |\n" +
+          "12/25/15 12:45:21 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 13:15:21 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 13:45:21 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 14:15:21 | Sleep                                         | 06:38:982     |\n" +
+          "12/25/15 14:22:00 | Notify: MinchaKetana@2:37:00 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/25/15 14:52:00 | Sleep                                         | 22:46:242     |\n" +
+          "12/25/15 15:14:46 | Notify: PlagHaMincha@3:29:46 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/25/15 15:44:46 | Sleep                                         | 04:46:243     |\n" +
+          "12/25/15 15:49:33 | Notify: CandleLighting@4:04:33 PM (15:0:0)    | 18:00:000     |\n" +
+          "12/25/15 16:07:33 | Notify: Shkia@4:22:33 PM (15:0:0)             | 09:29:916     |\n" +
+          "12/25/15 16:17:02 | Notify: LatestMincha@4:32:02 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/25/15 16:47:02 | Sleep                                         | 13:07:394     |\n" +
+          "12/25/15 17:00:10 | Notify: TzaitHacochavim@5:15:10 PM (15:0:0)   | 30:00:000     |\n" +
+          "12/25/15 17:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 18:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 18:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 19:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 19:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 20:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 20:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 21:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 21:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 22:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 22:30:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 23:00:10 | Sleep                                         | 30:00:000     |\n" +
+          "12/25/15 23:30:10 | Sleep                                         | 24:14:285     |\n" +
+          "12/25/15 23:54:24 | Notify: NightChatzot@12:09:24 AM (15:0:0)     | 30:00:000     |\n" +
+          "12/26/15 00:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 01:00:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 01:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 02:00:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 02:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 03:00:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 03:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 04:00:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 04:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 05:00:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 05:30:00 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 06:00:00 | Notify: Alot@6:15:15 AM (15:15:398)           | 30:00:000     |\n" +
+          "12/26/15 06:30:00 | Sleep                                         | 07:35:059     |\n" +
+          "12/26/15 06:37:35 | Notify: Talit@6:52:35 AM (15:0:0)             | 30:00:000     |\n" +
+          "12/26/15 07:07:35 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 07:37:35 | Sleep                                         | 03:41:158     |\n" +
+          "12/26/15 07:41:16 | Notify: Hanetz@7:56:16 AM (15:0:0)            | 30:00:000     |\n" +
+          "12/26/15 08:11:16 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 08:41:16 | Sleep                                         | 16:13:809     |\n" +
+          "12/26/15 08:57:30 | Notify: SofZmanShema@9:12:30 AM (15:0:0)      | 30:00:000     |\n" +
+          "12/26/15 09:27:30 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 09:57:30 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 10:27:30 | Sleep                                         | 02:45:635     |\n" +
+          "12/26/15 10:30:15 | Notify: SofZmanTefila@10:45:15 AM (15:0:0)    | 30:00:000     |\n" +
+          "12/26/15 11:00:15 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 11:30:15 | Sleep                                         | 24:29:722     |\n" +
+          "12/26/15 11:54:45 | Notify: Chatzot@12:09:45 PM (15:0:0)          | 21:07:430     |\n" +
+          "12/26/15 12:15:52 | Notify: MinchaGedola@12:30:52 PM (15:0:0)     | 30:00:000     |\n" +
+          "12/26/15 12:45:52 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 13:15:52 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 13:45:52 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 14:15:52 | Sleep                                         | 06:44:583     |\n" +
+          "12/26/15 14:22:37 | Notify: MinchaKetana@2:37:37 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/26/15 14:52:37 | Sleep                                         | 22:48:576     |\n" +
+          "12/26/15 15:15:25 | Notify: PlagHaMincha@3:30:25 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/26/15 15:45:25 | Sleep                                         | 22:48:586     |\n" +
+          "12/26/15 16:08:14 | Notify: Shkia@4:23:14 PM (15:0:0)             | 09:30:334     |\n" +
+          "12/26/15 16:17:44 | Notify: LatestMincha@4:32:44 PM (15:0:0)      | 30:00:000     |\n" +
+          "12/26/15 16:47:44 | Sleep                                         | 05:29:666     |\n" +
+          "12/26/15 16:53:14 | Notify: ShabbatEnd@5:08:14 PM (15:0:0)        | 07:35:556     |\n" +
+          "12/26/15 17:00:50 | Notify: TzaitHacochavim@5:15:50 PM (15:0:0)   | 30:00:000     |\n" +
+          "12/26/15 17:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 18:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 18:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 19:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 19:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 20:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 20:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 21:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 21:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 22:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 22:30:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 23:00:50 | Sleep                                         | 30:00:000     |\n" +
+          "12/26/15 23:30:50 | Sleep                                         | 24:03:429     |\n" +
+          "12/26/15 23:54:53 | Notify: NightChatzot@12:09:53 AM (15:0:0)     | 30:00:000     |\n";
+      }
+
+
+      @Override
+      public Map<HebrewDate, List<Zmanim.Type>> getExpectedNotifiedZmanim( HebrewDate date ) {
+        Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
+
+        expectedZmanim.put( date,
+          Arrays.asList( Zmanim.Type.Alot , Zmanim.Type.Talit, Zmanim.Type.Hanetz,
+            Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
+            Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha,
+            Zmanim.Type.CandleLighting, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
+            Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
+        );
+
+        expectedZmanim.put( date.forward( 1 ),
+          Arrays.asList( Zmanim.Type.Alot , Zmanim.Type.Talit, Zmanim.Type.Hanetz,
+            Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
+            Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha,
+            Zmanim.Type.Shkia, Zmanim.Type.LatestMincha, Zmanim.Type.ShabbatEnd,
+            Zmanim.Type.TzaitHacochavim, Zmanim.Type.NightChatzot )
+        );
+
+        expectedZmanim.put( date.forward( 2 ),
+          Arrays.asList( Zmanim.Type.Talit, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
+            Zmanim.Type.BeinHashmashot, Zmanim.Type.TzaitHacochavim )
+        );
+
+        return expectedZmanim;
+      }
+    };
+
+    UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback perTestCallback = new UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback() {
+      @Override
+      public int howManyMinutesToAlertBefore( Zmanim.Type type ) {
+        if ( type == Zmanim.Type.BeinHashmashot ) {
+          return ZmanNotificationScheduler.NO_ALERT;
+        }
+
+        return super.howManyMinutesToAlertBefore( type );
+      }
+    };
+
+
+    Calendar testTime = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 25, 0, 1 );
+    Calendar endTest = UT_ZmanUtils.configureTestTime( 2015, Calendar.DECEMBER, 27, 0, 0 );
+
+    runDays( testTime, endTest, perTestCallback, testResultsCallback );
+  }
+
+
+  @Test
+   public void shabbatWithAlerts_summer() {
+
+     TestResultsCallback testResultsCallback = new TestResultsCallback() {
+       @Override
+       public String getExpectedOutput() {
+         return
+           "Time              | Action                                        | Next (M:S:ms) |\n" +
+           "------------------|-----------------------------------------------|---------------|\n" +
+           "07/21/17 00:01:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 00:31:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 01:01:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 01:31:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 02:01:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 02:31:00 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 03:01:00 | Sleep                                         | 08:02:085     |\n" +
+           "07/21/17 03:09:02 | Notify: Alot@3:24:02 AM (15:0:0)              | 30:00:000     |\n" +
+           "07/21/17 03:39:02 | Sleep                                         | 27:27:695     |\n" +
+           "07/21/17 04:06:29 | Notify: Talit@4:21:29 AM (15:0:0)             | 30:00:000     |\n" +
+           "07/21/17 04:36:29 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 05:06:29 | Sleep                                         | 11:47:101     |\n" +
+           "07/21/17 05:18:16 | Notify: Hanetz@5:33:16 AM (15:0:0)            | 30:00:000     |\n" +
+           "07/21/17 05:48:16 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 06:18:16 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 06:48:16 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 07:18:16 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 07:48:16 | Sleep                                         | 16:11:583     |\n" +
+           "07/21/17 08:04:28 | Notify: SofZmanShema@8:19:28 AM (15:0:0)      | 30:00:000     |\n" +
+           "07/21/17 08:34:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 09:04:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 09:34:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 10:04:28 | Sleep                                         | 21:43:449     |\n" +
+           "07/21/17 10:26:11 | Notify: SofZmanTefila@10:41:11 AM (15:0:0)    | 30:00:000     |\n" +
+           "07/21/17 10:56:11 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 11:26:11 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 11:56:11 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 12:26:11 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 12:56:11 | Sleep                                         | 03:57:516     |\n" +
+           "07/21/17 13:00:09 | Notify: Chatzot@1:15:09 PM (15:0:0)           | 30:00:000     |\n" +
+           "07/21/17 13:30:09 | Sleep                                         | 08:29:379     |\n" +
+           "07/21/17 13:38:38 | Notify: MinchaGedola@1:53:38 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/21/17 14:08:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 14:38:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 15:08:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 15:38:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 16:08:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 16:38:38 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 17:08:38 | Sleep                                         | 20:56:274     |\n" +
+           "07/21/17 17:29:35 | Notify: MinchaKetana@5:44:35 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/21/17 17:59:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 18:29:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 18:59:35 | Sleep                                         | 06:13:447     |\n" +
+           "07/21/17 19:05:48 | Notify: PlagHaMincha@7:20:48 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/21/17 19:35:48 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 20:05:48 | Sleep                                         | 18:13:448     |\n" +
+           "07/21/17 20:24:01 | Notify: CandleLighting@8:39:01 PM (15:0:0)    | 18:00:000     |\n" +
+           "07/21/17 20:42:01 | Notify: Shkia@8:57:01 PM (15:0:0)             | 17:19:216     |\n" +
+           "07/21/17 20:59:21 | Notify: LatestMincha@9:14:21 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/21/17 21:29:21 | Sleep                                         | 10:06:916     |\n" +
+           "07/21/17 21:39:28 | Notify: TzaitHacochavim@9:54:28 PM (15:0:0)   | 30:00:000     |\n" +
+           "07/21/17 22:09:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 22:39:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 23:09:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/21/17 23:39:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 00:09:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 00:39:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 01:09:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 01:39:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 02:09:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 02:39:28 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 03:09:28 | Sleep                                         | 01:40:144     |\n" +
+           "07/22/17 03:11:08 | Notify: Alot@3:26:08 AM (15:0:0)              | 30:00:000     |\n" +
+           "07/22/17 03:41:08 | Sleep                                         | 26:51:327     |\n" +
+           "07/22/17 04:07:59 | Notify: Talit@4:22:59 AM (15:0:0)             | 30:00:000     |\n" +
+           "07/22/17 04:37:59 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 05:07:59 | Sleep                                         | 11:25:184     |\n" +
+           "07/22/17 05:19:24 | Notify: Hanetz@5:34:24 AM (15:0:0)            | 30:00:000     |\n" +
+           "07/22/17 05:49:24 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 06:19:24 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 06:49:24 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 07:19:24 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 07:49:24 | Sleep                                         | 16:07:843     |\n" +
+           "07/22/17 08:05:32 | Notify: SofZmanShema@8:20:32 AM (15:0:0)      | 30:00:000     |\n" +
+           "07/22/17 08:35:32 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 09:05:32 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 09:35:32 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 10:05:32 | Sleep                                         | 21:03:309     |\n" +
+           "07/22/17 10:26:35 | Notify: SofZmanTefila@10:41:35 AM (15:0:0)    | 30:00:000     |\n" +
+           "07/22/17 10:56:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 11:26:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 11:56:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 12:26:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 12:56:35 | Sleep                                         | 03:35:576     |\n" +
+           "07/22/17 13:00:11 | Notify: Chatzot@1:15:11 PM (15:0:0)           | 30:00:000     |\n" +
+           "07/22/17 13:30:11 | Sleep                                         | 08:23:894     |\n" +
+           "07/22/17 13:38:35 | Notify: MinchaGedola@1:53:35 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/22/17 14:08:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 14:38:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 15:08:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 15:38:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 16:08:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 16:38:35 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 17:08:35 | Sleep                                         | 20:23:364     |\n" +
+           "07/22/17 17:28:58 | Notify: MinchaKetana@5:43:58 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/22/17 17:58:58 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 18:28:58 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 18:58:58 | Sleep                                         | 05:59:735     |\n" +
+           "07/22/17 19:04:58 | Notify: PlagHaMincha@7:19:58 PM (15:0:0)      | 30:00:000     |\n" +
+           "07/22/17 19:34:58 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 20:04:58 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 20:34:58 | Sleep                                         | 05:59:740     |\n" +
+           "07/22/17 20:40:58 | Notify: Shkia@8:55:58 PM (15:0:0)             | 17:16:746     |\n" +
+           "07/22/17 20:58:14 | Notify: LatestMincha@9:13:14 PM (15:0:0)      | 27:43:254     |\n" +
+           "07/22/17 21:25:58 | Notify: ShabbatEnd@9:40:58 PM (15:0:0)        | 12:09:852     |\n" +
+           "07/22/17 21:38:08 | Notify: TzaitHacochavim@9:53:08 PM (15:0:0)   | 30:00:000     |\n" +
+           "07/22/17 22:08:08 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 22:38:08 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 23:08:08 | Sleep                                         | 30:00:000     |\n" +
+           "07/22/17 23:38:08 | Sleep                                         | 30:00:000     |\n";
+       }
+
+
+       @Override
+       public Map<HebrewDate, List<Zmanim.Type>> getExpectedNotifiedZmanim( HebrewDate date ) {
+         Map<HebrewDate,List<Zmanim.Type>> expectedZmanim = new HashMap<>();
+
+         expectedZmanim.put( date,
+           Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz,
+             Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
+             Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha,
+             Zmanim.Type.CandleLighting, Zmanim.Type.Shkia, Zmanim.Type.LatestMincha,
+             Zmanim.Type.TzaitHacochavim )
+         );
+
+         expectedZmanim.put( date.forward( 1 ),
+           Arrays.asList( Zmanim.Type.Alot, Zmanim.Type.Talit, Zmanim.Type.Hanetz,
+             Zmanim.Type.SofZmanShema, Zmanim.Type.SofZmanTefila, Zmanim.Type.Chatzot,
+             Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana, Zmanim.Type.PlagHaMincha,
+             Zmanim.Type.Shkia, Zmanim.Type.LatestMincha, Zmanim.Type.ShabbatEnd,
+             Zmanim.Type.TzaitHacochavim )
+         );
+
+         return expectedZmanim;
+       }
+     };
+
+     UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback perTestCallback = new UT_ZmanUtils.AlwaysFifteenMinuteAlertsZmanCallback() {
+       @Override
+       public int howManyMinutesToAlertBefore( Zmanim.Type type ) {
+         if ( type == Zmanim.Type.BeinHashmashot ) {
+           return ZmanNotificationScheduler.NO_ALERT;
+         }
+
+         return super.howManyMinutesToAlertBefore( type );
+       }
+     };
+
+
+     Calendar testTime = UT_ZmanUtils.configureTestTime( 2017, Calendar.JULY, 21, 0, 1 );
+     Calendar endTest = UT_ZmanUtils.configureTestTime( 2017, Calendar.JULY, 23, 0, 0 );
+
+     runDays( testTime, endTest, perTestCallback, testResultsCallback );
+   }
+
 
 	private static class OverlappingAlertsZmanCallback
 		extends UT_ZmanUtils.ZmanCallbackForTests {
