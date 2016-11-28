@@ -3,10 +3,10 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
-import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
+
 import org.junit.Assert;
 
 import java.util.*;
@@ -190,16 +190,21 @@ abstract class WakeupSchedulerBase {
 
 
     @Override
+    public void completed(
+      Calendar  now,
+      Zman      zman
+    ) {
+
+      NotifiedZmanim notifiedForDay = getNotifiedZmanim( now );
+      notifiedForDay.notified( zman );
+    }
+
+
+    @Override
 		public void notifyUser(
-      ZmanimLocation  location,
       Calendar        now,
       Zman            nextZman
     ) {
-
-			NotifiedZmanim notifiedForDay = getNotifiedZmanim( now );
-			notifiedForDay.notified( nextZman );
-
-			notified = true;
 
 			long delta = nextZman.getTime().getTimeInMillis() - now.getTimeInMillis();
 			long minUntilZman = ( delta / ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) );
@@ -210,6 +215,7 @@ abstract class WakeupSchedulerBase {
 			output.append( String.format( " %-45s |", "Notify: " + nextZman.type + "@" +
 				zmanFormatter.formatZmanTime( nextZman ) + " (" + minUntilZman + ":" + secs + ":" + remainingMs + ")" ) );
 
+      notified = true;
 			testComplete = isTestComplete( now, endDate );
 		}
 

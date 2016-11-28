@@ -102,13 +102,17 @@ public class ZmanNotificationScheduler {
 		final ZmanNotification nextZmanNotification = findNextZmanNotification( restOfTheDaysZmanim );
 
 		// If we have to notify now, do it. Note that if we're within a couple of seconds, we'll just notify now.
-		if ( shouldActuallyNotify( location, now, nextZmanNotification, hebrewDate ) ) {
+    if ( isTimeToNotify( now, nextZmanNotification ) ) {
+      if ( shouldActuallyNotify( location, now, hebrewDate ) ) {
+        zmanCallback.notifyUser( now, nextZmanNotification.zman );
+      }
 
-      zmanCallback.notifyUser( location, now, nextZmanNotification.zman );
+      // Regardless, mark this zman as notified.
+      zmanCallback.completed( now, nextZmanNotification.zman );
 
-			// That zman will no longer be a candidate, so go run again...
-			run( location, now );
-		}
+      // That zman will no longer be a candidate, so go run again...
+      run( location, now );
+    }
 		else {
 
 			// Schedule the next check...
@@ -206,17 +210,11 @@ public class ZmanNotificationScheduler {
 
 
   /**
-   * Prior to actually notifying the user, figure out if this is a notification the user
-   *  should receive.
-   *
-   * @return true if the user should be notified; false otherwise.
+   * Determine if it's time to notify for the specified notification.
    */
-  @SuppressWarnings( "FeatureEnvy" )
-  private boolean shouldActuallyNotify(
-    final ZmanimLocation    location,
+	private boolean isTimeToNotify(
     final Calendar          now,
-    final ZmanNotification  zmanNotification,
-    final HebrewDate        today
+	  final ZmanNotification  zmanNotification
   ) {
 
     // If there's no zman in the notification, then it's too far away.
@@ -232,6 +230,23 @@ public class ZmanNotificationScheduler {
     if ( zmanNotification.msUntilAction > ALERT_FUDGE_FACTOR ) {
       return false;
     }
+
+    return true;
+  }
+
+
+  /**
+   * Prior to actually notifying the user, figure out if this is a notification the user
+   *  should receive.
+   *
+   * @return true if the user should be notified; false otherwise.
+   */
+  @SuppressWarnings( "FeatureEnvy" )
+  private boolean shouldActuallyNotify(
+    final ZmanimLocation    location,
+    final Calendar          now,
+    final HebrewDate        today
+  ) {
 
     if ( zmanCallback.shouldNotifyOnShabbat() ) {
       return true;

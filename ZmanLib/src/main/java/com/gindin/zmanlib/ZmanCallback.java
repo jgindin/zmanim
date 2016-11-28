@@ -1,8 +1,8 @@
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
@@ -47,12 +47,18 @@ public interface ZmanCallback {
 		Zman      zman
 	);
 
+  /**
+   * Indicate the handling of the specified zman has been completed.
+   */
+	void completed(
+    Calendar  now,
+	  Zman      zman
+  );
 
 	/**
 	 * The user should be notified about the specified zman.
 	 */
 	void notifyUser(
-    ZmanimLocation  location,
     Calendar        now,
     Zman            nextZman
   );
@@ -102,8 +108,15 @@ public interface ZmanCallback {
 
 
     @Override
+    public void completed(
+      Calendar  now,
+  	  Zman      zman
+    ) {
+    }
+
+
+    @Override
 		public void notifyUser(
-      ZmanimLocation  location,
       Calendar        now,
       Zman            nextZman
     ) {

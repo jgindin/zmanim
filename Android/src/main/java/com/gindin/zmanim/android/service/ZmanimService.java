@@ -480,15 +480,22 @@ public class ZmanimService
 		}
 
 
-		@Override
+    @Override
+    public void completed(
+      Calendar  now,
+  	  Zman      zman
+    ) {
+      getNotifiedZmanim( now );
+      notifiedZmanim.notified( zman );
+    }
+
+
+    @Override
 		public void notifyUser(
-      final ZmanimLocation  location,
       final Calendar        now,
       final Zman            nextZman
     ) {
 
-			getNotifiedZmanim( now );
-			notifiedZmanim.notified( nextZman );
       notifyUserOfUpcomingZman( nextZman );
     }
 
