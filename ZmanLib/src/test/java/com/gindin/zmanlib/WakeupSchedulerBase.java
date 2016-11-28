@@ -23,6 +23,8 @@ abstract class WakeupSchedulerBase {
 		String getExpectedOutput();
 
 		Map<HebrewDate,List<Zmanim.Type>> getExpectedNotifiedZmanim( HebrewDate date );
+
+		int scheduleTimeDelta();
 	}
 
 
@@ -57,7 +59,7 @@ abstract class WakeupSchedulerBase {
 		output.append( "------------------|-----------------------------------------------|---------------|\n" );
 
 
-		RunDaysZmanCallback zmanCallback = new RunDaysZmanCallback( perTestCallback, testTime, output, endDate );
+		RunDaysZmanCallback zmanCallback = new RunDaysZmanCallback( perTestCallback, testResultsCallback, testTime, output, endDate );
     ZmanNotificationScheduler scheduler = new ZmanNotificationScheduler( zmanCallback );
 
 		while ( !zmanCallback.testComplete ) {
@@ -129,7 +131,9 @@ abstract class WakeupSchedulerBase {
 		/** The real callback. */
 		private final ZmanCallback                              perTestCallback;
 
-		/** What time is it? As the test runs, this calendar is moved forward in time. */
+    private final TestResultsCallback                       testResultsCallback;
+
+    /** What time is it? As the test runs, this calendar is moved forward in time. */
 		private final Calendar                                  testTime;
 
 		/** When is the test supposed to end? */
@@ -144,13 +148,15 @@ abstract class WakeupSchedulerBase {
 
 
 		RunDaysZmanCallback(
-			ZmanCallback  perTestCallback,
-			Calendar      testTime,
-			StringBuilder output,
-			Calendar      endDate
-		) {
+      ZmanCallback        perTestCallback,
+      TestResultsCallback testResultsCallback,
+      Calendar            testTime,
+      StringBuilder       output,
+      Calendar            endDate
+    ) {
 			this.perTestCallback = perTestCallback;
-			this.testTime = testTime;
+      this.testResultsCallback = testResultsCallback;
+      this.testTime = testTime;
 			this.output = output;
 			this.endDate = endDate;
 			notifiedZmanim = new HashMap<>();
@@ -255,7 +261,7 @@ abstract class WakeupSchedulerBase {
 
 			//noinspection AutoBoxing
 			output.append( String.format( " %02d:%02d:%03d     |", minUntilNextCheck, secs, remainingMs ) );
-			testTime.add( Calendar.MILLISECOND, timeUntilNextCheck );
+			testTime.add( Calendar.MILLISECOND, timeUntilNextCheck + testResultsCallback.scheduleTimeDelta() );
 
 			testComplete = isTestComplete( testTime, endDate );
 		}

@@ -20,6 +20,12 @@ public class UT_WakeupScheduler_NoShabbat
 
     TestResultsCallback testResultsCallback = new TestResultsCallback() {
       @Override
+      public int scheduleTimeDelta() {
+        return 0;
+      }
+
+
+      @Override
       public String getExpectedOutput() {
         return
           "Time              | Action                                        | Next (M:S:ms) |\n" +
@@ -177,6 +183,12 @@ public class UT_WakeupScheduler_NoShabbat
     Calendar endTest = UT_ZmanUtils.configureTestTime( 2016, Calendar.OCTOBER, 13, 10, 0 );
 
     TestResultsCallback testResultsCallback = new TestResultsCallback() {
+      @Override
+      public int scheduleTimeDelta() {
+        return 0;
+      }
+
+
       @Override
       public String getExpectedOutput() {
         return

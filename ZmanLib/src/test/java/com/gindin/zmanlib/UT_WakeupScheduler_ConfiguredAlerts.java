@@ -17,7 +17,13 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 	public void december_7_2014() {
 
 		TestResultsCallback testResultsCallback = new TestResultsCallback() {
-			@Override
+      @Override
+      public int scheduleTimeDelta() {
+        return 0;
+      }
+
+
+      @Override
 			public String getExpectedOutput() {
 				return
 					"Time              | Action                                        | Next (M:S:ms) |\n" +
@@ -88,7 +94,13 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 	public void december_21_2015_1_week() {
 
 		TestResultsCallback testResultsCallback = new TestResultsCallback() {
-			@Override
+      @Override
+      public int scheduleTimeDelta() {
+        return 0;
+      }
+
+
+      @Override
 			public String getExpectedOutput() {
 				return
 					"Time              | Action                                        | Next (M:S:ms) |\n" +
@@ -506,6 +518,12 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 
     TestResultsCallback testResultsCallback = new TestResultsCallback() {
       @Override
+      public int scheduleTimeDelta() {
+        return 0;
+      }
+
+
+      @Override
       public String getExpectedOutput() {
         return
           "Time              | Action                                        | Next (M:S:ms) |\n" +
@@ -677,6 +695,12 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 
      TestResultsCallback testResultsCallback = new TestResultsCallback() {
        @Override
+       public int scheduleTimeDelta() {
+         return 0;
+       }
+
+
+       @Override
        public String getExpectedOutput() {
          return
            "Time              | Action                                        | Next (M:S:ms) |\n" +
@@ -835,6 +859,7 @@ public class UT_WakeupScheduler_ConfiguredAlerts
 
      runDays( testTime, endTest, perTestCallback, testResultsCallback );
    }
+
 
 
 	private static class OverlappingAlertsZmanCallback
