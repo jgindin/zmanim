@@ -376,6 +376,13 @@ public class HebrewDate
 	}
 
 
+	public boolean isToday() {
+
+	  HebrewDate today = HebrewCalendar.today();
+	  return equals( today );
+  }
+
+
   /**
  	 * Check if the specified time, given the specified location, is after the time of the specified zman.
  	 *

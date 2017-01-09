@@ -74,7 +74,7 @@ public abstract class HebrewDateFormatter {
 
 			StringBuilder buf = new StringBuilder();
 
-			if ( ( location != null ) && date.isAfterSunset( location ) ) {
+			if ( ( location != null ) && date.isToday() && date.isAfterSunset( location ) ) {
 				//noinspection AssignmentToMethodParameter
 				date = date.tomorrow();
 				buf.append( "Or le " );

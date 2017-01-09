@@ -148,7 +148,7 @@ class DatePresenterImpl<V extends DateView>
 		if ( currentDate == null ) {
 			description = null;
 		}
-		else if ( currentDate.isAfterSunset( currentLocation ) ) {
+		else if ( currentDate.isToday() && currentDate.isAfterSunset( currentLocation ) ) {
 			description = currentDate.tomorrow().getDescription();
 		}
 		else {
