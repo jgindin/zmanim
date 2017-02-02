@@ -8,6 +8,7 @@ import com.gindin.zmanim.android.BuildConfig;
 
 import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
 import android.util.Log;
@@ -53,7 +54,7 @@ public class LogUtils {
 		Throwable error
 	) {
 		//noinspection NullArgumentToVariableArgMethod
-		logError( where, message, error, null );
+		logError( where, message, error, (Pair<String, String>[])null );
 	}
 
 
@@ -61,7 +62,7 @@ public class LogUtils {
 		String                  where,
 		String                  message,
 		Throwable               error,
-		Pair<String, String>... moreInfo
+		@Nullable Pair<String, String>... moreInfo
 	) {
 
 

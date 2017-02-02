@@ -11,15 +11,14 @@
 		android:id="@android:id/title"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Some Zman Here"
+		android:text=""
 		android:layout_marginLeft="4dp"
 		android:textStyle="bold"
-		android:singleLine="true"
-    android:textSize="16sp"
+		android:textSize="16sp"
+		android:maxLines="1"
 	/>
 
 	<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center_vertical"
@@ -45,9 +44,9 @@
 			android:layout_weight="15"
 			android:layout_height="wrap_content"
 			android:inputType="number"
-			android:singleLine="true"
-		  android:maxLength="2"
-		/>
+			android:maxLength="2"
+			android:maxLines="1"
+    />
 
 		<TextView
 			android:id="@+id/min"

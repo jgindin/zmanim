@@ -72,10 +72,10 @@ public class LongitudeLatitudePreference
 		super.onBindDialogView( view );
 
 		TextView degrees = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
-		degrees.setText( "" + valueHolder.getDegrees() );
+		degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
 
 		TextView minutes = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
-		minutes.setText( "" + valueHolder.getMinutes() );
+		minutes.setText( String.format( "%d", valueHolder.getMinutes() ) );
 
 
 		// Configuring the spinner comes straight from the Android JavaDocs:

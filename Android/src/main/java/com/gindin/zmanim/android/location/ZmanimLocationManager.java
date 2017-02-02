@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android.location;
 
 import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.location.acquirers.DynamicLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
@@ -237,7 +238,9 @@ public class ZmanimLocationManager {
 					break;
 
 				default:
-					assert false : "Unknown provider type: " + type;
+					if ( BuildConfig.DEBUG ) {
+						throw new AssertionError( "Unknown provider type: " + type );
+					}
 			}
 
 			typeToAcquirerMap.put( type, provider );
