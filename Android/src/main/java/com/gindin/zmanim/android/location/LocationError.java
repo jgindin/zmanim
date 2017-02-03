@@ -12,11 +12,12 @@ public class LocationError {
 	/**
 	 * Enumerates the possible errors when trying to determine the location.
 	 */
-	public static enum Code {
+	public enum Code {
 		CANNOT_DETERMINE_LOCATION,
 		BAD_INPUT,
 		NO_LOCATION_MANAGER_SERVICE,
-		NO_PROVIDERS
+		NO_PROVIDERS,
+		NO_PERMISSIONS
 	}
 
 

@@ -32,15 +32,19 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -526,6 +530,21 @@ public class ZmanimActivity
 	}
 
 
+	@Override
+	public void onRequestPermissionsResult(
+		int               requestCode,
+		@NonNull String[] permissions,
+		@NonNull int[]    grantResults
+	) {
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+
+    // We're only asking for location permissions, so no need to check what permission was asked for.
+    if ( ( grantResults.length > 0 ) && ( grantResults[0] == PackageManager.PERMISSION_GRANTED ) ) {
+      refresh();
+    }
+	}
+
+
 	private void refresh() {
 
 		SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
@@ -668,6 +687,14 @@ public class ZmanimActivity
 				new Runnable() {
 					@Override
 					public void run() {
+
+            if ( error.errorCode == LocationError.Code.NO_PERMISSIONS ) {
+              ActivityCompat.requestPermissions( ZmanimActivity.this,
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
+                0
+              );
+            }
+
 						rebuildUI( lastKnownLocation, error );
 					}
 				}

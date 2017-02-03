@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import java.util.*;
 
@@ -95,11 +96,14 @@ public class DynamicLocationAcquirer
 	public void acquire( final CachedLocationUsage cachedLocationUsage ) {
 
 		if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
-			ZmanimLocation lastKnownLocation = getLastKnownLocation();
-			if ( lastKnownLocation != null ) {
-				fireLocationAcquiredEvent( lastKnownLocation, true );
-			}
-		}
+      try {
+        ZmanimLocation lastKnownLocation = getLastKnownLocation();
+        fireLocationAcquiredEvent( lastKnownLocation, true );
+      }
+      catch ( SecurityException e ) {
+        fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+      }
+    }
 
 		if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
 			startListeningToLocations();
@@ -123,17 +127,30 @@ public class DynamicLocationAcquirer
 
 
 	/**
-	 * Check the various location providers for their last known locations, and try to use the most recent. May
-	 *  return null if none of the providers are able to give us anything.
+	 * Check the various location providers for their last known locations, and try to use the most recent.
+   *
+   * @throws SecurityException In case we were unable to get any last known location due to a lack of permissions.
 	 */
 	@SuppressWarnings( { "AutoBoxing", "AutoUnboxing", "FeatureEnvy" } )
-	private ZmanimLocation getLastKnownLocation() {
+	@NonNull
+	private ZmanimLocation getLastKnownLocation() throws SecurityException {
 
 		List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<Pair<Location,Long>>();
 
+    boolean noLocationPermissions = false;
+
 		for ( String provider : locationManager.getAllProviders( true ) ) {
-			Location lastKnownLocation = locationManager.getLastKnownLocation( provider );
-			if ( null != lastKnownLocation ) {
+			Location lastKnownLocation;
+
+      try {
+        lastKnownLocation = locationManager.getLastKnownLocation( provider );
+      }
+      catch ( SecurityException e ) {
+        noLocationPermissions = true;
+        lastKnownLocation = null;
+      }
+
+      if ( null != lastKnownLocation ) {
 				lastKnownLocationsWithTime.add( new Pair<Location,Long>( lastKnownLocation, lastKnownLocation.getTime() ) );
 			}
 		}
@@ -164,8 +181,14 @@ public class DynamicLocationAcquirer
 		}
 		else {
 
-			location = new ZmanimLocation.Builder()
-				.invalidLocation();
+      if ( noLocationPermissions ) {
+        // We got nothing and no way of getting anything...
+        throw new SecurityException( "No location permissions." );
+      }
+      else {
+        location = new ZmanimLocation.Builder()
+     				.invalidLocation();
+      }
 		}
 
 		return location;
@@ -319,10 +342,21 @@ public class DynamicLocationAcquirer
 
 			this.providerName = providerName;
 
-			locationManager.requestSingleUpdate( providerName, this );
+      try {
+        locationManager.requestSingleUpdate( providerName, this );
+      }
+      catch ( SecurityException e ) {
 
-			// This first update we want RIGHT NOW!!!!
-//			locationManager.requestLocationUpdates( providerName, 0, 0, this );
+        cancel();
+        cancelWaitingForLocationTimer();
+
+        for ( AndroidLocationListener listener : locationListeners ) {
+          listener.cancel();
+        }
+
+        fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), false,
+          new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+      }
 		}
 
 
@@ -343,12 +377,6 @@ public class DynamicLocationAcquirer
 		public void onStatusChanged( String provider, int status, Bundle extras ) {
 
 			// Inherited from LocationListener...Not used
-//			StringBuffer message = new StringBuffer( "StatusChanged for " + provider );
-//			for ( String s : extras.keySet() ) {
-//				message.append( s ).append( " = " ).append( extras.get( s ) );
-//			}
-//
-//			LogUtils.logEvent( "onStatusChanged", message.toString() );
 		}
 
 

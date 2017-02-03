@@ -12,11 +12,15 @@ import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.StaticLocationAcquirer;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,14 +47,16 @@ import java.util.Map;
 public class ZmanimLocationManager {
 
 
-	public static enum Type {
+	public enum Type {
 		FROM_DEVICE,
 		LAT_LONG_FROM_USER,
 		NAME_FROM_USER
 	}
 
 
-	private final EventBus                                    eventBus;
+  private final Context                                     context;
+
+  private final EventBus                                    eventBus;
 
 	/** Everyone wants to see what preferences have been set. */
 	private final SharedPreferences                           locationManagementPrefs;
@@ -60,7 +66,7 @@ public class ZmanimLocationManager {
 	/** System-wide, actual location manager. */
 	private final LocationManager                             locationManager;
 
-	private final Map<Type,LocationAcquirer>                  typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
+	private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
 
 	/**
 	 * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
@@ -82,7 +88,8 @@ public class ZmanimLocationManager {
 		LocationManager   locationManager
 	) {
 
-		this.eventBus = eventBus;
+    this.context = context;
+    this.eventBus = eventBus;
 		this.locationManagementPrefs = locationManagementPrefs;
 		this.personalPrefs = personalPrefs;
 		this.locationManager = locationManager;
@@ -179,14 +186,24 @@ public class ZmanimLocationManager {
 	}
 
 
-	public Location getLastKnownLocation( String providerName ) {
+  /**
+   * @return The location provider's last known location, null if it doesn't know it.
+   *
+   * @throws SecurityException in case we don't have the location permission.
+   */
+	@Nullable
+	public Location getLastKnownLocation( String providerName ) throws SecurityException {
 
 		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
 			return lastKnownLocationProvider.getLastKnownLocation();
 		}
-		else {
-			return locationManager.getLastKnownLocation( providerName );
+		else if ( hasLocationPermissions() ) {
+      //noinspection MissingPermission
+      return locationManager.getLastKnownLocation( providerName );
 		}
+		else {
+      throw new SecurityException( "No location permissions available" );
+    }
 	}
 
 
@@ -196,15 +213,24 @@ public class ZmanimLocationManager {
 	}
 
 
-	public void requestSingleUpdate( String providerName, LocationListener listener ) {
+  /**
+   * Tries to use the specified provider to get a one-time location update.
+   *
+   * @throws SecurityException in case we don't have the location permission.
+   */
+	public void requestSingleUpdate( String providerName, LocationListener listener ) throws SecurityException {
 
 		//noinspection StatementWithEmptyBody
 		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
 			// Don't allow this. It'll prevent the real providers from having a chance....
 		}
-		else {
-			locationManager.requestSingleUpdate( providerName, listener, null );
+		else if ( hasLocationPermissions() ) {
+      //noinspection MissingPermission
+      locationManager.requestSingleUpdate( providerName, listener, null );
 		}
+		else {
+      throw new SecurityException( "No location permissions available" );
+    }
 	}
 
 
@@ -248,5 +274,14 @@ public class ZmanimLocationManager {
 
 		return provider;
 	}
+
+
+	private boolean hasLocationPermissions() {
+
+    boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+    boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+
+    return hasFineAccess || hasCoarseAccess;
+  }
 
 }  // End of ZmanimLocation class

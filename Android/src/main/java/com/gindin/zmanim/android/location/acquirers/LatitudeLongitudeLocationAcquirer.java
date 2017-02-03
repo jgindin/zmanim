@@ -64,7 +64,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			fireLocationAcquiredEvent( null, true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
+			fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
 		}
 	}
 
@@ -80,7 +80,7 @@ public class LatitudeLongitudeLocationAcquirer
 			ourLocation.setTime( System.currentTimeMillis() );
 		}
 		catch ( Exception e ) {
-			fireLocationAcquiredEvent( null, true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
+			fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
 		}
 	}
 
