@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ZehutYosef" type="AndroidRunConfigurationType" factoryName="Android Application">
     <module name="ZehutYosef" />
@@ -24,3 +25,4 @@
     <method />
   </configuration>
 </component>
+

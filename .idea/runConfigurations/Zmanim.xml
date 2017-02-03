@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Zmanim" type="AndroidRunConfigurationType" factoryName="Android Application" activateToolWindowBeforeRun="false">
     <module name="Android" />
@@ -35,3 +36,4 @@
     </method>
   </configuration>
 </component>
+
