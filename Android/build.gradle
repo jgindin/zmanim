@@ -50,16 +50,15 @@ android {
      *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
      */
     minSdkVersion 10
-    targetSdkVersion 22
+    targetSdkVersion 24
 
     versionCode appVersionCode
     versionName appVersionName
 
     String replace = appVersionName;
-
     copy {
       from( 'src/template/assets/com/gindin/zmanim/android/about.html' ) {
-        filter{ String line -> line.replace( "@@VERSION@@", replace ) }
+        filter { String line -> line.replace( "@@VERSION@@", replace ) }
       }
       into 'src/main/assets/com/gindin/zmanim/android'
     }
