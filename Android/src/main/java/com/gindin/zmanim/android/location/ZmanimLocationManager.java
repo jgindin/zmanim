@@ -236,7 +236,10 @@ public class ZmanimLocationManager {
 
 	public void removeUpdates( LocationListener listener ) {
 
-		locationManager.removeUpdates( listener );
+		if ( hasLocationPermissions() ) {
+			//noinspection MissingPermission
+			locationManager.removeUpdates( listener );
+		}
 	}
 
 
