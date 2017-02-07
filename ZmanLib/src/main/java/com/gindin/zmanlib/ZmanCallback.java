@@ -71,9 +71,18 @@ public interface ZmanCallback {
 	 */
 	void scheduleNextCheck(
 		Calendar  now,
-		int       timeUntilNextCheck
+		long timeUntilNextCheck
 	);
 
+
+  /**
+   * There are cases (I'm looking at YOU Samsung) where even though we do what we're supposed to
+   *  do, the alarm just doesn't go off in time. It seems that Samsung modifications to Android
+   *  can cause delays in alarm notifications...
+   *
+   * @return true if a longer than normal fudge factor ought to be applied.
+   */
+	boolean needExtraLongAlarmFudge();
 
 
 	class Adapter
@@ -126,8 +135,14 @@ public interface ZmanCallback {
 		@Override
 		public void scheduleNextCheck(
 			final Calendar  now,
-			final int       timeUntilNextCheck
+			final long timeUntilNextCheck
 		) {
 		}
+
+
+    @Override
+    public boolean needExtraLongAlarmFudge() {
+      return false;
+    }
   }
 }

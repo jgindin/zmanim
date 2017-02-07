@@ -299,6 +299,7 @@ public class ZmanimService
     SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
     task.execute( notifiedZmanim );
 
+		// See http://alvinalexander.com/source-code/android/android-how-attach-extra-intent-pendingintent-notification-solution-example
     Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
 
@@ -307,17 +308,26 @@ public class ZmanimService
 		boolean needPreciseWakeup = ( nextWakeupDelta < ZmanNotificationScheduler.CHECK_INTERVAL );
 
 		long nextWakeup = now.getTimeInMillis() + nextWakeupDelta;
-
 		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
-			alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+			if ( needPreciseWakeup ) {
+				alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+			}
+			else {
+				alarmManager.setAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+			}
 		}
 		else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-			alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-		}
+      if ( needPreciseWakeup ) {
+        alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+      }
+      else {
+        alarmManager.set( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
+      }
+    }
 		else {
-			alarmManager.set( needPreciseWakeup ? AlarmManager.RTC_WAKEUP : AlarmManager.RTC, nextWakeup, pendingIntent );
+			alarmManager.set( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
 		}
 	}
 
@@ -503,12 +513,18 @@ public class ZmanimService
 		@Override
 		public void scheduleNextCheck(
 			final Calendar  now,
-			final int       timeUntilNextCheck
+			final long timeUntilNextCheck
 		) {
 			scheduleNextWakeup( timeUntilNextCheck, now );
 		}
 
-  }
+
+		@Override
+		public boolean needExtraLongAlarmFudge() {
+			return Build.MANUFACTURER.contains( "samsung" );
+		}
+
+	}
 
 
   private class SaveNotifiedZmanimTask

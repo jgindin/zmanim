@@ -11,6 +11,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -23,14 +24,11 @@ import java.util.List;
  */
 public class ZmanNotificationScheduler {
 
-	/** If we wake up within a short time of needing to alert anyways, just do it. */
-	public static final int                                   ALERT_FUDGE_FACTOR = 30 * 1000;
+	static final int                                          FIFTEEN_MINUTES = 15;
+
+	static final int                                          ONE_HOUR = 60;
 
 	public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
-
-	public static final int                                   FIFTEEN_MINUTES = 15;
-
-	public static final int                                   ONE_HOUR = 60;
 
 	/** What's the longest time before a zman that we'll allow an alert? */
 	public static final int                                   MAX_ALERT_TIME = ONE_HOUR * MIN_TO_MS_CONVERSION;
@@ -40,6 +38,10 @@ public class ZmanNotificationScheduler {
 
 	/** How often should we be checking for something to do? */
 	public static final int                                   CHECK_INTERVAL = MAX_ALERT_TIME / 2;
+
+  /** If we wake up within a short time of needing to alert anyways, just do it. */
+	private static final int                                  DEFAULT_ALERT_FUDGE_FACTOR = 30 * 1000;
+  private static final int                                  LONG_ALERT_FUDGE_FACTOR = 5 * MIN_TO_MS_CONVERSION;
 
   private final ZmanCallback                                zmanCallback;
 
@@ -116,7 +118,7 @@ public class ZmanNotificationScheduler {
 		else {
 
 			// Schedule the next check...
-      int next = ( nextZmanNotification.msUntilAction > 0 ? nextZmanNotification.msUntilAction : CHECK_INTERVAL );
+      long next = ( nextZmanNotification.msUntilAction > 0 ? nextZmanNotification.msUntilAction : CHECK_INTERVAL );
 			zmanCallback.scheduleNextCheck( now, next );
 		}
 	}
@@ -125,7 +127,9 @@ public class ZmanNotificationScheduler {
   /**
 	 * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
 	 *
-	 * @return For each remaining zman, the ZmanNotification.msUntilAction represents the amount of time (in ms) until the zman occurs.
+	 * @return For each remaining zman, the ZmanNotification.msUntilAction represents the amount of
+   *  time (in ms) until the zman occurs. Note specifically, this is NOT the time until an alert
+   *  is to be raised, but the time until the Zman!
 	 */
 	private List<ZmanNotification> findTheRestOfTheDaysZmanim(
 		final ZmanimLocation    location,
@@ -142,6 +146,9 @@ public class ZmanNotificationScheduler {
 		//    - Are after the current time;
 		List<ZmanNotification> candidates = new ArrayList<>();
 
+    final long alarmFudge = getAlarmFudge();
+    final long timeInMillis = now.getTimeInMillis();
+
 		for ( Zmanim zmanim : daysZmanim ) {
 			String zmanName = zmanCallback.getPreferredZman( zmanim.type );
 			Zman zman;
@@ -155,13 +162,14 @@ public class ZmanNotificationScheduler {
 			// Make sure the zman is before the current time and we haven't already notified...
       //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
       //  just missed it, we'll still add it as a candidate.
-      long timeDiff = ( zman.getTime().getTimeInMillis() + ALERT_FUDGE_FACTOR ) - now.getTimeInMillis();
+      long timeDiff = ( zman.getTime().getTimeInMillis() + alarmFudge ) - timeInMillis;
       if ( ( timeDiff > 0 ) && !zmanCallback.hasBeenNotified( now, zman ) ) {
 
 				// Yes...if we haven't notified for this zman, then add it to the list. Even if we managed to miss the
 				//  time we wanted to alert, at least we can alert as soon as we know about it.
-				//noinspection AutoBoxing
-				candidates.add( new ZmanNotification( zman, now ) );
+	      // We have to subtract off the fudge factor that was added above. In that case we want to be a bit
+	      //  sloppy, but now we want the actual time until the zman.
+				candidates.add( new ZmanNotification( zman, timeDiff - alarmFudge ) );
 			}
 		}
 
@@ -172,13 +180,13 @@ public class ZmanNotificationScheduler {
 	/**
 	 * Figure out the zman which is next to be notified, and how long (in ms) until the notification.
 	 */
-	@SuppressWarnings( { "AutoUnboxing", "AutoBoxing" } )
+  @NotNull
 	private ZmanNotification findNextZmanNotification(
     final List<ZmanNotification> restOfTodaysZmanim
   ) {
 
 		Zman nextZman = null;
-		int msToNextNotification = CHECK_INTERVAL;
+		long msToNextNotification = CHECK_INTERVAL;
 
 		for ( ZmanNotification zmanNotification : restOfTodaysZmanim ) {
 
@@ -188,9 +196,9 @@ public class ZmanNotificationScheduler {
 			if ( minutesToAlertBefore >= 0 ) {
 				final int msToAlertBefore = minutesToAlertBefore * MIN_TO_MS_CONVERSION;
 
-				final int msToZmanNotification;
+				final long msToZmanNotification;
 
-				final int msUntilZman = zmanNotification.msUntilAction;
+				final long msUntilZman = zmanNotification.msUntilAction;
 				if ( msToAlertBefore > msUntilZman ) {
 					msToZmanNotification = 0;
 				}
@@ -227,7 +235,7 @@ public class ZmanNotificationScheduler {
       return false;
     }
 
-    if ( zmanNotification.msUntilAction > ALERT_FUDGE_FACTOR ) {
+    if ( zmanNotification.msUntilAction > getAlarmFudge() ) {
       return false;
     }
 
@@ -276,31 +284,37 @@ public class ZmanNotificationScheduler {
 
 
 
+  private long getAlarmFudge() {
+    if ( zmanCallback.needExtraLongAlarmFudge() ) {
+     return LONG_ALERT_FUDGE_FACTOR;
+    }
+    else {
+      return DEFAULT_ALERT_FUDGE_FACTOR;
+    }
+  }
+
+
+
   /**
    * Contains information about an upcoming notification.
    */
   static final class ZmanNotification {
 
+  	/** If null, then msUntilAction will be CHECK_INTERVAL. */
+    @Nullable
     final Zman                                         zman;
 
-    final int                                          msUntilAction;
+    final long                                         msUntilAction;
 
 
     ZmanNotification(
 	    @Nullable Zman  zman,
-	    int             msToNextNotification
+	    long            msUntilAction
     ) {
       this.zman = zman;
-      this.msUntilAction = msToNextNotification;
+      this.msUntilAction = ( ( zman == null ) || ( msUntilAction < 0 ) ? CHECK_INTERVAL : msUntilAction );
     }
 
-
-    ZmanNotification(
-      Zman      zman,
-      Calendar  now
-    ) {
-      this( zman, computeMsUntilZman( zman, now.getTimeInMillis() ) );
-    }
 
 
     @Override
@@ -311,39 +325,6 @@ public class ZmanNotificationScheduler {
         '}';
     }
 
-
-    /**
-     * Calculate the milliseconds of minutes between the given date and the zman. If it cannot be calculated for any
-     *  reason, we'll return Integer.MAX_VALUE.
-     *
-     * @param now Expected to be the result of Calendar.getTime().getTime(); this is done since the common case is
-     *              to call this method in a loop, and it seemed quite unnecessary to call this so many times.
-     */
-    private static int computeMsUntilZman(
-      final Zman nextZman,
-      final long now
-    ) {
-
-      // Just in case something has gone wrong, it will be a long time...
-      if ( nextZman == null ) {
-        return Integer.MAX_VALUE;
-      }
-
-      final Calendar nextZmanTime = nextZman.getTime();
-      if ( nextZmanTime == null ) {
-        // There are some zmanim which just cannot be calculated for a given location.
-        return Integer.MAX_VALUE;
-      }
-
-      long zmanTime = nextZmanTime.getTimeInMillis();
-
-      long delta = zmanTime - now;
-      if ( delta > Integer.MAX_VALUE ) {
-        return Integer.MAX_VALUE;
-      }
-
-      return (int)delta;
-    }
   }
 
 } // End of ZmanUtils class

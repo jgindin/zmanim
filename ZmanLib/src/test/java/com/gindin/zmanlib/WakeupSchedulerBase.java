@@ -245,7 +245,7 @@ abstract class WakeupSchedulerBase {
 		@Override
 		public void scheduleNextCheck(
 			final Calendar  now,
-			final int       timeUntilNextCheck
+			final long      timeUntilNextCheck
 		) {
 
 			if ( !notified ) {
@@ -254,17 +254,23 @@ abstract class WakeupSchedulerBase {
 
 			notified = false;
 
-			int minUntilNextCheck = ( timeUntilNextCheck / ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) );
-			int remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) ) );
-			int secs = ( remainingMs / 1000 );
+			long minUntilNextCheck = ( timeUntilNextCheck / ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) );
+			long remainingMs = ( timeUntilNextCheck - ( minUntilNextCheck * ( ZmanNotificationScheduler.MIN_TO_MS_CONVERSION ) ) );
+			long secs = ( remainingMs / 1000 );
 			remainingMs = ( remainingMs - secs * 1000 );
 
 			//noinspection AutoBoxing
 			output.append( String.format( " %02d:%02d:%03d     |", minUntilNextCheck, secs, remainingMs ) );
-			testTime.add( Calendar.MILLISECOND, timeUntilNextCheck + testResultsCallback.scheduleTimeDelta() );
+			testTime.add( Calendar.MILLISECOND, (int)(timeUntilNextCheck + testResultsCallback.scheduleTimeDelta()) );
 
 			testComplete = isTestComplete( testTime, endDate );
 		}
+
+
+    @Override
+    public boolean needExtraLongAlarmFudge() {
+      return false;
+    }
 
 
     private boolean isTestComplete(
