@@ -3,6 +3,7 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
@@ -177,36 +178,47 @@ abstract class WakeupSchedulerBase {
 		}
 
 
-    @Override
+		@Override
+		public boolean shouldShowAnyNotifications() {
+			return true;
+		}
+
+
+		@Override
     public boolean shouldNotifyOnShabbat() {
       return perTestCallback.shouldNotifyOnShabbat();
     }
 
 
-    @Override
+		@Override
+		public boolean shouldActuallyNotify( ZmanimLocation location ) {
+			return shouldShowAnyNotifications() && shouldNotifyOnShabbat();
+		}
+
+
+		@Override
 		public boolean hasBeenNotified(
-			Calendar  now,
-			Zman      zman
+	    Calendar    now,
+	    Zmanim.Type type
 		) {
 
 			final NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
-			return notifiedForDay != null && notifiedForDay.contains( zman.type );
+			return notifiedForDay != null && notifiedForDay.contains( type );
 		}
 
 
     @Override
     public void completed(
-      Calendar  now,
-      Zman      zman
+	    Calendar    now,
+	    Zmanim.Type type
     ) {
 
       NotifiedZmanim notifiedForDay = getNotifiedZmanim( now );
-      notifiedForDay.notified( zman );
+      notifiedForDay.notified( type );
     }
 
 
-    @Override
-		public void notifyUser(
+    public void notifyUser(
       Calendar        now,
       Zman            nextZman
     ) {
@@ -242,7 +254,6 @@ abstract class WakeupSchedulerBase {
 		}
 
 
-		@Override
 		public void scheduleNextCheck(
 			final Calendar  now,
 			final long      timeUntilNextCheck
@@ -268,12 +279,22 @@ abstract class WakeupSchedulerBase {
 
 
     @Override
-    public boolean needExtraLongAlarmFudge() {
-      return false;
+    public void scheduleAlert(
+	    ZmanNotification  zmanNotification,
+	    ZmanimLocation    location,
+	    Calendar          now
+    ) {
+      // todo
     }
 
 
-    private boolean isTestComplete(
+		@Override
+		public boolean formatTimeWithSeconds() {
+			return false;
+		}
+
+
+		private boolean isTestComplete(
 			final Calendar  currentTestTime,
 			final Calendar  endDate
 		) {

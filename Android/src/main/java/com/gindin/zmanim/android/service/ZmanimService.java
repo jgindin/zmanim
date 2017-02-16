@@ -1,25 +1,22 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.R;
-import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanlib.NotifiedZmanim;
 import com.gindin.zmanlib.ZmanCallback;
+import com.gindin.zmanlib.ZmanNotification;
 import com.gindin.zmanlib.ZmanNotificationScheduler;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import com.gindin.zmanlib.zman.Zman;
-import com.gindin.zmanlib.zman.ZmanFormatter;
-import com.gindin.zmanlib.zman.Zmanim;
 
 import org.jetbrains.annotations.NotNull;
 
-import android.app.*;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +24,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Calendar;
@@ -96,11 +92,19 @@ public class ZmanimService
 	private ZmanNotificationScheduler                         zmanNotificationScheduler;
 
 
-	/**
-	 * DO NOT access this directly! Always use the getNotifiedZmanim method to ensure using for the correct date!
-	 */
-	private NotifiedZmanim                                    notifiedZmanim;
 
+  /**
+   * Creates an intent that can be used to have this service schedule alarms.
+   */
+  public static Intent createIntentForSchedulingAlarms(
+    Context context
+  ) {
+
+    Intent startZmanimServiceIntent = new Intent( context, ZmanimService.class );
+    startZmanimServiceIntent.setAction( ZmanimService.Actions.SCHEDULE_ALARM.name() );
+
+    return startZmanimServiceIntent;
+  }
 
 
 	public void onCreate() {
@@ -125,12 +129,19 @@ public class ZmanimService
 
 		final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 		final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-		final SharedPreferences zmanimSelectionPrefs = getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
 
 		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
-    ZmanCallback zmanCallback = new PrefsBasedZmanCallback( zmanimSelectionPrefs, personalPrefs );
+    ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
+      @Override public void scheduleAlert(
+        ZmanNotification  zmanNotification,
+        ZmanimLocation    location,
+        Calendar          now
+      ) {
+        scheduleUserAlert( zmanNotification, location, now );
+      }
+    };
     zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
 	}
 
@@ -156,8 +167,7 @@ public class ZmanimService
 		if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
 			servicingUser = true;
 
-			boolean showNotifications = userWantsNotifications();
-			findCurrentLocation( showNotifications );
+			findCurrentLocation();
 
 			eventBus.fire( new ServiceStartedEvent() );
 		}
@@ -174,12 +184,7 @@ public class ZmanimService
 			if ( locationAcquiredHandler == null ) {
 				handlingAlarmsFor = intent;
 
-				if ( userWantsNotifications() ) {
-					findCurrentLocation( true );
-				}
-				else {
-					releaseWakefulIntent();
-				}
+				findCurrentLocation();
 			}
 			else {
 				// We're not going to do anything for this request, so make sure to release the wake lock!
@@ -220,12 +225,12 @@ public class ZmanimService
 	}
 
 
-	private void findCurrentLocation( boolean showNotifications ) {
+	private void findCurrentLocation() {
 
 		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
 		// We have to figure out where we are in order to see when the next alarm is.
-		locationAcquiredHandler = new LocationAcquiredHandler( showNotifications );
+		locationAcquiredHandler = new LocationAcquiredHandler();
 		eventBus.addHandler( locationAcquiredHandler );
 
 		// Ask the location manager to do its best job figuring out where we are now, without using the cache.
@@ -245,8 +250,7 @@ public class ZmanimService
 
 	@SuppressWarnings( "AutoUnboxing" )
 	private void handleLocation(
-		final ZmanimLocation  location,
-		final boolean         showNotifications
+		final ZmanimLocation  location
 	) {
 
 		if ( locationAcquiredHandler != null ) {
@@ -261,142 +265,66 @@ public class ZmanimService
 			return;
 		}
 
-		if ( !showNotifications ) {
-      releaseWakefulIntent();
-    }
-    else {
+    AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
+      @Override
+      protected Void doInBackground( Void... params ) {
 
-      AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
-        @Override
-        protected Void doInBackground( Void... params ) {
+        Calendar now = Calendar.getInstance();
+        now.setTimeZone( location.getTimeZone() );
+        zmanNotificationScheduler.run( location, now );
 
-          Calendar now = Calendar.getInstance();
-          now.setTimeZone( location.getTimeZone() );
-          zmanNotificationScheduler.run( location, now );
-
-          return null;
-        }
+        return null;
+      }
 
 
-        @Override
-        protected void onPostExecute( Void aVoid ) {
-          super.onPostExecute( aVoid );
-          releaseWakefulIntent();
-        }
-      };
+      @Override
+      protected void onPostExecute( Void aVoid ) {
+        super.onPostExecute( aVoid );
+        releaseWakefulIntent();
+      }
+    };
 
-      schedulerTask.execute( (Void[])null );
-    }
+    schedulerTask.execute( (Void[])null );
   }
 
 
-	private void scheduleNextWakeup(
-		final long      nextWakeupDelta,
-		final Calendar  now
-	) {
 
-    getNotifiedZmanim( now );
-    SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
-    task.execute( notifiedZmanim );
+	private void scheduleUserAlert(
+    final ZmanNotification  zmanNotification,
+    ZmanimLocation          location,
+    final Calendar          now
+  ) {
 
-		// See http://alvinalexander.com/source-code/android/android-how-attach-extra-intent-pendingintent-notification-solution-example
-    Intent alarmIntent = new Intent( this, ZmanimReceiver.class );
-		PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT );
+    //noinspection MagicNumber
+    PendingIntent pendingIntent = PendingIntent.getService( this,
 
-		// If we're close enough to the next zman, then we need to schedule a more precise alarm so we make
-		//  sure not to miss it...
-		boolean needPreciseWakeup = ( nextWakeupDelta < ZmanNotificationScheduler.CHECK_INTERVAL );
+      // This rather convoluted mechanism of identifying the pending intent is necessary so that we don't
+      //  wind up replacing an intent just because we wind up scheduling a second alarm for the same
+      //  zman type on a different day...
+      ( ( (byte)now.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zmanNotification.zman.type.ordinal() & 0xFF ) ),
 
-		long nextWakeup = now.getTimeInMillis() + nextWakeupDelta;
-		AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
+      DisplayNotificationService.createIntentForService( this, zmanNotification.zman, location, now ),
 
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
-			if ( needPreciseWakeup ) {
-				alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-			}
-			else {
-				alarmManager.setAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-			}
-		}
-		else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-      if ( needPreciseWakeup ) {
-        alarmManager.setExact( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-      }
-      else {
-        alarmManager.set( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-      }
+      // Why no flags here? http://stackoverflow.com/a/39926854/17941
+       //    "Never use FLAG_CANCEL_CURRENT with PendingIntents that you use when setting alarms. If you want to
+       //    reschedule the alarm for a different time you don't need any flag at all; just create a duplicate
+       //    PendingIntent with flags of zero and then use it to set() an alarm: this will implicitly cancel the
+       //    existing alarm and then set it for the newly-specified time."
+      0
+    );
+
+    long alertTime = now.getTimeInMillis() + zmanNotification.msUntilAction;
+    AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
+
+    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+      alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
-		else {
-			alarmManager.set( AlarmManager.RTC_WAKEUP, nextWakeup, pendingIntent );
-		}
-	}
-
-
-  /**
-   * Because of the process to possibly load the previously notified zmanim, it is assumed that this method will NOT
-   *  be invoked on the main thread.
-   */
-	private void getNotifiedZmanim( final Calendar now ) {
-
-		if ( notifiedZmanim == null ) {
-			notifiedZmanim = NotifiedZmanim.restore( getFilesDir() );
-		}
-
-		if ( notifiedZmanim != null ) {
-			if ( !notifiedZmanim.isForDate( now ) ) {
-				notifiedZmanim = null;
-			}
-		}
-
-		if ( notifiedZmanim == null ) {
-			notifiedZmanim = new NotifiedZmanim( now );
-		}
-	}
-
-
-  /**
-	 * Displays a notification of the upcoming zman.
-	 *<p/>
-	 *
-	 * This method assumes that if it is called, it's because the notification is supposed to be shown. In other words,
-	 *  it's up to the caller to ensure that we should really be notifying the user.
-	 *
-	 * @param nextZman the upcoming zman to notify the user about.
-	 */
-	private void notifyUserOfUpcomingZman(
-		final Zman nextZman
-	) {
-
-	  // Make sure any previous notification is removed. It seems that this is normally not necessary,
-    //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
-    //  dismissed...
-    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-	  notificationManager.cancel( 1 );
-
-		Intent openZmanim = new Intent( this, ZmanimActivity.class );
-
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-		boolean showSeconds = personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
-		String notificationText = getString( R.string.notification, nextZman.type.name, zmanFormatter.formatZmanTime( nextZman ) );
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder( this )
-			.setContentTitle( getString( R.string.app_name ) )
-			.setContentText( notificationText )
-			.setSmallIcon( R.drawable.ic_stat_zman_notification )
-			.setTicker( notificationText )
-			.setAutoCancel( true )
-			.setDefaults( Notification.DEFAULT_ALL )
-			.setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
-
-		notificationManager.notify( 1, builder.build() );
-	}
-
-
-	private boolean userWantsNotifications() {
-
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-		return personalPrefs.getBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
+    else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
+      alarmManager.setExact( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
+    }
+    else {
+      alarmManager.set( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
+    }
 	}
 
 
@@ -415,21 +343,13 @@ public class ZmanimService
   private class LocationAcquiredHandler
 		extends LocationAcquiredEvent.Handler {
 
-		/** Does the user want us to show notifications? */
-		private final boolean                                   showNotifications;
-
-
-		LocationAcquiredHandler( final boolean showNotifications ) {
-			this.showNotifications = showNotifications;
-		}
-
 
 		@Override
 		public void onLocationAcquired(
 			ZmanimLocation  location,
 			boolean         isCachedLocation
 		) {
-			handleLocation( location, showNotifications );
+			handleLocation( location );
 		}
 
 
@@ -438,104 +358,9 @@ public class ZmanimService
 			@NotNull LocationError  error,
 			@NotNull ZmanimLocation lastKnownLocation
 		) {
-			handleLocation( lastKnownLocation, showNotifications );
+			handleLocation( lastKnownLocation );
 		}
 	}
 
-
-
-	private class PrefsBasedZmanCallback
-		implements ZmanCallback {
-
-		private final SharedPreferences                         zmanimSelectionPrefs;
-
-		private final SharedPreferences                         personalPrefs;
-
-
-		PrefsBasedZmanCallback(
-			SharedPreferences zmanimSelectionPrefs,
-			SharedPreferences personalPrefs
-		) {
-			this.zmanimSelectionPrefs = zmanimSelectionPrefs;
-			this.personalPrefs = personalPrefs;
-		}
-
-
-		@Override
-		public String getPreferredZman( final Zmanim.Type type ) {
-			return zmanimSelectionPrefs.getString( type.name, null );
-		}
-
-
-		@Override
-		public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
-			return personalPrefs.getInt( type.name(), -1 );
-		}
-
-
-    @Override
-    public boolean shouldNotifyOnShabbat() {
-      return personalPrefs .getBoolean( PersonalPreferences.Prefs.ENABLE_NOTIFICATIONS_ON_SHABBAT.name(), false );
-    }
-
-
-    @Override
-		public boolean hasBeenNotified(
-			Calendar  now,
-			Zman      zman
-		) {
-
-			getNotifiedZmanim( now );
-			return notifiedZmanim.contains( zman.type );
-		}
-
-
-    @Override
-    public void completed(
-      Calendar  now,
-  	  Zman      zman
-    ) {
-      getNotifiedZmanim( now );
-      notifiedZmanim.notified( zman );
-    }
-
-
-    @Override
-		public void notifyUser(
-      final Calendar        now,
-      final Zman            nextZman
-    ) {
-
-      notifyUserOfUpcomingZman( nextZman );
-    }
-
-
-		@Override
-		public void scheduleNextCheck(
-			final Calendar  now,
-			final long timeUntilNextCheck
-		) {
-			scheduleNextWakeup( timeUntilNextCheck, now );
-		}
-
-
-		@Override
-		public boolean needExtraLongAlarmFudge() {
-			return Build.MANUFACTURER.contains( "samsung" );
-		}
-
-	}
-
-
-  private class SaveNotifiedZmanimTask
-    extends AsyncTask<NotifiedZmanim, Void, Void> {
-
-    @Override
-    protected Void doInBackground( NotifiedZmanim... params ) {
-      params[0].save( getFilesDir() );
-
-      return null;
-    }
-  }
 
 }

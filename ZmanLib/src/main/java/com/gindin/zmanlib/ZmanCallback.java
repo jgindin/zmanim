@@ -1,6 +1,6 @@
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.zman.Zman;
+import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import org.jetbrains.annotations.Nullable;
@@ -33,9 +33,20 @@ public interface ZmanCallback {
 	);
 
   /**
+   * @return true if the user wants any notifications; false if they've been turned off.
+   */
+	boolean shouldShowAnyNotifications();
+
+  /**
    * @return true if the user has indicated they want notifications even on Shabbat & Yom Tov.
    */
 	boolean shouldNotifyOnShabbat();
+
+  /**
+   * Check if a notification should actually be displayed right now.
+   */
+  boolean shouldActuallyNotify( ZmanimLocation location );
+
 
 	/**
 	 * Has the user been notified of the specified zman for the specified date?
@@ -43,49 +54,43 @@ public interface ZmanCallback {
 	 * @return true if notification has happened; false otherwise.
 	 */
 	boolean hasBeenNotified(
-		Calendar  now,
-		Zman      zman
+    Calendar  now,
+    Zmanim.Type type
 	);
 
   /**
    * Indicate the handling of the specified zman has been completed.
    */
 	void completed(
-    Calendar  now,
-	  Zman      zman
-  );
-
-	/**
-	 * The user should be notified about the specified zman.
-	 */
-	void notifyUser(
-    Calendar        now,
-    Zman            nextZman
-  );
-
-	/**
-	 * Requests that the next check should be scheduled.
-	 *
-	 * @param now The current time.
-	 * @param timeUntilNextCheck How long from now until the next check is to be scheduled.
-	 */
-	void scheduleNextCheck(
-		Calendar  now,
-		long timeUntilNextCheck
+    Calendar    now,
+    Zmanim.Type type
 	);
 
 
-  /**
-   * There are cases (I'm looking at YOU Samsung) where even though we do what we're supposed to
-   *  do, the alarm just doesn't go off in time. It seems that Samsung modifications to Android
-   *  can cause delays in alarm notifications...
+	/**
+	 * Schedule an alert for the specified zman.
    *
-   * @return true if a longer than normal fudge factor ought to be applied.
+	 * @param zmanNotification Which zman and how long from now (in milliseconds) until the alert
+   *  should be raised.
+   * @param location The current location (as determined when the zmanim were updated).
+   * @param now The current date & time, with the correct time zone (based on the location).
    */
-	boolean needExtraLongAlarmFudge();
+  void scheduleAlert(
+    ZmanNotification  zmanNotification,
+    ZmanimLocation    location,
+    Calendar          now
+  );
 
 
-	class Adapter
+  /**
+   * @return true if the user wants to see the zman times formatted with seconds. If false, an
+   *  appropriate rounding algorithm will be used.
+   */
+  boolean formatTimeWithSeconds();
+
+
+
+  class Adapter
 		implements ZmanCallback {
 
 		@Nullable
@@ -102,15 +107,27 @@ public interface ZmanCallback {
 
 
     @Override
+    public boolean shouldShowAnyNotifications() {
+      return true;
+    }
+
+
+    @Override
     public boolean shouldNotifyOnShabbat() {
       return true;
     }
 
 
     @Override
+    public boolean shouldActuallyNotify( ZmanimLocation location ) {
+      return shouldShowAnyNotifications() && shouldNotifyOnShabbat();
+    }
+
+
+    @Override
 		public boolean hasBeenNotified(
-			Calendar  now,
-			Zman      zman
+      Calendar    now,
+      Zmanim.Type type
 		) {
 			return false;
 		}
@@ -118,31 +135,25 @@ public interface ZmanCallback {
 
     @Override
     public void completed(
-      Calendar  now,
-  	  Zman      zman
+      Calendar    now,
+      Zmanim.Type type
     ) {
     }
 
 
     @Override
-		public void notifyUser(
-      Calendar        now,
-      Zman            nextZman
+	  public void scheduleAlert(
+      ZmanNotification  zmanNotification,
+      ZmanimLocation    location,
+      Calendar          now
     ) {
-		}
-
-
-		@Override
-		public void scheduleNextCheck(
-			final Calendar  now,
-			final long timeUntilNextCheck
-		) {
-		}
+	  }
 
 
     @Override
-    public boolean needExtraLongAlarmFudge() {
+    public boolean formatTimeWithSeconds() {
       return false;
     }
+
   }
 }

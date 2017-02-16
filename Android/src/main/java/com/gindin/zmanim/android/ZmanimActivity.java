@@ -23,6 +23,7 @@ import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.android.service.ServiceStartedEvent;
+import com.gindin.zmanim.android.service.ZmanimReceiver;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
@@ -201,6 +202,9 @@ public class ZmanimActivity
 		// TODO:  We should actually be storing the date the user is viewing in the savedInstanceState!
 		currentDate = HebrewCalendar.today();
 		eventBus.fire( new HebrewDateChangedEvent( currentDate ) );
+
+		// Make sure that we're going to update our alarms...
+    ZmanimReceiver.scheduleRepeatingChecks( this );
 	}
 
 

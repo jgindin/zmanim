@@ -1,6 +1,5 @@
 package com.gindin.zmanlib;
 
-import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import java.io.*;
@@ -68,10 +67,10 @@ public final class NotifiedZmanim
 	 * Once the user has been notified about the specified type, then this method is invoked to note that notification.
 	 */
 	public void notified(
-		final Zman zman
+		final Zmanim.Type type
 	) {
 
-		notifiedTypes.add( zman.type );
+		notifiedTypes.add( type );
 	}
 
 

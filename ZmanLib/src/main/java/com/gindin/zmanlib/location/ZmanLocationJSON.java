@@ -9,7 +9,7 @@ import java.util.TimeZone;
 /**
  * Handles the translation of a ZmanimLocation to/from JSON.
  */
-class ZmanLocationJSON {
+public class ZmanLocationJSON {
 
 	private static final String                               LATITUDE = "lat";
 	private static final String                               LONGITUDE = "lon";

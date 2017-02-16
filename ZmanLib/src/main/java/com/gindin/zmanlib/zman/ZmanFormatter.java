@@ -32,15 +32,23 @@ public class ZmanFormatter {
 			zmanRounder = new ZmanRounder();
 		}
 	}	
-	
-	
-	public String formatZmanTime(
+
+
+  public String formatZmanTime(
 		Zman zman
 	) {
+	  return formatZmanTime( zman.type, zman.getTime() );
+  }
+
+
+	public String formatZmanTime(
+	  Zmanim.Type   zmanType,
+    Calendar      zmanTime
+  ) {
 
 		// This can return null in case the zman just doesn't apply. E.g., there are places where the Sun never
 		//  actually gets low enough to be able to calculate Alot @ 26degrees.
-		Calendar time = zman.getTime();
+		Calendar time = zmanTime;
 		if ( null == time ) {
 			return "N/A";
 		}
@@ -48,7 +56,7 @@ public class ZmanFormatter {
 		if ( null != zmanRounder ) {
 			// Some of the zman types we need to do some rounding so that we avoid a situation of showing
 			//  a time that can mislead someone into missing their mitzvah...
-			switch ( zman.type ) {
+			switch ( zmanType ) {
 
 				case Alot:
 				case Talit:
