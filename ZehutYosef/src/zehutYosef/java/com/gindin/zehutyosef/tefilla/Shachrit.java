@@ -10,16 +10,16 @@ import java.util.List;
  *
  */
 public class Shachrit
-	extends Section {
+  extends Section {
 
-	public Shachrit() {
-		super( R.string.shachrit );
-	}
+  public Shachrit() {
+    super( R.string.shachrit );
+  }
 
 
-	@Override
-	public List<TextChunk> getTextInfoForDate( final HebrewDate date ) {
-		return null;
-	}
+  @Override
+  public List<TextChunk> getTextInfoForDate( final HebrewDate date ) {
+    return null;
+  }
 
 } // End of Shachrit class

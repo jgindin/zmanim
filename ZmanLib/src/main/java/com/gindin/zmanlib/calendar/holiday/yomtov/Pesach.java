@@ -14,107 +14,107 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  */
 @SuppressWarnings( "MagicNumber" )
 public class Pesach
-	extends Observance {
+  extends Observance {
 
-	private static final String PESACH = "Pesach";
-
-
-	@Override
-	public String getName() {
-		return PESACH;
-	}
+  private static final String PESACH = "Pesach";
 
 
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
-
-		final int hebrewMonth = date.getHebrewMonth();
-
-		if ( HebrewMonth.NISSAN != hebrewMonth ) {
-			return null;
-		}
-
-		final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-		switch ( hebrewDayOfMonth ) {
-			case 14:
-				return new ErevPesachDetails( date );
-
-			case 15:
-				return new PesachYomTovDetails( date, true );
-
-			case 16:
-				return new PesachYomTovDetails( date, false );
-
-			case 17:
-			case 18:
-			case 19:
-				return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, false );
-
-			case 20:
-				return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, true );
-
-			case 21:
-				return new PesachYomTovDetails( date, true );
-
-			case 22:
-				return new PesachYomTovDetails( date, false );
-		}
-
-		return null;
-	}
+  @Override
+  public String getName() {
+    return PESACH;
+  }
 
 
-	protected static class ErevPesachDetails
-		extends Details.ErevYomTov {
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		ErevPesachDetails(
-			HebrewDate  date
-		) {
-			super( date, PESACH );
-		}
+    final int hebrewMonth = date.getHebrewMonth();
 
+    if ( HebrewMonth.NISSAN != hebrewMonth ) {
+      return null;
+    }
 
-		@Override
-		public boolean isPesach() {
-			return true;
-		}
-	}
+    final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    switch ( hebrewDayOfMonth ) {
+      case 14:
+        return new ErevPesachDetails( date );
 
+      case 15:
+        return new PesachYomTovDetails( date, true );
 
-	protected static class PesachYomTovDetails
-		extends Details.YomTovDetails {
+      case 16:
+        return new PesachYomTovDetails( date, false );
 
-		PesachYomTovDetails(
-			HebrewDate  date,
-			boolean     lightCandles
-		) {
-			super( date, PESACH, lightCandles );
-		}
+      case 17:
+      case 18:
+      case 19:
+        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, false );
 
+      case 20:
+        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, true );
 
-		@Override
-		public boolean isPesach() {
-			return true;
-		}
-	}
+      case 21:
+        return new PesachYomTovDetails( date, true );
 
+      case 22:
+        return new PesachYomTovDetails( date, false );
+    }
 
-	protected static class PesachCholHaMoedDetails
-		extends Details.CholHaMoedDetails {
-
-		PesachCholHaMoedDetails(
-			HebrewDate  date,
-			int         dayOfChag,
-			boolean     lightCandles
-		) {
-			super( date, dayOfChag, PESACH, lightCandles );
-		}
+    return null;
+  }
 
 
-		@Override
-		public boolean isPesach() {
-			return true;
-		}
-	}
+  protected static class ErevPesachDetails
+    extends Details.ErevYomTov {
+
+    ErevPesachDetails(
+      HebrewDate  date
+    ) {
+      super( date, PESACH );
+    }
+
+
+    @Override
+    public boolean isPesach() {
+      return true;
+    }
+  }
+
+
+  protected static class PesachYomTovDetails
+    extends Details.YomTovDetails {
+
+    PesachYomTovDetails(
+      HebrewDate  date,
+      boolean     lightCandles
+    ) {
+      super( date, PESACH, lightCandles );
+    }
+
+
+    @Override
+    public boolean isPesach() {
+      return true;
+    }
+  }
+
+
+  protected static class PesachCholHaMoedDetails
+    extends Details.CholHaMoedDetails {
+
+    PesachCholHaMoedDetails(
+      HebrewDate  date,
+      int         dayOfChag,
+      boolean     lightCandles
+    ) {
+      super( date, dayOfChag, PESACH, lightCandles );
+    }
+
+
+    @Override
+    public boolean isPesach() {
+      return true;
+    }
+  }
 
 }  // End of Pesach class

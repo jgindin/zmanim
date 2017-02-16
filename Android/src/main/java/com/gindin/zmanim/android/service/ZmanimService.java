@@ -44,52 +44,52 @@ import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.Loca
  *  </ol>
  */
 public class ZmanimService
-	extends Service {
+  extends Service {
 
 
-	public enum Actions {
-		/** Request the service to start for the Zmanim Activity. */
-		ACTIVITY_STARTED,
+  public enum Actions {
+    /** Request the service to start for the Zmanim Activity. */
+    ACTIVITY_STARTED,
 
-		/** Notify the service that the Zmanim Activity is done. */
-		ACTIVITY_STOPPED,
+    /** Notify the service that the Zmanim Activity is done. */
+    ACTIVITY_STOPPED,
 
-		/** Ask the service to schedule the next alarm. May optionally have a boolean extra to force the alarm scheduling. */
-		SCHEDULE_ALARM
-	}
-
-
-	public enum ActionParams {
-
-		/** Can be specified with the SCHEDULE_ALARM action to indicate the alarm should be scheduled no matter what. */
-		FORCE_SCHEDULE,
-	}
+    /** Ask the service to schedule the next alarm. May optionally have a boolean extra to force the alarm scheduling. */
+    SCHEDULE_ALARM
+  }
 
 
-	public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
+  public enum ActionParams {
 
-	private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
+    /** Can be specified with the SCHEDULE_ALARM action to indicate the alarm should be scheduled no matter what. */
+    FORCE_SCHEDULE,
+  }
 
-	// TODO: Inject this
-	private ZmanimLocationManager                             locationManager;
 
-	private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
+  public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
 
-	/**
-	 * When we get a command to start coming from the Zmanim activity, then we know we're providing services for
-	 *  the user. In that case, we must make sure not to shut down until we receive an explicit command to do so.
-	 */
-	private boolean                                           servicingUser = false;
+  private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
-	/**
-	 * If we're invoked from some other intent, keep track of it. This way we can (a) not do something if we're already
-	 *  handling for an intent; and (b) cleanup if something goes really wrong.
-	 * In addition, this serves as a flag that we need to shut ourselves down after the notification has been
-	 *  displayed and the next alarm scheduled. Unless, that is, we're also currently servicing a user.
-	 */
-	private Intent                                            handlingAlarmsFor;
+  // TODO: Inject this
+  private ZmanimLocationManager                             locationManager;
 
-	private ZmanNotificationScheduler                         zmanNotificationScheduler;
+  private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
+
+  /**
+   * When we get a command to start coming from the Zmanim activity, then we know we're providing services for
+   *  the user. In that case, we must make sure not to shut down until we receive an explicit command to do so.
+   */
+  private boolean                                           servicingUser = false;
+
+  /**
+   * If we're invoked from some other intent, keep track of it. This way we can (a) not do something if we're already
+   *  handling for an intent; and (b) cleanup if something goes really wrong.
+   * In addition, this serves as a flag that we need to shut ourselves down after the notification has been
+   *  displayed and the next alarm scheduled. Unless, that is, we're also currently servicing a user.
+   */
+  private Intent                                            handlingAlarmsFor;
+
+  private ZmanNotificationScheduler                         zmanNotificationScheduler;
 
 
 
@@ -107,31 +107,31 @@ public class ZmanimService
   }
 
 
-	public void onCreate() {
-		super.onCreate();
+  public void onCreate() {
+    super.onCreate();
 
     final Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     Thread.setDefaultUncaughtExceptionHandler(
-			new Thread.UncaughtExceptionHandler() {
-				@Override
-				public void uncaughtException(
-					final Thread    thread,
-					final Throwable throwable
-				) {
+      new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(
+          final Thread    thread,
+          final Throwable throwable
+        ) {
 
-					releaseWakefulIntent();
+          releaseWakefulIntent();
 
-					exceptionHandler.uncaughtException( thread, throwable );
-				}
-			}
-		);
+          exceptionHandler.uncaughtException( thread, throwable );
+        }
+      }
+    );
 
-		final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-		final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+    final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+    final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
-		LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-		locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+    LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
+    locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
     ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
       @Override public void scheduleAlert(
@@ -143,56 +143,56 @@ public class ZmanimService
       }
     };
     zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
-	}
+  }
 
 
-	@Override
-	public IBinder onBind( Intent intent ) {
-		return null;
-	}
+  @Override
+  public IBinder onBind( Intent intent ) {
+    return null;
+  }
 
 
-	@Override
-	public int onStartCommand(
-		Intent  intent,
-		int     flags,
-		int     startId
-	) {
+  @Override
+  public int onStartCommand(
+    Intent  intent,
+    int     flags,
+    int     startId
+  ) {
 
-	  // NOTE: It helps to read the JavaDocs -- it clearly states that:
+    // NOTE: It helps to read the JavaDocs -- it clearly states that:
     //    [the intent parameter] may be null if the service is being restarted after
     //    its process has gone away...
-		String action = ( intent == null ? "" : intent.getAction() );
+    String action = ( intent == null ? "" : intent.getAction() );
 
-		if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
-			servicingUser = true;
+    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
+      servicingUser = true;
 
-			findCurrentLocation();
+      findCurrentLocation();
 
-			eventBus.fire( new ServiceStartedEvent() );
-		}
-		else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
-			servicingUser = false;
-			if ( handlingAlarmsFor == null ) {
-				stopSelf();
-			}
-		}
-		else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
+      eventBus.fire( new ServiceStartedEvent() );
+    }
+    else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
+      servicingUser = false;
+      if ( handlingAlarmsFor == null ) {
+        stopSelf();
+      }
+    }
+    else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
 
-			// If we already have a handler, then we're already in the process of figuring out where we are to be
-			//  able to schedule the next alarm.
-			if ( locationAcquiredHandler == null ) {
-				handlingAlarmsFor = intent;
+      // If we already have a handler, then we're already in the process of figuring out where we are to be
+      //  able to schedule the next alarm.
+      if ( locationAcquiredHandler == null ) {
+        handlingAlarmsFor = intent;
 
-				findCurrentLocation();
-			}
-			else {
-				// We're not going to do anything for this request, so make sure to release the wake lock!
-				WakefulBroadcastReceiver.completeWakefulIntent( intent );
-			}
-		}
+        findCurrentLocation();
+      }
+      else {
+        // We're not going to do anything for this request, so make sure to release the wake lock!
+        WakefulBroadcastReceiver.completeWakefulIntent( intent );
+      }
+    }
 
-		// In case the process is killed while running, what should happen? "The Busy Coder's Guide to
+    // In case the process is killed while running, what should happen? "The Busy Coder's Guide to
     //  Android Development", v6.9, explains in the "Services and the Command Pattern" chapter, that
     //  the options are:
     //  1. START_STICKY, meaning that the service should be moved back into the
@@ -208,62 +208,62 @@ public class ZmanimService
     //    ...the default implementation of onStartCommand() returns START_STICKY, which means
     //    that Android will keep trying to restart our service after our process gets terminated.
     //    This is a ridiculous default value and goes a long way towards explaining Android’s memory issues.
-		return START_NOT_STICKY;
-	}
+    return START_NOT_STICKY;
+  }
 
 
-	@Override
-	public void onDestroy() {
+  @Override
+  public void onDestroy() {
 
-		// Might be null if we get stopped before we're fully started...
-		if ( null != locationManager ) {
-			locationManager.onStop();
-			locationManager = null;
-		}
+    // Might be null if we get stopped before we're fully started...
+    if ( null != locationManager ) {
+      locationManager.onStop();
+      locationManager = null;
+    }
 
-		super.onDestroy();
-	}
-
-
-	private void findCurrentLocation() {
-
-		SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-
-		// We have to figure out where we are in order to see when the next alarm is.
-		locationAcquiredHandler = new LocationAcquiredHandler();
-		eventBus.addHandler( locationAcquiredHandler );
-
-		// Ask the location manager to do its best job figuring out where we are now, without using the cache.
-		//  When it fires the location acquired event, we'll use the location to work out when to schedule the
-		//  next alarm.
-		LocationDeterminationOverride locationDeterminationOverride;
-		if ( personalPrefs.getBoolean( PersonalPreferences.Prefs.NOTIFICATIONS_FOR_CURRENT_LOCATION.name(), false ) ) {
-			locationDeterminationOverride = LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION;
-		}
-		else {
-			locationDeterminationOverride = LocationDeterminationOverride.NORMAL;
-		}
-
-		eventBus.fire( new RequestLocationUpdateEvent( locationDeterminationOverride, CachedLocationUsage.FALLBACK ) );
-	}
+    super.onDestroy();
+  }
 
 
-	@SuppressWarnings( "AutoUnboxing" )
-	private void handleLocation(
-		final ZmanimLocation  location
-	) {
+  private void findCurrentLocation() {
 
-		if ( locationAcquiredHandler != null ) {
-			eventBus.removeHandler( locationAcquiredHandler );
-			locationAcquiredHandler = null;
-		}
-		else {
-			// This is NOT supposed to happen. Send some data to try and diagnose.
+    SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+
+    // We have to figure out where we are in order to see when the next alarm is.
+    locationAcquiredHandler = new LocationAcquiredHandler();
+    eventBus.addHandler( locationAcquiredHandler );
+
+    // Ask the location manager to do its best job figuring out where we are now, without using the cache.
+    //  When it fires the location acquired event, we'll use the location to work out when to schedule the
+    //  next alarm.
+    LocationDeterminationOverride locationDeterminationOverride;
+    if ( personalPrefs.getBoolean( PersonalPreferences.Prefs.NOTIFICATIONS_FOR_CURRENT_LOCATION.name(), false ) ) {
+      locationDeterminationOverride = LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION;
+    }
+    else {
+      locationDeterminationOverride = LocationDeterminationOverride.NORMAL;
+    }
+
+    eventBus.fire( new RequestLocationUpdateEvent( locationDeterminationOverride, CachedLocationUsage.FALLBACK ) );
+  }
+
+
+  @SuppressWarnings( "AutoUnboxing" )
+  private void handleLocation(
+    final ZmanimLocation  location
+  ) {
+
+    if ( locationAcquiredHandler != null ) {
+      eventBus.removeHandler( locationAcquiredHandler );
+      locationAcquiredHandler = null;
+    }
+    else {
+      // This is NOT supposed to happen. Send some data to try and diagnose.
       //  UPDATE: Yet, now all of a sudden, I am seeing it! For me, this is happening after I go into the emulator
       //    settings and change the time to test some alerting functionality...
-			releaseWakefulIntent();
-			return;
-		}
+      releaseWakefulIntent();
+      return;
+    }
 
     AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
       @Override
@@ -289,7 +289,7 @@ public class ZmanimService
 
 
 
-	private void scheduleUserAlert(
+  private void scheduleUserAlert(
     final ZmanNotification  zmanNotification,
     ZmanimLocation          location,
     final Calendar          now
@@ -325,42 +325,42 @@ public class ZmanimService
     else {
       alarmManager.set( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
-	}
+  }
 
 
-	private void releaseWakefulIntent() {
+  private void releaseWakefulIntent() {
 
-		if ( handlingAlarmsFor != null ) {
-			WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
-			handlingAlarmsFor = null;
-			if ( !servicingUser ) {
-				stopSelf();
-			}
-		}
-	}
+    if ( handlingAlarmsFor != null ) {
+      WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
+      handlingAlarmsFor = null;
+      if ( !servicingUser ) {
+        stopSelf();
+      }
+    }
+  }
 
 
   private class LocationAcquiredHandler
-		extends LocationAcquiredEvent.Handler {
+    extends LocationAcquiredEvent.Handler {
 
 
-		@Override
-		public void onLocationAcquired(
-			ZmanimLocation  location,
-			boolean         isCachedLocation
-		) {
-			handleLocation( location );
-		}
+    @Override
+    public void onLocationAcquired(
+      ZmanimLocation  location,
+      boolean         isCachedLocation
+    ) {
+      handleLocation( location );
+    }
 
 
-		@Override
-		public void onError(
-			@NotNull LocationError  error,
-			@NotNull ZmanimLocation lastKnownLocation
-		) {
-			handleLocation( lastKnownLocation );
-		}
-	}
+    @Override
+    public void onError(
+      @NotNull LocationError  error,
+      @NotNull ZmanimLocation lastKnownLocation
+    ) {
+      handleLocation( lastKnownLocation );
+    }
+  }
 
 
 }

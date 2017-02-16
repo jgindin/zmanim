@@ -14,50 +14,50 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  */
 @SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
 public class Purim
-	extends Observance {
+  extends Observance {
 
 
-	private static final String                               PURIM = "Purim";
+  private static final String                               PURIM = "Purim";
 
 
-	@Override
-	public String getName() {
-		return PURIM;
-	}
+  @Override
+  public String getName() {
+    return PURIM;
+  }
 
 
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
-			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
+    if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
+         ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
-			if ( 13 == date.getHebrewDayOfMonth() ) {
-				return new Details.Erev( date, PURIM, false );
-			}
-			if ( 14 == date.getHebrewDayOfMonth() ) {
-				return new PurimDetails( date );
-			}
-		}
+      if ( 13 == date.getHebrewDayOfMonth() ) {
+        return new Details.Erev( date, PURIM, false );
+      }
+      if ( 14 == date.getHebrewDayOfMonth() ) {
+        return new PurimDetails( date );
+      }
+    }
 
-		return null;
-	}
-
-
-	private static class PurimDetails
-		extends Details.Yom {
-
-		public PurimDetails(
-			final HebrewDate date
-		) {
-			super( date, PURIM );
-		}
+    return null;
+  }
 
 
-		@Override
-		public boolean isPurim() {
-			return true;
-		}
-	}
+  private static class PurimDetails
+    extends Details.Yom {
+
+    public PurimDetails(
+      final HebrewDate date
+    ) {
+      super( date, PURIM );
+    }
+
+
+    @Override
+    public boolean isPurim() {
+      return true;
+    }
+  }
 
 }  // End of Purim class

@@ -13,53 +13,53 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  *
  */
 public class Omer
-	extends Observance {
+  extends Observance {
 
-	private static final String                               OMER = "Omer";
+  private static final String                               OMER = "Omer";
 
-	@Override
-	public String getName() {
-		return OMER;
-	}
-
-
-	@SuppressWarnings( "MagicNumber" )
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
-
-		int hebrewMonth = date.getHebrewMonth();
-		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-
-		if ( HebrewMonth.NISSAN == hebrewMonth ) {
-			if ( hebrewDayOfMonth >= 16 ) {
-				return new OmerDetails( date, hebrewDayOfMonth - 15 );
-			}
-		}
-		else if ( HebrewMonth.IYAR == hebrewMonth ) {
-			return new OmerDetails( date, 15 + hebrewDayOfMonth );
-		}
-		else if ( HebrewMonth.SIVAN == hebrewMonth ) {
-			if ( hebrewDayOfMonth < 6 ) {
-				return new OmerDetails( date, 15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth );
-			}
-		}
-
-		return null;
-	}
+  @Override
+  public String getName() {
+    return OMER;
+  }
 
 
-	private static final class OmerDetails
-		extends Details.Yom {
+  @SuppressWarnings( "MagicNumber" )
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		private OmerDetails( HebrewDate date, int dayOfOmer ) {
-			super( date, OMER + " " + dayOfOmer );
-		}
+    int hebrewMonth = date.getHebrewMonth();
+    int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+
+    if ( HebrewMonth.NISSAN == hebrewMonth ) {
+      if ( hebrewDayOfMonth >= 16 ) {
+        return new OmerDetails( date, hebrewDayOfMonth - 15 );
+      }
+    }
+    else if ( HebrewMonth.IYAR == hebrewMonth ) {
+      return new OmerDetails( date, 15 + hebrewDayOfMonth );
+    }
+    else if ( HebrewMonth.SIVAN == hebrewMonth ) {
+      if ( hebrewDayOfMonth < 6 ) {
+        return new OmerDetails( date, 15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth );
+      }
+    }
+
+    return null;
+  }
 
 
-		@Override
-		protected boolean isOmer() {
-			return true;
-		}
-	}
+  private static final class OmerDetails
+    extends Details.Yom {
+
+    private OmerDetails( HebrewDate date, int dayOfOmer ) {
+      super( date, OMER + " " + dayOfOmer );
+    }
+
+
+    @Override
+    protected boolean isOmer() {
+      return true;
+    }
+  }
 
 }  // End of Omer class

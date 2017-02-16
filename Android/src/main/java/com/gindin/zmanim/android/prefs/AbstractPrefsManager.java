@@ -20,84 +20,84 @@ import java.util.Map;
  */
 public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? extends Activity>> {
 
-	/** Need to know the activity so we can do things like build dialogs and spawn other activities. */
-	protected final ZmanimActivity                            activity;
+  /** Need to know the activity so we can do things like build dialogs and spawn other activities. */
+  protected final ZmanimActivity                            activity;
 
-	private final PREF_ACTIVITY_CLASS                         prefActivityClass;
+  private final PREF_ACTIVITY_CLASS                         prefActivityClass;
 
-	protected final SharedPreferences                         prefs;
+  protected final SharedPreferences                         prefs;
 
-	/**
-	 * Prior to invoking the user's preferences activity, tuck away the current prefs so that if
-	 *  the user doesn't make any changes, then we don't do anything upon return.
- 	 */
-	private Map<String,?>                                     prefsBeforeEditing;
-
-
-	protected AbstractPrefsManager(
-		ZmanimActivity      activity,
-	  ZmanimPrefs         prefsType,
-	  PREF_ACTIVITY_CLASS prefActivityClass
-		) {
-		this.activity = activity;
-		this.prefActivityClass = prefActivityClass;
-		prefs = activity.getSharedPreferences( prefsType.name(), Context.MODE_PRIVATE );
-	}
+  /**
+   * Prior to invoking the user's preferences activity, tuck away the current prefs so that if
+   *  the user doesn't make any changes, then we don't do anything upon return.
+   */
+  private Map<String,?>                                     prefsBeforeEditing;
 
 
-	/**
-	 * Called at app startup to perform any upgrade tasks.
-	 *
-	 * @param thisCodeVersion The current code version
-	 * @param lastKnownCodeVersion The last code version which was installed
-	 *
-	 * @return Identifier of release notes to display or -1 if there are none.
-	 */
-	public abstract @StringRes int onHandleUpgrade(
-		int thisCodeVersion,
-		int lastKnownCodeVersion
-	);
+  protected AbstractPrefsManager(
+    ZmanimActivity      activity,
+    ZmanimPrefs         prefsType,
+    PREF_ACTIVITY_CLASS prefActivityClass
+    ) {
+    this.activity = activity;
+    this.prefActivityClass = prefActivityClass;
+    prefs = activity.getSharedPreferences( prefsType.name(), Context.MODE_PRIVATE );
+  }
 
 
-	/**
-	 * Called to invoke the activity which will allow the preferences to be edited.
-	 */
-	public void editPrefs() {
-
-		// Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
-		prefsBeforeEditing = prefs.getAll();
-
-		Activities prefActivity = getPrefActivity();
-		activity.startActivityForResult( new Intent( activity, prefActivityClass ), prefActivity.ordinal() );
-	}
-
-
-	public void personalPrefsChanged() {
-
-		final Map<String, ?> prefsAfterEditing = prefs.getAll();
-		if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
-			activity.personalPrefsChanged();
-		}
-
-		prefsBeforeEditing = null;
-	}
+  /**
+   * Called at app startup to perform any upgrade tasks.
+   *
+   * @param thisCodeVersion The current code version
+   * @param lastKnownCodeVersion The last code version which was installed
+   *
+   * @return Identifier of release notes to display or -1 if there are none.
+   */
+  public abstract @StringRes int onHandleUpgrade(
+    int thisCodeVersion,
+    int lastKnownCodeVersion
+  );
 
 
-	public boolean getBoolean(
-		String  prefName,
+  /**
+   * Called to invoke the activity which will allow the preferences to be edited.
+   */
+  public void editPrefs() {
+
+    // Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
+    prefsBeforeEditing = prefs.getAll();
+
+    Activities prefActivity = getPrefActivity();
+    activity.startActivityForResult( new Intent( activity, prefActivityClass ), prefActivity.ordinal() );
+  }
+
+
+  public void personalPrefsChanged() {
+
+    final Map<String, ?> prefsAfterEditing = prefs.getAll();
+    if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
+      activity.personalPrefsChanged();
+    }
+
+    prefsBeforeEditing = null;
+  }
+
+
+  public boolean getBoolean(
+    String  prefName,
     boolean defaultValue
-	) {
+  ) {
 
-		return prefs.getBoolean( prefName, defaultValue );
-	}
+    return prefs.getBoolean( prefName, defaultValue );
+  }
 
 
-	/**
-	 * Called so we know what identifier to associate with the launched activity.
-	 *
-	 * @return The appropriate value from the Activities enum.
-	 */
-	protected abstract Activities getPrefActivity();
+  /**
+   * Called so we know what identifier to associate with the launched activity.
+   *
+   * @return The appropriate value from the Activities enum.
+   */
+  protected abstract Activities getPrefActivity();
 
 
 }  // End of AbstractPrefsManager class

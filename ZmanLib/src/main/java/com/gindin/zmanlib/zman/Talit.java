@@ -12,56 +12,56 @@ import java.util.List;
  *
  */
 class Talit
-	extends Zmanim {
+  extends Zmanim {
 
-	private static final String                               DEFAULT_ZMAN_NAME = "10.2 deg";
-
-
-	Talit(
-		final ZmanimCalculator zmanimCalculator
-	) {
-
-		super( Type.Talit, zmanimCalculator );
-	}
+  private static final String                               DEFAULT_ZMAN_NAME = "10.2 deg";
 
 
-	@Override
-	public Zman getDefault() {
-		return getByName( DEFAULT_ZMAN_NAME );
-	}
+  Talit(
+    final ZmanimCalculator zmanimCalculator
+  ) {
+
+    super( Type.Talit, zmanimCalculator );
+  }
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  public Zman getDefault() {
+    return getByName( DEFAULT_ZMAN_NAME );
+  }
 
-		List<Zman>  zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "Based on the position of the sun when it is 10.2 degrees below geometric zenith.", Zmanim.Type.Talit, false )  {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir10Point2Degrees() );
-				}
-			}
-		);
+  @SuppressWarnings( "FeatureEnvy" )
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		zmanim.add(
-			new Zman( "11 deg", "Based on the position of the sun when it is 11 degrees below geometric zenith.", Zmanim.Type.Talit, false ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir11Degrees() );
-				}
-			}
-		);
+    List<Zman>  zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( "11.5 deg", "Based on the position of the sun when it is 11.5 degrees below geometric zenith.", Zmanim.Type.Talit ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir11Point5Degrees() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( DEFAULT_ZMAN_NAME, "Based on the position of the sun when it is 10.2 degrees below geometric zenith.", Zmanim.Type.Talit, false )  {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir10Point2Degrees() );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    zmanim.add(
+      new Zman( "11 deg", "Based on the position of the sun when it is 11 degrees below geometric zenith.", Zmanim.Type.Talit, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir11Degrees() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "11.5 deg", "Based on the position of the sun when it is 11.5 degrees below geometric zenith.", Zmanim.Type.Talit ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMisheyakir11Point5Degrees() );
+        }
+      }
+    );
+
+    return zmanim;
+  }
 
 }  // End of Talit class

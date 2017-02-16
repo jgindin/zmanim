@@ -15,29 +15,29 @@ import android.support.v4.app.FragmentActivity;
  *
  */
 public class DateDisplayModule
-	extends AbstractMvpModule<DatePresenter<DateView>> {
+  extends AbstractMvpModule<DatePresenter<DateView>> {
 
 
-	public DateDisplayModule(
-		FragmentActivity      activity,
-		EventBus              eventBus
-	) {
-		super( activity, eventBus );
-	}
+  public DateDisplayModule(
+    FragmentActivity      activity,
+    EventBus              eventBus
+  ) {
+    super( activity, eventBus );
+  }
 
 
-	@Override
-	public DatePresenter<DateView> create() {
+  @Override
+  public DatePresenter<DateView> create() {
 
-		// Seems quite likely we'll want these injected...
-		HebrewDateFormatter hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
-		SecularDateFormatter secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
+    // Seems quite likely we'll want these injected...
+    HebrewDateFormatter hebrewDateFormatter = HebrewDateFormatter.getInstance( HebrewDateFormatter.Style.SHORT );
+    SecularDateFormatter secularDateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.DEFAULT );
 
-		DateViewImpl<DatePresenter> view = new DateViewImpl<DatePresenter>( activity );
-		DatePresenterImpl<DateView> impl = new DatePresenterImpl<DateView>( view, eventBus, hebrewDateFormatter, secularDateFormatter );
+    DateViewImpl<DatePresenter> view = new DateViewImpl<DatePresenter>( activity );
+    DatePresenterImpl<DateView> impl = new DatePresenterImpl<DateView>( view, eventBus, hebrewDateFormatter, secularDateFormatter );
 
-		return impl;
-	}
+    return impl;
+  }
 
 
 } // End of DatePresenterModule class

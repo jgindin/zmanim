@@ -18,62 +18,62 @@ import android.support.annotation.StringRes;
  *  that it needs to update, etc...
  */
 public class PersonalPrefsManager
-	extends AbstractPrefsManager<Class<PersonalPreferences>> {
+  extends AbstractPrefsManager<Class<PersonalPreferences>> {
 
 
-	public PersonalPrefsManager( ZmanimActivity activity ) {
-		super( activity, ZmanimPrefs.PERSONAL, PersonalPreferences.class );
+  public PersonalPrefsManager( ZmanimActivity activity ) {
+    super( activity, ZmanimPrefs.PERSONAL, PersonalPreferences.class );
 
-	}
-
-
-	@Override
-	@SuppressWarnings( { "MagicNumber" } )
-	public @StringRes	int onHandleUpgrade(
-		int   thisCodeVersion,
-		int   lastKnownCodeVersion
-	) {
-
-		int upgradeNotesId = -1;
-
-		if ( lastKnownCodeVersion <= 66 ) {
-			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-			editor.apply();
-		}
-
-		if ( lastKnownCodeVersion <= 229 ) {
-			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
-			editor.apply();
-
-			upgradeNotesId = R.string.notification_info;
-		}
+  }
 
 
-		if ( lastKnownCodeVersion <= 285 ) {
+  @Override
+  @SuppressWarnings( { "MagicNumber" } )
+  public @StringRes int onHandleUpgrade(
+    int   thisCodeVersion,
+    int   lastKnownCodeVersion
+  ) {
 
-			// Early beta versions only allowed the alerts to be on or off.
-			final SharedPreferences.Editor editor = prefs.edit();
+    int upgradeNotesId = -1;
 
-			NotificationDefaults notificationDefaults = new NotificationDefaults();
+    if ( lastKnownCodeVersion <= 66 ) {
+      final SharedPreferences.Editor editor = prefs.edit();
+      editor.putBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+      editor.apply();
+    }
 
-			for ( Zmanim.Type type : Zmanim.Type.values() ) {
-				editor.remove( type.name() );
-				editor.putInt( type.name(), notificationDefaults.getDefaultZmanAlertTime( type ) );
-			}
+    if ( lastKnownCodeVersion <= 229 ) {
+      final SharedPreferences.Editor editor = prefs.edit();
+      editor.putBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), true );
+      editor.apply();
 
-			editor.apply();
-		}
-
-		return upgradeNotesId;
-	}
+      upgradeNotesId = R.string.notification_info;
+    }
 
 
-	@Override
-	protected Activities getPrefActivity() {
-		return Activities.PERSONAL_PREFERENCS;
-	}
+    if ( lastKnownCodeVersion <= 285 ) {
+
+      // Early beta versions only allowed the alerts to be on or off.
+      final SharedPreferences.Editor editor = prefs.edit();
+
+      NotificationDefaults notificationDefaults = new NotificationDefaults();
+
+      for ( Zmanim.Type type : Zmanim.Type.values() ) {
+        editor.remove( type.name() );
+        editor.putInt( type.name(), notificationDefaults.getDefaultZmanAlertTime( type ) );
+      }
+
+      editor.apply();
+    }
+
+    return upgradeNotesId;
+  }
+
+
+  @Override
+  protected Activities getPrefActivity() {
+    return Activities.PERSONAL_PREFERENCS;
+  }
 
 
 }  // End of PersonalPrefsManager class

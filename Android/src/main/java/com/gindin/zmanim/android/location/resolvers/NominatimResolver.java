@@ -30,129 +30,129 @@ import java.util.Locale;
  *  </ul>
  */
 class NominatimResolver
-	extends JsonQueryingResolver {
+  extends JsonQueryingResolver {
 
-	/** URL to make the request. */
-	private static final String                               NOMINATIM_URL = "http://open.mapquestapi.com/nominatim/v1/";
+  /** URL to make the request. */
+  private static final String                               NOMINATIM_URL = "http://open.mapquestapi.com/nominatim/v1/";
 
-	/** The various operations which can be sent. */
-	private static final String                               SEARCH_OPERATION = "search.php";
-	private static final String                               REVERSE_LOOKUP_OPERATION = "reverse.php";
+  /** The various operations which can be sent. */
+  private static final String                               SEARCH_OPERATION = "search.php";
+  private static final String                               REVERSE_LOOKUP_OPERATION = "reverse.php";
 
-	private static final String                               LATITUDE_PARAM = "lat";
-	private static final String                               LONGITUDE_PARAM = "lon";
+  private static final String                               LATITUDE_PARAM = "lat";
+  private static final String                               LONGITUDE_PARAM = "lon";
 
-	// Other fields (not currently used) that could be returned.
+  // Other fields (not currently used) that could be returned.
 /*
-	private static final String                               HOUSE_NUMBER = "house_number";
-	private static final String                               ROAD = "road";
+  private static final String                               HOUSE_NUMBER = "house_number";
+  private static final String                               ROAD = "road";
 */
 
 
 
-	NominatimResolver(
-		EventBus          eventBus,
-		SharedPreferences personalPrefs
-	) {
-		super( eventBus, personalPrefs );
-	}
+  NominatimResolver(
+    EventBus          eventBus,
+    SharedPreferences personalPrefs
+  ) {
+    super( eventBus, personalPrefs );
+  }
 
 
-	@Override
-	public void onDestroy() {
+  @Override
+  public void onDestroy() {
 
-	}
-
-
-	@Override
-	protected void fillInLatitudeAndLongitude(
-		String                      latitude,
-		String                      longitude,
-		List<Pair<String, String>>  params
-		) {
-
-		params.add( new Pair<String, String>( LATITUDE_PARAM, latitude ) );
-		params.add( new Pair<String, String>( LONGITUDE_PARAM, longitude ) );
-	}
+  }
 
 
-	@Override
-	protected void fillInSearch(
-		ZmanimLocation              location,
-		List<Pair<String, String>>  params
-	) {
+  @Override
+  protected void fillInLatitudeAndLongitude(
+    String                      latitude,
+    String                      longitude,
+    List<Pair<String, String>>  params
+    ) {
 
-		params.add( new Pair<String, String>( "q", URLEncoder.encode( location.getLocationName() ) ) );
-	}
-
-
-	@Override
-	protected void addAdditionalParams(
-		Operation                   operation,
-		ZmanimLocation              unresolvedLocation,
-		List<Pair<String, String>>  params
-	) {
-
-		params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
-
-		// We want all the details.
-		params.add( new Pair<String, String>( "addressdetails", "1" ) );
-
-		params.add( new Pair<String, String>( "limit", "1" ) );
-
-		// We know we always want JSON returned
-		params.add( new Pair<String, String>( "format", "json" ) );
-		params.add( new Pair<String, String>( "email", "zmanim.apps@gmail.com" ) );
-	}
+    params.add( new Pair<String, String>( LATITUDE_PARAM, latitude ) );
+    params.add( new Pair<String, String>( LONGITUDE_PARAM, longitude ) );
+  }
 
 
-	@Override
-	protected String getRequestUrl( Operation operation ) {
+  @Override
+  protected void fillInSearch(
+    ZmanimLocation              location,
+    List<Pair<String, String>>  params
+  ) {
 
-		if ( operation == Operation.ReverseGeocode ) {
-			return NOMINATIM_URL + REVERSE_LOOKUP_OPERATION;
-		}
-		else {
-			return NOMINATIM_URL + SEARCH_OPERATION;
-		}
-	}
+    params.add( new Pair<String, String>( "q", URLEncoder.encode( location.getLocationName() ) ) );
+  }
 
 
-	@Override
-	protected Address addressFromJSON( JSONObject jsonRoot ) {
+  @Override
+  protected void addAdditionalParams(
+    Operation                   operation,
+    ZmanimLocation              unresolvedLocation,
+    List<Pair<String, String>>  params
+  ) {
 
-		try {
+    params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
 
-			JSONObject jsonAddress = jsonRoot.getJSONObject( "address" );
+    // We want all the details.
+    params.add( new Pair<String, String>( "addressdetails", "1" ) );
 
-			Address address = new Address( Locale.getDefault() );
-			address.setCountryCode( jsonAddress.getString( "country_code" ) );
-			address.setCountryName( jsonAddress.getString( "country" ) );
-			address.setLatitude( jsonRoot.getDouble( LATITUDE_PARAM ) );
-			address.setLongitude( jsonRoot.getDouble( LONGITUDE_PARAM ) );
+    params.add( new Pair<String, String>( "limit", "1" ) );
 
-			String postcode = jsonAddress.optString( "postcode", null );
-			String city = jsonAddress.optString( "city", null );
-			String suburb = jsonAddress.optString( "suburb", null );
-			if ( ( city == null ) || ( city.equals( postcode ) ) ) {
-				city = suburb;
-			}
-			else {
-				address.setSubLocality( suburb );
-			}
+    // We know we always want JSON returned
+    params.add( new Pair<String, String>( "format", "json" ) );
+    params.add( new Pair<String, String>( "email", "zmanim.apps@gmail.com" ) );
+  }
 
-			address.setLocality( city );
-			address.setAdminArea( jsonAddress.getString( "state" ) );
-			address.setPostalCode( postcode );
 
-			return address;
-		}
-		catch ( Exception e ) {
-			// Don't log an error...it can fail if we don't get anything back.
-			//LogUtils.logError( "NominatimResolver::addressFromJSON", e.getMessage(), e );
-			return null;
-		}
-	}
+  @Override
+  protected String getRequestUrl( Operation operation ) {
+
+    if ( operation == Operation.ReverseGeocode ) {
+      return NOMINATIM_URL + REVERSE_LOOKUP_OPERATION;
+    }
+    else {
+      return NOMINATIM_URL + SEARCH_OPERATION;
+    }
+  }
+
+
+  @Override
+  protected Address addressFromJSON( JSONObject jsonRoot ) {
+
+    try {
+
+      JSONObject jsonAddress = jsonRoot.getJSONObject( "address" );
+
+      Address address = new Address( Locale.getDefault() );
+      address.setCountryCode( jsonAddress.getString( "country_code" ) );
+      address.setCountryName( jsonAddress.getString( "country" ) );
+      address.setLatitude( jsonRoot.getDouble( LATITUDE_PARAM ) );
+      address.setLongitude( jsonRoot.getDouble( LONGITUDE_PARAM ) );
+
+      String postcode = jsonAddress.optString( "postcode", null );
+      String city = jsonAddress.optString( "city", null );
+      String suburb = jsonAddress.optString( "suburb", null );
+      if ( ( city == null ) || ( city.equals( postcode ) ) ) {
+        city = suburb;
+      }
+      else {
+        address.setSubLocality( suburb );
+      }
+
+      address.setLocality( city );
+      address.setAdminArea( jsonAddress.getString( "state" ) );
+      address.setPostalCode( postcode );
+
+      return address;
+    }
+    catch ( Exception e ) {
+      // Don't log an error...it can fail if we don't get anything back.
+      //LogUtils.logError( "NominatimResolver::addressFromJSON", e.getMessage(), e );
+      return null;
+    }
+  }
 
 
 } // End of NominatimResolver class

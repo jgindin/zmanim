@@ -11,23 +11,23 @@ import java.util.List;
  *
  */
 class ShabbatEnds
-	extends TzaitHacochavim {
+  extends TzaitHacochavim {
 
 
-	ShabbatEnds(
-		final ZmanimCalculator zmanimCalculator
-	) {
+  ShabbatEnds(
+    final ZmanimCalculator zmanimCalculator
+  ) {
 
-		super( Type.ShabbatEnd, zmanimCalculator );
-	}
+    super( Type.ShabbatEnd, zmanimCalculator );
+  }
 
 
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		return mergeZmanimLists(
-			buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ),
-			buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ) );
-	}
+    return mergeZmanimLists(
+      buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ),
+      buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ) );
+  }
 
 }  // End of TzaitHacochavim class

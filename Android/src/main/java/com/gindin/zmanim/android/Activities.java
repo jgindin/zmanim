@@ -10,22 +10,22 @@ package com.gindin.zmanim.android;
  */
 public enum Activities {
 
-	MAIN,
+  MAIN,
 
-	/**
-	 * When the user wants to change their location preferences
-	 */
-	EDIT_LOCATION_PREFERENCES,
+  /**
+   * When the user wants to change their location preferences
+   */
+  EDIT_LOCATION_PREFERENCES,
 
-	/**
-	 * In case there are no location sources enabled, we'll make a request to the intent that will allow the
-	 *  user to turn something on.
-	 */
-	ENABLE_LOCATION_SERVICES,
+  /**
+   * In case there are no location sources enabled, we'll make a request to the intent that will allow the
+   *  user to turn something on.
+   */
+  ENABLE_LOCATION_SERVICES,
 
-	/**
-	 * When the user wants to edit their personal preferences
-	 */
-	PERSONAL_PREFERENCS
+  /**
+   * When the user wants to edit their personal preferences
+   */
+  PERSONAL_PREFERENCS
 
 }  // End of Activities class

@@ -21,110 +21,110 @@ import android.support.v4.app.FragmentActivity;
  * Implementation of the LocationPresenter.
  */
 class LocationPresenterImpl<V extends LocationView>
-	extends AbstractPresenter<V>
-	implements LocationPresenter<V> {
+  extends AbstractPresenter<V>
+  implements LocationPresenter<V> {
 
-	private final FragmentActivity                            owner;
+  private final FragmentActivity                            owner;
 
-	private final Resources                                   resources;
+  private final Resources                                   resources;
 
-	private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
+  private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
 
-	private ZmanimLocation                                    currentLocation;
+  private ZmanimLocation                                    currentLocation;
 
-	private final EditLocationPrefsEvent.Handler              editLocationPrefsHandler;
-
-
-	LocationPresenterImpl(
-		V                 view,
-		EventBus          eventBus,
-		FragmentActivity  owner,
-		Resources         resources
-	) {
-		super( view, eventBus );
-		this.owner = owner;
-		this.resources = resources;
-
-		locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
-			@Override
-			public void onLocationAcquired(
-				ZmanimLocation  location,
-				boolean         isCachedLocation
-			) {
-				handleLocationChanged( location );
-			}
-
-			@Override
-			public void onError(
-				@NotNull LocationError  error,
-				@NotNull ZmanimLocation lastKnownLocation
-			) {
-				// Don't bother updating if there's an error AND we already have a location.
-				if ( currentLocation == null ) {
-					handleLocationChanged( lastKnownLocation );
-				}
-			}
-		};
-		eventBus.addHandler( locationAcquiredHandler, true );
-
-		editLocationPrefsHandler = new EditLocationPrefsEvent.Handler() {
-			@Override
-			public void onEditLocationPrefs() {
-				userWantsToEditLocationPrefs();
-			}
-		};
-		eventBus.addHandler( editLocationPrefsHandler );
-	}
+  private final EditLocationPrefsEvent.Handler              editLocationPrefsHandler;
 
 
-	@Override
-	public void destroy() {
+  LocationPresenterImpl(
+    V                 view,
+    EventBus          eventBus,
+    FragmentActivity  owner,
+    Resources         resources
+  ) {
+    super( view, eventBus );
+    this.owner = owner;
+    this.resources = resources;
 
-		getEventBus().removeHandler( locationAcquiredHandler );
-		getEventBus().removeHandler( editLocationPrefsHandler );
-	}
+    locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
+      @Override
+      public void onLocationAcquired(
+        ZmanimLocation  location,
+        boolean         isCachedLocation
+      ) {
+        handleLocationChanged( location );
+      }
+
+      @Override
+      public void onError(
+        @NotNull LocationError  error,
+        @NotNull ZmanimLocation lastKnownLocation
+      ) {
+        // Don't bother updating if there's an error AND we already have a location.
+        if ( currentLocation == null ) {
+          handleLocationChanged( lastKnownLocation );
+        }
+      }
+    };
+    eventBus.addHandler( locationAcquiredHandler, true );
+
+    editLocationPrefsHandler = new EditLocationPrefsEvent.Handler() {
+      @Override
+      public void onEditLocationPrefs() {
+        userWantsToEditLocationPrefs();
+      }
+    };
+    eventBus.addHandler( editLocationPrefsHandler );
+  }
 
 
-	@Override
-	public void userWantsToSeeLocationDetails() {
+  @Override
+  public void destroy() {
 
-		String details;
-		if ( currentLocation != null ) {
-			details = currentLocation.toString();
-		}
-		else {
-			details = resources.getString( R.string.unable_to_determine_location_error );
-		}
-
-		getView().showLocationDetails( details );
-	}
+    getEventBus().removeHandler( locationAcquiredHandler );
+    getEventBus().removeHandler( editLocationPrefsHandler );
+  }
 
 
-	@Override
-	public void userWantsToEditLocationPrefs() {
+  @Override
+  public void userWantsToSeeLocationDetails() {
 
-		owner.startActivity( new Intent( owner, LocationProviderPreferences.class ) );
-	}
+    String details;
+    if ( currentLocation != null ) {
+      details = currentLocation.toString();
+    }
+    else {
+      details = resources.getString( R.string.unable_to_determine_location_error );
+    }
+
+    getView().showLocationDetails( details );
+  }
 
 
-	private void handleLocationChanged( @NotNull ZmanimLocation location ) {
+  @Override
+  public void userWantsToEditLocationPrefs() {
 
-		if ( location.isSignificantChangeFrom( currentLocation ) || ( location.hasName() && !currentLocation.hasName() ) ) {
+    owner.startActivity( new Intent( owner, LocationProviderPreferences.class ) );
+  }
 
-			currentLocation = location;
 
-			final String locationName;
-			if ( location.isInvalid ) {
-				locationName = resources.getString( R.string.unknown_location );
-			}
-			else {
-				locationName = location.getLocationName();
-			}
+  private void handleLocationChanged( @NotNull ZmanimLocation location ) {
 
-			getView().displayLocation( locationName );
-		}
+    if ( location.isSignificantChangeFrom( currentLocation ) || ( location.hasName() && !currentLocation.hasName() ) ) {
 
-	}
+      currentLocation = location;
+
+      final String locationName;
+      if ( location.isInvalid ) {
+        locationName = resources.getString( R.string.unknown_location );
+      }
+      else {
+        locationName = location.getLocationName();
+      }
+
+      getView().displayLocation( locationName );
+    }
+
+  }
 
 
 

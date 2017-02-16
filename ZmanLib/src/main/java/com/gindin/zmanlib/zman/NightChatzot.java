@@ -12,36 +12,36 @@ import java.util.List;
  *
  */
 class NightChatzot
-	extends Zmanim {
+  extends Zmanim {
 
-	public NightChatzot( ZmanimCalculator zmanimCalculator ) {
-		super( Type.NightChatzot, zmanimCalculator );
-	}
+  public NightChatzot( ZmanimCalculator zmanimCalculator ) {
+    super( Type.NightChatzot, zmanimCalculator );
+  }
 
 
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( "Mid-night", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.NightChatzot, false ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getNightChatzos() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( "Mid-night", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.NightChatzot, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getNightChatzos() );
+        }
+      }
+    );
 
-		zmanim.add(
-			new Zman( "Fixed Local Mid-Night", "R. Moshe Feinstein and Aruch Ha-Shulchan, based on chatzot being fixed at solar noon.", Type.NightChatzot, true ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getFixedLocalNightChatzos() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( "Fixed Local Mid-Night", "R. Moshe Feinstein and Aruch Ha-Shulchan, based on chatzot being fixed at solar noon.", Type.NightChatzot, true ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getFixedLocalNightChatzos() );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    return zmanim;
+  }
 
 
 }  // End of NightChatzot class

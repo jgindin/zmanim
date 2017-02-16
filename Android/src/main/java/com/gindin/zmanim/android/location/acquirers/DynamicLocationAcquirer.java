@@ -58,44 +58,44 @@ import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.Cach
  *    a fix from some other location provider, we'll use that. Otherwise, we'll fire an error.
  */
 public class DynamicLocationAcquirer
-	extends LocationAcquirer {
+  extends LocationAcquirer {
 
 
-	private final ZmanimLocationManager                       locationManager;
+  private final ZmanimLocationManager                       locationManager;
 
-	/** We have one listener for every location provider. */
-	private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
+  /** We have one listener for every location provider. */
+  private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
 
-	/**
-	 * We need to wait for "some time" before giving up on all the location providers. So, when any of the location
-	 *  providers give us a fix, we cancel this timer. If it expires, then it will cause us to fire an error.
-	 */
-	private WaitingForLocationTimer                           waitingForLocationTimer = null;
-
-
-	/** Do we prefer to receive GPS fixes over other providers? */
-	private boolean                                           preferGPS;
+  /**
+   * We need to wait for "some time" before giving up on all the location providers. So, when any of the location
+   *  providers give us a fix, we cancel this timer. If it expires, then it will cause us to fire an error.
+   */
+  private WaitingForLocationTimer                           waitingForLocationTimer = null;
 
 
-	public DynamicLocationAcquirer(
-		EventBus              eventBus,
-		SharedPreferences     locationManagementPrefs,
-		SharedPreferences     personalPrefs,
-		ZmanimLocationManager locationManager
-	) {
-
-		super( eventBus, locationManagementPrefs, personalPrefs );
-		this.locationManager = locationManager;
+  /** Do we prefer to receive GPS fixes over other providers? */
+  private boolean                                           preferGPS;
 
 
-		preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
-	}
+  public DynamicLocationAcquirer(
+    EventBus              eventBus,
+    SharedPreferences     locationManagementPrefs,
+    SharedPreferences     personalPrefs,
+    ZmanimLocationManager locationManager
+  ) {
+
+    super( eventBus, locationManagementPrefs, personalPrefs );
+    this.locationManager = locationManager;
 
 
-	@Override
-	public void acquire( final CachedLocationUsage cachedLocationUsage ) {
+    preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
+  }
 
-		if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
+
+  @Override
+  public void acquire( final CachedLocationUsage cachedLocationUsage ) {
+
+    if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
       try {
         ZmanimLocation lastKnownLocation = getLastKnownLocation();
         fireLocationAcquiredEvent( lastKnownLocation, true );
@@ -105,42 +105,42 @@ public class DynamicLocationAcquirer
       }
     }
 
-		if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
-			startListeningToLocations();
-		}
-	}
+    if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
+      startListeningToLocations();
+    }
+  }
 
 
-	@Override
-	public void cancel() {
-		super.cancel();
-		stopListeningToLocations();
-	}
+  @Override
+  public void cancel() {
+    super.cancel();
+    stopListeningToLocations();
+  }
 
 
-	@Override
-	public void onDestroy() {
+  @Override
+  public void onDestroy() {
 
-		stopListeningToLocations();
-		super.onDestroy();
-	}
+    stopListeningToLocations();
+    super.onDestroy();
+  }
 
 
-	/**
-	 * Check the various location providers for their last known locations, and try to use the most recent.
+  /**
+   * Check the various location providers for their last known locations, and try to use the most recent.
    *
    * @throws SecurityException In case we were unable to get any last known location due to a lack of permissions.
-	 */
-	@SuppressWarnings( { "AutoBoxing", "AutoUnboxing", "FeatureEnvy" } )
-	@NonNull
-	private ZmanimLocation getLastKnownLocation() throws SecurityException {
+   */
+  @SuppressWarnings( { "AutoBoxing", "AutoUnboxing", "FeatureEnvy" } )
+  @NonNull
+  private ZmanimLocation getLastKnownLocation() throws SecurityException {
 
-		List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<Pair<Location,Long>>();
+    List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<Pair<Location,Long>>();
 
     boolean noLocationPermissions = false;
 
-		for ( String provider : locationManager.getAllProviders( true ) ) {
-			Location lastKnownLocation;
+    for ( String provider : locationManager.getAllProviders( true ) ) {
+      Location lastKnownLocation;
 
       try {
         lastKnownLocation = locationManager.getLastKnownLocation( provider );
@@ -151,35 +151,35 @@ public class DynamicLocationAcquirer
       }
 
       if ( null != lastKnownLocation ) {
-				lastKnownLocationsWithTime.add( new Pair<Location,Long>( lastKnownLocation, lastKnownLocation.getTime() ) );
-			}
-		}
+        lastKnownLocationsWithTime.add( new Pair<Location,Long>( lastKnownLocation, lastKnownLocation.getTime() ) );
+      }
+    }
 
-		Pair<Location,Long> bestLocation = new Pair<Location, Long>( null, Long.MIN_VALUE );
-		for ( Pair<Location, Long> pair : lastKnownLocationsWithTime ) {
-			if ( pair.second > bestLocation.second ) {
-				bestLocation = pair;
-			}
-		}
+    Pair<Location,Long> bestLocation = new Pair<Location, Long>( null, Long.MIN_VALUE );
+    for ( Pair<Location, Long> pair : lastKnownLocationsWithTime ) {
+      if ( pair.second > bestLocation.second ) {
+        bestLocation = pair;
+      }
+    }
 
-		ZmanimLocation location;
-		if ( bestLocation.first != null ) {
+    ZmanimLocation location;
+    if ( bestLocation.first != null ) {
 
-			final TimeZone timeZone = getTimeZoneFromPrefs();
+      final TimeZone timeZone = getTimeZoneFromPrefs();
 
-			ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-				.fromProvider( bestLocation.first.getProvider() )
-				.inTimeZone( timeZone )
-				.at( bestLocation.first.getTime() )
-				.atLatitude( bestLocation.first.getLatitude() )
-				.atLongitude( bestLocation.first.getLongitude() );
+      ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
+        .fromProvider( bestLocation.first.getProvider() )
+        .inTimeZone( timeZone )
+        .at( bestLocation.first.getTime() )
+        .atLatitude( bestLocation.first.getLatitude() )
+        .atLongitude( bestLocation.first.getLongitude() );
 
-			if ( bestLocation.first.hasAccuracy() ) builder.withAccuracy( bestLocation.first.getAccuracy() );
-			if ( bestLocation.first.hasAltitude() ) builder.atElevation( bestLocation.first.getAltitude() );
+      if ( bestLocation.first.hasAccuracy() ) builder.withAccuracy( bestLocation.first.getAccuracy() );
+      if ( bestLocation.first.hasAltitude() ) builder.atElevation( bestLocation.first.getAltitude() );
 
-			location = builder.build();
-		}
-		else {
+      location = builder.build();
+    }
+    else {
 
       if ( noLocationPermissions ) {
         // We got nothing and no way of getting anything...
@@ -187,160 +187,160 @@ public class DynamicLocationAcquirer
       }
       else {
         location = new ZmanimLocation.Builder()
-     				.invalidLocation();
+            .invalidLocation();
       }
-		}
+    }
 
-		return location;
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	private void onReceivedFix(
-		final Location                newLocation,
-		final AndroidLocationListener source
-	) {
-
-		// We've got a fix we can use, even if it turns out to not be from our preferred method. Make sure
-		//  we don't time out and claim to have failed...
-		cancelWaitingForLocationTimer();
+    return location;
+  }
 
 
-		// Now, there's a few cases here:
-		//  1. We don't care how we get a fix: Tell all the location listeners to cancel their first fix
-		//  2. We prefer GPS, but this isn't: Let the location listeners continue trying to get their first fix
-		//  3. We prefer GPS and this is it:  Tell all the location listeners to cancel their first fix
-		//  4. We prefer GPS, but it isn't turned on: Tell all the location listeners to cancel their first fix
-		final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+  @SuppressWarnings( "FeatureEnvy" )
+  private void onReceivedFix(
+    final Location                newLocation,
+    final AndroidLocationListener source
+  ) {
 
-		if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) || !gpsProviderEnabled ) {
-			stopListeningToLocations();
-		}
+    // We've got a fix we can use, even if it turns out to not be from our preferred method. Make sure
+    //  we don't time out and claim to have failed...
+    cancelWaitingForLocationTimer();
 
-		locationManager.saveLastLocation( newLocation );
+
+    // Now, there's a few cases here:
+    //  1. We don't care how we get a fix: Tell all the location listeners to cancel their first fix
+    //  2. We prefer GPS, but this isn't: Let the location listeners continue trying to get their first fix
+    //  3. We prefer GPS and this is it:  Tell all the location listeners to cancel their first fix
+    //  4. We prefer GPS, but it isn't turned on: Tell all the location listeners to cancel their first fix
+    final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+
+    if ( !preferGPS || LocationManager.GPS_PROVIDER.equals( source.providerName ) || !gpsProviderEnabled ) {
+      stopListeningToLocations();
+    }
+
+    locationManager.saveLastLocation( newLocation );
 
     final TimeZone timeZone = getTimeZoneFromPrefs();
 
     ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-			.fromProvider( newLocation.getProvider() )
-			.inTimeZone( timeZone )
-			.at( newLocation.getTime() )
-			.atLatitude( newLocation.getLatitude() )
-			.atLongitude( newLocation.getLongitude() );
+      .fromProvider( newLocation.getProvider() )
+      .inTimeZone( timeZone )
+      .at( newLocation.getTime() )
+      .atLatitude( newLocation.getLatitude() )
+      .atLongitude( newLocation.getLongitude() );
 
-		if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
-		if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
+    if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
+    if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
 
-		ZmanimLocation location = builder.build();
+    ZmanimLocation location = builder.build();
 
-		fireLocationAcquiredEvent( location, false );
-	}
-
-
-	private void onFailedToGetAnyFixes() {
-
-		cancelWaitingForLocationTimer();
-
-		for ( AndroidLocationListener listener : locationListeners ) {
-			listener.cancel();
-		}
-
-		// Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-		fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
-	}
+    fireLocationAcquiredEvent( location, false );
+  }
 
 
-	private void startListeningToLocations() {
+  private void onFailedToGetAnyFixes() {
 
-		if ( !isLocationEnabled() ) {
-			return;
-		}
+    cancelWaitingForLocationTimer();
 
-		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
-		//  decide to fire...
-		cancelWaitingForLocationTimer();
+    for ( AndroidLocationListener listener : locationListeners ) {
+      listener.cancel();
+    }
 
-		// Now, kick off a timer such that if the timer expires, we're going to assume we can't get any
-		//  location fix... Start this BEFORE any listeners get added in case one of the listeners returns
-		//  a fix right away...
-		final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
-		waitingForLocationTimer = new WaitingForLocationTimer( gpsProviderEnabled );
-
-		// I'm going to listen to whatever providers might be available.
-		final List<String> providers = locationManager.getAllProviders( false );
-		for ( String provider : providers ) {
-			AndroidLocationListener listener = new AndroidLocationListener( provider );
-			locationListeners.add( listener );
-		}
-	}
+    // Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
+    fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
+  }
 
 
-	private void stopListeningToLocations() {
+  private void startListeningToLocations() {
 
-		// Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
-		//  decide to fire...
-		cancelWaitingForLocationTimer();
+    if ( !isLocationEnabled() ) {
+      return;
+    }
 
-		for ( AndroidLocationListener listener : locationListeners ) {
-			listener.cancel();
-		}
+    // Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
+    //  decide to fire...
+    cancelWaitingForLocationTimer();
 
-		locationListeners.clear();
-	}
+    // Now, kick off a timer such that if the timer expires, we're going to assume we can't get any
+    //  location fix... Start this BEFORE any listeners get added in case one of the listeners returns
+    //  a fix right away...
+    final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+    waitingForLocationTimer = new WaitingForLocationTimer( gpsProviderEnabled );
 
-
-	private void cancelWaitingForLocationTimer() {
-
-		if ( null != waitingForLocationTimer ) {
-			waitingForLocationTimer.cancel();
-			waitingForLocationTimer = null;
-		}
-	}
-
-
-	private boolean isLocationEnabled() {
-
-		if ( null == locationManager ) {
-			fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
-			return false;
-		}
-
-		List<String> providers = locationManager.getAllProviders( true );
-		boolean foundAProvider = false;
-		for ( String provider : providers ) {
-			if ( locationManager.isProviderEnabled( provider ) ) {
-				foundAProvider = true;
-				break;
-			}
-		}
-
-		if ( !foundAProvider ) {
-			fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_PROVIDERS ) );
-			return false;
-		}
-
-		return true;
-	}
+    // I'm going to listen to whatever providers might be available.
+    final List<String> providers = locationManager.getAllProviders( false );
+    for ( String provider : providers ) {
+      AndroidLocationListener listener = new AndroidLocationListener( provider );
+      locationListeners.add( listener );
+    }
+  }
 
 
-	/**
-	 * Listens to location changes for a given provider.
-	 */
-	private class AndroidLocationListener
-		implements LocationListener {
+  private void stopListeningToLocations() {
 
-		/**
-		 * Who provides the location updates for this listener? Common identifiers are taken from the
-		 *  LocationManager class, e.g., LocationManager.NETWORK_PROVIDER or LocationManager.GPS_PROVIDER.
-		 */
-		public final String                                     providerName;
+    // Cancel any outstanding timer *first* so that if one were to be running right now, it couldn't
+    //  decide to fire...
+    cancelWaitingForLocationTimer();
+
+    for ( AndroidLocationListener listener : locationListeners ) {
+      listener.cancel();
+    }
+
+    locationListeners.clear();
+  }
 
 
-		AndroidLocationListener(
-			String  providerName
-		) {
+  private void cancelWaitingForLocationTimer() {
 
-			this.providerName = providerName;
+    if ( null != waitingForLocationTimer ) {
+      waitingForLocationTimer.cancel();
+      waitingForLocationTimer = null;
+    }
+  }
+
+
+  private boolean isLocationEnabled() {
+
+    if ( null == locationManager ) {
+      fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
+      return false;
+    }
+
+    List<String> providers = locationManager.getAllProviders( true );
+    boolean foundAProvider = false;
+    for ( String provider : providers ) {
+      if ( locationManager.isProviderEnabled( provider ) ) {
+        foundAProvider = true;
+        break;
+      }
+    }
+
+    if ( !foundAProvider ) {
+      fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_PROVIDERS ) );
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Listens to location changes for a given provider.
+   */
+  private class AndroidLocationListener
+    implements LocationListener {
+
+    /**
+     * Who provides the location updates for this listener? Common identifiers are taken from the
+     *  LocationManager class, e.g., LocationManager.NETWORK_PROVIDER or LocationManager.GPS_PROVIDER.
+     */
+    public final String                                     providerName;
+
+
+    AndroidLocationListener(
+      String  providerName
+    ) {
+
+      this.providerName = providerName;
 
       try {
         locationManager.requestSingleUpdate( providerName, this );
@@ -357,89 +357,89 @@ public class DynamicLocationAcquirer
         fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), false,
           new LocationError( LocationError.Code.NO_PERMISSIONS ) );
       }
-		}
+    }
 
 
-		public void onLocationChanged(
-			Location location
-		) {
+    public void onLocationChanged(
+      Location location
+    ) {
 
-			cancel();
-			onReceivedFix( location, this );
-		}
-
-
-		public void cancel() {
-			locationManager.removeUpdates( this );
-		}
+      cancel();
+      onReceivedFix( location, this );
+    }
 
 
-		public void onStatusChanged( String provider, int status, Bundle extras ) {
-
-			// Inherited from LocationListener...Not used
-		}
-
-
-		public void onProviderEnabled( String provider ) {
-			// Inherited from LocationListener...Not used
-		}
+    public void cancel() {
+      locationManager.removeUpdates( this );
+    }
 
 
-		public void onProviderDisabled( String provider ) {
-			// Inherited from LocationListener...Not used
-		}
+    public void onStatusChanged( String provider, int status, Bundle extras ) {
 
-	} // End of AndroidLocationListener
-
-
-	/**
-	 * If this timer's task actually gets to run, then that means it took too long to get a fix on our location. So, we'll
-	 *  fallback to whatever we can get.
-	 */
-	private class WaitingForLocationTimer
-		extends Timer {
-
-		/** Max time to wait for SOMEONE to cancel us when we're using only the network. */
-		private static final int                                WAIT_FOR_FIRST_NETWORK_FIX_DELAY = 10000;
-
-		/** Max time to wait for SOMEONE to cancel us when we have access to GPS. */
-		private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 30000;
+      // Inherited from LocationListener...Not used
+    }
 
 
-		WaitingForLocationTimer(
-			boolean waitingForGpsProvider
-		) {
-
-			super( true );
-
-			// If we're waiting on GPS, then we need a longer delay...
-			int timeToWaitForFix;
-			if ( waitingForGpsProvider ) {
-				timeToWaitForFix = WAIT_FOR_FIRST_GPS_FIX_DELAY;
-			}
-			else {
-				timeToWaitForFix = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
-			}
-
-			start( timeToWaitForFix );
-		}
+    public void onProviderEnabled( String provider ) {
+      // Inherited from LocationListener...Not used
+    }
 
 
-		private void start(
-			int timeToWaitForFix
-		) {
+    public void onProviderDisabled( String provider ) {
+      // Inherited from LocationListener...Not used
+    }
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					onFailedToGetAnyFixes();
-				}
-			};
+  } // End of AndroidLocationListener
 
-			schedule( task, timeToWaitForFix );
-		}
 
-	} // End of WaitingForLocationTimer
+  /**
+   * If this timer's task actually gets to run, then that means it took too long to get a fix on our location. So, we'll
+   *  fallback to whatever we can get.
+   */
+  private class WaitingForLocationTimer
+    extends Timer {
+
+    /** Max time to wait for SOMEONE to cancel us when we're using only the network. */
+    private static final int                                WAIT_FOR_FIRST_NETWORK_FIX_DELAY = 10000;
+
+    /** Max time to wait for SOMEONE to cancel us when we have access to GPS. */
+    private static final int                                WAIT_FOR_FIRST_GPS_FIX_DELAY = 30000;
+
+
+    WaitingForLocationTimer(
+      boolean waitingForGpsProvider
+    ) {
+
+      super( true );
+
+      // If we're waiting on GPS, then we need a longer delay...
+      int timeToWaitForFix;
+      if ( waitingForGpsProvider ) {
+        timeToWaitForFix = WAIT_FOR_FIRST_GPS_FIX_DELAY;
+      }
+      else {
+        timeToWaitForFix = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
+      }
+
+      start( timeToWaitForFix );
+    }
+
+
+    private void start(
+      int timeToWaitForFix
+    ) {
+
+      TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+          onFailedToGetAnyFixes();
+        }
+      };
+
+      schedule( task, timeToWaitForFix );
+    }
+
+  } // End of WaitingForLocationTimer
 
 
 }  // End of DynamicLocationProvider class

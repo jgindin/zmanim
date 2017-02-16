@@ -14,7 +14,7 @@ public class UT_WakeupScheduler_NoShabbat
   extends WakeupSchedulerBase {
 
   @Test
- 	public void november_25_2016() {
+  public void november_25_2016() {
     Calendar testTime = UT_ZmanUtils.configureTestTime( 2016, Calendar.NOVEMBER, 25, 6, 34 );
     Calendar endTest = UT_ZmanUtils.configureTestTime( 2016, Calendar.NOVEMBER, 27, 10, 0 );
 

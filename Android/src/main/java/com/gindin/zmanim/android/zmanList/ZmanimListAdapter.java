@@ -19,116 +19,116 @@ import java.util.List;
  * Adapter for a ListView that shows a set of Zman objects.
  */
 public abstract class ZmanimListAdapter
-	extends ArrayAdapter<Zman> {
+  extends ArrayAdapter<Zman> {
 
 
-	/** Allows us access to various services, like an inflater. */
-	private final Context                                     context;
+  /** Allows us access to various services, like an inflater. */
+  private final Context                                     context;
 
 
-	public ZmanimListAdapter(
-		Context     context,
-		List<Zman>  zmanim
-	) {
+  public ZmanimListAdapter(
+    Context     context,
+    List<Zman>  zmanim
+  ) {
 
-		super( context, R.layout.zman_list_row, zmanim );
-		this.context = context;
-	}
-
-
-	public void updateZmanim(
-		List<Zman>  zmanim
-	) {
-
-		setNotifyOnChange( false );
-		clear();
-
-		// Can't use addAll() -- it wasn't added until API level 11...
-		for ( Zman zman : zmanim ) {
-			add( zman );
-		}
-
-		notifyDataSetChanged();
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
+    super( context, R.layout.zman_list_row, zmanim );
+    this.context = context;
+  }
 
 
-	@Override
-	public long getItemId( int position ) {
-		return position;
-	}
+  public void updateZmanim(
+    List<Zman>  zmanim
+  ) {
+
+    setNotifyOnChange( false );
+    clear();
+
+    // Can't use addAll() -- it wasn't added until API level 11...
+    for ( Zman zman : zmanim ) {
+      add( zman );
+    }
+
+    notifyDataSetChanged();
+  }
+
+  @Override
+  public boolean hasStableIds() {
+    return true;
+  }
 
 
-	@Override
-	public boolean areAllItemsEnabled() {
-		return true;
-	}
+  @Override
+  public long getItemId( int position ) {
+    return position;
+  }
 
 
-	@Override
-	public View getView(
-		int       position,
-		View      convertView,
-		ViewGroup parent
-	) {
-
-		final Zman zman = getItem( position );
-
-		final View childView;
-		final ZmanRowHolder holder;
-
-		if ( null == convertView ) {
-
-			LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-			childView = inflater.inflate( R.layout.zman_list_row, parent, false );
-
-			holder = createRowHolder( childView );
-			childView.setTag( holder );
-
-			onNewViewCreated( childView, zman );
-		}
-		else {
-
-			// We can just reuse this view as-is.
-			childView = convertView;
-			holder = (ZmanRowHolder)childView.getTag();
-
-			onViewRecycled( childView, zman );
-		}
-
-		holder.setZman( zman );
-
-		return childView;
-	}
+  @Override
+  public boolean areAllItemsEnabled() {
+    return true;
+  }
 
 
-	protected void onNewViewCreated(
-		View childView,
-		Zman zman
-	) {
-		// Nothing by default.
-	}
+  @Override
+  public View getView(
+    int       position,
+    View      convertView,
+    ViewGroup parent
+  ) {
+
+    final Zman zman = getItem( position );
+
+    final View childView;
+    final ZmanRowHolder holder;
+
+    if ( null == convertView ) {
+
+      LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+      childView = inflater.inflate( R.layout.zman_list_row, parent, false );
+
+      holder = createRowHolder( childView );
+      childView.setTag( holder );
+
+      onNewViewCreated( childView, zman );
+    }
+    else {
+
+      // We can just reuse this view as-is.
+      childView = convertView;
+      holder = (ZmanRowHolder)childView.getTag();
+
+      onViewRecycled( childView, zman );
+    }
+
+    holder.setZman( zman );
+
+    return childView;
+  }
 
 
-	protected void onViewRecycled(
-		View childView,
-		Zman zman
-	) {
-		// Nothing by default.
-	}
+  protected void onNewViewCreated(
+    View childView,
+    Zman zman
+  ) {
+    // Nothing by default.
+  }
 
 
-	/**
-	 * Creates a wrapper which will cache the row view.
-	 *
-	 * @param rowView The actual view of the row.
-	 * @return The row wrapper, which will be used to avoid creating crazy numbers of row views.
-	 */
-	protected abstract ZmanRowHolder createRowHolder( View rowView );
+  protected void onViewRecycled(
+    View childView,
+    Zman zman
+  ) {
+    // Nothing by default.
+  }
+
+
+  /**
+   * Creates a wrapper which will cache the row view.
+   *
+   * @param rowView The actual view of the row.
+   * @return The row wrapper, which will be used to avoid creating crazy numbers of row views.
+   */
+  protected abstract ZmanRowHolder createRowHolder( View rowView );
 
 
 } // End of ZmanimListAdapter

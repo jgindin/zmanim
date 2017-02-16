@@ -12,55 +12,55 @@ import java.util.List;
  *
  */
 public class SofZmanBiurChametz
-	extends Zmanim {
+  extends Zmanim {
 
-	private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
-
-
-	SofZmanBiurChametz(
-		final ZmanimCalculator zmanimCalculator
-	) {
-		super( Type.SofZmanBiurChametz, zmanimCalculator );
-	}
+  private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
 
 
-	@Override
-	public Zman getDefault() {
-		return getByName( DEFAULT_ZMAN_NAME );
-	}
+  SofZmanBiurChametz(
+    final ZmanimCalculator zmanimCalculator
+  ) {
+    super( Type.SofZmanBiurChametz, zmanimCalculator );
+  }
 
 
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  public Zman getDefault() {
+    return getByName( DEFAULT_ZMAN_NAME );
+  }
 
-		List<Zman> zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Type.SofZmanBiurChametz ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzGRA() );
-				}
-			}
-		);
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		zmanim.add(
-			new Zman( "MG'A 72 Minutes", "Based on alot being 72 minutes before sunrise.", Type.SofZmanBiurChametz ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA72Minutes() );
-				}
-			}
-		);
+    List<Zman> zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Type.SofZmanBiurChametz ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Type.SofZmanBiurChametz ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzGRA() );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    zmanim.add(
+      new Zman( "MG'A 72 Minutes", "Based on alot being 72 minutes before sunrise.", Type.SofZmanBiurChametz ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA72Minutes() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Type.SofZmanBiurChametz ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees() );
+        }
+      }
+    );
+
+    return zmanim;
+  }
 
 
 } // End of SofZmanBiurChametz class

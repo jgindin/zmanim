@@ -132,23 +132,23 @@ public class DisplayNotificationService
     //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
     //  dismissed...
     NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
- 	  notificationManager.cancel( zmanType.ordinal() );
+    notificationManager.cancel( zmanType.ordinal() );
 
- 		Intent openZmanim = new Intent( this, ZmanimActivity.class );
+    Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
- 		String notificationText = getString( R.string.notification, zmanType, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
+    String notificationText = getString( R.string.notification, zmanType, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
- 		Notification notification = new NotificationCompat.Builder( this )
- 			.setContentTitle( getString( R.string.app_name ) )
- 			.setContentText( notificationText )
- 			.setSmallIcon( R.drawable.ic_stat_zman_notification )
- 			.setTicker( notificationText )
- 			.setAutoCancel( true )
- 			.setDefaults( Notification.DEFAULT_ALL )
- 			.setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) )
+    Notification notification = new NotificationCompat.Builder( this )
+      .setContentTitle( getString( R.string.app_name ) )
+      .setContentText( notificationText )
+      .setSmallIcon( R.drawable.ic_stat_zman_notification )
+      .setTicker( notificationText )
+      .setAutoCancel( true )
+      .setDefaults( Notification.DEFAULT_ALL )
+      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) )
       .build();
 
- 		notificationManager.notify( zmanType.ordinal(), notification );
+    notificationManager.notify( zmanType.ordinal(), notification );
   }
 
 }

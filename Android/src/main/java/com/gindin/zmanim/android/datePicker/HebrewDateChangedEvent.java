@@ -12,37 +12,37 @@ import com.gindin.zmanlib.calendar.HebrewDate;
  * Represents that a new date has been selected.
  */
 public class HebrewDateChangedEvent
-	extends Event<HebrewDateChangedEvent.Handler> {
+  extends Event<HebrewDateChangedEvent.Handler> {
 
-	public static abstract class Handler implements EventHandler {
-		public abstract void onHebrewDateChanged( HebrewDate newDate );
-
-
-		@Override
-		public Class getAssociatedType() {
-			return HebrewDateChangedEvent.class;
-		}
-	}
+  public static abstract class Handler implements EventHandler {
+    public abstract void onHebrewDateChanged( HebrewDate newDate );
 
 
-	private final HebrewDate                                  newDate;
+    @Override
+    public Class getAssociatedType() {
+      return HebrewDateChangedEvent.class;
+    }
+  }
 
 
-	public HebrewDateChangedEvent( HebrewDate newDate ) {
-		this.newDate = newDate;
-	}
+  private final HebrewDate                                  newDate;
 
 
-	@Override
-	public void dispatch( Handler handler ) {
-		handler.onHebrewDateChanged( newDate );
-	}
+  public HebrewDateChangedEvent( HebrewDate newDate ) {
+    this.newDate = newDate;
+  }
 
 
-	@Override
-	public String toString() {
-		return "HebrewDateChangedEvent{" +
-			"newDate=" + newDate +
-			'}';
-	}
+  @Override
+  public void dispatch( Handler handler ) {
+    handler.onHebrewDateChanged( newDate );
+  }
+
+
+  @Override
+  public String toString() {
+    return "HebrewDateChangedEvent{" +
+      "newDate=" + newDate +
+      '}';
+  }
 } // End of HebrewDateChangedEvent class

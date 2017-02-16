@@ -12,31 +12,31 @@ import java.util.List;
  *
  */
 class Shkia
-	extends Zmanim {
+  extends Zmanim {
 
-	Shkia(
-		final ZmanimCalculator zmanimCalculator
-	) {
+  Shkia(
+    final ZmanimCalculator zmanimCalculator
+  ) {
 
-		super( Type.Shkia, zmanimCalculator );
-	}
+    super( Type.Shkia, zmanimCalculator );
+  }
 
 
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSunset() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSunset() );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    return zmanim;
+  }
 
 
 }  // End of Shkia class

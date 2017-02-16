@@ -11,29 +11,29 @@ import com.gindin.eventBus.EventHandler;
  * Fired when someone detects that the user wants to edit their location preferences.
  */
 public class EditLocationPrefsEvent
-	extends Event<EditLocationPrefsEvent.Handler> {
+  extends Event<EditLocationPrefsEvent.Handler> {
 
-	public static abstract class Handler implements EventHandler<EditLocationPrefsEvent> {
+  public static abstract class Handler implements EventHandler<EditLocationPrefsEvent> {
 
-		public abstract void onEditLocationPrefs();
-
-
-		@Override
-		public Class<EditLocationPrefsEvent> getAssociatedType() {
-			return EditLocationPrefsEvent.class;
-		}
-	}
+    public abstract void onEditLocationPrefs();
 
 
-	@Override
-	public boolean isCachable() {
-		return false;
-	}
+    @Override
+    public Class<EditLocationPrefsEvent> getAssociatedType() {
+      return EditLocationPrefsEvent.class;
+    }
+  }
 
 
-	@Override
-	public void dispatch( Handler handler ) {
-		handler.onEditLocationPrefs();
-	}
+  @Override
+  public boolean isCachable() {
+    return false;
+  }
+
+
+  @Override
+  public void dispatch( Handler handler ) {
+    handler.onEditLocationPrefs();
+  }
 
 } // End of EditLocationPrefsEvent class

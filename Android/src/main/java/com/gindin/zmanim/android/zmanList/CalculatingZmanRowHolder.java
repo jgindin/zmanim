@@ -17,89 +17,89 @@ import android.widget.TextView;
  * This class should really be deprecated...the view holder should *not* be performing calculations...
  */
 public abstract class CalculatingZmanRowHolder
-	extends ZmanRowHolder {
+  extends ZmanRowHolder {
 
-	private final ZmanFormatter                               zmanFormatter;
+  private final ZmanFormatter                               zmanFormatter;
 
-	private ZmanAsyncCalculator                               currentCalculator;
-
-
-
-	protected CalculatingZmanRowHolder(
-		View          zmanRowView,
-		ZmanFormatter zmanFormatter
-	) {
-		super( zmanRowView );
-		this.zmanFormatter = zmanFormatter;
-	}
+  private ZmanAsyncCalculator                               currentCalculator;
 
 
-	@Override
-	public void setZman( Zman zman ) {
 
-		// Cancel any currently executing calculation...
-		if ( ( null != currentCalculator ) && ( !currentCalculator.isCancelled() ) ) {
-			currentCalculator.cancel( false );
-		}
-
-		// Start the new calculation
-		currentCalculator = new ZmanAsyncCalculator( zmanFormatter, timeField );
-		currentCalculator.execute( zman );
-
-		super.setZman( zman );
-	}
+  protected CalculatingZmanRowHolder(
+    View          zmanRowView,
+    ZmanFormatter zmanFormatter
+  ) {
+    super( zmanRowView );
+    this.zmanFormatter = zmanFormatter;
+  }
 
 
-	/**
-	 * Used to asynchronously calculate the zman.
-	 */
-	private static class ZmanAsyncCalculator
-		extends AsyncTask<Zman, Void, String> {
+  @Override
+  public void setZman( Zman zman ) {
 
-		private final ZmanFormatter                             zmanFormatter;
-		private final TextView                                  timeField;
+    // Cancel any currently executing calculation...
+    if ( ( null != currentCalculator ) && ( !currentCalculator.isCancelled() ) ) {
+      currentCalculator.cancel( false );
+    }
 
+    // Start the new calculation
+    currentCalculator = new ZmanAsyncCalculator( zmanFormatter, timeField );
+    currentCalculator.execute( zman );
 
-		ZmanAsyncCalculator(
-			ZmanFormatter zmanFormatter,
-			TextView      timeField
-		) {
-			this.zmanFormatter = zmanFormatter;
-			this.timeField = timeField;
-
-			timeField.setText( "" );
-		}
+    super.setZman( zman );
+  }
 
 
-		@Override
-		protected String doInBackground( Zman... zmans ) {
+  /**
+   * Used to asynchronously calculate the zman.
+   */
+  private static class ZmanAsyncCalculator
+    extends AsyncTask<Zman, Void, String> {
 
-			String formatted = "";
-
-			try {
-				formatted = zmanFormatter.formatZmanTime( zmans[0] );
-			}
-			catch ( Exception e ) {
-				final Zman zman = zmans[ 0 ];
-				//noinspection unchecked
-				LogUtils.logError( "ZRW::doInBackground", "Format zman", e,
-					new Pair<String, String>( "type", zman.type.name ),
-					new Pair<String, String>( "zman", zman.name ) );
-			}
-
-			return formatted;
-		}
+    private final ZmanFormatter                             zmanFormatter;
+    private final TextView                                  timeField;
 
 
-		@Override
-		protected void onPostExecute( String formattedZman ) {
-			super.onPostExecute( formattedZman );
+    ZmanAsyncCalculator(
+      ZmanFormatter zmanFormatter,
+      TextView      timeField
+    ) {
+      this.zmanFormatter = zmanFormatter;
+      this.timeField = timeField;
 
-			// If we got cancelled, don't do anything!
-			if ( !isCancelled() ) {
-				timeField.setText( formattedZman );
-			}
-		}
-	}
+      timeField.setText( "" );
+    }
+
+
+    @Override
+    protected String doInBackground( Zman... zmans ) {
+
+      String formatted = "";
+
+      try {
+        formatted = zmanFormatter.formatZmanTime( zmans[0] );
+      }
+      catch ( Exception e ) {
+        final Zman zman = zmans[ 0 ];
+        //noinspection unchecked
+        LogUtils.logError( "ZRW::doInBackground", "Format zman", e,
+          new Pair<String, String>( "type", zman.type.name ),
+          new Pair<String, String>( "zman", zman.name ) );
+      }
+
+      return formatted;
+    }
+
+
+    @Override
+    protected void onPostExecute( String formattedZman ) {
+      super.onPostExecute( formattedZman );
+
+      // If we got cancelled, don't do anything!
+      if ( !isCancelled() ) {
+        timeField.setText( formattedZman );
+      }
+    }
+  }
 
 } // End of CalculatingZmanRowHolder class

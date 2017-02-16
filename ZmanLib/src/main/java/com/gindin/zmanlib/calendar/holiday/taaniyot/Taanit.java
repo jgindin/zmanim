@@ -26,224 +26,224 @@ import java.util.Calendar;
  * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
  */
 public abstract class Taanit
-	extends Observance {
+  extends Observance {
 
-	protected static final String                             TAANIT = "Ta'anit ";
+  protected static final String                             TAANIT = "Ta'anit ";
 
-	/** Which month does the fast fall in? */
-	@HebrewMonth.Constant
-	private final int                                         monthOfFast;
+  /** Which month does the fast fall in? */
+  @HebrewMonth.Constant
+  private final int                                         monthOfFast;
 
-	/** Absent any reason to postpone the fast, what day of the month does it fall on? */
-	protected final int                                       normalDayOfFast;
-
-
-	protected Taanit(
-		@HebrewMonth.Constant
-		int   monthOfFast,
-		int   normalDayOfFast
-	) {
-		this.monthOfFast = monthOfFast;
-		this.normalDayOfFast = normalDayOfFast;
-	}
+  /** Absent any reason to postpone the fast, what day of the month does it fall on? */
+  protected final int                                       normalDayOfFast;
 
 
-	/** Can the fast take place on a Friday? */
-	protected abstract boolean canFallOnFriday();
-
-	protected abstract Details createErevDetails( HebrewDate date );
-
-	protected abstract Details createYomDetails( HebrewDate date );
-
-
-	/**
-	 * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets
-	 *  pulled back instead.
-	 */
-	protected boolean canPushToSunday() {
-		return true;
-	}
-
-	/**
-	 * Allows the subclass to change the month of the fast based on the specified date.
-	 */
-	@HebrewMonth.Constant
-	protected int getAdjustedMonthOfFast( HebrewDate date ) {
-		return monthOfFast;
-	}
+  protected Taanit(
+    @HebrewMonth.Constant
+    int   monthOfFast,
+    int   normalDayOfFast
+  ) {
+    this.monthOfFast = monthOfFast;
+    this.normalDayOfFast = normalDayOfFast;
+  }
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	@Override
-	public final Details getDetailsFor( HebrewDate date ) {
+  /** Can the fast take place on a Friday? */
+  protected abstract boolean canFallOnFriday();
 
-		@HebrewMonth.Constant
-		int actualMonthOfFast = getAdjustedMonthOfFast( date );
+  protected abstract Details createErevDetails( HebrewDate date );
 
-		if ( actualMonthOfFast != date.getHebrewMonth() ) {
-			return null;
-		}
-
-		final int dayOfWeek = date.getDayOfWeek();
-		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-
-		if ( Calendar.WEDNESDAY == dayOfWeek ) {
-			Details details = checkWednesday( date );
-			if ( null != details ) {
-				return details;
-			}
-		}
-
-		if ( Calendar.THURSDAY == dayOfWeek ) {
-			Details details = checkThursday( date );
-			if ( null != details ) {
-				return details;
-			}
-		}
-
-		if ( Calendar.FRIDAY == dayOfWeek ) {
-
-			if ( canFallOnFriday() ) {
-				if ( normalDayOfFast == jewishDayOfMonth ) {
-					return createYomDetails( date );
-				}
-			}
-			else {
-				// If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be
-				//  Erev, because we never have a Ta'anit on Shabbat (well, except Yom Kippur, but that's
-				//  a whole separate case)...
-				return null;
-			}
-		}
-
-		if ( Calendar.SATURDAY == dayOfWeek ) {
-			if ( canPushToSunday() ) {
-				if ( normalDayOfFast == jewishDayOfMonth ) {
-					return createErevDetails( date );
-				}
-			}
-			else {
-				// If we can't push it, then today is nothing.
-				return null;
-			}
-		}
-
-		if ( Calendar.SUNDAY == dayOfWeek ) {
-			if ( ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) && canPushToSunday() ) {
-				return createYomDetails( date );
-			}
-		}
+  protected abstract Details createYomDetails( HebrewDate date );
 
 
-		// We've handled all the special cases above...
-		if ( normalDayOfFast == jewishDayOfMonth ) {
-			return createYomDetails( date );
-		}
+  /**
+   * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets
+   *  pulled back instead.
+   */
+  protected boolean canPushToSunday() {
+    return true;
+  }
 
-		if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-			return createErevDetails( date );
-		}
-
-
-		return null;
-	}
-
-
-	protected Details checkWednesday(
-		HebrewDate date
-	) {
-
-		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-
-		if ( canFallOnFriday() ) {
-			if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-				return createErevDetails( date );
-			}
-		}
-		else {
-			if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-				return createErevDetails( date );
-			}
-		}
-
-		return null;
-	}
+  /**
+   * Allows the subclass to change the month of the fast based on the specified date.
+   */
+  @HebrewMonth.Constant
+  protected int getAdjustedMonthOfFast( HebrewDate date ) {
+    return monthOfFast;
+  }
 
 
-	protected Details checkThursday(
-		HebrewDate date
-	) {
+  @SuppressWarnings( "FeatureEnvy" )
+  @Override
+  public final Details getDetailsFor( HebrewDate date ) {
 
-		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+    @HebrewMonth.Constant
+    int actualMonthOfFast = getAdjustedMonthOfFast( date );
 
-		if ( canFallOnFriday() ) {
-			if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-				return createErevDetails( date );
-			}
-		}
-		else {
-			if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
-				return createYomDetails( date );
-			}
-		}
+    if ( actualMonthOfFast != date.getHebrewMonth() ) {
+      return null;
+    }
 
-		return null;
-	}
+    final int dayOfWeek = date.getDayOfWeek();
+    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
+    if ( Calendar.WEDNESDAY == dayOfWeek ) {
+      Details details = checkWednesday( date );
+      if ( null != details ) {
+        return details;
+      }
+    }
 
-	protected static class ErevTaanitDetails
-		extends Details.Erev {
+    if ( Calendar.THURSDAY == dayOfWeek ) {
+      Details details = checkThursday( date );
+      if ( null != details ) {
+        return details;
+      }
+    }
 
-		ErevTaanitDetails(
-			HebrewDate  date,
-			String      name
-		) {
+    if ( Calendar.FRIDAY == dayOfWeek ) {
 
-			// Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
-			//  Details class)
-			super( date, name, false );
-		}
+      if ( canFallOnFriday() ) {
+        if ( normalDayOfFast == jewishDayOfMonth ) {
+          return createYomDetails( date );
+        }
+      }
+      else {
+        // If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be
+        //  Erev, because we never have a Ta'anit on Shabbat (well, except Yom Kippur, but that's
+        //  a whole separate case)...
+        return null;
+      }
+    }
 
+    if ( Calendar.SATURDAY == dayOfWeek ) {
+      if ( canPushToSunday() ) {
+        if ( normalDayOfFast == jewishDayOfMonth ) {
+          return createErevDetails( date );
+        }
+      }
+      else {
+        // If we can't push it, then today is nothing.
+        return null;
+      }
+    }
 
-		@Override
-		public boolean sayHavdalah() {
-
-			// We can have a fast day that falls on Sunday, in which case we would say Havdalah on erev of the fast...
-			return isShabbat();
-		}
-	}
-
-
-	protected static class TaanitDetails
-		extends Details.Yom {
-
-		public TaanitDetails(
-			HebrewDate  date,
-			String      name
-		) {
-			super( date, name );
-		}
-
-
-		@Override
-		public boolean lightCandles() {
-
-			// At least one fast can fall on Erev Shabbat...
-			return isErevShabbat();
-		}
-
-
-		@Override
-		public boolean sayHavdalah() {
-			// No fast requires havdalah.
-			return false;
-		}
+    if ( Calendar.SUNDAY == dayOfWeek ) {
+      if ( ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) && canPushToSunday() ) {
+        return createYomDetails( date );
+      }
+    }
 
 
-		@Override
-		public boolean isTaanit() {
-			return true;
-		}
-	}
+    // We've handled all the special cases above...
+    if ( normalDayOfFast == jewishDayOfMonth ) {
+      return createYomDetails( date );
+    }
+
+    if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+      return createErevDetails( date );
+    }
+
+
+    return null;
+  }
+
+
+  protected Details checkWednesday(
+    HebrewDate date
+  ) {
+
+    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+
+    if ( canFallOnFriday() ) {
+      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+        return createErevDetails( date );
+      }
+    }
+    else {
+      if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+        return createErevDetails( date );
+      }
+    }
+
+    return null;
+  }
+
+
+  protected Details checkThursday(
+    HebrewDate date
+  ) {
+
+    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+
+    if ( canFallOnFriday() ) {
+      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
+        return createErevDetails( date );
+      }
+    }
+    else {
+      if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
+        return createYomDetails( date );
+      }
+    }
+
+    return null;
+  }
+
+
+  protected static class ErevTaanitDetails
+    extends Details.Erev {
+
+    ErevTaanitDetails(
+      HebrewDate  date,
+      String      name
+    ) {
+
+      // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
+      //  Details class)
+      super( date, name, false );
+    }
+
+
+    @Override
+    public boolean sayHavdalah() {
+
+      // We can have a fast day that falls on Sunday, in which case we would say Havdalah on erev of the fast...
+      return isShabbat();
+    }
+  }
+
+
+  protected static class TaanitDetails
+    extends Details.Yom {
+
+    public TaanitDetails(
+      HebrewDate  date,
+      String      name
+    ) {
+      super( date, name );
+    }
+
+
+    @Override
+    public boolean lightCandles() {
+
+      // At least one fast can fall on Erev Shabbat...
+      return isErevShabbat();
+    }
+
+
+    @Override
+    public boolean sayHavdalah() {
+      // No fast requires havdalah.
+      return false;
+    }
+
+
+    @Override
+    public boolean isTaanit() {
+      return true;
+    }
+  }
 
 }  // End of Taanit class

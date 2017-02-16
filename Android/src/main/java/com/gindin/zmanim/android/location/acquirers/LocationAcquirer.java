@@ -34,93 +34,93 @@ import java.util.TimeZone;
  */
 public abstract class LocationAcquirer {
 
-	protected final EventBus                                  eventBus;
+  protected final EventBus                                  eventBus;
 
-	protected final SharedPreferences                         locationManagementPrefs;
+  protected final SharedPreferences                         locationManagementPrefs;
 
-	private final SharedPreferences                           personalPrefs;
-
-
-	protected LocationAcquirer(
-		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs,
-	  SharedPreferences personalPrefs
-	) {
-		this.eventBus = eventBus;
-		this.locationManagementPrefs = locationManagementPrefs;
-		this.personalPrefs = personalPrefs;
-	}
+  private final SharedPreferences                           personalPrefs;
 
 
-	/**
-	 * Called to acquire the current location information.
-	 */
-	public abstract void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage );
+  protected LocationAcquirer(
+    EventBus          eventBus,
+    SharedPreferences locationManagementPrefs,
+    SharedPreferences personalPrefs
+  ) {
+    this.eventBus = eventBus;
+    this.locationManagementPrefs = locationManagementPrefs;
+    this.personalPrefs = personalPrefs;
+  }
 
 
-	/**
-	 * Called when we're to stop trying to acquire a location. If called when the provider is not actively trying to
-	 *  acquire the location, then it will silently do nothing.
-	 */
-	public void cancel() {
-		// Nothing by default
-	}
+  /**
+   * Called to acquire the current location information.
+   */
+  public abstract void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage );
 
 
-	/**
-	 * Called when this location provider is going away.
-	 */
-	public void onDestroy() {
-		// Nothing by default
-	}
+  /**
+   * Called when we're to stop trying to acquire a location. If called when the provider is not actively trying to
+   *  acquire the location, then it will silently do nothing.
+   */
+  public void cancel() {
+    // Nothing by default
+  }
 
 
-	/**
-	 * @return The timezone specified by the user in the preferences, or null if we're to use the system time zone.
-	 */
-	@Nullable
+  /**
+   * Called when this location provider is going away.
+   */
+  public void onDestroy() {
+    // Nothing by default
+  }
+
+
+  /**
+   * @return The timezone specified by the user in the preferences, or null if we're to use the system time zone.
+   */
+  @Nullable
   protected final TimeZone getTimeZoneFromPrefs() {
 
-		if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
-			return null;
-		}
+    if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
+      return null;
+    }
 
-		final String timeZoneArea = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
-		if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
-			return null;
-		}
+    final String timeZoneArea = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+    if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
+      return null;
+    }
 
-		final String timeZoneLocale = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
-		if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
-			return null;
-		}
+    final String timeZoneLocale = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+    if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
+      return null;
+    }
 
-		return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
-	}
-
-
-	protected final void fireLocationAcquiredEvent(
-		ZmanimLocation  newLocation,
-		boolean         isCachedLocation
-	) {
-
-		fireLocationAcquiredEvent( newLocation, isCachedLocation, null );
-	}
+    return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
+  }
 
 
-	protected final void fireLocationAcquiredEvent(
-		ZmanimLocation  newLocation,
-		final boolean   isCachedLocation,
-		LocationError   error
-	) {
+  protected final void fireLocationAcquiredEvent(
+    ZmanimLocation  newLocation,
+    boolean         isCachedLocation
+  ) {
 
-		boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-		if ( !useElevation && ( newLocation != null ) ) {
-			newLocation.setElevation( 0.0 );
-		}
+    fireLocationAcquiredEvent( newLocation, isCachedLocation, null );
+  }
 
-		eventBus.fire( new LocationAcquiredEvent( newLocation, isCachedLocation, error ) );
-	}
+
+  protected final void fireLocationAcquiredEvent(
+    ZmanimLocation  newLocation,
+    final boolean   isCachedLocation,
+    LocationError   error
+  ) {
+
+    boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
+    if ( !useElevation && ( newLocation != null ) ) {
+      newLocation.setElevation( 0.0 );
+    }
+
+    eventBus.fire( new LocationAcquiredEvent( newLocation, isCachedLocation, error ) );
+  }
 
 
 }  // End of LocationProvider class

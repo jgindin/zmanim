@@ -12,18 +12,18 @@ import com.gindin.zmanlib.zman.Zman;
  *  a representation of that day is also included.
  */
 public interface ZmanimPresenter<V extends ZmanimView>
-	extends Presenter<V> {
+  extends Presenter<V> {
 
-	/**
-	 * Called when the user gestures that they want to see the various options for the specified zman.
-	 */
-	void userWantsToSeeZmanOptions( Zman zman );
+  /**
+   * Called when the user gestures that they want to see the various options for the specified zman.
+   */
+  void userWantsToSeeZmanOptions( Zman zman );
 
-	/**
-	 * Called when the user has decided to change the option for the specified zman.
-	 */
-	void userChangedZman(
-		Zman selection
-	);
+  /**
+   * Called when the user has decided to change the option for the specified zman.
+   */
+  void userChangedZman(
+    Zman selection
+  );
 
 } // End of DailyPresenter class

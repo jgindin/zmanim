@@ -14,27 +14,27 @@ import android.support.v4.app.FragmentActivity;
  *  this pattern.
  */
 public abstract class AbstractView<P extends Presenter>
-	implements View<P> {
+  implements View<P> {
 
-	protected final FragmentActivity                          owner;
+  protected final FragmentActivity                          owner;
 
-	private P                                                 presenter;
-
-
-	protected AbstractView( FragmentActivity owner ) {
-		this.owner = owner;
-	}
+  private P                                                 presenter;
 
 
-	@Override
-	public void setPresenter( P presenter ) {
-		this.presenter = presenter;
-	}
+  protected AbstractView( FragmentActivity owner ) {
+    this.owner = owner;
+  }
 
 
-	protected final P getPresenter() {
-		return presenter;
-	}
+  @Override
+  public void setPresenter( P presenter ) {
+    this.presenter = presenter;
+  }
+
+
+  protected final P getPresenter() {
+    return presenter;
+  }
 
 
 } // End of AbstractView class

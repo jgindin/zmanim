@@ -14,31 +14,31 @@ package com.gindin.eventBus;
  */
 public abstract class Event<H extends EventHandler> {
 
-	protected Event() {
-	}
+  protected Event() {
+  }
 
 
-	/**
-	 * Invoked prior to any dispatching of the event, allowing an opportunity to interact with the cache control.
-	 */
-	public void preDispatch( EventCacheControl cacheControl ) {
-	}
+  /**
+   * Invoked prior to any dispatching of the event, allowing an opportunity to interact with the cache control.
+   */
+  public void preDispatch( EventCacheControl cacheControl ) {
+  }
 
 
-	/**
-	 * Called by the event bus to send this method to the specified handler. Generally, if the handler has a method
-	 *  onFoo, the implementation of this method will be of the form, "handler.onFoo( this );".
-	 *
-	 * @param handler the handler to invoke.
-	 */
-	public abstract void dispatch( H handler );
+  /**
+   * Called by the event bus to send this method to the specified handler. Generally, if the handler has a method
+   *  onFoo, the implementation of this method will be of the form, "handler.onFoo( this );".
+   *
+   * @param handler the handler to invoke.
+   */
+  public abstract void dispatch( H handler );
 
 
-	/**
-	 * @return true if this event can be cached.
-	 */
-	public boolean isCachable() {
-		return true;
-	}
+  /**
+   * @return true if this event can be cached.
+   */
+  public boolean isCachable() {
+    return true;
+  }
 
 } // End of Event class

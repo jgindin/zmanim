@@ -11,6 +11,6 @@ import android.preference.PreferenceActivity;
  *  an activity which is "registered" and so won't / can't be invoked.
  */
 public class ZmanimSelectionPreferences
-	extends PreferenceActivity {
+  extends PreferenceActivity {
 
 }  // End of ZmanimSelectionPreferences class

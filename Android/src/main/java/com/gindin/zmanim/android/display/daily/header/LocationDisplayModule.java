@@ -14,25 +14,25 @@ import android.support.v4.app.FragmentActivity;
  * Module to handle presentation and interaction with the current location.
  */
 public class LocationDisplayModule
-	extends AbstractMvpModule<LocationPresenter<LocationView>> {
+  extends AbstractMvpModule<LocationPresenter<LocationView>> {
 
 
-	public LocationDisplayModule(
-		FragmentActivity activity,
-		EventBus eventBus
-	) {
-		super( activity, eventBus );
-	}
+  public LocationDisplayModule(
+    FragmentActivity activity,
+    EventBus eventBus
+  ) {
+    super( activity, eventBus );
+  }
 
 
-	@Override
-	public LocationPresenter<LocationView> create() {
+  @Override
+  public LocationPresenter<LocationView> create() {
 
-		Resources resources = activity.getResources();
+    Resources resources = activity.getResources();
 
-		LocationViewImpl view = new LocationViewImpl<LocationPresenter>( activity );
-		return new LocationPresenterImpl<LocationView>( view, eventBus, activity, resources );
-	}
+    LocationViewImpl view = new LocationViewImpl<LocationPresenter>( activity );
+    return new LocationPresenterImpl<LocationView>( view, eventBus, activity, resources );
+  }
 
 
 } // End of LocationDisplayModule class

@@ -14,27 +14,27 @@ import com.gindin.zmanlib.zman.Zman;
  *  with one of the zmanim.
  */
 public interface ZmanimView<P extends ZmanimPresenter>
-	extends View<P> {
+  extends View<P> {
 
-	/**
-	 * Provides the list of zmanim that apply to the day. At this point, however, the exact times
-	 *  may not have been calculated, and so the view must NOT ask any of these Zman objects for
-	 *  their times.
-	 */
-	void displayZmanim( Zman[] zmanimForTheDay );
+  /**
+   * Provides the list of zmanim that apply to the day. At this point, however, the exact times
+   *  may not have been calculated, and so the view must NOT ask any of these Zman objects for
+   *  their times.
+   */
+  void displayZmanim( Zman[] zmanimForTheDay );
 
-	/**
-	 * Invoked after the time for this zman has been calculated.
-	 */
-	void displayTimeForZman( Zman zman, String formattedTime );
+  /**
+   * Invoked after the time for this zman has been calculated.
+   */
+  void displayTimeForZman( Zman zman, String formattedTime );
 
-	/**
-	 * Called when the user should be allowed to choose from the various options for the given zman.
-	 */
-	void showZmanOptions(
-		final Zman            zman,
-		final ZmanimLocation  currentLocation,
-		final HebrewDate      currentDate
-	);
+  /**
+   * Called when the user should be allowed to choose from the various options for the given zman.
+   */
+  void showZmanOptions(
+    final Zman            zman,
+    final ZmanimLocation  currentLocation,
+    final HebrewDate      currentDate
+  );
 
 } // End of DailyView interface

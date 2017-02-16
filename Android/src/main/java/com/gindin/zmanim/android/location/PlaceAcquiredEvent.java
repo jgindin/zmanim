@@ -14,45 +14,45 @@ import com.gindin.zmanlib.location.ZmanimLocation;
  *  location.
  */
 public class PlaceAcquiredEvent
-	extends Event<PlaceAcquiredEvent.Handler> {
+  extends Event<PlaceAcquiredEvent.Handler> {
 
 
-	public static abstract class Handler implements EventHandler<PlaceAcquiredEvent> {
+  public static abstract class Handler implements EventHandler<PlaceAcquiredEvent> {
 
-		/**
-		 * Invoked when the place has been acquired. By place, we mean some rough description of a location.
-		 *
-		 * @param place a ZmanimLocation, where only the location name and time zone have been accurately populated.
-		 *              Specifically, the latitude & longitude will NOT be usable.
-		 */
-		public abstract void placeAcquired( ZmanimLocation place );
+    /**
+     * Invoked when the place has been acquired. By place, we mean some rough description of a location.
+     *
+     * @param place a ZmanimLocation, where only the location name and time zone have been accurately populated.
+     *              Specifically, the latitude & longitude will NOT be usable.
+     */
+    public abstract void placeAcquired( ZmanimLocation place );
 
-		@Override
-		public Class<PlaceAcquiredEvent> getAssociatedType() {
-			return PlaceAcquiredEvent.class;
-		}
-	}
-
-
-	private final ZmanimLocation                              place;
+    @Override
+    public Class<PlaceAcquiredEvent> getAssociatedType() {
+      return PlaceAcquiredEvent.class;
+    }
+  }
 
 
-	public PlaceAcquiredEvent( ZmanimLocation place ) {
-		this.place = place;
-	}
+  private final ZmanimLocation                              place;
 
 
-	@Override
-	public void dispatch( Handler handler ) {
-			handler.placeAcquired( place );
-	}
+  public PlaceAcquiredEvent( ZmanimLocation place ) {
+    this.place = place;
+  }
 
 
-	@Override
-	public String toString() {
-		return "PlaceAcquiredEvent{" +
-			"place=" + place +
-			'}';
-	}
+  @Override
+  public void dispatch( Handler handler ) {
+      handler.placeAcquired( place );
+  }
+
+
+  @Override
+  public String toString() {
+    return "PlaceAcquiredEvent{" +
+      "place=" + place +
+      '}';
+  }
 
 } // End of RawLocationAcquiredEvent class

@@ -20,68 +20,68 @@ import java.util.TimeZone;
  * Location provider that deals with a static latitude & longitude location.
  */
 public class LatitudeLongitudeLocationAcquirer
-	extends LocationAcquirer {
+  extends LocationAcquirer {
 
 
-	public LatitudeLongitudeLocationAcquirer(
-		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs,
-		SharedPreferences personalPrefs
-	) {
+  public LatitudeLongitudeLocationAcquirer(
+    EventBus          eventBus,
+    SharedPreferences locationManagementPrefs,
+    SharedPreferences personalPrefs
+  ) {
 
-		super( eventBus, locationManagementPrefs, personalPrefs );
-	}
-
-
-	@Override
-	public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
-
-		Location ourLocation = new Location( "Zmanim Latitude & Longitude Provider" );
-
-		updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
-		updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
-
-		TimeZone timeZone = getTimeZoneFromPrefs();
-
-		ZmanimLocation newLocation = new ZmanimLocation.Builder()
-			.atLatitude( ourLocation.getLatitude() )
-			.atLongitude( ourLocation.getLongitude() )
-			.inTimeZone( timeZone )
-			.build();
-
-		fireLocationAcquiredEvent( newLocation, false );
-	}
+    super( eventBus, locationManagementPrefs, personalPrefs );
+  }
 
 
-	private void updateLatitudeFromPrefs(
-		SharedPreferences locationManagementPrefs,
-		Location          ourLocation
-	) {
+  @Override
+  public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
 
-		String latitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "0" );
-		try {
-			ourLocation.setLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
-			ourLocation.setTime( System.currentTimeMillis() );
-		}
-		catch ( Exception e ) {
-			fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
-		}
-	}
+    Location ourLocation = new Location( "Zmanim Latitude & Longitude Provider" );
+
+    updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
+    updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
+
+    TimeZone timeZone = getTimeZoneFromPrefs();
+
+    ZmanimLocation newLocation = new ZmanimLocation.Builder()
+      .atLatitude( ourLocation.getLatitude() )
+      .atLongitude( ourLocation.getLongitude() )
+      .inTimeZone( timeZone )
+      .build();
+
+    fireLocationAcquiredEvent( newLocation, false );
+  }
 
 
-	private void updateLongitudeFromPrefs(
-		SharedPreferences locationManagementPrefs,
-		Location          ourLocation
-	) {
+  private void updateLatitudeFromPrefs(
+    SharedPreferences locationManagementPrefs,
+    Location          ourLocation
+  ) {
 
-		String longitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "0" );
-		try {
-			ourLocation.setLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
-			ourLocation.setTime( System.currentTimeMillis() );
-		}
-		catch ( Exception e ) {
-			fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
-		}
-	}
+    String latitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "0" );
+    try {
+      ourLocation.setLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
+      ourLocation.setTime( System.currentTimeMillis() );
+    }
+    catch ( Exception e ) {
+      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
+    }
+  }
+
+
+  private void updateLongitudeFromPrefs(
+    SharedPreferences locationManagementPrefs,
+    Location          ourLocation
+  ) {
+
+    String longitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "0" );
+    try {
+      ourLocation.setLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
+      ourLocation.setTime( System.currentTimeMillis() );
+    }
+    catch ( Exception e ) {
+      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
+    }
+  }
 
 }  // End of LatitudeLongitudeLocationProvider class

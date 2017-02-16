@@ -12,38 +12,38 @@ import com.gindin.zmanlib.calendar.holiday.Details;
  *
  */
 public class TishaBAv
-	extends Taanit {
+  extends Taanit {
 
-	private static final String                               TISHA_B_AV = "Tisha B'Av";
-
-
-	public TishaBAv() {
-		super( HebrewMonth.AV, 9 );
-	}
+  private static final String                               TISHA_B_AV = "Tisha B'Av";
 
 
-	@Override
-	public String getName() {
-		return TISHA_B_AV;
-	}
+  public TishaBAv() {
+    super( HebrewMonth.AV, 9 );
+  }
 
 
-	@Override
-	protected boolean canFallOnFriday() {
-		return false;
-	}
+  @Override
+  public String getName() {
+    return TISHA_B_AV;
+  }
 
 
-	@Override
-	protected Details createErevDetails( HebrewDate date ) {
-		return new ErevTaanitDetails( date, TISHA_B_AV );
-	}
+  @Override
+  protected boolean canFallOnFriday() {
+    return false;
+  }
 
 
-	@Override
-	protected Details createYomDetails( HebrewDate date ) {
-		return new TaanitDetails( date, TISHA_B_AV );
-	}
+  @Override
+  protected Details createErevDetails( HebrewDate date ) {
+    return new ErevTaanitDetails( date, TISHA_B_AV );
+  }
+
+
+  @Override
+  protected Details createYomDetails( HebrewDate date ) {
+    return new TaanitDetails( date, TISHA_B_AV );
+  }
 
 
 }  // End of TishaBAv class

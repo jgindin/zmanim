@@ -20,32 +20,32 @@ import android.support.v4.app.FragmentActivity;
  *
  */
 public class ZmanimDisplayModule
-	extends AbstractMvpModule<ZmanimPresenter<ZmanimView>> {
+  extends AbstractMvpModule<ZmanimPresenter<ZmanimView>> {
 
-	private final PersonalPrefsManager                        personalPrefsManager;
-
-
-	public ZmanimDisplayModule(
-		FragmentActivity      activity,
-		EventBus              eventBus,
-	  PersonalPrefsManager  personalPrefsManager
-	) {
-		super( activity, eventBus );
-		this.personalPrefsManager = personalPrefsManager;
-	}
+  private final PersonalPrefsManager                        personalPrefsManager;
 
 
-	@Override
-	public ZmanimPresenter<ZmanimView> create() {
+  public ZmanimDisplayModule(
+    FragmentActivity      activity,
+    EventBus              eventBus,
+    PersonalPrefsManager  personalPrefsManager
+  ) {
+    super( activity, eventBus );
+    this.personalPrefsManager = personalPrefsManager;
+  }
 
-		boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-		ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 
-		ZmanimViewImpl view = new ZmanimViewImpl( activity, new ZmanimSelector( activity, zmanFormatter ) );
+  @Override
+  public ZmanimPresenter<ZmanimView> create() {
 
-		SharedPreferences zmanSelectionPrefs = activity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+    boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
+    ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
 
-		return new ZmanimPresenterImpl<ZmanimView>( view, eventBus, zmanSelectionPrefs, zmanFormatter );
-	}
+    ZmanimViewImpl view = new ZmanimViewImpl( activity, new ZmanimSelector( activity, zmanFormatter ) );
+
+    SharedPreferences zmanSelectionPrefs = activity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+
+    return new ZmanimPresenterImpl<ZmanimView>( view, eventBus, zmanSelectionPrefs, zmanFormatter );
+  }
 
 } // End of ZmanimDisplayModule class

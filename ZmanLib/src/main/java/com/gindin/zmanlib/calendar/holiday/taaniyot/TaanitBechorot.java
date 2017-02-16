@@ -13,39 +13,39 @@ import com.gindin.zmanlib.calendar.holiday.Details;
  */
 @SuppressWarnings( "MagicNumber" )
 public class TaanitBechorot
-	extends Taanit {
+  extends Taanit {
 
-	private static final String                               BECHOROT = TAANIT + "Bechorot";
-
-
-
-	public TaanitBechorot() {
-		super( HebrewMonth.NISSAN, 14 );
-	}
+  private static final String                               BECHOROT = TAANIT + "Bechorot";
 
 
-	@Override
-	public String getName() {
-		return BECHOROT;
-	}
+
+  public TaanitBechorot() {
+    super( HebrewMonth.NISSAN, 14 );
+  }
 
 
-	@Override
-	protected boolean canFallOnFriday() {
-		return true;
-	}
+  @Override
+  public String getName() {
+    return BECHOROT;
+  }
 
 
-	@Override
-	protected Details createErevDetails( HebrewDate date ) {
-		return new ErevTaanitDetails( date, BECHOROT );
-	}
+  @Override
+  protected boolean canFallOnFriday() {
+    return true;
+  }
 
 
-	@Override
-	protected Details createYomDetails( HebrewDate date ) {
-		return new TaanitDetails( date, BECHOROT );
-	}
+  @Override
+  protected Details createErevDetails( HebrewDate date ) {
+    return new ErevTaanitDetails( date, BECHOROT );
+  }
+
+
+  @Override
+  protected Details createYomDetails( HebrewDate date ) {
+    return new TaanitDetails( date, BECHOROT );
+  }
 
 
 }  // End of TaanitBechorot class

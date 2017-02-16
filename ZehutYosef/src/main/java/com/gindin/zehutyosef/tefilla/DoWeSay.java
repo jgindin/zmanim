@@ -14,201 +14,201 @@ import java.util.Calendar;
 class DoWeSay {
 
 
-	private final HebrewDate                                  date;
+  private final HebrewDate                                  date;
 
-	private final TefillaType                                 tefillaType;
+  private final TefillaType                                 tefillaType;
 
-	private final Details                                     dateDetails;
-
-
-	DoWeSay(
-		final HebrewDate date,
-		final TefillaType tefillaType
-	) {
-		this.date = date;
-		this.tefillaType = tefillaType;
-
-		this.dateDetails = date.getDetails();
-	}
+  private final Details                                     dateDetails;
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	final boolean barechenu() {
+  DoWeSay(
+    final HebrewDate date,
+    final TefillaType tefillaType
+  ) {
+    this.date = date;
+    this.tefillaType = tefillaType;
 
-		HebrewDate nextYear = HebrewCalendar.getForDate( date.getGregorianYear() + 1, Calendar.JANUARY, 1 );
-		final boolean isLeapYear = nextYear.isGregorianLeapYear();
-
-		HebrewDate startOfSummer = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 16 );
-		HebrewDate endOfSummer = HebrewCalendar.getForDate( date.getGregorianYear(), Calendar.DECEMBER, isLeapYear ? 5 : 4 );
-
-		// Make sure we're not in the new Hebrew year, but 'old' gregorian year...
-		if ( startOfSummer.getGregorianYear() != date.getGregorianYear() ) {
-			startOfSummer = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 16 );
-		}
+    this.dateDetails = date.getDetails();
+  }
 
 
-		final boolean barechenu;
-		if ( date.compareTo( startOfSummer ) >= 0 ) {
-			// If we're saying Arvit, then we must be strictly before the end of summer. For Shachrit or Mincha,
-			//  it could be that day...
-			if ( tefillaType == TefillaType.Arvit ) {
-				barechenu = ( date.compareTo( endOfSummer ) < 0 );
-			}
-			else {
-				barechenu = ( date.compareTo( endOfSummer ) <= 0 );
-			}
-		}
-		else {
-			barechenu = false;
-		}
+  @SuppressWarnings( "FeatureEnvy" )
+  final boolean barechenu() {
 
-		return barechenu;
-	}
+    HebrewDate nextYear = HebrewCalendar.getForDate( date.getGregorianYear() + 1, Calendar.JANUARY, 1 );
+    final boolean isLeapYear = nextYear.isGregorianLeapYear();
+
+    HebrewDate startOfSummer = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 16 );
+    HebrewDate endOfSummer = HebrewCalendar.getForDate( date.getGregorianYear(), Calendar.DECEMBER, isLeapYear ? 5 : 4 );
+
+    // Make sure we're not in the new Hebrew year, but 'old' gregorian year...
+    if ( startOfSummer.getGregorianYear() != date.getGregorianYear() ) {
+      startOfSummer = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 16 );
+    }
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	final boolean moridHaTal() {
+    final boolean barechenu;
+    if ( date.compareTo( startOfSummer ) >= 0 ) {
+      // If we're saying Arvit, then we must be strictly before the end of summer. For Shachrit or Mincha,
+      //  it could be that day...
+      if ( tefillaType == TefillaType.Arvit ) {
+        barechenu = ( date.compareTo( endOfSummer ) < 0 );
+      }
+      else {
+        barechenu = ( date.compareTo( endOfSummer ) <= 0 );
+      }
+    }
+    else {
+      barechenu = false;
+    }
 
-		HebrewDate firstDayOfPesach;
-		HebrewDate shminiAtzeret;
-
-		// First, check if we're before or after the Jewish New Year.
-		//  - If we're before, then the 1st day of Pesach that we're going to check against is in the same Hebrew year,
-		//    and the Shmini Atzeret we compare against is the next Hebrew year.
-		//  - Otherwise, we're comparing against the previous Hebrew year's Pesach and the current Hebrew year's
-		//    Shmini Atzeret.
-		//
-		HebrewDate endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ELUL, 29 );
-
-		// Make sure we're not in the new Hebrew year, but 'old' gregorian year...
-		if ( endOfYear.getGregorianYear() != date.getGregorianYear() ) {
-			endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.ELUL, 29 );
-		}
-
-
-		if ( date.compareTo( endOfYear ) <= 0 ) {
-			firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 15 );
-			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear() + 1, HebrewMonth.TISHREI, 22 );
-		}
-		else {
-			firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 15 );
-			shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.TISHREI, 22 );
-		}
+    return barechenu;
+  }
 
 
-		if ( ( date.compareTo( firstDayOfPesach ) > 0 ) && ( date.compareTo( shminiAtzeret ) < 0 ) ) {
-			return true;
-		}
+  @SuppressWarnings( "FeatureEnvy" )
+  final boolean moridHaTal() {
 
-		// Now, check the edge cases...
-		if ( date.compareTo( firstDayOfPesach ) == 0 ) {
-			return ( tefillaType != TefillaType.Shachrit );
-		}
+    HebrewDate firstDayOfPesach;
+    HebrewDate shminiAtzeret;
 
-		//noinspection SimplifiableIfStatement
-		if ( date.compareTo( shminiAtzeret ) == 0 ) {
-			return ( tefillaType == TefillaType.Shachrit );
-		}
+    // First, check if we're before or after the Jewish New Year.
+    //  - If we're before, then the 1st day of Pesach that we're going to check against is in the same Hebrew year,
+    //    and the Shmini Atzeret we compare against is the next Hebrew year.
+    //  - Otherwise, we're comparing against the previous Hebrew year's Pesach and the current Hebrew year's
+    //    Shmini Atzeret.
+    //
+    HebrewDate endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.ELUL, 29 );
 
-		return false;
-	}
-
-
-	@SuppressWarnings( "FeatureEnvy" )
-	final boolean tachanun() {
-
-		// See pg. 43 of Zehut Yosef.
-
-		Details today = date.getDetails();
-		if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot()
-			|| today.isChanukah() || today.isPurim() || today.isShushanPurim() ) {
-			return false;
-		}
-
-		if ( tefillaType == TefillaType.Mincha ) {
-			Details tomorrow = date.tomorrow().getDetails();
-			if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
-				tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
-				tomorrow.isPurim() || tomorrow.isShushanPurim()	) {
-				return false;
-			}
-		}
+    // Make sure we're not in the new Hebrew year, but 'old' gregorian year...
+    if ( endOfYear.getGregorianYear() != date.getGregorianYear() ) {
+      endOfYear = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.ELUL, 29 );
+    }
 
 
-		int hebrewMonth = date.getHebrewMonth();
-		if ( hebrewMonth == HebrewMonth.NISSAN ) {
-			return false;
-		}
-
-		if ( today.isYomHaAtzmaut() || today.isPesachSheni() || today.isLagBOmer() || today.isYomYerushalayim() ) {
-			return false;
-		}
-
-		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-		if ( ( hebrewMonth == HebrewMonth.SIVAN ) && ( hebrewDayOfMonth <= 12 ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.AV ) && ( ( hebrewDayOfMonth == 9 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.ELUL ) && ( hebrewDayOfMonth == 29 ) ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 11 ) ) {
-			return false;
-		}
-
-		if ( today.isChanukah() ) {
-			return false;
-		}
-
-		if ( ( hebrewMonth == HebrewMonth.SHEVAT ) && ( hebrewDayOfMonth == 15 ) ) {
-			return false;
-		}
-
-		//noinspection RedundantIfStatement
-		if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-			return false;
-		}
-
-		return true;
-	}
+    if ( date.compareTo( endOfYear ) <= 0 ) {
+      firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.NISSAN, 15 );
+      shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear() + 1, HebrewMonth.TISHREI, 22 );
+    }
+    else {
+      firstDayOfPesach = HebrewCalendar.getForJewishDate( date.getHebrewYear() - 1, HebrewMonth.NISSAN, 15 );
+      shminiAtzeret = HebrewCalendar.getForJewishDate( date.getHebrewYear(), HebrewMonth.TISHREI, 22 );
+    }
 
 
-	final boolean aseretYameiTeshuvaInsertions() {
+    if ( ( date.compareTo( firstDayOfPesach ) > 0 ) && ( date.compareTo( shminiAtzeret ) < 0 ) ) {
+      return true;
+    }
 
-		int hebrewMonth = date.getHebrewMonth();
-		int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    // Now, check the edge cases...
+    if ( date.compareTo( firstDayOfPesach ) == 0 ) {
+      return ( tefillaType != TefillaType.Shachrit );
+    }
 
-		return ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 1 ) && ( hebrewDayOfMonth <= 10 );
-	}
+    //noinspection SimplifiableIfStatement
+    if ( date.compareTo( shminiAtzeret ) == 0 ) {
+      return ( tefillaType == TefillaType.Shachrit );
+    }
 
-
-	final boolean roshChodeshAdditions() {
-		return dateDetails.isRoshChodesh();
-	}
-
-
-	final boolean chanukahAdditions() {
-		return dateDetails.isChanukah();
-	}
-
-
-	final boolean purimAdditions() {
-		return dateDetails.isPurim();
-	}
+    return false;
+  }
 
 
-	final boolean taanitDayInsertions() {
-		return dateDetails.isTaanit();
-	}
+  @SuppressWarnings( "FeatureEnvy" )
+  final boolean tachanun() {
+
+    // See pg. 43 of Zehut Yosef.
+
+    Details today = date.getDetails();
+    if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot()
+      || today.isChanukah() || today.isPurim() || today.isShushanPurim() ) {
+      return false;
+    }
+
+    if ( tefillaType == TefillaType.Mincha ) {
+      Details tomorrow = date.tomorrow().getDetails();
+      if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
+        tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
+        tomorrow.isPurim() || tomorrow.isShushanPurim() ) {
+        return false;
+      }
+    }
 
 
-	final boolean erevShabbatModifications() {
-		return ( date.getDayOfWeek() == Calendar.FRIDAY );
-	}
+    int hebrewMonth = date.getHebrewMonth();
+    if ( hebrewMonth == HebrewMonth.NISSAN ) {
+      return false;
+    }
+
+    if ( today.isYomHaAtzmaut() || today.isPesachSheni() || today.isLagBOmer() || today.isYomYerushalayim() ) {
+      return false;
+    }
+
+    int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    if ( ( hebrewMonth == HebrewMonth.SIVAN ) && ( hebrewDayOfMonth <= 12 ) ) {
+      return false;
+    }
+
+    if ( ( hebrewMonth == HebrewMonth.AV ) && ( ( hebrewDayOfMonth == 9 ) || ( hebrewDayOfMonth == 15 ) ) ) {
+      return false;
+    }
+
+    if ( ( hebrewMonth == HebrewMonth.ELUL ) && ( hebrewDayOfMonth == 29 ) ) {
+      return false;
+    }
+
+    if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 11 ) ) {
+      return false;
+    }
+
+    if ( today.isChanukah() ) {
+      return false;
+    }
+
+    if ( ( hebrewMonth == HebrewMonth.SHEVAT ) && ( hebrewDayOfMonth == 15 ) ) {
+      return false;
+    }
+
+    //noinspection RedundantIfStatement
+    if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  final boolean aseretYameiTeshuvaInsertions() {
+
+    int hebrewMonth = date.getHebrewMonth();
+    int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+
+    return ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 1 ) && ( hebrewDayOfMonth <= 10 );
+  }
+
+
+  final boolean roshChodeshAdditions() {
+    return dateDetails.isRoshChodesh();
+  }
+
+
+  final boolean chanukahAdditions() {
+    return dateDetails.isChanukah();
+  }
+
+
+  final boolean purimAdditions() {
+    return dateDetails.isPurim();
+  }
+
+
+  final boolean taanitDayInsertions() {
+    return dateDetails.isTaanit();
+  }
+
+
+  final boolean erevShabbatModifications() {
+    return ( date.getDayOfWeek() == Calendar.FRIDAY );
+  }
 
 } // End of DoWeSay class

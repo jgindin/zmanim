@@ -16,95 +16,95 @@ import com.gindin.zmanlib.calendar.holiday.Details;
  */
 @SuppressWarnings( "MagicNumber" )
 public class TaanitEsther
-	extends Taanit {
+  extends Taanit {
 
-	private static final String                               ESTHER = TAANIT + "Esther";
-
-
-
-	public TaanitEsther() {
-		super( HebrewMonth.ADAR, 13 );
-	}
+  private static final String                               ESTHER = TAANIT + "Esther";
 
 
-	@Override
-	public String getName() {
-		return ESTHER;
-	}
+
+  public TaanitEsther() {
+    super( HebrewMonth.ADAR, 13 );
+  }
 
 
-	@Override
-	protected boolean canFallOnFriday() {
-		return false;
-	}
+  @Override
+  public String getName() {
+    return ESTHER;
+  }
 
 
-	@Override
-	protected boolean canPushToSunday() {
-		return false;
-	}
+  @Override
+  protected boolean canFallOnFriday() {
+    return false;
+  }
 
 
-	@Override
-	protected int getAdjustedMonthOfFast( HebrewDate date ) {
-		if ( date.isHebrewLeapYear() ) {
-			return HebrewMonth.ADAR_II;
-		}
-
-		return HebrewMonth.ADAR;
-	}
+  @Override
+  protected boolean canPushToSunday() {
+    return false;
+  }
 
 
-	@Override
-	protected Details checkWednesday(
-		HebrewDate date
-	) {
+  @Override
+  protected int getAdjustedMonthOfFast( HebrewDate date ) {
+    if ( date.isHebrewLeapYear() ) {
+      return HebrewMonth.ADAR_II;
+    }
 
-		Details details = super.checkWednesday( date );
-
-		if ( null == details ) {
-
-			final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-			if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
-				// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-				return createErevDetails( date );
-			}
-
-		}
-
-		return null;
-	}
+    return HebrewMonth.ADAR;
+  }
 
 
-	@Override
-	protected Details checkThursday(
-		HebrewDate date
-	) {
+  @Override
+  protected Details checkWednesday(
+    HebrewDate date
+  ) {
 
-		Details details = super.checkThursday( date );
-		if ( null == details ) {
+    Details details = super.checkWednesday( date );
 
-			final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-			if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-				// Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-				return createYomDetails( date );
-			}
-		}
+    if ( null == details ) {
 
-		return null;
-	}
+      final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+      if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
+        // Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
+        return createErevDetails( date );
+      }
 
+    }
 
-	@Override
-	protected Details createErevDetails( HebrewDate date ) {
-		return new ErevTaanitDetails( date, ESTHER );
-	}
+    return null;
+  }
 
 
-	@Override
-	protected Details createYomDetails( HebrewDate date ) {
-		return new TaanitDetails( date, ESTHER );
-	}
+  @Override
+  protected Details checkThursday(
+    HebrewDate date
+  ) {
+
+    Details details = super.checkThursday( date );
+    if ( null == details ) {
+
+      final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+      if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+        // Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
+        return createYomDetails( date );
+      }
+    }
+
+    return null;
+  }
+
+
+  @Override
+  protected Details createErevDetails( HebrewDate date ) {
+    return new ErevTaanitDetails( date, ESTHER );
+  }
+
+
+  @Override
+  protected Details createYomDetails( HebrewDate date ) {
+    return new TaanitDetails( date, ESTHER );
+  }
 
 
 }  // End of TaanitEsther class

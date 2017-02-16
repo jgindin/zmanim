@@ -19,7 +19,7 @@ package com.gindin.eventBus;
  *      public void run() {
  *        doWhatYouNeedToDo();
  *      }
- *    }	);
+ *    } );
  *  }
  *  </pre>
  *
@@ -29,10 +29,10 @@ package com.gindin.eventBus;
  */
 public interface EventHandler<E extends Event<?>>  {
 
-	/**
-	 * Indicate the type of event this handler is associated with.
-	 */
-	Class<E> getAssociatedType();
+  /**
+   * Indicate the type of event this handler is associated with.
+   */
+  Class<E> getAssociatedType();
 
 
 } // End of EventHandler interface

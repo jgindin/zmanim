@@ -13,6 +13,6 @@ package com.gindin.eventBus;
  */
 public interface EventCacheControl {
 
-	void clearCacheForType( Class<? extends Event> type );
+  void clearCacheForType( Class<? extends Event> type );
 
 } // End of EventCacheControl interface

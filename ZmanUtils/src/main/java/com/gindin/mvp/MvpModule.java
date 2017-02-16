@@ -12,6 +12,6 @@ package com.gindin.mvp;
  */
 public interface MvpModule<P extends Presenter> {
 
-	P create();
+  P create();
 
 } // End of Module class

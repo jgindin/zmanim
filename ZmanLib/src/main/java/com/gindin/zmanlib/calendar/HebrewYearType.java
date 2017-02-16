@@ -28,19 +28,19 @@ package com.gindin.zmanlib.calendar;
  * Putting this together, we get the following table:
  *    Month       Gregorian Equivalent  Haser Length    Qesidrah Length   Shalem Length
  *    =======     ====================  =============   ================  =============
- *    1.  Nissan 	  March-April           30 days         30 days           30 days
- *    2.  Iyar 	    April-May             29 days 	      29 days 	        29 days
- *    3.  Sivan 	  May-June              30 days 	      30 days 	        30 days
- *    4.  Tammuz 	  June-July             29 days 	      29 days 	        29 days
- *    5.  Av        July-August           30 days 	      30 days 	        30 days
- *    6.  Elul 	    August-September      29 days 	      29 days 	        29 days
- *    7.  Tishri 	  September-October     30 days         30 days           30 days
- *    8.  Heshvan   October-November      29 days 	      29 days 	        30 days
- *    9.  Kislev 	  November-December     29 days 	      30 days 	        30 days
- *    10. Tevet 	  December-January      29 days         29 days           29 days
- *    11. Shevat 	  January-February      30 days 	      30 days 	        30 days
- *    12. Adar      February-March        29 days 	      29 days 	        29 days
- *    12. Adar I    February-March        30 days 	      30 days 	        30 days
+ *    1.  Nissan    March-April           30 days         30 days           30 days
+ *    2.  Iyar      April-May             29 days         29 days           29 days
+ *    3.  Sivan     May-June              30 days         30 days           30 days
+ *    4.  Tammuz    June-July             29 days         29 days           29 days
+ *    5.  Av        July-August           30 days         30 days           30 days
+ *    6.  Elul      August-September      29 days         29 days           29 days
+ *    7.  Tishri    September-October     30 days         30 days           30 days
+ *    8.  Heshvan   October-November      29 days         29 days           30 days
+ *    9.  Kislev    November-December     29 days         30 days           30 days
+ *    10. Tevet     December-January      29 days         29 days           29 days
+ *    11. Shevat    January-February      30 days         30 days           30 days
+ *    12. Adar      February-March        29 days         29 days           29 days
+ *    12. Adar I    February-March        30 days         30 days           30 days
  *    13. Adar II   March-April           29 days         29 days           29 days
  *                                    ----------      ----------        ---------
  *                                      353 / 383         354/384           355/385
@@ -50,19 +50,19 @@ package com.gindin.zmanlib.calendar;
 
 public enum HebrewYearType {
 
-	/**
-	 * A short year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 29 days.
-	 */
-	HASER,
+  /**
+   * A short year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 29 days.
+   */
+  HASER,
 
-	/**
-	 * An ordered year where {@link HebrewMonth#CHESHVAN} is 29 days and {@link HebrewMonth#KISLEV} is 30 days.
-	 */
-	QESIDRAH,
+  /**
+   * An ordered year where {@link HebrewMonth#CHESHVAN} is 29 days and {@link HebrewMonth#KISLEV} is 30 days.
+   */
+  QESIDRAH,
 
-	/**
-	 * A long year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 30 days.
-	 */
-	SHALEM
+  /**
+   * A long year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 30 days.
+   */
+  SHALEM
 
 }

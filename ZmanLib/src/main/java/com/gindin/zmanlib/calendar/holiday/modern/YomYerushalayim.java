@@ -20,39 +20,39 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  */
 @SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
 public class YomYerushalayim
-	extends Observance {
+  extends Observance {
 
-	private static final String                               NAME = "Yom Yerushalyim";
-
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+  private static final String                               NAME = "Yom Yerushalyim";
 
 
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
-		if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
-			return null;
-		}
 
-		if ( 27 == date.getHebrewDayOfMonth() ) {
-			return new Details.Erev( date, NAME, false );
-		}
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		if ( 28 == date.getHebrewDayOfMonth() ) {
-			return new Details.Yom( date, NAME ) {
-				@Override
-				public boolean isYomYerushalayim() {
-					return true;
-				}
-			};
-		}
+    if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
+      return null;
+    }
 
-		return null;
-	}
+    if ( 27 == date.getHebrewDayOfMonth() ) {
+      return new Details.Erev( date, NAME, false );
+    }
+
+    if ( 28 == date.getHebrewDayOfMonth() ) {
+      return new Details.Yom( date, NAME ) {
+        @Override
+        public boolean isYomYerushalayim() {
+          return true;
+        }
+      };
+    }
+
+    return null;
+  }
 
 
 }  // End of YomYerushalayim class

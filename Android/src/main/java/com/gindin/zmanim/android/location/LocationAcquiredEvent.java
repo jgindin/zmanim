@@ -15,92 +15,92 @@ import org.jetbrains.annotations.Nullable;
  *  is fully resolved, it will have to ask the location.
  */
 public class LocationAcquiredEvent
-	extends Event<LocationAcquiredEvent.Handler> {
+  extends Event<LocationAcquiredEvent.Handler> {
 
 
-	public static abstract class Handler implements EventHandler<LocationAcquiredEvent> {
+  public static abstract class Handler implements EventHandler<LocationAcquiredEvent> {
 
-		/**
-		 * Invoked when the location has been acquired.
-		 *
-		 * @param location The location which has been acquired.
-		 * @param isCachedLocation Indicate if the location is cached and, therefore, may not be up-to-date.
-		 */
-		public abstract void onLocationAcquired(
-			ZmanimLocation  location,
-			boolean         isCachedLocation
-		);
+    /**
+     * Invoked when the location has been acquired.
+     *
+     * @param location The location which has been acquired.
+     * @param isCachedLocation Indicate if the location is cached and, therefore, may not be up-to-date.
+     */
+    public abstract void onLocationAcquired(
+      ZmanimLocation  location,
+      boolean         isCachedLocation
+    );
 
-		/**
-		 * Invoked when an error occurred while trying to acquire the location. The specified location is, by definition,
-		 *  cached and not necessarily correct.
-		 *
-		 * @param error Describes the error.
-		 * @param lastKnownLocation The last known location.
-		 */
-		public abstract void onError(
-			@NotNull LocationError   error,
-			@NotNull ZmanimLocation  lastKnownLocation
-		);
-
-
-		@Override
-		public Class<LocationAcquiredEvent> getAssociatedType() {
-			return LocationAcquiredEvent.class;
-		}
-	}
+    /**
+     * Invoked when an error occurred while trying to acquire the location. The specified location is, by definition,
+     *  cached and not necessarily correct.
+     *
+     * @param error Describes the error.
+     * @param lastKnownLocation The last known location.
+     */
+    public abstract void onError(
+      @NotNull LocationError   error,
+      @NotNull ZmanimLocation  lastKnownLocation
+    );
 
 
-	/** The location which has been acquired. */
-	private final ZmanimLocation                              location;
+    @Override
+    public Class<LocationAcquiredEvent> getAssociatedType() {
+      return LocationAcquiredEvent.class;
+    }
+  }
 
 
-	private final boolean                                     isCachedLocation;
-
-	/**
-	 * If there was any error determining the location, then this describes the error. In this case, the location
-	 *  is actually the last known location
-	 */
-	private final LocationError                               error;
+  /** The location which has been acquired. */
+  private final ZmanimLocation                              location;
 
 
-	public LocationAcquiredEvent(
-		ZmanimLocation  newLocation,
-		boolean         isCachedLocation
-	) {
-		this( newLocation, isCachedLocation, null );
-	}
+  private final boolean                                     isCachedLocation;
+
+  /**
+   * If there was any error determining the location, then this describes the error. In this case, the location
+   *  is actually the last known location
+   */
+  private final LocationError                               error;
 
 
-	public LocationAcquiredEvent(
-		@NotNull ZmanimLocation location,
-		boolean                 isCachedLocation,
-		@Nullable LocationError error
-	) {
-		this.location = location;
-		this.isCachedLocation = isCachedLocation;
-		this.error = error;
-	}
+  public LocationAcquiredEvent(
+    ZmanimLocation  newLocation,
+    boolean         isCachedLocation
+  ) {
+    this( newLocation, isCachedLocation, null );
+  }
 
 
-	@Override
-	public void dispatch( Handler handler ) {
-		if ( error == null ) {
-			handler.onLocationAcquired( location, isCachedLocation );
-		}
-		else {
-			handler.onError( error, location );
-		}
-	}
+  public LocationAcquiredEvent(
+    @NotNull ZmanimLocation location,
+    boolean                 isCachedLocation,
+    @Nullable LocationError error
+  ) {
+    this.location = location;
+    this.isCachedLocation = isCachedLocation;
+    this.error = error;
+  }
 
 
-	@Override
-	public String toString() {
-		return "LocationAcquiredEvent{" +
-			"location=" + location +
-			"cached=" + isCachedLocation +
-			", error=" + error +
-			'}';
-	}
+  @Override
+  public void dispatch( Handler handler ) {
+    if ( error == null ) {
+      handler.onLocationAcquired( location, isCachedLocation );
+    }
+    else {
+      handler.onError( error, location );
+    }
+  }
+
+
+  @Override
+  public String toString() {
+    return "LocationAcquiredEvent{" +
+      "location=" + location +
+      "cached=" + isCachedLocation +
+      ", error=" + error +
+      '}';
+  }
 
 } // End of RawLocationAcquiredEvent class

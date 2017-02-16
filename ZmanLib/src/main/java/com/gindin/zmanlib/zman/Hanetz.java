@@ -12,42 +12,42 @@ import java.util.List;
  *
  */
 class Hanetz
-	extends Zmanim {
+  extends Zmanim {
 
 
-	private static final String                               DEFAULT_ZMAN_NAME = "Sunrise";
+  private static final String                               DEFAULT_ZMAN_NAME = "Sunrise";
 
-	Hanetz(
-		final ZmanimCalculator zmanimCalculator
-	) {
+  Hanetz(
+    final ZmanimCalculator zmanimCalculator
+  ) {
 
-		super( Type.Hanetz, zmanimCalculator );
-	}
+    super( Type.Hanetz, zmanimCalculator );
+  }
 
 
-	@Override
-	protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  @Override
+  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-		List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<Zman>();
 
-		zmanim.add(
-			new Zman( DEFAULT_ZMAN_NAME, "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSeaLevelSunrise() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( DEFAULT_ZMAN_NAME, "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSeaLevelSunrise() );
+        }
+      }
+    );
 
-		zmanim.add(
-			new Zman( "Sunrise (with elevation)", "The exact sunrise time, taking elevation into account..", Zmanim.Type.Hanetz, false ) {
-				@Override protected Calendar calculate() {
-					return toCalendar( zmanimCalculator, zmanimCalculator.getSunrise() );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( "Sunrise (with elevation)", "The exact sunrise time, taking elevation into account..", Zmanim.Type.Hanetz, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSunrise() );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    return zmanim;
+  }
 
 
 }  // End of Hanetz class

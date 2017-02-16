@@ -13,39 +13,39 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  *
  */
 public class PesachSheni
-	extends Observance {
+  extends Observance {
 
-	private static final String                               PESACH_SHENI = "Pesach Sheni";
-
-
-	@Override
-	public String getName() {
-		return PESACH_SHENI;
-	}
+  private static final String                               PESACH_SHENI = "Pesach Sheni";
 
 
-	@SuppressWarnings( "MagicNumber" )
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+  @Override
+  public String getName() {
+    return PESACH_SHENI;
+  }
 
-		if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
-			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
-			if ( 13 == hebrewDayOfMonth ) {
-				return new Details.Erev( date, PESACH_SHENI, false );
-			}
+  @SuppressWarnings( "MagicNumber" )
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-			if ( 14 == hebrewDayOfMonth ) {
-				return new Details.Yom( date, PESACH_SHENI ) {
-					@Override
-					public boolean isPesachSheni() {
-						return true;
-					}
-				};
-			}
-		}
+    if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
+      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
-		return null;
-	}
+      if ( 13 == hebrewDayOfMonth ) {
+        return new Details.Erev( date, PESACH_SHENI, false );
+      }
+
+      if ( 14 == hebrewDayOfMonth ) {
+        return new Details.Yom( date, PESACH_SHENI ) {
+          @Override
+          public boolean isPesachSheni() {
+            return true;
+          }
+        };
+      }
+    }
+
+    return null;
+  }
 
 }  // End of PesachSheni class

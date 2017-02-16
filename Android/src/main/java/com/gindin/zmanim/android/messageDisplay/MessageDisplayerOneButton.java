@@ -13,39 +13,39 @@ import android.widget.Button;
  *
  */
 public class MessageDisplayerOneButton
-	extends MessageDisplayer {
+  extends MessageDisplayer {
 
 
-	public void update(
-		int                                   titleResource,
-		String                                textLocation,
-		int                                   buttonTextResource,
-		final DialogInterface.OnClickListener clickListener
-	) {
-		super.update( titleResource, textLocation );
+  public void update(
+    int                                   titleResource,
+    String                                textLocation,
+    int                                   buttonTextResource,
+    final DialogInterface.OnClickListener clickListener
+  ) {
+    super.update( titleResource, textLocation );
 
-		String buttonText = messageDialog.getContext().getResources().getString( buttonTextResource );
+    String buttonText = messageDialog.getContext().getResources().getString( buttonTextResource );
 
-		Button button = messageDialog.getButton( DialogInterface.BUTTON_POSITIVE );
-		button.setText( buttonText );
-		button.setOnClickListener(
-			new View.OnClickListener() {
-				@Override
-				public void onClick( View view ) {
-					messageDialog.dismiss();
-					clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
-				}
-			}
-		);
-	}
+    Button button = messageDialog.getButton( DialogInterface.BUTTON_POSITIVE );
+    button.setText( buttonText );
+    button.setOnClickListener(
+      new View.OnClickListener() {
+        @Override
+        public void onClick( View view ) {
+          messageDialog.dismiss();
+          clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
+        }
+      }
+    );
+  }
 
 
-	@Override
-	protected void customize( AlertDialog.Builder builder ) {
-		super.customize( builder );
+  @Override
+  protected void customize( AlertDialog.Builder builder ) {
+    super.customize( builder );
 
-		// Just like with the title, trying to set an empty string won't allow us to later set the real string.
-		builder.setPositiveButton( " x  ", null );
-	}
+    // Just like with the title, trying to set an empty string won't allow us to later set the real string.
+    builder.setPositiveButton( " x  ", null );
+  }
 
 } // End of MessageDisplayerOneButton class

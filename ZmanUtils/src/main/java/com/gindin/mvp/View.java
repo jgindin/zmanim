@@ -11,9 +11,9 @@ package com.gindin.mvp;
  */
 public interface View<P extends Presenter> {
 
-	/**
-	 * Notify the view of its presenter. Using a setter (instead of a ctor param) makes it part of the contract.
-	 */
-	void setPresenter( P presenter );
+  /**
+   * Notify the view of its presenter. Using a setter (instead of a ctor param) makes it part of the contract.
+   */
+  void setPresenter( P presenter );
 
 } // End of View interface

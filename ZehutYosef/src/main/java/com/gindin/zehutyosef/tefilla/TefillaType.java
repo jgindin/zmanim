@@ -5,8 +5,8 @@ package com.gindin.zehutyosef.tefilla;
  */
 @SuppressWarnings( "SpellCheckingInspection" )
 enum TefillaType {
-	Shachrit,
-	Musaf,
-	Mincha,
-	Arvit
+  Shachrit,
+  Musaf,
+  Mincha,
+  Arvit
 }

@@ -12,38 +12,38 @@ import com.gindin.zmanlib.calendar.holiday.Details;
  *
  */
 public class AsaraBTevet
-	extends Taanit {
+  extends Taanit {
 
-	private static final String                               ASARA_BTEVET = "Asara B'Tevet";
-
-
-
-	public AsaraBTevet() {
-		super( HebrewMonth.TEVET, 10 );
-	}
+  private static final String                               ASARA_BTEVET = "Asara B'Tevet";
 
 
-	@Override
-	public String getName() {
-		return ASARA_BTEVET;
-	}
+
+  public AsaraBTevet() {
+    super( HebrewMonth.TEVET, 10 );
+  }
 
 
-	@Override
-	protected boolean canFallOnFriday() {
-		return true;
-	}
+  @Override
+  public String getName() {
+    return ASARA_BTEVET;
+  }
 
 
-	@Override
-	protected Details createErevDetails( HebrewDate date ) {
-		return new ErevTaanitDetails( date, ASARA_BTEVET );
-	}
+  @Override
+  protected boolean canFallOnFriday() {
+    return true;
+  }
 
 
-	@Override
-	protected Details createYomDetails( HebrewDate date ) {
-		return new TaanitDetails( date, ASARA_BTEVET );
-	}
+  @Override
+  protected Details createErevDetails( HebrewDate date ) {
+    return new ErevTaanitDetails( date, ASARA_BTEVET );
+  }
+
+
+  @Override
+  protected Details createYomDetails( HebrewDate date ) {
+    return new TaanitDetails( date, ASARA_BTEVET );
+  }
 
 }  // End of AsaraBTevet class

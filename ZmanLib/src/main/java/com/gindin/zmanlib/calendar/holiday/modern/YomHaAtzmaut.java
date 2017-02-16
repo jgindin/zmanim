@@ -34,94 +34,94 @@ import java.util.Calendar;
  */
 @SuppressWarnings( "FeatureEnvy" )
 public class YomHaAtzmaut
-	extends Observance {
+  extends Observance {
 
-	private static final String                               NAME = "Yom HaAtzmaut";
-
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+  private static final String                               NAME = "Yom HaAtzmaut";
 
 
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
-
-		if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
-			return null;
-		}
-
-		// In order to prevent Yom HaZikaron or Yom HaAtzmaut from falling on or immediately after Shabbat,
-		//  if the 5th of Iyar falls on:
-		//    Friday:   Moved back to the 4th
-		//    Shabbat:  Moved back to the 3rd
-		//    Monday:   Moved forward to the 6th
-		// See http://en.wikipedia.org/wiki/Yom_Ha-Atzma%27ut
-		final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-
-		switch ( date.getDayOfWeek() ) {
-			case Calendar.SUNDAY:
-				if ( 4 == jewishDayOfMonth ) {
-					// This is a case where we're pushing it forward...
-					return null;
-				}
-
-			case Calendar.MONDAY:
-				if ( 5 == jewishDayOfMonth ) {
-					return createErevDetails( date );
-				}
-				break;
-
-			case Calendar.TUESDAY:
-				if ( 6 == jewishDayOfMonth ) {
-					return createYomDetails( date );
-				}
-				break;
-
-			case Calendar.WEDNESDAY:
-				if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
-					return createErevDetails( date );
-				}
-				break;
-
-			case Calendar.THURSDAY:
-				if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
-					return createYomDetails( date );
-				}
-				break;
-
-			case Calendar.FRIDAY:
-				if ( 5 == jewishDayOfMonth ) {
-					// In this case, we pushed it back to the Thursday the 4th...
-					return null;
-				}
-		}
-
-		// We've handled the special cases, so if we get here, we're dealing with a regular year...
-		if ( 4 == jewishDayOfMonth ) {
-			return createErevDetails( date );
-		}
-		else if ( 5 == jewishDayOfMonth ) {
-			return createYomDetails( date );
-		}
-
-		return null;
-	}
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
 
-	private Details createErevDetails( HebrewDate date ) {
-		return new Details.Erev( date, NAME, false );
-	}
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
+
+    if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
+      return null;
+    }
+
+    // In order to prevent Yom HaZikaron or Yom HaAtzmaut from falling on or immediately after Shabbat,
+    //  if the 5th of Iyar falls on:
+    //    Friday:   Moved back to the 4th
+    //    Shabbat:  Moved back to the 3rd
+    //    Monday:   Moved forward to the 6th
+    // See http://en.wikipedia.org/wiki/Yom_Ha-Atzma%27ut
+    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+
+    switch ( date.getDayOfWeek() ) {
+      case Calendar.SUNDAY:
+        if ( 4 == jewishDayOfMonth ) {
+          // This is a case where we're pushing it forward...
+          return null;
+        }
+
+      case Calendar.MONDAY:
+        if ( 5 == jewishDayOfMonth ) {
+          return createErevDetails( date );
+        }
+        break;
+
+      case Calendar.TUESDAY:
+        if ( 6 == jewishDayOfMonth ) {
+          return createYomDetails( date );
+        }
+        break;
+
+      case Calendar.WEDNESDAY:
+        if ( ( 2 == jewishDayOfMonth ) || ( 3 == jewishDayOfMonth ) ) {
+          return createErevDetails( date );
+        }
+        break;
+
+      case Calendar.THURSDAY:
+        if ( ( 3 == jewishDayOfMonth ) || ( 4 == jewishDayOfMonth ) ) {
+          return createYomDetails( date );
+        }
+        break;
+
+      case Calendar.FRIDAY:
+        if ( 5 == jewishDayOfMonth ) {
+          // In this case, we pushed it back to the Thursday the 4th...
+          return null;
+        }
+    }
+
+    // We've handled the special cases, so if we get here, we're dealing with a regular year...
+    if ( 4 == jewishDayOfMonth ) {
+      return createErevDetails( date );
+    }
+    else if ( 5 == jewishDayOfMonth ) {
+      return createYomDetails( date );
+    }
+
+    return null;
+  }
 
 
-	private Details createYomDetails( HebrewDate date ) {
-		return new Details.Yom( date, NAME ) {
-			@Override
-			public boolean isYomHaAtzmaut() {
-				return true;
-			}
-		};
-	}
+  private Details createErevDetails( HebrewDate date ) {
+    return new Details.Erev( date, NAME, false );
+  }
+
+
+  private Details createYomDetails( HebrewDate date ) {
+    return new Details.Yom( date, NAME ) {
+      @Override
+      public boolean isYomHaAtzmaut() {
+        return true;
+      }
+    };
+  }
 
 }  // End of YomHaAtzmaut class

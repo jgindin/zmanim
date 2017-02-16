@@ -45,7 +45,7 @@ import java.util.Map;
  *  preference_seekbar.xml
  */
 public class SeekBarPreference
-	extends Preference {
+  extends Preference {
 
   /**
    * Problem is that these {@link SeekBarPreference} objects get recycled. We know when this is happening because
@@ -56,48 +56,48 @@ public class SeekBarPreference
    */
   private static Map<EditText, SeekBarPreference>           cache = new HashMap<>();
 
-	private CheckBox                                          enabled;
-	private SeekBar                                           seekBar;
-	private EditText                                          currentValueDisplay;
+  private CheckBox                                          enabled;
+  private SeekBar                                           seekBar;
+  private EditText                                          currentValueDisplay;
 
-	private int                                               defaultValue;
-	private int                                               progress;
+  private int                                               defaultValue;
+  private int                                               progress;
 
-	private CurrentValueTextWatcher                           currentValueTextWatcher;
+  private CurrentValueTextWatcher                           currentValueTextWatcher;
 
-	private SeekBarListener                                   seekBarListener;
+  private SeekBarListener                                   seekBarListener;
 
   private View.OnClickListener                              enabledClickListener;
 
 
   @SuppressWarnings( "unused" )
   public SeekBarPreference( Context context ) {
-		this( context, null, 0 );
-	}
+    this( context, null, 0 );
+  }
 
 
   @SuppressWarnings( "unused" )
-	public SeekBarPreference(
-		Context       context,
-		AttributeSet  attrs
-	) {
-		this( context, attrs, 0 );
-	}
+  public SeekBarPreference(
+    Context       context,
+    AttributeSet  attrs
+  ) {
+    this( context, attrs, 0 );
+  }
 
 
-	public SeekBarPreference(
+  public SeekBarPreference(
     Context                 context,
     @Nullable AttributeSet  attrs,
     int                     defStyle
-	) {
-		super( context, attrs, defStyle );
-		setLayoutResource( R.layout.preference_seekbar );
+  ) {
+    super( context, attrs, defStyle );
+    setLayoutResource( R.layout.preference_seekbar );
 
     currentValueTextWatcher = new CurrentValueTextWatcher();
     seekBarListener = new SeekBarListener();
 
     enabledClickListener = new EnabledClickListener();
-	}
+  }
 
 
   @Override
@@ -172,24 +172,24 @@ public class SeekBarPreference
 
     super.onBindViewHolder( holder );
 
-		seekBar = (SeekBar)holder.findViewById( R.id.seekbar );
-		seekBar.setProgress( progress );
-		seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
+    seekBar = (SeekBar)holder.findViewById( R.id.seekbar );
+    seekBar.setProgress( progress );
+    seekBar.setMax( ZmanNotificationScheduler.MAX_ALERT_TIME / ZmanNotificationScheduler.MIN_TO_MS_CONVERSION );
 
-		currentValueDisplay = (EditText)holder.findViewById( R.id.value );
-		enabled = (CheckBox)holder.findViewById( R.id.enable );
+    currentValueDisplay = (EditText)holder.findViewById( R.id.value );
+    enabled = (CheckBox)holder.findViewById( R.id.enable );
 
     updateCache();
 
 
-		// Forces everything to get setup correctly.
-		initView();
+    // Forces everything to get setup correctly.
+    initView();
 
-		// Add the listeners now, so we don't get anything while initializing.
+    // Add the listeners now, so we don't get anything while initializing.
     enabled.setOnClickListener( enabledClickListener );
-		seekBar.setOnSeekBarChangeListener( seekBarListener );
-		currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
-	}
+    seekBar.setOnSeekBarChangeListener( seekBarListener );
+    currentValueDisplay.addTextChangedListener( currentValueTextWatcher );
+  }
 
 
   private void updateCache() {
@@ -220,40 +220,40 @@ public class SeekBarPreference
 
 
   @Override
-	protected void onPrepareForRemoval() {
+  protected void onPrepareForRemoval() {
 
     cleanup();
-		super.onPrepareForRemoval();
-	}
+    super.onPrepareForRemoval();
+  }
 
 
-	@Override
-	protected void onSetInitialValue(
-		boolean restoreValue,
-		Object  defaultValue
-	) {
+  @Override
+  protected void onSetInitialValue(
+    boolean restoreValue,
+    Object  defaultValue
+  ) {
 
-		int value;
-		if ( defaultValue instanceof Integer ) {
-			//noinspection UnnecessaryUnboxing
-			value = ((Integer)defaultValue).intValue();
-		}
-		else {
-			value = ZmanNotificationScheduler.NO_ALERT;
-		}
+    int value;
+    if ( defaultValue instanceof Integer ) {
+      //noinspection UnnecessaryUnboxing
+      value = ((Integer)defaultValue).intValue();
+    }
+    else {
+      value = ZmanNotificationScheduler.NO_ALERT;
+    }
 
-		setValue( restoreValue ? getPersistedInt( progress ) : value );
-	}
+    setValue( restoreValue ? getPersistedInt( progress ) : value );
+  }
 
 
-	@Override
-	protected Object onGetDefaultValue(
-		TypedArray  a,
-		int         index
-	) {
-		defaultValue = a.getInt( index, 0 );
-		return defaultValue;
-	}
+  @Override
+  protected Object onGetDefaultValue(
+    TypedArray  a,
+    int         index
+  ) {
+    defaultValue = a.getInt( index, 0 );
+    return defaultValue;
+  }
 
 
   private void initView() {
@@ -271,14 +271,14 @@ public class SeekBarPreference
 
     // Do NOT try to call setEnabled() on 'this' -- since we call this method from onBindViewHolder() and other times
     //  while performing a layout, it will cause an exception.
-		seekBar.setEnabled( isEnabled );
-		currentValueDisplay.setEnabled( isEnabled );
-	}
+    seekBar.setEnabled( isEnabled );
+    currentValueDisplay.setEnabled( isEnabled );
+  }
 
 
-	private void setValue( int value ) {
+  private void setValue( int value ) {
 
-		if ( value != progress ) {
+    if ( value != progress ) {
 
        persistInt( value );
        progress = value;
@@ -286,18 +286,18 @@ public class SeekBarPreference
       // The onSetInitialValue gets called before onBindView.
       // NOTE: The 'best practice' says you should notify here, but... we're OK. We don't need to do anything until
       //  all the preferences are set.
-//			if ( isViewReady() ) {
+//      if ( isViewReady() ) {
 //        notifyChanged();
-//			}
-		}
-	}
+//      }
+    }
+  }
 
 
   private void updateValueDisplay( boolean initialUpdate ) {
 
     currentValueDisplay.removeTextChangedListener( currentValueTextWatcher );
 
-		if ( progress >= 0 ) {
+    if ( progress >= 0 ) {
 
       // Don't do anything we don't have to do. (Note if the value is blank, it won't parse to an int, and we'll blow up...)
       int alertValue = getAlertValue();
@@ -323,7 +323,7 @@ public class SeekBarPreference
 
   private boolean isViewReady() {
     // Will be null when we're setting up.
-	  return currentValueDisplay != null;
+    return currentValueDisplay != null;
   }
 
 
@@ -333,56 +333,56 @@ public class SeekBarPreference
   }
 
 
-	/**
-	 * Listen for the user to slide the seek bar, and make sure the text value is updated.
-	 */
-	private class SeekBarListener
-		implements OnSeekBarChangeListener {
+  /**
+   * Listen for the user to slide the seek bar, and make sure the text value is updated.
+   */
+  private class SeekBarListener
+    implements OnSeekBarChangeListener {
 
-	  boolean                                                 isTracking = false;
+    boolean                                                 isTracking = false;
 
-		@Override
-		public void onProgressChanged(
-			SeekBar   seekBar,
-			int       progress,
-			boolean   fromUser
-		) {
-			if ( !fromUser ) {
-				return;
-			}
+    @Override
+    public void onProgressChanged(
+      SeekBar   seekBar,
+      int       progress,
+      boolean   fromUser
+    ) {
+      if ( !fromUser ) {
+        return;
+      }
 
-			setValue( progress );
+      setValue( progress );
       updateValueDisplay( false );
-		}
+    }
 
 
-		@Override
-		public void onStartTrackingTouch( SeekBar seekBar ) {
-		  isTracking = true;
-		}
+    @Override
+    public void onStartTrackingTouch( SeekBar seekBar ) {
+      isTracking = true;
+    }
 
 
-		@Override
-		public void onStopTrackingTouch( SeekBar seekBar ) {
-		  isTracking = false;
-		}
+    @Override
+    public void onStopTrackingTouch( SeekBar seekBar ) {
+      isTracking = false;
+    }
 
-	}
+  }
 
 
-	/**
-	 * Listen for the user to enter a value in the text box, and make sure the seek bar is updated.
-	 */
-	private class CurrentValueTextWatcher
-		implements TextWatcher {
+  /**
+   * Listen for the user to enter a value in the text box, and make sure the seek bar is updated.
+   */
+  private class CurrentValueTextWatcher
+    implements TextWatcher {
 
-		@Override
-		public void beforeTextChanged(
-			CharSequence s,
-			int start,
-			int count,
-			int after
-		) {
+    @Override
+    public void beforeTextChanged(
+      CharSequence s,
+      int start,
+      int count,
+      int after
+    ) {
 
       if ( !seekBarListener.isTracking ) {
         seekBar.setOnSeekBarChangeListener( null );
@@ -390,19 +390,19 @@ public class SeekBarPreference
     }
 
 
-		@Override
-		public void onTextChanged(
-			CharSequence s,
-			int start,
-			int before,
-			int count
-		) {
+    @Override
+    public void onTextChanged(
+      CharSequence s,
+      int start,
+      int before,
+      int count
+    ) {
 
-		}
+    }
 
 
-		@Override
-		public void afterTextChanged( Editable s ) {
+    @Override
+    public void afterTextChanged( Editable s ) {
 
       if ( !seekBarListener.isTracking ) {
         int alertTime = getAlertValue();
@@ -412,7 +412,7 @@ public class SeekBarPreference
         seekBar.setOnSeekBarChangeListener( seekBarListener );
       }
     }
-	}
+  }
 
 
   /**

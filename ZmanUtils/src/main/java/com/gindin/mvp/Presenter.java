@@ -9,9 +9,9 @@ package com.gindin.mvp;
  */
 public interface Presenter<V extends View> {
 
-	/**
-	 * Called when the presenter is no longer needed.
-	 */
-	void destroy();
+  /**
+   * Called when the presenter is no longer needed.
+   */
+  void destroy();
 
 } // End of Presenter interface

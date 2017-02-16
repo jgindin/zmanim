@@ -14,35 +14,35 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  */
 @SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
 public class ShushanPurim
-	extends Observance {
+  extends Observance {
 
 
-	private static final String                               SHUSHAN_PURIM = "Shushan Purim";
+  private static final String                               SHUSHAN_PURIM = "Shushan Purim";
 
 
-	@Override
-	public String getName() {
-		return SHUSHAN_PURIM;
-	}
+  @Override
+  public String getName() {
+    return SHUSHAN_PURIM;
+  }
 
 
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
-			   ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
+    if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
+         ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
 
-			if ( 15 == date.getHebrewDayOfMonth() ) {
-				return new Details.Yom( date, SHUSHAN_PURIM ) {
-					@Override
-					public boolean isShushanPurim() {
-						return true;
-					}
-				};
-			}
-		}
+      if ( 15 == date.getHebrewDayOfMonth() ) {
+        return new Details.Yom( date, SHUSHAN_PURIM ) {
+          @Override
+          public boolean isShushanPurim() {
+            return true;
+          }
+        };
+      }
+    }
 
-		return null;
-	}
+    return null;
+  }
 
 }  // End of ShushanPurim class

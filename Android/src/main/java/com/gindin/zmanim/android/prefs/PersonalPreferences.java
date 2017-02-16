@@ -15,15 +15,15 @@ import android.support.v7.preference.PreferenceFragmentCompat;
  * Activity for editing personal preferences.
  */
 public class PersonalPreferences
-	extends AppCompatActivity {
+  extends AppCompatActivity {
 
-	public static enum Prefs {
-		SHOW_SECONDS,
-		USE_ELEVATION,
-		SHOW_NOTIFICATIONS,
+  public static enum Prefs {
+    SHOW_SECONDS,
+    USE_ELEVATION,
+    SHOW_NOTIFICATIONS,
     ENABLE_NOTIFICATIONS_ON_SHABBAT,
-		NOTIFICATIONS_FOR_CURRENT_LOCATION
-	}
+    NOTIFICATIONS_FOR_CURRENT_LOCATION
+  }
 
 
   @Override

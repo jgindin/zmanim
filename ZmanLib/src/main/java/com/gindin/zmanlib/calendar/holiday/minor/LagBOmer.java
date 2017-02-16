@@ -14,37 +14,37 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  *
  */
 public class LagBOmer
-	extends Observance {
+  extends Observance {
 
-	private static final String                               NAME = "Lag B'Omer";
-
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+  private static final String                               NAME = "Lag B'Omer";
 
 
-	@SuppressWarnings( "MagicNumber" )
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
-		if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
-			int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-			if ( 17 == hebrewDayOfMonth ) {
-				return new Details.Erev( date, NAME, false );
-			}
-			else if ( 18 == hebrewDayOfMonth ) {
-				return new Details.Yom( date, NAME ) {
-					@Override
-					public boolean isLagBOmer() {
-						return true;
-					}
-				};
-			}
-		}
 
-		return null;
-	}
+  @SuppressWarnings( "MagicNumber" )
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
+
+    if ( HebrewMonth.IYAR == date.getHebrewMonth() ) {
+      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+      if ( 17 == hebrewDayOfMonth ) {
+        return new Details.Erev( date, NAME, false );
+      }
+      else if ( 18 == hebrewDayOfMonth ) {
+        return new Details.Yom( date, NAME ) {
+          @Override
+          public boolean isLagBOmer() {
+            return true;
+          }
+        };
+      }
+    }
+
+    return null;
+  }
 
 }  // End of LagBOmer class

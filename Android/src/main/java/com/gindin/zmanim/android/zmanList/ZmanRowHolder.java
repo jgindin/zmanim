@@ -16,34 +16,34 @@ import android.widget.TextView;
  */
 public abstract class ZmanRowHolder {
 
-	protected final TextView                                nameField;
-	protected final TextView                                descriptionField;
-	protected final TextView                                timeField;
+  protected final TextView                                nameField;
+  protected final TextView                                descriptionField;
+  protected final TextView                                timeField;
 
 
-	public ZmanRowHolder(
-		View  zmanRowView
-	) {
+  public ZmanRowHolder(
+    View  zmanRowView
+  ) {
 
-		nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
-		timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
-		descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
-	}
-
-
-	public void setZman(
-		Zman zman
-	) {
-
-		updateTextFields( zman );
-	}
+    nameField = (TextView)zmanRowView.findViewById( R.id.zman_name );
+    timeField = (TextView)zmanRowView.findViewById( R.id.zman_time );
+    descriptionField = (TextView)zmanRowView.findViewById( R.id.zman_description );
+  }
 
 
-	/**
-	 * Must be implemented to set the name & description fields.
-	 *
-	 * @param zman the zman to use when setting the fields.
-	 */
-	protected abstract void updateTextFields( Zman zman );
+  public void setZman(
+    Zman zman
+  ) {
+
+    updateTextFields( zman );
+  }
+
+
+  /**
+   * Must be implemented to set the name & description fields.
+   *
+   * @param zman the zman to use when setting the fields.
+   */
+  protected abstract void updateTextFields( Zman zman );
 
 }

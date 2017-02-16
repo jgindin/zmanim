@@ -24,127 +24,127 @@ import android.widget.TextView;
  *
  */
 class DateViewImpl<P extends DatePresenter>
-	extends AbstractView<P>
-	implements DateView<P> {
+  extends AbstractView<P>
+  implements DateView<P> {
 
-	private final TextView                                    hebrewDateView;
-	private final TextView                                    secularDateView;
-	private final TextView                                    dateDescriptionView;
+  private final TextView                                    hebrewDateView;
+  private final TextView                                    secularDateView;
+  private final TextView                                    dateDescriptionView;
 
-	private final DatePickerDialog.OnDateSetListener          dateSetListener;
-
-
-	DateViewImpl(
-		FragmentActivity owner
-	) {
-		super( owner );
-
-		dateSetListener = new DatePickerDialog.OnDateSetListener() {
-			public void onDateSet(
-				DatePicker datePicker,
-				int year,
-				int month,
-				int date
-			) {
-				getPresenter().userChangedDate( year, month, date );
-			}
-		};
-
-		secularDateView = (TextView)owner.findViewById( R.id.secular_date );
-		secularDateView.setOnClickListener(
-			new View.OnClickListener() {
-				public void onClick( View v ) {
-					getPresenter().userWantsToChangeDate();
-				}
-			}
-		);
-
-		hebrewDateView = (TextView)owner.findViewById( R.id.hebrew_date );
-		dateDescriptionView = (TextView)owner.findViewById( R.id.holiday );
-	}
+  private final DatePickerDialog.OnDateSetListener          dateSetListener;
 
 
-	@Override
-	public void displayDate(
-		final String formattedHebrewDate,
-		final String formattedSecularDate
-	) {
+  DateViewImpl(
+    FragmentActivity owner
+  ) {
+    super( owner );
 
-		owner.runOnUiThread(
-			new Runnable() {
-				@Override
-				public void run() {
-					hebrewDateView.setText( formattedHebrewDate );
-					secularDateView.setText(  Html.fromHtml( "<u>" + formattedSecularDate + "</u>" ) );
-				}
-			}
-		);
+    dateSetListener = new DatePickerDialog.OnDateSetListener() {
+      public void onDateSet(
+        DatePicker datePicker,
+        int year,
+        int month,
+        int date
+      ) {
+        getPresenter().userChangedDate( year, month, date );
+      }
+    };
 
-	}
+    secularDateView = (TextView)owner.findViewById( R.id.secular_date );
+    secularDateView.setOnClickListener(
+      new View.OnClickListener() {
+        public void onClick( View v ) {
+          getPresenter().userWantsToChangeDate();
+        }
+      }
+    );
 
-
-	@Override
-	public void allowUserToChangeDate( HebrewDate currentDate ) {
-
-		// Yes...I know that I should be using Fragment#setArguments, but that's just overkill.
-		ChangeDateFragment changeDateFragment = new ChangeDateFragment();
-		changeDateFragment.init( currentDate, dateSetListener );
-
-		changeDateFragment.show( owner.getSupportFragmentManager(), "secularDatePicker" );
-	}
-
-
-	@Override
-	public void displayDescriptionOfTheDay( @Nullable final String descriptionOfTheDay ) {
-
-		owner.runOnUiThread(
-			new Runnable() {
-				@Override
-				public void run() {
-
-					if ( ( descriptionOfTheDay == null ) || descriptionOfTheDay.trim().isEmpty() ) {
-						owner.findViewById( R.id.holiday_row ).setVisibility( View.GONE );
-					}
-					else {
-						owner.findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
-						dateDescriptionView.setText( descriptionOfTheDay );
-					}
-				}
-			}
-		);
-	}
+    hebrewDateView = (TextView)owner.findViewById( R.id.hebrew_date );
+    dateDescriptionView = (TextView)owner.findViewById( R.id.holiday );
+  }
 
 
-	public static class ChangeDateFragment
-		extends DialogFragment {
+  @Override
+  public void displayDate(
+    final String formattedHebrewDate,
+    final String formattedSecularDate
+  ) {
 
-		private HebrewDate                                  currentDate;
+    owner.runOnUiThread(
+      new Runnable() {
+        @Override
+        public void run() {
+          hebrewDateView.setText( formattedHebrewDate );
+          secularDateView.setText(  Html.fromHtml( "<u>" + formattedSecularDate + "</u>" ) );
+        }
+      }
+    );
 
-		private DatePickerDialog.OnDateSetListener          dateSetListener;
-
-
-		public ChangeDateFragment() {
-			setRetainInstance( true );
-		}
-
-
-		void init(
-			HebrewDate                          currentDate,
-			DatePickerDialog.OnDateSetListener  dateSetListener
-		) {
-			this.currentDate = currentDate;
-			this.dateSetListener = dateSetListener;
-		}
+  }
 
 
+  @Override
+  public void allowUserToChangeDate( HebrewDate currentDate ) {
 
-		@Override
-		public Dialog onCreateDialog( Bundle savedInstanceState ) {
-			return new DatePickerDialog( getActivity(), dateSetListener,
-				currentDate.getGregorianYear(), currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
-		}
+    // Yes...I know that I should be using Fragment#setArguments, but that's just overkill.
+    ChangeDateFragment changeDateFragment = new ChangeDateFragment();
+    changeDateFragment.init( currentDate, dateSetListener );
 
-	}
+    changeDateFragment.show( owner.getSupportFragmentManager(), "secularDatePicker" );
+  }
+
+
+  @Override
+  public void displayDescriptionOfTheDay( @Nullable final String descriptionOfTheDay ) {
+
+    owner.runOnUiThread(
+      new Runnable() {
+        @Override
+        public void run() {
+
+          if ( ( descriptionOfTheDay == null ) || descriptionOfTheDay.trim().isEmpty() ) {
+            owner.findViewById( R.id.holiday_row ).setVisibility( View.GONE );
+          }
+          else {
+            owner.findViewById( R.id.holiday_row ).setVisibility( View.VISIBLE );
+            dateDescriptionView.setText( descriptionOfTheDay );
+          }
+        }
+      }
+    );
+  }
+
+
+  public static class ChangeDateFragment
+    extends DialogFragment {
+
+    private HebrewDate                                  currentDate;
+
+    private DatePickerDialog.OnDateSetListener          dateSetListener;
+
+
+    public ChangeDateFragment() {
+      setRetainInstance( true );
+    }
+
+
+    void init(
+      HebrewDate                          currentDate,
+      DatePickerDialog.OnDateSetListener  dateSetListener
+    ) {
+      this.currentDate = currentDate;
+      this.dateSetListener = dateSetListener;
+    }
+
+
+
+    @Override
+    public Dialog onCreateDialog( Bundle savedInstanceState ) {
+      return new DatePickerDialog( getActivity(), dateSetListener,
+        currentDate.getGregorianYear(), currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
+    }
+
+  }
 
 
 } // End of DateViewImpl class

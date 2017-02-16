@@ -47,143 +47,143 @@ import java.util.Map;
 public class ZmanimLocationManager {
 
 
-	public enum Type {
-		FROM_DEVICE,
-		LAT_LONG_FROM_USER,
-		NAME_FROM_USER
-	}
+  public enum Type {
+    FROM_DEVICE,
+    LAT_LONG_FROM_USER,
+    NAME_FROM_USER
+  }
 
 
   private final Context                                     context;
 
   private final EventBus                                    eventBus;
 
-	/** Everyone wants to see what preferences have been set. */
-	private final SharedPreferences                           locationManagementPrefs;
+  /** Everyone wants to see what preferences have been set. */
+  private final SharedPreferences                           locationManagementPrefs;
 
-	private final SharedPreferences                           personalPrefs;
+  private final SharedPreferences                           personalPrefs;
 
-	/** System-wide, actual location manager. */
-	private final LocationManager                             locationManager;
+  /** System-wide, actual location manager. */
+  private final LocationManager                             locationManager;
 
-	private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
+  private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
 
-	/**
-	 * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
-	 */
-	private final LastKnownLocationProvider                   lastKnownLocationProvider;
+  /**
+   * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
+   */
+  private final LastKnownLocationProvider                   lastKnownLocationProvider;
 
-	/** Which provider are we currently using? */
-	private LocationAcquirer                                  currentAcquirer;
+  /** Which provider are we currently using? */
+  private LocationAcquirer                                  currentAcquirer;
 
-	/** Listen for requests to get a new location. */
-	private RequestLocationUpdateEvent.Handler                locationRequestHandler;
+  /** Listen for requests to get a new location. */
+  private RequestLocationUpdateEvent.Handler                locationRequestHandler;
 
 
-	public ZmanimLocationManager(
-		Context           context,
-		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs,
-		SharedPreferences personalPrefs,
-		LocationManager   locationManager
-	) {
+  public ZmanimLocationManager(
+    Context           context,
+    EventBus          eventBus,
+    SharedPreferences locationManagementPrefs,
+    SharedPreferences personalPrefs,
+    LocationManager   locationManager
+  ) {
 
     this.context = context;
     this.eventBus = eventBus;
-		this.locationManagementPrefs = locationManagementPrefs;
-		this.personalPrefs = personalPrefs;
-		this.locationManager = locationManager;
+    this.locationManagementPrefs = locationManagementPrefs;
+    this.personalPrefs = personalPrefs;
+    this.locationManager = locationManager;
 
-		lastKnownLocationProvider = new LastKnownLocationProvider( context );
+    lastKnownLocationProvider = new LastKnownLocationProvider( context );
 
-		locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
-			@Override
-			public void onLocationUpdateRequested( final RequestLocationUpdateEvent event ) {
-				determineLocation( event );
-			}
-		};
-		eventBus.addHandler( locationRequestHandler );
-	}
-
-
-	public void onStop() {
-
-		if ( locationRequestHandler != null ) {
-			eventBus.removeHandler( locationRequestHandler );
-			locationRequestHandler = null;
-		}
-
-		cancel();
-	}
+    locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
+      @Override
+      public void onLocationUpdateRequested( final RequestLocationUpdateEvent event ) {
+        determineLocation( event );
+      }
+    };
+    eventBus.addHandler( locationRequestHandler );
+  }
 
 
-	private void determineLocation( final RequestLocationUpdateEvent event ) {
+  public void onStop() {
 
-		cancel();
-		currentAcquirer = null;
+    if ( locationRequestHandler != null ) {
+      eventBus.removeHandler( locationRequestHandler );
+      locationRequestHandler = null;
+    }
 
-		if ( event.locationDeterminationOverride == RequestLocationUpdateEvent.LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION ) {
-			currentAcquirer = getAcquirer( Type.FROM_DEVICE );
-		}
-		else {
-
-			boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
-			if ( useThis ) {
-				currentAcquirer = getAcquirer( Type.FROM_DEVICE );
-			}
-			else {
-
-				useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
-				if ( useThis ) {
-					currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
-				}
-				else {
-
-					useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
-					if ( useThis ) {
-						currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
-					}
-				}
-			}
-		}
-
-		// Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
-		if ( currentAcquirer == null ) {
-			currentAcquirer = getAcquirer( Type.FROM_DEVICE );
-			locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
-		}
-
-		currentAcquirer.acquire( event.cachedLocationUsage );
-	}
+    cancel();
+  }
 
 
-	private void cancel() {
+  private void determineLocation( final RequestLocationUpdateEvent event ) {
 
-		if ( currentAcquirer != null ) {
-			currentAcquirer.cancel();
-			currentAcquirer = null;
-		}
-	}
+    cancel();
+    currentAcquirer = null;
+
+    if ( event.locationDeterminationOverride == RequestLocationUpdateEvent.LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION ) {
+      currentAcquirer = getAcquirer( Type.FROM_DEVICE );
+    }
+    else {
+
+      boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+      if ( useThis ) {
+        currentAcquirer = getAcquirer( Type.FROM_DEVICE );
+      }
+      else {
+
+        useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
+        if ( useThis ) {
+          currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
+        }
+        else {
+
+          useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
+          if ( useThis ) {
+            currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
+          }
+        }
+      }
+    }
+
+    // Didn't find anything? Use dynamic positioning, and make sure the prefs are updated.
+    if ( currentAcquirer == null ) {
+      currentAcquirer = getAcquirer( Type.FROM_DEVICE );
+      locationManagementPrefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
+    }
+
+    currentAcquirer.acquire( event.cachedLocationUsage );
+  }
 
 
-	public List<String> getAllProviders( boolean evenDisabledProviders ) {
+  private void cancel() {
 
-		ArrayList<String> providerNames;
+    if ( currentAcquirer != null ) {
+      currentAcquirer.cancel();
+      currentAcquirer = null;
+    }
+  }
 
-		if ( evenDisabledProviders ) {
-			providerNames = new ArrayList<String>( locationManager.getAllProviders() );
 
-			// We treat the last known provider as disabled because we don't want someone thinking that they can (or should)
-			//  ask this provider for an update. (We also prevent that in the requestSingleUpdate method, but this is a good
-			//  safe guard.)
-			providerNames.add( LastKnownLocationProvider.NAME );
-		}
-		else {
-			providerNames = new ArrayList<String>( locationManager.getProviders( true ) );
-		}
+  public List<String> getAllProviders( boolean evenDisabledProviders ) {
 
-		return providerNames;
-	}
+    ArrayList<String> providerNames;
+
+    if ( evenDisabledProviders ) {
+      providerNames = new ArrayList<String>( locationManager.getAllProviders() );
+
+      // We treat the last known provider as disabled because we don't want someone thinking that they can (or should)
+      //  ask this provider for an update. (We also prevent that in the requestSingleUpdate method, but this is a good
+      //  safe guard.)
+      providerNames.add( LastKnownLocationProvider.NAME );
+    }
+    else {
+      providerNames = new ArrayList<String>( locationManager.getProviders( true ) );
+    }
+
+    return providerNames;
+  }
 
 
   /**
@@ -191,26 +191,26 @@ public class ZmanimLocationManager {
    *
    * @throws SecurityException in case we don't have the location permission.
    */
-	@Nullable
-	public Location getLastKnownLocation( String providerName ) throws SecurityException {
+  @Nullable
+  public Location getLastKnownLocation( String providerName ) throws SecurityException {
 
-		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
-			return lastKnownLocationProvider.getLastKnownLocation();
-		}
-		else if ( hasLocationPermissions() ) {
+    if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
+      return lastKnownLocationProvider.getLastKnownLocation();
+    }
+    else if ( hasLocationPermissions() ) {
       //noinspection MissingPermission
       return locationManager.getLastKnownLocation( providerName );
-		}
-		else {
+    }
+    else {
       throw new SecurityException( "No location permissions available" );
     }
-	}
+  }
 
 
-	public boolean isProviderEnabled( String providerName ) {
+  public boolean isProviderEnabled( String providerName ) {
 
-		return !LastKnownLocationProvider.NAME.equals( providerName ) && locationManager.isProviderEnabled( providerName );
-	}
+    return !LastKnownLocationProvider.NAME.equals( providerName ) && locationManager.isProviderEnabled( providerName );
+  }
 
 
   /**
@@ -218,68 +218,68 @@ public class ZmanimLocationManager {
    *
    * @throws SecurityException in case we don't have the location permission.
    */
-	public void requestSingleUpdate( String providerName, LocationListener listener ) throws SecurityException {
+  public void requestSingleUpdate( String providerName, LocationListener listener ) throws SecurityException {
 
-		//noinspection StatementWithEmptyBody
-		if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
-			// Don't allow this. It'll prevent the real providers from having a chance....
-		}
-		else if ( hasLocationPermissions() ) {
+    //noinspection StatementWithEmptyBody
+    if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
+      // Don't allow this. It'll prevent the real providers from having a chance....
+    }
+    else if ( hasLocationPermissions() ) {
       //noinspection MissingPermission
       locationManager.requestSingleUpdate( providerName, listener, null );
-		}
-		else {
+    }
+    else {
       throw new SecurityException( "No location permissions available" );
     }
-	}
+  }
 
 
-	public void removeUpdates( LocationListener listener ) {
+  public void removeUpdates( LocationListener listener ) {
 
-		if ( hasLocationPermissions() ) {
-			//noinspection MissingPermission
-			locationManager.removeUpdates( listener );
-		}
-	}
-
-
-	public void saveLastLocation( Location lastLocation ) {
-
-		lastKnownLocationProvider.save( lastLocation );
-	}
+    if ( hasLocationPermissions() ) {
+      //noinspection MissingPermission
+      locationManager.removeUpdates( listener );
+    }
+  }
 
 
-	private LocationAcquirer getAcquirer( Type type ) {
+  public void saveLastLocation( Location lastLocation ) {
 
-		LocationAcquirer provider = typeToAcquirerMap.get( type );
-		if ( provider == null ) {
-			switch ( type ) {
-				case FROM_DEVICE:
-					provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs, this );
-					break;
-
-				case LAT_LONG_FROM_USER:
-					provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
-					break;
-
-				case NAME_FROM_USER:
-					provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
-					break;
-
-				default:
-					if ( BuildConfig.DEBUG ) {
-						throw new AssertionError( "Unknown provider type: " + type );
-					}
-			}
-
-			typeToAcquirerMap.put( type, provider );
-		}
-
-		return provider;
-	}
+    lastKnownLocationProvider.save( lastLocation );
+  }
 
 
-	private boolean hasLocationPermissions() {
+  private LocationAcquirer getAcquirer( Type type ) {
+
+    LocationAcquirer provider = typeToAcquirerMap.get( type );
+    if ( provider == null ) {
+      switch ( type ) {
+        case FROM_DEVICE:
+          provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs, this );
+          break;
+
+        case LAT_LONG_FROM_USER:
+          provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
+          break;
+
+        case NAME_FROM_USER:
+          provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
+          break;
+
+        default:
+          if ( BuildConfig.DEBUG ) {
+            throw new AssertionError( "Unknown provider type: " + type );
+          }
+      }
+
+      typeToAcquirerMap.put( type, provider );
+    }
+
+    return provider;
+  }
+
+
+  private boolean hasLocationPermissions() {
 
     boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
     boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );

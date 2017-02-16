@@ -16,91 +16,91 @@ import java.util.List;
  */
 public class FontInfo {
 
-	static final List<FontInfo>                               FONT_INFOS = new ArrayList<>();
+  static final List<FontInfo>                               FONT_INFOS = new ArrayList<>();
 
 
-	/**
-	 * Initiializes all the fonts that we might use, and returns the key of the default font.
-	 */
-	public static String init( final Context context, final SharedPreferences prefs ) {
+  /**
+   * Initiializes all the fonts that we might use, and returns the key of the default font.
+   */
+  public static String init( final Context context, final SharedPreferences prefs ) {
 
-		FONT_INFOS.add( new FontInfo( "font_taamey_david",     context.getString( R.string.font_taamey_david ),    "fonts/TaameyDavidCLM-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( "font_shlomo",           context.getString( R.string.font_shlomo ),          "fonts/Shlomo.ttf" ) );
-		FONT_INFOS.add( new FontInfo( "font_taamey_ashkenaz",  context.getString( R.string.font_taamey_ashkenaz ), "fonts/TaameyAshkenaz-Medium.ttf" ) );
-		FONT_INFOS.add( new FontInfo( "font_taamey_frank",     context.getString( R.string.font_taamey_frank ),    "fonts/TaameyFrankCLM-Medium.ttf" ) );
+    FONT_INFOS.add( new FontInfo( "font_taamey_david",     context.getString( R.string.font_taamey_david ),    "fonts/TaameyDavidCLM-Medium.ttf" ) );
+    FONT_INFOS.add( new FontInfo( "font_shlomo",           context.getString( R.string.font_shlomo ),          "fonts/Shlomo.ttf" ) );
+    FONT_INFOS.add( new FontInfo( "font_taamey_ashkenaz",  context.getString( R.string.font_taamey_ashkenaz ), "fonts/TaameyAshkenaz-Medium.ttf" ) );
+    FONT_INFOS.add( new FontInfo( "font_taamey_frank",     context.getString( R.string.font_taamey_frank ),    "fonts/TaameyFrankCLM-Medium.ttf" ) );
 
-		return prefs.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).id );
-	}
-
-
-
-	@NonNull
-	public static FontInfo getByIdName( String fontChoice ) {
-
-		for ( FontInfo fontInfo : FONT_INFOS ) {
-			if ( fontChoice.equals( fontInfo.id ) ) {
-				return fontInfo;
-			}
-		}
-
-		// TODO: We should log something here...
-		return FONT_INFOS.get( 0 );
-	}
+    return prefs.getString( Settings.PreferenceKey.FontChoice.key, FontInfo.FONT_INFOS.get( 0 ).id );
+  }
 
 
 
-	private final String                                      id;
+  @NonNull
+  public static FontInfo getByIdName( String fontChoice ) {
 
-	private final String                                      name;
+    for ( FontInfo fontInfo : FONT_INFOS ) {
+      if ( fontChoice.equals( fontInfo.id ) ) {
+        return fontInfo;
+      }
+    }
 
-	private final String                                      relativePath;
-
-	private Typeface                                          typeface;
-
-	// Empirically, this is the default text size.
-	private float                                             size = 14f;
-
-
-	FontInfo(
-		final String  id,
-		final String  name,
-		final String  relativePath
-	) {
-		this.id = id;
-		this.name = name;
-		this.relativePath = relativePath;
-	}
+    // TODO: We should log something here...
+    return FONT_INFOS.get( 0 );
+  }
 
 
-	public Typeface getTypeface() {
-		return typeface;
-	}
+
+  private final String                                      id;
+
+  private final String                                      name;
+
+  private final String                                      relativePath;
+
+  private Typeface                                          typeface;
+
+  // Empirically, this is the default text size.
+  private float                                             size = 14f;
 
 
-	public float getSize() {
-		return size;
-	}
+  FontInfo(
+    final String  id,
+    final String  name,
+    final String  relativePath
+  ) {
+    this.id = id;
+    this.name = name;
+    this.relativePath = relativePath;
+  }
 
 
-	public void setSize( final float size ) {
-		this.size = size;
-	}
+  public Typeface getTypeface() {
+    return typeface;
+  }
 
 
-	public String getName() {
-		return name;
-	}
+  public float getSize() {
+    return size;
+  }
 
 
-	public String getId() {
-		return id;
-	}
+  public void setSize( final float size ) {
+    this.size = size;
+  }
 
 
-	void load( AssetManager assetManager ) {
+  public String getName() {
+    return name;
+  }
 
-		if ( typeface == null ) {
-			typeface = Typeface.createFromAsset( assetManager, relativePath );
-		}
-	}
+
+  public String getId() {
+    return id;
+  }
+
+
+  void load( AssetManager assetManager ) {
+
+    if ( typeface == null ) {
+      typeface = Typeface.createFromAsset( assetManager, relativePath );
+    }
+  }
 }

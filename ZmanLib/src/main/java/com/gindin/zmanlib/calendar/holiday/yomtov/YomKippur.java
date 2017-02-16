@@ -13,77 +13,77 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  *
  */
 public class YomKippur
-	extends Observance {
+  extends Observance {
 
-	private static final String                               NAME = "Yom Kippur";
-
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+  private static final String                               NAME = "Yom Kippur";
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	@Override
-	public Details getDetailsFor( HebrewDate date ) {
-
-		if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
-			if ( 9 == date.getHebrewDayOfMonth() ) {
-				return new Details.Erev( date, NAME );
-			}
-
-			if ( 10 == date.getHebrewDayOfMonth() ) {
-				return new YomKippurDetails( date );
-			}
-		}
-
-		return null;
-	}
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
 
-	private static class YomKippurDetails
-		extends Details {
+  @SuppressWarnings( "FeatureEnvy" )
+  @Override
+  public Details getDetailsFor( HebrewDate date ) {
 
-		private YomKippurDetails( HebrewDate date ) {
-			super( date );
-		}
+    if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
+      if ( 9 == date.getHebrewDayOfMonth() ) {
+        return new Details.Erev( date, NAME );
+      }
 
+      if ( 10 == date.getHebrewDayOfMonth() ) {
+        return new YomKippurDetails( date );
+      }
+    }
 
-		@Override
-		public boolean isErev() {
-			return false;
-		}
-
-
-		@Override
-		public boolean isYomTov() {
-			return true;
-		}
+    return null;
+  }
 
 
-		@Override
-		public boolean isYomKippur() {
-			return true;
-		}
+  private static class YomKippurDetails
+    extends Details {
+
+    private YomKippurDetails( HebrewDate date ) {
+      super( date );
+    }
 
 
-		@Override
-		public boolean lightCandles() {
-			return false;
-		}
+    @Override
+    public boolean isErev() {
+      return false;
+    }
 
 
-		@Override
-		public boolean sayHavdalah() {
-			return true;
-		}
+    @Override
+    public boolean isYomTov() {
+      return true;
+    }
 
 
-		@Override
-		public String getDescription() {
-			return NAME;
-		}
-	}
+    @Override
+    public boolean isYomKippur() {
+      return true;
+    }
+
+
+    @Override
+    public boolean lightCandles() {
+      return false;
+    }
+
+
+    @Override
+    public boolean sayHavdalah() {
+      return true;
+    }
+
+
+    @Override
+    public String getDescription() {
+      return NAME;
+    }
+  }
 
 }  // End of YomKippur class

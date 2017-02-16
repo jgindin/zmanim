@@ -9,19 +9,19 @@ package com.gindin.zmanim.android.prefs;
  */
 public enum ZmanimPrefs {
 
-	/** Tracks info about the last known version of the app that was run. Might be better to use the database... */ 
-	VERSION,
+  /** Tracks info about the last known version of the app that was run. Might be better to use the database... */ 
+  VERSION,
 
-	/** Used to track which zmanim the user has selected to use. */
-	ZMANIM_SELECTION,
+  /** Used to track which zmanim the user has selected to use. */
+  ZMANIM_SELECTION,
 
-	/** Used for storing the last known location. Might be better to use the database... */
-	LAST_LOCATION,
+  /** Used for storing the last known location. Might be better to use the database... */
+  LAST_LOCATION,
 
-	/** Preferences related to which location provider to use, and the choices about those providers made by the user. */
-	LOCATION_MANAGEMENT,
+  /** Preferences related to which location provider to use, and the choices about those providers made by the user. */
+  LOCATION_MANAGEMENT,
 
-	/** General preferences */
-	PERSONAL
+  /** General preferences */
+  PERSONAL
 
 }  // End of ZmanimPrefs class

@@ -19,122 +19,122 @@ import android.view.ViewGroup;
  * See http://developer.android.com/guide/topics/ui/settings.html
  */
 public class Settings
-	extends Activity {
+  extends Activity {
 
 
-	public enum PreferenceKey {
+  public enum PreferenceKey {
 
-		FontChoice( "pref_font_choice" ),
-		FontSize( "pref_font_size" ),
-		KeepScreenOn( "pref_keep_screen_on" ),
-		FullScreen( "pref_full_screen_on" )
-		;
-
-
-		public final String                                     key;
-
-		PreferenceKey( final String key ) {
-			this.key = key;
-		}
-	}
+    FontChoice( "pref_font_choice" ),
+    FontSize( "pref_font_size" ),
+    KeepScreenOn( "pref_keep_screen_on" ),
+    FullScreen( "pref_full_screen_on" )
+    ;
 
 
+    public final String                                     key;
 
-	@Override
-	protected void onCreate( final Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
-
-		getFragmentManager()
-			.beginTransaction()
-			.replace( android.R.id.content, new SettingFragment() )
-			.commit();
-	}
+    PreferenceKey( final String key ) {
+      this.key = key;
+    }
+  }
 
 
 
-	public static class SettingFragment
-		extends PreferenceFragment {
+  @Override
+  protected void onCreate( final Bundle savedInstanceState ) {
+    super.onCreate( savedInstanceState );
 
-		private SharedPreferences.OnSharedPreferenceChangeListener  sharedPreferenceChangeListener;
-
-		@Override
-		public void onCreate( final Bundle savedInstanceState ) {
-			super.onCreate( savedInstanceState );
-			addPreferencesFromResource( R.xml.preferences );
-
-			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-			updateFontName( preferences );
-			updateFontSize( preferences );
-		}
+    getFragmentManager()
+      .beginTransaction()
+      .replace( android.R.id.content, new SettingFragment() )
+      .commit();
+  }
 
 
-		@Override
-		public View onCreateView(
-			final LayoutInflater inflater,
-			final ViewGroup container,
-			final Bundle savedInstanceState
-		) {
 
-			View v = super.onCreateView( inflater, container, savedInstanceState );
-			v.setFitsSystemWindows( true );
+  public static class SettingFragment
+    extends PreferenceFragment {
 
-			return v;
-		}
+    private SharedPreferences.OnSharedPreferenceChangeListener  sharedPreferenceChangeListener;
 
+    @Override
+    public void onCreate( final Bundle savedInstanceState ) {
+      super.onCreate( savedInstanceState );
+      addPreferencesFromResource( R.xml.preferences );
 
-		@Override
-		public void onStart() {
-			super.onStart();
-
-			sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-				@Override
-				public void onSharedPreferenceChanged(
-					final SharedPreferences sharedPreferences,
-					final String            key
-				) {
-
-					if ( key.equals( PreferenceKey.FontChoice.key ) ) {
-						updateFontName( sharedPreferences );
-					}
-					else if ( key.equals( PreferenceKey.FontSize.key ) ) {
-						updateFontSize( sharedPreferences );
-					}
-				}
-			};
-
-			PreferenceManager.getDefaultSharedPreferences( getActivity() )
-				.registerOnSharedPreferenceChangeListener( sharedPreferenceChangeListener );
-		}
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+      updateFontName( preferences );
+      updateFontSize( preferences );
+    }
 
 
-		private void updateFontName(
-			final SharedPreferences sharedPreferences
-		) {
-			String fontIdName = sharedPreferences.getString( PreferenceKey.FontChoice.key, "" );
-			FontInfo fontInfo = FontInfo.getByIdName( fontIdName );
-			Preference pref = findPreference( PreferenceKey.FontChoice.key );
-			pref.setSummary( fontInfo.getName() );
-		}
+    @Override
+    public View onCreateView(
+      final LayoutInflater inflater,
+      final ViewGroup container,
+      final Bundle savedInstanceState
+    ) {
+
+      View v = super.onCreateView( inflater, container, savedInstanceState );
+      v.setFitsSystemWindows( true );
+
+      return v;
+    }
 
 
-		private void updateFontSize(
-			final SharedPreferences sharedPreferences
-		) {
-			Preference pref = findPreference( PreferenceKey.FontSize.key );
-			pref.setSummary( sharedPreferences.getString( PreferenceKey.FontSize.key, "14" ) );
-		}
+    @Override
+    public void onStart() {
+      super.onStart();
+
+      sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(
+          final SharedPreferences sharedPreferences,
+          final String            key
+        ) {
+
+          if ( key.equals( PreferenceKey.FontChoice.key ) ) {
+            updateFontName( sharedPreferences );
+          }
+          else if ( key.equals( PreferenceKey.FontSize.key ) ) {
+            updateFontSize( sharedPreferences );
+          }
+        }
+      };
+
+      PreferenceManager.getDefaultSharedPreferences( getActivity() )
+        .registerOnSharedPreferenceChangeListener( sharedPreferenceChangeListener );
+    }
 
 
-		@Override
-		public void onStop() {
-			super.onStop();
+    private void updateFontName(
+      final SharedPreferences sharedPreferences
+    ) {
+      String fontIdName = sharedPreferences.getString( PreferenceKey.FontChoice.key, "" );
+      FontInfo fontInfo = FontInfo.getByIdName( fontIdName );
+      Preference pref = findPreference( PreferenceKey.FontChoice.key );
+      pref.setSummary( fontInfo.getName() );
+    }
 
-			PreferenceManager.getDefaultSharedPreferences( getActivity() )
-				.unregisterOnSharedPreferenceChangeListener( sharedPreferenceChangeListener );
 
-			super.onPause();
-		}
+    private void updateFontSize(
+      final SharedPreferences sharedPreferences
+    ) {
+      Preference pref = findPreference( PreferenceKey.FontSize.key );
+      pref.setSummary( sharedPreferences.getString( PreferenceKey.FontSize.key, "14" ) );
+    }
 
-	}
+
+    @Override
+    public void onStop() {
+      super.onStop();
+
+      PreferenceManager.getDefaultSharedPreferences( getActivity() )
+        .unregisterOnSharedPreferenceChangeListener( sharedPreferenceChangeListener );
+
+      super.onPause();
+    }
+
+  }
 
 } // End of SettingsActivity class

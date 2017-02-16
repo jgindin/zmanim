@@ -9,76 +9,76 @@ import java.util.List;
  *
  */
 public class Mincha
-	extends Tefilla {
+  extends Tefilla {
 
 
-	public Mincha() {
-		super( R.string.mincha );
-	}
+  public Mincha() {
+    super( R.string.mincha );
+  }
 
 
-	@Override
-	protected TefillaType getTefillaType() {
-		return TefillaType.Mincha;
-	}
+  @Override
+  protected TefillaType getTefillaType() {
+    return TefillaType.Mincha;
+  }
 
 
-	@SuppressWarnings( "FeatureEnvy" )
-	@Override
-	protected List<TextChunk> getTefillaText( final DoWeSay doWeSay ) {
+  @SuppressWarnings( "FeatureEnvy" )
+  @Override
+  protected List<TextChunk> getTefillaText( final DoWeSay doWeSay ) {
 
-		final boolean isAseretYameiTeshuva = doWeSay.aseretYameiTeshuvaInsertions();
+    final boolean isAseretYameiTeshuva = doWeSay.aseretYameiTeshuvaInsertions();
 
-		List<TextChunk> files = new ArrayList<>();
+    List<TextChunk> files = new ArrayList<>();
 
-		// Assembling Mincha:
-		files.add( new TextChunk( "tefilla/mincha/mincha_intro.txt" ) );
-		files.add( new TextChunk( "tefilla/pitum_haketoret.txt" ) );
+    // Assembling Mincha:
+    files.add( new TextChunk( "tefilla/mincha/mincha_intro.txt" ) );
+    files.add( new TextChunk( "tefilla/pitum_haketoret.txt" ) );
 
-		if ( isAseretYameiTeshuva ) {
-			files.add( new TextChunk( "tefilla/pitum_haketoret_turk_asert_yamei_teshuva.txt" ) );
-		}
+    if ( isAseretYameiTeshuva ) {
+      files.add( new TextChunk( "tefilla/pitum_haketoret_turk_asert_yamei_teshuva.txt" ) );
+    }
 
-		files.add( new TextChunk( "tefilla/pitum_haketoret_conclusion.txt" ) );
-		files.add( new TextChunk( "tefilla/ashre.txt" ) );
+    files.add( new TextChunk( "tefilla/pitum_haketoret_conclusion.txt" ) );
+    files.add( new TextChunk( "tefilla/ashre.txt" ) );
 
-		files.add( new TextChunk( "tefilla/amidah/1_ticon_tefilati.txt" ) );
-		files.add( new TextChunk( "tefilla/kaddish_chatzi.txt" ) );
+    files.add( new TextChunk( "tefilla/amidah/1_ticon_tefilati.txt" ) );
+    files.add( new TextChunk( "tefilla/kaddish_chatzi.txt" ) );
 
-		files.addAll( getAmidahFileNamesForDate( doWeSay ) );
+    files.addAll( getAmidahFileNamesForDate( doWeSay ) );
 
-		if ( isAseretYameiTeshuva ) {
-			files.add( new TextChunk( "tefilla/avinu_malkenu.txt" ) );
-		}
+    if ( isAseretYameiTeshuva ) {
+      files.add( new TextChunk( "tefilla/avinu_malkenu.txt" ) );
+    }
 
-		if ( doWeSay.tachanun() ) {
-			files.add( new TextChunk( "tefilla/mincha/mincha_tachanun.txt" ) );
-		}
+    if ( doWeSay.tachanun() ) {
+      files.add( new TextChunk( "tefilla/mincha/mincha_tachanun.txt" ) );
+    }
 
-		files.add( new TextChunk( "tefilla/amonai_adonenu.txt" ) );
+    files.add( new TextChunk( "tefilla/amonai_adonenu.txt" ) );
 
-		files.add( new TextChunk( "tefilla/kaddish_titkabal.txt" ) );
+    files.add( new TextChunk( "tefilla/kaddish_titkabal.txt" ) );
 
-		if ( doWeSay.erevShabbatModifications() ) {
-			files.add( new TextChunk( "tefilla/amonai_malach_geut_lavesh.txt" ) );
-		}
-		else {
-			files.add( new TextChunk( "tefilla/lamnatzeach_binginot.txt" ) );
-		}
+    if ( doWeSay.erevShabbatModifications() ) {
+      files.add( new TextChunk( "tefilla/amonai_malach_geut_lavesh.txt" ) );
+    }
+    else {
+      files.add( new TextChunk( "tefilla/lamnatzeach_binginot.txt" ) );
+    }
 
-		files.add( new TextChunk( "tefilla/kaddish_yehe_shlama_raba.txt" ) );
-		files.add( new TextChunk( "tefilla/alenu.txt" ) );
-		files.add( new TextChunk( "tefilla/uvtoratecha.txt" ) );
+    files.add( new TextChunk( "tefilla/kaddish_yehe_shlama_raba.txt" ) );
+    files.add( new TextChunk( "tefilla/alenu.txt" ) );
+    files.add( new TextChunk( "tefilla/uvtoratecha.txt" ) );
 
-		if ( doWeSay.erevShabbatModifications() ) {
-			files.add( new TextChunk( "tefilla/mincha/mincha_conclusion_friday.txt" ) );
-		}
-		else {
-			files.add( new TextChunk( "tefilla/mincha/mincha_conclusion.txt" ) );
-		}
+    if ( doWeSay.erevShabbatModifications() ) {
+      files.add( new TextChunk( "tefilla/mincha/mincha_conclusion_friday.txt" ) );
+    }
+    else {
+      files.add( new TextChunk( "tefilla/mincha/mincha_conclusion.txt" ) );
+    }
 
 
-		return files;
-	}
+    return files;
+  }
 
 } // End of Mincha class

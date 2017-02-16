@@ -24,47 +24,47 @@ import java.io.IOException;
  */
 public class LastKnownLocationProvider {
 
-	public static final String                                NAME = "LastKnownLocationProvider";
+  public static final String                                NAME = "LastKnownLocationProvider";
 
-	private final Context                                     context;
+  private final Context                                     context;
 
-	private Location                                          lastKnownLocation;
+  private Location                                          lastKnownLocation;
 
   private SaveLocationTask                                  currentlyRunningSaveTask = null;
 
 
-	LastKnownLocationProvider( Context context ) {
-		this.context = context;
+  LastKnownLocationProvider( Context context ) {
+    this.context = context;
 
-		FileInputStream input = null;
-		try {
-			input = context.openFileInput( NAME );
-			ZmanimLocation location = ZmanimLocation.load( input );
-			lastKnownLocation = toLocation( location );
-		}
-		catch ( Exception e ) {
-			// Oh well, we can't read the last location, so...we just will have to deal ...
-//			LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
-		}
-		finally {
-			if ( input != null ) {
-				try {
-					input.close();
-				}
-				catch ( IOException e ) {
-					// Urgh. Oh well.
-				}
-			}
-		}
-	}
-
-
-	public Location getLastKnownLocation() {
-		return lastKnownLocation;
-	}
+    FileInputStream input = null;
+    try {
+      input = context.openFileInput( NAME );
+      ZmanimLocation location = ZmanimLocation.load( input );
+      lastKnownLocation = toLocation( location );
+    }
+    catch ( Exception e ) {
+      // Oh well, we can't read the last location, so...we just will have to deal ...
+//      LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
+    }
+    finally {
+      if ( input != null ) {
+        try {
+          input.close();
+        }
+        catch ( IOException e ) {
+          // Urgh. Oh well.
+        }
+      }
+    }
+  }
 
 
-	public void save( Location newLocation ) {
+  public Location getLastKnownLocation() {
+    return lastKnownLocation;
+  }
+
+
+  public void save( Location newLocation ) {
 
     if ( null == newLocation ) {
       return;
@@ -76,20 +76,20 @@ public class LastKnownLocationProvider {
 
     currentlyRunningSaveTask = new SaveLocationTask();
     currentlyRunningSaveTask.execute( newLocation );
-	}
+  }
 
 
   private Location toLocation( ZmanimLocation zmanimLocation ) {
 
-		Location location = new Location( zmanimLocation.providerName );
-		location.setLatitude( zmanimLocation.getLatitude() );
-		location.setLongitude( zmanimLocation.getLongitude() );
-		location.setTime( zmanimLocation.locationTime );
-		location.setAccuracy( zmanimLocation.accuracy );
-		location.setAltitude( zmanimLocation.getElevation() );
+    Location location = new Location( zmanimLocation.providerName );
+    location.setLatitude( zmanimLocation.getLatitude() );
+    location.setLongitude( zmanimLocation.getLongitude() );
+    location.setTime( zmanimLocation.locationTime );
+    location.setAccuracy( zmanimLocation.accuracy );
+    location.setAltitude( zmanimLocation.getElevation() );
 
-		return location;
-	}
+    return location;
+  }
 
 
   private void saveInBackground( Location newLocation ) {

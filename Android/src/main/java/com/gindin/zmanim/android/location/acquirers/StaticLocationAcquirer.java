@@ -16,29 +16,29 @@ import android.content.SharedPreferences;
  * Location provider which uses a place name like "5217 South Brandon St., Seattle, WA" to determine the Zmanim.
  */
 public class StaticLocationAcquirer
-	extends LocationAcquirer {
+  extends LocationAcquirer {
 
 
-	public StaticLocationAcquirer(
-		EventBus          eventBus,
-		SharedPreferences locationManagementPrefs,
-		SharedPreferences personalPrefs
-	) {
+  public StaticLocationAcquirer(
+    EventBus          eventBus,
+    SharedPreferences locationManagementPrefs,
+    SharedPreferences personalPrefs
+  ) {
 
-		super( eventBus, locationManagementPrefs, personalPrefs );
-	}
+    super( eventBus, locationManagementPrefs, personalPrefs );
+  }
 
 
-	@Override
-	public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
+  @Override
+  public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
 
-		String place = locationManagementPrefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
-		ZmanimLocation location = new ZmanimLocation.Builder()
-			.locationName( place )
-			.inTimeZone( getTimeZoneFromPrefs() )
-			.build();
-		eventBus.fire( new PlaceAcquiredEvent( location ) );
-	}
+    String place = locationManagementPrefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
+    ZmanimLocation location = new ZmanimLocation.Builder()
+      .locationName( place )
+      .inTimeZone( getTimeZoneFromPrefs() )
+      .build();
+    eventBus.fire( new PlaceAcquiredEvent( location ) );
+  }
 
 
 }  // End of StaticLocationProvider class

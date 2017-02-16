@@ -12,33 +12,33 @@ import java.util.List;
  * Used for allowing the user to see when a full-day fast ends.
  */
 class FastEnds
-	extends TzaitHacochavim {
+  extends TzaitHacochavim {
 
-	FastEnds(
-		final ZmanimCalculator zmanimCalculator
-	) {
+  FastEnds(
+    final ZmanimCalculator zmanimCalculator
+  ) {
 
-		super( Type.FastEnd, zmanimCalculator );
-	}
+    super( Type.FastEnd, zmanimCalculator );
+  }
 
 
-	protected List<Zman> buildZmanimList(
-		final ZmanimCalculator zmanimCalculator
-	) {
+  protected List<Zman> buildZmanimList(
+    final ZmanimCalculator zmanimCalculator
+  ) {
 
-		List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator );
+    List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator );
 
-		zmanim.add(
-			new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {
-				@Override protected Calendar calculate() {
-					//noinspection MagicNumber
-					return toCalendar( zmanimCalculator, zmanimCalculator.getEndOfFast( 30 ) );
-				}
-			}
-		);
+    zmanim.add(
+      new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {
+        @Override protected Calendar calculate() {
+          //noinspection MagicNumber
+          return toCalendar( zmanimCalculator, zmanimCalculator.getEndOfFast( 30 ) );
+        }
+      }
+    );
 
-		return zmanim;
-	}
+    return zmanim;
+  }
 
 
 }  // End of TzaitHacochavim class

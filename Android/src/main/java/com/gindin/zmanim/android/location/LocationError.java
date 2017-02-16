@@ -9,46 +9,46 @@ package com.gindin.zmanim.android.location;
  */
 public class LocationError {
 
-	/**
-	 * Enumerates the possible errors when trying to determine the location.
-	 */
-	public enum Code {
-		CANNOT_DETERMINE_LOCATION,
-		BAD_INPUT,
-		NO_LOCATION_MANAGER_SERVICE,
-		NO_PROVIDERS,
-		NO_PERMISSIONS
-	}
+  /**
+   * Enumerates the possible errors when trying to determine the location.
+   */
+  public enum Code {
+    CANNOT_DETERMINE_LOCATION,
+    BAD_INPUT,
+    NO_LOCATION_MANAGER_SERVICE,
+    NO_PROVIDERS,
+    NO_PERMISSIONS
+  }
 
 
-	public final Code                                         errorCode;
+  public final Code                                         errorCode;
 
-	public final String                                       message;
-
-
-
-	public LocationError(
-		Code    errorCode
-	) {
-		this( errorCode, null );
-	}
-
-	
-	public LocationError(
-		Code    errorCode,
-	  String  message
-	) {
-
-		this.errorCode = errorCode;
-		this.message = message;
-	}
+  public final String                                       message;
 
 
-	@Override
-	public String toString() {
-		return "LocationError{" +
-			"errorCode=" + errorCode +
-			", message='" + message + '\'' +
-			'}';
-	}
+
+  public LocationError(
+    Code    errorCode
+  ) {
+    this( errorCode, null );
+  }
+
+  
+  public LocationError(
+    Code    errorCode,
+    String  message
+  ) {
+
+    this.errorCode = errorCode;
+    this.message = message;
+  }
+
+
+  @Override
+  public String toString() {
+    return "LocationError{" +
+      "errorCode=" + errorCode +
+      ", message='" + message + '\'' +
+      '}';
+  }
 }

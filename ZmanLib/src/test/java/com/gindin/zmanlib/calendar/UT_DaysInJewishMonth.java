@@ -13,103 +13,103 @@ import org.junit.Test;
 @SuppressWarnings( { "MagicNumber" } )
 public class UT_DaysInJewishMonth {
 
-	@Test
-	public void daysInMonthsInHaserYear() {
+  @Test
+  public void daysInMonthsInHaserYear() {
 
-		assertHaser( 5773 );
-		assertHaser( 5777 );
-		assertHaser( 5781 );
-		assertHaserLeap( 5784 );
-		assertHaserLeap( 5790 );
-		assertHaserLeap( 5793 );
-	}
-
-
-	@Test
-	public void daysInMonthsInQesidrahYear() {
-
-		assertQesidrah( 5769 );
-		assertQesidrah( 5772 );
-		assertQesidrah( 5778 );
-		assertQesidrah( 5786 );
-		assertQesidrah( 5789 );
-		assertQesidrah( 5792 );
-
-		assertQesidrahLeap( 5782 );
-	}
+    assertHaser( 5773 );
+    assertHaser( 5777 );
+    assertHaser( 5781 );
+    assertHaserLeap( 5784 );
+    assertHaserLeap( 5790 );
+    assertHaserLeap( 5793 );
+  }
 
 
-	@Test
-	public void daysInMonthsInShalemYear() {
+  @Test
+  public void daysInMonthsInQesidrahYear() {
 
-		assertShalem( 5770 );
-		assertShalem( 5780 );
-		assertShalem( 5783 );
-		assertShalem( 5785 );
-		assertShalem( 5788 );
-		assertShalem( 5791 );
-		assertShalem( 5794 );
+    assertQesidrah( 5769 );
+    assertQesidrah( 5772 );
+    assertQesidrah( 5778 );
+    assertQesidrah( 5786 );
+    assertQesidrah( 5789 );
+    assertQesidrah( 5792 );
 
-		assertShalemLeap( 5771 );
-		assertShalemLeap( 5774 );
-		assertShalemLeap( 5776 );
-		assertShalemLeap( 5779 );
-		assertShalemLeap( 5787 );
-		assertShalemLeap( 5795 );
-	}
+    assertQesidrahLeap( 5782 );
+  }
 
 
-	private void assertHaser( int year ) {
+  @Test
+  public void daysInMonthsInShalemYear() {
 
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+    assertShalem( 5770 );
+    assertShalem( 5780 );
+    assertShalem( 5783 );
+    assertShalem( 5785 );
+    assertShalem( 5788 );
+    assertShalem( 5791 );
+    assertShalem( 5794 );
 
-		Assert.assertFalse( date.isCheshvanLong() );
-		Assert.assertTrue( date.isKislevShort() );
-	}
-
-
-	private void assertHaserLeap( int year ) {
-
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
-
-		assertHaser( year );
-		Assert.assertTrue( date.isHebrewLeapYear() );
-	}
-
-
-	private void assertQesidrah( int year ) {
-
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
-
-		Assert.assertFalse( date.isCheshvanLong() );
-		Assert.assertFalse( date.isKislevShort() );
-	}
+    assertShalemLeap( 5771 );
+    assertShalemLeap( 5774 );
+    assertShalemLeap( 5776 );
+    assertShalemLeap( 5779 );
+    assertShalemLeap( 5787 );
+    assertShalemLeap( 5795 );
+  }
 
 
-	private void assertQesidrahLeap( int year ) {
+  private void assertHaser( int year ) {
 
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
-		assertQesidrah( year );
-		Assert.assertTrue( date.isHebrewLeapYear() );
-	}
-
-
-	private void assertShalem( int year ) {
-
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
-
-		Assert.assertTrue( date.isCheshvanLong() );
-		Assert.assertFalse( date.isKislevShort() );
-	}
+    Assert.assertFalse( date.isCheshvanLong() );
+    Assert.assertTrue( date.isKislevShort() );
+  }
 
 
-	private void assertShalemLeap( int year ) {
+  private void assertHaserLeap( int year ) {
 
-		HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
-		assertShalem( year );
-		Assert.assertTrue( date.isHebrewLeapYear() );
-	}
+    assertHaser( year );
+    Assert.assertTrue( date.isHebrewLeapYear() );
+  }
+
+
+  private void assertQesidrah( int year ) {
+
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+
+    Assert.assertFalse( date.isCheshvanLong() );
+    Assert.assertFalse( date.isKislevShort() );
+  }
+
+
+  private void assertQesidrahLeap( int year ) {
+
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+
+    assertQesidrah( year );
+    Assert.assertTrue( date.isHebrewLeapYear() );
+  }
+
+
+  private void assertShalem( int year ) {
+
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+
+    Assert.assertTrue( date.isCheshvanLong() );
+    Assert.assertFalse( date.isKislevShort() );
+  }
+
+
+  private void assertShalemLeap( int year ) {
+
+    HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
+
+    assertShalem( year );
+    Assert.assertTrue( date.isHebrewLeapYear() );
+  }
 
 } // End of UT_DaysInJewishMonth class

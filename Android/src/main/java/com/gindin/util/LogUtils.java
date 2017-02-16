@@ -24,106 +24,106 @@ import java.util.Map;
 public class LogUtils {
 
 
-	private LogUtils() {
-	}
+  private LogUtils() {
+  }
 
 
-	public static void startSession(
-		final Context context
-	) {
+  public static void startSession(
+    final Context context
+  ) {
 
-		if ( !BuildConfig.DEBUG ) {
-			FlurryAgent.onStartSession( context );
-		}
-	}
-
-
-	public static void endSession(
-		Context context
-	) {
-
-		if ( !BuildConfig.DEBUG ) {
-			FlurryAgent.onEndSession( context );
-		}
-	}
+    if ( !BuildConfig.DEBUG ) {
+      FlurryAgent.onStartSession( context );
+    }
+  }
 
 
-	public static void logError(
-		String    where,
-		String    message,
-		Throwable error
-	) {
-		//noinspection NullArgumentToVariableArgMethod
-		logError( where, message, error, (Pair<String, String>[])null );
-	}
+  public static void endSession(
+    Context context
+  ) {
+
+    if ( !BuildConfig.DEBUG ) {
+      FlurryAgent.onEndSession( context );
+    }
+  }
 
 
-	public static void logError(
-		String                  where,
-		String                  message,
-		Throwable               error,
-		@Nullable Pair<String, String>... moreInfo
-	) {
+  public static void logError(
+    String    where,
+    String    message,
+    Throwable error
+  ) {
+    //noinspection NullArgumentToVariableArgMethod
+    logError( where, message, error, (Pair<String, String>[])null );
+  }
 
 
-		if ( BuildConfig.DEBUG ) {
-			Log.e( where, "Msg: " + message, error );
-		}
-		else {
+  public static void logError(
+    String                  where,
+    String                  message,
+    Throwable               error,
+    @Nullable Pair<String, String>... moreInfo
+  ) {
+
+
+    if ( BuildConfig.DEBUG ) {
+      Log.e( where, "Msg: " + message, error );
+    }
+    else {
 
       ACRA.getErrorReporter().putCustomData( "Where", where );
       ACRA.getErrorReporter().putCustomData( "Message", message );
 
-			if ( null != moreInfo ) {
+      if ( null != moreInfo ) {
         for ( Pair<String, String> info : moreInfo ) {
           ACRA.getErrorReporter().putCustomData( info.first, info.second );
         }
       }
 
       // We want this to be silent...it's something we're interested in logging, but the user
-			//  shouldn't know/care...
-			ACRA.getErrorReporter().handleSilentException( error );
-		}
-	}
+      //  shouldn't know/care...
+      ACRA.getErrorReporter().handleSilentException( error );
+    }
+  }
 
 
-	public static void logEvent(
-		String                      eventName,
-	  List<Pair<String,String>>   messages
-	) {
+  public static void logEvent(
+    String                      eventName,
+    List<Pair<String,String>>   messages
+  ) {
 
-		if ( BuildConfig.DEBUG ) {
+    if ( BuildConfig.DEBUG ) {
 
-			StringBuilder msg = new StringBuilder();
-			for ( Pair<String, String> pair : messages ) {
-				msg.append( pair.first ).append( ": " ).append( pair.second );
-			}
+      StringBuilder msg = new StringBuilder();
+      for ( Pair<String, String> pair : messages ) {
+        msg.append( pair.first ).append( ": " ).append( pair.second );
+      }
 
-			Log.i( eventName, msg.toString() );
-		}
-		else {
+      Log.i( eventName, msg.toString() );
+    }
+    else {
 
-			Map<String,String> messageMap = new HashMap<String, String>();
-			if ( null != messages ) {
-				for ( Pair<String, String> message : messages ) {
-					messageMap.put( message.first, message.second );
-				}
-			}
+      Map<String,String> messageMap = new HashMap<String, String>();
+      if ( null != messages ) {
+        for ( Pair<String, String> message : messages ) {
+          messageMap.put( message.first, message.second );
+        }
+      }
 
-			FlurryAgent.logEvent( eventName, messageMap );
-		}
-	}
+      FlurryAgent.logEvent( eventName, messageMap );
+    }
+  }
 
 
-	public static void debug(
-		String tag,
-	  String message
-	) {
+  public static void debug(
+    String tag,
+    String message
+  ) {
 
-		if ( BuildConfig.DEBUG ) {
-			Log.i( tag, message );
-		}
-	}
+    if ( BuildConfig.DEBUG ) {
+      Log.i( tag, message );
+    }
+  }
 
 
   public static void setContext(
@@ -137,12 +137,12 @@ public class LogUtils {
       }
     }
     else {
-	    if ( data == null ) {
-		    ACRA.getErrorReporter().removeCustomData( key );
-	    }
-	    else {
-		    ACRA.getErrorReporter().putCustomData( key, data );
-	    }
+      if ( data == null ) {
+        ACRA.getErrorReporter().removeCustomData( key );
+      }
+      else {
+        ACRA.getErrorReporter().putCustomData( key, data );
+      }
     }
   }
 
