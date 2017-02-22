@@ -5,112 +5,112 @@
   -->
 
 <PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orderingFromXml="true"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orderingFromXml="true"
   android:title="@string/edit_location_prefs_title"
 >
 
-	<!--
-		See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,
-		DYNAMIC_POSITION, STATIC_POSITION, LATITUDE_LONGITUDE_POSITION.
-	-->
+  <!--
+    See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,
+    DYNAMIC_POSITION, STATIC_POSITION, LATITUDE_LONGITUDE_POSITION.
+  -->
 
-	<PreferenceCategory
-		android:key="DYNAMIC_LOCATION_CATEGORY"
-		android:title="@string/dynamic_location"
-	  android:orderingFromXml="true"
-	>
+  <PreferenceCategory
+    android:key="DYNAMIC_LOCATION_CATEGORY"
+    android:title="@string/dynamic_location"
+    android:orderingFromXml="true"
+  >
 
-		<CheckBoxPreference
-			android:key="DYNAMIC_POSITION"
-		  android:title="@string/dynamic_position_pref_title"
-		  android:summary="@string/dynaic_position_pref_summary"
-		  android:checked="true"
-		/>
-		<CheckBoxPreference
-			android:key="PREFER_GPS"
-		  android:title="@string/prefer_gps_pref_title"
-		  android:summary="@string/prefer_gps_pref_summary"
-		  android:dependency="DYNAMIC_POSITION"
-		/>
-		<CheckBoxPreference
-			android:key="PREFER_CACHED_LOCATION"
-		  android:title="@string/prefer_cached_location_pref_title"
-		  android:summary="@string/prefer_cached_location_pref_summary"
-		  android:dependency="DYNAMIC_POSITION"
-		/>
-	</PreferenceCategory>
-
-
-	<PreferenceCategory
-		android:title="@string/static_location"
-	  android:orderingFromXml="true"
-	>
-
-		<CheckBoxPreference
-			android:key="STATIC_POSITION"
-		  android:title="@string/use_static_location_pref_title"
-		  android:summary="@string/use_static_location_pref_summary"
-		/>
-		<EditTextPreference
-			android:key="PLACE"
-		  android:title="@string/static_location_pref_title"
-		  android:summary="@string/static_location_pref_summary"
-		  android:dependency="STATIC_POSITION"
-		/>
-	</PreferenceCategory>
+    <CheckBoxPreference
+      android:key="DYNAMIC_POSITION"
+      android:title="@string/dynamic_position_pref_title"
+      android:summary="@string/dynaic_position_pref_summary"
+      android:checked="true"
+    />
+    <CheckBoxPreference
+      android:key="PREFER_GPS"
+      android:title="@string/prefer_gps_pref_title"
+      android:summary="@string/prefer_gps_pref_summary"
+      android:dependency="DYNAMIC_POSITION"
+    />
+    <CheckBoxPreference
+      android:key="PREFER_CACHED_LOCATION"
+      android:title="@string/prefer_cached_location_pref_title"
+      android:summary="@string/prefer_cached_location_pref_summary"
+      android:dependency="DYNAMIC_POSITION"
+    />
+  </PreferenceCategory>
 
 
-	<PreferenceCategory
-		android:title="@string/lat_long_location"
-	  android:orderingFromXml="true"
-	>
+  <PreferenceCategory
+    android:title="@string/static_location"
+    android:orderingFromXml="true"
+  >
 
-		<CheckBoxPreference
-			android:key="LATITUDE_LONGITUDE_POSITION"
-		  android:title="@string/use_latitude_longitued_pref_title"
-		  android:summary="@string/use_latitude_longitued_pref_summary" 
-		/>
-		<com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
-			android:key="LATITUDE"
-		  android:title="@string/use_latitude_pref_title"
-		  android:summary="@string/use_latitude_pref_summary"
-		  android:dependency="LATITUDE_LONGITUDE_POSITION"
-		/>
-		<com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
-			android:key="LONGITUDE"
-		  android:title="@string/use_longitude_pref_title"
-		  android:summary="@string/use_longitude_pref_summary"
-		  android:dependency="LATITUDE_LONGITUDE_POSITION"
-		/>
+    <CheckBoxPreference
+      android:key="STATIC_POSITION"
+      android:title="@string/use_static_location_pref_title"
+      android:summary="@string/use_static_location_pref_summary"
+    />
+    <EditTextPreference
+      android:key="PLACE"
+      android:title="@string/static_location_pref_title"
+      android:summary="@string/static_location_pref_summary"
+      android:dependency="STATIC_POSITION"
+    />
+  </PreferenceCategory>
 
-	</PreferenceCategory>
 
-	<PreferenceCategory
-		android:title="@string/time_zone_setting"
-	  android:orderingFromXml="true"
-	>
+  <PreferenceCategory
+    android:title="@string/lat_long_location"
+    android:orderingFromXml="true"
+  >
 
-		<CheckBoxPreference
-			android:key="OVERRIDE_SYSTEM_TIME_ZONE"
-		  android:title="@string/override_system_time_zone"
-		  android:summary="@string/override_system_time_zone_summary"
-		/>
+    <CheckBoxPreference
+      android:key="LATITUDE_LONGITUDE_POSITION"
+      android:title="@string/use_latitude_longitued_pref_title"
+      android:summary="@string/use_latitude_longitued_pref_summary" 
+    />
+    <com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
+      android:key="LATITUDE"
+      android:title="@string/use_latitude_pref_title"
+      android:summary="@string/use_latitude_pref_summary"
+      android:dependency="LATITUDE_LONGITUDE_POSITION"
+    />
+    <com.gindin.zmanim.android.prefs.LongitudeLatitudePreference
+      android:key="LONGITUDE"
+      android:title="@string/use_longitude_pref_title"
+      android:summary="@string/use_longitude_pref_summary"
+      android:dependency="LATITUDE_LONGITUDE_POSITION"
+    />
 
-		<!-- Values are populated dynamically -->
-		<ListPreference
-			android:key="TIME_ZONE_AREA"
-		  android:title="@string/time_zone_area"
-		  android:summary="@string/time_zone_area_summary"
-		  android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
-	  />
-		<ListPreference
-			android:key="TIME_ZONE_LOCALE"
-		  android:title="@string/time_zone_locale"
-		  android:summary="@string/time_zone_locale_summary"
-		  android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
-	  />
+  </PreferenceCategory>
 
-	</PreferenceCategory>
+  <PreferenceCategory
+    android:title="@string/time_zone_setting"
+    android:orderingFromXml="true"
+  >
+
+    <CheckBoxPreference
+      android:key="OVERRIDE_SYSTEM_TIME_ZONE"
+      android:title="@string/override_system_time_zone"
+      android:summary="@string/override_system_time_zone_summary"
+    />
+
+    <!-- Values are populated dynamically -->
+    <ListPreference
+      android:key="TIME_ZONE_AREA"
+      android:title="@string/time_zone_area"
+      android:summary="@string/time_zone_area_summary"
+      android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
+    />
+    <ListPreference
+      android:key="TIME_ZONE_LOCALE"
+      android:title="@string/time_zone_locale"
+      android:summary="@string/time_zone_locale_summary"
+      android:dependency="OVERRIDE_SYSTEM_TIME_ZONE"
+    />
+
+  </PreferenceCategory>
 
 </PreferenceScreen>

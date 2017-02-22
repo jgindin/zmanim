@@ -1,14 +1,14 @@
 <menu
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	tools:context=".ZehutYosefActivity"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".ZehutYosefActivity"
 >
-	<item
-		android:id="@+id/date"
-		app:showAsAction="ifRoom"
-		app:actionViewClass="android.widget.TextView"
-		android:title=""
-	/>
+  <item
+    android:id="@+id/date"
+    app:showAsAction="ifRoom"
+    app:actionViewClass="android.widget.TextView"
+    android:title=""
+  />
 
 </menu>

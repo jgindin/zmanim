@@ -4,106 +4,106 @@
   -->
 
 <!--
-	Required properties:
-		* about.html : where's the project's about.html located, to be updated with the correct version info?
+  Required properties:
+    * about.html : where's the project's about.html located, to be updated with the correct version info?
 -->
 <project name="versioning">
 
-	<fail message="about.html is not defined." unless="about.html"/>
-	<property name="about.html" value=""/>
+  <fail message="about.html is not defined." unless="about.html"/>
+  <property name="about.html" value=""/>
 
-	<property name="svnant.javahl" value="false"/>
-	<property name="svnant.svnkit" value="true"/>
-	<path id="svnant.classpath">
-		<fileset dir="${svnant.lib.dir}">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
-	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
-
-
-	<target name="check-release">
-
-		<condition property="release_build">
-			<equals arg1="${build.target}" arg2="release" />
-		</condition>
-
-		<echo>Release build? ${release_build}</echo>
-	</target>
-
-	<target name="get-svn-state">
-		<exec executable="hg" output="hg.number" >
-			<arg line="log --limit 1 --template 'hg.node={node|short}'"/>
-		</exec>
-	</target>
+  <property name="svnant.javahl" value="false"/>
+  <property name="svnant.svnkit" value="true"/>
+  <path id="svnant.classpath">
+    <fileset dir="${svnant.lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+  <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath"/>
 
 
-	<!--
-	 Takes care of updating the user-visible version string.
+  <target name="check-release">
+
+    <condition property="release_build">
+      <equals arg1="${build.target}" arg2="release" />
+    </condition>
+
+    <echo>Release build? ${release_build}</echo>
+  </target>
+
+  <target name="get-svn-state">
+    <exec executable="hg" output="hg.number" >
+      <arg line="log --limit 1 --template 'hg.node={node|short}'"/>
+    </exec>
+  </target>
+
+
+  <!--
+   Takes care of updating the user-visible version string.
  -->
-	<target name="read-version-files">
-		<property file="version.number"/>
-		<property file="build.number"/>
-		<property file="hg.number"/>
-	</target>
+  <target name="read-version-files">
+    <property file="version.number"/>
+    <property file="build.number"/>
+    <property file="hg.number"/>
+  </target>
 
-	<target name="set-release-version" if="release_build">
-		<property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}" />
-		<echo message="Set a release version..." />
-	</target>
+  <target name="set-release-version" if="release_build">
+    <property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}" />
+    <echo message="Set a release version..." />
+  </target>
 
-	<target name="set-debug-version" unless="release_build">
-		<property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}-DEV" />
-		<echo message="Set a debug version..." />
-	</target>
+  <target name="set-debug-version" unless="release_build">
+    <property name="version" value="${version.major}.${version.minor}.${build.number}.${hg.node}-DEV" />
+    <echo message="Set a debug version..." />
+  </target>
 
-	<target name="set-version" depends="get-svn-state,read-version-files,set-release-version,set-debug-version">
+  <target name="set-version" depends="get-svn-state,read-version-files,set-release-version,set-debug-version">
 
-		<echo>
-			version.major = ${version.major}
-			version.minor = ${version.minor}
-			build.number = ${build.number}
+    <echo>
+      version.major = ${version.major}
+      version.minor = ${version.minor}
+      build.number = ${build.number}
 
-			version = ${version}
-		</echo>
+      version = ${version}
+    </echo>
 
-	</target>
+  </target>
 
 
-	<!--
-	 Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
-		 minor version number.
+  <!--
+   Takes care of updating the android:versionCode attribute so that we never screw that up and bumping the
+     minor version number.
  -->
-	<target name="zmanim-update-release-version" if="release_build">
+  <target name="zmanim-update-release-version" if="release_build">
 
-		<echo>Updating version number...</echo>
-		<buildnumber file="build.number"/>
+    <echo>Updating version number...</echo>
+    <buildnumber file="build.number"/>
 
-		<propertyfile file="version.number" comment="Zmanim Version">
-			<!-- Actually, I don't want to bump the minor version every time.... -->
-			<!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
-			<entry key="version.date" type="date" value="now"/>
-		</propertyfile>
+    <propertyfile file="version.number" comment="Zmanim Version">
+      <!-- Actually, I don't want to bump the minor version every time.... -->
+      <!--<entry key="version.minor" type="int" default="0" operation="+"/>-->
+      <entry key="version.date" type="date" value="now"/>
+    </propertyfile>
 
-	</target>
+  </target>
 
 
-	<target name="replace-version-placeholders" depends="check-release,set-version,zmanim-update-release-version">
+  <target name="replace-version-placeholders" depends="check-release,set-version,zmanim-update-release-version">
 
-		<echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
-		               replace='android:versionName="${version}"'/>
-		<replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)"
-		               replace='android:versionCode="${build.number}"'/>
+    <echo>Updating version in AndroidManifest.xml and strings.xml...</echo>
+    <replaceregexp file="AndroidManifest.xml" match="android:versionName(.*)"
+                   replace='android:versionName="${version}"'/>
+    <replaceregexp file="AndroidManifest.xml" match="android:versionCode(.*)"
+                   replace='android:versionCode="${build.number}"'/>
 
-		<replaceregexp file="${about.html}" match='Version (.*)'
-		               replace='Version ${version}'/>
+    <replaceregexp file="${about.html}" match='Version (.*)'
+                   replace='Version ${version}'/>
 
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)'
-		               replace='public static final String androidVersionName = "${version}";'/>
-		<replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)'
-		               replace='public static final int androidCodeVersion = ${build.number};'/>
+    <replaceregexp file="src/com/gindin/util/Version.java" match='public static final String androidVersionName(.*)'
+                   replace='public static final String androidVersionName = "${version}";'/>
+    <replaceregexp file="src/com/gindin/util/Version.java" match='public static final int androidCodeVersion(.*)'
+                   replace='public static final int androidCodeVersion = ${build.number};'/>
 
-	</target>
+  </target>
 
 </project>

@@ -5,39 +5,39 @@
   -->
 
 <menu 
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools" 
-	tools:context=".ZmanimActivity"
-	android:orderInCategory="100"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools" 
+  tools:context=".ZmanimActivity"
+  android:orderInCategory="100"
 >
 <!-- 
 should this be included in the menu above?
-	app:showAsAction="never"
+  app:showAsAction="never"
 -->
-	<item
-		android:id="@+id/refresh"
-		android:title="@string/refresh_menu"
-		android:icon="@android:drawable/ic_menu_rotate"
-	/>
-	<item
-		android:id="@+id/location_prefs"
-	  android:title="@string/location_prefs"
-	  android:icon="@android:drawable/ic_menu_mylocation"
-	/>
-	<item
-		android:id="@+id/personal_prefs"
-	  android:title="@string/personal_prefs"
-	  android:icon="@android:drawable/ic_menu_preferences"
-	/>
-	<item
-		android:id="@+id/about"
-		android:title="@string/about_menu"
-		android:icon="@android:drawable/ic_menu_info_details"
-		/>
-	<item
-		android:id="@+id/help"
-		android:title="@string/help_menu"
-		android:icon="@android:drawable/ic_menu_help"
-	/>
+  <item
+    android:id="@+id/refresh"
+    android:title="@string/refresh_menu"
+    android:icon="@android:drawable/ic_menu_rotate"
+  />
+  <item
+    android:id="@+id/location_prefs"
+    android:title="@string/location_prefs"
+    android:icon="@android:drawable/ic_menu_mylocation"
+  />
+  <item
+    android:id="@+id/personal_prefs"
+    android:title="@string/personal_prefs"
+    android:icon="@android:drawable/ic_menu_preferences"
+  />
+  <item
+    android:id="@+id/about"
+    android:title="@string/about_menu"
+    android:icon="@android:drawable/ic_menu_info_details"
+    />
+  <item
+    android:id="@+id/help"
+    android:title="@string/help_menu"
+    android:icon="@android:drawable/ic_menu_help"
+  />
 </menu>

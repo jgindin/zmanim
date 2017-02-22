@@ -4,85 +4,85 @@
   -->
 
 <manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.gindin.zmanim.android"
   android:installLocation="auto"
 >
 
 
-	<!--
-		Taken from http://www.devx.com/wireless/Article/40524 for accessing coarse location
-	-->
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <!--
+    Taken from http://www.devx.com/wireless/Article/40524 for accessing coarse location
+  -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-	<!--
-		Permissions necessary to support notifications.
-	-->
-	<uses-permission android:name="android.permission.VIBRATE" />
+  <!--
+    Permissions necessary to support notifications.
+  -->
+  <uses-permission android:name="android.permission.VIBRATE" />
 
-	<!--
-		Permission so that we can schedule an alarm to check for upcoming zmanim as soon as the
-		device completes a reboot. Otherwise, we wouldn't be able to set any alarms until the
-		user decides to run the app.
-	-->
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
+  <!--
+    Permission so that we can schedule an alarm to check for upcoming zmanim as soon as the
+    device completes a reboot. Otherwise, we wouldn't be able to set any alarms until the
+    user decides to run the app.
+  -->
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-	<supports-screens
-		android:smallScreens="true"
+  <supports-screens
+    android:smallScreens="true"
     android:normalScreens="true"
     android:largeScreens="true"
     android:xlargeScreens="true"
-	/>
+  />
 
-	<application
-		android:icon="@mipmap/ic_launcher"
-		android:label="Zmanim"
-		android:allowBackup="true"
-		android:theme="@style/AppTheme"
-	  android:name="ZmanimApplication"
-	>
+  <application
+    android:icon="@mipmap/ic_launcher"
+    android:label="Zmanim"
+    android:allowBackup="true"
+    android:theme="@style/AppTheme"
+    android:name="ZmanimApplication"
+  >
 
-		<activity
-			android:name=".ZmanimActivity"
-		>
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
+    <activity
+      android:name=".ZmanimActivity"
+    >
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
 
-		<activity
-			android:name=".prefs.LocationProviderPreferences"
-			android:label=".EditLocationPrefs"
-		/>
-		<activity
-			android:name=".prefs.PersonalPreferences"
-			android:label="Personal Preferences"
-		/>
+    <activity
+      android:name=".prefs.LocationProviderPreferences"
+      android:label=".EditLocationPrefs"
+    />
+    <activity
+      android:name=".prefs.PersonalPreferences"
+      android:label="Personal Preferences"
+    />
 
 
-		<!--
-			Register the receiver for the BOOT_COMPLETED notification.
-		-->
-		<receiver android:name=".service.ZmanimReceiver">
-			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED"/>
-			</intent-filter>
-		</receiver>
-
-		<!--
-		  Service that can run in the background to do things like schedule alarms so we can display notifications.
+    <!--
+      Register the receiver for the BOOT_COMPLETED notification.
     -->
-		<service android:name=".service.ZmanimService"/>
+    <receiver android:name=".service.ZmanimReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
+    </receiver>
+
+    <!--
+      Service that can run in the background to do things like schedule alarms so we can display notifications.
+    -->
+    <service android:name=".service.ZmanimService"/>
 
     <!--
       Serivce that will display our notifications.
     -->
-		<service android:name=".service.DisplayNotificationService"/>
+    <service android:name=".service.DisplayNotificationService"/>
 
-	</application>
+  </application>
 
 </manifest>

@@ -5,46 +5,46 @@
   -->
 
 <android.support.v7.preference.PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orderingFromXml="true"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orderingFromXml="true"
   android:title="@string/personal_prefs"
 >
 
-	<!--
-		See the com.gindin.zmanim.android.prefs.PersonalPreferences.Prefs enum, which corresponds to the keys (e.g.,
-		SHOW_SECONDS).
-	-->
+  <!--
+    See the com.gindin.zmanim.android.prefs.PersonalPreferences.Prefs enum, which corresponds to the keys (e.g.,
+    SHOW_SECONDS).
+  -->
 
-	<android.support.v7.preference.CheckBoxPreference
-		android:key="SHOW_SECONDS"
-	  android:title="@string/show_seconds_pref_title"
-	  android:summary="@string/show_seconds_pref_summary"
-	  android:defaultValue="false"
-	/>
+  <android.support.v7.preference.CheckBoxPreference
+    android:key="SHOW_SECONDS"
+    android:title="@string/show_seconds_pref_title"
+    android:summary="@string/show_seconds_pref_summary"
+    android:defaultValue="false"
+  />
 
-	<android.support.v7.preference.CheckBoxPreference
-		android:key="USE_ELEVATION"
-	  android:title="@string/use_elevation_pref_title"
-	  android:summary="@string/use_elevation_pref_summary"
-	  android:defaultValue="false"
-	/>
+  <android.support.v7.preference.CheckBoxPreference
+    android:key="USE_ELEVATION"
+    android:title="@string/use_elevation_pref_title"
+    android:summary="@string/use_elevation_pref_summary"
+    android:defaultValue="false"
+  />
 
-	<android.support.v7.preference.PreferenceCategory
-		android:title="@string/notifications_category"
-		android:orderingFromXml="true"
-	>
+  <android.support.v7.preference.PreferenceCategory
+    android:title="@string/notifications_category"
+    android:orderingFromXml="true"
+  >
 
-		<!--
-		  I'd like for this to be a nice switch and then clicking on it opens another prefs screen.
-		  That would require API 14 for the switch and API 11 to open another fragment.
-		-->
-		<android.support.v7.preference.CheckBoxPreference
-			android:key="SHOW_NOTIFICATIONS"
-			android:title="@string/show_notifications_pref_title"
-			android:summary="@string/show_notifications_pref_summary"
-			android:defaultValue="true"
-			android:disableDependentsState="false"
-		/>
+    <!--
+      I'd like for this to be a nice switch and then clicking on it opens another prefs screen.
+      That would require API 14 for the switch and API 11 to open another fragment.
+    -->
+    <android.support.v7.preference.CheckBoxPreference
+      android:key="SHOW_NOTIFICATIONS"
+      android:title="@string/show_notifications_pref_title"
+      android:summary="@string/show_notifications_pref_summary"
+      android:defaultValue="true"
+      android:disableDependentsState="false"
+    />
 
     <android.support.v7.preference.CheckBoxPreference
       android:key="ENABLE_NOTIFICATIONS_ON_SHABBAT"
@@ -54,140 +54,140 @@
       android:dependency="SHOW_NOTIFICATIONS"
     />
 
-		<!-- The keys here are the names of the Zmanim.Type enum. -->
-		<com.gindin.prefs.SeekBarPreference
-			android:key="Alot"
-			android:title="@string/Alot"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <!-- The keys here are the names of the Zmanim.Type enum. -->
+    <com.gindin.prefs.SeekBarPreference
+      android:key="Alot"
+      android:title="@string/Alot"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="Talit"
-			android:title="@string/Talit"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="Talit"
+      android:title="@string/Talit"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="Hanetz"
-			android:title="@string/Hanetz"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="Hanetz"
+      android:title="@string/Hanetz"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="SofZmanShema"
-			android:title="@string/SofZmanShema"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="SofZmanShema"
+      android:title="@string/SofZmanShema"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="SofZmanTefila"
-			android:title="@string/SofZmanTefilah"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="SofZmanTefila"
+      android:title="@string/SofZmanTefilah"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="SofZmanAchilatChametz"
-			android:title="@string/AchilatChametz"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="SofZmanAchilatChametz"
+      android:title="@string/AchilatChametz"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="SofZmanBiurChametz"
-			android:title="@string/BiurChametz"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="SofZmanBiurChametz"
+      android:title="@string/BiurChametz"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="Chatzot"
-			android:title="@string/Chatzot"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="Chatzot"
+      android:title="@string/Chatzot"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="MinchaGedola"
-			android:title="@string/MinchaGedola"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="MinchaGedola"
+      android:title="@string/MinchaGedola"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="MinchaKetana"
-			android:title="@string/MinchaKetana"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="MinchaKetana"
+      android:title="@string/MinchaKetana"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="PlagHaMincha"
-			android:title="@string/PlagHaMincha"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="PlagHaMincha"
+      android:title="@string/PlagHaMincha"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="CandleLighting"
-			android:title="@string/Candles"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="CandleLighting"
+      android:title="@string/Candles"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="Shkia"
-			android:title="@string/Shkia"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="Shkia"
+      android:title="@string/Shkia"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="BeinHashmashot"
-			android:title="@string/BeinHashmashot"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="BeinHashmashot"
+      android:title="@string/BeinHashmashot"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="LatestMincha"
-			android:title="@string/Mincha"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="LatestMincha"
+      android:title="@string/Mincha"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="FastEnd"
-			android:title="@string/FastEnds"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="FastEnd"
+      android:title="@string/FastEnds"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="TzaitHacochavim"
-			android:title="@string/Tzait"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="TzaitHacochavim"
+      android:title="@string/Tzait"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="ShabbatEnd"
-			android:title="@string/Havdalah"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="ShabbatEnd"
+      android:title="@string/Havdalah"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-		<com.gindin.prefs.SeekBarPreference
-			android:key="NightChatzot"
-			android:title="@string/Midnight"
-			android:defaultValue="15"
-			android:dependency="SHOW_NOTIFICATIONS"
-		/>
+    <com.gindin.prefs.SeekBarPreference
+      android:key="NightChatzot"
+      android:title="@string/Midnight"
+      android:defaultValue="15"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
 
-	</android.support.v7.preference.PreferenceCategory>
+  </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

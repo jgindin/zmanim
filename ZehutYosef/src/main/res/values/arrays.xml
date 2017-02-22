@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
-	xmlns:tools="http://schemas.android.com/tools"
-	tools:ignore="MissingTranslation"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:ignore="MissingTranslation"
 >
 
-	<string-array name="font_names">
-		<item>@string/font_shlomo</item>
-		<item>@string/font_taamey_frank</item>
-		<item>@string/font_taamey_david</item>
-		<item>@string/font_taamey_ashkenaz</item>
-	</string-array>
+  <string-array name="font_names">
+    <item>@string/font_shlomo</item>
+    <item>@string/font_taamey_frank</item>
+    <item>@string/font_taamey_david</item>
+    <item>@string/font_taamey_ashkenaz</item>
+  </string-array>
 
-	<string-array name="font_ids">
-		<item>font_shlomo</item>
-		<item>font_taamey_frank</item>
-		<item>font_taamey_david</item>
-		<item>font_taamey_ashkenaz</item>
-	</string-array>
+  <string-array name="font_ids">
+    <item>font_shlomo</item>
+    <item>font_taamey_frank</item>
+    <item>font_taamey_david</item>
+    <item>font_taamey_ashkenaz</item>
+  </string-array>
 
-	<string-array name="font_sizes">
-		<item>10</item>
-		<item>12</item>
-		<item>14</item>
-		<item>16</item>
-		<item>18</item>
-		<item>20</item>
-		<item>22</item>
-	</string-array>
+  <string-array name="font_sizes">
+    <item>10</item>
+    <item>12</item>
+    <item>14</item>
+    <item>16</item>
+    <item>18</item>
+    <item>20</item>
+    <item>22</item>
+  </string-array>
 
 </resources>

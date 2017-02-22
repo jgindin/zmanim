@@ -5,40 +5,40 @@
   -->
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/zman_list_row"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:layout_weight="1"
-	android:paddingLeft="10px"
-	android:paddingRight="10px"
-	android:stretchColumns="1"
-	>
+  android:id="@+id/zman_list_row"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:layout_weight="1"
+  android:paddingLeft="10px"
+  android:paddingRight="10px"
+  android:stretchColumns="1"
+  >
 
-	<TableRow
-		android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:gravity="center_vertical"
-	>
-		<TextView
-			android:id="@+id/zman_name"
-		/>
-		<TextView
-			android:id="@+id/zman_time"
-			android:gravity="right"
-		/>
-	</TableRow>
+  <TableRow
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+  >
+    <TextView
+      android:id="@+id/zman_name"
+    />
+    <TextView
+      android:id="@+id/zman_time"
+      android:gravity="right"
+    />
+  </TableRow>
 
-	<TableRow
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-	>
-		<TextView
-			android:id="@+id/zman_description"
-			android:layout_span="2"
-		  android:textStyle="italic"
-		  android:paddingLeft="10px"
-		  android:textSize="13sp"
-		/>
-	</TableRow>
+  <TableRow
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+  >
+    <TextView
+      android:id="@+id/zman_description"
+      android:layout_span="2"
+      android:textStyle="italic"
+      android:paddingLeft="10px"
+      android:textSize="13sp"
+    />
+  </TableRow>
 
 </TableLayout>

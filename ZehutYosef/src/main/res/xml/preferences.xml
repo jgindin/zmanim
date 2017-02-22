@@ -1,52 +1,52 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory
-		android:title="@string/pref_fonts_title"
-		android:key="pref_fonts"
-	>
+  <PreferenceCategory
+    android:title="@string/pref_fonts_title"
+    android:key="pref_fonts"
+  >
 
-		<ListPreference
-			android:key="pref_font_choice"
-			android:title="@string/pref_fonts_title"
-			android:summary="@string/pref_fonts_summary"
-			android:dialogTitle="@string/choose_font"
-			android:entries="@array/font_names"
-			android:entryValues="@array/font_ids"
-			android:defaultValue="font_taamey_david"
-		/>
+    <ListPreference
+      android:key="pref_font_choice"
+      android:title="@string/pref_fonts_title"
+      android:summary="@string/pref_fonts_summary"
+      android:dialogTitle="@string/choose_font"
+      android:entries="@array/font_names"
+      android:entryValues="@array/font_ids"
+      android:defaultValue="font_taamey_david"
+    />
 
-		<ListPreference
-			android:key="pref_font_size"
-			android:title="@string/pref_fonts_size"
-			android:summary="@string/pref_fonts_size_summary"
-			android:dialogTitle="@string/pref_fonts_size_choose"
-			android:entries="@array/font_sizes"
-			android:entryValues="@array/font_sizes"
-			android:defaultValue="14"
-		/>
+    <ListPreference
+      android:key="pref_font_size"
+      android:title="@string/pref_fonts_size"
+      android:summary="@string/pref_fonts_size_summary"
+      android:dialogTitle="@string/pref_fonts_size_choose"
+      android:entries="@array/font_sizes"
+      android:entryValues="@array/font_sizes"
+      android:defaultValue="14"
+    />
 
-	</PreferenceCategory>
+  </PreferenceCategory>
 
 
-	<PreferenceCategory
-		android:title="@string/pref_other_settings_title"
-		android:key="pref_other_settings"
-	>
+  <PreferenceCategory
+    android:title="@string/pref_other_settings_title"
+    android:key="pref_other_settings"
+  >
 
-		<CheckBoxPreference
-			android:key="pref_keep_screen_on"
-			android:title="@string/pref_keep_screen_on_title"
-			android:summary="@string/pref_keep_screen_on_summary"
-			android:defaultValue="true"
-		/>
+    <CheckBoxPreference
+      android:key="pref_keep_screen_on"
+      android:title="@string/pref_keep_screen_on_title"
+      android:summary="@string/pref_keep_screen_on_summary"
+      android:defaultValue="true"
+    />
 
-		<CheckBoxPreference
-			android:key="pref_full_screen_on"
-			android:title="@string/pref_full_screen_on_title"
-			android:summary="@string/pref_full_screen_on_summary"
-			android:defaultValue="true"
-		/>
+    <CheckBoxPreference
+      android:key="pref_full_screen_on"
+      android:title="@string/pref_full_screen_on_title"
+      android:summary="@string/pref_full_screen_on_summary"
+      android:defaultValue="true"
+    />
 
-	</PreferenceCategory>
+  </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="aboutLibraries_description_showIcon" translatable="false">true</string>
-	<string name="aboutLibraries_description_showVersion" translatable="false">true</string>
-	<string name="about_description_text">
-		<![CDATA[
-		Mincha, Arvit, Birkat Ammazon, and Me\'en Shalosh in honor of Eli\'s Bar Mitzvah!<br/>
-		<small>Copyright &#0169; 2015 Jay R. Gindin</small><br/>
-		<br/>
-		See <a href="https://bitbucket.org/jgindin/zmanim">Zehut Yosef</a> for full details, version change lists, and bug tracking.
-		]]>
-	</string>
+  <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
+  <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
+  <string name="about_description_text">
+    <![CDATA[
+    Mincha, Arvit, Birkat Ammazon, and Me\'en Shalosh in honor of Eli\'s Bar Mitzvah!<br/>
+    <small>Copyright &#0169; 2015 Jay R. Gindin</small><br/>
+    <br/>
+    See <a href="https://bitbucket.org/jgindin/zmanim">Zehut Yosef</a> for full details, version change lists, and bug tracking.
+    ]]>
+  </string>
 
 </resources>
