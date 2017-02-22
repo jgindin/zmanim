@@ -1,6 +1,7 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
@@ -316,7 +317,17 @@ public class ZmanimService
     long alertTime = now.getTimeInMillis() + zmanNotification.msUntilAction;
     AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
-    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+    SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+    boolean useAlarmClock = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ALARM_CLOCK.name(), false );
+
+    if ( useAlarmClock && ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) ) {
+      Intent openZmanim = new Intent( this, ZmanimActivity.class );
+
+      AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo( alertTime,
+        PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
+      alarmManager.setAlarmClock( alarmClockInfo, pendingIntent );
+    }
+    else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
       alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
     else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {

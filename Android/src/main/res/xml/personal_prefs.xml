@@ -54,6 +54,14 @@
       android:dependency="SHOW_NOTIFICATIONS"
     />
 
+    <android.support.v7.preference.CheckBoxPreference
+      android:key="USE_ALARM_CLOCK"
+      android:title="@string/use_alarm_clock_pref_title"
+      android:summary="@string/use_alarm_clock_pref_summary"
+      android:defaultValue="false"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
+
     <!-- The keys here are the names of the Zmanim.Type enum. -->
     <com.gindin.prefs.SeekBarPreference
       android:key="Alot"
