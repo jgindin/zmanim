@@ -136,7 +136,7 @@ public class DisplayNotificationService
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
-    String notificationText = getString( R.string.notification, zmanType, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
+    String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
     Notification notification = new NotificationCompat.Builder( this )
       .setContentTitle( getString( R.string.app_name ) )
