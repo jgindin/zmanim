@@ -1,6 +1,10 @@
 package com.gindin.zmanlib;
 
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +14,7 @@ import java.util.Calendar;
 /**
  * Allows access to info about a given zman.
  */
-public interface ZmanCallback {
+public abstract class ZmanCallback {
 
   /**
    * Used in conjunction with #findNextZman to allow control over which of the various zmanim for the given
@@ -21,31 +25,68 @@ public interface ZmanCallback {
    *  E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
    */
   @Nullable
-  String getPreferredZman( Zmanim.Type type );
+  public abstract String getPreferredZman( Zmanim.Type type );
 
 
   /**
    * @return For the given type, how far in advance (in minutes) does the user want to be notified? May be less than
    *  zero to indicate no notification.
    */
-  int howManyMinutesToAlertBefore(
+  public abstract int howManyMinutesToAlertBefore(
     Zmanim.Type type
   );
 
   /**
    * @return true if the user wants any notifications; false if they've been turned off.
    */
-  boolean shouldShowAnyNotifications();
+  public abstract boolean shouldShowAnyNotifications();
 
   /**
    * @return true if the user has indicated they want notifications even on Shabbat & Yom Tov.
    */
-  boolean shouldNotifyOnShabbat();
+  public abstract boolean shouldNotifyOnShabbat();
 
   /**
    * Check if a notification should actually be displayed right now.
    */
-  boolean shouldActuallyNotify( ZmanimLocation location );
+  @SuppressWarnings( "FeatureEnvy" )
+  public final boolean shouldActuallyNotify(
+    final ZmanimLocation  location,
+    final Calendar        now
+  ) {
+
+    if ( !shouldShowAnyNotifications() ) {
+      return false;
+    }
+
+    if ( shouldNotifyOnShabbat() ) {
+      return true;
+    }
+
+    now.setTimeZone( location.getTimeZone() );
+    HebrewDate today = HebrewCalendar.getForDate( now );;
+
+    Details todayDetails = today.getDetails();
+    HebrewDate tomorrow = today.tomorrow();
+    final Details tomorrowDetails = tomorrow.getDetails();
+
+    // If today is erev something, and it's after candle lighting, then don't notify...
+    if ( todayDetails.isErev() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
+      return false;
+    }
+
+    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isShabbat() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
+      return true;
+    }
+
+    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isYomTov() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
+      return true;
+    }
+
+    return ( !todayDetails.isShabbat() && !todayDetails.isYomTov() );
+  }
 
 
   /**
@@ -53,15 +94,15 @@ public interface ZmanCallback {
    *
    * @return true if notification has happened; false otherwise.
    */
-  boolean hasBeenNotified(
-    Calendar  now,
+  public abstract boolean hasBeenNotified(
+    Calendar    now,
     Zmanim.Type type
   );
 
   /**
    * Indicate the handling of the specified zman has been completed.
    */
-  void completed(
+  public abstract void completed(
     Calendar    now,
     Zmanim.Type type
   );
@@ -69,16 +110,14 @@ public interface ZmanCallback {
 
   /**
    * Schedule an alert for the specified zman.
-   *
-   * @param zmanNotification Which zman and how long from now (in milliseconds) until the alert
-   *  should be raised.
+   * @param zman Which zman is the alert being scheduled for?
    * @param location The current location (as determined when the zmanim were updated).
-   * @param now The current date & time, with the correct time zone (based on the location).
+   * @param alertAt The date & time (with the correct time zone, based on the location) for when the
    */
-  void scheduleAlert(
-    ZmanNotification  zmanNotification,
-    ZmanimLocation    location,
-    Calendar          now
+  public abstract void scheduleAlert(
+    Zman            zman,
+    ZmanimLocation  location,
+    Calendar        alertAt
   );
 
 
@@ -86,12 +125,12 @@ public interface ZmanCallback {
    * @return true if the user wants to see the zman times formatted with seconds. If false, an
    *  appropriate rounding algorithm will be used.
    */
-  boolean formatTimeWithSeconds();
+  public abstract boolean formatTimeWithSeconds();
 
 
 
-  class Adapter
-    implements ZmanCallback {
+  static class Adapter
+    extends ZmanCallback {
 
     @Nullable
     @Override
@@ -119,12 +158,6 @@ public interface ZmanCallback {
 
 
     @Override
-    public boolean shouldActuallyNotify( ZmanimLocation location ) {
-      return shouldShowAnyNotifications() && shouldNotifyOnShabbat();
-    }
-
-
-    @Override
     public boolean hasBeenNotified(
       Calendar    now,
       Zmanim.Type type
@@ -143,9 +176,9 @@ public interface ZmanCallback {
 
     @Override
     public void scheduleAlert(
-      ZmanNotification  zmanNotification,
-      ZmanimLocation    location,
-      Calendar          now
+      Zman            zman,
+      ZmanimLocation  location,
+      Calendar        alertAt
     ) {
     }
 

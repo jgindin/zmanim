@@ -94,7 +94,11 @@ public class ZmanNotificationScheduler {
     }
 
     for ( ZmanNotification zmanNotification : restOfTheDaysZmanim ) {
-      zmanCallback.scheduleAlert( zmanNotification, location, now );
+      Calendar alertAt = Calendar.getInstance();
+      alertAt.setTimeInMillis( now.getTimeInMillis() + zmanNotification.msUntilAction );
+      alertAt.setTimeZone( now.getTimeZone() );
+
+      zmanCallback.scheduleAlert( zmanNotification.zman, location,  alertAt );
     }
   }
 

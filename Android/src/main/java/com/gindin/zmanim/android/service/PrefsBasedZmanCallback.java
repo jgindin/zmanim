@@ -4,10 +4,6 @@ import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.NotifiedZmanim;
 import com.gindin.zmanlib.ZmanCallback;
-import com.gindin.zmanlib.calendar.HebrewCalendar;
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
@@ -21,7 +17,7 @@ import java.util.Calendar;
  * Zman callback that works from the shared preferences.
  */
 abstract class PrefsBasedZmanCallback
-  implements ZmanCallback {
+  extends ZmanCallback {
 
   private final SharedPreferences                           zmanimSelectionPrefs;
 
@@ -68,46 +64,6 @@ abstract class PrefsBasedZmanCallback
   @Override
   public boolean shouldNotifyOnShabbat() {
     return personalPrefs.getBoolean( PersonalPreferences.Prefs.ENABLE_NOTIFICATIONS_ON_SHABBAT.name(), false );
-  }
-
-
-  @SuppressWarnings( "FeatureEnvy" )
-  @Override
-  public boolean shouldActuallyNotify( ZmanimLocation location ) {
-
-    if ( !shouldShowAnyNotifications() ) {
-      return false;
-    }
-
-    if ( shouldNotifyOnShabbat() ) {
-      return true;
-    }
-
-    Calendar now = Calendar.getInstance();
-    now.setTimeZone( location.getTimeZone() );
-    HebrewDate today = HebrewCalendar.getForDate( now );;
-
-    Details todayDetails = today.getDetails();
-    HebrewDate tomorrow = today.tomorrow();
-    final Details tomorrowDetails = tomorrow.getDetails();
-
-    // If today is erev something, and it's after candle lighting, then don't notify...
-    if ( todayDetails.isErev() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
-      return false;
-    }
-
-    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
-    if ( todayDetails.isShabbat() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
-      return true;
-    }
-
-    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
-    if ( todayDetails.isYomTov() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
-      return true;
-    }
-
-    return ( !todayDetails.isShabbat() && !todayDetails.isYomTov() );
-
   }
 
 

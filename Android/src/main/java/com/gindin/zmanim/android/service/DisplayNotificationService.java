@@ -3,7 +3,6 @@ package com.gindin.zmanim.android.service;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanlib.ZmanCallback;
-import com.gindin.zmanlib.ZmanNotification;
 import com.gindin.zmanlib.location.ZmanLocationJSON;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
@@ -34,7 +33,7 @@ public class DisplayNotificationService
   private static final String                               EXTRA_ZMAN_LOCATION = "com.gindin.zmanim.android.service.extra.ZMAN_LOCATION";
   private static final String                               EXTRA_ZMAN_TIME = "com.gindin.zmanim.android.service.extra.ZMAN_TIME";
   private static final String                               EXTRA_ZMAN_TYPE = "com.gindin.zmanim.android.service.extra.ZMAN_TYPE";
-  private static final String                               EXTRA_ZMAN_NOW = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
+  private static final String                               EXTRA_ZMAN_ALERT_AT = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
 
 
   private ZmanCallback                                      zmanCallback;
@@ -50,7 +49,7 @@ public class DisplayNotificationService
     Context         context,
     Zman            nextZman,
     ZmanimLocation  location,
-    Calendar        now
+    Calendar        alertAt
   ) {
 
     Intent intent = new Intent( context, DisplayNotificationService.class );
@@ -61,7 +60,7 @@ public class DisplayNotificationService
     //  when we tried to pull it out, it was always null.
     intent.putExtra( EXTRA_ZMAN_TYPE, nextZman.type.name() );
     intent.putExtra( EXTRA_ZMAN_TIME, nextZman.getTime() );
-    intent.putExtra( EXTRA_ZMAN_NOW, now );
+    intent.putExtra( EXTRA_ZMAN_ALERT_AT, alertAt );
     intent.putExtra( EXTRA_ZMAN_LOCATION, ZmanLocationJSON.toJSON( location ) );
 
     return intent;
@@ -75,9 +74,9 @@ public class DisplayNotificationService
       if ( zmanCallback == null ) {
         zmanCallback = new PrefsBasedZmanCallback( this ) {
           @Override public void scheduleAlert(
-            ZmanNotification zmanNotification,
+            Zman zman,
             ZmanimLocation    location,
-            Calendar          now
+            Calendar          alertAt
           ) {
             // This implementation will NEVER schedule any alerts...;
           }
@@ -90,11 +89,11 @@ public class DisplayNotificationService
 
         Zmanim.Type type = Zmanim.Type.valueOf( intent.getStringExtra( EXTRA_ZMAN_TYPE ) );
         Calendar time = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_TIME );
-        Calendar now = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_NOW );
+        Calendar alertAt = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_ALERT_AT );
 
         try {
           ZmanimLocation location = ZmanLocationJSON.fromJSON( intent.getStringExtra( EXTRA_ZMAN_LOCATION ) );
-          handleNotificationAction( type, time, location, now );
+          handleNotificationAction( type, time, location, alertAt );
         }
         catch ( JSONException e ) {
           // Something happened and we can't translate it back...
@@ -113,14 +112,14 @@ public class DisplayNotificationService
     final Zmanim.Type     zmanType,
     final Calendar        zmanTime,
     final ZmanimLocation  location,
-    final Calendar        now
+    final Calendar        alertAt
   ) {
 
     // Ensure the user wants to see this notification!!!
-    boolean shouldNotify = zmanCallback.shouldActuallyNotify( location );
+    boolean shouldNotify = zmanCallback.shouldActuallyNotify( location, alertAt );
 
     // Mark this zman as having been notified. (even if we wind up not showing it...)
-    zmanCallback.completed( now, zmanType );
+    zmanCallback.completed( alertAt, zmanType );
 
     if ( !shouldNotify ) {
       return;

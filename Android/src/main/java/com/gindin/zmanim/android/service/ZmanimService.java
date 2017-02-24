@@ -12,6 +12,7 @@ import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.ZmanNotification;
 import com.gindin.zmanlib.ZmanNotificationScheduler;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Zman;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -136,11 +137,11 @@ public class ZmanimService
 
     ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
       @Override public void scheduleAlert(
-        ZmanNotification  zmanNotification,
+        Zman              zman,
         ZmanimLocation    location,
-        Calendar          now
+        Calendar          alertAt
       ) {
-        scheduleUserAlert( zmanNotification, location, now );
+        scheduleUserAlert( zman, location, alertAt );
       }
     };
     zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
@@ -291,9 +292,9 @@ public class ZmanimService
 
 
   private void scheduleUserAlert(
-    final ZmanNotification  zmanNotification,
-    ZmanimLocation          location,
-    final Calendar          now
+    final Zman              zman,
+    final ZmanimLocation    location,
+    final Calendar          alertAt
   ) {
 
     //noinspection MagicNumber
@@ -302,9 +303,9 @@ public class ZmanimService
       // This rather convoluted mechanism of identifying the pending intent is necessary so that we don't
       //  wind up replacing an intent just because we wind up scheduling a second alarm for the same
       //  zman type on a different day...
-      ( ( (byte)now.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zmanNotification.zman.type.ordinal() & 0xFF ) ),
+      ( ( (byte)alertAt.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zman.type.ordinal() & 0xFF ) ),
 
-      DisplayNotificationService.createIntentForService( this, zmanNotification.zman, location, now ),
+      DisplayNotificationService.createIntentForService( this, zman, location, alertAt ),
 
       // Why no flags here? http://stackoverflow.com/a/39926854/17941
        //    "Never use FLAG_CANCEL_CURRENT with PendingIntents that you use when setting alarms. If you want to
@@ -314,7 +315,7 @@ public class ZmanimService
       0
     );
 
-    long alertTime = now.getTimeInMillis() + zmanNotification.msUntilAction;
+    long alertTime = alertAt.getTimeInMillis();
     AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
     SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
