@@ -1,5 +1,6 @@
 package com.gindin.zmanim.android.service;
 
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanlib.ZmanCallback;
@@ -130,8 +131,18 @@ public class DisplayNotificationService
     // Make sure any previous notification is removed. It seems that this is normally not necessary,
     //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
     //  dismissed...
+    // Note that for now, on debug builds we're going to "stack up" the notifications. If this becomes
+    //  interesting, we could add a preference for this...
+    final int notificationID;
+    if ( BuildConfig.DEBUG ) {
+      notificationID = zmanType.ordinal();
+    }
+    else {
+      notificationID = 1;
+    }
+
     NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-    notificationManager.cancel( zmanType.ordinal() );
+    notificationManager.cancel( notificationID );
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
@@ -147,7 +158,7 @@ public class DisplayNotificationService
       .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) )
       .build();
 
-    notificationManager.notify( zmanType.ordinal(), notification );
+    notificationManager.notify( notificationID, notification );
   }
 
 }
