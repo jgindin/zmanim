@@ -14,23 +14,23 @@ public final class ZmanNotification {
   @NotNull
   public final Zman                                         zman;
 
-  public final long                                         msUntilAction;
+  public final long                                         msUntilZman;
 
 
   ZmanNotification(
     @NotNull Zman zman,
-    long          msUntilAction
+    long msUntilZman
   ) {
     this.zman = zman;
-    this.msUntilAction = msUntilAction;
+    this.msUntilZman = msUntilZman;
   }
 
 
 
   @Override
   public String toString() {
-    return "ZmanNotification{" + "zman=" + zman.type + ", msUntilAction=" + msUntilAction + " (" + new Date(
-      System.currentTimeMillis() + msUntilAction ) + ")" + '}';
+    return "ZmanNotification{" + "zman=" + zman.type + ", msUntilZman=" + msUntilZman + " (" + new Date(
+      System.currentTimeMillis() + msUntilZman ) + ")" + '}';
   }
 
 }

@@ -93,12 +93,20 @@ public class ZmanNotificationScheduler {
       return;
     }
 
+    final long timeInMillis = now.getTimeInMillis();
+
     for ( ZmanNotification zmanNotification : restOfTheDaysZmanim ) {
+      // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up overwriting the time
+      //  each iteration through the loop...
       Calendar alertAt = Calendar.getInstance();
-      alertAt.setTimeInMillis( now.getTimeInMillis() + zmanNotification.msUntilAction );
       alertAt.setTimeZone( now.getTimeZone() );
 
-      zmanCallback.scheduleAlert( zmanNotification.zman, location,  alertAt );
+      final long alertTime = computeAlertTime( zmanNotification );
+
+      if ( alertTime >= 0 ) {
+        alertAt.setTimeInMillis( timeInMillis + alertTime );
+        zmanCallback.scheduleAlert( zmanNotification.zman, location,  alertAt );
+      }
     }
   }
 
@@ -106,8 +114,8 @@ public class ZmanNotificationScheduler {
   /**
    * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
    *
-   * @return For each remaining zman, the ZmanNotification.msUntilAction represents the amount of
-   *  time (in ms) until the ALERT for the zman occurs.
+   * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of
+   *  time (in ms) until the zman occurs.
    */
   private List<ZmanNotification> findTheRestOfTheDaysZmanim(
     final ZmanimLocation    location,
@@ -139,19 +147,10 @@ public class ZmanNotificationScheduler {
       // Make sure the zman is before the current time and we haven't already notified...
       //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
       //  just missed it, we'll still add it as a candidate.
-      long timeDiff = ( zman.getTime().getTimeInMillis() + DEFAULT_ALERT_FUDGE_FACTOR ) - nowInMillis;
-      if ( ( timeDiff > 0 ) && !zmanCallback.hasBeenNotified( now, zman.type ) ) {
+      long msUntilZman = zman.getTime().getTimeInMillis() - nowInMillis;
+      if ( ( ( msUntilZman + DEFAULT_ALERT_FUDGE_FACTOR ) > 0 ) && !zmanCallback.hasBeenNotified( now, zman.type ) ) {
 
-        // Yes...if we haven't notified for this zman, then add it to the list. Even if we managed to miss the
-        //  time we wanted to alert, at least we can alert as soon as we know about it.
-        // We have to subtract off the fudge factor that was added above. In that case we want to be a bit
-        //  sloppy, but now we want the actual time until the zman.
-        timeDiff -= DEFAULT_ALERT_FUDGE_FACTOR;
-
-        final ZmanNotification zmanNotification = computeAlertTime( zman, timeDiff );
-        if ( zmanNotification != null ) {
-          candidates.add( zmanNotification );
-        }
+        candidates.add( new ZmanNotification( zman, msUntilZman ) );
       }
     }
 
@@ -162,30 +161,30 @@ public class ZmanNotificationScheduler {
   /**
    * Figure out the milliseconds until an alert for the specified zman should be raised.
    *
-   * @return null if no alert is configured for the zman.
+   * @return the number of milliseconds until the alert, or Long.MIN_VALUE if not alert should be
+   *  scheduled.
    */
-  private ZmanNotification computeAlertTime(
-    final Zman  zman,
-    final long  msUntilZman
+  private long computeAlertTime(
+    final ZmanNotification zmanNotification
   ) {
 
-    final int minutesToAlertBefore = zmanCallback.howManyMinutesToAlertBefore( zman.type );
+    final int minutesToAlertBefore = zmanCallback.howManyMinutesToAlertBefore( zmanNotification.zman.type );
     if ( minutesToAlertBefore >= 0 ) {
       final int msToAlertBefore = minutesToAlertBefore * MIN_TO_MS_CONVERSION;
 
       final long msToZmanNotification;
 
-      if ( msToAlertBefore > msUntilZman ) {
+      if ( msToAlertBefore > zmanNotification.msUntilZman ) {
         msToZmanNotification = 0;
       }
       else {
-        msToZmanNotification = msUntilZman - msToAlertBefore;
+        msToZmanNotification = zmanNotification.msUntilZman - msToAlertBefore;
       }
 
-      return new ZmanNotification( zman, msToZmanNotification );
+      return msToZmanNotification;
     }
 
-    return null;
+    return Long.MIN_VALUE;
   }
 
 
