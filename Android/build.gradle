@@ -117,10 +117,6 @@ dependencies {
 
   // Flurry
   compile 'com.flurry.android:analytics:6.7.0'
-  //  see https://github.com/jgindin/MaterialSeekBarPreference
-  //compile 'com.gindin:material-seekbar-preference:0.13'
-  // https://github.com/Gericop/Android-Support-Preference-V7-Fix
-  //compile 'com.takisoft.fix:preference-v7:24.1.1.1'
 
   testCompile 'junit:junit:4.12'
 }
