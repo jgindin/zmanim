@@ -68,23 +68,23 @@ public class BirkatAmmazon
     }
 
     if ( isRoshChodesh ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_rosh_hodesh.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_rosh_hodesh.txt" ) );
     }
 
     if ( dateDetails.isPesach() ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_pesach.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_pesach.txt" ) );
     }
     else if ( dateDetails.isShavuot() ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_shavuot.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_shavuot.txt" ) );
     }
     else if ( isSukkot ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_sukkot.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_sukkot.txt" ) );
     }
     else if ( dateDetails.isShminiAtzeret() || dateDetails.isSimchatTorah() ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_shmini_atzeret_simchat_torah.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_shmini_atzeret_simchat_torah.txt" ) );
     }
     else if ( dateDetails.isRoshHashana() ) {
-      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvao_rosh_ashana.txt" ) );
+      files.add( new TextChunk( "berachot/birkat_ammazon/8_yaaleh_vayvo_rosh_ashana.txt" ) );
     }
 
     files.add( new TextChunk( "berachot/birkat_ammazon/9_vtivneh_and_arachamans.txt" ) );
