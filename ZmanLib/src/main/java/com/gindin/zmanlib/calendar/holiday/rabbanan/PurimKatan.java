@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.minor;
+package com.gindin.zmanlib.calendar.holiday.rabbanan;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.HebrewMonth;
@@ -18,6 +18,7 @@ public class PurimKatan
 
   private static final String                               PURIM_KATAN = "Purim Katan";
 
+
   @Override
   public String getName() {
     return PURIM_KATAN;
@@ -28,15 +29,33 @@ public class PurimKatan
   public Details getDetailsFor( HebrewDate date ) {
 
     if ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) {
+
       if ( 13 == date.getHebrewDayOfMonth() ) {
         return new Details.Erev( date, PURIM_KATAN, false );
       }
       if ( 14 == date.getHebrewDayOfMonth() ) {
-        return new Details.Yom( date, PURIM_KATAN );
+        return new PurimKatanDetails( date );
       }
     }
 
     return null;
   }
 
-}  // End of PurimKatan class
+
+  private static class PurimKatanDetails
+    extends Details.Yom {
+
+    public PurimKatanDetails(
+      final HebrewDate date
+    ) {
+      super( date, PURIM_KATAN );
+    }
+
+
+    @Override
+    public boolean isPurimKatan() {
+      return true;
+    }
+  }
+
+}  // End of Purim class

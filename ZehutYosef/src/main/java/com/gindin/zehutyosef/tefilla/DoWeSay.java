@@ -121,7 +121,7 @@ class DoWeSay {
 
     Details today = date.getDetails();
     if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot()
-      || today.isChanukah() || today.isPurim() || today.isShushanPurim() ) {
+      || today.isChanukah() || today.isPurim() || today.isShushanPurim() || today.isPurimKatan() ) {
       return false;
     }
 
@@ -129,7 +129,7 @@ class DoWeSay {
       Details tomorrow = date.tomorrow().getDetails();
       if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
         tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
-        tomorrow.isPurim() || tomorrow.isShushanPurim() ) {
+        tomorrow.isPurim() || tomorrow.isShushanPurim() || tomorrow.isPurimKatan() ) {
         return false;
       }
     }

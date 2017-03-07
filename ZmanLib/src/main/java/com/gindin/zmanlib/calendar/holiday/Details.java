@@ -72,6 +72,8 @@ public abstract class Details {
 
   public boolean isShavuot() { return false; }
 
+  public boolean isPurimKatan() { return false; }
+
   public boolean isPurim() { return false; }
 
   public boolean isShushanPurim() { return false; }
@@ -630,6 +632,18 @@ public abstract class Details {
     public boolean isShavuot() {
       for ( Details composedDate : composedDates ) {
         if ( composedDate.isShavuot() ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+    @Override
+    public boolean isPurimKatan() {
+      for ( Details composedDate : composedDates ) {
+        if ( composedDate.isPurimKatan() ) {
           return true;
         }
       }

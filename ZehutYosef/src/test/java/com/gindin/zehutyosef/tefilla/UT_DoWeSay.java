@@ -131,6 +131,23 @@ public class UT_DoWeSay {
 
 
   @Test
+  public void feb_18_2019() {
+
+    // Erev Purim katan
+    DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2019, Calendar.FEBRUARY, 18 ), TefillaType.Mincha );
+    Assert.assertFalse( doWeSay.barechenu() );
+    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assert.assertFalse( doWeSay.chanukahAdditions() );
+    Assert.assertFalse( doWeSay.erevShabbatModifications() );
+    Assert.assertFalse( doWeSay.purimAdditions() );
+    Assert.assertFalse( doWeSay.moridHaTal() );
+    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assert.assertFalse( doWeSay.taanitDayInsertions() );
+    Assert.assertFalse( doWeSay.tachanun() );
+  }
+
+
+  @Test
   public void feb_19_2019() {
 
     // Purim Katan
