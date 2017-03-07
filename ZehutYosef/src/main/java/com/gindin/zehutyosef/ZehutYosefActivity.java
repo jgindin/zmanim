@@ -47,7 +47,7 @@ public class ZehutYosefActivity
   extends AppCompatActivity {
 
   /** The sections of tefillah, berachot, etc... the user can choose. */
-  private final List<Section>                          sections;
+  private final List<Section>                               sections;
 
   /** The date for which all tefillah, etc..., are to be shown. */
   @NonNull
@@ -60,7 +60,7 @@ public class ZehutYosefActivity
 
 
   /** Remember which section is currently active. */
-  private Section activeSection;
+  private Section                                           activeSection;
 
   private PrefsListener                                     prefsListener;
 
@@ -139,6 +139,7 @@ public class ZehutYosefActivity
         // NOTE: the typeface MUST be updated first, as that ensures that we have a font!
         updateTypeface( prefs );
         updateFontSize( prefs );
+        updateFullScreen( prefs );
       }
     };
 
@@ -363,6 +364,45 @@ public class ZehutYosefActivity
   }
 
 
+  private void updateFullScreen(
+    SharedPreferences sharedPreferences
+  ) {
+
+/*
+    TODO: This is supposed to work, but isn't...
+    TODO:   See https://developer.android.com/training/system-ui/immersive.html
+
+    final View decorView = getWindow().getDecorView();
+    final View toolBar = findViewById( R.id.toolbar );
+
+    boolean fullScreen = sharedPreferences.getBoolean( Settings.PreferenceKey.FullScreen.key, true );
+    if ( fullScreen ) {
+      decorView.setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | // hide nav bar
+        View.SYSTEM_UI_FLAG_FULLSCREEN | // hide status bar
+        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+      );
+
+      toolBar.setVisibility( View.GONE );
+    }
+    else {
+
+      decorView.setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+      );
+
+      toolBar.setVisibility( View.VISIBLE );
+    }
+*/
+
+  }
+
+
   private class PrefsListener
     implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -382,8 +422,12 @@ public class ZehutYosefActivity
       else if ( key.equals( Settings.PreferenceKey.KeepScreenOn.key ) ) {
         updateKeepScreenOn( sharedPreferences );
       }
+      else if ( key.equals( Settings.PreferenceKey.FullScreen.key ) ) {
+        updateFullScreen( sharedPreferences );
+      }
     }
   }
+
 
 
   @SuppressLint( "ValidFragment" )
