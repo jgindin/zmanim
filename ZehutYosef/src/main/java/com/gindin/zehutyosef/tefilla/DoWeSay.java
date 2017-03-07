@@ -120,8 +120,9 @@ class DoWeSay {
     // See pg. 43 of Zehut Yosef.
 
     Details today = date.getDetails();
-    if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot()
-      || today.isChanukah() || today.isPurim() || today.isShushanPurim() || today.isPurimKatan() ) {
+    if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot() ||
+         today.isChanukah() || today.isPurim() || today.isShushanPurim() || today.isPurimKatan() ||
+         today.isTuBAv() ) {
       return false;
     }
 
@@ -129,7 +130,7 @@ class DoWeSay {
       Details tomorrow = date.tomorrow().getDetails();
       if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
         tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
-        tomorrow.isPurim() || tomorrow.isShushanPurim() || tomorrow.isPurimKatan() ) {
+        tomorrow.isPurim() || tomorrow.isShushanPurim() || tomorrow.isPurimKatan() || tomorrow.isTuBAv() ) {
         return false;
       }
     }

@@ -90,6 +90,8 @@ public abstract class Details {
 
   public boolean isLagBOmer() { return false; }
 
+  public boolean isTuBAv() { return false; }
+
 
   /**
    * A complete description of today's observance. Could be something simple like,
@@ -740,6 +742,18 @@ public abstract class Details {
     public boolean isLagBOmer() {
       for ( Details composedDate : composedDates ) {
         if ( composedDate.isLagBOmer() ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+    @Override
+    public boolean isTuBAv() {
+      for ( Details composedDate : composedDates ) {
+        if ( composedDate.isTuBAv() ) {
           return true;
         }
       }

@@ -34,11 +34,29 @@ public class TuBAv
       }
 
       if ( 15 == hebrewDayOfMonth ) {
-        return new Details.Yom( date, TU_BAV );
+        return new TuBAvDetails( date );
       }
     }
 
     return null;
   }
+
+
+  private static class TuBAvDetails
+    extends Details.Yom {
+
+    public TuBAvDetails(
+      final HebrewDate date
+    ) {
+      super( date, TU_BAV );
+    }
+
+
+    @Override
+    public boolean isTuBAv() {
+      return true;
+    }
+  }
+
 
 }  // End of TuBAv class
