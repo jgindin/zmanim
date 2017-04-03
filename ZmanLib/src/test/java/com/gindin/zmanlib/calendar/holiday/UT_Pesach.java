@@ -8,7 +8,7 @@ import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.minor.LagBOmer;
-import com.gindin.zmanlib.calendar.holiday.minor.Omer;
+import com.gindin.zmanlib.calendar.holiday.other.Omer;
 import com.gindin.zmanlib.calendar.holiday.minor.PesachSheni;
 import com.gindin.zmanlib.calendar.holiday.yomtov.Pesach;
 import org.junit.*;

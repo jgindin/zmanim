@@ -42,7 +42,12 @@ public class TishaBAv
 
   @Override
   protected Details createYomDetails( HebrewDate date ) {
-    return new TaanitDetails( date, TISHA_B_AV );
+    return new TaanitDetails( date, TISHA_B_AV ) {
+      @Override
+      public boolean sayTachanun() {
+        return false;
+      }
+    };
   }
 
 

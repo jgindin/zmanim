@@ -117,62 +117,28 @@ class DoWeSay {
   @SuppressWarnings( "FeatureEnvy" )
   final boolean tachanun() {
 
+    // There are never tachanun at night. (Well, except on Yom Kippur...)
+    if ( tefillaType == TefillaType.Arvit ) {
+      return false;
+    }
+
     // See pg. 43 of Zehut Yosef.
 
     Details today = date.getDetails();
-    if ( today.isShabbat() || today.isRoshChodesh() || today.isPesach() || today.isShavuot() || today.isSukkot() ||
-         today.isChanukah() || today.isPurim() || today.isShushanPurim() || today.isPurimKatan() ||
-         today.isTuBAv() ) {
+    if ( !today.sayTachanun() ) {
       return false;
     }
 
     if ( tefillaType == TefillaType.Mincha ) {
-      Details tomorrow = date.tomorrow().getDetails();
-      if ( tomorrow.isShabbat() || tomorrow.isRoshChodesh() || tomorrow.isPesach() || tomorrow.isShavuot() ||
-        tomorrow.isSukkot() || tomorrow.isChanukah() || tomorrow.isRoshHashana() || tomorrow.isYomKippur() ||
-        tomorrow.isPurim() || tomorrow.isShushanPurim() || tomorrow.isPurimKatan() || tomorrow.isTuBAv() ) {
-        return false;
+      HebrewDate tomorrowDate = date.tomorrow();
+      Details tomorrow = tomorrowDate.getDetails();
+
+      // There are cases (e.g., Erev Rosh Hashana & Erev Yom Kippu) where we don't say tachanun,
+      //  but we still do say it the day before the erev...
+      if ( !tomorrow.sayTachanun() ) {
+        Details dayAfterTomorrow = tomorrowDate.tomorrow().getDetails();
+        return dayAfterTomorrow.isRoshHashana() || dayAfterTomorrow.isYomKippur();
       }
-    }
-
-
-    int hebrewMonth = date.getHebrewMonth();
-    if ( hebrewMonth == HebrewMonth.NISSAN ) {
-      return false;
-    }
-
-    if ( today.isYomHaAtzmaut() || today.isPesachSheni() || today.isLagBOmer() || today.isYomYerushalayim() ) {
-      return false;
-    }
-
-    int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-    if ( ( hebrewMonth == HebrewMonth.SIVAN ) && ( hebrewDayOfMonth <= 12 ) ) {
-      return false;
-    }
-
-    if ( ( hebrewMonth == HebrewMonth.AV ) && ( ( hebrewDayOfMonth == 9 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-      return false;
-    }
-
-    if ( ( hebrewMonth == HebrewMonth.ELUL ) && ( hebrewDayOfMonth == 29 ) ) {
-      return false;
-    }
-
-    if ( ( hebrewMonth == HebrewMonth.TISHREI ) && ( hebrewDayOfMonth >= 11 ) ) {
-      return false;
-    }
-
-    if ( today.isChanukah() ) {
-      return false;
-    }
-
-    if ( ( hebrewMonth == HebrewMonth.SHEVAT ) && ( hebrewDayOfMonth == 15 ) ) {
-      return false;
-    }
-
-    //noinspection RedundantIfStatement
-    if ( date.isHebrewLeapYear() && ( hebrewMonth == HebrewMonth.ADAR ) && ( ( hebrewDayOfMonth == 14 ) || ( hebrewDayOfMonth == 15 ) ) ) {
-      return false;
     }
 
     return true;

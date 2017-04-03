@@ -33,7 +33,12 @@ public class RoshHashana
     final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
 
     if ( ( HebrewMonth.ELUL == hebrewMonth ) && ( 29 == hebrewDayOfMonth ) ) {
-      return new Details.Erev( date, ROSH_HASHANA );
+      return new Details.Erev( date, ROSH_HASHANA ) {
+        @Override
+        public boolean sayTachanun() {
+          return false;
+        }
+      };
     }
     else if ( HebrewMonth.TISHREI == hebrewMonth ) {
       if ( 1 == hebrewDayOfMonth ) {

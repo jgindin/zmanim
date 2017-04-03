@@ -112,7 +112,12 @@ public class YomHaZikaron
 
 
   private Details createYomDetails( HebrewDate date ) {
-    return new Details.Yom( date, NAME );
+    return new Details.Yom( date, NAME ) {
+      @Override
+      public boolean sayTachanun() {
+        return false;
+      }
+    };
   }
 
 }  // End of YomHaZikaron class

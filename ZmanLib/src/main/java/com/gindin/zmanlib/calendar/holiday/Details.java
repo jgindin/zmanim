@@ -62,8 +62,6 @@ public abstract class Details {
     return false;
   }
 
-  public boolean isPesachSheni() { return false; }
-
   public boolean isSukkot() { return false; }
 
   public boolean isShminiAtzeret() { return false; }
@@ -72,11 +70,7 @@ public abstract class Details {
 
   public boolean isShavuot() { return false; }
 
-  public boolean isPurimKatan() { return false; }
-
   public boolean isPurim() { return false; }
-
-  public boolean isShushanPurim() { return false; }
 
   public boolean isChanukah() { return false; }
 
@@ -84,13 +78,45 @@ public abstract class Details {
 
   public boolean isYomKippur() { return  false; }
 
-  public boolean isYomHaAtzmaut() { return false; }
 
-  public boolean isYomYerushalayim() { return false; }
-
-  public boolean isLagBOmer() { return false; }
-
-  public boolean isTuBAv() { return false; }
+  /**
+   * Zehut Yosef has the following regarding when tachanun are not said:
+   *
+   *
+   * Every day, Tahanunim are recited during Shaharit and Minha, with the following exceptions:
+   * <ol>
+   *  <li>Shabbat
+   *  <li>Rosh Hodesh
+   *  <li>Moed (all the days of Pesah, Shavuot and Sukkot)
+   *  <li>The whole month of Nisan
+   *  <li>Yom Aatsmaut (5 Iyar)
+   *  <li>Pesah Sheni (14 Iyar)
+   *  <li>Lag LaOmer (18 Iyar)
+   *  <li>Yom Yerushalayim (28 Iyar)
+   *  <li>From 1-12 of Sivan
+   *  <li>9 Av
+   *  <li>15 Av
+   *  <li>Erev Rosh Ashanah
+   *  <li>From Erev Kippur until the end of Tishri
+   *  <li>Hanukkah
+   *  <li>15 Shevat
+   *  <li>14 and 15 of Adar Rishon
+   *  <li>Purim and the day after (Shushan Purim).
+   * </ol>
+   *
+   * On all the days shown above, Tahanunim are not recited on Minha of the prior day,
+   *  with the exception of Erev Rosh Ashanah and Erev Yom Kippur.
+   *<p/>
+   *
+   * Also, Tahanunim are not recited (during Shaharit only) when there is a Hatan (bridegroom)
+   *  in the synagogue or when there is a Berit Milah in the synagogue and the Avi Aben
+   *  (father of the baby), or the Mo’el, or the Sandak (godfather) are praying with the minyan;
+   *  or on the actual day of a Bar Mitsvah.
+   *<p/>
+   *
+   *  Tahanunim are not recited in a House of Mourning.
+   */
+  public boolean sayTachanun() { return !isShabbat(); }
 
 
   /**
@@ -313,6 +339,12 @@ public abstract class Details {
 
 
     @Override
+    public boolean sayTachanun() {
+      return false;
+    }
+
+
+    @Override
     public String getDescription() {
       return name;
     }
@@ -367,6 +399,12 @@ public abstract class Details {
     @Override
     public boolean isCholHaMoed() {
       return true;
+    }
+
+
+    @Override
+    public boolean sayTachanun() {
+      return false;
     }
   }
 
@@ -583,18 +621,6 @@ public abstract class Details {
 
 
     @Override
-    public boolean isPesachSheni() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isPesachSheni() ) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-
-    @Override
     public boolean isSukkot() {
       for ( Details composedDate : composedDates ) {
         if ( composedDate.isSukkot() ) {
@@ -643,33 +669,9 @@ public abstract class Details {
 
 
     @Override
-    public boolean isPurimKatan() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isPurimKatan() ) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-
-    @Override
     public boolean isPurim() {
       for ( Details composedDate : composedDates ) {
         if ( composedDate.isPurim() ) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-
-    @Override
-    public boolean isShushanPurim() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isShushanPurim() ) {
           return true;
         }
       }
@@ -715,50 +717,14 @@ public abstract class Details {
 
 
     @Override
-    public boolean isYomHaAtzmaut() {
+    public boolean sayTachanun() {
       for ( Details composedDate : composedDates ) {
-        if ( composedDate.isYomHaAtzmaut() ) {
-          return true;
+        if ( !composedDate.sayTachanun() ) {
+          return false;
         }
       }
 
-      return false;
-    }
-
-
-    @Override
-    public boolean isYomYerushalayim() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isYomYerushalayim() ) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-
-    @Override
-    public boolean isLagBOmer() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isLagBOmer() ) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-
-    @Override
-    public boolean isTuBAv() {
-      for ( Details composedDate : composedDates ) {
-        if ( composedDate.isTuBAv() ) {
-          return true;
-        }
-      }
-
-      return false;
+      return true;
     }
 
 

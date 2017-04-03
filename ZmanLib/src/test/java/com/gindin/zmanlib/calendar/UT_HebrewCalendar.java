@@ -84,6 +84,9 @@ public class UT_HebrewCalendar {
       "2010 /  9 / 12 | yom      | no      | no       | Tzom Gedaliah\n" +
       "2010 /  9 / 17 | erev     | yes     | no       | Erev Yom Kippur\n" +
       "2010 /  9 / 18 | yom      | no      | yes      | Shabbat / Yom Kippur\n" +
+      "2010 /  9 / 19 | yom      | no      | no       | \n" +
+      "2010 /  9 / 20 | yom      | no      | no       | \n" +
+      "2010 /  9 / 21 | yom      | no      | no       | \n" +
       "2010 /  9 / 22 | erev     | yes     | no       | Erev Sukkot\n" +
       "2010 /  9 / 23 | yom      | yes     | no       | Sukkot\n" +
       "2010 /  9 / 24 | erev     | yes     | no       | Sukkot\n" +
@@ -95,6 +98,10 @@ public class UT_HebrewCalendar {
       "2010 /  9 / 30 | yom      | yes     | no       | Shmini Atzeret\n" +
       "2010 / 10 /  1 | erev     | yes     | no       | Simchat Torah\n" +
       "2010 / 10 /  2 | yom      | no      | yes      | Shabbat\n" +
+      "2010 / 10 /  3 | yom      | no      | no       | \n" +
+      "2010 / 10 /  4 | yom      | no      | no       | \n" +
+      "2010 / 10 /  5 | yom      | no      | no       | \n" +
+      "2010 / 10 /  6 | yom      | no      | no       | \n" +
       "2010 / 10 /  7 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
       "2010 / 10 /  8 | erev     | yes     | no       | Rosh Chodesh Heshvan (1)\n" +
       "2010 / 10 /  9 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan (2)\n" +
@@ -151,7 +158,7 @@ public class UT_HebrewCalendar {
       "2011 /  2 / 12 | yom      | no      | yes      | Shabbat\n" +
       "2011 /  2 / 17 | erev     | no      | no       | Erev Purim Katan\n" +
       "2011 /  2 / 18 | erev     | yes     | no       | Purim Katan\n" +
-      "2011 /  2 / 19 | yom      | no      | yes      | Shabbat\n" +
+      "2011 /  2 / 19 | yom      | no      | yes      | Shabbat / Purim Katan\n" +
       "2011 /  2 / 25 | erev     | yes     | no       | \n" +
       "2011 /  2 / 26 | yom      | no      | yes      | Shabbat\n" +
       "2011 /  3 /  4 | erev     | yes     | no       | \n" +
@@ -172,8 +179,15 @@ public class UT_HebrewCalendar {
       "2011 /  4 /  2 | yom      | no      | yes      | Shabbat\n" +
       "2011 /  4 /  4 | erev     | no      | no       | Erev Rosh Chodesh Nissan\n" +
       "2011 /  4 /  5 | yom      | no      | no       | Rosh Chodesh Nissan\n" +
+      "2011 /  4 /  6 | yom      | no      | no       | \n" +
+      "2011 /  4 /  7 | yom      | no      | no       | \n" +
       "2011 /  4 /  8 | erev     | yes     | no       | \n" +
       "2011 /  4 /  9 | yom      | no      | yes      | Shabbat\n" +
+      "2011 /  4 / 10 | yom      | no      | no       | \n" +
+      "2011 /  4 / 11 | yom      | no      | no       | \n" +
+      "2011 /  4 / 12 | yom      | no      | no       | \n" +
+      "2011 /  4 / 13 | yom      | no      | no       | \n" +
+      "2011 /  4 / 14 | yom      | no      | no       | \n" +
       "2011 /  4 / 15 | erev     | yes     | no       | \n" +
       "2011 /  4 / 16 | yom      | no      | yes      | Shabbat\n" +
       "2011 /  4 / 17 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
@@ -232,6 +246,9 @@ public class UT_HebrewCalendar {
       "2011 /  6 /  9 | yom      | no      | yes      | Shavuot\n" +
       "2011 /  6 / 10 | erev     | yes     | no       | \n" +
       "2011 /  6 / 11 | yom      | no      | yes      | Shabbat\n" +
+      "2011 /  6 / 12 | yom      | no      | no       | \n" +
+      "2011 /  6 / 13 | yom      | no      | no       | \n" +
+      "2011 /  6 / 14 | yom      | no      | no       | \n" +
       "2011 /  6 / 17 | erev     | yes     | no       | \n" +
       "2011 /  6 / 18 | yom      | no      | yes      | Shabbat\n" +
       "2011 /  6 / 24 | erev     | yes     | no       | \n" +
@@ -292,6 +309,7 @@ public class UT_HebrewCalendar {
       "2012 /  9 / 22 | yom      | no      | yes      | Shabbat\n" +
       "2012 /  9 / 25 | erev     | yes     | no       | Erev Yom Kippur\n" +
       "2012 /  9 / 26 | yom      | no      | yes      | Yom Kippur\n" +
+      "2012 /  9 / 27 | yom      | no      | no       | \n" +
       "2012 /  9 / 28 | erev     | yes     | no       | \n" +
       "2012 /  9 / 29 | yom      | no      | yes      | Shabbat\n" +
       "2012 /  9 / 30 | erev     | yes     | no       | Erev Sukkot\n" +
@@ -304,8 +322,11 @@ public class UT_HebrewCalendar {
       "2012 / 10 /  7 | erev     | yes     | no       | Sukkot 7 (Hoshana Rabba)\n" +
       "2012 / 10 /  8 | yom      | yes     | no       | Shmini Atzeret\n" +
       "2012 / 10 /  9 | yom      | no      | yes      | Simchat Torah\n" +
+      "2012 / 10 / 10 | yom      | no      | no       | \n" +
+      "2012 / 10 / 11 | yom      | no      | no       | \n" +
       "2012 / 10 / 12 | erev     | yes     | no       | \n" +
       "2012 / 10 / 13 | yom      | no      | yes      | Shabbat\n" +
+      "2012 / 10 / 14 | yom      | no      | no       | \n" +
       "2012 / 10 / 15 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
       "2012 / 10 / 16 | yom      | no      | no       | Rosh Chodesh Heshvan (1)\n" +
       "2012 / 10 / 17 | yom      | no      | no       | Rosh Chodesh Heshvan (2)\n" +
@@ -368,8 +389,15 @@ public class UT_HebrewCalendar {
       "2013 /  3 /  9 | yom      | no      | yes      | Shabbat\n" +
       "2013 /  3 / 11 | erev     | no      | no       | Erev Rosh Chodesh Nissan\n" +
       "2013 /  3 / 12 | yom      | no      | no       | Rosh Chodesh Nissan\n" +
+      "2013 /  3 / 13 | yom      | no      | no       | \n" +
+      "2013 /  3 / 14 | yom      | no      | no       | \n" +
       "2013 /  3 / 15 | erev     | yes     | no       | \n" +
       "2013 /  3 / 16 | yom      | no      | yes      | Shabbat\n" +
+      "2013 /  3 / 17 | yom      | no      | no       | \n" +
+      "2013 /  3 / 18 | yom      | no      | no       | \n" +
+      "2013 /  3 / 19 | yom      | no      | no       | \n" +
+      "2013 /  3 / 20 | yom      | no      | no       | \n" +
+      "2013 /  3 / 21 | yom      | no      | no       | \n" +
       "2013 /  3 / 22 | erev     | yes     | no       | \n" +
       "2013 /  3 / 23 | yom      | no      | yes      | Shabbat\n" +
       "2013 /  3 / 24 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
@@ -428,6 +456,9 @@ public class UT_HebrewCalendar {
       "2013 /  5 / 16 | yom      | no      | yes      | Shavuot\n" +
       "2013 /  5 / 17 | erev     | yes     | no       | \n" +
       "2013 /  5 / 18 | yom      | no      | yes      | Shabbat\n" +
+      "2013 /  5 / 19 | yom      | no      | no       | \n" +
+      "2013 /  5 / 20 | yom      | no      | no       | \n" +
+      "2013 /  5 / 21 | yom      | no      | no       | \n" +
       "2013 /  5 / 24 | erev     | yes     | no       | \n" +
       "2013 /  5 / 25 | yom      | no      | yes      | Shabbat\n" +
       "2013 /  5 / 31 | erev     | yes     | no       | \n" +
@@ -486,6 +517,9 @@ public class UT_HebrewCalendar {
       "2013 /  9 /  8 | yom      | no      | no       | Tzom Gedaliah\n" +
       "2013 /  9 / 13 | erev     | yes     | no       | Erev Yom Kippur\n" +
       "2013 /  9 / 14 | yom      | no      | yes      | Shabbat / Yom Kippur\n" +
+      "2013 /  9 / 15 | yom      | no      | no       | \n" +
+      "2013 /  9 / 16 | yom      | no      | no       | \n" +
+      "2013 /  9 / 17 | yom      | no      | no       | \n" +
       "2013 /  9 / 18 | erev     | yes     | no       | Erev Sukkot\n" +
       "2013 /  9 / 19 | yom      | yes     | no       | Sukkot\n" +
       "2013 /  9 / 20 | erev     | yes     | no       | Sukkot\n" +
@@ -497,6 +531,10 @@ public class UT_HebrewCalendar {
       "2013 /  9 / 26 | yom      | yes     | no       | Shmini Atzeret\n" +
       "2013 /  9 / 27 | erev     | yes     | no       | Simchat Torah\n" +
       "2013 /  9 / 28 | yom      | no      | yes      | Shabbat\n" +
+      "2013 /  9 / 29 | yom      | no      | no       | \n" +
+      "2013 /  9 / 30 | yom      | no      | no       | \n" +
+      "2013 / 10 /  1 | yom      | no      | no       | \n" +
+      "2013 / 10 /  2 | yom      | no      | no       | \n" +
       "2013 / 10 /  3 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
       "2013 / 10 /  4 | erev     | yes     | no       | Rosh Chodesh Heshvan (1)\n" +
       "2013 / 10 /  5 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan (2)\n" +
@@ -557,7 +595,7 @@ public class UT_HebrewCalendar {
 
       // You might think, "Here's a bug! This should be **yom**" But notice it's Erev Shabbat...
       "2014 /  2 / 14 | erev     | yes     | no       | Purim Katan\n" +
-      "2014 /  2 / 15 | yom      | no      | yes      | Shabbat\n" +
+      "2014 /  2 / 15 | yom      | no      | yes      | Shabbat / Purim Katan\n" +
       "2014 /  2 / 21 | erev     | yes     | no       | \n" +
       "2014 /  2 / 22 | yom      | no      | yes      | Shabbat\n" +
       "2014 /  2 / 28 | erev     | yes     | no       | \n" +
@@ -578,8 +616,15 @@ public class UT_HebrewCalendar {
       "2014 /  3 / 29 | yom      | no      | yes      | Shabbat\n" +
       "2014 /  3 / 31 | erev     | no      | no       | Erev Rosh Chodesh Nissan\n" +
       "2014 /  4 /  1 | yom      | no      | no       | Rosh Chodesh Nissan\n" +
+      "2014 /  4 /  2 | yom      | no      | no       | \n" +
+      "2014 /  4 /  3 | yom      | no      | no       | \n" +
       "2014 /  4 /  4 | erev     | yes     | no       | \n" +
       "2014 /  4 /  5 | yom      | no      | yes      | Shabbat\n" +
+      "2014 /  4 /  6 | yom      | no      | no       | \n" +
+      "2014 /  4 /  7 | yom      | no      | no       | \n" +
+      "2014 /  4 /  8 | yom      | no      | no       | \n" +
+      "2014 /  4 /  9 | yom      | no      | no       | \n" +
+      "2014 /  4 / 10 | yom      | no      | no       | \n" +
       "2014 /  4 / 11 | erev     | yes     | no       | \n" +
       "2014 /  4 / 12 | yom      | no      | yes      | Shabbat\n" +
       "2014 /  4 / 13 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
@@ -638,6 +683,9 @@ public class UT_HebrewCalendar {
       "2014 /  6 /  5 | yom      | no      | yes      | Shavuot\n" +
       "2014 /  6 /  6 | erev     | yes     | no       | \n" +
       "2014 /  6 /  7 | yom      | no      | yes      | Shabbat\n" +
+      "2014 /  6 /  8 | yom      | no      | no       | \n" +
+      "2014 /  6 /  9 | yom      | no      | no       | \n" +
+      "2014 /  6 / 10 | yom      | no      | no       | \n" +
       "2014 /  6 / 13 | erev     | yes     | no       | \n" +
       "2014 /  6 / 14 | yom      | no      | yes      | Shabbat\n" +
       "2014 /  6 / 20 | erev     | yes     | no       | \n" +
@@ -696,6 +744,9 @@ public class UT_HebrewCalendar {
       "2014 /  9 / 28 | yom      | no      | no       | Tzom Gedaliah\n" +
       "2014 / 10 /  3 | erev     | yes     | no       | Erev Yom Kippur\n" +
       "2014 / 10 /  4 | yom      | no      | yes      | Shabbat / Yom Kippur\n" +
+      "2014 / 10 /  5 | yom      | no      | no       | \n" +
+      "2014 / 10 /  6 | yom      | no      | no       | \n" +
+      "2014 / 10 /  7 | yom      | no      | no       | \n" +
       "2014 / 10 /  8 | erev     | yes     | no       | Erev Sukkot\n" +
       "2014 / 10 /  9 | yom      | yes     | no       | Sukkot\n" +
       "2014 / 10 / 10 | erev     | yes     | no       | Sukkot\n" +
@@ -707,6 +758,10 @@ public class UT_HebrewCalendar {
       "2014 / 10 / 16 | yom      | yes     | no       | Shmini Atzeret\n" +
       "2014 / 10 / 17 | erev     | yes     | no       | Simchat Torah\n" +
       "2014 / 10 / 18 | yom      | no      | yes      | Shabbat\n" +
+      "2014 / 10 / 19 | yom      | no      | no       | \n" +
+      "2014 / 10 / 20 | yom      | no      | no       | \n" +
+      "2014 / 10 / 21 | yom      | no      | no       | \n" +
+      "2014 / 10 / 22 | yom      | no      | no       | \n" +
       "2014 / 10 / 23 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
       "2014 / 10 / 24 | erev     | yes     | no       | Rosh Chodesh Heshvan (1)\n" +
       "2014 / 10 / 25 | yom      | no      | yes      | Shabbat / Rosh Chodesh Heshvan (2)\n" +
@@ -771,8 +826,17 @@ public class UT_HebrewCalendar {
       "2015 /  3 / 14 | yom      | no      | yes      | Shabbat\n" +
       "2015 /  3 / 20 | erev     | yes     | no       | Erev Rosh Chodesh Nissan\n" +
       "2015 /  3 / 21 | yom      | no      | yes      | Shabbat / Rosh Chodesh Nissan\n" +
+      "2015 /  3 / 22 | yom      | no      | no       | \n" +
+      "2015 /  3 / 23 | yom      | no      | no       | \n" +
+      "2015 /  3 / 24 | yom      | no      | no       | \n" +
+      "2015 /  3 / 25 | yom      | no      | no       | \n" +
+      "2015 /  3 / 26 | yom      | no      | no       | \n" +
       "2015 /  3 / 27 | erev     | yes     | no       | \n" +
       "2015 /  3 / 28 | yom      | no      | yes      | Shabbat\n" +
+      "2015 /  3 / 29 | yom      | no      | no       | \n" +
+      "2015 /  3 / 30 | yom      | no      | no       | \n" +
+      "2015 /  3 / 31 | yom      | no      | no       | \n" +
+      "2015 /  4 /  1 | yom      | no      | no       | \n" +
       "2015 /  4 /  2 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
       "2015 /  4 /  3 | erev     | yes     | no       | Ta'anit Bechorot / Erev Pesach\n" +
       "2015 /  4 /  4 | yom      | no      | no       | Shabbat / Pesach\n" +
@@ -827,6 +891,9 @@ public class UT_HebrewCalendar {
       "2015 /  5 / 23 | erev     | no      | no       | Shabbat / Erev Shavuot / Omer 49\n" +
       "2015 /  5 / 24 | yom      | yes     | no       | Shavuot\n" +
       "2015 /  5 / 25 | yom      | no      | yes      | Shavuot\n" +
+      "2015 /  5 / 26 | yom      | no      | no       | \n" +
+      "2015 /  5 / 27 | yom      | no      | no       | \n" +
+      "2015 /  5 / 28 | yom      | no      | no       | \n" +
       "2015 /  5 / 29 | erev     | yes     | no       | \n" +
       "2015 /  5 / 30 | yom      | no      | yes      | Shabbat\n" +
       "2015 /  6 /  5 | erev     | yes     | no       | \n" +
@@ -885,6 +952,7 @@ public class UT_HebrewCalendar {
       "2015 /  9 / 19 | yom      | no      | yes      | Shabbat\n" +
       "2015 /  9 / 22 | erev     | yes     | no       | Erev Yom Kippur\n" +
       "2015 /  9 / 23 | yom      | no      | yes      | Yom Kippur\n" +
+      "2015 /  9 / 24 | yom      | no      | no       | \n" +
       "2015 /  9 / 25 | erev     | yes     | no       | \n" +
       "2015 /  9 / 26 | yom      | no      | yes      | Shabbat\n" +
       "2015 /  9 / 27 | erev     | yes     | no       | Erev Sukkot\n" +
@@ -897,8 +965,11 @@ public class UT_HebrewCalendar {
       "2015 / 10 /  4 | erev     | yes     | no       | Sukkot 7 (Hoshana Rabba)\n" +
       "2015 / 10 /  5 | yom      | yes     | no       | Shmini Atzeret\n" +
       "2015 / 10 /  6 | yom      | no      | yes      | Simchat Torah\n" +
+      "2015 / 10 /  7 | yom      | no      | no       | \n" +
+      "2015 / 10 /  8 | yom      | no      | no       | \n" +
       "2015 / 10 /  9 | erev     | yes     | no       | \n" +
       "2015 / 10 / 10 | yom      | no      | yes      | Shabbat\n" +
+      "2015 / 10 / 11 | yom      | no      | no       | \n" +
       "2015 / 10 / 12 | erev     | no      | no       | Erev Rosh Chodesh Heshvan\n" +
       "2015 / 10 / 13 | yom      | no      | no       | Rosh Chodesh Heshvan (1)\n" +
       "2015 / 10 / 14 | yom      | no      | no       | Rosh Chodesh Heshvan (2)\n" +
@@ -960,6 +1031,7 @@ public class UT_HebrewCalendar {
       "2016 /  2 / 20 | yom      | no      | yes      | Shabbat\n" +
       "2016 /  2 / 22 | erev     | no      | no       | Erev Purim Katan\n" +
       "2016 /  2 / 23 | yom      | no      | no       | Purim Katan\n" +
+      "2016 /  2 / 24 | yom      | no      | no       | Purim Katan\n" +
       "2016 /  2 / 26 | erev     | yes     | no       | \n" +
       "2016 /  2 / 27 | yom      | no      | yes      | Shabbat\n" +
       "2016 /  3 /  4 | erev     | yes     | no       | \n" +
@@ -979,8 +1051,17 @@ public class UT_HebrewCalendar {
       "2016 /  4 /  2 | yom      | no      | yes      | Shabbat\n" +
       "2016 /  4 /  8 | erev     | yes     | no       | Erev Rosh Chodesh Nissan\n" +
       "2016 /  4 /  9 | yom      | no      | yes      | Shabbat / Rosh Chodesh Nissan\n" +
+      "2016 /  4 / 10 | yom      | no      | no       | \n" +
+      "2016 /  4 / 11 | yom      | no      | no       | \n" +
+      "2016 /  4 / 12 | yom      | no      | no       | \n" +
+      "2016 /  4 / 13 | yom      | no      | no       | \n" +
+      "2016 /  4 / 14 | yom      | no      | no       | \n" +
       "2016 /  4 / 15 | erev     | yes     | no       | \n" +
       "2016 /  4 / 16 | yom      | no      | yes      | Shabbat\n" +
+      "2016 /  4 / 17 | yom      | no      | no       | \n" +
+      "2016 /  4 / 18 | yom      | no      | no       | \n" +
+      "2016 /  4 / 19 | yom      | no      | no       | \n" +
+      "2016 /  4 / 20 | yom      | no      | no       | \n" +
       "2016 /  4 / 21 | erev     | no      | no       | Erev Ta'anit Bechorot\n" +
       "2016 /  4 / 22 | erev     | yes     | no       | Ta'anit Bechorot / Erev Pesach\n" +
       "2016 /  4 / 23 | yom      | no      | no       | Shabbat / Pesach\n" +
@@ -1035,6 +1116,9 @@ public class UT_HebrewCalendar {
       "2016 /  6 / 11 | erev     | no      | no       | Shabbat / Erev Shavuot / Omer 49\n" +
       "2016 /  6 / 12 | yom      | yes     | no       | Shavuot\n" +
       "2016 /  6 / 13 | yom      | no      | yes      | Shavuot\n" +
+      "2016 /  6 / 14 | yom      | no      | no       | \n" +
+      "2016 /  6 / 15 | yom      | no      | no       | \n" +
+      "2016 /  6 / 16 | yom      | no      | no       | \n" +
       "2016 /  6 / 17 | erev     | yes     | no       | \n" +
       "2016 /  6 / 18 | yom      | no      | yes      | Shabbat\n" +
       "2016 /  6 / 24 | erev     | yes     | no       | \n" +

@@ -118,8 +118,8 @@ public class YomHaAtzmaut
   private Details createYomDetails( HebrewDate date ) {
     return new Details.Yom( date, NAME ) {
       @Override
-      public boolean isYomHaAtzmaut() {
-        return true;
+      public boolean sayTachanun() {
+        return false;
       }
     };
   }

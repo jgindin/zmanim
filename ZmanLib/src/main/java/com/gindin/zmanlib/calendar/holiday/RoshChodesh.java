@@ -200,6 +200,12 @@ public class RoshChodesh
     public boolean isRoshChodesh() {
       return true;
     }
+
+
+    @Override
+    public boolean sayTachanun() {
+      return false;
+    }
   }
 
 }  // End of RoshChodesh class

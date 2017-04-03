@@ -30,10 +30,11 @@ public class PurimKatan
 
     if ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) {
 
-      if ( 13 == date.getHebrewDayOfMonth() ) {
+      final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+      if ( 13 == hebrewDayOfMonth ) {
         return new Details.Erev( date, PURIM_KATAN, false );
       }
-      if ( 14 == date.getHebrewDayOfMonth() ) {
+      if ( ( 14 == hebrewDayOfMonth ) || ( 15 == hebrewDayOfMonth ) ) {
         return new PurimKatanDetails( date );
       }
     }
@@ -53,8 +54,8 @@ public class PurimKatan
 
 
     @Override
-    public boolean isPurimKatan() {
-      return true;
+    public boolean sayTachanun() {
+      return false;
     }
   }
 

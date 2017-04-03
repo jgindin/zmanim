@@ -30,7 +30,12 @@ public class YomKippur
 
     if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
       if ( 9 == date.getHebrewDayOfMonth() ) {
-        return new Details.Erev( date, NAME );
+        return new Details.Erev( date, NAME ) {
+          @Override
+          public boolean sayTachanun() {
+            return false;
+          }
+        };
       }
 
       if ( 10 == date.getHebrewDayOfMonth() ) {
@@ -77,6 +82,12 @@ public class YomKippur
     @Override
     public boolean sayHavdalah() {
       return true;
+    }
+
+
+    @Override
+    public boolean sayTachanun() {
+      return false;
     }
 
 

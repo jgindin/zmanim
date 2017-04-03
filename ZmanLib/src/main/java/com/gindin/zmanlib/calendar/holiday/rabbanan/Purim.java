@@ -58,6 +58,12 @@ public class Purim
     public boolean isPurim() {
       return true;
     }
+
+
+    @Override
+    public boolean sayTachanun() {
+      return false;
+    }
   }
 
 }  // End of Purim class

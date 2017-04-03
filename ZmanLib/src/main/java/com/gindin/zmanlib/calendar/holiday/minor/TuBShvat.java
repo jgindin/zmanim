@@ -34,11 +34,17 @@ public class TuBShvat
       }
 
       if ( 15 == hebrewDayOfMonth ) {
-        return new Details.Yom( date, TU_B_SHVAT );
+        return new Details.Yom( date, TU_B_SHVAT ) {
+          @Override
+          public boolean sayTachanun() {
+            return false;
+          }
+        };
       }
     }
 
     return null;
   }
+
 
 }  // End of TuBAv class

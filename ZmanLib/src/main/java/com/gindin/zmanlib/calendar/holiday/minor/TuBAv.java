@@ -53,9 +53,10 @@ public class TuBAv
 
 
     @Override
-    public boolean isTuBAv() {
-      return true;
+    public boolean sayTachanun() {
+      return false;
     }
+
   }
 
 

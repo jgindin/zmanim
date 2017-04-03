@@ -58,7 +58,7 @@ public class Sukkot
           return new ShminiAtzeretDetails( date );
 
         case 23:
-          return new Details.YomTovDetails( date, SIMCHAT_TORAH, false );
+          return new SimchatTorahDetails( date );
       }
     }
 

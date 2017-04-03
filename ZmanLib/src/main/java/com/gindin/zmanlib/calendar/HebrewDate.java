@@ -163,13 +163,10 @@ public class HebrewDate
       }
     }
 
-    Details omerDetails = Holidays.OMER.getDetailsFor( this );
-    if ( null != omerDetails ) {
-      if ( null == dateDetails ) {
-        dateDetails = omerDetails;
-      }
-      else {
-        dateDetails = dateDetails.composeWith( omerDetails );
+    for ( Observance observance : Holidays.OTHER ) {
+      holidayDetails = observance.getDetailsFor( this );
+      if ( null != holidayDetails ) {
+        dateDetails = dateDetails.composeWith( holidayDetails );
       }
     }
 

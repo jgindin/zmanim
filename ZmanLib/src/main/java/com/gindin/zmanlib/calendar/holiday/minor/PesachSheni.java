@@ -38,8 +38,8 @@ public class PesachSheni
       if ( 14 == hebrewDayOfMonth ) {
         return new Details.Yom( date, PESACH_SHENI ) {
           @Override
-          public boolean isPesachSheni() {
-            return true;
+          public boolean sayTachanun() {
+            return false;
           }
         };
       }

@@ -45,8 +45,8 @@ public class YomYerushalayim
     if ( 28 == date.getHebrewDayOfMonth() ) {
       return new Details.Yom( date, NAME ) {
         @Override
-        public boolean isYomYerushalayim() {
-          return true;
+        public boolean sayTachanun() {
+          return false;
         }
       };
     }

@@ -68,6 +68,12 @@ public class Chanukah
     public boolean isChanukah() {
       return true;
     }
+
+
+    @Override
+    public boolean sayTachanun() {
+      return false;
+    }
   }
 
 

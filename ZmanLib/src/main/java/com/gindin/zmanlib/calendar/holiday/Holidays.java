@@ -4,9 +4,22 @@
 
 package com.gindin.zmanlib.calendar.holiday;
 
-import com.gindin.zmanlib.calendar.holiday.minor.*;
-import com.gindin.zmanlib.calendar.holiday.modern.*;
-import com.gindin.zmanlib.calendar.holiday.rabbanan.*;
+import com.gindin.zmanlib.calendar.holiday.minor.LagBOmer;
+import com.gindin.zmanlib.calendar.holiday.minor.PesachSheni;
+import com.gindin.zmanlib.calendar.holiday.minor.TuBAv;
+import com.gindin.zmanlib.calendar.holiday.minor.TuBShvat;
+import com.gindin.zmanlib.calendar.holiday.modern.YomHaAtzmaut;
+import com.gindin.zmanlib.calendar.holiday.modern.YomHaShoah;
+import com.gindin.zmanlib.calendar.holiday.modern.YomHaZikaron;
+import com.gindin.zmanlib.calendar.holiday.modern.YomYerushalayim;
+import com.gindin.zmanlib.calendar.holiday.other.Nissan;
+import com.gindin.zmanlib.calendar.holiday.other.Omer;
+import com.gindin.zmanlib.calendar.holiday.other.Sivan;
+import com.gindin.zmanlib.calendar.holiday.other.Tishri;
+import com.gindin.zmanlib.calendar.holiday.rabbanan.Chanukah;
+import com.gindin.zmanlib.calendar.holiday.rabbanan.Purim;
+import com.gindin.zmanlib.calendar.holiday.rabbanan.PurimKatan;
+import com.gindin.zmanlib.calendar.holiday.rabbanan.ShushanPurim;
 import com.gindin.zmanlib.calendar.holiday.taaniyot.*;
 import com.gindin.zmanlib.calendar.holiday.yomtov.*;
 
@@ -54,11 +67,20 @@ public class Holidays {
   private static final YomHaZikaron                         YOM_HA_ZIKARON = new YomHaZikaron();
   private static final YomYerushalayim                      YOM_YERUSHALAYIM = new YomYerushalayim();
 
-  // Handles all of the Rosh Chodeshim
+  /** Handles all of the Rosh Chodeshim. */
   public static final RoshChodesh                           ROSH_CHODESH = new RoshChodesh();
 
-  // Handles all of the Omer
-  public static final Omer                                  OMER = new Omer();
+  /** Handles all of the Omer. */
+  private static final Omer                                 OMER = new Omer();
+
+  /** Handles that we don't say tachanun the first 12 days of Sivan. */
+  private static final Sivan                                SIVAN = new Sivan();
+
+  /** Handles that we don't say tachanun for all of Nissan. */
+  private static final Nissan                               NISSAN = new Nissan();
+
+  /** Handles that we don't say tachanun from Erev Kippur until the end of the month. */
+  private static final Tishri                               TISHRI = new Tishri();
 
 
   /**
@@ -77,7 +99,7 @@ public class Holidays {
   );
 
 
-  public static final List<Taanit>                      FAST_DAYS = Arrays.asList(
+  public static final List<Taanit>                          FAST_DAYS = Arrays.asList(
     TZOM_GEDALIAH,      ASARA_B_TEVET,      TAANIT_ESTHER,
     TAANIT_BECHOROT,    TAANIT_17_TAMUZ,    TISHA_B_AV
   );
@@ -88,6 +110,11 @@ public class Holidays {
     YOM_YERUSHALAYIM
   );
 
+
+  public static final List<Observance>                      OTHER = Arrays.asList(
+    OMER,               SIVAN,              NISSAN,
+    TISHRI
+  );
 
   /** Not instantiatable. */
   private Holidays() {

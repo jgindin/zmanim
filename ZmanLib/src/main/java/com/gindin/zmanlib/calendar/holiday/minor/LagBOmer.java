@@ -37,8 +37,8 @@ public class LagBOmer
       else if ( 18 == hebrewDayOfMonth ) {
         return new Details.Yom( date, NAME ) {
           @Override
-          public boolean isLagBOmer() {
-            return true;
+          public boolean sayTachanun() {
+            return false;
           }
         };
       }
