@@ -27,4 +27,7 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="JDK 1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="TaskProjectConfiguration">
+    <server type="YouTrack" url="https://zmanim.myjetbrains.com/youtrack" />
+  </component>
 </project>
