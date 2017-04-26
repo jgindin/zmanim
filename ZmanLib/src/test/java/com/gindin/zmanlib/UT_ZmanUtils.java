@@ -7,8 +7,8 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zmanim;
+
 import org.jetbrains.annotations.Nullable;
-import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -16,10 +16,7 @@ import java.util.TimeZone;
 /**
  * Tests for the ZmanNotificationScheduler functionality.
  */
-@SuppressWarnings( "MagicNumber" )
-public class UT_ZmanUtils {
-
-  static final int                                          thirtyMinutesInterval = ( 30 * 60 * 1000 );
+class UT_ZmanUtils {
 
   static final ZmanimLocation                               seattle;
 
@@ -49,25 +46,6 @@ public class UT_ZmanUtils {
       .locationName( "Yeshiva University" )
       .inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
       .build();
-  }
-
-
-
-  @Test
-  public void testFindNextZmanFromEndOfDay() {
-
-    // Make sure that when we're at the end of a day we'll find the next zman, even if its on the next day...
-    Calendar findAfter = Calendar.getInstance();
-    findAfter.setTimeZone( seattle.getTimeZone() );
-    findAfter.set( 2015, Calendar.DECEMBER, 21, 23, 54 );
-
-/*
-    final ZmanNotification zmanNotification = ZmanNotificationScheduler.determineNextNotification( seattle, findAfter,
-      new NotifiedZmanim( findAfter ), thirtyMinutesInterval, new AlwaysFifteenMinuteAlertsZmanCallback() );
-    Assert.assertNotNull( zmanNotification );
-    Assert.assertNotNull( zmanNotification.zmanToNotify );
-    Assert.assertEquals( Zmanim.Type.NightChatzot, zmanNotification.zmanToNotify.type );
-*/
   }
 
 

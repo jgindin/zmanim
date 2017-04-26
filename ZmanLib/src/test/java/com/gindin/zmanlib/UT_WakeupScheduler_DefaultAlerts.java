@@ -218,6 +218,43 @@ public class UT_WakeupScheduler_DefaultAlerts
   }
 
 
+  @Test
+  public void pesach2017() {
+
+    Calendar testTime = UT_ZmanUtils.configureTestTime( 2017, Calendar.APRIL, 10, 6, 34 );
+    runDays( testTime, 10, new PesachAlertsZmanCallback(),
+      "Zman                | Time           | Action Time                   | Actually Alert?   | \n" +
+        "--------------------|----------------|-------------------------------|-------------------|\n" +
+        "SofZmanAchilatChametz| 10:57:18 AM    | Mon Apr 10 09:57:18 PDT 2017  | true              |\n" +
+        "SofZmanBiurChametz  | 12:04:04 PM    | Mon Apr 10 11:04:04 PDT 2017  | true              |\n" +
+        "CandleLighting      | 7:33:27 PM     | Mon Apr 10 19:18:27 PDT 2017  | true              |\n" +
+        "FastEnd             | 8:21:27 PM     | Mon Apr 10 20:16:27 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:09:52 AM     | Tue Apr 11 00:54:52 PDT 2017  | true              |\n" +
+        "Alot                | 4:49:41 AM     | Tue Apr 11 04:34:41 PDT 2017  | true              |\n" +
+        "CandleLighting      | 7:34:51 PM     | Tue Apr 11 19:19:51 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:09:36 AM     | Wed Apr 12 00:54:36 PDT 2017  | true              |\n" +
+        "Alot                | 4:47:18 AM     | Wed Apr 12 04:32:18 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:09:21 AM     | Thu Apr 13 00:54:21 PDT 2017  | true              |\n" +
+        "Alot                | 4:44:55 AM     | Thu Apr 13 04:29:55 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:09:06 AM     | Fri Apr 14 00:54:06 PDT 2017  | true              |\n" +
+        "Alot                | 4:42:32 AM     | Fri Apr 14 04:27:32 PDT 2017  | true              |\n" +
+        "CandleLighting      | 7:39:05 PM     | Fri Apr 14 19:24:05 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:08:51 AM     | Sat Apr 15 00:53:51 PDT 2017  | true              |\n" +
+        "Alot                | 4:40:08 AM     | Sat Apr 15 04:25:08 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:08:36 AM     | Sun Apr 16 00:53:36 PDT 2017  | true              |\n" +
+        "Alot                | 4:37:45 AM     | Sun Apr 16 04:22:45 PDT 2017  | true              |\n" +
+        "CandleLighting      | 7:41:54 PM     | Sun Apr 16 19:26:54 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:08:22 AM     | Mon Apr 17 00:53:22 PDT 2017  | true              |\n" +
+        "Alot                | 4:35:21 AM     | Mon Apr 17 04:20:21 PDT 2017  | true              |\n" +
+        "CandleLighting      | 7:43:18 PM     | Mon Apr 17 19:28:18 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:08:09 AM     | Tue Apr 18 00:53:09 PDT 2017  | true              |\n" +
+        "Alot                | 4:32:57 AM     | Tue Apr 18 04:17:57 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:07:55 AM     | Wed Apr 19 00:52:55 PDT 2017  | true              |\n" +
+        "Alot                | 4:30:33 AM     | Wed Apr 19 04:15:33 PDT 2017  | true              |\n" +
+        "NightChatzot        | 1:07:43 AM     | Thu Apr 20 00:52:43 PDT 2017  | true              |\n"
+    );
+  }
+
 
   public static class DefaultAlertsZmanCallback
     extends UT_ZmanUtils.ZmanCallbackForTests {
@@ -230,5 +267,59 @@ public class UT_WakeupScheduler_DefaultAlerts
       return notificationDefaults.getDefaultZmanAlertTime( type );
     }
   }
+
+
+  private static class PesachAlertsZmanCallback
+    extends UT_ZmanUtils.ZmanCallbackForTests {
+
+    @Override
+    public int howManyMinutesToAlertBefore( final Zmanim.Type type ) {
+
+      switch ( type ) {
+        case Alot:
+          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+        case Talit:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case Hanetz:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case SofZmanShema:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case SofZmanTefila:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case SofZmanAchilatChametz:
+          return ZmanNotificationScheduler.ONE_HOUR;
+        case SofZmanBiurChametz:
+          return ZmanNotificationScheduler.ONE_HOUR;
+        case Chatzot:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case MinchaGedola:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case MinchaKetana:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case PlagHaMincha:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case CandleLighting:
+          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+        case Shkia:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case BeinHashmashot:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case LatestMincha:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case FastEnd:
+          return UT_ZmanUtils.FIVE_MINUTES;
+        case TzaitHacochavim:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case ShabbatEnd:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case NightChatzot:
+          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+      }
+
+      assert false;
+      return ZmanNotificationScheduler.NO_ALERT;
+    }
+  }
+
 
 } // End of UT_WakeupScheduler_MultiDay class

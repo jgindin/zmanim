@@ -201,47 +201,9 @@ public class HebrewDate
     Details details = getDetails();
     zmanimList = new ArrayList<Zmanim>();
 
-    // Get all the possible zmanim, then weed out the ones that don't apply for today.
-    zmanimList.add( getZmanim( location, Zmanim.Type.Alot ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.Talit ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.Hanetz ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanShema ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanTefila ) );
-
-    if ( details.isErev() && details.isPesach() ) {
-      zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanAchilatChametz ) );
-
-      // When erev Pesach falls out on Shabbat, then we cannot do Biur. Technically, the time still exists, but
-      //  it's not quite the same...
-      if ( !details.isShabbat() ) {
-        zmanimList.add( getZmanim( location, Zmanim.Type.SofZmanBiurChametz ) );
-      }
+    for ( Zmanim.Type type : details.getZmanim() ) {
+      zmanimList.add( getZmanim( location, type ) );
     }
-
-    zmanimList.add( getZmanim( location, Zmanim.Type.Chatzot ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.MinchaGedola ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.MinchaKetana ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.PlagHaMincha ) );
-
-    if ( details.lightCandles() ) {
-      zmanimList.add( getZmanim( location, Zmanim.Type.CandleLighting ) );
-    }
-
-    zmanimList.add( getZmanim( location, Zmanim.Type.Shkia ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.LatestMincha ) );
-    zmanimList.add( getZmanim( location, Zmanim.Type.BeinHashmashot ) );
-
-    if ( details.isTaanit() ) {
-      zmanimList.add( getZmanim( location, Zmanim.Type.FastEnd ) );
-    }
-
-    zmanimList.add( getZmanim( location, Zmanim.Type.TzaitHacochavim ) );
-
-    if ( details.sayHavdalah() ) {
-      zmanimList.add( getZmanim( location, Zmanim.Type.ShabbatEnd ) );
-    }
-
-    zmanimList.add( getZmanim( location, Zmanim.Type.NightChatzot ) );
 
     return zmanimList;
   }

@@ -8,6 +8,10 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.HebrewMonth;
 import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.zman.Zmanim;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -67,6 +71,7 @@ public class Pesach
   protected static class ErevPesachDetails
     extends Details.ErevYomTov {
 
+    
     ErevPesachDetails(
       HebrewDate  date
     ) {
@@ -77,6 +82,43 @@ public class Pesach
     @Override
     public boolean isPesach() {
       return true;
+    }
+
+
+    @Override
+    public List<Zmanim.Type> getZmanim() {
+
+      List<Zmanim.Type> zmanim = new ArrayList<>();
+      zmanim.add( Zmanim.Type.Alot );
+      zmanim.add( Zmanim.Type.Talit );
+      zmanim.add( Zmanim.Type.Hanetz );
+      zmanim.add( Zmanim.Type.SofZmanShema );
+      zmanim.add( Zmanim.Type.SofZmanTefila );
+      zmanim.add( Zmanim.Type.SofZmanAchilatChametz );
+
+      // When erev Pesach falls out on Shabbat, then we cannot do Biur. Technically, the time still exists, but
+      //  it's not quite the same...
+      if ( !isShabbat() ) {
+        zmanim.add( Zmanim.Type.SofZmanBiurChametz );
+      }
+
+      zmanim.add( Zmanim.Type.Chatzot );
+      zmanim.add( Zmanim.Type.MinchaGedola );
+      zmanim.add( Zmanim.Type.MinchaKetana );
+      zmanim.add( Zmanim.Type.PlagHaMincha );
+
+      if ( lightCandles() ) {
+        zmanim.add( Zmanim.Type.CandleLighting );
+      }
+
+      zmanim.add( Zmanim.Type.Shkia );
+      zmanim.add( Zmanim.Type.LatestMincha );
+      zmanim.add( Zmanim.Type.BeinHashmashot );
+      zmanim.add( Zmanim.Type.FastEnd );
+      zmanim.add( Zmanim.Type.TzaitHacochavim );
+      zmanim.add( Zmanim.Type.NightChatzot );
+
+      return zmanim;
     }
   }
 

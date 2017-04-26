@@ -1407,10 +1407,11 @@ public class UT_Zmanim {
 
     List<Zmanim> zmanimForDay = date.getZmanim( location );
 
-    for ( int i = 0; i < expectedZmanim.size(); i++ ) {
-      Assert.assertEquals( expectedZmanim.get( i ), zmanimForDay.get( i ).type );
+    List<Zmanim.Type> day = new ArrayList<>();
+    for ( Zmanim zmanim : zmanimForDay ) {
+      day.add( zmanim.type );
     }
-    Assert.assertEquals( expectedZmanim.size(), zmanimForDay.size() );
+    Assert.assertEquals( expectedZmanim.toString(), day.toString() );
 
     StringBuilder output = new StringBuilder();
     output.append( location.getLocationName() ).append( "\n" );

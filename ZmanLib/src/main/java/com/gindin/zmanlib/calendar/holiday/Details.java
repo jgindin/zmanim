@@ -5,11 +5,9 @@
 package com.gindin.zmanlib.calendar.holiday;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.zman.Zmanim;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Contains details about a given Observance.
@@ -19,12 +17,48 @@ public abstract class Details {
   protected static final String                             EREV = "Erev ";
 
   private static final String                               CHOL_HA_MOED = "Chol HaMoed ";
-
+  
+  
   private final HebrewDate                                  date;
 
 
   public Details( HebrewDate date ) {
     this.date = date;
+  }
+
+
+  /**
+   * @return A list of the types of zmanim this day has, ordered by the sequence in which they will occur.
+   */
+  public List<Zmanim.Type> getZmanim() {
+    
+    List<Zmanim.Type> zmanim = new ArrayList<>();
+    zmanim.add( Zmanim.Type.Alot );
+    zmanim.add( Zmanim.Type.Talit );
+    zmanim.add( Zmanim.Type.Hanetz );
+    zmanim.add( Zmanim.Type.SofZmanShema );
+    zmanim.add( Zmanim.Type.SofZmanTefila );
+    zmanim.add( Zmanim.Type.Chatzot );
+    zmanim.add( Zmanim.Type.MinchaGedola );
+    zmanim.add( Zmanim.Type.MinchaKetana );
+    zmanim.add( Zmanim.Type.PlagHaMincha );
+
+    if ( lightCandles() ) {
+      zmanim.add( Zmanim.Type.CandleLighting );
+    }
+
+    zmanim.add( Zmanim.Type.Shkia );
+    zmanim.add( Zmanim.Type.LatestMincha );
+    zmanim.add( Zmanim.Type.BeinHashmashot );
+    zmanim.add( Zmanim.Type.TzaitHacochavim );
+
+    if ( sayHavdalah() ) {
+      zmanim.add( Zmanim.Type.ShabbatEnd );
+    }
+
+    zmanim.add( Zmanim.Type.NightChatzot );
+    
+    return Collections.unmodifiableList( zmanim );
   }
 
 
@@ -764,6 +798,37 @@ public abstract class Details {
 
       return false;
     }
+
+
+    @Override
+    public List<Zmanim.Type> getZmanim() {
+
+      // This isn't really the prettiest, but...hand-writing something would no doubt be worse...
+      Set<Zmanim.Type> combined = new HashSet<>();
+      for ( Details details : composedDates ) {
+        combined.addAll( details.getZmanim() );
+      }
+
+      // NOTE: If one contains Havdalah, but another is Erev Shabbat OR a Yom Tov, then take out the havdalah.
+      if ( !sayHavdalah() ) {
+        combined.remove( Zmanim.Type.ShabbatEnd );
+      }
+
+      List<Zmanim.Type> todaysZmanim = new ArrayList<>();
+      todaysZmanim.addAll( combined );
+      Collections.sort( todaysZmanim, new Comparator<Zmanim.Type>() {
+        @Override
+        public int compare(
+          Zmanim.Type t1,
+          Zmanim.Type t2
+        ) {
+          return t1.ordinal() - t2.ordinal();
+        }
+      } );
+
+      return todaysZmanim;
+    }
+
   } // End of CompositeDetails class
 
 } // End of Details class

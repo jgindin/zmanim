@@ -173,14 +173,14 @@ public abstract class Zmanim {
         return new Shkia( zmanimCalculator );
       }
     },
-    BeinHashmashot( "Bein Hashmashot", "Twilight" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new BeinHashmashot( zmanimCalculator );
-      }
-    },
     LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ) {
       @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
         return new LatestMincha( zmanimCalculator );
+      }
+    },
+    BeinHashmashot( "Bein Hashmashot", "Twilight" ) {
+      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+        return new BeinHashmashot( zmanimCalculator );
       }
     },
     FastEnd( "Fast Ends", "Earliest end of fast days" ) {
