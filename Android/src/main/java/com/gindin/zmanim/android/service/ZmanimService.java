@@ -9,7 +9,6 @@ import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.ZmanCallback;
-import com.gindin.zmanlib.ZmanNotification;
 import com.gindin.zmanlib.ZmanNotificationScheduler;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
@@ -255,16 +254,22 @@ public class ZmanimService
     final ZmanimLocation  location
   ) {
 
-    if ( locationAcquiredHandler != null ) {
-      eventBus.removeHandler( locationAcquiredHandler );
-      locationAcquiredHandler = null;
-    }
-    else {
+    if ( locationAcquiredHandler == null ) {
       // This is NOT supposed to happen. Send some data to try and diagnose.
       //  UPDATE: Yet, now all of a sudden, I am seeing it! For me, this is happening after I go into the emulator
       //    settings and change the time to test some alerting functionality...
       releaseWakefulIntent();
       return;
+    }
+    else if ( location.isInvalid ) {
+      // Generally, this means that we don't have permission to acquire the location. This can happen
+      //  after the initial installation, before the user has had a chance to respond to the prompt.
+      releaseWakefulIntent();
+      return;
+    }
+    else {
+      eventBus.removeHandler( locationAcquiredHandler );
+      locationAcquiredHandler = null;
     }
 
     AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
@@ -321,10 +326,10 @@ public class ZmanimService
     SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     boolean useAlarmClock = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ALARM_CLOCK.name(), false );
 
-    if ( useAlarmClock && ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) ) {
+    if ( Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP && useAlarmClock ) {
       Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
-      AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo( alertTime,
+      AlarmManager.AlarmClockInfo  alarmClockInfo = new AlarmManager.AlarmClockInfo( alertTime,
         PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
       alarmManager.setAlarmClock( alarmClockInfo, pendingIntent );
     }

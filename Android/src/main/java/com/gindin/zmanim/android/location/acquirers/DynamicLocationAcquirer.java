@@ -187,7 +187,7 @@ public class DynamicLocationAcquirer
       }
       else {
         location = new ZmanimLocation.Builder()
-            .invalidLocation();
+          .invalidLocation();
       }
     }
 
@@ -246,7 +246,12 @@ public class DynamicLocationAcquirer
     }
 
     // Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-    fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
+    try {
+      fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION )  );
+    }
+    catch ( SecurityException e ) {
+      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+    }
   }
 
 
@@ -301,7 +306,12 @@ public class DynamicLocationAcquirer
   private boolean isLocationEnabled() {
 
     if ( null == locationManager ) {
-      fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
+      try {
+        fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE ) );
+      }
+      catch ( SecurityException e ) {
+        fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+      }
       return false;
     }
 
@@ -315,7 +325,12 @@ public class DynamicLocationAcquirer
     }
 
     if ( !foundAProvider ) {
-      fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_PROVIDERS ) );
+      try {
+        fireLocationAcquiredEvent( getLastKnownLocation(), true, new LocationError( LocationError.Code.NO_PROVIDERS ) );
+      }
+      catch ( SecurityException e ) {
+        fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+      }
       return false;
     }
 
