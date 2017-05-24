@@ -214,8 +214,7 @@ abstract class LocationResolver {
 
       if ( ( resolvedLocation == null ) || resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
         // If we never got this location resolved, don't fire an event.
-        LogUtils.logError( "LocationResolver", "No one resolved location!", null,
-          new Pair<String, String>( "Location", ( resolvedLocation == null ? "<null>" : resolvedLocation.toShortString() ) ) );
+        LogUtils.debug( "LocationResolver", "No one resolved location!" );
       }
       else {
 
