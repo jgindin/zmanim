@@ -1,5 +1,7 @@
 package com.gindin.zmanim.android.service;
 
+import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
@@ -10,17 +12,17 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import org.json.JSONException;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous requests to display a notification
@@ -96,8 +98,9 @@ public class DisplayNotificationService
           ZmanimLocation location = ZmanLocationJSON.fromJSON( intent.getStringExtra( EXTRA_ZMAN_LOCATION ) );
           handleNotificationAction( type, time, location, alertAt );
         }
-        catch ( JSONException e ) {
+        catch ( Exception e ) {
           // Something happened and we can't translate it back...
+          LogUtils.logError( "DisplayNotificationService::onHandleIntent", "JSONException", e );
         }
       }
     }
@@ -122,11 +125,11 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-    if ( !shouldNotify ) {
-      return;
-    }
+    // TODO: Re-enable this, and remove the same block of code from below...
+//    if ( !shouldNotify ) {
+//      return;
+//    }
 
-    ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
 
     // Make sure any previous notification is removed. It seems that this is normally not necessary,
     //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
@@ -146,7 +149,24 @@ public class DisplayNotificationService
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
+    ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
+
+    if ( Build.BRAND.equalsIgnoreCase( "samsung" ) ) {
+
+      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
+        new Pair<String, String>( "zmanType", zmanType.name ),
+        new Pair<String, String>( "zmanTime", new Date( zmanTime.getTimeInMillis() ).toString() ),
+        new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
+        new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
+        new Pair<String, String>( "message", notificationText )
+      );
+    }
+
+    if ( !shouldNotify ) {
+      return;
+    }
+
 
     Notification notification = new NotificationCompat.Builder( this )
       .setContentTitle( getString( R.string.app_name ) )
