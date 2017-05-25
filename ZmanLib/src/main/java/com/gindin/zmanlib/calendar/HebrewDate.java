@@ -368,6 +368,11 @@ public class HebrewDate
     }
 
     final Calendar zmanTime = getZman( location, type ).getTime();
+    if ( zmanTime == null ) {
+      // If the zman doesn't have a time then the current time cannot be after the time of the zman.
+      return false;
+    }
+
     return currentTime.getTime().after( zmanTime.getTime() );
   }
 

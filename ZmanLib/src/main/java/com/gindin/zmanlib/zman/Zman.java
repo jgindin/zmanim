@@ -4,6 +4,8 @@
 
 package com.gindin.zmanlib.zman;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -58,8 +60,11 @@ public abstract class Zman {
    * Obtain the time of the desired zman. Why a Calendar? Because there is no 'Time' class, and the Date class will
    *  simply use the default time zone, which means the time zone actually being used gets ignored.
    *
-   * @return The time for the requested zman.
+   * @return The time for the requested zman. May return null in some cases where it
+   *  is not possible to calculate the zman time. (For example, when you're far enough North or South, there are
+   *  days where the sun does not set, and so sunrise / sunset cannot be calculated.)
    */
+  @Nullable
   public final Calendar getTime() {
 
     synchronized ( this ) {
@@ -103,8 +108,11 @@ public abstract class Zman {
 
 
   /**
-   * @return Subclass must implement to return the actual time of the zman.
+   * @return Subclass must implement to return the actual time of the zman. May return null in some cases where it
+   *  is not possible to calculate the zman time. (For example, when you're far enough North or South, there are
+   *  days where the sun does not set, and so sunrise / sunset cannot be calculated.)
    */
+  @Nullable
   protected abstract Calendar calculate();
 
 

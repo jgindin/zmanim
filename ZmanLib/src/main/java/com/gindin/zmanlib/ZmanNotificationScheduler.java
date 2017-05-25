@@ -147,10 +147,13 @@ public class ZmanNotificationScheduler {
       // Make sure the zman is before the current time and we haven't already notified...
       //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
       //  just missed it, we'll still add it as a candidate.
-      long msUntilZman = zman.getTime().getTimeInMillis() - nowInMillis;
-      if ( ( ( msUntilZman + DEFAULT_ALERT_FUDGE_FACTOR ) > 0 ) && !zmanCallback.hasBeenNotified( now, zman.type ) ) {
+      final Calendar zmanTime = zman.getTime();
+      if ( zmanTime != null ) {
+        long msUntilZman = zmanTime.getTimeInMillis() - nowInMillis;
+        if ( ( ( msUntilZman + DEFAULT_ALERT_FUDGE_FACTOR ) > 0 ) && !zmanCallback.hasBeenNotified( now, zman.type ) ) {
 
-        candidates.add( new ZmanNotification( zman, msUntilZman ) );
+          candidates.add( new ZmanNotification( zman, msUntilZman ) );
+        }
       }
     }
 
