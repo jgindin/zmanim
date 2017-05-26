@@ -70,8 +70,13 @@ public abstract class ZmanCallback {
     HebrewDate tomorrow = today.tomorrow();
     final Details tomorrowDetails = tomorrow.getDetails();
 
-    // If today is erev something, and it's after candle lighting, then don't notify...
-    if ( todayDetails.isErev() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
+    // If today is erev Shabbat, and it's after candle lighting, then don't notify...
+    if ( tomorrowDetails.isShabbat() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
+      return false;
+    }
+
+    // If today is erev Yom Tov, and it's after candle lighting, then don't notify...
+    if ( tomorrowDetails.isYomTov() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
       return false;
     }
 
@@ -86,6 +91,54 @@ public abstract class ZmanCallback {
     }
 
     return ( !todayDetails.isShabbat() && !todayDetails.isYomTov() );
+  }
+
+
+  public final String actuallyNotifyReasoning(
+    final ZmanimLocation  location,
+    final Calendar        now
+  ) {
+
+    if ( !shouldShowAnyNotifications() ) {
+      return "NO: Notifications are disabled";
+    }
+
+    if ( shouldNotifyOnShabbat() ) {
+      return "YES: Notifying even Shabbat";
+    }
+
+    now.setTimeZone( location.getTimeZone() );
+    HebrewDate today = HebrewCalendar.getForDate( now );;
+
+    Details todayDetails = today.getDetails();
+    HebrewDate tomorrow = today.tomorrow();
+    final Details tomorrowDetails = tomorrow.getDetails();
+
+    // If today is erev Shabbat, and it's after candle lighting, then don't notify...
+    if ( tomorrowDetails.isShabbat() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
+      return "NO: It's erev Shabbat and after candle lighting.";
+    }
+
+    // If today is erev Yom Tov, and it's after candle lighting, then don't notify...
+    if ( tomorrowDetails.isYomTov() && today.isAfter( now, Zmanim.Type.CandleLighting, location ) ) {
+      return "NO: It's erev Yom Tov and after candle lighting.";
+    }
+
+    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isShabbat() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
+      return "YES: Shabbat is over, and there's nothing tomorrow.";
+    }
+
+    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
+    if ( todayDetails.isYomTov() && today.isAfter( now, Zmanim.Type.ShabbatEnd, location ) && !tomorrowDetails.isYomTov() ) {
+      return "YES: Yom Tov is over, and there's nothing tomorrow.";
+    }
+
+    if ( !todayDetails.isShabbat() && !todayDetails.isYomTov() ) {
+      return "YES: There's nothing today.";
+    }
+
+    return "NO: It must be Shabbat or a Yom Tov";
   }
 
 

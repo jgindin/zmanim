@@ -256,6 +256,31 @@ public class UT_WakeupScheduler_DefaultAlerts
   }
 
 
+  /**
+   * Make sure that just because a day is Erev Rosh Chodesh that we'll still notify after candle lighting.
+   */
+  @Test
+  public void may_25_2017() {
+
+    Calendar testTime = UT_ZmanUtils.configureTestTime( 2017, Calendar.MAY, 25, 6, 0 );
+    runDays( testTime, 2, new DefaultAlertsZmanCallback(),
+      "Zman                | Time           | Action Time                   | Actually Alert?   | \n" +
+      "--------------------|----------------|-------------------------------|-------------------|\n" +
+      "SofZmanShema        | 8:07:52 AM     | Thu May 25 07:52:52 PDT 2017  | true              |\n" +
+      "SofZmanTefila       | 10:31:11 AM    | Thu May 25 10:16:11 PDT 2017  | true              |\n" +
+      "PlagHaMincha        | 7:14:30 PM     | Thu May 25 18:59:30 PDT 2017  | true              |\n" +
+      "Shkia               | 8:51:24 PM     | Thu May 25 20:36:24 PDT 2017  | true              |\n" +
+      "LatestMincha        | 9:08:51 PM     | Thu May 25 20:53:51 PDT 2017  | true              |\n" +
+      "Talit               | 4:07:05 AM     | Fri May 26 03:52:05 PDT 2017  | true              |\n" +
+      "SofZmanShema        | 8:06:58 AM     | Fri May 26 07:51:58 PDT 2017  | true              |\n" +
+      "SofZmanTefila       | 10:30:57 AM    | Fri May 26 10:15:57 PDT 2017  | true              |\n" +
+      "PlagHaMincha        | 7:15:22 PM     | Fri May 26 19:00:22 PDT 2017  | true              |\n" +
+      "CandleLighting      | 8:34:29 PM     | Fri May 26 20:19:29 PDT 2017  | true              |\n" +
+      "Shkia               | 8:52:29 PM     | Fri May 26 20:37:29 PDT 2017  | true              |\n" +
+      "LatestMincha        | 9:09:58 PM     | Fri May 26 20:54:58 PDT 2017  | true              |\n"
+    );
+  }
+
   public static class DefaultAlertsZmanCallback
     extends UT_ZmanUtils.ZmanCallbackForTests {
 
