@@ -155,10 +155,11 @@ public class DisplayNotificationService
     if ( Build.BRAND.equalsIgnoreCase( "samsung" ) ) {
 
       LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
-        new Pair<String, String>( "zmanType", zmanType.name ),
-        new Pair<String, String>( "zmanTime", new Date( zmanTime.getTimeInMillis() ).toString() ),
+        new Pair<String, String>( "zman type", zmanType.name ),
+        new Pair<String, String>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
         new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
         new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
+        new Pair<String, String>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
         new Pair<String, String>( "message", notificationText )
       );
     }
