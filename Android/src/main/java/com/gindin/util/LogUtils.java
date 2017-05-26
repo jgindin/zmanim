@@ -82,7 +82,12 @@ public class LogUtils {
 
       // We want this to be silent...it's something we're interested in logging, but the user
       //  shouldn't know/care...
+      if ( error == null ) {
+        error = new Exception( message );
+      }
+
       ACRA.getErrorReporter().handleSilentException( error );
+      ACRA.getErrorReporter().clearCustomData();
     }
   }
 
