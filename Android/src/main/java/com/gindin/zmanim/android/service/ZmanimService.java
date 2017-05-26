@@ -355,7 +355,7 @@ public class ZmanimService
 
     if ( Build.BRAND.equalsIgnoreCase( "samsung" ) ) {
 
-      LogUtils.logError( "scheduleUserAlert", "", null,
+      LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
         new Pair<String, String>( "alert time", new Date( alertTime ).toString() ),
         new Pair<String, String>( "zman type", zman.type.name ),
         new Pair<String, String>( "zman", zman.name ),
