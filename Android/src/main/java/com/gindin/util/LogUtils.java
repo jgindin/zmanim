@@ -8,11 +8,13 @@ import com.gindin.zmanim.android.BuildConfig;
 
 import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
+import org.acra.ErrorReporter;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +73,14 @@ public class LogUtils {
     }
     else {
 
-      ACRA.getErrorReporter().putCustomData( "Where", where );
-      ACRA.getErrorReporter().putCustomData( "Message", message );
+      final ErrorReporter errorReporter = ACRA.getErrorReporter();
+      errorReporter.putCustomData( "Where", where );
+      errorReporter.putCustomData( "Message", message );
+      errorReporter.putCustomData( "LogTime", new Date( System.currentTimeMillis() ).toString() );
 
       if ( null != moreInfo ) {
         for ( Pair<String, String> info : moreInfo ) {
-          ACRA.getErrorReporter().putCustomData( info.first, info.second );
+          errorReporter.putCustomData( info.first, info.second );
         }
       }
 
@@ -86,8 +90,18 @@ public class LogUtils {
         error = new Exception( message );
       }
 
-      ACRA.getErrorReporter().handleSilentException( error );
-      ACRA.getErrorReporter().clearCustomData();
+      errorReporter.handleSilentException( error );
+
+      // Remove the extra data that was passed in here. But if someone had added additional info
+      //  besides this, then presumably it should remain...
+      errorReporter.removeCustomData( "Where" );
+      errorReporter.removeCustomData( "Message" );
+      errorReporter.removeCustomData( "LogTime" );
+      if ( moreInfo != null ) {
+        for ( Pair<String, String> info : moreInfo ) {
+          errorReporter.removeCustomData( info.first );
+        }
+      }
     }
   }
 
