@@ -160,7 +160,8 @@ public class DisplayNotificationService
         new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
         new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
         new Pair<String, String>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
-        new Pair<String, String>( "message", notificationText )
+        new Pair<String, String>( "message", notificationText ),
+        new Pair<String, String>( "notify location", location.toString() )
       );
     }
 

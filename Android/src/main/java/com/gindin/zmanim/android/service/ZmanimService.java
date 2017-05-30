@@ -359,7 +359,8 @@ public class ZmanimService
         new Pair<String, String>( "alert time", new Date( alertTime ).toString() ),
         new Pair<String, String>( "zman type", zman.type.name ),
         new Pair<String, String>( "zman", zman.name ),
-        new Pair<String, String>( "alarm type", alarmType )
+        new Pair<String, String>( "alarm type", alarmType ),
+        new Pair<String, String>( "sched. location", location.toString() )
       );
     }
   }
