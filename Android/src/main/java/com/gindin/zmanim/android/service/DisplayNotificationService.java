@@ -1,7 +1,6 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
@@ -18,11 +17,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous requests to display a notification
@@ -125,10 +122,9 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-    // TODO: Re-enable this, and remove the same block of code from below...
-//    if ( !shouldNotify ) {
-//      return;
-//    }
+    if ( !shouldNotify ) {
+      return;
+    }
 
 
     // Make sure any previous notification is removed. It seems that this is normally not necessary,
@@ -151,24 +147,6 @@ public class DisplayNotificationService
 
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
-
-    if ( Build.BRAND.equalsIgnoreCase( "samsung" ) ) {
-
-      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
-        new Pair<String, String>( "zman type", zmanType.name ),
-        new Pair<String, String>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
-        new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
-        new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
-        new Pair<String, String>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
-        new Pair<String, String>( "message", notificationText ),
-        new Pair<String, String>( "notify location", location.toString() )
-      );
-    }
-
-    if ( !shouldNotify ) {
-      return;
-    }
-
 
     Notification notification = new NotificationCompat.Builder( this )
       .setContentTitle( getString( R.string.app_name ) )

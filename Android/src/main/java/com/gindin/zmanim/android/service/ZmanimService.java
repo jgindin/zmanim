@@ -1,8 +1,6 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
-import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -30,7 +28,6 @@ import android.os.IBinder;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.LocationDeterminationOverride;
@@ -264,15 +261,17 @@ public class ZmanimService
       releaseWakefulIntent();
       return;
     }
-    else if ( location.isInvalid ) {
-      // Generally, this means that we don't have permission to acquire the location. This can happen
-      //  after the initial installation, before the user has had a chance to respond to the prompt.
-      releaseWakefulIntent();
-      return;
-    }
     else {
+
       eventBus.removeHandler( locationAcquiredHandler );
       locationAcquiredHandler = null;
+
+      if ( location.isInvalid ) {
+        // Generally, this means that we don't have permission to acquire the location. This can happen
+        //  after the initial installation, before the user has had a chance to respond to the prompt.
+        releaseWakefulIntent();
+        return;
+      }
     }
 
     AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
@@ -296,7 +295,6 @@ public class ZmanimService
 
     schedulerTask.execute( (Void[])null );
   }
-
 
 
   private void scheduleUserAlert(
@@ -323,8 +321,6 @@ public class ZmanimService
       0
     );
 
-    final String alarmType;
-
     long alertTime = alertAt.getTimeInMillis();
     AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
@@ -337,32 +333,17 @@ public class ZmanimService
       AlarmManager.AlarmClockInfo  alarmClockInfo = new AlarmManager.AlarmClockInfo( alertTime,
         PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
       alarmManager.setAlarmClock( alarmClockInfo, pendingIntent );
-
-      alarmType = "AlarmClock";
     }
     else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
       alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
-      alarmType = "setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP )";
     }
     else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
       alarmManager.setExact( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
-      alarmType = "setExact( AlarmManager.RTC_WAKEUP )";
     }
     else {
       alarmManager.set( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
-      alarmType = "set( AlarmManager.RTC_WAKEUP";
     }
 
-    if ( Build.BRAND.equalsIgnoreCase( "samsung" ) ) {
-
-      LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
-        new Pair<String, String>( "alert time", new Date( alertTime ).toString() ),
-        new Pair<String, String>( "zman type", zman.type.name ),
-        new Pair<String, String>( "zman", zman.name ),
-        new Pair<String, String>( "alarm type", alarmType ),
-        new Pair<String, String>( "sched. location", location.toString() )
-      );
-    }
   }
 
 
