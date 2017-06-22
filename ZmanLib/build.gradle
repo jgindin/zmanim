@@ -1,12 +1,9 @@
-apply plugin: 'java'
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+apply plugin: 'java-library'
 
 
 dependencies {
-  compile fileTree( include: ['*.jar'], dir: 'libs' )
-  compile project( ':ZmanUtils' )
-  compile 'org.json:json:20160810'
-  testCompile 'junit:junit:4.12'
+  api fileTree( include: ['*.jar'], dir: 'libs' )
+  implementation project( ':ZmanUtils' )
+  compileOnly 'org.json:json:20160810'
+  testImplementation 'junit:junit:4.12'
 }

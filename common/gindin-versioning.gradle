@@ -20,11 +20,30 @@ advancedVersioning {
   codeOptions {
     versionCodeType project.versionCodeType
   }
+/*
+
+  // This no longer works with the updated Android Gradle Plugin. You wind up with an error:
+  //  Cannot set the value of read-only property 'outputFile' for ApkVariantOutputImpl_Decorated{apkData=Main{type=MAIN, fullName=debug, filters=[]}} of type com.android.build.gradle.internal.api.ApkVariantOutputImpl.
+  //
+  // The block below for android.applicationVariants.all shows the new way to make this work.
+
   outputOptions {
     renameOutput true
     nameFormat '${appName}-${flavorName}-${buildType}-${versionName}'
   }
+*/
 }
 
 ext.appVersionCode = advancedVersioning.versionCode
 ext.appVersionName = advancedVersioning.versionName + "." + appVersionCode
+
+/**
+ * Swizzle the APK name.
+ *
+ * See https://stackoverflow.com/questions/44239235/android-gradle-3-0-0-alpha2-plugin-cannot-set-the-value-of-read-only-property
+ */
+android.applicationVariants.all {
+  variant -> variant.outputs.all {
+    outputFileName = "${project.name}-${flavorName}-${variant.name}-${variant.versionName}.apk"
+  }
+}
