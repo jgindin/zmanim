@@ -9,6 +9,9 @@ try {
   apply from: 'zmanim.gradle'
 }
 catch ( ignored ) {
+  println "\n\n    ==================================================================="
+  println "    You can't build the release version. Build a debug version instead."
+  println "    ==================================================================="
 }
 
 
@@ -20,19 +23,42 @@ apply from: '../common/gindin-versioning.gradle'
 
 /*
  * Stuff that we need to load...
+ *
+ * NOTE: Since these files contain secret keys, they're never committed to source control. So...that means
+ *  that not everyone will have them.
  */
 Properties flurry = new Properties()
-flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
-String flurryKey = "\"" + flurry[ 'flurry.key' ] + "\""
+String flurryKey
+try {
+  flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
+  flurryKey = "\"" + flurry[ 'flurry.key' ] + "\""
+}
+catch ( ignored ) {
+  flurryKey = ""
+}
 
 Properties mapQuest = new Properties()
-mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
-String mapQuestKey = "\"" + mapQuest[ 'mapquest.key' ] + "\""
+String mapQuestKey
+try {
+  mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
+  mapQuestKey = "\"" + mapQuest[ 'mapquest.key' ] + "\""
+}
+catch ( ignored ) {
+  mapQuestKey = ""
+}
 
 Properties acraProps = new Properties()
-acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
-String acraUser = "\"" + acraProps[ 'acra.user' ] + "\""
-String acraPassword = "\"" + acraProps[ 'acra.password' ] + "\""
+String acraUser
+String acraPassword
+try {
+  acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
+  acraUser = "\"" + acraProps[ 'acra.user' ] + "\""
+  acraPassword = "\"" + acraProps[ 'acra.password' ] + "\""
+}
+catch ( ignored ) {
+  acraUser = ""
+  acraPassword = ""
+}
 
 
 android {
