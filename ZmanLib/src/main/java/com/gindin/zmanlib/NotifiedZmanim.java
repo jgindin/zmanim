@@ -87,9 +87,7 @@ public final class NotifiedZmanim
   }
 
 
-  public boolean save( File filesDir ) {
-
-    boolean saved;
+  public void save( File filesDir ) {
 
     File storedData = new File( filesDir, NOTIFIED_ZMANIM_FILE_NAME );
     try {
@@ -98,15 +96,12 @@ public final class NotifiedZmanim
       oos.flush();
       oos.close();
 
-      saved = true;
     }
-    catch ( IOException e ) {
+    catch ( Exception e ) {
       // Urgh. Can't save... We're going to lose our state...
       //e.printStackTrace();
-      saved = false;
     }
 
-    return saved;
   }
 
 
