@@ -17,6 +17,7 @@ import android.os.Build;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -123,39 +124,63 @@ abstract class JsonQueryingResolver
 
 
   @Nullable
-  @SuppressWarnings( "FeatureEnvy" )
   private ZmanimLocation resolveLocation(
     ZmanimLocation              zmanimLocation,
     List<Pair<String, String>>  params
   ) {
 
-    try {
-      Operation operation = zmanimLocation.hasCoordinates() ? Operation.ReverseGeocode : Operation.Search;
-      addAdditionalParams( operation, zmanimLocation, params );
+    // In case we get a connection refused, we'll try a couple of times...
+    for ( int attempts = 0; attempts < 3; attempts++ ) {
 
-      JSONObject json = makeRequest( getRequestUrl( operation ), params );
-      if ( json == null ) {
+      try {
+        return doLocationResolution( zmanimLocation, params );
+      }
+      catch ( ConnectException ce ) {
+        // Try again
+        if ( attempts == 2 ) {
+          LogUtils.logError( "resolveFromCoords", ce.getMessage(), ce );
+        }
+      }
+      catch ( Exception e ) {
+        LogUtils.logError( "resolveFromCoords", e.getMessage(), e );
         return null;
       }
 
-      Address address = addressFromJSON( json );
-
-      if ( address != null ) {
-        return new ZmanimLocation.Builder()
-          .from( zmanimLocation )
-          .locationName( addressToLocationName( address ) )
-          .atLatitude( address.getLatitude() )
-          .atLongitude( address.getLongitude() )
-          .build();
-      }
-    }
-    catch ( Exception e ) {
-      LogUtils.logError( "resolveFromCoords", e.getMessage(), e );
     }
 
     return null;
   }
 
+
+  @Nullable
+  @SuppressWarnings( "FeatureEnvy" )
+  private ZmanimLocation doLocationResolution(
+    ZmanimLocation              zmanimLocation,
+    List<Pair<String, String>>  params
+  )
+    throws Exception {
+
+    Operation operation = zmanimLocation.hasCoordinates() ? Operation.ReverseGeocode : Operation.Search;
+    addAdditionalParams( operation, zmanimLocation, params );
+
+    JSONObject json = makeRequest( getRequestUrl( operation ), params );
+    if ( json == null ) {
+      return null;
+    }
+
+    Address address = addressFromJSON( json );
+
+    if ( address != null ) {
+      return new ZmanimLocation.Builder()
+        .from( zmanimLocation )
+        .locationName( addressToLocationName( address ) )
+        .atLatitude( address.getLatitude() )
+        .atLongitude( address.getLongitude() )
+        .build();
+    }
+
+    return null;
+  }
 
 
   @Nullable
