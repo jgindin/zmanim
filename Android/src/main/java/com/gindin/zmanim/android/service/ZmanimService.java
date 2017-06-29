@@ -121,6 +121,7 @@ public class ZmanimService
           final Throwable throwable
         ) {
 
+          servicingUser = false;
           releaseWakefulIntent();
 
           exceptionHandler.uncaughtException( thread, throwable );
@@ -174,9 +175,7 @@ public class ZmanimService
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       servicingUser = false;
-      if ( handlingAlarmsFor == null ) {
-        stopSelf();
-      }
+      releaseWakefulIntent();
     }
     else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
 
@@ -266,7 +265,7 @@ public class ZmanimService
       eventBus.removeHandler( locationAcquiredHandler );
       locationAcquiredHandler = null;
 
-      if ( location.isInvalid ) {
+      if ( location.isInvalid || !location.isResolved() ) {
         // Generally, this means that we don't have permission to acquire the location. This can happen
         //  after the initial installation, before the user has had a chance to respond to the prompt.
         releaseWakefulIntent();
@@ -352,9 +351,10 @@ public class ZmanimService
     if ( handlingAlarmsFor != null ) {
       WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
       handlingAlarmsFor = null;
-      if ( !servicingUser ) {
-        stopSelf();
-      }
+    }
+
+    if ( !servicingUser ) {
+      stopSelf();
     }
   }
 
