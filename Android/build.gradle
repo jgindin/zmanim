@@ -115,7 +115,11 @@ android {
 
       zipAlignEnabled true
 
-      signingConfig signingConfigs.release
+      try {
+        // In case this dev doesn't have the signing keys, this will fail...
+        signingConfig signingConfigs.release
+      }
+      catch ( ignored ) {}
     }
 
     debug {

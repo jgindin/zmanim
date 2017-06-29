@@ -35,7 +35,12 @@ android {
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
-      signingConfig signingConfigs.release
+
+      try {
+        // In case this dev doesn't have the signing keys, this will fail...
+        signingConfig signingConfigs.release
+      }
+      catch ( ignored ) {}
     }
 
     debug {
