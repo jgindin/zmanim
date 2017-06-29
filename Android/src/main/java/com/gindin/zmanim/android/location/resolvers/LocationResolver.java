@@ -212,9 +212,16 @@ abstract class LocationResolver {
     }
     else {
 
-      if ( ( resolvedLocation == null ) || resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
-        // If we never got this location resolved, don't fire an event.
-        LogUtils.debug( "LocationResolver", "No one resolved location!" );
+      if ( resolvedLocation == null ) {
+        //noinspection AssignmentToMethodParameter
+        resolvedLocation = new ZmanimLocation.Builder().invalidLocation();
+      }
+
+      if ( resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
+        LogUtils.debug( "LocationResolver", "No one resolved location:" + originalLocation );
+
+        eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false,
+          new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) ) );
       }
       else {
 
