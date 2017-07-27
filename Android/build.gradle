@@ -146,7 +146,7 @@ dependencies {
   compile 'ch.acra:acra:4.9.1'
 
   // Flurry
-  compile 'com.flurry.android:analytics:7.0.1@aar'
+  compile 'com.flurry.android:analytics:7.2.0@aar'
 
   testCompile 'junit:junit:4.12'
 }
