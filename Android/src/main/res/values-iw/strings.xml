@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">זמנים</string>
+    <string name="AchilatChametz">"אכילת חמץ "</string>
+    <string name="Alot">עלות השחר</string>
+    <string name="Talit">"טלית/תפילין "</string>
+    <string name="Hanetz">הנץ</string>
+    <string name="SofZmanShema">"סוף זמן שמע "</string>
+    <string name="SofZmanTefilah">"סוף זמן תפילה "</string>
+    <string name="BiurChametz">"ביעור חמץ "</string>
+    <string name="Chatzot">חצות</string>
+    <string name="MinchaGedola">"מנחה גדולה "</string>
+    <string name="MinchaKetana">"מנחה קטנה "</string>
+    <string name="PlagHaMincha">"פלג המנחה "</string>
+    <string name="Candles">"הדלקת נרות "</string>
+    <string name="Shkia">שקיע</string>
+    <string name="BeinHashmashot">"בין השמשות "</string>
+    <string name="Tzait">"צאת הכוכבים "</string>
+    <string name="Havdalah">הבדלה</string>
+    <string name="ShaahZmanit">שעה זמנית</string>
+    <string name="use_longitude_pref_summary">מעלות</string>
+    <string name="time_zone_area_summary">איזה אזור? (לדוגמה, \"אמריקה\")</string>
+    <string name="personal_prefs">הגדרות</string>
+    <string name="lat_long_editor_degrees_text">מעלות:</string>
+    <string name="lat_long_editor_minutes_text">דקות:</string>
+    <string name="lat_long_editor_ns_text">צפון / דרום:</string>
+    <string name="lat_long_editor_ew_text">מזרח / מערב:</string>
+    <string name="upgrade_header">מה חדש</string>
+    <string name="minutes">דקות</string>
+    <string name="enable_notifications_on_shabbat_pref_title">הודעות בשבת</string>
+    <string name="use_latitude_pref_summary">מעלות</string>
+    <string name="use_latitude_pref_title">קו רוחב</string>
+    <string name="use_longitude_pref_title">קו אורך</string>
+    <string name="time_zone_setting">אזור זמן</string>
+    <string name="static_location_pref_title">מקום</string>
+    <string name="location_prefs">מקום</string>
+    <string name="unknown_location">מקום לא ידוע</string>
+    <string name="help_menu">עזרה</string>
+    <string name="about_header">על זמנים</string>
+    <string name="about_menu">על האפליקציה</string>
+    <string name="Midnight">חצות</string>
+    <string name="FastEnds">סוף התענית</string>
+    <string name="Mincha">סוף זמן מנחה</string>
+    <string name="notifications_category">הודעות</string>
+    <string name="dynamic_location">מקום דינמי</string>
+</resources>
