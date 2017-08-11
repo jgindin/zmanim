@@ -51,9 +51,9 @@ public class LogUtils {
 
 
   public static void logError(
-    String    where,
-    String    message,
-    Throwable error
+    String              where,
+    String              message,
+    @Nullable Throwable error
   ) {
     //noinspection NullArgumentToVariableArgMethod
     logError( where, message, error, (Pair<String, String>[])null );
@@ -61,14 +61,24 @@ public class LogUtils {
 
 
   public static void logError(
-    String                  where,
-    String                  message,
-    Throwable               error,
+    String                            where,
+    String                            message,
+    @Nullable Throwable               error,
     @Nullable Pair<String, String>... moreInfo
   ) {
 
 
     if ( BuildConfig.DEBUG ) {
+      if ( moreInfo != null ) {
+        StringBuilder extra = new StringBuilder();
+        for ( Pair<String, String> info : moreInfo ) {
+          extra.append( info.first ).append( ": " ).append( info.second ).append( "\n" );
+        }
+
+        message += extra.toString();
+      }
+
+
       Log.e( where, "Msg: " + message, error );
     }
     else {
