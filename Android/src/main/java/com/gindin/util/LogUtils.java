@@ -70,7 +70,7 @@ public class LogUtils {
 
     if ( BuildConfig.DEBUG ) {
       if ( moreInfo != null ) {
-        StringBuilder extra = new StringBuilder();
+        StringBuilder extra = new StringBuilder( "\n" );
         for ( Pair<String, String> info : moreInfo ) {
           extra.append( info.first ).append( ": " ).append( info.second ).append( "\n" );
         }
