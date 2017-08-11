@@ -205,6 +205,8 @@ public class HebrewDate
       zmanimList.add( getZmanim( location, type ) );
     }
 
+    locationToZmanim.put( location, zmanimList );
+
     return zmanimList;
   }
 
