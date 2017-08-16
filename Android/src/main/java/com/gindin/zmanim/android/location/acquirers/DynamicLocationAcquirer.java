@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.location.acquirers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -166,18 +167,7 @@ public class DynamicLocationAcquirer
     if ( bestLocation.first != null ) {
 
       final TimeZone timeZone = getTimeZoneFromPrefs();
-
-      ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-        .fromProvider( bestLocation.first.getProvider() )
-        .inTimeZone( timeZone )
-        .at( bestLocation.first.getTime() )
-        .atLatitude( bestLocation.first.getLatitude() )
-        .atLongitude( bestLocation.first.getLongitude() );
-
-      if ( bestLocation.first.hasAccuracy() ) builder.withAccuracy( bestLocation.first.getAccuracy() );
-      if ( bestLocation.first.hasAltitude() ) builder.atElevation( bestLocation.first.getAltitude() );
-
-      location = builder.build();
+      location = ZmanLocationUtil.fromLocation( bestLocation.first, timeZone );
     }
     else {
 
@@ -217,21 +207,8 @@ public class DynamicLocationAcquirer
       stopListeningToLocations();
     }
 
-    locationManager.saveLastLocation( newLocation );
-
     final TimeZone timeZone = getTimeZoneFromPrefs();
-
-    ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-      .fromProvider( newLocation.getProvider() )
-      .inTimeZone( timeZone )
-      .at( newLocation.getTime() )
-      .atLatitude( newLocation.getLatitude() )
-      .atLongitude( newLocation.getLongitude() );
-
-    if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
-    if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
-
-    ZmanimLocation location = builder.build();
+    ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
 
     fireLocationAcquiredEvent( location, false );
   }
