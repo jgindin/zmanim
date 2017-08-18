@@ -9,9 +9,9 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
@@ -37,7 +37,7 @@ public class LocationToAddressConverter {
 
 
   public LocationToAddressConverter(
-    final Activity          activity,
+    final Context     context,
     EventBus          eventBus,
     Geocoder          geocoder,
     SharedPreferences personalPrefs
@@ -48,13 +48,13 @@ public class LocationToAddressConverter {
     CachedLocationResolver.IOFactory ioFactory = new CachedLocationResolver.IOFactory() {
       @Override
       public InputStream openInput() throws FileNotFoundException {
-        return activity.openFileInput( "CachedLocations" );
+        return context.openFileInput( "CachedLocations" );
       }
 
 
       @Override
       public FileOutputStream openOutput() throws FileNotFoundException {
-        return activity.openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
+        return context.openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
       }
 
 
@@ -73,8 +73,8 @@ public class LocationToAddressConverter {
     orderedResolvers.add( cachedLocationResolver );
     orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
 
-    orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
     orderedResolvers.add( new MapQuestResolver( eventBus, personalPrefs ) );
+    orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
 
     orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
 
@@ -120,6 +120,7 @@ public class LocationToAddressConverter {
 
 
   private void handleLocationAcquired( @NotNull ZmanimLocation location ) {
+
     if ( !location.isResolved() && !location.isInvalid ) {
       orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
     }

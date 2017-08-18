@@ -44,7 +44,7 @@ public class PlaceAcquiredEvent
 
   @Override
   public void dispatch( Handler handler ) {
-      handler.placeAcquired( place );
+    handler.placeAcquired( place );
   }
 
 

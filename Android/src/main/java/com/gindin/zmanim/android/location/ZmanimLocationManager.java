@@ -11,6 +11,9 @@ import com.gindin.zmanim.android.location.acquirers.LatitudeLongitudeLocationAcq
 import com.gindin.zmanim.android.location.acquirers.LocationAcquirer;
 import com.gindin.zmanim.android.location.acquirers.StaticLocationAcquirer;
 import com.gindin.zmanim.android.prefs.LocationProviders;
+import com.gindin.zmanlib.location.ZmanimLocation;
+
+import org.jetbrains.annotations.NotNull;
 
 import android.Manifest;
 import android.content.Context;
@@ -79,6 +82,10 @@ public class ZmanimLocationManager {
   /** Listen for requests to get a new location. */
   private RequestLocationUpdateEvent.Handler                locationRequestHandler;
 
+  /** Listen for the location to be acquired in order to cache it. */
+  private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
+
+
 
   public ZmanimLocationManager(
     Context           context,
@@ -103,6 +110,26 @@ public class ZmanimLocationManager {
       }
     };
     eventBus.addHandler( locationRequestHandler );
+
+    locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
+      @Override
+      public void onLocationAcquired(
+        ZmanimLocation location,
+        boolean isCachedLocation
+      ) {
+        lastKnownLocationProvider.save( location );
+      }
+
+
+      @Override
+      public void onError(
+        @NotNull LocationError error,
+        @NotNull ZmanimLocation lastKnownLocation
+      ) {
+        // Ignore on error...
+      }
+    };
+    eventBus.addHandler( locationAcquiredHandler );
   }
 
 
@@ -111,6 +138,11 @@ public class ZmanimLocationManager {
     if ( locationRequestHandler != null ) {
       eventBus.removeHandler( locationRequestHandler );
       locationRequestHandler = null;
+    }
+
+    if ( locationAcquiredHandler != null ) {
+      eventBus.removeHandler( locationAcquiredHandler );
+      locationAcquiredHandler = null;
     }
 
     cancel();
@@ -240,12 +272,6 @@ public class ZmanimLocationManager {
       //noinspection MissingPermission
       locationManager.removeUpdates( listener );
     }
-  }
-
-
-  public void saveLastLocation( Location lastLocation ) {
-
-    lastKnownLocationProvider.save( lastLocation );
   }
 
 

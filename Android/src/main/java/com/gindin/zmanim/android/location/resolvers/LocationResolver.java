@@ -179,11 +179,12 @@ abstract class LocationResolver {
     @NotNull final List<LocationResolver>  nextResolvers
   ) {
 
-    if ( location.getLocationName().trim().length() == 0 ) {
+    if ( location.getLocationName().trim().isEmpty() ) {
       eventBus.fire( new LocationAcquiredEvent( location, true, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
     }
 
     AsyncTask<ZmanimLocation,Void,ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
+      @Nullable
       @Override
       protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
         return resolveFromNameInBackground( zmanimLocations[0] );
@@ -218,8 +219,6 @@ abstract class LocationResolver {
       }
 
       if ( resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
-        LogUtils.debug( "LocationResolver", "No one resolved location:" + originalLocation );
-
         eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false,
           new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) ) );
       }
