@@ -43,7 +43,7 @@ public class ZmanLocationJSON {
 
     jsonLocation.put( USER_NAME, location.originalUserName );
 
-    return jsonLocation.toString();
+    return jsonLocation.toString( 2 );
   }
 
 
@@ -63,7 +63,7 @@ public class ZmanLocationJSON {
     if ( name.equals( NO_NAME ) ) {
       name = null;
     }
-    String userName = root.getString( USER_NAME );
+    String userName = root.optString( USER_NAME );
 
     return new ZmanimLocation.Builder()
       .atLatitude( latitude )
