@@ -6,6 +6,7 @@ package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import org.jetbrains.annotations.Nullable;

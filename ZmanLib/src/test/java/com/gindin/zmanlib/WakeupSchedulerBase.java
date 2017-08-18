@@ -3,6 +3,8 @@ package com.gindin.zmanlib;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.notification.NotifiedZmanim;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
@@ -127,11 +129,11 @@ abstract class WakeupSchedulerBase {
 
     @Override
     public boolean hasBeenNotified(
-      Calendar    now,
+      Calendar    zmanTime,
       Zmanim.Type type
     ) {
 
-      final NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( now ) );
+      final NotifiedZmanim notifiedForDay = notifiedZmanim.get( HebrewCalendar.getForDate( zmanTime ) );
       return notifiedForDay != null && notifiedForDay.contains( type );
     }
 

@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.prefs;
 import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
-import com.gindin.zmanlib.NotificationDefaults;
+import com.gindin.zmanlib.notification.NotificationDefaults;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.SharedPreferences;

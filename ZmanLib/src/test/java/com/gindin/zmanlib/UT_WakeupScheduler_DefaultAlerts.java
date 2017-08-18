@@ -1,5 +1,7 @@
 package com.gindin.zmanlib;
 
+import com.gindin.zmanlib.notification.NotificationDefaults;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Test;
 
