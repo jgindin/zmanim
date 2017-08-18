@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Zehut Yosef</string>
+  <string name="app_name">זכות יוסף</string>
   <string name="arvit">ערבית</string>
   <string name="mincha">מנחה</string>
   <string name="meen_shalosh">מעין שלש</string>
@@ -24,5 +24,5 @@
   <string name="pref_fonts_size">TRANSLATE ME</string>
   <string name="pref_fonts_size_choose">TRANSLATE ME</string>
   <string name="pref_fonts_size_summary">TRANSLATE ME</string>
-  <string name="action_settings">TRANSLATE ME</string>
+  <string name="action_settings">הגדרות</string>
 </resources>
