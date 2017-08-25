@@ -83,33 +83,35 @@ class AndroidResolver
   @SuppressWarnings( "FeatureEnvy" )
   protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation location ) {
 
-    if ( !Geocoder.isPresent() ) {
-      return null;
-    }
+    ZmanimLocation resolved = null;
 
-    try {
-      List<Address> addresses = geocoder.getFromLocationName( location.getLocationName(), 5 );
+    if ( Geocoder.isPresent() ) {
 
-      if ( ( null != addresses ) && !addresses.isEmpty() ) {
-        final Address address = addresses.get( 0 );
-        return new ZmanimLocation.Builder()
-          .locationName( addressToLocationName( address ) )
-          .atLatitude( address.getLatitude() )
-          .atLongitude( address.getLongitude() )
-          .inTimeZone( location.getTimeZone() )
-          .build();
+      try {
+        List<Address> addresses = geocoder.getFromLocationName( location.getLocationName(), 5 );
+
+        if ( ( null != addresses ) && !addresses.isEmpty() ) {
+          final Address address = addresses.get( 0 );
+          resolved = new ZmanimLocation.Builder()
+            .locationName( addressToLocationName( address ) )
+            .atLatitude( address.getLatitude() )
+            .atLongitude( address.getLongitude() )
+            .inTimeZone( location.getTimeZone() )
+            .build();
+        }
       }
-    }
-    catch ( IOException ioe ) {
-      // Docs for Geocoder.getFromLocationName say this happens when there's no network connectivity, or
-      //  there's some other I/O error. In any case, it can happen...
-      //LogUtils.logError( "AR::updateLocationFromPlace", "", ioe );
-    }
-    catch ( Exception e ) {
-      LogUtils.logError( "AR::updateLocationFromPlace", "", e );
+      catch ( IOException ioe ) {
+        // Docs for Geocoder.getFromLocationName say this happens when there's no network connectivity, or
+        //  there's some other I/O error. In any case, it can happen...
+        //LogUtils.logError( "AR::updateLocationFromPlace", "", ioe );
+      }
+      catch ( Exception e ) {
+        LogUtils.logError( "AR::updateLocationFromPlace", "", e );
+      }
+
     }
 
-    return null;
+    return resolved;
   }
 
 

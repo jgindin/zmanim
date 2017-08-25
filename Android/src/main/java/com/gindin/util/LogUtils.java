@@ -12,6 +12,7 @@ import org.acra.ErrorReporter;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.Date;
@@ -51,9 +52,9 @@ public class LogUtils {
 
 
   public static void logError(
-    String    where,
-    String    message,
-    Throwable error
+    String              where,
+    String              message,
+    @Nullable Throwable error
   ) {
     //noinspection NullArgumentToVariableArgMethod
     logError( where, message, error, (Pair<String, String>[])null );
@@ -61,48 +62,14 @@ public class LogUtils {
 
 
   public static void logError(
-    String                  where,
-    String                  message,
-    Throwable               error,
+    String                            where,
+    String                            message,
+    @Nullable Throwable               error,
     @Nullable Pair<String, String>... moreInfo
   ) {
 
-
-    if ( BuildConfig.DEBUG ) {
-      Log.e( where, "Msg: " + message, error );
-    }
-    else {
-
-      final ErrorReporter errorReporter = ACRA.getErrorReporter();
-      errorReporter.putCustomData( "Where", where );
-      errorReporter.putCustomData( "Message", message );
-      errorReporter.putCustomData( "LogTime", new Date( System.currentTimeMillis() ).toString() );
-
-      if ( null != moreInfo ) {
-        for ( Pair<String, String> info : moreInfo ) {
-          errorReporter.putCustomData( info.first, info.second );
-        }
-      }
-
-      // We want this to be silent...it's something we're interested in logging, but the user
-      //  shouldn't know/care...
-      if ( error == null ) {
-        error = new Exception( message );
-      }
-
-      errorReporter.handleSilentException( error );
-
-      // Remove the extra data that was passed in here. But if someone had added additional info
-      //  besides this, then presumably it should remain...
-      errorReporter.removeCustomData( "Where" );
-      errorReporter.removeCustomData( "Message" );
-      errorReporter.removeCustomData( "LogTime" );
-      if ( moreInfo != null ) {
-        for ( Pair<String, String> info : moreInfo ) {
-          errorReporter.removeCustomData( info.first );
-        }
-      }
-    }
+    LogErrorAsyncTask task = new LogErrorAsyncTask( where, message, error, moreInfo );
+    task.execute( (Void)null );
   }
 
 
@@ -111,37 +78,8 @@ public class LogUtils {
     List<Pair<String,String>>   messages
   ) {
 
-    if ( BuildConfig.DEBUG ) {
-
-      StringBuilder msg = new StringBuilder();
-      for ( Pair<String, String> pair : messages ) {
-        msg.append( pair.first ).append( ": " ).append( pair.second );
-      }
-
-      Log.i( eventName, msg.toString() );
-    }
-    else {
-
-      Map<String,String> messageMap = new HashMap<String, String>();
-      if ( null != messages ) {
-        for ( Pair<String, String> message : messages ) {
-          messageMap.put( message.first, message.second );
-        }
-      }
-
-      FlurryAgent.logEvent( eventName, messageMap );
-    }
-  }
-
-
-  public static void debug(
-    String tag,
-    String message
-  ) {
-
-    if ( BuildConfig.DEBUG ) {
-      Log.i( tag, message );
-    }
+    LogEventAsyncTask task = new LogEventAsyncTask( eventName, messages );
+    task.execute( (Void)null );
   }
 
 
@@ -164,5 +102,137 @@ public class LogUtils {
       }
     }
   }
+
+
+
+  private static class LogEventAsyncTask
+    extends AsyncTask<Void,Void,Void> {
+
+    private final String                                    eventName;
+    private final List<Pair<String,String>>                 messages;
+
+
+    LogEventAsyncTask(
+      String eventName,
+      List<Pair<String, String>> messages
+    ) {
+      this.eventName = eventName;
+      this.messages = messages;
+    }
+
+
+    @Override
+    protected Void doInBackground( Void... voids ) {
+
+      if ( BuildConfig.DEBUG ) {
+
+        StringBuilder msg = new StringBuilder();
+        for ( Pair<String, String> pair : messages ) {
+          msg.append( pair.first ).append( ": " ).append( pair.second );
+        }
+
+        Log.i( eventName, msg.toString() );
+      }
+      else {
+
+        Map<String,String> messageMap = new HashMap<String, String>();
+        if ( null != messages ) {
+          for ( Pair<String, String> message : messages ) {
+            messageMap.put( message.first, message.second );
+          }
+        }
+
+        FlurryAgent.logEvent( eventName, messageMap );
+      }
+
+      return null;
+    }
+  }
+
+
+  private static class LogErrorAsyncTask
+    extends AsyncTask<Void,Void,Void> {
+
+    private final String                                    where;
+
+    private final String                                    msg;
+
+    @Nullable
+    private final Throwable                                 error;
+
+    @Nullable
+    private final Pair<String, String>[]                    moreInfo;
+
+
+    LogErrorAsyncTask(
+      String                            where,
+      String                            message,
+      @Nullable Throwable               error,
+      @Nullable Pair<String, String>... moreInfo
+    ) {
+      this.where = where;
+      this.msg = message;
+      this.moreInfo = moreInfo;
+
+      // We want this to be silent...it's something we're interested in logging, but the user
+      //  shouldn't know/care...
+      if ( ( error == null ) && !BuildConfig.DEBUG ) {
+        this.error = new Exception( message );
+      }
+      else {
+        this.error = error;
+      }
+    }
+
+
+    @Override
+    protected Void doInBackground( Void... voids ) {
+
+      String message = msg;
+
+      if ( BuildConfig.DEBUG ) {
+        if ( moreInfo != null ) {
+          StringBuilder extra = new StringBuilder( "\n" );
+          for ( Pair<String, String> info : moreInfo ) {
+            extra.append( info.first ).append( ": " ).append( info.second ).append( "\n" );
+          }
+
+          message += extra.toString();
+        }
+
+        Log.e( where, "Msg: " + message, error );
+      }
+      else {
+
+        final ErrorReporter errorReporter = ACRA.getErrorReporter();
+        errorReporter.putCustomData( "Where", where );
+        errorReporter.putCustomData( "Message", message );
+        errorReporter.putCustomData( "LogTime", new Date( System.currentTimeMillis() ).toString() );
+
+        if ( null != moreInfo ) {
+          for ( Pair<String, String> info : moreInfo ) {
+            errorReporter.putCustomData( info.first, info.second );
+          }
+        }
+
+
+        errorReporter.handleSilentException( error );
+
+        // Remove the extra data that was passed in here. But if someone had added additional info
+        //  besides this, then presumably it should remain...
+        errorReporter.removeCustomData( "Where" );
+        errorReporter.removeCustomData( "Message" );
+        errorReporter.removeCustomData( "LogTime" );
+        if ( moreInfo != null ) {
+          for ( Pair<String, String> info : moreInfo ) {
+            errorReporter.removeCustomData( info.first );
+          }
+        }
+      }
+
+      return null;
+    }
+  }
+
 
 }  // End of LogUtils class

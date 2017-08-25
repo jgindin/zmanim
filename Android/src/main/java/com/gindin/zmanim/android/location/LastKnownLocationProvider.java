@@ -64,11 +64,13 @@ public class LastKnownLocationProvider {
   }
 
 
-  public void save( Location newLocation ) {
+  public void save( ZmanimLocation newLocation ) {
 
     if ( null == newLocation ) {
       return;
     }
+
+    lastKnownLocation = toLocation( newLocation );
 
     if ( currentlyRunningSaveTask != null ) {
       currentlyRunningSaveTask.cancel( false );
@@ -92,22 +94,12 @@ public class LastKnownLocationProvider {
   }
 
 
-  private void saveInBackground( Location newLocation ) {
+  private void saveInBackground( ZmanimLocation zmanimLocation ) {
 
     FileOutputStream output = null;
     try {
       output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
 
-      ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-        .fromProvider( newLocation.getProvider() )
-        .at( newLocation.getTime() )
-        .atLatitude( newLocation.getLatitude() )
-        .atLongitude( newLocation.getLongitude() );
-
-      if ( newLocation.hasAccuracy() ) builder.withAccuracy( newLocation.getAccuracy() );
-      if ( newLocation.hasAltitude() ) builder.atElevation( newLocation.getAltitude() );
-
-      ZmanimLocation zmanimLocation = builder.build();
       zmanimLocation.save( output );
     }
     catch ( Exception e ) {
@@ -131,10 +123,10 @@ public class LastKnownLocationProvider {
 
 
   private class SaveLocationTask
-    extends AsyncTask<Location, Void, Void> {
+    extends AsyncTask<ZmanimLocation, Void, Void> {
 
     @Override
-    protected Void doInBackground( Location... params ) {
+    protected Void doInBackground( ZmanimLocation... params ) {
       saveInBackground( params[0] );
 
       return null;

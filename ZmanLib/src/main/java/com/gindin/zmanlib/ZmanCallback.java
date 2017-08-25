@@ -1,9 +1,11 @@
 package com.gindin.zmanlib;
 
+import com.gindin.util.Pair;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 
@@ -145,10 +147,13 @@ public abstract class ZmanCallback {
   /**
    * Has the user been notified of the specified zman for the specified date?
    *
+   * @param zmanTime The time of the zman
+   * @param type The type of zman to check for
+   *
    * @return true if notification has happened; false otherwise.
    */
   public abstract boolean hasBeenNotified(
-    Calendar    now,
+    Calendar    zmanTime,
     Zmanim.Type type
   );
 
@@ -181,6 +186,17 @@ public abstract class ZmanCallback {
   public abstract boolean formatTimeWithSeconds();
 
 
+  /**
+   * Log some information. Should not do anything unless debugging...
+   */
+  public void log(
+    String                  where,
+    String                  message,
+    Throwable               error,
+    @Nullable Pair<String, String>... moreInfo
+  ) {
+  }
+
 
   static class Adapter
     extends ZmanCallback {
@@ -212,7 +228,7 @@ public abstract class ZmanCallback {
 
     @Override
     public boolean hasBeenNotified(
-      Calendar    now,
+      Calendar    zmanTime,
       Zmanim.Type type
     ) {
       return false;

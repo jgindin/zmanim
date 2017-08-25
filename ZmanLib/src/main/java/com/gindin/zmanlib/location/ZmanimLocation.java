@@ -25,14 +25,32 @@ public class ZmanimLocation
 
   public static final class Builder {
 
+    /** Name of the location provider. */
     private String                                          providerName = ZMANIM_PROVIDER;
+
+    /** What time is it in this location? */
     private long                                            locationTime = System.currentTimeMillis();
+
+    /** How accurate is the location? -1 to indicate this isn't applicable. */
     private float                                           accuracy = -1;
+
+    /** What's the name of this location? */
     private String                                          locationName = UNKNOWN_LOCATION;
+
+    /** Time zone for this location. */
     private TimeZone                                        timeZone = TimeZone.getDefault();
+
+    /** What's the latitude of this location? */
     private double                                          latitude = 0.0;
+
+    /** What's the longitude of this location? */
     private double                                          longitude = 0.0;
+
+    /** What's the altitude of this location? <= 0 to indicate unknown. */
     private double                                          elevation = 0.0;
+
+    /** Only used when the user gives us a name and we have to go find out where it is. */
+    private String                                          userName;
 
 
     public Builder fromProvider( String providerName ) {
@@ -47,6 +65,11 @@ public class ZmanimLocation
       else {
         this.locationName = locationName;
       }
+      return this;
+    }
+
+    public Builder userName( String userName ) {
+      this.userName = userName;
       return this;
     }
 
@@ -93,6 +116,7 @@ public class ZmanimLocation
       return this
         .fromProvider( source.providerName )
         .locationName( source.getLocationName() )
+        .userName( source.originalUserName )
         .at( source.locationTime )
         .inTimeZone( source.getTimeZone() )
         .atLatitude( source.getLatitude() )
@@ -107,7 +131,7 @@ public class ZmanimLocation
     }
 
     public ZmanimLocation build() {
-      return new ZmanimLocation( providerName, locationName, locationTime, timeZone, latitude, longitude, elevation, accuracy );
+      return new ZmanimLocation( this );
     }
   }
 
@@ -138,55 +162,44 @@ public class ZmanimLocation
    */
   public final boolean                                      isInvalid;
 
-
   /**
-   * @param providerName Name of the location provider.
-   * @param locationName What's the name of this location?
-   * @param locationTime What time is it in this location?
-   * @param locationTimeZone Time zone for this location
-   * @param accuracy How accurate is the location? -1 to indicate this isn't applicable.
-   * @param latitude What's the latitude of this location?
-   * @param longitude What's the longitude of this location?
-   * @param altitude What's the altitude of this location? <= 0 to indicate unknown.
+   * When the user gives us just a name of a location, and we have to go track it down, holding on to that name
+   *  allows us to recognize when we're seeing the same location again.
    */
+  public final String                                       originalUserName;
+
+
   private ZmanimLocation(
-    String    providerName,
-    String    locationName,
-    long      locationTime,
-    TimeZone  locationTimeZone,
-    double    latitude,
-    double    longitude,
-    double    altitude,
-    float     accuracy
-    ) {
+    Builder builder
+  ) {
 
     this.isInvalid = false;
 
-    this.providerName = providerName;
-    this.locationTime = locationTime;
-    setLocationName( locationName );
-    setLatitude( latitude );
-    setLongitude( longitude );
+    this.providerName = builder.providerName;
+    this.locationTime = builder.locationTime;
+    this.originalUserName = builder.userName;
+    setLocationName( builder.locationName );
+    setLatitude( builder.latitude );
+    setLongitude( builder.longitude );
 
-    if ( accuracy >= 0 ) {
-      this.accuracy = accuracy;
+    if ( builder.accuracy >= 0 ) {
+      this.accuracy = builder.accuracy;
     }
     else {
       this.accuracy = -1;
     }
 
-    if ( altitude < 0 ) {
-      //noinspection AssignmentToMethodParameter
-      altitude = 0.0;
+    if ( builder.elevation < 0 ) {
+      builder.elevation = 0.0;
     }
-    setElevation( altitude );
+    setElevation( builder.elevation );
 
     // If we don't set a time zone, then it defaults to GMT...
-    if ( null == locationTimeZone ) {
+    if ( null == builder.timeZone ) {
       setTimeZone( TimeZone.getDefault() );
     }
     else {
-      setTimeZone( locationTimeZone );
+      setTimeZone( builder.timeZone );
     }
   }
 
@@ -200,7 +213,7 @@ public class ZmanimLocation
     this.accuracy = -1;
     this.providerName = UNKNOWN_LOCATION;
     this.locationTime = 0;
-
+    this.originalUserName = "";
   }
 
 

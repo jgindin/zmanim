@@ -7,6 +7,7 @@ package com.gindin.zmanim.android;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LastKnownLocationProvider;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
@@ -111,16 +112,7 @@ class AppUpgrader {
 
       lastKnownLocation.setTime( locationPreferences.getLong( "lastfixTime", 0 ) );
 
-      ZmanimLocation.Builder builder = new ZmanimLocation.Builder()
-        .fromProvider( lastKnownLocation.getProvider() )
-        .at( lastKnownLocation.getTime() )
-        .atLatitude( lastKnownLocation.getLatitude() )
-        .atLongitude( lastKnownLocation.getLongitude() );
-
-      if ( lastKnownLocation.hasAccuracy() ) builder.withAccuracy( lastKnownLocation.getAccuracy() );
-      if ( lastKnownLocation.hasAltitude() ) builder.atElevation( lastKnownLocation.getAltitude() );
-
-      ZmanimLocation location = builder.build();
+      ZmanimLocation location = ZmanLocationUtil.fromLocation( lastKnownLocation );
 
       OutputStream output = null;
       try {

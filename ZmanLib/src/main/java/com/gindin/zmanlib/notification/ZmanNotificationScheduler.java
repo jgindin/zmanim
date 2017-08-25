@@ -2,8 +2,9 @@
  * Copyright (c) 2015. Jay R. Gindin
  */
 
-package com.gindin.zmanlib;
+package com.gindin.zmanlib.notification;
 
+import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -17,11 +18,12 @@ import java.util.List;
 /**
  * Utilities for working with zmanim.
  */
+@SuppressWarnings( "Convert2Diamond" )
 public class ZmanNotificationScheduler {
 
-  static final int                                          FIFTEEN_MINUTES = 15;
+  public static final int                                   FIFTEEN_MINUTES = 15;
 
-  static final int                                          ONE_HOUR = 60;
+  public static final int                                   ONE_HOUR = 60;
 
   public static final int                                   MIN_TO_MS_CONVERSION = 60 * 1000;
 
@@ -30,9 +32,6 @@ public class ZmanNotificationScheduler {
 
   /** Sentinel value to indicate the user doesn't want an alert for the zman. */
   public static final int                                   NO_ALERT = -1;
-
-  /** How often should we be checking for something to do? */
-  public static final int                                   CHECK_INTERVAL = MAX_ALERT_TIME / 2;
 
   /** If we wake up within a short time of needing to alert anyways, just do it. */
   private static final int                                  DEFAULT_ALERT_FUDGE_FACTOR = 30 * 1000;
@@ -87,7 +86,6 @@ public class ZmanNotificationScheduler {
     //  the day's zmanim, we're not going to find last night's chatzot.
     //  For now, this is going to be a bug...
 
-
     // If there are no candidates, we're done.
     if ( restOfTheDaysZmanim.isEmpty() ) {
       return;
@@ -96,14 +94,14 @@ public class ZmanNotificationScheduler {
     final long timeInMillis = now.getTimeInMillis();
 
     for ( ZmanNotification zmanNotification : restOfTheDaysZmanim ) {
-      // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up overwriting the time
-      //  each iteration through the loop...
-      Calendar alertAt = Calendar.getInstance();
-      alertAt.setTimeZone( now.getTimeZone() );
 
       final long alertTime = computeAlertTime( zmanNotification );
 
       if ( alertTime >= 0 ) {
+        // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up overwriting the time
+        //  each iteration through the loop...
+        Calendar alertAt = Calendar.getInstance();
+        alertAt.setTimeZone( now.getTimeZone() );
         alertAt.setTimeInMillis( timeInMillis + alertTime );
         zmanCallback.scheduleAlert( zmanNotification.zman, location,  alertAt );
       }
@@ -117,6 +115,7 @@ public class ZmanNotificationScheduler {
    * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of
    *  time (in ms) until the zman occurs.
    */
+  @SuppressWarnings( "FeatureEnvy" )
   private List<ZmanNotification> findTheRestOfTheDaysZmanim(
     final ZmanimLocation    location,
     final Calendar          now,
@@ -132,7 +131,9 @@ public class ZmanNotificationScheduler {
     //    - Are after the current time;
     List<ZmanNotification> candidates = new ArrayList<>();
 
-    final long nowInMillis = now.getTimeInMillis();
+    // Note that we're going to pretend that the current time is just a bit earlier than it actually is. This will
+    //  compensate in case Android got a bit sloppy and woke us up just a smidge late...
+    final long nowInMillis = now.getTimeInMillis() - DEFAULT_ALERT_FUDGE_FACTOR;
 
     for ( Zmanim zmanim : daysZmanim ) {
       String zmanName = zmanCallback.getPreferredZman( zmanim.type );
@@ -149,10 +150,15 @@ public class ZmanNotificationScheduler {
       //  just missed it, we'll still add it as a candidate.
       final Calendar zmanTime = zman.getTime();
       if ( zmanTime != null ) {
-        long msUntilZman = zmanTime.getTimeInMillis() - nowInMillis;
-        if ( ( ( msUntilZman + DEFAULT_ALERT_FUDGE_FACTOR ) > 0 ) && !zmanCallback.hasBeenNotified( now, zman.type ) ) {
 
-          candidates.add( new ZmanNotification( zman, msUntilZman ) );
+        long msUntilZman = zmanTime.getTimeInMillis() - nowInMillis;
+        boolean isZmanAfterNow = ( msUntilZman >= 0 );
+        final boolean notYetNotified = !zmanCallback.hasBeenNotified( zmanTime, zman.type );
+        
+        if ( isZmanAfterNow && notYetNotified ) {
+          // Note that the time until the zman we calculated above was based on our fudging the current
+          //  time. So now, we have to undo that fudge.
+          candidates.add( new ZmanNotification( zman, msUntilZman - DEFAULT_ALERT_FUDGE_FACTOR ) );
         }
       }
     }

@@ -40,9 +40,7 @@
 
   <string name="unable_to_determine_location_header">Enable Location</string>
 
-  <string name="unable_to_determine_location_button">
-    Enable
-  </string>
+  <string name="unable_to_determine_location_button">Enable</string>
 
   <string name="unable_to_determine_location_error">Unable to determine your current location.</string>
   <string name="no_location_management">Please enable a location source.</string>

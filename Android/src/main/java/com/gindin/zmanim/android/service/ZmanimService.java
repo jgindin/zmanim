@@ -1,19 +1,24 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
+import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.ZmanCallback;
-import com.gindin.zmanlib.ZmanNotificationScheduler;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zman;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -21,6 +26,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -44,6 +50,7 @@ import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.Loca
  *          the next alarm.
  *  </ol>
  */
+@SuppressWarnings( "Convert2Diamond" )
 public class ZmanimService
   extends Service {
 
@@ -92,6 +99,8 @@ public class ZmanimService
 
   private ZmanNotificationScheduler                         zmanNotificationScheduler;
 
+  private LocationToAddressConverter                        locationToAddressConverter;
+
 
 
   /**
@@ -121,6 +130,7 @@ public class ZmanimService
           final Throwable throwable
         ) {
 
+          servicingUser = false;
           releaseWakefulIntent();
 
           exceptionHandler.uncaughtException( thread, throwable );
@@ -134,6 +144,8 @@ public class ZmanimService
     LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
     locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
+    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ), personalPrefs );
+
     ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
       @Override public void scheduleAlert(
         Zman              zman,
@@ -142,7 +154,22 @@ public class ZmanimService
       ) {
         scheduleUserAlert( zman, location, alertAt );
       }
+
+
+      @Override
+      public void log(
+        String                  where,
+        String                  message,
+        Throwable               error,
+        @Nullable Pair<String, String>... moreInfo
+      ) {
+
+        if ( BuildConfig.DEBUG ) {
+          LogUtils.logError( where, message, error, moreInfo );
+        }
+      }
     };
+
     zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
   }
 
@@ -165,7 +192,13 @@ public class ZmanimService
     //    its process has gone away...
     String action = ( intent == null ? "" : intent.getAction() );
 
-    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
+    if ( intent == null ) {
+      // We got killed and now Android is restarting us. But this means we don't have a wake lock! Just
+      //  quickly schedule ourselves to get back on track...
+      ZmanimReceiver.scheduleRepeatingChecks( this );
+      releaseWakefulIntent();
+    }
+    else if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
       servicingUser = true;
 
       findCurrentLocation();
@@ -174,9 +207,7 @@ public class ZmanimService
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       servicingUser = false;
-      if ( handlingAlarmsFor == null ) {
-        stopSelf();
-      }
+      releaseWakefulIntent();
     }
     else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
 
@@ -209,7 +240,7 @@ public class ZmanimService
     //    ...the default implementation of onStartCommand() returns START_STICKY, which means
     //    that Android will keep trying to restart our service after our process gets terminated.
     //    This is a ridiculous default value and goes a long way towards explaining Android’s memory issues.
-    return START_NOT_STICKY;
+    return START_STICKY;
   }
 
 
@@ -220,6 +251,11 @@ public class ZmanimService
     if ( null != locationManager ) {
       locationManager.onStop();
       locationManager = null;
+    }
+
+    if ( locationToAddressConverter != null ) {
+      locationToAddressConverter.onDestroy();
+      locationToAddressConverter = null;
     }
 
     super.onDestroy();
@@ -352,9 +388,10 @@ public class ZmanimService
     if ( handlingAlarmsFor != null ) {
       WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
       handlingAlarmsFor = null;
-      if ( !servicingUser ) {
-        stopSelf();
-      }
+    }
+
+    if ( !servicingUser ) {
+      stopSelf();
     }
   }
 

@@ -1,5 +1,6 @@
 package com.gindin.zmanlib;
 
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.junit.Test;
 
@@ -174,7 +175,7 @@ public class UT_WakeupScheduler_ConfiguredAlerts
        "TzaitHacochavim     | 9:53:08 PM     | Sat Jul 22 21:38:08 PDT 2017  | true              |\n" +
        "ShabbatEnd          | 9:40:58 PM     | Sat Jul 22 21:25:58 PDT 2017  | true              |\n" +
        "NightChatzot        | 1:15:45 AM     | Sun Jul 23 01:00:45 PDT 2017  | true              |\n"
-   );
+     );
    }
 
 

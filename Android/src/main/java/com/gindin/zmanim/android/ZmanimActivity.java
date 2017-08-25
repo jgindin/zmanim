@@ -95,8 +95,6 @@ public class ZmanimActivity
 
   private ZmanimLocation                                    lastKnownLocation;
 
-  private LocationToAddressConverter                        locationToAddressConverter;
-
   private ServiceStartedEvent.Handler                       serviceStartedHandler;
 
 
@@ -177,8 +175,6 @@ public class ZmanimActivity
     /////
     // TODO: Move things things into Guice modules, etc....
     SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-
-    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ), personalPrefs );
 
     DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
     loadedPresenters.add( dateDisplayModule.create() );
@@ -272,9 +268,6 @@ public class ZmanimActivity
       presenter.destroy();
     }
     loadedPresenters.clear();
-
-    locationToAddressConverter.onDestroy();
-    locationToAddressConverter = null;
 
     LogUtils.endSession( this );
     

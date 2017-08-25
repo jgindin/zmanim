@@ -148,6 +148,19 @@ public class DisplayNotificationService
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
+//    if ( BuildConfig.DEBUG ) {
+//
+//      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
+//        new Pair<String, String>( "zman type", zmanType.name ),
+//        new Pair<String, String>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
+//        new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
+//        new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
+//        new Pair<String, String>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
+//        new Pair<String, String>( "message", notificationText ),
+//        new Pair<String, String>( "notify location", location.toString() )
+//      );
+//    }
+
     Notification notification = new NotificationCompat.Builder( this )
       .setContentTitle( getString( R.string.app_name ) )
       .setContentText( notificationText )

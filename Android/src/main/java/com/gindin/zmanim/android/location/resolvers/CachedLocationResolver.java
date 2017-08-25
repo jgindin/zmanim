@@ -67,10 +67,7 @@ class CachedLocationResolver
           return;
         }
 
-        // No sense saving the location if it was a cached location to begin with...
-        if ( !isCachedLocation ) {
-          saveCache( newLocation );
-        }
+        saveCache( newLocation );
       }
 
 
@@ -110,12 +107,21 @@ class CachedLocationResolver
   }
 
 
+  @Nullable
   private ZmanimLocation findCachedMatch( ZmanimLocation zmanimLocation ) {
 
     // Take a copy to avoid any possible ConcurrentModificationException.
     Set<ZmanimLocation> copy = locationCache.newCopy();
 
     for ( ZmanimLocation cachedLocation : copy ) {
+
+      if ( zmanimLocation.getLocationName().equals( cachedLocation.originalUserName ) ) {
+        // This is the case where the user has told us the name of their location and we've gone
+        //  and looked it up. The name the user gave us will be the location name in what's passed in, but stored
+        //  as the original user name in the resolved location.
+        return cachedLocation;
+      }
+
       if ( !zmanimLocation.isSignificantChangeFrom( cachedLocation ) && cachedLocation.hasName() ) {
         return cachedLocation;
       }
@@ -174,10 +180,9 @@ class CachedLocationResolver
     synchronized ( locationCache ) {
 
       // Make sure this new location is a significant change from all the other cache entries.
-      for ( ZmanimLocation location : locationCache ) {
-        if ( !newLocation.isSignificantChangeFrom( location ) ) {
-          return;
-        }
+      final ZmanimLocation cachedMatch = findCachedMatch( newLocation );
+      if ( null != cachedMatch ) {
+        return;
       }
 
       locationCache.add( newLocation );

@@ -18,6 +18,7 @@ public class ZmanLocationJSON {
   private static final String                               PROVIDER = "pv";
   private static final String                               ACCURACY = "ac";
   private static final String                               NAME = "name";
+  private static final String                               USER_NAME = "userName";
 
   private static final String                               NO_NAME = " - - ";
 
@@ -25,35 +26,24 @@ public class ZmanLocationJSON {
   @SuppressWarnings( "FeatureEnvy" )
   public static String toJSON( ZmanimLocation location ) {
 
-    StringBuilder json = new StringBuilder( "{" );
-    append( json, LATITUDE, Double.toString( location.getLatitude() ) );
-    json.append( ",\n" );
-
-    append( json, LONGITUDE, Double.toString( location.getLongitude() ) );
-    json.append( ",\n" );
-
-    append( json, ELEVATION, Double.toString( location.getElevation() ) );
-    json.append( ",\n" );
-
-    append( json, TIME_ZONE, location.getTimeZone().getID() );
-    json.append( ",\n" );
-
-    append( json, PROVIDER, location.providerName );
-    json.append( ",\n" );
-
-    append( json, ACCURACY, Float.toString( location.accuracy ) );
-    json.append( ",\n" );
+    JSONObject jsonLocation = new JSONObject();
+    jsonLocation.put( LATITUDE, location.getLatitude() );
+    jsonLocation.put( LONGITUDE, location.getLongitude() );
+    jsonLocation.put( ELEVATION, location.getElevation() );
+    jsonLocation.put( TIME_ZONE, location.getTimeZone().getID() );
+    jsonLocation.put( PROVIDER, location.providerName );
+    jsonLocation.put( ACCURACY, location.accuracy );
 
     if ( location.hasName() ) {
-      append( json, NAME, location.getLocationName() );
+      jsonLocation.put( NAME, location.getLocationName() );
     }
     else {
-      append( json, NAME, NO_NAME );
+      jsonLocation.put( NAME, NO_NAME );
     }
 
-    json.append( "\n}" );
+    jsonLocation.put( USER_NAME, location.originalUserName );
 
-    return json.toString();
+    return jsonLocation.toString( 2 );
   }
 
 
@@ -61,12 +51,6 @@ public class ZmanLocationJSON {
 
     JSONTokener tokener = new JSONTokener( json );
     JSONObject root = (JSONObject)tokener.nextValue();
-
-    return fromJSON( root );
-  }
-
-
-  public static ZmanimLocation fromJSON( JSONObject root ) throws JSONException {
 
     double latitude = root.getDouble( LATITUDE );
     double longitude = root.getDouble( LONGITUDE );
@@ -79,8 +63,9 @@ public class ZmanLocationJSON {
     if ( name.equals( NO_NAME ) ) {
       name = null;
     }
+    String userName = root.optString( USER_NAME );
 
-    ZmanimLocation location = new ZmanimLocation.Builder()
+    return new ZmanimLocation.Builder()
       .atLatitude( latitude )
       .atLongitude( longitude )
       .atElevation( elevation )
@@ -88,18 +73,8 @@ public class ZmanLocationJSON {
       .fromProvider( provider )
       .inTimeZone( timeZone )
       .locationName( name )
+      .userName( userName )
       .build();
-
-    return location;
   }
 
-
-  private static void append(
-    StringBuilder json,
-    String        key,
-    String        value
-  ) {
-
-    json.append( "\"" ).append( key ).append( "\": \"" ).append( value ).append( "\"" );
-  }
 }

@@ -2,8 +2,8 @@ package com.gindin.zmanim.android.service;
 
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanlib.NotifiedZmanim;
 import com.gindin.zmanlib.ZmanCallback;
+import com.gindin.zmanlib.notification.NotifiedZmanim;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
@@ -23,23 +23,15 @@ abstract class PrefsBasedZmanCallback
 
   private final SharedPreferences                           personalPrefs;
 
-  /**
-   * Where to read/write the notified zmanim.
-   */
-  private final File                                        filesDir;
-
-  /**
-   * DO NOT access this directly! Always use the getNotifiedZmanim method to ensure using for the correct date!
-   */
-  private NotifiedZmanim                                    notifiedZmanim;
-
 
   PrefsBasedZmanCallback(
     Context context
   ) {
     this.zmanimSelectionPrefs = context.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
     this.personalPrefs = context.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-    this.filesDir = context.getFilesDir();
+
+    File filesDir = context.getFilesDir();
+    NotifiedZmanim.manager.init( filesDir );
   }
 
 
@@ -69,11 +61,11 @@ abstract class PrefsBasedZmanCallback
 
   @Override
   public boolean hasBeenNotified(
-    Calendar    now,
+    Calendar    zmanTime,
     Zmanim.Type type
   ) {
 
-    getNotifiedZmanim( now );
+    NotifiedZmanim notifiedZmanim = NotifiedZmanim.manager.get( zmanTime );
     return notifiedZmanim.contains( type );
   }
 
@@ -84,7 +76,7 @@ abstract class PrefsBasedZmanCallback
     Zmanim.Type type
   ) {
 
-    getNotifiedZmanim( now );
+    NotifiedZmanim notifiedZmanim = NotifiedZmanim.manager.get( now );
     notifiedZmanim.notified( type );
 
     SaveNotifiedZmanimTask task = new SaveNotifiedZmanimTask();
@@ -98,34 +90,12 @@ abstract class PrefsBasedZmanCallback
   }
 
 
-  /**
-   * Because of the process to possibly load the previously notified zmanim, it is assumed that this method will NOT
-   * be invoked on the main thread.
-   */
-  private void getNotifiedZmanim( final Calendar now ) {
-
-    if ( notifiedZmanim == null ) {
-      notifiedZmanim = NotifiedZmanim.restore( filesDir );
-    }
-
-    if ( notifiedZmanim != null ) {
-      if ( !notifiedZmanim.isForDate( now ) ) {
-        notifiedZmanim = null;
-      }
-    }
-
-    if ( notifiedZmanim == null ) {
-      notifiedZmanim = new NotifiedZmanim( now );
-    }
-  }
-
-
   private class SaveNotifiedZmanimTask
     extends AsyncTask<NotifiedZmanim, Void, Void> {
 
     @Override
     protected Void doInBackground( NotifiedZmanim... params ) {
-      params[ 0 ].save( filesDir );
+      NotifiedZmanim.manager.save( params[ 0 ] );
 
       return null;
     }

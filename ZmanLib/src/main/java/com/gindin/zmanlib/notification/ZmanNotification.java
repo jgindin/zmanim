@@ -1,4 +1,4 @@
-package com.gindin.zmanlib;
+package com.gindin.zmanlib.notification;
 
 import com.gindin.zmanlib.zman.Zman;
 

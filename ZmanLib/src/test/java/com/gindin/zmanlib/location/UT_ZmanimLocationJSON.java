@@ -24,13 +24,14 @@ public class UT_ZmanimLocationJSON {
 
     String json = ZmanLocationJSON.toJSON( location );
     Assert.assertEquals(
-      "{\"lat\": \"47.62\",\n" +
-        "\"lon\": \"-122.33\",\n" +
-        "\"el\": \"0.0\",\n" +
-        "\"tz\": \"America/Los_Angeles\",\n" +
-        "\"pv\": \"Zmanim\",\n" +
-        "\"ac\": \"-1.0\",\n" +
-        "\"name\": \"Seattle, Washington\"\n" +
+      "{\n" +
+        "  \"ac\": -1,\n" +
+        "  \"tz\": \"America/Los_Angeles\",\n" +
+        "  \"pv\": \"Zmanim\",\n" +
+        "  \"el\": 0,\n" +
+        "  \"name\": \"Seattle, Washington\",\n" +
+        "  \"lon\": -122.33,\n" +
+        "  \"lat\": 47.62\n" +
         "}",
       json
     );

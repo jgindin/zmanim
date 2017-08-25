@@ -1,5 +1,7 @@
 package com.gindin.zmanim.android.service;
 
+import com.gindin.zmanim.android.BuildConfig;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,6 +14,10 @@ import android.support.v4.content.WakefulBroadcastReceiver;
  */
 public class ZmanimReceiver
   extends WakefulBroadcastReceiver {
+
+  private static final long                                 DEBUG_ALARM_INTERVAL = 2 * 60 * 1000;
+
+
 
   @Override
   public void onReceive(
@@ -42,10 +48,19 @@ public class ZmanimReceiver
     PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, alarmIntent, 0 );
 
     // Make sure to reschedule alarms periodically...
+    final long alarmInterval;
+    if ( BuildConfig.DEBUG ) {
+      alarmInterval = DEBUG_ALARM_INTERVAL;
+    }
+    else {
+      alarmInterval = AlarmManager.INTERVAL_HALF_HOUR;
+    }
+
+
     AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
     alarmManager.setInexactRepeating( AlarmManager.ELAPSED_REALTIME_WAKEUP,
-      SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-      AlarmManager.INTERVAL_HALF_HOUR,
+      SystemClock.elapsedRealtime() + alarmInterval,
+      alarmInterval,
       pendingIntent
     );
   }

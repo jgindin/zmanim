@@ -17,7 +17,7 @@
 package com.gindin.prefs;
 
 import com.gindin.zmanim.android.R;
-import com.gindin.zmanlib.ZmanNotificationScheduler;
+import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 
 import android.content.Context;
 import android.content.res.TypedArray;
