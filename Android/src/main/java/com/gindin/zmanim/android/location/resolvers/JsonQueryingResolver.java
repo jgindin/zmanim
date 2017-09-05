@@ -1,5 +1,8 @@
 package com.gindin.zmanim.android.location.resolvers;
 
+import android.content.SharedPreferences;
+import android.location.Address;
+import android.os.Build;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
@@ -7,17 +10,13 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import android.content.SharedPreferences;
-import android.location.Address;
-import android.os.Build;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -135,10 +134,10 @@ abstract class JsonQueryingResolver
       try {
         return doLocationResolution( zmanimLocation, params );
       }
-      catch ( ConnectException ce ) {
+      catch ( IOException | JSONException ex ) {
         // Try again
         if ( attempts == 2 ) {
-          LogUtils.logError( "resolveFromCoords", ce.getMessage(), ce );
+          LogUtils.logError( "resolveFromCoords", ex.getMessage(), ex );
         }
       }
       catch ( Exception e ) {
