@@ -142,7 +142,9 @@ public final class EventBus {
 
     List<H> handlers = handlerCollection.get( event.getClass() );
     if ( null != handlers ) {
-      for ( H handler : handlers ) {
+
+      List<H> copy = new ArrayList<>( handlers );
+      for ( H handler : copy ) {
         dispatchEvent( event, handler );
       }
     }
