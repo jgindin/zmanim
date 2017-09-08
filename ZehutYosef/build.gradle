@@ -54,7 +54,7 @@ android {
       applicationId "com.gindin.barmitzvah"
     }
 
-    zehutYosef {
+    sidur {
       applicationId "com.gindin.zehutyosef"
     }
   }
