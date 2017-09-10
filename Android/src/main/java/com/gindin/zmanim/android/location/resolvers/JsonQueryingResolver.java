@@ -134,7 +134,10 @@ abstract class JsonQueryingResolver
       try {
         return doLocationResolution( zmanimLocation, params );
       }
-      catch ( IOException | JSONException ex ) {
+      catch ( IOException ex ) {
+        // Try again; don't log anything because it can be overwhelming...
+      }
+      catch ( JSONException ex ) {
         // Try again
         if ( attempts == 2 ) {
           LogUtils.logError( "resolveFromCoords", ex.getMessage(), ex );
