@@ -36,22 +36,24 @@ public abstract class LatitudeLongitudeParser {
     private Direction                                       direction;
     private int                                             minutes;
     private int                                             degrees;
-    private int                                             seconds = 0;
+    private double                                          seconds = 0;
 
 
     public Holder() {
-      this( Direction.NORTH, 0, 0 );
+      this( Direction.NORTH, 0, 0, 0 );
     }
 
 
     public Holder(
       Direction direction,
       int       degrees,
-      int       minutes
+      int       minutes,
+      double    seconds
     ) {
       setDirection( direction );
       setDegrees( degrees );
       setMinutes( minutes );
+      setSeconds( seconds );
     }
 
 
@@ -82,11 +84,11 @@ public abstract class LatitudeLongitudeParser {
     }
 
 
-    public int getSeconds() {
+    public double getSeconds() {
       return seconds;
     }
 
-    void setSeconds( int seconds ) {
+    void setSeconds( double seconds ) {
       this.seconds = seconds;
     }
 
@@ -201,6 +203,68 @@ public abstract class LatitudeLongitudeParser {
     }
 
     return holder;
+  }
+
+
+  public static Holder parse(
+     String                             degreesText,
+     String                             minutesText,
+     String                             secondsText,
+     LatitudeLongitudeParser.Direction  direction
+  ) {
+
+    boolean parseMinutes = true;
+
+    int degrees;
+    int minutes = 0;
+    double seconds = 0;
+
+    try {
+      degrees = Integer.parseInt( degreesText );
+    }
+    catch ( NumberFormatException e ) {
+      // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
+      try {
+        double degreesDouble = Math.abs( Double.parseDouble( degreesText ) );
+
+        // Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
+        degrees = (int)degreesDouble;
+
+        // Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
+        double doubleMinutes = ( ( degreesDouble - degrees ) * 60 );
+        minutes = (int)doubleMinutes;
+
+        seconds = ( ( doubleMinutes - minutes ) * 60 );
+
+        parseMinutes = false;
+      }
+      catch ( NumberFormatException e1 ) {
+        // Nope... just give up.
+        degrees = 0;
+        minutes = 0;
+        seconds = 0;
+      }
+    }
+
+    if ( parseMinutes ) {
+
+      try {
+        minutes = Integer.parseInt( minutesText );
+      }
+      catch ( NumberFormatException e ) {
+        minutes = 0;
+      }
+
+
+      try {
+        seconds = Double.parseDouble( secondsText );
+      }
+      catch ( NumberFormatException e ) {
+        seconds = 0;
+      }
+    }
+
+    return new Holder( direction, degrees, minutes, seconds );
   }
 
 

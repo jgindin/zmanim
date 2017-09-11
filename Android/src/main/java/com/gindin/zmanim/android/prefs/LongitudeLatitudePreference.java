@@ -4,9 +4,6 @@
 
 package com.gindin.zmanim.android.prefs;
 
-import com.gindin.zmanim.android.R;
-import com.gindin.zmanlib.location.LatitudeLongitudeParser;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
@@ -16,6 +13,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.gindin.zmanim.android.R;
+import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 
 /**
  * An Android Preference that allows for easy editing of a Latitude or Longitude.
@@ -77,6 +76,9 @@ public class LongitudeLatitudePreference
     TextView minutes = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
     minutes.setText( String.format( "%d", valueHolder.getMinutes() ) );
 
+    TextView seconds = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
+    seconds.setText( String.format( "%f", valueHolder.getSeconds() ) );
+
 
     // Configuring the spinner comes straight from the Android JavaDocs:
     //  http://developer.android.com/guide/topics/ui/controls/spinner.html
@@ -122,45 +124,11 @@ public class LongitudeLatitudePreference
     TextView value = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
     String degreesText = value.getText().toString();
 
-    boolean parseMinutes = true;
+    value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+    String minutesText = value.getText().toString();
 
-    int degrees;
-    int minutes = 0;
-
-    try {
-      degrees = Integer.parseInt( degreesText );
-    }
-    catch ( NumberFormatException e ) {
-      // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
-      try {
-        double degreesDouble = Double.parseDouble( degreesText );
-
-        // Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
-        degrees = (int)degreesDouble;
-
-        // Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
-        minutes = (int)( ( degreesDouble - degrees ) * 60 );
-
-        parseMinutes = false;
-      }
-      catch ( NumberFormatException e1 ) {
-        // Nope... just give up.
-        degrees = 0;
-        minutes = 0;
-      }
-    }
-
-    if ( parseMinutes ) {
-      value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
-      String minutesText = value.getText().toString();
-
-      try {
-        minutes = Integer.parseInt( minutesText );
-      }
-      catch ( NumberFormatException e ) {
-        minutes = 0;
-      }
-    }
+    value = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
+    String secondsText = value.getText().toString();
 
     LatitudeLongitudeParser.Direction direction;
     Spinner spinner = (Spinner)view.findViewById( R.id.lat_long_editor_ns_ew_picker );
@@ -172,7 +140,8 @@ public class LongitudeLatitudePreference
       direction = ( 0 == item ? LatitudeLongitudeParser.Direction.EAST : LatitudeLongitudeParser.Direction.WEST );
     }
 
-    LatitudeLongitudeParser.Holder holder = new LatitudeLongitudeParser.Holder( direction, degrees, minutes );
+
+    LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse( degreesText, minutesText, secondsText, direction );
     String newValue = holder.toFullString( false );
 
     if ( callChangeListener( newValue ) ) {

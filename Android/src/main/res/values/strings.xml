@@ -99,6 +99,7 @@
 
   <string name="lat_long_editor_degrees_text">Degrees:</string>
   <string name="lat_long_editor_minutes_text">Minutes:</string>
+  <string name="lat_long_editor_seconds_text">Seconds</string>
   <string name="lat_long_editor_ns_text">North / South:</string>
   <string name="lat_long_editor_ew_text">East / West:</string>
   <string-array name="lat_long_editor_north_south">
