@@ -251,8 +251,8 @@ public class ZmanimLocation
 
     StringBuilder sb = new StringBuilder();
     sb.append( "Location Name:\t" ).append( getLocationName() );
-    sb.append( "\nLatitude:\t" ).append( getLatitudeString( getLatitude() ) ).append( " deg" );
-    sb.append( "\nLongitude:\t" ).append( getLongitudeString( getLongitude() ) ).append( " deg" );
+    sb.append( "\nLatitude:\t" ).append( getLatitudeString( getLatitude(), 5 ) ).append( " deg" );
+    sb.append( "\nLongitude:\t" ).append( getLongitudeString( getLongitude(), 5 ) ).append( " deg" );
     sb.append( "\nElevation:\t" ).append( getElevation() ).append( " Meters" );
     sb.append( "\nTZ Name:\t" ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
     sb.append( "\nTZ GMT Offset:\t" ).append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
@@ -331,20 +331,20 @@ public class ZmanimLocation
   }
 
 
-  static String getLatitudeString( double latitude ) {
+  private static String getLatitudeString(double latitude, int precision) {
     //noinspection AutoBoxing
-    return String.format( "%.1f", latitude );
+    return String.format( "%." + precision + "f", latitude );
   }
 
 
-  static String getLongitudeString( double longitude ) {
+  private static String getLongitudeString(double longitude, int precision) {
     //noinspection AutoBoxing
-    return String.format( "%.1f", longitude );
+    return String.format( "%." + precision + "f", longitude );
   }
 
 
   public static String toLatLongString( double latitude, double longitude ) {
-    return getLatitudeString( latitude ) + " lat; " + getLongitudeString( longitude ) + " long";
+    return getLatitudeString( latitude, 1 ) + " lat; " + getLongitudeString( longitude, 1 ) + " long";
   }
 
 

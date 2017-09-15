@@ -4,6 +4,24 @@
 
 package com.gindin.zmanim.android;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.*;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.Presenter;
 import com.gindin.util.LogUtils;
@@ -15,7 +33,6 @@ import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
-import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.LocationProviders;
@@ -29,29 +46,8 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import android.Manifest;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.*;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -612,6 +608,16 @@ public class ZmanimActivity
       // Did the user want to move to the next/prev day (swiping right or left) or next/prev month
       //  (swiping up or down)?
       // TODO: Re-enable the up/down swiping if we can...
+
+      // From a bit of StackOverflow reading, it seems that startMotionEvent could possibly be null if, e.g.,
+      //  something else has consumed the initial gesture.
+      //  See https://stackoverflow.com/questions/4151385/android-simpleongesturelistener-onfling-getting-a-null-motionevent
+      // Anyways, just because we're going to be paranoid now, we might as well guard against the endMotionEvent
+      //  being null too...
+      if ( ( startMotionEvent == null ) || ( endMotionEvent == null ) ) {
+        return false;
+      }
+
       float xDiff = startMotionEvent.getRawX() - endMotionEvent.getRawX();
 
       if ( Math.abs( xDiff ) < SWIPE_MIN_DISTANCE ) {

@@ -4,7 +4,10 @@
 
 package com.gindin.zmanlib.location;
 
-import org.junit.*;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -27,11 +30,11 @@ public class UT_LatitudeLongitudeParser {
 
 
   private static class CityInfo {
-    public String                                           cityName;
-    public LatitudeLongitudeParser.Holder                   latitude;
-    public LatitudeLongitudeParser.Holder                   longitude;
-    public double                                           convertedLatitude;
-    public double                                           convertedLongitude;
+    final String                                            cityName;
+    final LatitudeLongitudeParser.Holder                    latitude;
+    final LatitudeLongitudeParser.Holder                    longitude;
+    final double                                            convertedLatitude;
+    final double                                            convertedLongitude;
 
 
     private CityInfo(
@@ -67,8 +70,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Aberdeen, Scotland",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 57, 9 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 2, 9 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 57, 9, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 2, 9, 0 ),
           57.15,
           -2.15
         )
@@ -77,8 +80,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Adelaide, Australia",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.SOUTH, 34, 55 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.EAST, 138, 36 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.SOUTH, 34, 55, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.EAST, 138, 36, 0 ),
           -34.91666666666666666667,
           138.6
         )
@@ -87,8 +90,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Tel Aviv",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 32, 4 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.EAST, 34, 46 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 32, 4, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.EAST, 34, 46, 0 ),
           32.06666666666666666667,
           34.76666666666666666667
         )
@@ -97,8 +100,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Seattle, WA",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 47, 37 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 122, 20 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 47, 37, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 122, 20, 0 ),
           47.61666666666666666667,
           -122.33333333333333333333
         )
@@ -107,8 +110,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "New York, NY",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 40, 47 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 58 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 40, 47, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 58, 0 ),
           40.78333333333333333333,
           -73.96666666666666666667
         )
@@ -117,8 +120,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "San Francisco, Calif.",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 37, 47 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 122, 26 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 37, 47, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 122, 26, 0 ),
           37.78333333333333333333,
           -122.43333333333333333333
         )
@@ -127,8 +130,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Phoenix, Ariz.",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 33, 29 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 112, 4 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 33, 29, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 112, 4, 0 ),
           33.48333333333333333333,
           -112.06666666666666666667
         )
@@ -137,8 +140,8 @@ public class UT_LatitudeLongitudeParser {
       {
         new CityInfo(
           "Ottawa, Ont., Can.",
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 45, 24 ),
-          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 43 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.NORTH, 45, 24, 0 ),
+          new LatitudeLongitudeParser.Holder( LatitudeLongitudeParser.Direction.WEST, 73, 43, 0 ),
           45.4,
           -73.71666666666666666667
         )
@@ -176,6 +179,34 @@ public class UT_LatitudeLongitudeParser {
   }
 
 
+  @Test
+  public void fullDecimalInDegrees() {
+
+    final LatitudeLongitudeParser.Holder latitude = cityInfoToTest.latitude;
+    LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse(
+      Double.toString( cityInfoToTest.convertedLatitude ), "", "", latitude.getDirection() );
+    Assert.assertEquals( cityInfoToTest.cityName + " latitude.getDegrees()", latitude.getDegrees(), holder.getDegrees() );
+
+    // This gets a bit complicated because IF the actual is ONE degree larger AND we have seconds, THEN that has
+    //  happened because of rounding...
+    Assert.assertThat( cityInfoToTest.cityName + " latitude.getMinutes()", latitude, new DegreesWithRoundingMatcher( holder ) );
+
+    if ( latitude.getSeconds() != 0 ) {
+      Assert.assertEquals( cityInfoToTest.cityName + " latitude.getSeconds()", latitude.getSeconds(), holder.getSeconds(), 0 );
+    }
+
+    final LatitudeLongitudeParser.Holder longitude = cityInfoToTest.longitude;
+    holder = LatitudeLongitudeParser.parse(
+      Double.toString( cityInfoToTest.convertedLongitude ), "", "", longitude.getDirection() );
+    Assert.assertEquals( cityInfoToTest.cityName + " longitude.getDegrees()", longitude.getDegrees(), holder.getDegrees() );
+    Assert.assertThat( cityInfoToTest.cityName + " longitude.getMinutes()", longitude, new DegreesWithRoundingMatcher( holder ) );
+
+    if ( longitude.getSeconds() != 0 ) {
+      Assert.assertEquals( cityInfoToTest.cityName + " longitude.getSeconds()", longitude.getSeconds(), holder.getSeconds(), 0 );
+    }
+  }
+
+
   private void fullString( boolean withMarkers ) {
 
     double converted = LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( cityInfoToTest.latitude.toFullString( withMarkers ) );
@@ -193,6 +224,48 @@ public class UT_LatitudeLongitudeParser {
 
     converted = LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( cityInfoToTest.longitude.toSimpleString( withMarkers ) );
     Assert.assertEquals( cityInfoToTest.cityName + " longitude", cityInfoToTest.convertedLongitude, converted, 0.1 );
+  }
+
+
+
+
+  private static class DegreesWithRoundingMatcher
+    extends BaseMatcher<LatitudeLongitudeParser.Holder> {
+
+    private final LatitudeLongitudeParser.Holder            actual;
+    private String                                          mismatchReason;
+
+    DegreesWithRoundingMatcher(LatitudeLongitudeParser.Holder actual) {
+      this.actual = actual;
+    }
+
+
+    @Override
+    public boolean matches( Object item ) {
+
+      LatitudeLongitudeParser.Holder expected = (LatitudeLongitudeParser.Holder)item;
+
+      int diff = expected.getMinutes() - actual.getMinutes();
+      if ( diff == 0 ) {
+        return true;
+      }
+
+      if ( diff == 1 ) {
+
+        if ( ( expected.getSeconds() == 0 ) && ( actual.getSeconds() > 0 ) ) {
+          return true;
+        }
+      }
+
+      mismatchReason = "diff " + diff + " and expected seconds: " + expected.getSeconds() +
+        " but actual seconds: " + actual.getSeconds();
+      return false;
+    }
+
+    @Override
+    public void describeTo( Description description ) {
+
+    }
   }
 
 
