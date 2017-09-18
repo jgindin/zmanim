@@ -1,18 +1,20 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import android.content.SharedPreferences;
-import android.location.Address;
-import android.os.Build;
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import android.content.SharedPreferences;
+import android.location.Address;
+import android.os.Build;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -134,14 +136,12 @@ abstract class JsonQueryingResolver
       try {
         return doLocationResolution( zmanimLocation, params );
       }
-      catch ( IOException ex ) {
+      catch ( IOException |JSONException ex ) {
         // Try again; don't log anything because it can be overwhelming...
-      }
-      catch ( JSONException ex ) {
-        // Try again
-        if ( attempts == 2 ) {
-          LogUtils.logError( "resolveFromCoords", ex.getMessage(), ex );
-        }
+        //  The JSON exceptions seem to happen pretty often, with messages like:
+        //    'End of input at character 0 of'
+        //    'Expected ':' after latLng at character 799 of ...'
+        //    'Unterminated array at character 1368 of ...'
       }
       catch ( Exception e ) {
         LogUtils.logError( "resolveFromCoords", e.getMessage(), e );

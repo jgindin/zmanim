@@ -59,14 +59,18 @@ public final class NotifiedZmanim
     @NotNull
     public NotifiedZmanim get( Calendar forDate ) {
 
-      for ( NotifiedZmanim notifiedZmanim : notified ) {
-        if ( notifiedZmanim.isForDate( forDate ) ) {
-          return notifiedZmanim;
+      NotifiedZmanim newNotifiedZmanim;
+      
+      synchronized ( notified ) {
+        for ( NotifiedZmanim notifiedZmanim : notified ) {
+          if ( notifiedZmanim.isForDate( forDate ) ) {
+            return notifiedZmanim;
+          }
         }
-      }
 
-      NotifiedZmanim newNotifiedZmanim = new NotifiedZmanim( forDate );
-      notified.add( newNotifiedZmanim );
+        newNotifiedZmanim = new NotifiedZmanim( forDate );
+        notified.add( newNotifiedZmanim );
+      }
 
       return newNotifiedZmanim;
     }
@@ -118,7 +122,9 @@ public final class NotifiedZmanim
         }
       }
 
-      notified.add( restored );
+      synchronized ( notified ) {
+        notified.add( restored );
+      }
     }
 
   }

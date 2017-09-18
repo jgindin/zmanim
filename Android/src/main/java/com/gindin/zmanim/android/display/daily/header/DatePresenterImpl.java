@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.eventBus.EventBus;
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -88,7 +89,14 @@ class DatePresenterImpl<V extends DateView>
   @Override
   public void userWantsToChangeDate() {
 
-    getView().allowUserToChangeDate( currentDate );
+    // Not clear off hand how it can happen that we don't have a date. But...it's true...
+    if ( currentDate == null ) {
+      LogUtils.logError( "DatePresnterImpl::userWantsToChangeDate", "currentDate is null",
+        new Throwable() );
+    }
+    else {
+      getView().allowUserToChangeDate( currentDate );
+    }
   }
 
 
