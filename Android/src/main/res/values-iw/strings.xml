@@ -26,7 +26,7 @@
   <string name="lat_long_editor_ns_text">צפון / דרום:</string>
   <string name="lat_long_editor_ew_text">מזרח / מערב:</string>
   <string name="upgrade_header">מה חדש</string>
-  <string name="minutes">min</string>
+  <string name="minutes">דקות</string>
   <string name="enable_notifications_on_shabbat_pref_title">הודעות בשבת</string>
   <string name="use_latitude_pref_summary">מעלות</string>
   <string name="use_latitude_pref_title">קו רוחב</string>
@@ -45,7 +45,7 @@
   <string name="dynamic_location">מקום דינמי</string>
   <string name="cannot_determine_location">Using last known location.</string>
   <string name="crash_toast_text">Zmanim has crashed and a report has been sent to the developer.</string>
-  <string name="current_location_title">Current Location</string>
+  <string name="current_location_title">מקום נוחכי</string>
   <string name="determining_location">Determining location…</string>
   <string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
   <string name="dynamic_position_pref_title">Use My Location</string>

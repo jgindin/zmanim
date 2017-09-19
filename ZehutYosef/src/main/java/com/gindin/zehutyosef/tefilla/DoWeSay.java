@@ -173,9 +173,16 @@ class DoWeSay {
     return dateDetails.isTaanit();
   }
 
-
   final boolean erevShabbatModifications() {
     return ( date.getDayOfWeek() == Calendar.FRIDAY );
+  }
+
+  final boolean mondayThursdayAdditions() {
+    return ( date.getDayOfWeek() == Calendar.MONDAY || date.getDayOfWeek() == Calendar.THURSDAY );
+  }
+
+  final int getDayOfWeek() {
+    return date.getDayOfWeek();
   }
 
 } // End of DoWeSay class

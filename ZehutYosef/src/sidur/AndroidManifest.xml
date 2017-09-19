@@ -12,7 +12,7 @@
   >
 
     <activity
-      android:name=".ZehutYosefActivity"
+      android:name=".SidurActivity"
       android:label="@string/app_name"
     >
 

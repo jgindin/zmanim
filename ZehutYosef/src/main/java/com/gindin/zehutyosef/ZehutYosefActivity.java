@@ -44,11 +44,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ZehutYosefActivity
+public abstract class ZehutYosefActivity
   extends AppCompatActivity {
 
   /** The sections of tefillah, berachot, etc... the user can choose. */
-  private final List<Section>                               sections;
+  protected final List<Section>                             sections;
 
   /** The date for which all tefillah, etc..., are to be shown. */
   @NonNull
@@ -95,10 +95,7 @@ public class ZehutYosefActivity
       StrictMode.enableDefaults();
     }
 
-    sections.add( new Mincha() );
-    sections.add( new Arvit() );
-    sections.add( new BirkatAmmazon() );
-    sections.add( new MeenShalosh() );
+    addSections();
 
     // Do this after the initial setup, because when we get rotated, the fragments are preserved and so don't have to go through
     //  the whole lifecycle. This means that if we were to invoked super.onCreate() first from this method,
@@ -146,6 +143,8 @@ public class ZehutYosefActivity
 
     readPrefsTask.execute();
   }
+
+  protected abstract void addSections();
 
 
   @Override

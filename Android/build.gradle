@@ -123,7 +123,7 @@ android {
     }
 
     debug {
-      buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
+      buildConfigField "String", "MAPQUEST_KEY", "\"DEV\""
       buildConfigField "String", "FLURRY_KEY", "\"DEV\""
       buildConfigField "String", "ACRA_KEY", "\"DEV\""
       buildConfigField "String", "ACRA_USER", "\"DEV\""

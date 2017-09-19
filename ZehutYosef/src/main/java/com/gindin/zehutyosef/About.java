@@ -37,7 +37,7 @@ class About {
       .withFields( "define_zehut_yosef", "define_zmanim", "define_kosherjava", "define_materialdrawer", "define_AboutLibraries" )
       .withAutoDetect( false )
       .withAboutAppName( context.getString( R.string.app_name ) )
-      .withAboutDescription( description )
+      .withAboutDescription(description)
       .withAboutVersionShownCode( false )
       .withActivityTheme( R.style.EliPurple )
       .withActivityTitle( context.getString( R.string.action_about_title ) )
