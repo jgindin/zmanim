@@ -4,17 +4,21 @@
 
 package com.gindin.zmanim.android.prefs;
 
+import com.gindin.zmanim.android.R;
+import com.gindin.zmanlib.location.LatitudeLongitudeParser;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.gindin.zmanim.android.R;
-import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 
 /**
  * An Android Preference that allows for easy editing of a Latitude or Longitude.
@@ -70,11 +74,23 @@ public class LongitudeLatitudePreference
 
     super.onBindDialogView( view );
 
-    TextView degrees = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
-    degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
+    ValueFilter degreesFilter;
+    if ( showingLatitude ) {
+      degreesFilter = new ValueFilter( -90, 90 );
+    }
+    else {
+      degreesFilter = new ValueFilter( -180, 180 );
+    }
 
-    TextView minutes = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+    ValueFilter minutesFilter = new ValueFilter( 0, 60 );
+
+    EditText degrees = (EditText)view.findViewById( R.id.lat_long_editor_degrees_editor );
+    degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
+    degrees.setFilters( new InputFilter[] { degreesFilter } );
+
+    EditText minutes = (EditText)view.findViewById( R.id.lat_long_editor_minutes_editor );
     minutes.setText( String.format( "%d", valueHolder.getMinutes() ) );
+    minutes.setFilters( new InputFilter[] { minutesFilter } );
 
     TextView seconds = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
     seconds.setText( String.format( "%f", valueHolder.getSeconds() ) );
@@ -194,6 +210,58 @@ public class LongitudeLatitudePreference
 //      LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( initValue );
 //    }
     */
+  }
+
+
+  /**
+   * Ensure the value in an EditText is never less than a specified minimum value, nor greater than a specified
+   *  maximum value.
+   *
+   * See https://stackoverflow.com/questions/14212518/is-there-a-way-to-define-a-min-and-max-value-for-edittext-in-android
+   */
+  private static class ValueFilter
+    implements InputFilter {
+
+    private final int                                       min;
+    private final int                                       max;
+
+    ValueFilter( int min, int max ) {
+
+      this.min = min;
+      this.max = max;
+    }
+
+
+    @Override
+    public CharSequence filter(
+      CharSequence  source,
+      int           start,
+      int           end,
+      Spanned       dest,
+      int           dstart,
+      int           dend
+    ) {
+
+      try {
+        // Remove the string out of destination that is to be replaced
+        String newVal = dest.toString().substring( 0, dstart ) +
+          dest.toString().substring( dend, dest.toString().length() );
+
+        // Add the new string in
+        newVal = newVal.substring( 0, dstart ) + source.toString() + newVal.substring( dstart, newVal.length() );
+        int input = Integer.parseInt( newVal );
+
+        if ( input >= min && input <= max ) {
+          return null;
+        }
+      }
+      catch ( NumberFormatException nfe ) {
+        // Not in the correct range...
+      }
+
+      return "";
+    }
+
   }
 
 
