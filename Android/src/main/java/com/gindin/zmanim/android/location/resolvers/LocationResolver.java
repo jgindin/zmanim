@@ -4,13 +4,13 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
+import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +33,7 @@ abstract class LocationResolver {
 
   protected final EventBus                                  eventBus;
 
-  private final SharedPreferences                           personalPrefs;
+  private final SharedPreferences                           locationManagementPrefs;
 
 
   protected static String addressToLocationName( Address address ) {
@@ -97,10 +97,10 @@ abstract class LocationResolver {
 
   protected LocationResolver(
     EventBus          eventBus,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
     this.eventBus = eventBus;
-    this.personalPrefs = personalPrefs;
+    this.locationManagementPrefs = locationManagementPrefs;
   }
 
 
@@ -223,11 +223,6 @@ abstract class LocationResolver {
           new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) ) );
       }
       else {
-
-        boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-        if ( !useElevation ) {
-          resolvedLocation.setElevation( 0.0 );
-        }
 
         eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false ) );
 

@@ -54,9 +54,9 @@ abstract class JsonQueryingResolver
 
   JsonQueryingResolver(
     EventBus          eventBus,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus, locationManagementPrefs );
   }
 
 

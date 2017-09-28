@@ -13,6 +13,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.annotation.Nullable;
 
 import java.util.TimeZone;
 
@@ -38,14 +39,26 @@ public class LatitudeLongitudeLocationAcquirer
 
     Location ourLocation = new Location( "Zmanim Latitude & Longitude Provider" );
 
-    updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
-    updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
+    String error = updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
+    if ( error != null ) {
+      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + error ) );
+      return;
+    }
+
+    error = updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
+    if ( error != null ) {
+      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + error ) );
+      return;
+    }
+
+    updateElevationFromPrefs( locationManagementPrefs, ourLocation );
 
     TimeZone timeZone = getTimeZoneFromPrefs();
 
     ZmanimLocation newLocation = new ZmanimLocation.Builder()
       .atLatitude( ourLocation.getLatitude() )
       .atLongitude( ourLocation.getLongitude() )
+      .atElevation( ourLocation.getAltitude() )
       .inTimeZone( timeZone )
       .build();
 
@@ -53,35 +66,65 @@ public class LatitudeLongitudeLocationAcquirer
   }
 
 
-  private void updateLatitudeFromPrefs(
+  @Nullable
+  private String updateLatitudeFromPrefs(
     SharedPreferences locationManagementPrefs,
     Location          ourLocation
   ) {
 
     String latitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "0" );
+    if ( latitudePref.isEmpty() ) {
+      latitudePref = "0";
+    }
+
     try {
       ourLocation.setLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
       ourLocation.setTime( System.currentTimeMillis() );
+
+      return null;
     }
     catch ( Exception e ) {
-      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + latitudePref ) );
+      return latitudePref;
     }
   }
 
 
-  private void updateLongitudeFromPrefs(
+  @Nullable
+  private String updateLongitudeFromPrefs(
     SharedPreferences locationManagementPrefs,
     Location          ourLocation
   ) {
 
     String longitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "0" );
+    if ( longitudePref.isEmpty() ) {
+      longitudePref = "0";
+    }
+
     try {
       ourLocation.setLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
       ourLocation.setTime( System.currentTimeMillis() );
+
+      return null;
     }
     catch ( Exception e ) {
-      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + longitudePref ) );
+      return longitudePref;
     }
+  }
+
+
+  private void updateElevationFromPrefs(
+    SharedPreferences locationManagementPrefs,
+    Location          ourLocation
+  ) {
+
+    String elevationPref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE_LONGITUDE_ELEVATION.name(), "0" );
+    if ( elevationPref.isEmpty() ) {
+      ourLocation.setAltitude( 0.0 );
+    }
+    else {
+      ourLocation.setAltitude( Double.parseDouble( elevationPref ) );
+    }
+
   }
 
 }  // End of LatitudeLongitudeLocationProvider class

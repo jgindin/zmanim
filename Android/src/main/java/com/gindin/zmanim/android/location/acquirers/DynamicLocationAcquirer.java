@@ -4,6 +4,14 @@
 
 package com.gindin.zmanim.android.location.acquirers;
 
+import com.gindin.eventBus.EventBus;
+import com.gindin.util.Pair;
+import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.prefs.LocationProviders;
+import com.gindin.zmanlib.location.ZmanimLocation;
+
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,13 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import com.gindin.eventBus.EventBus;
-import com.gindin.util.Pair;
-import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.ZmanLocationUtil;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
-import com.gindin.zmanim.android.prefs.LocationProviders;
-import com.gindin.zmanlib.location.ZmanimLocation;
 
 import java.util.*;
 
@@ -210,6 +211,11 @@ public class DynamicLocationAcquirer
 
     final TimeZone timeZone = getTimeZoneFromPrefs();
     ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
+
+    boolean useElevation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
+    if ( !useElevation && ( newLocation != null ) ) {
+      location.setElevation( 0.0 );
+    }
 
     fireLocationAcquiredEvent( location, false );
   }

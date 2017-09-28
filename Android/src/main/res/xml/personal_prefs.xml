@@ -22,13 +22,6 @@
     android:defaultValue="false"
   />
 
-  <android.support.v7.preference.CheckBoxPreference
-    android:key="USE_ELEVATION"
-    android:title="@string/use_elevation_pref_title"
-    android:summary="@string/use_elevation_pref_summary"
-    android:defaultValue="false"
-  />
-
   <android.support.v7.preference.PreferenceCategory
     android:title="@string/notifications_category"
     android:orderingFromXml="true"
