@@ -4,24 +4,6 @@
 
 package com.gindin.zmanim.android;
 
-import android.Manifest;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.*;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.Presenter;
 import com.gindin.util.LogUtils;
@@ -46,8 +28,28 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.*;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -168,9 +170,7 @@ public class ZmanimActivity
     eventBus = ZmanimService.ZMANIM_EVENT_BUS;
 
     // todo: Move to background thread????????
-    /////
     // TODO: Move things things into Guice modules, etc....
-    SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
     DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
     loadedPresenters.add( dateDisplayModule.create() );

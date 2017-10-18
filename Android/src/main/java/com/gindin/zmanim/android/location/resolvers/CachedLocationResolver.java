@@ -50,9 +50,9 @@ class CachedLocationResolver
   CachedLocationResolver(
     IOFactory         ioFactory,
     EventBus          eventBus,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus, locationManagementPrefs );
     this.ioFactory = ioFactory;
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {

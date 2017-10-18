@@ -20,9 +20,9 @@ class PassthroughResolver
 
   PassthroughResolver(
     EventBus          eventBus,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus, locationManagementPrefs );
   }
 
 

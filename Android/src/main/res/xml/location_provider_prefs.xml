@@ -34,6 +34,14 @@
       android:dependency="DYNAMIC_POSITION"
     />
     <CheckBoxPreference
+      android:key="USE_ELEVATION"
+      android:title="@string/use_elevation_pref_title"
+      android:summary="@string/use_elevation_pref_summary"
+      android:defaultValue="false"
+      android:dependency="DYNAMIC_POSITION"
+    />
+
+    <CheckBoxPreference
       android:key="PREFER_CACHED_LOCATION"
       android:title="@string/prefer_cached_location_pref_title"
       android:summary="@string/prefer_cached_location_pref_summary"
@@ -57,6 +65,13 @@
       android:title="@string/static_location_pref_title"
       android:summary="@string/static_location_pref_summary"
       android:dependency="STATIC_POSITION"
+    />
+    <EditTextPreference
+      android:key="PLACE_ELEVATION"
+      android:title="@string/location_use_elevation"
+      android:summary="@string/location_use_elevation_pref_summary"
+      android:dependency="STATIC_POSITION"
+      android:inputType="number"
     />
   </PreferenceCategory>
 
@@ -82,6 +97,13 @@
       android:title="@string/use_longitude_pref_title"
       android:summary="@string/use_longitude_pref_summary"
       android:dependency="LATITUDE_LONGITUDE_POSITION"
+    />
+    <EditTextPreference
+      android:key="LATITUDE_LONGITUDE_ELEVATION"
+      android:title="@string/location_use_elevation"
+      android:summary="@string/location_use_elevation_pref_summary"
+      android:dependency="LATITUDE_LONGITUDE_POSITION"
+      android:inputType="number"
     />
 
   </PreferenceCategory>

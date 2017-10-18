@@ -21,8 +21,9 @@ import android.support.v7.preference.PreferenceScreen;
 public class PersonalPreferences
   extends AppCompatActivity {
 
-  public static enum Prefs {
+  public enum Prefs {
     SHOW_SECONDS,
+    @Deprecated
     USE_ELEVATION,
     SHOW_NOTIFICATIONS,
     ENABLE_NOTIFICATIONS_ON_SHABBAT,

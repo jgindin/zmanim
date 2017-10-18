@@ -70,6 +70,10 @@
   <string name="use_latitude_pref_summary">Degrees</string>
   <string name="use_longitude_pref_title">Longitude</string>
   <string name="use_longitude_pref_summary">Degrees</string>
+  <string name="location_use_elevation">Elevation</string>
+  <string name="location_use_elevation_pref_summary">Set elevation (use 0 for sea-level)</string>
+  <string name="meters">Meters</string>
+  <string name="sea_level">Sea Level</string>
   <string name="time_zone_setting">Time Zone</string>
   <string name="override_system_time_zone">Use Custom Time Zone?</string>
   <string name="override_system_time_zone_summary">Ignores the system time zone for calculations.</string>

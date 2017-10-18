@@ -29,9 +29,9 @@ class AndroidResolver
   AndroidResolver(
     EventBus          eventBus,
     Geocoder          geocoder,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus, locationManagementPrefs );
     this.geocoder = geocoder;
   }
 

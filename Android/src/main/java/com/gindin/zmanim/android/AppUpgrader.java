@@ -8,9 +8,7 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
-import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
-import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
@@ -50,8 +48,11 @@ class AppUpgrader {
         int personalPrefsUpgradeId = personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
         int zmanPrefsUpgradeId = zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
         upgradeLocationPrefs( zmanimActivity, lastKnownCodeVersion );
+        upgradeElevationPref( zmanimActivity, lastKnownCodeVersion );
 
         int thisUpgradeId = -1;
+        
+        //noinspection MagicNumber
         if ( lastKnownCodeVersion < 279 ) {
           thisUpgradeId = R.string.upgrade_from_279;
         }
@@ -74,12 +75,36 @@ class AppUpgrader {
   }
 
 
+  /**
+   * In v320 we moved the Use Elevation property from the personal prefs into the location management prefs.
+   */
+  private static void upgradeElevationPref(
+    ZmanimActivity  zmanimActivity,
+    int             lastKnownCodeVersion
+  ) {
+
+    //noinspection MagicNumber
+    if ( lastKnownCodeVersion >= 320 ) {
+      return;
+    }
+
+    final SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+    final SharedPreferences locationManagementPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+
+    final SharedPreferences.Editor editor = locationManagementPrefs.edit();
+    editor.putBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(),
+      personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false ) );
+    editor.apply();
+  }
+
+
   @SuppressWarnings( "FeatureEnvy" )
   private static void upgradeLocationPrefs(
     ZmanimActivity    activity,
     int               lastKnownCodeVersion
   ) {
 
+    //noinspection MagicNumber
     if ( lastKnownCodeVersion > 230 ) {
       return;
     }
