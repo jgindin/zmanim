@@ -21,7 +21,6 @@ apply from: '../common/gindin-versioning.gradle'
 android {
 
   compileSdkVersion 24
-  buildToolsVersion '25.0.3'
 
   defaultConfig {
     minSdkVersion 14
