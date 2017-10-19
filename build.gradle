@@ -6,6 +6,7 @@ buildscript {
     maven {
       url "https://maven.google.com"
     }
+    google()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:3.0.0-rc1'
@@ -24,6 +25,7 @@ allprojects {
     maven {
       url 'https://raw.githubusercontent.com/jgindin/maven-repo/master/'
     }
+    google()
   }
 }
 
