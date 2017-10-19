@@ -242,7 +242,7 @@ class CachedLocationResolver
 
     private final Map<ZmanimLocation,ZmanimLocation>        cache = new LinkedHashMap<ZmanimLocation, ZmanimLocation>( 16, 0.75f, true ) {
       @Override
-      protected boolean removeEldestEntry( Entry<ZmanimLocation,ZmanimLocation> eldest ) {
+      protected boolean removeEldestEntry( Map.Entry<ZmanimLocation,ZmanimLocation> eldest ) {
         return size() > MAX_SIZE;
       }
     };
