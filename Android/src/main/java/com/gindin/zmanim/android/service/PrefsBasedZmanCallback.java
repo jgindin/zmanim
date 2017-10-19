@@ -6,6 +6,8 @@ import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.notification.NotifiedZmanim;
 import com.gindin.zmanlib.zman.Zmanim;
 
+import org.jetbrains.annotations.Nullable;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -56,6 +58,13 @@ abstract class PrefsBasedZmanCallback
   @Override
   public boolean shouldNotifyOnShabbat() {
     return personalPrefs.getBoolean( PersonalPreferences.Prefs.ENABLE_NOTIFICATIONS_ON_SHABBAT.name(), false );
+  }
+
+
+  @Nullable
+  @Override
+  public String getNotificationTone() {
+    return personalPrefs.getString( PersonalPreferences.Prefs.NOTIFICATION_TONE.name(), null );
   }
 
 

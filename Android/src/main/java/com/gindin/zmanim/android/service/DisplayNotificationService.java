@@ -17,6 +17,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 
 import java.util.Calendar;
@@ -161,15 +162,23 @@ public class DisplayNotificationService
 //      );
 //    }
 
-    Notification notification = new NotificationCompat.Builder( this )
+    NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
+    builder
       .setContentTitle( getString( R.string.app_name ) )
       .setContentText( notificationText )
       .setSmallIcon( R.drawable.ic_stat_zman_notification )
       .setTicker( notificationText )
       .setAutoCancel( true )
       .setDefaults( Notification.DEFAULT_ALL )
-      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) )
-      .build();
+      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
+
+    String tone = zmanCallback.getNotificationTone();
+    if ( tone != null ) {
+      Uri toneUri = Uri.parse( tone );
+      builder.setSound( toneUri );
+    }
+
+    Notification notification = builder.build();
 
     notificationManager.notify( notificationID, notification );
   }

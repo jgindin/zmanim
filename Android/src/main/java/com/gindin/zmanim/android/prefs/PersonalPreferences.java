@@ -12,8 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.preference.XpPreferenceFragment;
 
 /**
  * Activity for editing personal preferences.
@@ -28,7 +28,8 @@ public class PersonalPreferences
     SHOW_NOTIFICATIONS,
     ENABLE_NOTIFICATIONS_ON_SHABBAT,
     NOTIFICATIONS_FOR_CURRENT_LOCATION,
-    USE_ALARM_CLOCK
+    USE_ALARM_CLOCK,
+    NOTIFICATION_TONE
   }
 
 
@@ -46,12 +47,12 @@ public class PersonalPreferences
 
 
   public static class PersonalPrefsFragment
-    extends PreferenceFragmentCompat {
+    extends XpPreferenceFragment {
 
     @Override
-    public void onCreatePreferences(
-      Bundle bundle,
-      String s
+    public void onCreatePreferences2(
+      Bundle savedInstanceState,
+      String rootKey
     ) {
 
       getPreferenceManager().setSharedPreferencesName( ZmanimPrefs.PERSONAL.name() );

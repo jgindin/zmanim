@@ -100,6 +100,8 @@
   <string name="use_alarm_clock_pref_title">Use Alarm Clock</string>
   <string name="use_alarm_clock_pref_summary">Use only if notifications are not on time. Will cause the Alarm Clock icon to always be displayed.</string>
   <string name="notifications_category">Notifications</string>
+  <string name="select_notification_tone">Notification Sound</string>
+  <string name="select_notification_tone_summary">Select a tone to use when a notification is displayed.</string>
 
   <string name="lat_long_editor_degrees_text">Degrees:</string>
   <string name="lat_long_editor_minutes_text">Minutes:</string>

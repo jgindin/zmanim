@@ -9,6 +9,7 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 
 import java.util.*;
@@ -124,6 +125,13 @@ abstract class WakeupSchedulerBase {
     @Override
     public boolean shouldNotifyOnShabbat() {
       return perTestCallback.shouldNotifyOnShabbat();
+    }
+
+
+    @Nullable
+    @Override
+    public String getNotificationTone() {
+      return null;
     }
 
 
