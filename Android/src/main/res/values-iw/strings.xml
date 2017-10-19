@@ -97,5 +97,12 @@
     <item>מזרח</item>
     <item>מערב</item>
   </string-array>
+  <string name="location_use_elevation">Elevation</string>
+  <string name="location_use_elevation_pref_summary">Set elevation (use 0 for sea-level)</string>
+  <string name="meters">Meters</string>
+  <string name="sea_level">Sea Level</string>
+  <string name="lat_long_editor_seconds_text">Seconds</string>
+  <string name="select_notification_tone">Notification Sound</string>
+  <string name="select_notification_tone_summary">Select a tone to use when a notification is displayed.</string>
 
 </resources>
