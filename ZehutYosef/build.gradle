@@ -59,6 +59,10 @@ android {
   }
 
   sourceSets { zehutYosef { res.srcDirs = ['src/zehutYosef/res', 'src/zehutYosef/res/values-he'] } }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
@@ -75,7 +79,7 @@ dependencies {
   compile 'com.mikepenz:materialdrawer:3.0.8@aar'
 
   /* https://github.com/mikepenz/AboutLibraries */
-  compile('com.mikepenz:aboutlibraries:5.6.2@aar') {
+  compile( 'com.mikepenz:aboutlibraries:5.6.2@aar' ) {
     transitive = true
   }
   testCompile 'junit:junit:4.12'
