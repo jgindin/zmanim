@@ -141,8 +141,6 @@ public class DisplayNotificationService
       notificationID = 1;
     }
 
-    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-    notificationManager.cancel( notificationID );
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
@@ -176,10 +174,11 @@ public class DisplayNotificationService
     if ( tone != null ) {
       Uri toneUri = Uri.parse( tone );
       builder.setSound( toneUri );
+      builder.setDefaults( ~Notification.DEFAULT_SOUND );
     }
 
+    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
     Notification notification = builder.build();
-
     notificationManager.notify( notificationID, notification );
   }
 
