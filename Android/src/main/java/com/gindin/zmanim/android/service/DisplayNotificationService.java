@@ -123,10 +123,6 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-    if ( !shouldNotify ) {
-      return;
-    }
-
 
     // Make sure any previous notification is removed. It seems that this is normally not necessary,
     //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
@@ -147,6 +143,7 @@ public class DisplayNotificationService
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
+    // Keep this...it's very useful at times...
 //    if ( BuildConfig.DEBUG ) {
 //
 //      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
@@ -159,6 +156,10 @@ public class DisplayNotificationService
 //        new Pair<String, String>( "notify location", location.toString() )
 //      );
 //    }
+
+    if ( !shouldNotify ) {
+      return;
+    }
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
     builder
