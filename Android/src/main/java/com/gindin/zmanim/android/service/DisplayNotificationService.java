@@ -123,10 +123,6 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-    if ( !shouldNotify ) {
-      return;
-    }
-
 
     // Make sure any previous notification is removed. It seems that this is normally not necessary,
     //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
@@ -141,14 +137,13 @@ public class DisplayNotificationService
       notificationID = 1;
     }
 
-    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-    notificationManager.cancel( notificationID );
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
+    // Keep this...it's very useful at times...
 //    if ( BuildConfig.DEBUG ) {
 //
 //      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
@@ -161,6 +156,10 @@ public class DisplayNotificationService
 //        new Pair<String, String>( "notify location", location.toString() )
 //      );
 //    }
+
+    if ( !shouldNotify ) {
+      return;
+    }
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
     builder
@@ -176,10 +175,11 @@ public class DisplayNotificationService
     if ( tone != null ) {
       Uri toneUri = Uri.parse( tone );
       builder.setSound( toneUri );
+      builder.setDefaults( ~Notification.DEFAULT_SOUND );
     }
 
+    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
     Notification notification = builder.build();
-
     notificationManager.notify( notificationID, notification );
   }
 

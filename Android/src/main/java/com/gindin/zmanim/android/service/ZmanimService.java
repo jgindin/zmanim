@@ -20,6 +20,7 @@ import com.gindin.zmanlib.zman.Zman;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -310,6 +311,9 @@ public class ZmanimService
       }
     }
 
+
+    // Supressing because this is *not* going to be a long running task...
+    @SuppressLint( "StaticFieldLeak" )
     AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
       @Override
       protected Void doInBackground( Void... params ) {
@@ -339,13 +343,13 @@ public class ZmanimService
     final Calendar          alertAt
   ) {
 
-    //noinspection MagicNumber
-    PendingIntent pendingIntent = PendingIntent.getService( this,
+    // This rather convoluted mechanism of identifying the pending intent is necessary so that we don't
+    //  wind up replacing an intent just because we wind up scheduling a second alarm for the same
+    //  zman type on a different day...
+    int intentId = ( ( (byte)alertAt.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zman.type.ordinal() & 0xFF ) );
 
-      // This rather convoluted mechanism of identifying the pending intent is necessary so that we don't
-      //  wind up replacing an intent just because we wind up scheduling a second alarm for the same
-      //  zman type on a different day...
-      ( ( (byte)alertAt.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zman.type.ordinal() & 0xFF ) ),
+    //noinspection MagicNumber
+    PendingIntent pendingIntent = PendingIntent.getService( this, intentId,
 
       DisplayNotificationService.createIntentForService( this, zman, location, alertAt ),
 
@@ -379,6 +383,19 @@ public class ZmanimService
     else {
       alarmManager.set( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
+
+
+    // Leave this here ... it comes in handy...
+//    if ( BuildConfig.DEBUG ) {
+//      //noinspection unchecked
+//      LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
+//        new Pair<String, String>( "alert time", new Date( alertTime ).toString() ),
+//        new Pair<String, String>( "zman type", zman.type.name ),
+//        new Pair<String, String>( "zman", zman.name ),
+//        new Pair<String, String>( "sched. location", location.toString() ),
+//        new Pair<String, String>( "intent id", Integer.toString( intentId ) )
+//      );
+//    }
 
   }
 
