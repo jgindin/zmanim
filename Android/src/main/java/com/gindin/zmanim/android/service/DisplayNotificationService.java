@@ -1,7 +1,6 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
-import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanlib.ZmanCallback;
@@ -130,12 +129,12 @@ public class DisplayNotificationService
     // Note that for now, on debug builds we're going to "stack up" the notifications. If this becomes
     //  interesting, we could add a preference for this...
     final int notificationID;
-    if ( BuildConfig.DEBUG ) {
+//    if ( BuildConfig.DEBUG ) {
       notificationID = zmanType.ordinal();
-    }
-    else {
-      notificationID = 1;
-    }
+//    }
+//    else {
+//      notificationID = 1;
+//    }
 
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
