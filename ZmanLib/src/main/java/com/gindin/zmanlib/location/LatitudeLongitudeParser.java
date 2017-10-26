@@ -343,7 +343,22 @@ public abstract class LatitudeLongitudeParser {
       //noinspection MagicNumber
       return 90;
     }
+
+
+    @Override
+    public double parseAsDouble( String value ) throws IllegalArgumentException {
+      double parsed = super.parseAsDouble( value );
+
+      // Latitude must be -90 <= lat <= 90
+      if ( ( parsed < -90 ) || ( parsed > 90 ) ) {
+        parsed = 0;
+      }
+
+      return parsed;
+    }
   }
+
+
 
   static class LongitudeParser
     extends LatitudeLongitudeParser {
@@ -352,6 +367,19 @@ public abstract class LatitudeLongitudeParser {
     protected double getMax() {
       //noinspection MagicNumber
       return 180;
+    }
+
+
+    @Override
+    public double parseAsDouble( String value ) throws IllegalArgumentException {
+      double parsed = super.parseAsDouble( value );
+
+      // Longitude must be -180 <= long <= 180
+      if ( ( parsed < -180 ) || ( parsed > 180 ) ) {
+        parsed = 180;
+      }
+
+      return parsed;
     }
   }
 }
