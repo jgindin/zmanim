@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractView;
 import com.gindin.zmanim.android.R;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -138,8 +140,20 @@ class DateViewImpl<P extends DatePresenter>
 
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState ) {
+
+      // I don't know how it's possible...I'm guessing that somehow this fragment got weirded out???
+      //  After all, if you look at how this is called, the allowUserToChangeDate() method is already
+      //  only invoked if the HebrewDate is not null.
+      // Nonetheless, I have stack traces:
+      //  java.lang.NullPointerException: Attempt to invoke virtual method 'int com.gindin.zmanlib.calendar.HebrewDate.getGregorianYear()' on a null object reference
+      if ( currentDate == null ) {
+        // Uh...just default to today's date...
+        currentDate = HebrewCalendar.today();
+      }
+
       return new DatePickerDialog( getActivity(), dateSetListener,
         currentDate.getGregorianYear(), currentDate.getGregorianMonth(), currentDate.getGregorianDayOfMonth() );
     }
