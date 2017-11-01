@@ -109,12 +109,12 @@ public final class NotifiedZmanim
 
           ois.close();
         }
-        catch ( Exception e ) {
+        catch ( Throwable e ) {
           if ( ois != null ) {
             try {
               ois.close();
             }
-            catch ( IOException e1 ) {
+            catch ( Throwable e1 ) {
               // Oh well, we tried...
             }
           }
