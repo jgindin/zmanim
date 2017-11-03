@@ -94,6 +94,7 @@ class AndroidResolver
           final Address address = addresses.get( 0 );
           resolved = new ZmanimLocation.Builder()
             .locationName( addressToLocationName( address ) )
+            .userName( location.getLocationName() )
             .atLatitude( address.getLatitude() )
             .atLongitude( address.getLongitude() )
             .inTimeZone( location.getTimeZone() )
