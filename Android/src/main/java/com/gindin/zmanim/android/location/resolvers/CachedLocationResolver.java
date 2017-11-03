@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import java.io.*;
 import java.util.*;
@@ -279,6 +280,7 @@ class CachedLocationResolver
     }
 
 
+    @NonNull
     public Iterator<ZmanimLocation> iterator() {
       return cache.keySet().iterator();
     }
