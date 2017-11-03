@@ -23,6 +23,9 @@ allprojects {
   repositories {
     jcenter()
     maven {
+      url "https://maven.google.com"
+    }
+    maven {
       url 'https://raw.githubusercontent.com/jgindin/maven-repo/master/'
     }
     google()

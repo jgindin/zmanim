@@ -1,6 +1,10 @@
 package com.gindin.zmanim.android;
 
 import com.flurry.android.FlurryAgent;
+import dagger.Component;
+import dagger.android.AndroidInjectionModule;
+import dagger.android.AndroidInjector;
+import dagger.android.DaggerApplication;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -8,7 +12,6 @@ import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,7 +34,26 @@ import android.widget.Toast;
   alsoReportToAndroidFramework = true
 )
 public class ZmanimApplication
-  extends Application {
+  extends DaggerApplication {
+
+
+  /**
+   * Dagger component that will get our Application class injected...
+   */
+  @Component(modules = { AndroidInjectionModule.class, ZmanimAppModule.class } )
+  interface ZmanimAppComponent
+    extends AndroidInjector<ZmanimApplication> {
+
+
+    abstract class Builder extends AndroidInjector.Builder<ZmanimApplication> {}
+  }
+
+
+
+  @Override
+  protected AndroidInjector<ZmanimApplication> applicationInjector() {
+    return DaggerZmanimApplication_ZmanimAppComponent.create();
+  }
 
 
   @Override
