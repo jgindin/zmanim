@@ -8,7 +8,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.io.*;
@@ -49,11 +48,10 @@ class CachedLocationResolver
 
 
   CachedLocationResolver(
-    IOFactory         ioFactory,
-    EventBus          eventBus,
-    SharedPreferences locationManagementPrefs
+    IOFactory ioFactory,
+    EventBus  eventBus
   ) {
-    super( eventBus, locationManagementPrefs );
+    super( eventBus );
     this.ioFactory = ioFactory;
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {

@@ -14,7 +14,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.AsyncTask;
 
@@ -33,7 +32,6 @@ abstract class LocationResolver {
 
   protected final EventBus                                  eventBus;
 
-  private final SharedPreferences                           locationManagementPrefs;
 
 
   protected static String addressToLocationName( Address address ) {
@@ -96,11 +94,9 @@ abstract class LocationResolver {
 
 
   protected LocationResolver(
-    EventBus          eventBus,
-    SharedPreferences locationManagementPrefs
+    EventBus eventBus
   ) {
     this.eventBus = eventBus;
-    this.locationManagementPrefs = locationManagementPrefs;
   }
 
 

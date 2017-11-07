@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.Build;
 
@@ -53,10 +52,9 @@ abstract class JsonQueryingResolver
 
 
   JsonQueryingResolver(
-    EventBus          eventBus,
-    SharedPreferences locationManagementPrefs
+    EventBus eventBus
   ) {
-    super( eventBus, locationManagementPrefs );
+    super( eventBus );
   }
 
 

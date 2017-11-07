@@ -145,7 +145,7 @@ public class ZmanimService
     LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
     locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
-    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ), locationManagementPrefs );
+    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ) );
 
     ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
       @Override public void scheduleAlert(

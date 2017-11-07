@@ -13,7 +13,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 
@@ -37,10 +36,9 @@ public class LocationToAddressConverter {
 
 
   public LocationToAddressConverter(
-    final Context     context,
-    EventBus          eventBus,
-    Geocoder          geocoder,
-    SharedPreferences locationManagementPrefs
+    final Context context,
+    EventBus      eventBus,
+    Geocoder      geocoder
   ) {
 
     this.eventBus = eventBus;
@@ -66,17 +64,17 @@ public class LocationToAddressConverter {
       }
     };
 
-    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus, locationManagementPrefs );
+    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
     cachedLocationResolver.loadCache();
 
     orderedResolvers = new ArrayList<>();
     orderedResolvers.add( cachedLocationResolver );
-    orderedResolvers.add( new AndroidResolver( eventBus, geocoder, locationManagementPrefs ) );
+    orderedResolvers.add( new AndroidResolver( eventBus, geocoder ) );
 
-    orderedResolvers.add( new MapQuestResolver( eventBus, locationManagementPrefs ) );
-    orderedResolvers.add( new NominatimResolver( eventBus, locationManagementPrefs ) );
+    orderedResolvers.add( new MapQuestResolver( eventBus ) );
+    orderedResolvers.add( new NominatimResolver( eventBus ) );
 
-    orderedResolvers.add( new PassthroughResolver( eventBus, locationManagementPrefs ) );
+    orderedResolvers.add( new PassthroughResolver( eventBus ) );
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
