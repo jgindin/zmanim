@@ -93,7 +93,7 @@ public class LocationToAddressConverter {
         @NotNull LocationError  error,
         @NotNull ZmanimLocation lastKnownLocation
       ) {
-        handleLocationAcquired( lastKnownLocation );
+        // Don't do anything.
       }
     };
     eventBus.addHandler( locationAcquiredHandler );
