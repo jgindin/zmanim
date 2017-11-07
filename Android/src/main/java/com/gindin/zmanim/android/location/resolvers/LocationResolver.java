@@ -111,16 +111,31 @@ abstract class LocationResolver {
 
 
   public final void resolve(
-    @NotNull ZmanimLocation          location,
-    @NotNull List<LocationResolver>  nextResolvers
+    @NotNull final ZmanimLocation          location,
+    @NotNull final List<LocationResolver>  nextResolvers
   ) {
 
-    if ( location.hasCoordinates() ) {
-      resolveFromCoordinates( location, nextResolvers );
-    }
-    else {
-      resolveFromName( location, nextResolvers );
-    }
+    AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
+      @Override
+      protected ZmanimLocation doInBackground( ZmanimLocation... zmanimLocations ) {
+
+        if ( location.hasCoordinates() ) {
+          return resolveFromCoordinatesInBackground( zmanimLocations[0] );
+        }
+        else {
+          return resolveFromNameInBackground( zmanimLocations[0] );
+        }
+      }
+
+
+      @Override
+      protected void onPostExecute( ZmanimLocation resolvedLocation ) {
+        super.onPostExecute( resolvedLocation );
+        handlePostExecute( location, resolvedLocation, nextResolvers );
+      }
+    };
+
+    task.execute( location );
   }
 
 
@@ -141,65 +156,6 @@ abstract class LocationResolver {
    */
   @Nullable
   protected abstract ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation );
-
-
-  /**
-   * Given a location which MUST have the latitude and longitude set, use reverse geocoding to find the
-   *  name of that location. Upon completion, the location is updated and the FullLocationAcquiredEvent
-   *  will be fired.
-   */
-  private void resolveFromCoordinates(
-    @NotNull final ZmanimLocation          location,
-    @NotNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
-      @Override
-      protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
-        return resolveFromCoordinatesInBackground( zmanimLocations[0] );
-      }
-
-
-      @Override
-      protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
-        super.onPostExecute( resolvedLocation );
-        handlePostExecute( location, resolvedLocation, nextResolvers );
-      }
-    };
-
-    task.execute( location );
-  }
-
-
-  /**
-   * Given a descriptive place name, use geocoding to find the actual location.
-   */
-  private void resolveFromName(
-    @NotNull final ZmanimLocation          location,
-    @NotNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    if ( location.getLocationName().trim().isEmpty() ) {
-      eventBus.fire( new LocationAcquiredEvent( location, true, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
-    }
-
-    AsyncTask<ZmanimLocation,Void,ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
-      @Nullable
-      @Override
-      protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
-        return resolveFromNameInBackground( zmanimLocations[0] );
-      }
-
-
-      @Override
-      protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
-        super.onPostExecute( resolvedLocation );
-        handlePostExecute( location, resolvedLocation, nextResolvers );
-      }
-    };
-
-    task.execute( location );
-  }
 
 
   private void handlePostExecute(
