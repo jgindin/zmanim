@@ -42,10 +42,8 @@ abstract class LocationResolver {
       return ZmanimLocation.UNKNOWN_LOCATION;
     }
 
-    final String adminArea = address.getAdminArea();
     final String locality = address.getLocality();
-    final String postalCode = address.getPostalCode();
-    final int maxAddressLineIndex = address.getMaxAddressLineIndex();
+    final String adminArea = address.getAdminArea();
     final String country = address.getCountryName();
 
     // There are cases where locality is null. No kiddin'...if you use the StaticLocationProvider, and choose
@@ -53,12 +51,29 @@ abstract class LocationResolver {
     //  (Well, that is the case, except that when the StaticLocationProvider goes to look up what the location is
     //    it now stores the returned Address as the Extras in the Location. And, for some reason, *that* Address
     //    comes back properly. Oh well...)
-    if ( ( null != locality ) && ( null != adminArea ) ) {
-      locationString = locality + ", " + adminArea;
-    }
-    else if ( null == locality ) {
+    if ( locality != null ) {
+      locationString = locality;
 
+      if ( null != adminArea ) {
+        locationString += ", " + adminArea;
+      }
+      else if ( country != null ) {
+        locationString += ", " + country;
+      }
+    }
+    else if ( adminArea != null ) {
+      locationString = adminArea;
+
+      if ( country != null ) {
+        locationString += ", " + country;
+      }
+    }
+    else {
+
+      final int maxAddressLineIndex = address.getMaxAddressLineIndex();
       if ( maxAddressLineIndex > 0 ) {
+
+        final String postalCode = address.getPostalCode();
 
         // Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
         for ( int index = 0; index < maxAddressLineIndex; index++ ) {
@@ -76,12 +91,6 @@ abstract class LocationResolver {
         locationString = country;
       }
 
-    }
-    else if ( null != country ) {
-      locationString = locality + ", " + country;
-    }
-    else {
-      locationString = locality;
     }
 
     // Final fallback...if we got nothing then just use the lat & long...
