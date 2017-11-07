@@ -203,8 +203,6 @@ public class ZmanimService
       servicingUser = true;
 
       findCurrentLocation();
-
-      eventBus.fire( new ServiceStartedEvent() );
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       servicingUser = false;

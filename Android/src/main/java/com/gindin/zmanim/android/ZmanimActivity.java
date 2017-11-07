@@ -21,7 +21,6 @@ import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.android.service.ServiceStartedEvent;
 import com.gindin.zmanim.android.service.ZmanimReceiver;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
@@ -93,7 +92,6 @@ public class ZmanimActivity
 
   private ZmanimLocation                                    lastKnownLocation;
 
-  private ServiceStartedEvent.Handler                       serviceStartedHandler;
 
 
 
@@ -211,15 +209,6 @@ public class ZmanimActivity
 
     super.onStart();
 
-    serviceStartedHandler = new ServiceStartedEvent.Handler() {
-      @Override
-      public void onServiceStarted() {
-        refresh();
-      }
-    };
-
-    eventBus.addHandler( serviceStartedHandler );
-
     Intent zmanimService = new Intent( this, ZmanimService.class );
     zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
     startService( zmanimService );
@@ -241,8 +230,6 @@ public class ZmanimActivity
   @SuppressWarnings( "FeatureEnvy" )
   @Override
   protected void onStop() {
-
-    eventBus.removeHandler( serviceStartedHandler );
 
     Intent zmanimService = new Intent( this, ZmanimService.class );
     zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STOPPED.name() );
