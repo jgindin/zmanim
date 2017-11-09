@@ -122,19 +122,9 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-
-    // Make sure any previous notification is removed. It seems that this is normally not necessary,
-    //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
-    //  dismissed...
-    // Note that for now, on debug builds we're going to "stack up" the notifications. If this becomes
-    //  interesting, we could add a preference for this...
-    final int notificationID;
-//    if ( BuildConfig.DEBUG ) {
-      notificationID = zmanType.ordinal();
-//    }
-//    else {
-//      notificationID = 1;
-//    }
+    // We use a different notification ID for each notification. This means that as they occur, they will
+    //  "stack".
+    final int notificationID = zmanType.ordinal();
 
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
@@ -164,6 +154,7 @@ public class DisplayNotificationService
     builder
       .setContentTitle( getString( R.string.app_name ) )
       .setContentText( notificationText )
+      .setSubText( location.getLocationName() )
       .setSmallIcon( R.drawable.ic_stat_zman_notification )
       .setTicker( notificationText )
       .setAutoCancel( true )
