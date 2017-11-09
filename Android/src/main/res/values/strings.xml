@@ -42,11 +42,13 @@
 
   <string name="unable_to_determine_location_button">Enable</string>
 
-  <string name="unable_to_determine_location_error">Unable to determine your current location.</string>
-  <string name="no_location_management">Please enable a location source.</string>
-  <string name="cannot_determine_location">Using last known location.</string>
-  <string name="last_location_time"> (%s)</string>
+  <string name="unable_to_determine_location_error">Unable to update your current location.</string>
+  <string name="no_location_management">Unable to determine your current location.</string>
+  <string name="no_location_management_action"><u>Please enable a location source.</u></string>
+  <string name="cannot_determine_location">Unable to determine your current location.</string>
+  <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
+  <string name="action_dismiss">Dismiss</string>
 
 
   <string name="location_prefs">Location</string>

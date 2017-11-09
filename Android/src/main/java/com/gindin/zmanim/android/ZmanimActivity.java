@@ -42,14 +42,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.*;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -301,11 +299,7 @@ public class ZmanimActivity
     @Nullable final LocationError error
   ) {
 
-    if ( null == error ) {
-      updateField( R.id.messages, "" );
-      //displayDebugMessages();
-    }
-    else {
+    if ( null != error ) {
       handleLocationError( error );
     }
   }
@@ -315,40 +309,43 @@ public class ZmanimActivity
     LocationError error
   ) {
 
-    String errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
-
-    Toast toast = Toast.makeText( this, errorMessage, Toast.LENGTH_LONG );
-    toast.show();
-
     // Now...why is it we couldn't determine our location?
-    String extra = "";
+    final String errorMessage;
+    final String action;
     final View.OnClickListener clickListener;
     switch ( error.errorCode ) {
 
       case NO_LOCATION_MANAGER_SERVICE:
         // This is just weird...
-        extra = "No location manager??? Internal error...";
+        errorMessage = "No location manager??? Internal error...";
+        action = null;
         clickListener = null;
         break;
 
 
       case CANNOT_DETERMINE_LOCATION:
-        extra = getResources().getString( R.string.cannot_determine_location );
 
         if ( null != lastKnownLocation ) {
-          extra += " " + getResources().getString( R.string.last_location_time, new Date( lastKnownLocation.locationTime ) );
+          final String lastTime = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT )
+            .format( new Date( lastKnownLocation.locationTime ) );
+          errorMessage = getResources().getString( R.string.cannot_update_location, lastTime );
+        }
+        else {
+          errorMessage = getResources().getString( R.string.cannot_determine_location  );
         }
 
         // TODO: Need to add click listener that will invoke a dialog allowing the user to:
         //  1. try obtaining location again; or
         //  2. manually specify where they are
+        action = null;
         clickListener = null;
         break;
 
       
       case NO_PROVIDERS:
         // Well, gosh..looks like the user hasn't turned on location management!
-        extra = getResources().getString( R.string.no_location_management );
+        errorMessage = getResources().getString( R.string.no_location_management );
+        action = getResources().getString( R.string.no_location_management_action );
         clickListener = new View.OnClickListener() {
           public void onClick( View view ) {
             showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
@@ -358,7 +355,8 @@ public class ZmanimActivity
 
 
       case BAD_INPUT:
-        extra = error.message;
+        errorMessage = error.message;
+        action = null;
         clickListener = null;
         break;
 
@@ -366,21 +364,27 @@ public class ZmanimActivity
       default:
         // Seems necessary to have a default case, even though we've specified all the cases, so that the
         //  clickListener gets initialized.
+        errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
+        action = null;
         clickListener = null;
     }
 
 
+    Snackbar snackbar = Snackbar
+      .make( findViewById( android.R.id.content ), errorMessage, Snackbar.LENGTH_INDEFINITE );
+
     if ( null == clickListener ) {
-      errorMessage = errorMessage + extra;
+      snackbar.setAction( R.string.action_dismiss, new View.OnClickListener() {
+        @Override public void onClick( View v ) {
+          // Nothing to do.
+        }
+      } );
     }
     else {
-      errorMessage = errorMessage + " <u>" + extra + "</u>";
-
-      View messages = findViewById( R.id.messages );
-      messages.setOnClickListener( clickListener );
+      snackbar.setAction( action, clickListener );
     }
 
-    updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
+    snackbar.show();
   }
 
 
@@ -536,26 +540,6 @@ public class ZmanimActivity
 
     // This will force us to go re-query for our location.
     eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
-  }
-
-
-  private void updateField(
-    int     field,
-    String  text
-  ) {
-
-    TextView view = (TextView)findViewById( field );
-    view.setText( text );
-  }
-
-
-  private void updateField(
-    int     field,
-    Spanned text
-  ) {
-
-    TextView view = (TextView)findViewById( field );
-    view.setText( text );
   }
 
 
