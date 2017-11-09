@@ -152,8 +152,6 @@ public class ZmanimActivity
 
     super.onCreate( savedInstanceState );
 
-    LogUtils.startSession( this );
-
     personalPrefsManager = new PersonalPrefsManager( this );
 
     AppUpgrader.handle( this, personalPrefsManager, new ZmanimSelectionPrefsManager( this ) );
@@ -252,8 +250,6 @@ public class ZmanimActivity
     }
     loadedPresenters.clear();
 
-    LogUtils.endSession( this );
-    
     super.onDestroy();
   }
 

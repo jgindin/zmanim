@@ -6,12 +6,10 @@ package com.gindin.util;
 
 import com.gindin.zmanim.android.BuildConfig;
 
-import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -28,26 +26,6 @@ public class LogUtils {
 
 
   private LogUtils() {
-  }
-
-
-  public static void startSession(
-    final Context context
-  ) {
-
-    if ( !BuildConfig.DEBUG ) {
-      FlurryAgent.onStartSession( context );
-    }
-  }
-
-
-  public static void endSession(
-    Context context
-  ) {
-
-    if ( !BuildConfig.DEBUG ) {
-      FlurryAgent.onEndSession( context );
-    }
   }
 
 
@@ -142,7 +120,7 @@ public class LogUtils {
           }
         }
 
-        FlurryAgent.logEvent( eventName, messageMap );
+//        FlurryAgent.logEvent( eventName, messageMap );
       }
 
       return null;

@@ -1,6 +1,5 @@
 package com.gindin.zmanim.android;
 
-import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -51,11 +50,6 @@ public class ZmanimApplication
         Log.e( "init", "Unable to init ACRA", e );
       }
 
-
-      new FlurryAgent.Builder()
-        .withLogEnabled( false )
-        .withCaptureUncaughtExceptions( false )
-        .build( this, BuildConfig.FLURRY_KEY );
     }
     else {
       // Just so we *KNOW* we're dealing with a dev version...
