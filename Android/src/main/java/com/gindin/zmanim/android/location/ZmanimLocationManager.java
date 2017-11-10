@@ -154,27 +154,21 @@ public class ZmanimLocationManager {
     cancel();
     currentAcquirer = null;
 
-    if ( event.locationDeterminationOverride == RequestLocationUpdateEvent.LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION ) {
+    boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+    if ( useThis ) {
       currentAcquirer = getAcquirer( Type.FROM_DEVICE );
     }
     else {
 
-      boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+      useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
       if ( useThis ) {
-        currentAcquirer = getAcquirer( Type.FROM_DEVICE );
+        currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
       }
       else {
 
-        useThis = locationManagementPrefs.getBoolean( LocationProviders.STATIC_POSITION.name(), false );
+        useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
         if ( useThis ) {
-          currentAcquirer = getAcquirer( Type.NAME_FROM_USER );
-        }
-        else {
-
-          useThis = locationManagementPrefs.getBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false );
-          if ( useThis ) {
-            currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
-          }
+          currentAcquirer = getAcquirer( Type.LAT_LONG_FROM_USER );
         }
       }
     }

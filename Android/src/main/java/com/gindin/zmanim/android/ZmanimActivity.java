@@ -14,12 +14,9 @@ import com.gindin.zmanim.android.display.daily.header.LocationDisplayModule;
 import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
-import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.android.service.ZmanimReceiver;
 import com.gindin.zmanim.android.service.ZmanimService;
@@ -34,10 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -90,7 +85,7 @@ public class ZmanimActivity
 
   private ZmanimLocation                                    lastKnownLocation;
 
-
+  private Snackbar                                          snackbar;
 
 
   //  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -370,8 +365,13 @@ public class ZmanimActivity
     }
 
 
-    Snackbar snackbar = Snackbar
-      .make( findViewById( android.R.id.content ), errorMessage, Snackbar.LENGTH_INDEFINITE );
+    if ( snackbar == null ) {
+      snackbar = Snackbar
+        .make( findViewById( android.R.id.content ), errorMessage, Snackbar.LENGTH_INDEFINITE );
+    }
+    else {
+      snackbar.setText( errorMessage );
+    }
 
     if ( null == clickListener ) {
       snackbar.setAction( R.string.action_dismiss, new View.OnClickListener() {
@@ -527,19 +527,10 @@ public class ZmanimActivity
 
   private void refresh() {
 
-    SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-    boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
-
-    RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
-    if ( !preferCachedLocation ) {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
-    }
-    else {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
-    }
-
-    // This will force us to go re-query for our location.
-    eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
+    // Just kick the service and let it do the work...
+    Intent zmanimService = new Intent( this, ZmanimService.class );
+    zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
+    startService( zmanimService );
   }
 
 
@@ -640,6 +631,10 @@ public class ZmanimActivity
         new Runnable() {
           @Override
           public void run() {
+            if ( ( snackbar != null ) && snackbar.isShownOrQueued() ){
+              snackbar.dismiss();
+            }
+
             rebuildUI( location, null );
           }
         }
