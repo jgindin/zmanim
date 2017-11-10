@@ -110,7 +110,10 @@ class CachedLocationResolver
   private ZmanimLocation findCachedMatch( ZmanimLocation zmanimLocation ) {
 
     // Take a copy to avoid any possible ConcurrentModificationException.
-    Set<ZmanimLocation> copy = locationCache.newCopy();
+    Set<ZmanimLocation> copy;
+    synchronized ( locationCache ) {
+      copy = locationCache.newCopy();
+    }
 
     for ( ZmanimLocation cachedLocation : copy ) {
 
@@ -139,15 +142,18 @@ class CachedLocationResolver
         DataInputStream input = null;
         try {
 
-          final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
-          input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
-
-          int numLocations = input.readInt();
-          for ( int i = 0; i < numLocations; i++ ) {
-            copy.add( ZmanimLocation.load( input ) );
-          }
-
+          // Sync on the entire load process just in case we wind up getting a save() operation
+          //  while we're trying to load!
           synchronized ( locationCache ) {
+
+            final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
+            input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
+
+            int numLocations = input.readInt();
+            for ( int i = 0; i < numLocations; i++ ) {
+              copy.add( ZmanimLocation.load( input ) );
+            }
+
             locationCache.addAll( copy );
           }
         }
@@ -191,18 +197,23 @@ class CachedLocationResolver
       @Override
       public void run() {
 
-        final Set<ZmanimLocation> copy = locationCache.newCopy();
 
         FileOutputStream fos = null;
         DataOutputStream output = null;
         try {
-          fos = ioFactory.openOutput();
-          output = new DataOutputStream( new BufferedOutputStream( fos ) );
 
-          output.writeInt( copy.size() );
+          // Synchronize the whole writing process so we can't conflict with a load...
+          synchronized ( locationCache ) {
+            final Set<ZmanimLocation> copy = locationCache.newCopy();
 
-          for ( ZmanimLocation location : copy ) {
-            location.save( output );
+            fos = ioFactory.openOutput();
+            output = new DataOutputStream( new BufferedOutputStream( fos ) );
+
+            output.writeInt( copy.size() );
+
+            for ( ZmanimLocation location : copy ) {
+              location.save( output );
+            }
           }
         }
         catch ( Exception e ) {
@@ -294,13 +305,11 @@ class CachedLocationResolver
     }
 
 
-    public Set<ZmanimLocation> newCopy() {
+    Set<ZmanimLocation> newCopy() {
       Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
 
-      synchronized ( this ) {
-        for ( ZmanimLocation location : cache.keySet() ) {
-          copy.add( location );
-        }
+      for ( ZmanimLocation location : cache.keySet() ) {
+        copy.add( location );
       }
 
       return copy;
