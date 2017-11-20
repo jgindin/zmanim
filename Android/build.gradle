@@ -152,7 +152,7 @@ dependencies {
   compile "com.android.support:preference-v7:$supportLibsVersion"
 
   // ACRA
-  compile 'ch.acra:acra:4.9.1'
+  compile 'ch.acra:acra:4.9.2'
 
 
   testCompile 'junit:junit:4.12'
