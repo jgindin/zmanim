@@ -16,7 +16,7 @@ import android.widget.Toast;
  *
  */
 @ReportsCrashes(
-  formUri = "https://crashes.zmanim.today:6095/acra-zmanim/_design/acra-storage/_update/report",
+  formUri = "http://crashes.zmanim.today:6095/acra-zmanim/_design/acra-storage/_update/report",
   reportType = org.acra.sender.HttpSender.Type.JSON,
   httpMethod = org.acra.sender.HttpSender.Method.PUT,
 
