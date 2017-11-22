@@ -102,7 +102,7 @@ abstract class LocationResolver {
   }
 
 
-  protected LocationResolver(
+  LocationResolver(
     EventBus eventBus
   ) {
     this.eventBus = eventBus;
@@ -115,7 +115,7 @@ abstract class LocationResolver {
   public abstract void onDestroy();
 
 
-  public final void resolve(
+  final void resolve(
     @NotNull final ZmanimLocation          location,
     @NotNull final List<LocationResolver>  nextResolvers
   ) {
