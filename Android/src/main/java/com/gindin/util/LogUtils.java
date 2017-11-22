@@ -8,6 +8,7 @@ import com.gindin.zmanim.android.BuildConfig;
 
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.os.AsyncTask;
@@ -47,6 +48,15 @@ public class LogUtils {
   ) {
 
     LogErrorAsyncTask task = new LogErrorAsyncTask( where, message, error, moreInfo );
+    task.execute( (Void)null );
+  }
+
+
+  public static void logFeedback(
+    @NotNull String feedback
+  ) {
+
+    LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(), null );
     task.execute( (Void)null );
   }
 
@@ -152,8 +162,6 @@ public class LogUtils {
       this.msg = message;
       this.moreInfo = moreInfo;
 
-      // We want this to be silent...it's something we're interested in logging, but the user
-      //  shouldn't know/care...
       if ( ( error == null ) && !BuildConfig.DEBUG ) {
         this.error = new Exception( message );
       }
@@ -194,6 +202,8 @@ public class LogUtils {
         }
 
 
+        // We want this to be silent...it's something we're interested in logging, but the user
+        //  shouldn't know/care...
         errorReporter.handleSilentException( error );
 
         // Remove the extra data that was passed in here. But if someone had added additional info
@@ -201,6 +211,7 @@ public class LogUtils {
         errorReporter.removeCustomData( "Where" );
         errorReporter.removeCustomData( "Message" );
         errorReporter.removeCustomData( "LogTime" );
+
         if ( moreInfo != null ) {
           for ( Pair<String, String> info : moreInfo ) {
             errorReporter.removeCustomData( info.first );
@@ -212,5 +223,10 @@ public class LogUtils {
     }
   }
 
+
+  private static class UserFeedbackException
+    extends Exception {
+
+  }
 
 }  // End of LogUtils class

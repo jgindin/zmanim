@@ -12,6 +12,7 @@ import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
 import com.gindin.zmanim.android.display.daily.header.EditLocationPrefsEvent;
 import com.gindin.zmanim.android.display.daily.header.LocationDisplayModule;
 import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
+import com.gindin.zmanim.android.feedback.FeedbackFragment;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
@@ -444,6 +445,11 @@ public class ZmanimActivity
 
       case R.id.about:
         showDialog( id );
+        return true;
+
+      case R.id.feedback:
+        FeedbackFragment feedbackFragment = new FeedbackFragment(  );
+        feedbackFragment.show( getSupportFragmentManager(), "feedback" );
         return true;
 
       case R.id.help:

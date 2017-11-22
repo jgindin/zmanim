@@ -4,6 +4,7 @@ import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanlib.location.ZmanLocationJSON;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -203,18 +204,23 @@ class CachedLocationResolver
         try {
 
           // Synchronize the whole writing process so we can't conflict with a load...
+          final Set<ZmanimLocation> copy;
           synchronized ( locationCache ) {
-            final Set<ZmanimLocation> copy = locationCache.newCopy();
-
-            fos = ioFactory.openOutput();
-            output = new DataOutputStream( new BufferedOutputStream( fos ) );
-
-            output.writeInt( copy.size() );
-
-            for ( ZmanimLocation location : copy ) {
-              location.save( output );
-            }
+            copy = locationCache.newCopy();
           }
+
+          fos = ioFactory.openOutput();
+          output = new DataOutputStream( new BufferedOutputStream( fos ) );
+          output.writeInt( copy.size() );
+
+          StringBuilder cacheData = new StringBuilder();
+
+          for ( ZmanimLocation location : copy ) {
+            location.save( output );
+            cacheData.append( ZmanLocationJSON.toJSON( location ) );
+          }
+
+          LogUtils.setContext( "location-cache", cacheData.toString() );
         }
         catch ( Exception e ) {
           LogUtils.logError( "CLR::saveCache", e.getMessage(), e );

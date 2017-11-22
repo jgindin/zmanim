@@ -147,6 +147,8 @@ dependencies {
   ext.supportLibsVersion = "25.4.0"
   ext.$supportLibVersionAnnotations = ""
 
+  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+  implementation "com.android.support:support-v4:$supportLibsVersion"
   compile "com.android.support:design:$supportLibsVersion"
   compile "com.android.support:appcompat-v7:$supportLibsVersion"
   compile "com.android.support:preference-v7:$supportLibsVersion"
