@@ -231,7 +231,6 @@ class CachedLocationResolver
             }
             catch ( IOException e ) {
               // Oh well.
-              LogUtils.logError( "CLR::saveCache (closing)", e.getMessage(), e );
             }
           }
         }

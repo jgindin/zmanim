@@ -146,7 +146,6 @@ class AppUpgrader {
       }
       catch ( IOException e ) {
         // Oh well, we'll lose the last known location, and we'll have to acquire the current location.
-        LogUtils.logError( "AppUpgrader::locationPrefs", "Couldn't upgrade last location", e );
       }
       finally {
         if ( output != null ) {
