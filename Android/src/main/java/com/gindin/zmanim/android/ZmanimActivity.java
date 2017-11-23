@@ -448,7 +448,7 @@ public class ZmanimActivity
         return true;
 
       case R.id.feedback:
-        FeedbackFragment feedbackFragment = new FeedbackFragment(  );
+        FeedbackFragment feedbackFragment = new FeedbackFragment();
         feedbackFragment.show( getSupportFragmentManager(), "feedback" );
         return true;
 
