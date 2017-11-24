@@ -6,6 +6,7 @@ package com.gindin.zmanlib.zman;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +31,8 @@ class Shkia
     zmanim.add(
       new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
         @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSunset() );
+          final Date sunset = zmanimCalculator.getSunset();
+          return toCalendar( zmanimCalculator, sunset );
         }
       }
     );
