@@ -2,7 +2,6 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanlib.location.ZmanimLocation;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,17 +11,17 @@ import android.content.SharedPreferences;
 /**
  *
  */
-public class UT_MapQuestResolver {
+@SuppressWarnings( "MagicNumber" )
+public class UT_NominatimResolver {
 
-  private MapQuestResolver                                  resolver;
+  private NominatimResolver                                 resolver;
 
 
   @Before
   public void setup() {
 
-    EventBus eventBus = new EventBus();
-    SharedPreferences prefs = new TestPrefs();
-    resolver = new MapQuestResolver( eventBus, prefs );
+    final EventBus eventBus = new EventBus();
+    resolver = new NominatimResolver( eventBus );
   }
 
   @Test
@@ -30,24 +29,24 @@ public class UT_MapQuestResolver {
 
     testReverse( 57.15, -2.15, "Aberdeen, Scotland" );
     testReverse( -34.917, 138.6, "North Adelaide, South Australia" );
-    testReverse( 32.067, 34.767, "תל אביב-יפו, Israel" );
-    testReverse( 47.62, -122.33, "Seattle, WA" );
-    testReverse( 40.78, -73.966, "New York, NY" );
-    testReverse( 37.78333, -122.433, "San Francisco, CA" );
-    testReverse( 33.48, -112.07, "Phoenix, AZ" );
-    testReverse( 45.4, -73.717, "Kahnawake, QC" );
-    testReverse( 55.0, -1.6, "Newcastle upon Tyne, England" );
+    testReverse( 32.067, 34.767, "תל אביב-יפו, מחוז תל אביב" );
+    testReverse( 47.62, -122.33, "Seattle, Washington" );
+    testReverse( 40.78, -73.966, "NYC, New York" );
+    testReverse( 37.78333, -122.433, "San Francisco, California" );
+    testReverse( 33.48, -112.07, "Phoenix, Arizona" );
+    testReverse( 45.4, -73.717, "Lachine, Québec" );
   }
 
 
   @Test
   public void forwardGeocoding() {
 
-    testForward( "98118", "Seattle, WA", 47.54055, -122.275593 );
-    testForward( "Brooklyn, NY", "Brooklyn, NY", 40.692529, -73.990996 );
-    testForward( "Broklyn, NY", "Brooklyn, NY", 40.692529, -73.990996 );
-    testForward( "Jerusalem, IL", "Jerusalem, Israel", 31.778408, 35.206626 );
+    testForward( "98118", "Seattle, Washington", 47.5414053555493, -122.275995343744 );
+    testForward( "Brooklyn, NY", "NYC, New York", 40.6501038, -73.9495823 );
+    testForward( "Broklyn, NY", null, 0, 0 );
+    testForward( "Jerusalem, IL", "Jerusalem, מחוז ירושלים", 31.79681325, 35.2137689549576 );
   }
+
 
 
   private void testReverse(
@@ -79,9 +78,15 @@ public class UT_MapQuestResolver {
       .build();
 
     ZmanimLocation resolved = resolver.resolveFromNameInBackground( unresolved );
-    Assert.assertNotNull(resolved );
-    Assert.assertEquals( expectedLocationName, resolved.getLocationName() );
-    Assert.assertEquals( expectedLatitude, resolved.getLatitude(), 0 );
-    Assert.assertEquals( expectedLongitude, resolved.getLongitude(), 0 );
+    if ( expectedLocationName == null ) {
+      Assert.assertNull( resolved );
+    }
+    else {
+      Assert.assertNotNull( resolved );
+      Assert.assertEquals( expectedLocationName, resolved.getLocationName() );
+      Assert.assertEquals( expectedLatitude, resolved.getLatitude(), 0 );
+      Assert.assertEquals( expectedLongitude, resolved.getLongitude(), 0 );
+    }
   }
+
 }

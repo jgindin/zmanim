@@ -3,11 +3,10 @@ package com.gindin.zmanim.android.location.resolvers;
 import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import android.content.SharedPreferences;
 
 import java.io.*;
 import java.util.TimeZone;
@@ -15,11 +14,10 @@ import java.util.TimeZone;
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class UT_CachedLocationResolver {
 
   private EventBus                                          eventBus;
-
-  private SharedPreferences                                 testPrefs;
 
   private CachedLocationResolver                            cachedLocationResolver;
 
@@ -32,8 +30,7 @@ public class UT_CachedLocationResolver {
     ioFactory = new TestIOFactory();
 
     eventBus = new EventBus();
-    testPrefs = new TestPrefs();
-    cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus, testPrefs );
+    cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
   }
 
 
