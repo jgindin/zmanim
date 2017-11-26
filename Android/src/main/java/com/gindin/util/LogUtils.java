@@ -11,7 +11,6 @@ import org.acra.ErrorReporter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.Date;
@@ -48,7 +47,7 @@ public class LogUtils {
   ) {
 
     LogErrorAsyncTask task = new LogErrorAsyncTask( where, message, error, moreInfo );
-    task.execute( (Void)null );
+    new Thread( task ).start();
   }
 
 
@@ -57,7 +56,7 @@ public class LogUtils {
   ) {
 
     LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(), null );
-    task.execute( (Void)null );
+    new Thread( task ).start();
   }
 
 
@@ -67,7 +66,7 @@ public class LogUtils {
   ) {
 
     LogEventAsyncTask task = new LogEventAsyncTask( eventName, messages );
-    task.execute( (Void)null );
+    new Thread( task ).start();
   }
 
 
@@ -76,12 +75,7 @@ public class LogUtils {
     String data
   ) {
 
-    if ( BuildConfig.DEBUG ) {
-      if ( data != null ) {
-        Log.e( key, data );
-      }
-    }
-    else {
+    if ( !BuildConfig.DEBUG ) {
       if ( data == null ) {
         ACRA.getErrorReporter().removeCustomData( key );
       }
@@ -94,7 +88,7 @@ public class LogUtils {
 
 
   private static class LogEventAsyncTask
-    extends AsyncTask<Void,Void,Void> {
+    implements Runnable {
 
     private final String                                    eventName;
     private final List<Pair<String,String>>                 messages;
@@ -110,7 +104,7 @@ public class LogUtils {
 
 
     @Override
-    protected Void doInBackground( Void... voids ) {
+    public void run() {
 
       if ( BuildConfig.DEBUG ) {
 
@@ -132,14 +126,12 @@ public class LogUtils {
 
 //        FlurryAgent.logEvent( eventName, messageMap );
       }
-
-      return null;
     }
   }
 
 
   private static class LogErrorAsyncTask
-    extends AsyncTask<Void,Void,Void> {
+    implements Runnable {
 
     private final String                                    where;
 
@@ -172,7 +164,7 @@ public class LogUtils {
 
 
     @Override
-    protected Void doInBackground( Void... voids ) {
+    public void run() {
 
       String message = msg;
 
@@ -219,7 +211,6 @@ public class LogUtils {
         }
       }
 
-      return null;
     }
   }
 
