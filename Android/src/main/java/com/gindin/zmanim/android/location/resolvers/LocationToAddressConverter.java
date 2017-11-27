@@ -27,6 +27,12 @@ import java.util.List;
  */
 public class LocationToAddressConverter {
 
+
+  /**
+   * Sometimes, after an upgrade, we need to wipe the cache.
+   */
+  public static boolean                                     wipeCacheOnStart = false;
+
   private final EventBus                                    eventBus;
 
   private final List<LocationResolver>                      orderedResolvers;
@@ -65,7 +71,12 @@ public class LocationToAddressConverter {
     };
 
     CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
-    cachedLocationResolver.loadCache();
+    if ( wipeCacheOnStart ) {
+      wipeCacheOnStart = false;
+    }
+    else {
+      cachedLocationResolver.loadCache();
+    }
 
     orderedResolvers = new ArrayList<>();
     orderedResolvers.add( cachedLocationResolver );

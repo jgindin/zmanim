@@ -8,6 +8,7 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Hanetz;
@@ -108,6 +109,8 @@ class AppUpgrader {
         editor.putString( Zmanim.Type.Shkia.name, Shkia.ZMAN_WITH_ELEVATION );
         editor.apply();
       }
+
+      LocationToAddressConverter.wipeCacheOnStart = true;
     }
   }
 
