@@ -239,7 +239,16 @@ public class ZmanimLocation
     // Less than 1km? Don't bother...
     // I suppose you could run into an issue if that 1km puts you in a different time zone
     //  or something like that...
-    return getGeodesicDistance( previousLocation ) >= 1000;
+    if ( getGeodesicDistance( previousLocation ) >= 1000 ) {
+      return true;
+    }
+
+    // So, we're within 1km, but Has the elevation changed?
+    if ( Math.abs( getElevation() - previousLocation.getElevation() ) > 5 ) {
+      return true;
+    }
+
+    return false;
   }
 
 
