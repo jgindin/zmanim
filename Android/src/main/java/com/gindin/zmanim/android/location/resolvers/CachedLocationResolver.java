@@ -150,12 +150,17 @@ class CachedLocationResolver
             final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
             input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
 
+            StringBuilder cacheData = new StringBuilder();
+
             int numLocations = input.readInt();
             for ( int i = 0; i < numLocations; i++ ) {
-              copy.add( ZmanimLocation.load( input ) );
+              final ZmanimLocation location = ZmanimLocation.load( input );
+              copy.add( location );
+              cacheData.append( ZmanLocationJSON.toJSON( location ) );
             }
 
             locationCache.addAll( copy );
+            LogUtils.setContext( "location-cache", cacheData.toString() );
           }
         }
         catch( FileNotFoundException fnfe ) {
