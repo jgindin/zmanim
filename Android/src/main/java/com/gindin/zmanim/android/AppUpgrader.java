@@ -10,6 +10,9 @@ import com.gindin.zmanim.android.location.LastKnownLocationProvider;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.Hanetz;
+import com.gindin.zmanlib.zman.Shkia;
+import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -75,26 +78,37 @@ class AppUpgrader {
   }
 
 
-  /**
-   * In v320 we moved the Use Elevation property from the personal prefs into the location management prefs.
-   */
+  @SuppressWarnings( "MagicNumber" )
   private static void upgradeElevationPref(
     ZmanimActivity  zmanimActivity,
     int             lastKnownCodeVersion
   ) {
 
-    //noinspection MagicNumber
-    if ( lastKnownCodeVersion >= 320 ) {
-      return;
+    // In v320 we moved the Use Elevation property from the personal prefs into the location management prefs.
+    if ( lastKnownCodeVersion < 320 ) {
+      final SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+      final SharedPreferences locationManagementPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+
+      final SharedPreferences.Editor editor = locationManagementPrefs.edit();
+      editor.putBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(),
+        personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false ) );
+      editor.apply();
     }
 
-    final SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-    final SharedPreferences locationManagementPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+    // In v335, we no longer use the Use Elevation setting. Instead, there are explicit zmanim for Hanetz & Shkia to
+    //  account for elevation.
+    if ( lastKnownCodeVersion < 335 ) {
 
-    final SharedPreferences.Editor editor = locationManagementPrefs.edit();
-    editor.putBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(),
-      personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false ) );
-    editor.apply();
+      final SharedPreferences locationPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+      final boolean useElevation = locationPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
+      if ( useElevation ) {
+        final SharedPreferences zmanPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+        final SharedPreferences.Editor editor = zmanPrefs.edit();
+        editor.putString( Zmanim.Type.Hanetz.name , Hanetz.ZMAN_WITH_ELEVATION );
+        editor.putString( Zmanim.Type.Shkia.name, Shkia.ZMAN_WITH_ELEVATION );
+        editor.apply();
+      }
+    }
   }
 
 

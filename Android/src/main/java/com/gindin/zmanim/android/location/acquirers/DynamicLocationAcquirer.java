@@ -211,11 +211,6 @@ public class DynamicLocationAcquirer
     final TimeZone timeZone = getTimeZoneFromPrefs();
     ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
 
-    boolean useElevation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
-    if ( !useElevation && ( newLocation != null ) ) {
-      location.setElevation( 0.0 );
-    }
-
     fireLocationAcquiredEvent( location, false );
   }
 

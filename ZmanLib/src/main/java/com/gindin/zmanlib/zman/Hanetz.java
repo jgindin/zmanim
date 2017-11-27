@@ -11,11 +11,14 @@ import java.util.List;
 /**
  *
  */
-class Hanetz
+public class Hanetz
   extends Zmanim {
 
 
+  public static final String                                ZMAN_WITH_ELEVATION = "Sunrise (with elevation)";
+
   private static final String                               DEFAULT_ZMAN_NAME = "Sunrise";
+
 
   Hanetz(
     final ZmanimCalculator zmanimCalculator
@@ -39,7 +42,7 @@ class Hanetz
     );
 
     zmanim.add(
-      new Zman( "Sunrise (with elevation)", "The exact sunrise time, taking elevation into account..", Zmanim.Type.Hanetz, false ) {
+      new Zman( ZMAN_WITH_ELEVATION, "The exact sunrise time, taking elevation into account.", Zmanim.Type.Hanetz, false ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSunrise() );
         }
@@ -47,6 +50,12 @@ class Hanetz
     );
 
     return zmanim;
+  }
+
+
+  @Override
+  public Zman getDefault() {
+    return getByName( DEFAULT_ZMAN_NAME );
   }
 
 

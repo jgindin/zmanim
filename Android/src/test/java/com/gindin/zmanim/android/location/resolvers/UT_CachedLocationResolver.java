@@ -201,10 +201,7 @@ public class UT_CachedLocationResolver {
     void prepInput( File prepFrom ) throws IOException {
 
       input = new FileInputStream( prepFrom );
-
-      outputFile = File.createTempFile( "ut_cached_location_", "output" );
-      outputFile.deleteOnExit();
-      output = new FileOutputStream( outputFile );
+      openOutput();
     }
 
 

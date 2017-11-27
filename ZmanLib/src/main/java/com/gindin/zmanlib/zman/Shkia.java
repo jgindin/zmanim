@@ -12,8 +12,14 @@ import java.util.List;
 /**
  *
  */
-class Shkia
+public class Shkia
   extends Zmanim {
+
+  public static final String                                ZMAN_WITH_ELEVATION = "Sunset (with elevation)";
+
+  private static final String                               DEFAULT_ZMAN_NAME = "Sunset";
+
+
 
   Shkia(
     final ZmanimCalculator zmanimCalculator
@@ -29,7 +35,16 @@ class Shkia
     List<Zman>  zmanim = new ArrayList<Zman>();
 
     zmanim.add(
-      new Zman( "Sunset", "The exact sunset time.", Zmanim.Type.Shkia, false ) {
+      new Zman( DEFAULT_ZMAN_NAME, "The exact sunset time.", Zmanim.Type.Shkia, false ) {
+        @Override protected Calendar calculate() {
+          final Date sunset = zmanimCalculator.getSeaLevelSunset();
+          return toCalendar( zmanimCalculator, sunset );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( ZMAN_WITH_ELEVATION, "The exact sunset time, taking elevation into account.", Zmanim.Type.Shkia, false ) {
         @Override protected Calendar calculate() {
           final Date sunset = zmanimCalculator.getSunset();
           return toCalendar( zmanimCalculator, sunset );
@@ -38,6 +53,12 @@ class Shkia
     );
 
     return zmanim;
+  }
+
+
+  @Override
+  public Zman getDefault() {
+    return getByName( DEFAULT_ZMAN_NAME );
   }
 
 

@@ -1,6 +1,5 @@
 package com.gindin.zmanlib.location;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -47,7 +46,7 @@ public class ZmanLocationJSON {
   }
 
 
-  public static ZmanimLocation fromJSON( String json ) throws JSONException {
+  public static ZmanimLocation fromJSON( String json ) {
 
     JSONTokener tokener = new JSONTokener( json );
     JSONObject root = (JSONObject)tokener.nextValue();

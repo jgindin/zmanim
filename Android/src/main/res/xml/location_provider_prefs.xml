@@ -34,14 +34,6 @@
       android:dependency="DYNAMIC_POSITION"
     />
     <CheckBoxPreference
-      android:key="USE_ELEVATION"
-      android:title="@string/use_elevation_pref_title"
-      android:summary="@string/use_elevation_pref_summary"
-      android:defaultValue="false"
-      android:dependency="DYNAMIC_POSITION"
-    />
-
-    <CheckBoxPreference
       android:key="PREFER_CACHED_LOCATION"
       android:title="@string/prefer_cached_location_pref_title"
       android:summary="@string/prefer_cached_location_pref_summary"

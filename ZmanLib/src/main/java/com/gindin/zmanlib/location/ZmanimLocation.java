@@ -322,7 +322,7 @@ public class ZmanimLocation
    * @throws IOException If there is any error interacting with the stream.
    * @throws JSONException If there is any error reading the location from the stream.
    */
-  public static ZmanimLocation load( InputStream input ) throws IOException, JSONException {
+  public static ZmanimLocation load( InputStream input ) throws IOException {
 
     DataInputStream inputStream = new DataInputStream( input );
     String json = inputStream.readUTF();
