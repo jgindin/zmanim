@@ -73,6 +73,7 @@ public class LocationToAddressConverter {
     CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
     if ( wipeCacheOnStart ) {
       wipeCacheOnStart = false;
+      cachedLocationResolver.wipeCache();
     }
     else {
       cachedLocationResolver.loadCache();

@@ -67,7 +67,7 @@ class CachedLocationResolver
           return;
         }
 
-        saveCache( newLocation );
+        cacheLocation( newLocation );
       }
 
 
@@ -186,7 +186,17 @@ class CachedLocationResolver
   }
 
 
-  private void saveCache( ZmanimLocation newLocation ) {
+  void wipeCache() {
+
+    synchronized ( locationCache ) {
+      locationCache.clear();
+    }
+
+    saveCache();
+  }
+
+
+  private void cacheLocation( ZmanimLocation newLocation ) {
 
     synchronized ( locationCache ) {
 
@@ -199,10 +209,15 @@ class CachedLocationResolver
       locationCache.add( newLocation );
     }
 
+    saveCache();
+  }
+
+
+  private void saveCache() {
+
     Runnable saveCache = new Runnable() {
       @Override
       public void run() {
-
 
         FileOutputStream fos = null;
         DataOutputStream output = null;

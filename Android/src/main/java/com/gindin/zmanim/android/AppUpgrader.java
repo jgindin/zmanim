@@ -98,7 +98,7 @@ class AppUpgrader {
 
     // In v335, we no longer use the Use Elevation setting. Instead, there are explicit zmanim for Hanetz & Shkia to
     //  account for elevation.
-    if ( lastKnownCodeVersion < 335 ) {
+    if ( lastKnownCodeVersion <= 336 ) {
 
       final SharedPreferences locationPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
       final boolean useElevation = locationPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
