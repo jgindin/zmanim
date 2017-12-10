@@ -106,11 +106,15 @@ public abstract class Details {
 
   public boolean isPurim() { return false; }
 
+  public boolean isShushanPurim() { return false; }
+
   public boolean isChanukah() { return false; }
 
   public boolean isRoshHashana() { return false; }
 
   public boolean isYomKippur() { return  false; }
+
+
 
 
   /**

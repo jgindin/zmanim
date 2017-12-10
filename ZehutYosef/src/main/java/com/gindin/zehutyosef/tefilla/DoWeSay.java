@@ -35,6 +35,8 @@ class DoWeSay {
   @SuppressWarnings( "FeatureEnvy" )
   final boolean barechenu() {
 
+    // TODO: The rules are different in Israel, we should account for this
+
     HebrewDate nextYear = HebrewCalendar.getForDate( date.getGregorianYear() + 1, Calendar.JANUARY, 1 );
     final boolean isLeapYear = nextYear.isGregorianLeapYear();
 
@@ -164,8 +166,28 @@ class DoWeSay {
   }
 
 
+  final boolean pesachAdditions() {
+    return dateDetails.isPesach();
+  }
+
+
+  final boolean sukkotAdditions() {
+    return dateDetails.isSukkot();
+  }
+
+
   final boolean purimAdditions() {
     return dateDetails.isPurim();
+  }
+
+
+  final boolean shushanPurimAdditions() {
+    return dateDetails.isShushanPurim();
+  }
+
+
+  final boolean dayAfterKipurAdditions() {
+    return date.yesterday().getDetails().isYomKippur();
   }
 
 
@@ -173,16 +195,21 @@ class DoWeSay {
     return dateDetails.isTaanit();
   }
 
+
   final boolean erevShabbatModifications() {
     return ( date.getDayOfWeek() == Calendar.FRIDAY );
   }
+
 
   final boolean mondayThursdayAdditions() {
     return ( date.getDayOfWeek() == Calendar.MONDAY || date.getDayOfWeek() == Calendar.THURSDAY );
   }
 
+
   final int getDayOfWeek() {
     return date.getDayOfWeek();
   }
+
+
 
 } // End of DoWeSay class

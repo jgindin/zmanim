@@ -38,6 +38,11 @@ public class ShushanPurim
           public boolean sayTachanun() {
             return false;
           }
+
+          @Override
+          public boolean isShushanPurim() {
+            return true;
+          }
         };
       }
     }

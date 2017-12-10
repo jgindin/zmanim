@@ -34,8 +34,9 @@ public class Shachrit
 
     List<TextChunk> files = new ArrayList<>();
 
+    // Beginning of Shachrit
     files.add( new TextChunk( "tefila/shachrit/hashkamat_haboker.txt" ) );
-    files.add( new TextChunk( "tefila/shachrit/patach_eliyahu.txt" ) );
+    files.add( new TextChunk( "tefila/shachrit/patah_eliyahu.txt" ) );
     files.add( new TextChunk( "tefila/kadesh_li_kol_bekhor.txt" ) );
     files.add( new TextChunk( "tefila/shachrit/korbanot.txt" ) );
     files.add( new TextChunk( "tefila/ribi_hananya.txt" ) );
@@ -43,16 +44,18 @@ public class Shachrit
     files.add( new TextChunk( "tefila/shachrit/hodu.txt" ) );
     files.add( new TextChunk( "tefila/shachrit/aromimkha_perek_number.txt" ) );
 
+    // Add first line of Aromimkha on Hanuka
     if ( doWeSay.chanukahAdditions() ) {
       files.add( new TextChunk( "tefila/shachrit/aromimkha_hanuka_intro.txt" ) );
     }
 
-    files.add( new TextChunk( "tefila/shachrit/aromimkha" ) );
+    files.add( new TextChunk( "tefila/shachrit/aromimkha.txt" ) );
 
     if ( doWeSay.aseretYameiTeshuvaInsertions() ) {
       files.add( new TextChunk( "tefila/shachrit/amonai_hu_haelokim.txt" ) );
     }
 
+    // Zemirot
     files.add( new TextChunk( "tefila/shachrit/amonai_melekh.txt" ) );
     files.add( new TextChunk( "tefila/shachrit/skip_to_barukh_sheamar.txt" ) );
     files.add( new TextChunk( "tefila/ribi_hananya.txt" ) );
@@ -63,12 +66,14 @@ public class Shachrit
       files.add( new TextChunk( "tefila/shachrit/shir_hamaalot_aseret_yeme_teshuva.txt" ) );
     }
 
+    // Shema
     files.add( new TextChunk( "tefila/hatzi_kadish.txt" ) );
     files.add( new TextChunk( "tefila/barekhu.txt" ) );
     files.add( new TextChunk( "tefila/shachrit/shema_opening_berakhot.txt" ) );
     files.add( new TextChunk( "tefila/shema.txt" ) );
     files.add( new TextChunk( "tefila/shachrit/shema_after_berakhot.txt" ) );
 
+    // Amida
     files.add( new TextChunk( "tefila/amida_opening.txt" ) );
 
     if ( doWeSay.aseretYameiTeshuvaInsertions() ) {
@@ -163,12 +168,20 @@ public class Shachrit
     files.add( new TextChunk( "tefila/amida_sim_shalom_conclusion.txt" ) );
     files.add( new TextChunk( "tefila/amida_elokai_netzor.txt" ) );
 
-    //TODO: Halel
+    //TODO: Lulav
+    // Halel
+    if ( doWeSay.roshChodeshAdditions() || doWeSay.pesachAdditions() ) {
+      files.add( new TextChunk( "tefila/shachrit/halel_half.txt" ) );
+    } else if ( doWeSay.chanukahAdditions() || doWeSay.sukkotAdditions() ) {
+      files.add( new TextChunk( "tefila/shachrit/halel_full.txt" ) );
+    }
 
-    if ( doWeSay.aseretYameiTeshuvaInsertions() ) {
+    // Avinu Malkenu
+    else if ( doWeSay.aseretYameiTeshuvaInsertions() ) {
       files.add( new TextChunk( "tefila/avinu_malkenu.txt" ) );
     }
 
+    // Tahanunim
     if ( doWeSay.tachanun() ) {
       files.add( new TextChunk( "tefila/tahanunim_ana.txt" ) );
 
@@ -181,7 +194,7 @@ public class Shachrit
 
       if ( doWeSay.mondayThursdayAdditions() ) {
         files.add( new TextChunk( "tefila/shachrit/tahanunim_eb_monday_thursday.txt" ) );
-      }
+      }  //TODO: Fast day tahanunim
 
       files.add( new TextChunk( "tefila/shachrit/tahanunim_avinu_malkenu.txt" ) );
 
@@ -193,6 +206,7 @@ public class Shachrit
     files.add( new TextChunk( "tefila/amonai_adonenu.txt" ) );
     files.add( new TextChunk( "tefila/hatzi_kadish.txt" ) );
 
+    // Torah reading
     if ( doWeSay.mondayThursdayAdditions() ) {
       files.add( new TextChunk( doWeSay.tachanun() ? "tefila/sefer_yes_tahanunim.txt" : "tefila/sefer_no_tahanunim/txt") );
       files.add( new TextChunk( "tefila/sefer_taking_out.txt" ) );
@@ -204,41 +218,103 @@ public class Shachrit
     files.add( new TextChunk( "tefila/ashre.txt" ) );
 
     if ( doWeSay.tachanun() ) {
-      files.add( new TextChunk( "tefila/shachrit/lamnatzeach_mizmor_ledavid.txt" ) );
+      files.add( new TextChunk( "tefila/shachrit/lamnatzeakh_mizmor_ledavid.txt" ) );
     }
 
     files.add( new TextChunk( "tefila/uva_letziyon_goel.txt" ) );
     files.add( new TextChunk( "tefila/veata_kadosh.txt" ) );
-    files.add( new TextChunk( "tefila/kadish_titkabal.txt" ) );
 
-    if ( doWeSay.mondayThursdayAdditions() ) {
-      files.add( new TextChunk( "tefila/returning_sefer.txt" ) );
+    // Musaf
+    if ( doWeSay.roshChodeshAdditions() || doWeSay.pesachAdditions() || doWeSay.sukkotAdditions() ) {
+      files.add(new TextChunk("tefila/returning_sefer.txt"));
+      files.add( new TextChunk( "tefila/hatzi_kadish.txt" ) );
+      files.add( new TextChunk( "tefila/shachrit/rh_musaf_sbh_opening.txt" ) );
+      files.add( new TextChunk( "tefila/amida_opening.txt" ) );
+      files.add( new TextChunk( "tefila/amida_melekh_ozer_ata_gibor.txt" ) );
+      if ( doWeSay.moridHaTal() ) {
+        files.add( new TextChunk( "tefila/amida_morid_hatal.txt" ) );
+      } else {
+        files.add( new TextChunk( "tefila/amida_mashiv_haruach.txt" ) );
+      }
+      files.add( new TextChunk( "tefila/amida_mekhalkel_hayim.txt" ) );
+      files.add( new TextChunk( "tefila/amida_veneeman_ata.txt" ) );
+      files.add( new TextChunk( "tefila/shachrit/amida_kedusha_opening_musaf.txt" ) );
+      files.add( new TextChunk( "tefila/amida_kedusha_conclusion.txt" ) );
+      files.add( new TextChunk( "tefila/amida_ata_kadosh_regular.txt" ) );
+
+      if ( doWeSay.roshChodeshAdditions() ) {
+        files.add( new TextChunk( "tefila/shachrit/rh_musaf.txt" ) );
+      } else {
+        //TODO: Hol Hamoed
+      }
+
+      files.add( new TextChunk( "tefila/amida_retze_opening.txt" ) );
+      files.add( new TextChunk( "tefila/amida_retze_conclusion.txt" ) );
+      files.add( new TextChunk( "tefila/amida_modim_opening.txt" ) );
+      files.add( new TextChunk( "tefila/amida_modim_derabanan.txt" ) );
+      if ( doWeSay.chanukahAdditions() ) {
+        files.add( new TextChunk( "tefila/amida_al_hanisim.txt" ) );
+        files.add( new TextChunk( "tefila/amida_hanuka.txt" ) );
+      }
+      files.add( new TextChunk( "tefila/amida_veal_kulam_yitbarakh.txt" ) );
+      files.add( new TextChunk( "tefila/amida_modim_conclusion.txt" ) );
+      files.add( new TextChunk( "tefila/amida_sim_shalom_opening.txt" ) );
+      files.add( new TextChunk( "tefila/amida_sim_shalom_conclusion.txt" ) );
+      files.add( new TextChunk( "tefila/amida_elokai_netzor.txt" ) );
+      files.add( new TextChunk( "tefila/shachrit/ashrekha.txt" ) );
+      files.add( new TextChunk( "tefila/kadish_titkabal.txt" ) );
+
+      if ( doWeSay.roshChodeshAdditions() ) {
+        files.add( new TextChunk( "tefila/rh_psalmu.txt" ) );
+      } else if ( doWeSay.pesachAdditions() ) {
+        //TODO: Pesach psalmu
+      } else if ( doWeSay.sukkotAdditions() ) {
+        //TODO: Sukkot psalmu
+      } if ( doWeSay.chanukahAdditions() ) {
+        files.add( new TextChunk( "tefila/shachrit/hanuka_psalmu.txt" ) );
+      }
+
+    // When we don't say Musaf
+    } else {
+      files.add(new TextChunk("tefila/kadish_titkabal.txt"));
+      if (doWeSay.mondayThursdayAdditions()) {
+        files.add(new TextChunk("tefila/returning_sefer.txt"));
+      }
+
+      // Shir Shel Yom
+      if (doWeSay.tachanun()) {
+        files.add(new TextChunk("tefila/shachrit/tefila_ledavid.txt"));
+      }
+
+      files.add(new TextChunk("tefila/shachrit/shir_shel_yom_intro.txt"));
+
+      int day = doWeSay.getDayOfWeek();
+      if (day == 1) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_sunday.txt"));
+      } else if (day == 2) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_monday.txt"));
+      } else if (day == 3) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_tuesday.txt"));
+      } else if (day == 4) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_wednesday.txt"));
+      } else if (day == 5) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_thursday.txt"));
+      } else if (day == 6) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_friday.txt"));
+      }
+
+      if (doWeSay.shushanPurimAdditions()) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_sbh_shushan_purim.txt"));
+      } else if (doWeSay.dayAfterKipurAdditions()) {
+        files.add(new TextChunk("tefila/shachrit/shir_shel_yom_sbh_after_kipur.txt"));
+      }
+
+      files.add(new TextChunk("tefila/shachrit/shir_shel_yom_hoshienu.txt"));
     }
 
-    if ( doWeSay.tachanun() ) {
-      files.add( new TextChunk( "tefila/shachrit/tefila_ledavid" ) );
-    }
-
-    files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_intro.txt" ) );
-
-    int day = doWeSay.getDayOfWeek();
-    if ( day == 1) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_sunday.txt" ) );
-    } else if ( day == 2) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_monday.txt" ) );
-    } else if ( day == 3) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_tuesday.txt" ) );
-    } else if ( day == 4) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_wednesday.txt" ) );
-    } else if ( day == 5) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_thursday.txt" ) );
-    } else if (day == 6) {
-      files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_friday.txt" ) );
-    }
-
-    //TODO: SBH insertions for day after Kipur & Shushan Purim
-    files.add( new TextChunk( "tefila/shachrit/shir_shel_yom_hoshienu.txt" ) );
     files.add( new TextChunk( "tefila/kadish_yatom.txt" ) );
+
+    // End of tefila
     files.add( new TextChunk( "tefila/shachrit/kave.txt" ) );
     files.add( new TextChunk( "tefila/ketoret.txt" ) );
 
