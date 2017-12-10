@@ -85,7 +85,7 @@ public class Shachrit
     if ( doWeSay.moridHaTal() ) {
       files.add( new TextChunk( "tefila/amida_morid_hatal.txt" ) );
     } else {
-      files.add( new TextChunk( "tefila/amida_mashiv_haruach.txt" ) );
+      files.add( new TextChunk( "tefila/amida_mashiv_haruakh.txt" ) );
     }
 
     files.add( new TextChunk( "tefila/amida_mekhalkel_hayim.txt" ) );
@@ -234,7 +234,7 @@ public class Shachrit
       if ( doWeSay.moridHaTal() ) {
         files.add( new TextChunk( "tefila/amida_morid_hatal.txt" ) );
       } else {
-        files.add( new TextChunk( "tefila/amida_mashiv_haruach.txt" ) );
+        files.add( new TextChunk( "tefila/amida_mashiv_haruakh.txt" ) );
       }
       files.add( new TextChunk( "tefila/amida_mekhalkel_hayim.txt" ) );
       files.add( new TextChunk( "tefila/amida_veneeman_ata.txt" ) );
