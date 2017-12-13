@@ -226,6 +226,13 @@ class DoWeSay {
   }
 
 
+  final boolean sefer() {
+    return this.mondayThursdayAdditions() || this.roshChodeshAdditions() || this.chanukahAdditions()
+            || this.pesachAdditions() || this.sukkotAdditions() || this.purimAdditions() ||
+            this.taanitDayInsertions();
+  }
+
+
   final int getDayOfWeek() {
     return date.getDayOfWeek();
   }

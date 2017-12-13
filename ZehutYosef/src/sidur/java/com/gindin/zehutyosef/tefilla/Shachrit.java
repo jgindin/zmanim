@@ -231,7 +231,7 @@ public class Shachrit
     files.add( new TextChunk( "tefila/hatzi_kadish.txt" ) );
 
     // Torah reading
-    if ( doWeSay.mondayThursdayAdditions() ) {
+    if ( doWeSay.sefer() ) {
       files.add( new TextChunk( doWeSay.tachanun() ? "tefila/sefer_yes_tahanunim.txt" : "tefila/sefer_no_tahanunim/txt") );
       files.add( new TextChunk( "tefila/sefer_taking_out.txt" ) );
       files.add( new TextChunk( "tefila/sefer_birkot_hatorah.txt" ) );  //TODO: inline reading
