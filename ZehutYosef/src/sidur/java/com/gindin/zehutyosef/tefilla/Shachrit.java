@@ -219,7 +219,7 @@ public class Shachrit
         } else if ( doWeSay.taanitEstherInsertions() ) {
           files.add( new TextChunk( "tefila/taanit/esther_tahanun.txt" ) );
         } else if ( doWeSay.seventeenTamuzInsertions() ) {
-          files.add( new TextChunk( "tefila/17tammuz_tahanun.txt" ) );
+          files.add( new TextChunk( "tefila/taanit/17tammuz_tahanun.txt" ) );
         }
         files.add( new TextChunk( "tefila/taanit/tahanun_conclusion.txt" ) );
       } else if ( doWeSay.mondayThursdayAdditions() ) {
@@ -271,13 +271,13 @@ public class Shachrit
       } else {
         files.add( new TextChunk( "tefila/chagim/musaf_opening.txt" ) );
         if ( doWeSay.pesachAdditions() ) {
-          files.add( new TextChunk( "tefila/chagime/musaf_pesach_insertion_1.txt" ) );
+          files.add( new TextChunk( "tefila/chagim/musaf_pesach_insertion_1.txt" ) );
         } else {
           files.add( new TextChunk( "tefila/chagim/musaf_sukkot_insertion_1.txt" ) );
         }
         files.add( new TextChunk( "tefila/chagim/musaf_middle.txt" ) );
         if ( doWeSay.pesachAdditions() ) {
-          files.add( new TextChunk( "tefila/chagime/musaf_pesach_insertion_2.txt" ) );
+          files.add( new TextChunk( "tefila/chagim/musaf_pesach_insertion_2.txt" ) );
         } else {
           files.add( new TextChunk( "tefila/chagim/musaf_sukkot_insertion_2.txt" ) );
         }
