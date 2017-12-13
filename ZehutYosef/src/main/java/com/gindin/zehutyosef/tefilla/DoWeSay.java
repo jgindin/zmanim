@@ -196,6 +196,26 @@ class DoWeSay {
   }
 
 
+  final boolean tzomGedalyaInsertions() {
+    return this.taanitDayInsertions() && date.getHebrewMonth() == HebrewMonth.TISHREI;
+  }
+
+
+  final boolean asaraBetevetInsertions() {
+    return this.taanitDayInsertions() && date.getHebrewMonth() == HebrewMonth.TEVET;
+  }
+
+
+  final boolean taanitEstherInsertions() {
+    return this.taanitDayInsertions() && date.getHebrewMonth() == HebrewMonth.ADAR;
+  }
+
+
+  final boolean seventeenTamuzInsertions() {
+    return this.taanitDayInsertions() && date.getHebrewMonth() == HebrewMonth.TAMMUZ;
+  }
+
+
   final boolean erevShabbatModifications() {
     return ( date.getDayOfWeek() == Calendar.FRIDAY );
   }
@@ -211,5 +231,8 @@ class DoWeSay {
   }
 
 
+  final int getDayOfMonth() {
+    return date.getHebrewDayOfMonth();
+  }
 
 } // End of DoWeSay class
