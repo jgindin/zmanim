@@ -326,7 +326,7 @@ public class Shachrit
     // When we don't say Musaf
     } else {
       files.add( new TextChunk("tefila/kadish_titkabal.txt" ) );
-      if ( doWeSay.mondayThursdayAdditions() ) {
+      if ( doWeSay.mondayThursdayAdditions() || doWeSay.chanukahAdditions() || doWeSay.purimAdditions() ) {
         files.add( new TextChunk("tefila/returning_sefer.txt" ) );
       }
 
