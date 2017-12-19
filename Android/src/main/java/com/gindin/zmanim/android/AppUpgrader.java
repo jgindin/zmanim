@@ -98,7 +98,7 @@ class AppUpgrader {
 
     // In v335, we no longer use the Use Elevation setting. Instead, there are explicit zmanim for Hanetz & Shkia to
     //  account for elevation.
-    if ( lastKnownCodeVersion <= 336 ) {
+    if ( lastKnownCodeVersion <= 338 ) {
 
       final SharedPreferences locationPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
       final boolean useElevation = locationPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
@@ -107,8 +107,18 @@ class AppUpgrader {
         final SharedPreferences.Editor editor = zmanPrefs.edit();
         editor.putString( Zmanim.Type.Hanetz.name , Hanetz.ZMAN_WITH_ELEVATION );
         editor.putString( Zmanim.Type.Shkia.name, Shkia.ZMAN_WITH_ELEVATION );
+
         editor.apply();
       }
+
+      SharedPreferences.Editor editor = locationPrefs.edit();
+      editor.remove( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name() );
+      editor.apply();
+
+      final SharedPreferences personalPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
+      editor = personalPrefs.edit();
+      editor.remove( PersonalPreferences.Prefs.USE_ELEVATION.name() );
+      editor.apply();
 
       LocationToAddressConverter.wipeCacheOnStart = true;
     }
