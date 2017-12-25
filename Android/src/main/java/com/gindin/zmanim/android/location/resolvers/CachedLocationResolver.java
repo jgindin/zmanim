@@ -163,11 +163,11 @@ class CachedLocationResolver
             LogUtils.setContext( "location-cache", cacheData.toString() );
           }
         }
-        catch( FileNotFoundException fnfe ) {
-          // This seems to happen when the cache file doesn't exist.
-        }
         catch ( Exception e ) {
-          LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
+          // This seems to happen when the cache file doesn't exist.
+          if ( e.getMessage() != null ) {
+            LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
+          }
         }
         finally {
           if ( input != null ) {
