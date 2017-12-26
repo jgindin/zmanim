@@ -1,20 +1,16 @@
 package com.gindin.zehutyosef;
 
-import com.gindin.zehutyosef.berachot.BirkatAmmazon;
-import com.gindin.zehutyosef.berachot.MeenShalosh;
 import com.gindin.zehutyosef.settings.Settings;
-import com.gindin.zehutyosef.tefilla.Arvit;
-import com.gindin.zehutyosef.tefilla.Mincha;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
@@ -36,7 +32,6 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -243,11 +238,9 @@ public abstract class ZehutYosefActivity
         new Drawer.OnDrawerItemClickListener() {
           @Override
           public boolean onItemClick(
-            final AdapterView<?>  adapterView,
-            final View            view,
-            final int             position,
-            final long            id,
-            final IDrawerItem     drawerItem
+            View        view,
+            int         position,
+            IDrawerItem drawerItem
           ) {
 
             handleItem( drawerItem );
@@ -265,7 +258,7 @@ public abstract class ZehutYosefActivity
   private void handleItem( final IDrawerItem drawerItem ) {
 
     boolean handled = false;
-    switch ( drawerItem.getIdentifier() ) {
+    switch ( (int)drawerItem.getIdentifier() ) {
       case R.string.action_settings:
         startActivity( new Intent( this, Settings.class ) );
         handled = true;

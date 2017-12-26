@@ -13,11 +13,15 @@
 
     <!-- MaterialDrawer specific values -->
     <item name="material_drawer_background">#505050</item>
-    <item name="material_drawer_icons">#FFFFFF</item>
     <item name="material_drawer_primary_text">#B6B6B6</item>
+    <item name="material_drawer_primary_icon">#FFFFFF</item>
     <item name="material_drawer_secondary_text">#868686</item>
+    <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
     <item name="material_drawer_divider">#B6B6B6</item>
+    <item name="material_drawer_selected">@color/material_drawer_selected</item>
     <item name="material_drawer_selected_text">#7151b7</item>
+    <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+
 
     <!-- AboutLibraries specific values -->
     <item name="about_libraries_window_background">@color/about_libraries_window_background_dark</item>
