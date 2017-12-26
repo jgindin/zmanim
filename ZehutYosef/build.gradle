@@ -20,11 +20,11 @@ apply from: '../common/gindin-versioning.gradle'
 
 android {
 
-  compileSdkVersion 24
+  compileSdkVersion 25
 
   defaultConfig {
     minSdkVersion 14
-    targetSdkVersion 24
+    targetSdkVersion 25
     versionCode appVersionCode
     versionName appVersionName
   }
@@ -66,7 +66,9 @@ android {
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:24.2.1'
+
+  ext.supportLibsVersion = "25.4.0"
+  compile "com.android.support:appcompat-v7:$supportLibsVersion"
 
   /* Used to provide out of the box icon font support. simplifies development, and provides scalable icons.
    *  the core is very very light. https://github.com/mikepenz/Android-Iconics

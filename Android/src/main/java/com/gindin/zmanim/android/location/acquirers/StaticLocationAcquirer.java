@@ -30,6 +30,7 @@ public class StaticLocationAcquirer
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   @Override
   public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
 

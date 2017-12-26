@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
@@ -98,7 +99,7 @@ public class DynamicLocationAcquirer
   @Override
   public void acquire( final CachedLocationUsage cachedLocationUsage ) {
 
-    if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
+    if ( cachedLocationUsage == CachedLocationUsage.PREFER ) {
       try {
         ZmanimLocation lastKnownLocation = getLastKnownLocation();
         fireLocationAcquiredEvent( lastKnownLocation, true );
@@ -108,9 +109,7 @@ public class DynamicLocationAcquirer
       }
     }
 
-    if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
-      startListeningToLocations();
-    }
+    startListeningToLocations();
   }
 
 
@@ -211,11 +210,6 @@ public class DynamicLocationAcquirer
 
     final TimeZone timeZone = getTimeZoneFromPrefs();
     ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
-
-    boolean useElevation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.USE_ELEVATION.name(), false );
-    if ( !useElevation && ( newLocation != null ) ) {
-      location.setElevation( 0.0 );
-    }
 
     fireLocationAcquiredEvent( location, false );
   }
@@ -418,6 +412,10 @@ public class DynamicLocationAcquirer
       }
       else {
         timeToWaitForFix = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
+      }
+
+      if ( BuildConfig.DEBUG ) {
+        timeToWaitForFix *= 10;
       }
 
       start( timeToWaitForFix );

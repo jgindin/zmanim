@@ -28,7 +28,7 @@ public enum LocationProviders {
     /** Should we prefer a GPS location, even when other providers are available? */
     PREFER_GPS,
     PREFER_CACHED_LOCATION,
-    USE_ELEVATION
+    @Deprecated USE_ELEVATION
   }
 
 

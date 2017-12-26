@@ -239,7 +239,16 @@ public class ZmanimLocation
     // Less than 1km? Don't bother...
     // I suppose you could run into an issue if that 1km puts you in a different time zone
     //  or something like that...
-    return getGeodesicDistance( previousLocation ) >= 1000;
+    if ( getGeodesicDistance( previousLocation ) >= 1000 ) {
+      return true;
+    }
+
+    // So, we're within 1km, but Has the elevation changed?
+    if ( Math.abs( getElevation() - previousLocation.getElevation() ) > 5 ) {
+      return true;
+    }
+
+    return false;
   }
 
 
@@ -322,7 +331,7 @@ public class ZmanimLocation
    * @throws IOException If there is any error interacting with the stream.
    * @throws JSONException If there is any error reading the location from the stream.
    */
-  public static ZmanimLocation load( InputStream input ) throws IOException, JSONException {
+  public static ZmanimLocation load( InputStream input ) throws IOException {
 
     DataInputStream inputStream = new DataInputStream( input );
     String json = inputStream.readUTF();

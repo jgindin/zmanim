@@ -11,7 +11,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 
 import java.net.URLEncoder;
@@ -51,10 +50,9 @@ class NominatimResolver
 
 
   NominatimResolver(
-    EventBus          eventBus,
-    SharedPreferences personalPrefs
+    EventBus eventBus
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus );
   }
 
 

@@ -14,7 +14,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.AsyncTask;
 
@@ -33,7 +32,6 @@ abstract class LocationResolver {
 
   protected final EventBus                                  eventBus;
 
-  private final SharedPreferences                           locationManagementPrefs;
 
 
   protected static String addressToLocationName( Address address ) {
@@ -44,10 +42,8 @@ abstract class LocationResolver {
       return ZmanimLocation.UNKNOWN_LOCATION;
     }
 
-    final String adminArea = address.getAdminArea();
     final String locality = address.getLocality();
-    final String postalCode = address.getPostalCode();
-    final int maxAddressLineIndex = address.getMaxAddressLineIndex();
+    final String adminArea = address.getAdminArea();
     final String country = address.getCountryName();
 
     // There are cases where locality is null. No kiddin'...if you use the StaticLocationProvider, and choose
@@ -55,12 +51,29 @@ abstract class LocationResolver {
     //  (Well, that is the case, except that when the StaticLocationProvider goes to look up what the location is
     //    it now stores the returned Address as the Extras in the Location. And, for some reason, *that* Address
     //    comes back properly. Oh well...)
-    if ( ( null != locality ) && ( null != adminArea ) ) {
-      locationString = locality + ", " + adminArea;
-    }
-    else if ( null == locality ) {
+    if ( locality != null ) {
+      locationString = locality;
 
+      if ( null != adminArea ) {
+        locationString += ", " + adminArea;
+      }
+      else if ( country != null ) {
+        locationString += ", " + country;
+      }
+    }
+    else if ( adminArea != null ) {
+      locationString = adminArea;
+
+      if ( country != null ) {
+        locationString += ", " + country;
+      }
+    }
+    else {
+
+      final int maxAddressLineIndex = address.getMaxAddressLineIndex();
       if ( maxAddressLineIndex > 0 ) {
+
+        final String postalCode = address.getPostalCode();
 
         // Find the address line that has the location. In the case mentioned above, address line two is: Brooklyn, NY 11226
         for ( int index = 0; index < maxAddressLineIndex; index++ ) {
@@ -79,12 +92,6 @@ abstract class LocationResolver {
       }
 
     }
-    else if ( null != country ) {
-      locationString = locality + ", " + country;
-    }
-    else {
-      locationString = locality;
-    }
 
     // Final fallback...if we got nothing then just use the lat & long...
     if ( null == locationString ) {
@@ -95,12 +102,10 @@ abstract class LocationResolver {
   }
 
 
-  protected LocationResolver(
-    EventBus          eventBus,
-    SharedPreferences locationManagementPrefs
+  LocationResolver(
+    EventBus eventBus
   ) {
     this.eventBus = eventBus;
-    this.locationManagementPrefs = locationManagementPrefs;
   }
 
 
@@ -110,17 +115,32 @@ abstract class LocationResolver {
   public abstract void onDestroy();
 
 
-  public final void resolve(
-    @NotNull ZmanimLocation          location,
-    @NotNull List<LocationResolver>  nextResolvers
+  final void resolve(
+    @NotNull final ZmanimLocation          location,
+    @NotNull final List<LocationResolver>  nextResolvers
   ) {
 
-    if ( location.hasCoordinates() ) {
-      resolveFromCoordinates( location, nextResolvers );
-    }
-    else {
-      resolveFromName( location, nextResolvers );
-    }
+    AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
+      @Override
+      protected ZmanimLocation doInBackground( ZmanimLocation... zmanimLocations ) {
+
+        if ( location.hasCoordinates() ) {
+          return resolveFromCoordinatesInBackground( zmanimLocations[0] );
+        }
+        else {
+          return resolveFromNameInBackground( zmanimLocations[0] );
+        }
+      }
+
+
+      @Override
+      protected void onPostExecute( ZmanimLocation resolvedLocation ) {
+        super.onPostExecute( resolvedLocation );
+        handlePostExecute( location, resolvedLocation, nextResolvers );
+      }
+    };
+
+    task.execute( location );
   }
 
 
@@ -141,65 +161,6 @@ abstract class LocationResolver {
    */
   @Nullable
   protected abstract ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation );
-
-
-  /**
-   * Given a location which MUST have the latitude and longitude set, use reverse geocoding to find the
-   *  name of that location. Upon completion, the location is updated and the FullLocationAcquiredEvent
-   *  will be fired.
-   */
-  private void resolveFromCoordinates(
-    @NotNull final ZmanimLocation          location,
-    @NotNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
-      @Override
-      protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
-        return resolveFromCoordinatesInBackground( zmanimLocations[0] );
-      }
-
-
-      @Override
-      protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
-        super.onPostExecute( resolvedLocation );
-        handlePostExecute( location, resolvedLocation, nextResolvers );
-      }
-    };
-
-    task.execute( location );
-  }
-
-
-  /**
-   * Given a descriptive place name, use geocoding to find the actual location.
-   */
-  private void resolveFromName(
-    @NotNull final ZmanimLocation          location,
-    @NotNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    if ( location.getLocationName().trim().isEmpty() ) {
-      eventBus.fire( new LocationAcquiredEvent( location, true, new LocationError( LocationError.Code.BAD_INPUT, "Empty place!" ) ) );
-    }
-
-    AsyncTask<ZmanimLocation,Void,ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
-      @Nullable
-      @Override
-      protected ZmanimLocation doInBackground( final ZmanimLocation... zmanimLocations ) {
-        return resolveFromNameInBackground( zmanimLocations[0] );
-      }
-
-
-      @Override
-      protected void onPostExecute( final ZmanimLocation resolvedLocation ) {
-        super.onPostExecute( resolvedLocation );
-        handlePostExecute( location, resolvedLocation, nextResolvers );
-      }
-    };
-
-    task.execute( location );
-  }
 
 
   private void handlePostExecute(

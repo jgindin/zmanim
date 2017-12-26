@@ -249,7 +249,7 @@ public class LongitudeLatitudePreference
 
         // Add the new string in
         newVal = newVal.substring( 0, dstart ) + source.toString() + newVal.substring( dstart, newVal.length() );
-        int input = Integer.parseInt( newVal );
+        double input = Double.parseDouble( newVal );
 
         if ( input >= min && input <= max ) {
           return null;

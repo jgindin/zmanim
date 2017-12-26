@@ -23,11 +23,9 @@ public class PersonalPreferences
 
   public enum Prefs {
     SHOW_SECONDS,
-    @Deprecated
-    USE_ELEVATION,
+    @Deprecated USE_ELEVATION,
     SHOW_NOTIFICATIONS,
     ENABLE_NOTIFICATIONS_ON_SHABBAT,
-    NOTIFICATIONS_FOR_CURRENT_LOCATION,
     USE_ALARM_CLOCK,
     NOTIFICATION_TONE
   }

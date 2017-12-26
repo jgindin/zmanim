@@ -1,6 +1,5 @@
 package com.gindin.zmanim.android;
 
-import com.flurry.android.FlurryAgent;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
@@ -20,7 +19,7 @@ import android.widget.Toast;
  *
  */
 @ReportsCrashes(
-  formUri = "https://zmanim.cloudant.com/acra-zmanim/_design/acra-storage/_update/report",
+  formUri = "http://crashes.zmanim.today:6095/acra-zmanim/_design/acra-storage/_update/report",
   reportType = org.acra.sender.HttpSender.Type.JSON,
   httpMethod = org.acra.sender.HttpSender.Method.PUT,
 
@@ -73,11 +72,6 @@ public class ZmanimApplication
         Log.e( "init", "Unable to init ACRA", e );
       }
 
-
-      new FlurryAgent.Builder()
-        .withLogEnabled( false )
-        .withCaptureUncaughtExceptions( false )
-        .build( this, BuildConfig.FLURRY_KEY );
     }
     else {
       // Just so we *KNOW* we're dealing with a dev version...

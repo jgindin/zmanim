@@ -2,7 +2,7 @@
 <resources>
   <string name="aboutLibraries_description_showIcon">true</string>
   <string name="aboutLibraries_description_showVersion">true</string>
-  <string name="aboutLibraries_description_text">
+  <string name="about_description_text">
     Zehut Yosef Siddur App
     <p/>
     Copyright &#0169; 2015-2017 Jay R. Gindin

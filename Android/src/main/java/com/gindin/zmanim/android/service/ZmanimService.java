@@ -10,6 +10,7 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.ZmanCallback;
@@ -35,9 +36,6 @@ import android.os.IBinder;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Calendar;
-
-import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
-import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.LocationDeterminationOverride;
 
 /**
  * This is the service we use to schedule notifications. In order to do that, however, the service has to have all
@@ -145,7 +143,7 @@ public class ZmanimService
     LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
     locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
 
-    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ), locationManagementPrefs );
+    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ) );
 
     ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
       @Override public void scheduleAlert(
@@ -203,8 +201,6 @@ public class ZmanimService
       servicingUser = true;
 
       findCurrentLocation();
-
-      eventBus.fire( new ServiceStartedEvent() );
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       servicingUser = false;
@@ -265,24 +261,22 @@ public class ZmanimService
 
   private void findCurrentLocation() {
 
-    SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-
     // We have to figure out where we are in order to see when the next alarm is.
     locationAcquiredHandler = new LocationAcquiredHandler();
     eventBus.addHandler( locationAcquiredHandler );
 
-    // Ask the location manager to do its best job figuring out where we are now, without using the cache.
-    //  When it fires the location acquired event, we'll use the location to work out when to schedule the
-    //  next alarm.
-    LocationDeterminationOverride locationDeterminationOverride;
-    if ( personalPrefs.getBoolean( PersonalPreferences.Prefs.NOTIFICATIONS_FOR_CURRENT_LOCATION.name(), false ) ) {
-      locationDeterminationOverride = LocationDeterminationOverride.FORCE_TO_ACTUAL_LOCATION;
+    SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+    boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
+
+    RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
+    if ( preferCachedLocation ) {
+      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
     }
     else {
-      locationDeterminationOverride = LocationDeterminationOverride.NORMAL;
+      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
     }
 
-    eventBus.fire( new RequestLocationUpdateEvent( locationDeterminationOverride, CachedLocationUsage.FALLBACK ) );
+    eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
   }
 
 
