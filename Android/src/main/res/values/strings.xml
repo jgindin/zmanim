@@ -42,11 +42,13 @@
 
   <string name="unable_to_determine_location_button">Enable</string>
 
-  <string name="unable_to_determine_location_error">Unable to determine your current location.</string>
-  <string name="no_location_management">Please enable a location source.</string>
-  <string name="cannot_determine_location">Using last known location.</string>
-  <string name="last_location_time"> (%s)</string>
+  <string name="unable_to_determine_location_error">Unable to update your current location.</string>
+  <string name="no_location_management">Unable to determine your current location.</string>
+  <string name="no_location_management_action"><u>Please enable a location source.</u></string>
+  <string name="cannot_determine_location">Unable to determine your current location.</string>
+  <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
+  <string name="action_dismiss">Dismiss</string>
 
 
   <string name="location_prefs">Location</string>
@@ -70,6 +72,10 @@
   <string name="use_latitude_pref_summary">Degrees</string>
   <string name="use_longitude_pref_title">Longitude</string>
   <string name="use_longitude_pref_summary">Degrees</string>
+  <string name="location_use_elevation">Elevation</string>
+  <string name="location_use_elevation_pref_summary">Set elevation (use 0 for sea-level)</string>
+  <string name="meters">Meters</string>
+  <string name="sea_level">Sea Level</string>
   <string name="time_zone_setting">Time Zone</string>
   <string name="override_system_time_zone">Use Custom Time Zone?</string>
   <string name="override_system_time_zone_summary">Ignores the system time zone for calculations.</string>
@@ -96,9 +102,12 @@
   <string name="use_alarm_clock_pref_title">Use Alarm Clock</string>
   <string name="use_alarm_clock_pref_summary">Use only if notifications are not on time. Will cause the Alarm Clock icon to always be displayed.</string>
   <string name="notifications_category">Notifications</string>
+  <string name="select_notification_tone">Notification Sound</string>
+  <string name="select_notification_tone_summary">Select a tone to use when a notification is displayed.</string>
 
   <string name="lat_long_editor_degrees_text">Degrees:</string>
   <string name="lat_long_editor_minutes_text">Minutes:</string>
+  <string name="lat_long_editor_seconds_text">Seconds</string>
   <string name="lat_long_editor_ns_text">North / South:</string>
   <string name="lat_long_editor_ew_text">East / West:</string>
   <string-array name="lat_long_editor_north_south">
@@ -118,5 +127,11 @@
 
   <string name="minutes">min</string>
   <string name="crash_toast_text">Zmanim has crashed and a report has been sent to the developer.</string>
+  <string name="feedback">Send Feedback…</string>
+  <string name="feedback_instructions">Thank you for taking the time to send feedback about Zmanim! Please let me know any thoughts or ideas you have.</string>
+  <string name="feedback_send">Send!</string>
+  <string name="feedback_email">Email (OPTIONAL):</string>
+  <string name="feedback_email_instructions">If you would like me to contact you, please add your email address.</string>
+  <string name="feedback_note">Note: Some additional data will be sent along with your feedback. None of this information is personally identifiable. This data includes your location and basic data about your device which can be used to help debug issues.</string>
 
 </resources>

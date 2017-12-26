@@ -4,11 +4,12 @@ import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanlib.location.ZmanLocationJSON;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import java.io.*;
 import java.util.*;
@@ -48,11 +49,10 @@ class CachedLocationResolver
 
 
   CachedLocationResolver(
-    IOFactory         ioFactory,
-    EventBus          eventBus,
-    SharedPreferences personalPrefs
+    IOFactory ioFactory,
+    EventBus  eventBus
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus );
     this.ioFactory = ioFactory;
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
@@ -67,7 +67,7 @@ class CachedLocationResolver
           return;
         }
 
-        saveCache( newLocation );
+        cacheLocation( newLocation );
       }
 
 
@@ -111,7 +111,10 @@ class CachedLocationResolver
   private ZmanimLocation findCachedMatch( ZmanimLocation zmanimLocation ) {
 
     // Take a copy to avoid any possible ConcurrentModificationException.
-    Set<ZmanimLocation> copy = locationCache.newCopy();
+    Set<ZmanimLocation> copy;
+    synchronized ( locationCache ) {
+      copy = locationCache.newCopy();
+    }
 
     for ( ZmanimLocation cachedLocation : copy ) {
 
@@ -140,23 +143,31 @@ class CachedLocationResolver
         DataInputStream input = null;
         try {
 
-          final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
-          input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
-
-          int numLocations = input.readInt();
-          for ( int i = 0; i < numLocations; i++ ) {
-            copy.add( ZmanimLocation.load( input ) );
-          }
-
+          // Sync on the entire load process just in case we wind up getting a save() operation
+          //  while we're trying to load!
           synchronized ( locationCache ) {
+
+            final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
+            input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
+
+            StringBuilder cacheData = new StringBuilder();
+
+            int numLocations = input.readInt();
+            for ( int i = 0; i < numLocations; i++ ) {
+              final ZmanimLocation location = ZmanimLocation.load( input );
+              copy.add( location );
+              cacheData.append( ZmanLocationJSON.toJSON( location ) );
+            }
+
             locationCache.addAll( copy );
+            LogUtils.setContext( "location-cache", cacheData.toString() );
           }
-        }
-        catch( FileNotFoundException fnfe ) {
-          // This seems to happen when the cache file doesn't exist.
         }
         catch ( Exception e ) {
-          LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
+          // This seems to happen when the cache file doesn't exist.
+          if ( e.getMessage() != null ) {
+            LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
+          }
         }
         finally {
           if ( input != null ) {
@@ -175,7 +186,17 @@ class CachedLocationResolver
   }
 
 
-  private void saveCache( ZmanimLocation newLocation ) {
+  void wipeCache() {
+
+    synchronized ( locationCache ) {
+      locationCache.clear();
+    }
+
+    saveCache();
+  }
+
+
+  private void cacheLocation( ZmanimLocation newLocation ) {
 
     synchronized ( locationCache ) {
 
@@ -188,23 +209,38 @@ class CachedLocationResolver
       locationCache.add( newLocation );
     }
 
+    saveCache();
+  }
+
+
+  private void saveCache() {
+
     Runnable saveCache = new Runnable() {
       @Override
       public void run() {
 
-        final Set<ZmanimLocation> copy = locationCache.newCopy();
-
         FileOutputStream fos = null;
         DataOutputStream output = null;
         try {
+
+          // Synchronize the whole writing process so we can't conflict with a load...
+          final Set<ZmanimLocation> copy;
+          synchronized ( locationCache ) {
+            copy = locationCache.newCopy();
+          }
+
           fos = ioFactory.openOutput();
           output = new DataOutputStream( new BufferedOutputStream( fos ) );
-
           output.writeInt( copy.size() );
+
+          StringBuilder cacheData = new StringBuilder();
 
           for ( ZmanimLocation location : copy ) {
             location.save( output );
+            cacheData.append( ZmanLocationJSON.toJSON( location ) );
           }
+
+          LogUtils.setContext( "location-cache", cacheData.toString() );
         }
         catch ( Exception e ) {
           LogUtils.logError( "CLR::saveCache", e.getMessage(), e );
@@ -221,7 +257,6 @@ class CachedLocationResolver
             }
             catch ( IOException e ) {
               // Oh well.
-              LogUtils.logError( "CLR::saveCache (closing)", e.getMessage(), e );
             }
           }
         }
@@ -242,7 +277,7 @@ class CachedLocationResolver
 
     private final Map<ZmanimLocation,ZmanimLocation>        cache = new LinkedHashMap<ZmanimLocation, ZmanimLocation>( 16, 0.75f, true ) {
       @Override
-      protected boolean removeEldestEntry( Entry<ZmanimLocation,ZmanimLocation> eldest ) {
+      protected boolean removeEldestEntry( Map.Entry<ZmanimLocation,ZmanimLocation> eldest ) {
         return size() > MAX_SIZE;
       }
     };
@@ -279,6 +314,7 @@ class CachedLocationResolver
     }
 
 
+    @NonNull
     public Iterator<ZmanimLocation> iterator() {
       return cache.keySet().iterator();
     }
@@ -294,13 +330,11 @@ class CachedLocationResolver
     }
 
 
-    public Set<ZmanimLocation> newCopy() {
+    Set<ZmanimLocation> newCopy() {
       Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
 
-      synchronized ( this ) {
-        for ( ZmanimLocation location : cache.keySet() ) {
-          copy.add( location );
-        }
+      for ( ZmanimLocation location : cache.keySet() ) {
+        copy.add( location );
       }
 
       return copy;

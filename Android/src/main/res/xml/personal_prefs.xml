@@ -15,17 +15,10 @@
     SHOW_SECONDS).
   -->
 
-  <android.support.v7.preference.CheckBoxPreference
+  <net.xpece.android.support.preference.CheckBoxPreference
     android:key="SHOW_SECONDS"
     android:title="@string/show_seconds_pref_title"
     android:summary="@string/show_seconds_pref_summary"
-    android:defaultValue="false"
-  />
-
-  <android.support.v7.preference.CheckBoxPreference
-    android:key="USE_ELEVATION"
-    android:title="@string/use_elevation_pref_title"
-    android:summary="@string/use_elevation_pref_summary"
     android:defaultValue="false"
   />
 
@@ -38,7 +31,7 @@
       I'd like for this to be a nice switch and then clicking on it opens another prefs screen.
       That would require API 14 for the switch and API 11 to open another fragment.
     -->
-    <android.support.v7.preference.CheckBoxPreference
+    <net.xpece.android.support.preference.CheckBoxPreference
       android:key="SHOW_NOTIFICATIONS"
       android:title="@string/show_notifications_pref_title"
       android:summary="@string/show_notifications_pref_summary"
@@ -46,7 +39,14 @@
       android:disableDependentsState="false"
     />
 
-    <android.support.v7.preference.CheckBoxPreference
+    <net.xpece.android.support.preference.RingtonePreference
+      android:key="NOTIFICATION_TONE"
+      android:title="@string/select_notification_tone"
+      android:summary="@string/select_notification_tone_summary"
+      android:dependency="SHOW_NOTIFICATIONS"
+    />
+
+    <net.xpece.android.support.preference.CheckBoxPreference
       android:key="ENABLE_NOTIFICATIONS_ON_SHABBAT"
       android:title="@string/enable_notifications_on_shabbat_pref_title"
       android:summary="@string/enable_notifications_on_shabbat_pref_summary"
@@ -54,7 +54,7 @@
       android:dependency="SHOW_NOTIFICATIONS"
     />
 
-    <android.support.v7.preference.CheckBoxPreference
+    <net.xpece.android.support.preference.CheckBoxPreference
       android:key="USE_ALARM_CLOCK"
       android:title="@string/use_alarm_clock_pref_title"
       android:summary="@string/use_alarm_clock_pref_summary"

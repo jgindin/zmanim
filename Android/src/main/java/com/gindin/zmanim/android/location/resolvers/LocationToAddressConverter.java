@@ -13,7 +13,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 
@@ -28,6 +27,12 @@ import java.util.List;
  */
 public class LocationToAddressConverter {
 
+
+  /**
+   * Sometimes, after an upgrade, we need to wipe the cache.
+   */
+  public static boolean                                     wipeCacheOnStart = false;
+
   private final EventBus                                    eventBus;
 
   private final List<LocationResolver>                      orderedResolvers;
@@ -37,10 +42,9 @@ public class LocationToAddressConverter {
 
 
   public LocationToAddressConverter(
-    final Context     context,
-    EventBus          eventBus,
-    Geocoder          geocoder,
-    SharedPreferences personalPrefs
+    final Context context,
+    EventBus      eventBus,
+    Geocoder      geocoder
   ) {
 
     this.eventBus = eventBus;
@@ -66,17 +70,23 @@ public class LocationToAddressConverter {
       }
     };
 
-    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus, personalPrefs );
-    cachedLocationResolver.loadCache();
+    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
+    if ( wipeCacheOnStart ) {
+      wipeCacheOnStart = false;
+      cachedLocationResolver.wipeCache();
+    }
+    else {
+      cachedLocationResolver.loadCache();
+    }
 
     orderedResolvers = new ArrayList<>();
     orderedResolvers.add( cachedLocationResolver );
-    orderedResolvers.add( new AndroidResolver( eventBus, geocoder, personalPrefs ) );
+    orderedResolvers.add( new AndroidResolver( eventBus, geocoder ) );
 
-    orderedResolvers.add( new MapQuestResolver( eventBus, personalPrefs ) );
-    orderedResolvers.add( new NominatimResolver( eventBus, personalPrefs ) );
+    orderedResolvers.add( new MapQuestResolver( eventBus ) );
+    orderedResolvers.add( new NominatimResolver( eventBus ) );
 
-    orderedResolvers.add( new PassthroughResolver( eventBus, personalPrefs ) );
+    orderedResolvers.add( new PassthroughResolver( eventBus ) );
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
@@ -93,7 +103,7 @@ public class LocationToAddressConverter {
         @NotNull LocationError  error,
         @NotNull ZmanimLocation lastKnownLocation
       ) {
-        handleLocationAcquired( lastKnownLocation );
+        // Don't do anything.
       }
     };
     eventBus.addHandler( locationAcquiredHandler );

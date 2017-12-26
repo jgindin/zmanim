@@ -40,12 +40,14 @@ public class UT_Zmanim {
       .atLatitude( 47.552827 )
       .atLongitude( -122.267065 )
       .locationName( "Ezra Bessaroth" )
+      .atElevation( 61 )
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
     yeshivaUniviersity = new ZmanimLocation.Builder()
       .atLatitude( 40.851546 )
       .atLongitude( -73.928937 )
+      .atElevation( 56 )
       .locationName( "Yeshiva University" )
       .inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
       .build();
@@ -53,6 +55,7 @@ public class UT_Zmanim {
     haRambanSynagogue = new ZmanimLocation.Builder()
       .atLatitude( 31.7750 )
       .atLongitude( 35.2312 )
+      .atElevation( 767.49 )
       .locationName( "HaRamban Synagogue" )
       .inTimeZone( TimeZone.getTimeZone( "Asia/Jerusalem" ) )
       .build();
@@ -128,10 +131,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  6:32:25\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:29:27\n" +
         "              Hanetz - Sunrise                       :  7:33:26\n" +
-        "              Hanetz - Sunrise (with elevation)      :  7:33:26\n" +
+        "              Hanetz - Sunrise (with elevation)      :  7:31:54\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:38\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:05:06\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:14:25\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:14:32\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:35:30\n" +
         "      Sof Zman Shema - GR'A                          : 10:13:32\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:21:15\n" +
@@ -182,12 +185,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:14:45\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:36:18\n" +
         "               Shkia - Sunset                        : 18:13:51\n" +
+        "               Shkia - Sunset (with elevation)       : 18:15:23\n" +
         "       Latest Mincha - Mishna Berura                 : 18:13:51\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:25:52\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:39:51\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:28:11\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:12:21\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:37:35\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:38:05\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:45:19\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:13:51\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 20:00:36\n" +
@@ -212,7 +216,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:37:54\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:44:23\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:44:48\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:05\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:35\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 19:00:02\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:58:51\n" +
         "            Midnight - Mid-night                     :  0:54:22\n" +
@@ -237,10 +241,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  6:16:47\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:14:08\n" +
         "              Hanetz - Sunrise                       :  7:11:08\n" +
-        "              Hanetz - Sunrise (with elevation)      :  7:11:08\n" +
+        "              Hanetz - Sunrise (with elevation)      :  7:09:50\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:40:24\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:54:46\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:03:03\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:03:09\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:16:23\n" +
         "      Sof Zman Shema - GR'A                          :  9:55:46\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:03:25\n" +
@@ -291,12 +295,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:10:35\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:30:03\n" +
         "               Shkia - Sunset                        : 18:09:40\n" +
+        "               Shkia - Sunset (with elevation)       : 18:10:58\n" +
         "       Latest Mincha - Mishna Berura                 : 18:09:40\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:22:01\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:35:40\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:15:55\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:08:10\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:29:18\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:29:44\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:37:42\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:09:40\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:59:26\n" +
@@ -321,7 +326,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:31:02\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:36:49\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:37:12\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:48\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:43:14\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:50:47\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:54:40\n" +
         "            Midnight - Mid-night                     :  0:40:57\n" +
@@ -346,10 +351,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  5:56:31\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:54:10\n" +
         "              Hanetz - Sunrise                       :  6:44:51\n" +
-        "              Hanetz - Sunrise (with elevation)      :  6:44:51\n" +
+        "              Hanetz - Sunrise (with elevation)      :  6:40:35\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:23:54\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:40:06\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:47:27\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:47:33\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:53:31\n" +
         "      Sof Zman Shema - GR'A                          :  9:34:23\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:41:57\n" +
@@ -400,12 +405,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:55\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:21:06\n" +
         "               Shkia - Sunset                        : 18:02:58\n" +
+        "               Shkia - Sunset (with elevation)       : 18:07:14\n" +
         "       Latest Mincha - Mishna Berura                 : 18:02:58\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:15:41\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:28:58\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:01:54\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:01:28\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:18:53\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:19:17\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:27:55\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:02:58\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:56:00\n" +
@@ -430,7 +436,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:21:56\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:27:04\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:27:24\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:23\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:47\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:39:30\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:58\n" +
         "            Midnight - Mid-night                     :  0:24:17\n" +
@@ -469,10 +475,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  6:39:19\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:36:21\n" +
         "              Hanetz - Sunrise                       :  7:40:48\n" +
-        "              Hanetz - Sunrise (with elevation)      :  7:40:48\n" +
+        "              Hanetz - Sunrise (with elevation)      :  7:39:15\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:52:53\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:08:02\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:17:26\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:17:33\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:40:02\n" +
         "      Sof Zman Shema - GR'A                          : 10:16:51\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:24:56\n" +
@@ -530,12 +536,13 @@ public class UT_Zmanim {
         "     Candle Lighting - 30 Minutes                    : 17:34:58\n" +
         "     Candle Lighting - 40 Minutes                    : 17:24:58\n" +
         "               Shkia - Sunset                        : 18:04:58\n" +
+        "               Shkia - Sunset (with elevation)       : 18:06:31\n" +
         "       Latest Mincha - Mishna Berura                 : 18:04:58\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:16:40\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:30:58\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:19:50\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:03:28\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:29:04\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:29:34\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:36:33\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:04:58\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:48:59\n" +
@@ -560,7 +567,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:29:16\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:35:49\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:36:14\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:34\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:43:04\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:51:35\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:49:58\n" +
         "            Midnight - Mid-night                     :  0:53:38\n" +
@@ -595,10 +602,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  6:40:42\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:37:43\n" +
         "              Hanetz - Sunrise                       :  7:42:18\n" +
-        "              Hanetz - Sunrise (with elevation)      :  7:42:18\n" +
+        "              Hanetz - Sunrise (with elevation)      :  7:40:44\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:52:46\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:08:37\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:18:02\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:18:10\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:40:58\n" +
         "      Sof Zman Shema - GR'A                          : 10:17:32\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:25:41\n" +
@@ -649,12 +656,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:04:06\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:27:56\n" +
         "               Shkia - Sunset                        : 18:03:15\n" +
+        "               Shkia - Sunset (with elevation)       : 18:04:48\n" +
         "       Latest Mincha - Mishna Berura                 : 18:03:15\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:14:53\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:29:15\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:18:14\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:01:45\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:27:26\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:27:56\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:34:52\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:03:15\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:46:44\n" +
@@ -679,7 +687,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:27:37\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:34:10\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:34:35\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:40:56\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:41:26\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:49:57\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:48:15\n" +
         "            Havdalah - MG'A 120 Minutes              : 20:03:15\n" +
@@ -705,7 +713,7 @@ public class UT_Zmanim {
         "            Havdalah - Geonim 4.8 deg                : 18:27:37\n" +
         "            Havdalah - Geonim 5.88 deg               : 18:34:10\n" +
         "            Havdalah - Geonim 5.95 deg               : 18:34:35\n" +
-        "            Havdalah - Geonim 7.083 deg              : 18:40:56\n" +
+        "            Havdalah - Geonim 7.083 deg              : 18:41:26\n" +
         "            Havdalah - Geonim 8.5 deg                : 18:49:57\n" +
         "            Havdalah - Seattle Sephardic             : 18:48:15\n" +
         "            Midnight - Mid-night                     :  0:53:31\n" +
@@ -740,10 +748,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  5:39:29\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:36:18\n" +
         "              Hanetz - Sunrise                       :  6:42:03\n" +
-        "              Hanetz - Sunrise (with elevation)      :  6:42:03\n" +
+        "              Hanetz - Sunrise (with elevation)      :  6:40:33\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        : 10:12:31\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:45:25\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:54:48\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:54:56\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:08:43\n" +
         "      Sof Zman Shema - GR'A                          :  9:57:17\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:55:33\n" +
@@ -794,12 +802,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 19:44:04\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 18:49:20\n" +
         "               Shkia - Sunset                        : 19:42:59\n" +
+        "               Shkia - Sunset (with elevation)       : 19:44:30\n" +
         "       Latest Mincha - Mishna Berura                 : 19:42:59\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 19:57:38\n" +
         "       Latest Mincha - Hacham Ben Sion               : 20:08:59\n" +
         "     Bein Hashmashot - 13 Degrees                    : 21:00:05\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 20:41:29\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 20:07:03\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 20:07:34\n" +
         "     Bein Hashmashot - 2 Stars                       : 20:16:42\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 21:42:59\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 21:53:09\n" +
@@ -824,7 +833,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:07:01\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 20:13:39\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:14:04\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 20:20:33\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 20:21:04\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:29:53\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:27:59\n" +
         "            Midnight - Mid-night                     :  1:11:32\n" +
@@ -859,10 +868,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  5:17:48\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:14:27\n" +
         "              Hanetz - Sunrise                       :  6:22:31\n" +
-        "              Hanetz - Sunrise (with elevation)      :  6:22:31\n" +
+        "              Hanetz - Sunrise (with elevation)      :  6:20:58\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        : 10:09:48\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:31:10\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:40:50\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:40:58\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:55:04\n" +
         "      Sof Zman Shema - GR'A                          :  9:46:09\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:45:47\n" +
@@ -935,12 +944,13 @@ public class UT_Zmanim {
         "     Candle Lighting - 30 Minutes                    : 19:27:05\n" +
         "     Candle Lighting - 40 Minutes                    : 19:17:05\n" +
         "               Shkia - Sunset                        : 19:57:05\n" +
+        "               Shkia - Sunset (with elevation)       : 19:58:37\n" +
         "       Latest Mincha - Mishna Berura                 : 19:57:05\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 20:12:21\n" +
         "       Latest Mincha - Hacham Ben Sion               : 20:23:05\n" +
         "     Bein Hashmashot - 13 Degrees                    : 21:17:08\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 20:55:35\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 20:22:14\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 20:22:46\n" +
         "     Bein Hashmashot - 2 Stars                       : 20:32:33\n" +
         "           Fast Ends - MG'A 120 Minutes              : 21:57:05\n" +
         "           Fast Ends - GR'A 120 Minutes Zmaniyot     : 22:12:51\n" +
@@ -965,7 +975,7 @@ public class UT_Zmanim {
         "           Fast Ends - Geonim 4.8 deg                : 20:21:45\n" +
         "           Fast Ends - Geonim 5.88 deg               : 20:28:35\n" +
         "           Fast Ends - Geonim 5.95 deg               : 20:29:02\n" +
-        "           Fast Ends - Geonim 7.083 deg              : 20:35:44\n" +
+        "           Fast Ends - Geonim 7.083 deg              : 20:36:16\n" +
         "           Fast Ends - Geonim 8.5 deg                : 20:45:26\n" +
         "           Fast Ends - Seattle Sephardic             : 20:27:05\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 21:57:05\n" +
@@ -991,7 +1001,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:21:45\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 20:28:35\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:29:02\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 20:35:44\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 20:36:16\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:45:26\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:42:05\n" +
         "            Midnight - Mid-night                     :  1:08:51\n" +
@@ -1023,10 +1033,10 @@ public class UT_Zmanim {
         "       Talit/Tefilin - 11 deg                        :  6:48:47\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:45:36\n" +
         "              Hanetz - Sunrise                       :  7:57:15\n" +
-        "              Hanetz - Sunrise (with elevation)      :  7:57:15\n" +
+        "              Hanetz - Sunrise (with elevation)      :  7:55:28\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:12:55\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:49:41\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:00:17\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:00:26\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:36:44\n" +
         "      Sof Zman Shema - GR'A                          : 10:05:05\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:03:09\n" +
@@ -1077,12 +1087,13 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 16:29:17\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 16:05:49\n" +
         "               Shkia - Sunset                        : 16:28:34\n" +
+        "               Shkia - Sunset (with elevation)       : 16:30:22\n" +
         "       Latest Mincha - Mishna Berura                 : 16:28:34\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 16:38:10\n" +
         "       Latest Mincha - Hacham Ben Sion               : 16:54:34\n" +
         "     Bein Hashmashot - 13 Degrees                    : 17:51:12\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 17:27:04\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 16:57:28\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 16:58:01\n" +
         "     Bein Hashmashot - 2 Stars                       : 17:02:48\n" +
         "           Fast Ends - MG'A 120 Minutes              : 18:28:34\n" +
         "           Fast Ends - GR'A 120 Minutes Zmaniyot     : 17:53:48\n" +
@@ -1107,7 +1118,7 @@ public class UT_Zmanim {
         "           Fast Ends - Geonim 4.8 deg                : 16:56:13\n" +
         "           Fast Ends - Geonim 5.88 deg               : 17:03:30\n" +
         "           Fast Ends - Geonim 5.95 deg               : 17:03:58\n" +
-        "           Fast Ends - Geonim 7.083 deg              : 17:10:58\n" +
+        "           Fast Ends - Geonim 7.083 deg              : 17:11:31\n" +
         "           Fast Ends - Geonim 8.5 deg                : 17:20:50\n" +
         "           Fast Ends - Seattle Sephardic             : 16:58:34\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 18:28:34\n" +
@@ -1133,7 +1144,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 16:56:13\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 17:03:30\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 17:03:58\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 17:10:58\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 17:11:31\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 17:20:50\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 17:13:34\n" +
         "            Midnight - Mid-night                     :  0:12:54\n" +
@@ -1184,7 +1195,7 @@ public class UT_Zmanim {
         "              Hanetz - Sunrise (with elevation)      :  7:32:40\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:47:25\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:06:42\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:20\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:27\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:32:49\n" +
         "      Sof Zman Shema - GR'A                          : 10:10:02\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:44\n" +
@@ -1242,12 +1253,13 @@ public class UT_Zmanim {
         "     Candle Lighting - 30 Minutes                    : 17:32:09\n" +
         "     Candle Lighting - 40 Minutes                    : 17:22:09\n" +
         "               Shkia - Sunset                        : 18:02:09\n" +
+        "               Shkia - Sunset (with elevation)       : 18:02:09\n" +
         "       Latest Mincha - Mishna Berura                 : 18:02:09\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:13:57\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:28:09\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:10:58\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:00:39\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:23:12\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:23:40\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:31:11\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:02:09\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:47:04\n" +
@@ -1272,7 +1284,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:29\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:30:30\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:53\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:36:42\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:10\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
         "            Midnight - Mid-night                     :  0:46:44\n" +
@@ -1301,7 +1313,7 @@ public class UT_Zmanim {
         "              Hanetz - Sunrise (with elevation)      :  7:30:09\n" +
         "      Sof Zman Shema - 3 Hours before Chatzot        :  9:47:25\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:06:42\n" +
-        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:20\n" +
+        "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:27\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:32:49\n" +
         "      Sof Zman Shema - GR'A                          : 10:10:02\n" +
         "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:44\n" +
@@ -1358,13 +1370,14 @@ public class UT_Zmanim {
         "     Candle Lighting - 22 Minutes                    : 17:40:09\n" +
         "     Candle Lighting - 30 Minutes                    : 17:32:09\n" +
         "     Candle Lighting - 40 Minutes                    : 17:22:09\n" +
-        "               Shkia - Sunset                        : 18:04:40\n" +
+        "               Shkia - Sunset                        : 18:02:09\n" +
+        "               Shkia - Sunset (with elevation)       : 18:04:40\n" +
         "       Latest Mincha - Mishna Berura                 : 18:02:09\n" +
         "       Latest Mincha - Hacham Ovadia Yosef           : 18:13:57\n" +
         "       Latest Mincha - Hacham Ben Sion               : 18:28:09\n" +
         "     Bein Hashmashot - 13 Degrees                    : 19:10:58\n" +
         "     Bein Hashmashot - 58.5 Minutes                  : 19:00:39\n" +
-        "     Bein Hashmashot - 13.5 Minutes                  : 18:23:12\n" +
+        "     Bein Hashmashot - 13.5 Minutes                  : 18:23:40\n" +
         "     Bein Hashmashot - 2 Stars                       : 18:31:11\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 20:02:09\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 19:47:04\n" +
@@ -1389,12 +1402,129 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:29\n" +
         "    Tzait Hacochavim - Geonim 5.88 deg               : 18:30:30\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:53\n" +
-        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:36:42\n" +
+        "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:10\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
         "            Midnight - Mid-night                     :  0:46:44\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
+  }
+
+
+  @Test
+  public void november_26_2017() {
+
+    final String haRambanSynagogueExpected = "HaRamban Synagogue\n" +
+      "      Alot Hashachar - 120 Minutes                   :  4:16:32\n" +
+      "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:33:20\n" +
+      "      Alot Hashachar - 16.1 deg                      :  5:00:16\n" +
+      "      Alot Hashachar - 18 deg                        :  4:51:02\n" +
+      "      Alot Hashachar - 19.8 deg                      :  4:42:20\n" +
+      "      Alot Hashachar - 26 deg                        :  4:12:36\n" +
+      "      Alot Hashachar - 60 Minutes                    :  5:16:32\n" +
+      "      Alot Hashachar - 72 Minutes                    :  5:04:32\n" +
+      "      Alot Hashachar - GR'A 72 Minutes Zmaniyot      :  5:14:37\n" +
+      "      Alot Hashachar - 90 Minutes                    :  4:46:32\n" +
+      "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  4:59:08\n" +
+      "      Alot Hashachar - 96 Minutes                    :  4:40:32\n" +
+      "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  4:53:58\n" +
+      "       Talit/Tefilin - 10.2 deg                      :  5:29:14\n" +
+      "       Talit/Tefilin - 11 deg                        :  5:25:17\n" +
+      "       Talit/Tefilin - 11.5 deg                      :  5:22:49\n" +
+      "              Hanetz - Sunrise                       :  6:16:32\n" +
+      "              Hanetz - Sunrise (with elevation)      :  6:11:57\n" +
+      "      Sof Zman Shema - 3 Hours before Chatzot        :  8:26:10\n" +
+      "      Sof Zman Shema - 16.1 deg to Sunset            :  7:54:09\n" +
+      "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:02:06\n" +
+      "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:14:54\n" +
+      "      Sof Zman Shema - GR'A                          :  8:51:21\n" +
+      "      Sof Zman Shema - GR'A Kol Eliyahu              :  8:57:48\n" +
+      "      Sof Zman Shema - MG'A                          :  8:15:21\n" +
+      "      Sof Zman Shema - MG'A 120 Minutes              :  7:51:21\n" +
+      "      Sof Zman Shema - MG'A 16.1 deg                 :  8:13:14\n" +
+      "      Sof Zman Shema - MG'A 19.8 deg                 :  8:04:16\n" +
+      "      Sof Zman Shema - MG'A 72 Minutes Zmaniyot      :  8:20:23\n" +
+      "      Sof Zman Shema - MG'A 90 Minutes               :  8:06:21\n" +
+      "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:12:39\n" +
+      "      Sof Zman Shema - 96 Minutes                    :  8:03:21\n" +
+      "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:10:04\n" +
+      "     Sof Zman Tefila - 2 Hours before Chatzot        :  9:26:10\n" +
+      "     Sof Zman Tefila - GR'A                          :  9:42:57\n" +
+      "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:15:00\n" +
+      "     Sof Zman Tefila - MG'A                          :  9:18:57\n" +
+      "     Sof Zman Tefila - MG'A 120 Minutes              :  9:02:57\n" +
+      "     Sof Zman Tefila - MG'A 16.1 deg                 :  9:17:33\n" +
+      "     Sof Zman Tefila - MG'A 19.8 deg                 :  9:11:34\n" +
+      "     Sof Zman Tefila - MG'A 72 Minutes Zmaniyot      :  9:22:19\n" +
+      "     Sof Zman Tefila - MG'A 90 Minutes               :  9:12:57\n" +
+      "     Sof Zman Tefila - MG'A 90 Minutes Zmaniyot      :  9:17:09\n" +
+      "     Sof Zman Tefila - MG'A 96 Minutes               :  9:10:57\n" +
+      "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      :  9:15:26\n" +
+      "             Chatzot - Mid-Day                       : 11:26:10\n" +
+      "             Chatzot - Fixed Local Mid-Day           : 11:39:04\n" +
+      "       Mincha Gedola - GR'A                          : 11:51:58\n" +
+      "       Mincha Gedola - MG'A 16.1 deg                 : 11:58:21\n" +
+      "       Mincha Gedola - MG'A 72 Minutes               : 11:57:58\n" +
+      "       Mincha Gedola - Chacham Yosef Harari-Raful    : 11:45:15\n" +
+      "       Mincha Ketana - GR'A                          : 14:26:46\n" +
+      "       Mincha Ketana - MG'A 16.1 deg                 : 15:11:18\n" +
+      "       Mincha Ketana - MG'A 72 Minutes               : 15:08:46\n" +
+      "       Mincha Ketana - Chacham Yosef Harari-Raful    : 14:45:32\n" +
+      "       Plag HaMincha - GR'A                          : 15:31:17\n" +
+      "       Plag HaMincha - MG'A 120 Minutes              : 17:06:17\n" +
+      "       Plag HaMincha - MG'A 120 Minutes Zmaniyot     : 16:52:59\n" +
+      "       Plag HaMincha - MG'A 16.1 deg                 : 16:31:42\n" +
+      "       Plag HaMincha - MG'A 18 deg                   : 16:39:01\n" +
+      "       Plag HaMincha - MG'A 19.8 deg                 : 16:45:55\n" +
+      "       Plag HaMincha - MG'A 26 deg                   : 17:09:28\n" +
+      "       Plag HaMincha - MG'A 60 Minutes               : 16:18:47\n" +
+      "       Plag HaMincha - MG'A 72 Minutes               : 16:28:17\n" +
+      "       Plag HaMincha - MG'A 72 Minutes Zmaniyot      : 16:20:18\n" +
+      "       Plag HaMincha - MG'A 90 Minutes               : 16:42:32\n" +
+      "       Plag HaMincha - MG'A 90 Minutes Zmaniyot      : 16:32:34\n" +
+      "       Plag HaMincha - MG'A 96 Minutes               : 16:47:17\n" +
+      "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 16:36:39\n" +
+      "       Plag HaMincha - Chacham Yosef Harari-Raful    : 16:00:40\n" +
+      "               Shkia - Sunset                        : 16:35:47\n" +
+      "               Shkia - Sunset (with elevation)       : 16:40:22\n" +
+      "       Latest Mincha - Mishna Berura                 : 16:35:47\n" +
+      "       Latest Mincha - Hacham Ovadia Yosef           : 16:47:24\n" +
+      "       Latest Mincha - Hacham Ben Sion               : 17:01:47\n" +
+      "     Bein Hashmashot - 13 Degrees                    : 17:38:07\n" +
+      "     Bein Hashmashot - 58.5 Minutes                  : 17:34:17\n" +
+      "     Bein Hashmashot - 13.5 Minutes                  : 16:54:04\n" +
+      "     Bein Hashmashot - 2 Stars                       : 17:01:57\n" +
+      "    Tzait Hacochavim - MG'A 120 Minutes              : 18:35:47\n" +
+      "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 18:19:00\n" +
+      "    Tzait Hacochavim - 3.5 deg                       : 16:49:28\n" +
+      "    Tzait Hacochavim - 6.5 deg                       : 17:04:39\n" +
+      "    Tzait Hacochavim - 8.5 deg                       : 17:14:40\n" +
+      "    Tzait Hacochavim - 16.1 deg                      : 17:52:06\n" +
+      "    Tzait Hacochavim - 18 deg                        : 18:01:20\n" +
+      "    Tzait Hacochavim - 19.8 deg                      : 18:10:03\n" +
+      "    Tzait Hacochavim - 26 deg                        : 18:39:48\n" +
+      "    Tzait Hacochavim - Chavas Yair and Divray Malkiel: 17:35:47\n" +
+      "    Tzait Hacochavim - Rambam / Rabainu Tam          : 17:47:47\n" +
+      "    Tzait Hacochavim - 72 Minutes Zmaniyot           : 17:37:43\n" +
+      "    Tzait Hacochavim - MG'A 90 Minutes               : 18:05:47\n" +
+      "    Tzait Hacochavim - GR'A 90 Minutes Zmaniyot      : 17:53:11\n" +
+      "    Tzait Hacochavim - 96 Minutes                    : 18:11:47\n" +
+      "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 17:58:21\n" +
+      "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 17:15:47\n" +
+      "    Tzait Hacochavim - Geonim 3.65 deg               : 16:50:13\n" +
+      "    Tzait Hacochavim - Geonim 4.37 deg               : 16:53:53\n" +
+      "    Tzait Hacochavim - Geonim 4.61 deg               : 16:55:06\n" +
+      "    Tzait Hacochavim - Geonim 4.8 deg                : 16:56:04\n" +
+      "    Tzait Hacochavim - Geonim 5.88 deg               : 17:01:31\n" +
+      "    Tzait Hacochavim - Geonim 5.95 deg               : 17:01:52\n" +
+      "    Tzait Hacochavim - Geonim 7.083 deg              : 17:07:34\n" +
+      "    Tzait Hacochavim - Geonim 8.5 deg                : 17:14:40\n" +
+      "    Tzait Hacochavim - Seattle Sephardic             : 17:20:47\n" +
+      "            Midnight - Mid-night                     : 23:26:35\n" +
+      "            Midnight - Fixed Local Mid-Night         : 23:39:04\n";
+
+    HebrewDate date = HebrewCalendar.getForDate( 2017, Calendar.NOVEMBER, 26 );
+    verifyZmanim( haRambanSynagogue, date, dailyZmanim, haRambanSynagogueExpected );
   }
 
 

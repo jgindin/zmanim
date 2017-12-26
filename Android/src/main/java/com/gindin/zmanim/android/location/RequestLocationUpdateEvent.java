@@ -26,20 +26,6 @@ public class RequestLocationUpdateEvent
   }
 
 
-  public enum LocationDeterminationOverride {
-
-    /**
-     * Use the normal procedure for determining the user's location.
-     */
-    NORMAL,
-
-    /**
-     * Force the determination of the user's location to finding their actual location.
-     */
-    FORCE_TO_ACTUAL_LOCATION
-  }
-
-
   public enum CachedLocationUsage {
 
     /**
@@ -48,28 +34,11 @@ public class RequestLocationUpdateEvent
     PREFER,
 
     /**
-     * If a cached location is available, use it and don't bother with anything else. If no cached location is
-     *  available, consider that an error.
-     */
-    EXCLUSIVE,
-
-    /**
-     * Try to get the actual location and only the case where it cannot be determined should we fall back to using
-     *  a cached location.
-     */
-    FALLBACK,
-
-    /**
      * Do not use a cached location.
      */
     NEVER
   }
 
-
-  /**
-   * Indicate that despite user preferences, the location being requested is the user's actual location.
-   */
-  public final LocationDeterminationOverride                locationDeterminationOverride;
 
   /**
    * Indicate that if a cached location is available, we should use it immediately, but then continue to obtain
@@ -82,16 +51,6 @@ public class RequestLocationUpdateEvent
 
   public RequestLocationUpdateEvent( final CachedLocationUsage cachedLocationUsage ) {
 
-    this.locationDeterminationOverride = LocationDeterminationOverride.NORMAL;
-    this.cachedLocationUsage = cachedLocationUsage;
-  }
-
-
-  public RequestLocationUpdateEvent(
-    final LocationDeterminationOverride locationDeterminationOverride,
-    final CachedLocationUsage           cachedLocationUsage
-  ) {
-    this.locationDeterminationOverride = locationDeterminationOverride;
     this.cachedLocationUsage = cachedLocationUsage;
   }
 

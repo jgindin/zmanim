@@ -6,13 +6,11 @@ package com.gindin.util;
 
 import com.gindin.zmanim.android.BuildConfig;
 
-import com.flurry.android.FlurryAgent;
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.Date;
@@ -28,26 +26,6 @@ public class LogUtils {
 
 
   private LogUtils() {
-  }
-
-
-  public static void startSession(
-    final Context context
-  ) {
-
-    if ( !BuildConfig.DEBUG ) {
-      FlurryAgent.onStartSession( context );
-    }
-  }
-
-
-  public static void endSession(
-    Context context
-  ) {
-
-    if ( !BuildConfig.DEBUG ) {
-      FlurryAgent.onEndSession( context );
-    }
   }
 
 
@@ -69,7 +47,16 @@ public class LogUtils {
   ) {
 
     LogErrorAsyncTask task = new LogErrorAsyncTask( where, message, error, moreInfo );
-    task.execute( (Void)null );
+    new Thread( task ).start();
+  }
+
+
+  public static void logFeedback(
+    @NotNull String feedback
+  ) {
+
+    LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(), null );
+    new Thread( task ).start();
   }
 
 
@@ -79,7 +66,7 @@ public class LogUtils {
   ) {
 
     LogEventAsyncTask task = new LogEventAsyncTask( eventName, messages );
-    task.execute( (Void)null );
+    new Thread( task ).start();
   }
 
 
@@ -88,12 +75,7 @@ public class LogUtils {
     String data
   ) {
 
-    if ( BuildConfig.DEBUG ) {
-      if ( data != null ) {
-        Log.e( key, data );
-      }
-    }
-    else {
+    if ( !BuildConfig.DEBUG ) {
       if ( data == null ) {
         ACRA.getErrorReporter().removeCustomData( key );
       }
@@ -106,7 +88,7 @@ public class LogUtils {
 
 
   private static class LogEventAsyncTask
-    extends AsyncTask<Void,Void,Void> {
+    implements Runnable {
 
     private final String                                    eventName;
     private final List<Pair<String,String>>                 messages;
@@ -122,7 +104,7 @@ public class LogUtils {
 
 
     @Override
-    protected Void doInBackground( Void... voids ) {
+    public void run() {
 
       if ( BuildConfig.DEBUG ) {
 
@@ -142,16 +124,14 @@ public class LogUtils {
           }
         }
 
-        FlurryAgent.logEvent( eventName, messageMap );
+//        FlurryAgent.logEvent( eventName, messageMap );
       }
-
-      return null;
     }
   }
 
 
   private static class LogErrorAsyncTask
-    extends AsyncTask<Void,Void,Void> {
+    implements Runnable {
 
     private final String                                    where;
 
@@ -174,8 +154,6 @@ public class LogUtils {
       this.msg = message;
       this.moreInfo = moreInfo;
 
-      // We want this to be silent...it's something we're interested in logging, but the user
-      //  shouldn't know/care...
       if ( ( error == null ) && !BuildConfig.DEBUG ) {
         this.error = new Exception( message );
       }
@@ -186,7 +164,7 @@ public class LogUtils {
 
 
     @Override
-    protected Void doInBackground( Void... voids ) {
+    public void run() {
 
       String message = msg;
 
@@ -216,6 +194,8 @@ public class LogUtils {
         }
 
 
+        // We want this to be silent...it's something we're interested in logging, but the user
+        //  shouldn't know/care...
         errorReporter.handleSilentException( error );
 
         // Remove the extra data that was passed in here. But if someone had added additional info
@@ -223,6 +203,7 @@ public class LogUtils {
         errorReporter.removeCustomData( "Where" );
         errorReporter.removeCustomData( "Message" );
         errorReporter.removeCustomData( "LogTime" );
+
         if ( moreInfo != null ) {
           for ( Pair<String, String> info : moreInfo ) {
             errorReporter.removeCustomData( info.first );
@@ -230,9 +211,13 @@ public class LogUtils {
         }
       }
 
-      return null;
     }
   }
 
+
+  private static class UserFeedbackException
+    extends Exception {
+
+  }
 
 }  // End of LogUtils class

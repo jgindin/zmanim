@@ -35,10 +35,12 @@ public class LocationProviderPreferences
 
   private CheckBoxPreference                                useDynamicPos;
   private CheckBoxPreference                                useStaticLocation;
+  private EditTextPreference                                place;
+  private EditTextPreference                                placeElevation;
   private CheckBoxPreference                                useLatLong;
   private LongitudeLatitudePreference                       latitude;
   private LongitudeLatitudePreference                       longitude;
-  private EditTextPreference                                place;
+  private EditTextPreference                                latLongElevation;
 
   /**
    * We split the time zones (e.g., "America/Los_Angeles") into two separate strings to make it easier
@@ -73,8 +75,10 @@ public class LocationProviderPreferences
     useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
     useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
     place = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE.name() );
+    placeElevation = (EditTextPreference)findPreference( LocationProviders.StaticProviderOptions.PLACE_ELEVATION.name() );
     latitude = (LongitudeLatitudePreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name() );
     longitude = (LongitudeLatitudePreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name() );
+    latLongElevation = (EditTextPreference)findPreference( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE_LONGITUDE_ELEVATION.name() );
     overrideSystemTimeZone = (CheckBoxPreference)findPreference( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name() );
     timeZoneAreas = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name() );
     timeZoneLocales = (ListPreference)findPreference( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name() );
@@ -185,6 +189,15 @@ public class LocationProviderPreferences
           else if ( longitude == preference ) {
             updateSummary( longitude, newValue.toString(), getString( R.string.use_longitude_pref_summary ) );
           }
+          else if ( ( latLongElevation == preference ) || ( placeElevation == preference ) ) {
+            String str = newValue.toString();
+            if ( str.isEmpty() || "0".equals( str ) ) {
+              updateSummary( preference, getString( R.string.sea_level ), ""  );
+            }
+            else {
+              updateSummary( preference, str, getString( R.string.meters ) );
+            }
+          }
           else if ( overrideSystemTimeZone == preference ) {
             overridingSystemTimeZone( ((Boolean)newValue).booleanValue() );
           }
@@ -209,8 +222,10 @@ public class LocationProviderPreferences
     useStaticLocation.setOnPreferenceChangeListener( prefChangeListener );
     useLatLong.setOnPreferenceChangeListener( prefChangeListener );
     place.setOnPreferenceChangeListener( prefChangeListener );
+    placeElevation.setOnPreferenceChangeListener( prefChangeListener );
     latitude.setOnPreferenceChangeListener( prefChangeListener );
     longitude.setOnPreferenceChangeListener( prefChangeListener );
+    latLongElevation.setOnPreferenceChangeListener( prefChangeListener );
     overrideSystemTimeZone.setOnPreferenceChangeListener( prefChangeListener );
     timeZoneAreas.setOnPreferenceChangeListener( prefChangeListener );
     timeZoneLocales.setOnPreferenceChangeListener( prefChangeListener );
@@ -308,6 +323,15 @@ public class LocationProviderPreferences
 
     String placeName = prefs.getString( LocationProviders.StaticProviderOptions.PLACE.name(), "" );
     updateSummary( place, placeName, "" );
+
+    String elevationStr = prefs.getString( LocationProviders.StaticProviderOptions.PLACE_ELEVATION.name(), "0" );
+    placeElevation.setText( elevationStr );
+    if ( "0".equals( elevationStr ) ) {
+      updateSummary( placeElevation, getString( R.string.sea_level ), ""  );
+    }
+    else {
+      updateSummary( placeElevation, elevationStr, getString( R.string.meters ) );
+    }
   }
 
 
@@ -328,6 +352,15 @@ public class LocationProviderPreferences
       updateSummary( longitude, longitudeStr, getString( R.string.use_longitude_pref_summary ) );
     }
     longitude.init( longitudeStr, false );
+
+    String elevationStr = prefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE_LONGITUDE_ELEVATION.name(), "0" );
+    latLongElevation.setText( elevationStr );
+    if ( "0".equals( elevationStr ) ) {
+      updateSummary( latLongElevation, getString( R.string.sea_level ), ""  );
+    }
+    else {
+      updateSummary( latLongElevation, elevationStr, getString( R.string.meters ) );
+    }
   }
 
 

@@ -10,7 +10,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 
@@ -27,11 +26,10 @@ class AndroidResolver
 
 
   AndroidResolver(
-    EventBus          eventBus,
-    Geocoder          geocoder,
-    SharedPreferences personalPrefs
+    EventBus eventBus,
+    Geocoder geocoder
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus );
     this.geocoder = geocoder;
   }
 
@@ -94,6 +92,7 @@ class AndroidResolver
           final Address address = addresses.get( 0 );
           resolved = new ZmanimLocation.Builder()
             .locationName( addressToLocationName( address ) )
+            .userName( location.getLocationName() )
             .atLatitude( address.getLatitude() )
             .atLongitude( address.getLongitude() )
             .inTimeZone( location.getTimeZone() )

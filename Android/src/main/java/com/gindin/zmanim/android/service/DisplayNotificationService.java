@@ -1,7 +1,6 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
-import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanlib.ZmanCallback;
@@ -17,6 +16,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 
 import java.util.Calendar;
@@ -122,32 +122,17 @@ public class DisplayNotificationService
     // Mark this zman as having been notified. (even if we wind up not showing it...)
     zmanCallback.completed( alertAt, zmanType );
 
-    if ( !shouldNotify ) {
-      return;
-    }
+    // We use a different notification ID for each notification. This means that as they occur, they will
+    //  "stack".
+    final int notificationID = zmanType.ordinal();
 
-
-    // Make sure any previous notification is removed. It seems that this is normally not necessary,
-    //  but sometimes I'm seeing that a new notification doesn't show up when the old one hasn't been
-    //  dismissed...
-    // Note that for now, on debug builds we're going to "stack up" the notifications. If this becomes
-    //  interesting, we could add a preference for this...
-    final int notificationID;
-    if ( BuildConfig.DEBUG ) {
-      notificationID = zmanType.ordinal();
-    }
-    else {
-      notificationID = 1;
-    }
-
-    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-    notificationManager.cancel( notificationID );
 
     Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
+    // Keep this...it's very useful at times...
 //    if ( BuildConfig.DEBUG ) {
 //
 //      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
@@ -161,16 +146,30 @@ public class DisplayNotificationService
 //      );
 //    }
 
-    Notification notification = new NotificationCompat.Builder( this )
+    if ( !shouldNotify ) {
+      return;
+    }
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
+    builder
       .setContentTitle( getString( R.string.app_name ) )
       .setContentText( notificationText )
+      .setSubText( location.getLocationName() )
       .setSmallIcon( R.drawable.ic_stat_zman_notification )
       .setTicker( notificationText )
       .setAutoCancel( true )
       .setDefaults( Notification.DEFAULT_ALL )
-      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) )
-      .build();
+      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
 
+    String tone = zmanCallback.getNotificationTone();
+    if ( tone != null ) {
+      Uri toneUri = Uri.parse( tone );
+      builder.setSound( toneUri );
+      builder.setDefaults( ~Notification.DEFAULT_SOUND );
+    }
+
+    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
+    Notification notification = builder.build();
     notificationManager.notify( notificationID, notification );
   }
 

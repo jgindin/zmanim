@@ -12,17 +12,13 @@ import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
 import com.gindin.zmanim.android.display.daily.header.EditLocationPrefsEvent;
 import com.gindin.zmanim.android.display.daily.header.LocationDisplayModule;
 import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
+import com.gindin.zmanim.android.feedback.FeedbackFragment;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
-import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
-import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
-import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
-import com.gindin.zmanim.android.service.ServiceStartedEvent;
 import com.gindin.zmanim.android.service.ZmanimReceiver;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
@@ -36,23 +32,18 @@ import org.jetbrains.annotations.Nullable;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.*;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,8 +86,7 @@ public class ZmanimActivity
 
   private ZmanimLocation                                    lastKnownLocation;
 
-  private ServiceStartedEvent.Handler                       serviceStartedHandler;
-
+  private Snackbar                                          snackbar;
 
 
   //  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -156,8 +146,6 @@ public class ZmanimActivity
 
     super.onCreate( savedInstanceState );
 
-    LogUtils.startSession( this );
-
     personalPrefsManager = new PersonalPrefsManager( this );
 
     AppUpgrader.handle( this, personalPrefsManager, new ZmanimSelectionPrefsManager( this ) );
@@ -172,9 +160,7 @@ public class ZmanimActivity
     eventBus = ZmanimService.ZMANIM_EVENT_BUS;
 
     // todo: Move to background thread????????
-    /////
     // TODO: Move things things into Guice modules, etc....
-    SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
     DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
     loadedPresenters.add( dateDisplayModule.create() );
@@ -215,15 +201,6 @@ public class ZmanimActivity
 
     super.onStart();
 
-    serviceStartedHandler = new ServiceStartedEvent.Handler() {
-      @Override
-      public void onServiceStarted() {
-        refresh();
-      }
-    };
-
-    eventBus.addHandler( serviceStartedHandler );
-
     Intent zmanimService = new Intent( this, ZmanimService.class );
     zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
     startService( zmanimService );
@@ -246,8 +223,6 @@ public class ZmanimActivity
   @Override
   protected void onStop() {
 
-    eventBus.removeHandler( serviceStartedHandler );
-
     Intent zmanimService = new Intent( this, ZmanimService.class );
     zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STOPPED.name() );
     startService( zmanimService );
@@ -269,8 +244,6 @@ public class ZmanimActivity
     }
     loadedPresenters.clear();
 
-    LogUtils.endSession( this );
-    
     super.onDestroy();
   }
 
@@ -322,11 +295,7 @@ public class ZmanimActivity
     @Nullable final LocationError error
   ) {
 
-    if ( null == error ) {
-      updateField( R.id.messages, "" );
-      //displayDebugMessages();
-    }
-    else {
+    if ( null != error ) {
       handleLocationError( error );
     }
   }
@@ -336,40 +305,43 @@ public class ZmanimActivity
     LocationError error
   ) {
 
-    String errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
-
-    Toast toast = Toast.makeText( this, errorMessage, Toast.LENGTH_LONG );
-    toast.show();
-
     // Now...why is it we couldn't determine our location?
-    String extra = "";
+    final String errorMessage;
+    final String action;
     final View.OnClickListener clickListener;
     switch ( error.errorCode ) {
 
       case NO_LOCATION_MANAGER_SERVICE:
         // This is just weird...
-        extra = "No location manager??? Internal error...";
+        errorMessage = "No location manager??? Internal error...";
+        action = null;
         clickListener = null;
         break;
 
 
       case CANNOT_DETERMINE_LOCATION:
-        extra = getResources().getString( R.string.cannot_determine_location );
 
         if ( null != lastKnownLocation ) {
-          extra += " " + getResources().getString( R.string.last_location_time, new Date( lastKnownLocation.locationTime ) );
+          final String lastTime = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT )
+            .format( new Date( lastKnownLocation.locationTime ) );
+          errorMessage = getResources().getString( R.string.cannot_update_location, lastTime );
+        }
+        else {
+          errorMessage = getResources().getString( R.string.cannot_determine_location  );
         }
 
         // TODO: Need to add click listener that will invoke a dialog allowing the user to:
         //  1. try obtaining location again; or
         //  2. manually specify where they are
+        action = null;
         clickListener = null;
         break;
 
       
       case NO_PROVIDERS:
         // Well, gosh..looks like the user hasn't turned on location management!
-        extra = getResources().getString( R.string.no_location_management );
+        errorMessage = getResources().getString( R.string.no_location_management );
+        action = getResources().getString( R.string.no_location_management_action );
         clickListener = new View.OnClickListener() {
           public void onClick( View view ) {
             showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
@@ -379,7 +351,8 @@ public class ZmanimActivity
 
 
       case BAD_INPUT:
-        extra = error.message;
+        errorMessage = error.message;
+        action = null;
         clickListener = null;
         break;
 
@@ -387,21 +360,32 @@ public class ZmanimActivity
       default:
         // Seems necessary to have a default case, even though we've specified all the cases, so that the
         //  clickListener gets initialized.
+        errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
+        action = null;
         clickListener = null;
     }
 
 
-    if ( null == clickListener ) {
-      errorMessage = errorMessage + extra;
+    if ( snackbar == null ) {
+      snackbar = Snackbar
+        .make( findViewById( android.R.id.content ), errorMessage, Snackbar.LENGTH_INDEFINITE );
     }
     else {
-      errorMessage = errorMessage + " <u>" + extra + "</u>";
-
-      View messages = findViewById( R.id.messages );
-      messages.setOnClickListener( clickListener );
+      snackbar.setText( errorMessage );
     }
 
-    updateField( R.id.messages, Html.fromHtml( errorMessage + "<br/>" ) );
+    if ( null == clickListener ) {
+      snackbar.setAction( R.string.action_dismiss, new View.OnClickListener() {
+        @Override public void onClick( View v ) {
+          // Nothing to do.
+        }
+      } );
+    }
+    else {
+      snackbar.setAction( action, clickListener );
+    }
+
+    snackbar.show();
   }
 
 
@@ -461,6 +445,11 @@ public class ZmanimActivity
 
       case R.id.about:
         showDialog( id );
+        return true;
+
+      case R.id.feedback:
+        FeedbackFragment feedbackFragment = new FeedbackFragment();
+        feedbackFragment.show( getSupportFragmentManager(), "feedback" );
         return true;
 
       case R.id.help:
@@ -544,39 +533,10 @@ public class ZmanimActivity
 
   private void refresh() {
 
-    SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-    boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
-
-    RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
-    if ( !preferCachedLocation ) {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
-    }
-    else {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
-    }
-
-    // This will force us to go re-query for our location.
-    eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
-  }
-
-
-  private void updateField(
-    int     field,
-    String  text
-  ) {
-
-    TextView view = (TextView)findViewById( field );
-    view.setText( text );
-  }
-
-
-  private void updateField(
-    int     field,
-    Spanned text
-  ) {
-
-    TextView view = (TextView)findViewById( field );
-    view.setText( text );
+    // Just kick the service and let it do the work...
+    Intent zmanimService = new Intent( this, ZmanimService.class );
+    zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
+    startService( zmanimService );
   }
 
 
@@ -612,6 +572,16 @@ public class ZmanimActivity
       // Did the user want to move to the next/prev day (swiping right or left) or next/prev month
       //  (swiping up or down)?
       // TODO: Re-enable the up/down swiping if we can...
+
+      // From a bit of StackOverflow reading, it seems that startMotionEvent could possibly be null if, e.g.,
+      //  something else has consumed the initial gesture.
+      //  See https://stackoverflow.com/questions/4151385/android-simpleongesturelistener-onfling-getting-a-null-motionevent
+      // Anyways, just because we're going to be paranoid now, we might as well guard against the endMotionEvent
+      //  being null too...
+      if ( ( startMotionEvent == null ) || ( endMotionEvent == null ) ) {
+        return false;
+      }
+
       float xDiff = startMotionEvent.getRawX() - endMotionEvent.getRawX();
 
       if ( Math.abs( xDiff ) < SWIPE_MIN_DISTANCE ) {
@@ -667,6 +637,10 @@ public class ZmanimActivity
         new Runnable() {
           @Override
           public void run() {
+            if ( ( snackbar != null ) && snackbar.isShownOrQueued() ){
+              snackbar.dismiss();
+            }
+
             rebuildUI( location, null );
           }
         }

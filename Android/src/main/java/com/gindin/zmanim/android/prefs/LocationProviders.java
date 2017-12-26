@@ -23,29 +23,32 @@ public enum LocationProviders {
 
 
   /** Options specific to the DynamicLocationProvider. */
-  public static enum DynamicProviderOptions {
+  public enum DynamicProviderOptions {
 
     /** Should we prefer a GPS location, even when other providers are available? */
     PREFER_GPS,
-    PREFER_CACHED_LOCATION
+    PREFER_CACHED_LOCATION,
+    @Deprecated USE_ELEVATION
   }
 
 
   /** Options specific to the LatitudeLongitudeLocationProvider. */
-  public static enum LatitudeLongitudeProviderOptions {
+  public enum LatitudeLongitudeProviderOptions {
 
     LATITUDE,
-    LONGITUDE
+    LONGITUDE,
+    LATITUDE_LONGITUDE_ELEVATION
   }
 
 
   /** Options specific to the StaticLocationProvider. */
-  public static enum StaticProviderOptions {
-    PLACE
+  public enum StaticProviderOptions {
+    PLACE,
+    PLACE_ELEVATION
   }
 
 
-  public static enum TimeZoneOptions {
+  public enum TimeZoneOptions {
     OVERRIDE_SYSTEM_TIME_ZONE,
     TIME_ZONE_AREA,
     TIME_ZONE_LOCALE

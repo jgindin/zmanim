@@ -9,7 +9,6 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
-import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.SharedPreferences;
@@ -113,11 +112,6 @@ public abstract class LocationAcquirer {
     final boolean   isCachedLocation,
     LocationError   error
   ) {
-
-    boolean useElevation = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ELEVATION.name(), false );
-    if ( !useElevation && ( newLocation != null ) ) {
-      newLocation.setElevation( 0.0 );
-    }
 
     eventBus.fire( new LocationAcquiredEvent( newLocation, isCachedLocation, error ) );
   }

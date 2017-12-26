@@ -48,6 +48,15 @@ public abstract class ZmanCallback {
    */
   public abstract boolean shouldNotifyOnShabbat();
 
+
+  /**
+   * @return a handle to the tone to be used when notifying of an upcoming zman. Use null to indicate the
+   *  default tone should be used.
+   */
+  @Nullable
+  public abstract String getNotificationTone();
+
+
   /**
    * Check if a notification should actually be displayed right now.
    */
@@ -223,6 +232,12 @@ public abstract class ZmanCallback {
     @Override
     public boolean shouldNotifyOnShabbat() {
       return true;
+    }
+
+
+    @Override
+    public String getNotificationTone() {
+      return null;
     }
 
 

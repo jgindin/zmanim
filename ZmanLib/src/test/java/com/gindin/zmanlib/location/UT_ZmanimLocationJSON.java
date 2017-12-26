@@ -1,6 +1,5 @@
 package com.gindin.zmanlib.location;
 
-import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,6 +8,7 @@ import java.util.TimeZone;
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class UT_ZmanimLocationJSON {
 
   @Test
@@ -39,7 +39,7 @@ public class UT_ZmanimLocationJSON {
 
 
   @Test
-  public void fromJSON() throws JSONException {
+  public void fromJSON() {
 
     ZmanimLocation location = ZmanLocationJSON.fromJSON(
       "{\"lat\": \"47.62\",\n" +

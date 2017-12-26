@@ -239,7 +239,16 @@ public class ZmanimLocation
     // Less than 1km? Don't bother...
     // I suppose you could run into an issue if that 1km puts you in a different time zone
     //  or something like that...
-    return getGeodesicDistance( previousLocation ) >= 1000;
+    if ( getGeodesicDistance( previousLocation ) >= 1000 ) {
+      return true;
+    }
+
+    // So, we're within 1km, but Has the elevation changed?
+    if ( Math.abs( getElevation() - previousLocation.getElevation() ) > 5 ) {
+      return true;
+    }
+
+    return false;
   }
 
 
@@ -251,8 +260,8 @@ public class ZmanimLocation
 
     StringBuilder sb = new StringBuilder();
     sb.append( "Location Name:\t" ).append( getLocationName() );
-    sb.append( "\nLatitude:\t" ).append( getLatitudeString( getLatitude() ) ).append( " deg" );
-    sb.append( "\nLongitude:\t" ).append( getLongitudeString( getLongitude() ) ).append( " deg" );
+    sb.append( "\nLatitude:\t" ).append( getLatitudeString( getLatitude(), 5 ) ).append( " deg" );
+    sb.append( "\nLongitude:\t" ).append( getLongitudeString( getLongitude(), 5 ) ).append( " deg" );
     sb.append( "\nElevation:\t" ).append( getElevation() ).append( " Meters" );
     sb.append( "\nTZ Name:\t" ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
     sb.append( "\nTZ GMT Offset:\t" ).append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
@@ -322,7 +331,7 @@ public class ZmanimLocation
    * @throws IOException If there is any error interacting with the stream.
    * @throws JSONException If there is any error reading the location from the stream.
    */
-  public static ZmanimLocation load( InputStream input ) throws IOException, JSONException {
+  public static ZmanimLocation load( InputStream input ) throws IOException {
 
     DataInputStream inputStream = new DataInputStream( input );
     String json = inputStream.readUTF();
@@ -331,20 +340,20 @@ public class ZmanimLocation
   }
 
 
-  static String getLatitudeString( double latitude ) {
+  private static String getLatitudeString(double latitude, int precision) {
     //noinspection AutoBoxing
-    return String.format( "%.1f", latitude );
+    return String.format( "%." + precision + "f", latitude );
   }
 
 
-  static String getLongitudeString( double longitude ) {
+  private static String getLongitudeString(double longitude, int precision) {
     //noinspection AutoBoxing
-    return String.format( "%.1f", longitude );
+    return String.format( "%." + precision + "f", longitude );
   }
 
 
   public static String toLatLongString( double latitude, double longitude ) {
-    return getLatitudeString( latitude ) + " lat; " + getLongitudeString( longitude ) + " long";
+    return getLatitudeString( latitude, 1 ) + " lat; " + getLongitudeString( longitude, 1 ) + " long";
   }
 
 

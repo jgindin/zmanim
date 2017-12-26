@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.ZmanimLocationManager;
@@ -17,6 +18,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import java.util.*;
@@ -96,7 +99,7 @@ public class DynamicLocationAcquirer
   @Override
   public void acquire( final CachedLocationUsage cachedLocationUsage ) {
 
-    if ( ( cachedLocationUsage == CachedLocationUsage.EXCLUSIVE ) || ( cachedLocationUsage == CachedLocationUsage.PREFER ) ) {
+    if ( cachedLocationUsage == CachedLocationUsage.PREFER ) {
       try {
         ZmanimLocation lastKnownLocation = getLastKnownLocation();
         fireLocationAcquiredEvent( lastKnownLocation, true );
@@ -106,9 +109,7 @@ public class DynamicLocationAcquirer
       }
     }
 
-    if ( cachedLocationUsage != CachedLocationUsage.EXCLUSIVE ) {
-      startListeningToLocations();
-    }
+    startListeningToLocations();
   }
 
 
@@ -413,6 +414,10 @@ public class DynamicLocationAcquirer
         timeToWaitForFix = WAIT_FOR_FIRST_NETWORK_FIX_DELAY;
       }
 
+      if ( BuildConfig.DEBUG ) {
+        timeToWaitForFix *= 10;
+      }
+
       start( timeToWaitForFix );
     }
 
@@ -424,11 +429,22 @@ public class DynamicLocationAcquirer
       TimerTask task = new TimerTask() {
         @Override
         public void run() {
-          onFailedToGetAnyFixes();
+          fireOnUIThread();
         }
       };
 
       schedule( task, timeToWaitForFix );
+    }
+
+
+    private void fireOnUIThread() {
+
+      new Handler( Looper.getMainLooper() ).post( new Runnable() {
+        @Override public void run() {
+          onFailedToGetAnyFixes();
+        }
+      } );
+
     }
 
   } // End of WaitingForLocationTimer

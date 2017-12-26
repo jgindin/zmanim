@@ -10,10 +10,13 @@ import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -71,11 +74,26 @@ public class LongitudeLatitudePreference
 
     super.onBindDialogView( view );
 
-    TextView degrees = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
-    degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
+    ValueFilter degreesFilter;
+    if ( showingLatitude ) {
+      degreesFilter = new ValueFilter( -90, 90 );
+    }
+    else {
+      degreesFilter = new ValueFilter( -180, 180 );
+    }
 
-    TextView minutes = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+    ValueFilter minutesFilter = new ValueFilter( 0, 60 );
+
+    EditText degrees = (EditText)view.findViewById( R.id.lat_long_editor_degrees_editor );
+    degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
+    degrees.setFilters( new InputFilter[] { degreesFilter } );
+
+    EditText minutes = (EditText)view.findViewById( R.id.lat_long_editor_minutes_editor );
     minutes.setText( String.format( "%d", valueHolder.getMinutes() ) );
+    minutes.setFilters( new InputFilter[] { minutesFilter } );
+
+    TextView seconds = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
+    seconds.setText( String.format( "%f", valueHolder.getSeconds() ) );
 
 
     // Configuring the spinner comes straight from the Android JavaDocs:
@@ -122,45 +140,11 @@ public class LongitudeLatitudePreference
     TextView value = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
     String degreesText = value.getText().toString();
 
-    boolean parseMinutes = true;
+    value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+    String minutesText = value.getText().toString();
 
-    int degrees;
-    int minutes = 0;
-
-    try {
-      degrees = Integer.parseInt( degreesText );
-    }
-    catch ( NumberFormatException e ) {
-      // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
-      try {
-        double degreesDouble = Double.parseDouble( degreesText );
-
-        // Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
-        degrees = (int)degreesDouble;
-
-        // Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
-        minutes = (int)( ( degreesDouble - degrees ) * 60 );
-
-        parseMinutes = false;
-      }
-      catch ( NumberFormatException e1 ) {
-        // Nope... just give up.
-        degrees = 0;
-        minutes = 0;
-      }
-    }
-
-    if ( parseMinutes ) {
-      value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
-      String minutesText = value.getText().toString();
-
-      try {
-        minutes = Integer.parseInt( minutesText );
-      }
-      catch ( NumberFormatException e ) {
-        minutes = 0;
-      }
-    }
+    value = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
+    String secondsText = value.getText().toString();
 
     LatitudeLongitudeParser.Direction direction;
     Spinner spinner = (Spinner)view.findViewById( R.id.lat_long_editor_ns_ew_picker );
@@ -172,7 +156,8 @@ public class LongitudeLatitudePreference
       direction = ( 0 == item ? LatitudeLongitudeParser.Direction.EAST : LatitudeLongitudeParser.Direction.WEST );
     }
 
-    LatitudeLongitudeParser.Holder holder = new LatitudeLongitudeParser.Holder( direction, degrees, minutes );
+
+    LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse( degreesText, minutesText, secondsText, direction );
     String newValue = holder.toFullString( false );
 
     if ( callChangeListener( newValue ) ) {
@@ -225,6 +210,58 @@ public class LongitudeLatitudePreference
 //      LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( initValue );
 //    }
     */
+  }
+
+
+  /**
+   * Ensure the value in an EditText is never less than a specified minimum value, nor greater than a specified
+   *  maximum value.
+   *
+   * See https://stackoverflow.com/questions/14212518/is-there-a-way-to-define-a-min-and-max-value-for-edittext-in-android
+   */
+  private static class ValueFilter
+    implements InputFilter {
+
+    private final int                                       min;
+    private final int                                       max;
+
+    ValueFilter( int min, int max ) {
+
+      this.min = min;
+      this.max = max;
+    }
+
+
+    @Override
+    public CharSequence filter(
+      CharSequence  source,
+      int           start,
+      int           end,
+      Spanned       dest,
+      int           dstart,
+      int           dend
+    ) {
+
+      try {
+        // Remove the string out of destination that is to be replaced
+        String newVal = dest.toString().substring( 0, dstart ) +
+          dest.toString().substring( dend, dest.toString().length() );
+
+        // Add the new string in
+        newVal = newVal.substring( 0, dstart ) + source.toString() + newVal.substring( dstart, newVal.length() );
+        double input = Double.parseDouble( newVal );
+
+        if ( input >= min && input <= max ) {
+          return null;
+        }
+      }
+      catch ( NumberFormatException nfe ) {
+        // Not in the correct range...
+      }
+
+      return "";
+    }
+
   }
 
 

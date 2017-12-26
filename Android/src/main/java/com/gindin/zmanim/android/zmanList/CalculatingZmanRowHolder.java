@@ -4,8 +4,6 @@
 
 package com.gindin.zmanim.android.zmanList;
 
-import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 
@@ -74,19 +72,7 @@ public abstract class CalculatingZmanRowHolder
     @Override
     protected String doInBackground( Zman... zmans ) {
 
-      String formatted = "";
-
-      try {
-        formatted = zmanFormatter.formatZmanTime( zmans[0] );
-      }
-      catch ( Exception e ) {
-        final Zman zman = zmans[ 0 ];
-        //noinspection unchecked
-        LogUtils.logError( "ZRW::doInBackground", "Format zman", e,
-          new Pair<String, String>( "type", zman.type.name ),
-          new Pair<String, String>( "zman", zman.name ) );
-      }
-
+      String formatted = zmanFormatter.formatZmanTime( zmans[0] );
       return formatted;
     }
 

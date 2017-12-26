@@ -9,8 +9,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.SharedPreferences;
-
 /**
  * A resolver of last resort. Will simply resolve the location as itself.
  */
@@ -19,10 +17,9 @@ class PassthroughResolver
 
 
   PassthroughResolver(
-    EventBus          eventBus,
-    SharedPreferences personalPrefs
+    EventBus eventBus
   ) {
-    super( eventBus, personalPrefs );
+    super( eventBus );
   }
 
 

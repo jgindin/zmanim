@@ -5,7 +5,6 @@
 package com.gindin.zmanim.android.location;
 
 
-import com.gindin.util.LogUtils;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
@@ -105,7 +104,6 @@ public class LastKnownLocationProvider {
     catch ( Exception e ) {
       // Just means we can't actually save the last location, and next time the user starts we'll have to go
       //  query from scratch.
-      LogUtils.logError( "LKLP::save", "Can't open file.", e );
     }
     finally {
       if ( output != null ) {
