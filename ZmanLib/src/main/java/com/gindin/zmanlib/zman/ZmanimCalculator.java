@@ -5,6 +5,8 @@
 package com.gindin.zmanlib.zman;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
+
+import net.sourceforge.zmanim.AstronomicalCalendar;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
@@ -53,6 +55,8 @@ public class ZmanimCalculator
    * In Seattle, the Sephardic community considers Shabbat to be out 45 minutes after sunset.
    */
   private static final int                                  MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT = 45;
+
+  private static final int                                  MINUTES_AFTER_SUNSET_RAV_MOSHE = 50;
 
   /**
    * Minutes in an hour.
@@ -118,6 +122,32 @@ public class ZmanimCalculator
 
   public Date getTzaitSeattleSephardic() {
     return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT * MINUTE_MILLIS );
+  }
+
+
+  /**
+   * Based on Rav Moshe's fixed 50 minutes after sunset. This time is ONLY intended to be used in New York.
+   *
+   * TODO: We should simply allow users to create their own times rather than coding all of these...
+   */
+  public Date getTzaitRavMoshe() {
+    return getTimeOffset( getSeaLevelSunset(), MINUTES_AFTER_SUNSET_RAV_MOSHE * MINUTE_MILLIS );
+  }
+
+
+  /**
+   * This method returns the time of <em>plag hamincha</em> based on the opinion that the day starts at
+ 	 * <em>{@link #getAlos16Point1Degrees() alos 16.1&deg;}</em> and ends at
+ 	 * <em>{@link #getTzais()}  tzais 8.5&deg;}</em>.
+ 	 *
+ 	 * @return the <code>Date</code> of the time of <em>plag hamincha</em>. If the calculation can't be computed such as
+ 	 *         northern and southern locations even south of the Arctic Circle and north of the Antarctic Circle where
+ 	 *         the sun may not reach low enough below the horizon for this calculation, a null will be returned. See
+ 	 *         detailed explanation on top of the {@link AstronomicalCalendar} documentation.
+ 	 *
+   */
+  public Date getPlagAlot16Point1ToTzait8Point5() {
+    return getPlagHamincha( getAlos16Point1Degrees(), getTzais() );
   }
 
 

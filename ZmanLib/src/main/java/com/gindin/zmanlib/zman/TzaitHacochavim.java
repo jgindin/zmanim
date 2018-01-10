@@ -5,6 +5,7 @@
 package com.gindin.zmanlib.zman;
 
 import net.sourceforge.zmanim.AstronomicalCalendar;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -292,6 +293,13 @@ class TzaitHacochavim
         }
       }
     );
+
+    zmanim.add(
+      new Zman( "Rabbi Moshe Feinstein", "For use in the New York area: Fixed 50 minutes after sunset.", zmanType ) {
+        @Nullable @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitRavMoshe() );
+        }
+      } );
 
     return zmanim;
   }

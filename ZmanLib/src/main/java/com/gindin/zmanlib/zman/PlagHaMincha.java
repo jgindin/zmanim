@@ -4,6 +4,8 @@
 
 package com.gindin.zmanlib.zman;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -153,6 +155,14 @@ class PlagHaMincha
       new Zman( "Chacham Yosef Harari-Raful", "Based on Chacham Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.PlagHaMincha ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getPlagHaminchaAteretTorah() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "R. Moshe Feinstein's Rabbenui Tam", "Calculated based on the day running from alot 16.1 degrees to tzait 8.5 degrees.", Type.PlagHaMincha ) {
+        @Nullable @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getPlagAlot16Point1ToTzait8Point5() );
         }
       }
     );
