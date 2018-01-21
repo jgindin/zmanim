@@ -160,7 +160,7 @@ class PlagHaMincha
     );
 
     zmanim.add(
-      new Zman( "R. Moshe Feinstein's Rabbenui Tam", "Calculated based on the day running from alot 16.1 degrees to tzait 8.5 degrees.", Type.PlagHaMincha ) {
+      new Zman( "R. Moshe Feinstein's Rabbenu Tam", "Calculated based on the day running from alot 16.1 degrees to tzait 8.5 degrees.", Type.PlagHaMincha ) {
         @Nullable @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getPlagAlot16Point1ToTzait8Point5() );
         }
