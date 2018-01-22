@@ -83,6 +83,26 @@ public class ZmanimCalculator
 
 
   /**
+ 	 * This method returns the latest <em>zman krias shema</em> (time to recite Shema in the morning) based on the
+ 	 * opinion that the day starts at <em>{@link #getAlos16Point1Degrees() alos 16.1&deg;}</em> and ends at
+   * {@link #getTzaisGeonim3Point65Degrees() 3/4 of a <a href= "http://en.wikipedia.org/wiki/Biblical_and_Talmudic_units_of_measurement" >Mil</a>}
+   * after sunset. 3 shaos zmaniyos are calculated based on this day and added to
+ 	 * {@link #getAlos16Point1Degrees() alos}to reach this time.
+ 	 * <b>Note: </b> Based on this calculation <em>chatzos</em> will not be at midday.
+ 	 *
+ 	 * @return the <code>Date</code> of the latest <em>zman krias shema</em> based on this day. If the calculation can't
+ 	 *         be computed such as northern and southern locations even south of the Arctic Circle and north of the
+ 	 *         Antarctic Circle where the sun may not reach low enough below the horizon for this calculation, a null
+ 	 *         will be returned. See detailed explanation on top of the {@link AstronomicalCalendar} documentation.
+ 	 * @see #getAlos16Point1Degrees()
+ 	 * @see #getTzaisGeonim3Point65Degrees()
+ 	 */
+ 	public Date getSofZmanShmaAlos16Point1ToTzaisGeonim3Point65Degrees() {
+ 		return getSofZmanShma( getAlos16Point1Degrees(), getTzaisGeonim3Point65Degrees() );
+ 	}
+
+
+  /**
    * Method to return the latest time for mincha based on Daily Halacha's representation of the Mishna Berura's ruling,
    *  that mincha must be FINISHED by sunset.
    *

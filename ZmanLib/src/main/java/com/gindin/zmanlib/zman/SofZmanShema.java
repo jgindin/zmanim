@@ -4,6 +4,8 @@
 
 package com.gindin.zmanlib.zman;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -156,6 +158,14 @@ class SofZmanShema
       new Zman( "96 Minutes Zmaniyot", "Based on alot being 96 minutes zmaniyot before sunrise.", Zmanim.Type.SofZmanShema ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA96MinutesZmanis() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "R. Yaakov Moshe Hillel of Bet Horaah", "Based on alot being 72 minutes before sunrise, and tzait being when the sun's position at 3.65 degrees below the western horizon.", Type.SofZmanShema ) {
+        @Nullable @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point1ToTzaisGeonim3Point65Degrees() );
         }
       }
     );
