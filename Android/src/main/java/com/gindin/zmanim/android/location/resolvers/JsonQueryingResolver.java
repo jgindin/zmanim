@@ -134,12 +134,13 @@ abstract class JsonQueryingResolver
       try {
         return doLocationResolution( zmanimLocation, params );
       }
-      catch ( IOException |JSONException ex ) {
+      catch ( IOException | JSONException | NumberFormatException ex ) {
         // Try again; don't log anything because it can be overwhelming...
         //  The JSON exceptions seem to happen pretty often, with messages like:
         //    'End of input at character 0 of'
         //    'Expected ':' after latLng at character 799 of ...'
         //    'Unterminated array at character 1368 of ...'
+        //    'java.lang.NumberFormatException: Invalid int: "00"'
       }
       catch ( Exception e ) {
         LogUtils.logError( "resolveFromCoords", e.getMessage(), e );
