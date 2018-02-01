@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-  compile fileTree( include: ['*.jar'], dir: 'libs' )
+  implementation fileTree( include: ['*.jar'], dir: 'libs' )
 
-  compile project( ':ZmanLib' )
+  implementation project( ':ZmanLib' )
 }

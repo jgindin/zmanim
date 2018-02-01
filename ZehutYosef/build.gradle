@@ -58,7 +58,7 @@ android {
     }
   }
 
-  sourceSets { zehutYosef { res.srcDirs = ['src/zehutYosef/res', 'src/zehutYosef/res/values-he'] } }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -68,21 +68,22 @@ android {
 dependencies {
 
   ext.supportLibsVersion = "25.4.0"
-  compile "com.android.support:appcompat-v7:$supportLibsVersion"
+  implementation "com.android.support:appcompat-v7:$supportLibsVersion"
 
   /* Used to provide out of the box icon font support. simplifies development, and provides scalable icons.
    *  the core is very very light. https://github.com/mikepenz/Android-Iconics
    */
-  compile 'com.mikepenz:iconics-core:2.5.10@aar'
-  compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
-  compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
+  implementation 'com.mikepenz:iconics-core:2.5.10@aar'
+  implementation 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
+  implementation 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
 
   /* https://github.com/mikepenz/MaterialDrawer */
-  compile 'com.mikepenz:materialdrawer:3.0.8@aar'
+  implementation 'com.mikepenz:materialdrawer:3.0.8@aar'
 
   /* https://github.com/mikepenz/AboutLibraries */
-  compile( 'com.mikepenz:aboutlibraries:5.6.2@aar' ) {
+  implementation( 'com.mikepenz:aboutlibraries:5.6.2@aar' ) {
     transitive = true
   }
-  testCompile 'junit:junit:4.12'
+
+  testImplementation 'junit:junit:4.12'
 }
