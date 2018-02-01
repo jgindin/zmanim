@@ -166,6 +166,10 @@ class CachedLocationResolver
         catch( FileNotFoundException fnfe ) {
           // This seems to happen when the cache file doesn't exist.
         }
+        catch ( EOFException eof ) {
+          // Something happened to cause the cache to be malformed.
+          wipeCache();
+        }
         catch ( Exception e ) {
           if ( e.getMessage() != null ) {
             LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
