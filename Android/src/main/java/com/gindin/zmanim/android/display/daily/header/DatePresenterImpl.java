@@ -125,6 +125,7 @@ class DatePresenterImpl<V extends DateView>
     if ( !location.isInvalid && location.isSignificantChangeFrom( currentLocation ) ) {
       currentLocation = location;
       displayDate();
+      displayDateDescription();
     }
   }
 
