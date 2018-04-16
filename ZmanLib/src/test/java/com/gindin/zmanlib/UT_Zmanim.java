@@ -147,6 +147,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:33:30\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:25:32\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:30:50\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:09:23\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:38\n" +
         "     Sof Zman Tefila - GR'A                          : 11:06:54\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:37:32\n" +
@@ -184,6 +185,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:23:09\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:14:45\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:36:18\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:39:01\n" +
         "               Shkia - Sunset                        : 18:13:51\n" +
         "               Shkia - Sunset (with elevation)       : 18:15:23\n" +
         "       Latest Mincha - Mishna Berura                 : 18:13:51\n" +
@@ -219,6 +221,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:35\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 19:00:02\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:58:51\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 19:03:51\n" +
         "            Midnight - Mid-night                     :  0:54:22\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n";
 
@@ -257,6 +260,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:14:36\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:07:46\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:11:52\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:58:34\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:40:24\n" +
         "     Sof Zman Tefila - GR'A                          : 10:50:39\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:20:05\n" +
@@ -294,6 +298,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:17:04\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:10:35\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:30:03\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:29:26\n" +
         "               Shkia - Sunset                        : 18:09:40\n" +
         "               Shkia - Sunset (with elevation)       : 18:10:58\n" +
         "       Latest Mincha - Mishna Berura                 : 18:09:40\n" +
@@ -329,6 +334,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:43:14\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:50:47\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:54:40\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:59:40\n" +
         "            Midnight - Mid-night                     :  0:40:57\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:55:42\n";
 
@@ -367,6 +373,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:52:00\n" +
         "      Sof Zman Shema - 96 Minutes                    :  8:46:23\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:49:10\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:43:28\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:23:54\n" +
         "     Sof Zman Tefila - GR'A                          : 10:30:53\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:59:01\n" +
@@ -404,6 +411,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:08:20\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:55\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:21:06\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:17:31\n" +
         "               Shkia - Sunset                        : 18:02:58\n" +
         "               Shkia - Sunset (with elevation)       : 18:07:14\n" +
         "       Latest Mincha - Mishna Berura                 : 18:02:58\n" +
@@ -439,6 +447,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:47\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:39:30\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:58\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:58\n" +
         "            Midnight - Mid-night                     :  0:24:17\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:39:04\n";
 
@@ -491,6 +500,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:37:50\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:28:51\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:35:14\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:12:21\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:52:53\n" +
         "     Sof Zman Tefila - GR'A                          : 11:08:52\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:40:35\n" +
@@ -528,6 +538,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:15:57\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:05:50\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:29:17\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:32:09\n" +
         "     Candle Lighting - 18 Minutes                    : 17:46:58\n" +
         "     Candle Lighting - 15 Minutes                    : 17:49:58\n" +
         "     Candle Lighting - 20 Minutes                    : 17:44:58\n" +
@@ -570,6 +581,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:43:04\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:51:35\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:49:58\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:54:58\n" +
         "            Midnight - Mid-night                     :  0:53:38\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -618,6 +630,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:38:43\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:29:32\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:36:08\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:12:57\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:52:46\n" +
         "     Sof Zman Tefila - GR'A                          : 11:09:17\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:41:13\n" +
@@ -655,6 +668,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:14:34\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:04:06\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:27:56\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:30:50\n" +
         "               Shkia - Sunset                        : 18:03:15\n" +
         "               Shkia - Sunset (with elevation)       : 18:04:48\n" +
         "       Latest Mincha - Mishna Berura                 : 18:03:15\n" +
@@ -690,6 +704,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:41:26\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:49:57\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:48:15\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:53:15\n" +
         "            Havdalah - MG'A 120 Minutes              : 20:03:15\n" +
         "            Havdalah - GR'A 120 Minutes Zmaniyot     : 19:46:44\n" +
         "            Havdalah - 3.5 deg                       : 18:19:41\n" +
@@ -716,6 +731,7 @@ public class UT_Zmanim {
         "            Havdalah - Geonim 7.083 deg              : 18:41:26\n" +
         "            Havdalah - Geonim 8.5 deg                : 18:49:57\n" +
         "            Havdalah - Seattle Sephardic             : 18:48:15\n" +
+        "            Havdalah - Rabbi Moshe Feinstein         : 18:53:15\n" +
         "            Midnight - Mid-night                     :  0:53:31\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -764,6 +780,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:08:29\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:09:17\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:05:14\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:49:40\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:12:31\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:22\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:23:38\n" +
@@ -801,6 +818,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 19:37:39\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 19:44:04\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 18:49:20\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 18:53:40\n" +
         "               Shkia - Sunset                        : 19:42:59\n" +
         "               Shkia - Sunset (with elevation)       : 19:44:30\n" +
         "       Latest Mincha - Mishna Berura                 : 19:42:59\n" +
@@ -836,6 +854,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:21:04\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:29:53\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:27:59\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:32:59\n" +
         "            Midnight - Mid-night                     :  1:11:32\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -884,6 +903,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:55:15\n" +
         "      Sof Zman Shema - 96 Minutes                    :  8:58:09\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:51:51\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:35:32\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:09:48\n" +
         "     Sof Zman Tefila - GR'A                          : 10:54:02\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:13:04\n" +
@@ -936,6 +956,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 19:48:14\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 19:58:13\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 18:59:35\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 19:05:07\n" +
         "     Candle Lighting - 18 Minutes                    : 19:39:05\n" +
         "     Candle Lighting - 15 Minutes                    : 19:42:05\n" +
         "     Candle Lighting - 20 Minutes                    : 19:37:05\n" +
@@ -1004,6 +1025,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:36:16\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:45:26\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:42:05\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:47:05\n" +
         "            Midnight - Mid-night                     :  1:08:51\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -1049,6 +1071,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:33:08\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:17:05\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:31:00\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:54:38\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:12:55\n" +
         "     Sof Zman Tefila - GR'A                          : 10:47:42\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:26:56\n" +
@@ -1086,6 +1109,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 16:51:19\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 16:29:17\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 16:05:49\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 16:11:40\n" +
         "               Shkia - Sunset                        : 16:28:34\n" +
         "               Shkia - Sunset (with elevation)       : 16:30:22\n" +
         "       Latest Mincha - Mishna Berura                 : 16:28:34\n" +
@@ -1147,6 +1171,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 17:11:31\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 17:20:50\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 17:13:34\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:18:34\n" +
         "            Midnight - Mid-night                     :  0:12:54\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:09:04\n"
     );
@@ -1208,6 +1233,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:10:41\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
@@ -1245,6 +1271,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:12:35\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:02\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:25:51\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:26:10\n" +
         "     Candle Lighting - 18 Minutes                    : 17:44:09\n" +
         "     Candle Lighting - 15 Minutes                    : 17:47:09\n" +
         "     Candle Lighting - 20 Minutes                    : 17:42:09\n" +
@@ -1287,6 +1314,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:10\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:09\n" +
         "            Midnight - Mid-night                     :  0:46:44\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
@@ -1326,6 +1354,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:10:41\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
@@ -1363,6 +1392,7 @@ public class UT_Zmanim {
         "       Plag HaMincha - MG'A 96 Minutes               : 18:12:35\n" +
         "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 18:03:02\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 17:25:51\n" +
+        "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 17:26:10\n" +
         "     Candle Lighting - 18 Minutes                    : 17:44:09\n" +
         "     Candle Lighting - 15 Minutes                    : 17:47:09\n" +
         "     Candle Lighting - 20 Minutes                    : 17:42:09\n" +
@@ -1405,6 +1435,7 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:10\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:59\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:09\n" +
+        "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:09\n" +
         "            Midnight - Mid-night                     :  0:46:44\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
@@ -1448,6 +1479,7 @@ public class UT_Zmanim {
       "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:12:39\n" +
       "      Sof Zman Shema - 96 Minutes                    :  8:03:21\n" +
       "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:10:04\n" +
+      "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  7:57:45\n" +
       "     Sof Zman Tefila - 2 Hours before Chatzot        :  9:26:10\n" +
       "     Sof Zman Tefila - GR'A                          :  9:42:57\n" +
       "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:15:00\n" +
@@ -1485,6 +1517,7 @@ public class UT_Zmanim {
       "       Plag HaMincha - MG'A 96 Minutes               : 16:47:17\n" +
       "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 16:36:39\n" +
       "       Plag HaMincha - Chacham Yosef Harari-Raful    : 16:00:40\n" +
+      "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 15:58:10\n" +
       "               Shkia - Sunset                        : 16:35:47\n" +
       "               Shkia - Sunset (with elevation)       : 16:40:22\n" +
       "       Latest Mincha - Mishna Berura                 : 16:35:47\n" +
@@ -1520,6 +1553,7 @@ public class UT_Zmanim {
       "    Tzait Hacochavim - Geonim 7.083 deg              : 17:07:34\n" +
       "    Tzait Hacochavim - Geonim 8.5 deg                : 17:14:40\n" +
       "    Tzait Hacochavim - Seattle Sephardic             : 17:20:47\n" +
+      "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:25:47\n" +
       "            Midnight - Mid-night                     : 23:26:35\n" +
       "            Midnight - Fixed Local Mid-Night         : 23:39:04\n";
 
