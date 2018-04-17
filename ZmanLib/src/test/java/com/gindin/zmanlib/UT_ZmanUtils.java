@@ -23,6 +23,10 @@ class UT_ZmanUtils {
 
   static final ZmanimLocation                               yeshivaUniversity;
 
+  static final ZmanimLocation                               kotel;
+
+  static final ZmanimLocation                               london;
+
   static final int                                          ZERO_MINUTES = 0;
 
   static final int                                          FIVE_MINUTES = 5;
@@ -46,6 +50,21 @@ class UT_ZmanUtils {
       .atLongitude( -73.928937 )
       .locationName( "Yeshiva University" )
       .inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
+      .build();
+
+    kotel = new ZmanimLocation.Builder()
+      .atLatitude( 31.76832 )
+      .atLongitude( 35.21371 )
+      .atElevation( 800 )
+      .locationName( "Kotel" )
+      .inTimeZone( TimeZone.getTimeZone( "Asia/Jerusalem" ) )
+      .build();
+
+    london = new ZmanimLocation.Builder()
+      .atLatitude( 51.4993906 )
+      .atLongitude( -0.1388429 )
+      .locationName( "London" )
+      .inTimeZone( TimeZone.getTimeZone( "Europe/London" ) )
       .build();
   }
 

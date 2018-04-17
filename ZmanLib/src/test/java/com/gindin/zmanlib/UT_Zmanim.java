@@ -147,7 +147,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:33:30\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:25:32\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:30:50\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:09:23\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:10:00\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:38\n" +
         "     Sof Zman Tefila - GR'A                          : 11:06:54\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:37:32\n" +
@@ -260,7 +260,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:14:36\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:07:46\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:11:52\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:58:34\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:59:07\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:40:24\n" +
         "     Sof Zman Tefila - GR'A                          : 10:50:39\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:20:05\n" +
@@ -373,7 +373,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:52:00\n" +
         "      Sof Zman Shema - 96 Minutes                    :  8:46:23\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:49:10\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:43:28\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:43:58\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:23:54\n" +
         "     Sof Zman Tefila - GR'A                          : 10:30:53\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:59:01\n" +
@@ -500,7 +500,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:37:50\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:28:51\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:35:14\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:12:21\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:12:59\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:52:53\n" +
         "     Sof Zman Tefila - GR'A                          : 11:08:52\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:40:35\n" +
@@ -630,7 +630,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:38:43\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:29:32\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:36:08\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:12:57\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:13:35\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:52:46\n" +
         "     Sof Zman Tefila - GR'A                          : 11:09:17\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:41:13\n" +
@@ -780,7 +780,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:08:29\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:09:17\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:05:14\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:49:40\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:50:21\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:12:31\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:22\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:23:38\n" +
@@ -903,7 +903,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:55:15\n" +
         "      Sof Zman Shema - 96 Minutes                    :  8:58:09\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:51:51\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:35:32\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:36:15\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:09:48\n" +
         "     Sof Zman Tefila - GR'A                          : 10:54:02\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:13:04\n" +
@@ -1071,7 +1071,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:33:08\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:17:05\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:31:00\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:54:38\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  8:55:19\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:12:55\n" +
         "     Sof Zman Tefila - GR'A                          : 10:47:42\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:26:56\n" +
@@ -1233,7 +1233,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:10:41\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:11:15\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
@@ -1354,7 +1354,7 @@ public class UT_Zmanim {
         "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  9:30:42\n" +
         "      Sof Zman Shema - 96 Minutes                    :  9:22:02\n" +
         "      Sof Zman Shema - 96 Minutes Zmaniyot           :  9:28:04\n" +
-        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:10:41\n" +
+        "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  9:11:15\n" +
         "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:47:25\n" +
         "     Sof Zman Tefila - GR'A                          : 11:02:30\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:33:52\n" +
@@ -1479,7 +1479,7 @@ public class UT_Zmanim {
       "      Sof Zman Shema - MG'A 90 Minutes Zmaniyot      :  8:12:39\n" +
       "      Sof Zman Shema - 96 Minutes                    :  8:03:21\n" +
       "      Sof Zman Shema - 96 Minutes Zmaniyot           :  8:10:04\n" +
-      "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  7:57:45\n" +
+      "      Sof Zman Shema - R. Yaakov Moshe Hillel of Bet Horaah:  7:58:17\n" +
       "     Sof Zman Tefila - 2 Hours before Chatzot        :  9:26:10\n" +
       "     Sof Zman Tefila - GR'A                          :  9:42:57\n" +
       "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:15:00\n" +
