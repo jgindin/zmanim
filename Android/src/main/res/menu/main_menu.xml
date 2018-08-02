@@ -30,11 +30,13 @@ should this be included in the menu above?
     android:title="@string/personal_prefs"
     android:icon="@android:drawable/ic_menu_preferences"
   />
+<!--
   <item
     android:id="@+id/feedback"
     android:title="@string/feedback"
     android:icon="@android:drawable/ic_menu_send"
   />
+-->
   <item
     android:id="@+id/about"
     android:title="@string/about_menu"
