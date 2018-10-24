@@ -36,6 +36,7 @@ import android.os.IBinder;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This is the service we use to schedule notifications. In order to do that, however, the service has to have all
@@ -49,7 +50,6 @@ import java.util.Calendar;
  *          the next alarm.
  *  </ol>
  */
-@SuppressWarnings( "Convert2Diamond" )
 public class ZmanimService
   extends Service {
 
@@ -94,6 +94,7 @@ public class ZmanimService
    * In addition, this serves as a flag that we need to shut ourselves down after the notification has been
    *  displayed and the next alarm scheduled. Unless, that is, we're also currently servicing a user.
    */
+  @Nullable
   private Intent                                            handlingAlarmsFor;
 
   private ZmanNotificationScheduler                         zmanNotificationScheduler;
@@ -357,6 +358,10 @@ public class ZmanimService
 
     long alertTime = alertAt.getTimeInMillis();
     AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
+    if ( alarmManager == null ) {
+      LogUtils.logError( "scheuduleUserAlert", "failed to get alarm manager", null );
+      return;
+    }
 
     SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     boolean useAlarmClock = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ALARM_CLOCK.name(), false );
@@ -380,16 +385,16 @@ public class ZmanimService
 
 
     // Leave this here ... it comes in handy...
-//    if ( BuildConfig.DEBUG ) {
-//      //noinspection unchecked
-//      LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
-//        new Pair<String, String>( "alert time", new Date( alertTime ).toString() ),
-//        new Pair<String, String>( "zman type", zman.type.name ),
-//        new Pair<String, String>( "zman", zman.name ),
-//        new Pair<String, String>( "sched. location", location.toString() ),
-//        new Pair<String, String>( "intent id", Integer.toString( intentId ) )
-//      );
-//    }
+    if ( BuildConfig.DEBUG ) {
+      //noinspection unchecked
+      LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
+        new Pair<>( "alert time", new Date( alertTime ).toString() ),
+        new Pair<>( "zman type", zman.type.name ),
+        new Pair<>( "zman", zman.name ),
+        new Pair<>( "sched. location", location.toString() ),
+        new Pair<>( "intent id", Integer.toString( intentId ) )
+      );
+    }
 
   }
 

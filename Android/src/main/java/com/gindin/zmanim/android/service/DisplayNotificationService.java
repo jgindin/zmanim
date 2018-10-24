@@ -1,6 +1,8 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
+import com.gindin.util.Pair;
+import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanlib.ZmanCallback;
@@ -10,16 +12,15 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.NotificationCompat;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous requests to display a notification
@@ -35,8 +36,11 @@ public class DisplayNotificationService
   private static final String                               EXTRA_ZMAN_TYPE = "com.gindin.zmanim.android.service.extra.ZMAN_TYPE";
   private static final String                               EXTRA_ZMAN_ALERT_AT = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
 
+  private static final String                               NOTIFICATION_CHANNEL_ID = "zmanim-notifications";
 
   private ZmanCallback                                      zmanCallback;
+
+  private NotificationChannel                               notificationChannel;
 
 
   public DisplayNotificationService() {
@@ -87,6 +91,10 @@ public class DisplayNotificationService
       final String action = intent.getAction();
       if ( ACTION_NOTIFICATION.equals( action ) ) {
 
+        if ( notificationChannel == null ) {
+          createNotificationChannle();
+        }
+
         Zmanim.Type type = Zmanim.Type.valueOf( intent.getStringExtra( EXTRA_ZMAN_TYPE ) );
         Calendar time = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_TIME );
         Calendar alertAt = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_ALERT_AT );
@@ -100,6 +108,27 @@ public class DisplayNotificationService
           LogUtils.logError( "DisplayNotificationService::onHandleIntent", "JSONException", e );
         }
       }
+    }
+  }
+
+
+  private void createNotificationChannle() {
+
+    // Notification channel should only be created for devices running Android 26
+    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+      notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID, "Zmanim Notifications", NotificationManager.IMPORTANCE_HIGH );
+
+      // Boolean value to set if lights are enabled for Notifications from this Channel
+      notificationChannel.enableLights( true );
+
+      // Boolean value to set if vibration is enabled for Notifications from this Channel
+      notificationChannel.enableVibration( true );
+
+      // Sets whether notifications from these Channel should be visible on Lockscreen or not
+      notificationChannel.setLockscreenVisibility( Notification.VISIBILITY_PUBLIC );
+
+      NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE) ;
+      notificationManager.createNotificationChannel( notificationChannel );
     }
   }
 
@@ -133,24 +162,24 @@ public class DisplayNotificationService
     String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
     // Keep this...it's very useful at times...
-//    if ( BuildConfig.DEBUG ) {
-//
-//      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
-//        new Pair<String, String>( "zman type", zmanType.name ),
-//        new Pair<String, String>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
-//        new Pair<String, String>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
-//        new Pair<String, String>( "should notify", Boolean.toString( shouldNotify ) ),
-//        new Pair<String, String>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
-//        new Pair<String, String>( "message", notificationText ),
-//        new Pair<String, String>( "notify location", location.toString() )
-//      );
-//    }
+    if ( BuildConfig.DEBUG ) {
+
+      LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
+        new Pair<>( "zman type", zmanType.name ),
+        new Pair<>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
+        new Pair<>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
+        new Pair<>( "should notify", Boolean.toString( shouldNotify ) ),
+        new Pair<>( "notify reason", zmanCallback.actuallyNotifyReasoning( location, alertAt ) ),
+        new Pair<>( "message", notificationText ),
+        new Pair<>( "notify location", location.toString() )
+      );
+    }
 
     if ( !shouldNotify ) {
       return;
     }
 
-    NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
+    NotificationCompat.Builder builder = new NotificationCompat.Builder( this, NOTIFICATION_CHANNEL_ID );
     builder
       .setContentTitle( getString( R.string.app_name ) )
       .setContentText( notificationText )
@@ -169,8 +198,7 @@ public class DisplayNotificationService
     }
 
     NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
-    Notification notification = builder.build();
-    notificationManager.notify( notificationID, notification );
+    notificationManager.notify( notificationID, builder.build() );
   }
 
 }
