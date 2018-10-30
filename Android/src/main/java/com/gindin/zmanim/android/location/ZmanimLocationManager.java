@@ -16,12 +16,15 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
@@ -69,7 +72,7 @@ public class ZmanimLocationManager {
   /** System-wide, actual location manager. */
   private final LocationManager                             locationManager;
 
-  private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<Type, LocationAcquirer>();
+  private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<>();
 
   /**
    * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
@@ -244,15 +247,19 @@ public class ZmanimLocationManager {
    *
    * @throws SecurityException in case we don't have the location permission.
    */
-  public void requestSingleUpdate( String providerName, LocationListener listener ) throws SecurityException {
+  public void requestSingleUpdate(
+    String            providerName,
+    LocationListener  listener
+  )
+    throws SecurityException {
 
     //noinspection StatementWithEmptyBody
     if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
       // Don't allow this. It'll prevent the real providers from having a chance....
     }
     else if ( hasLocationPermissions() ) {
-      //noinspection MissingPermission
-      locationManager.requestSingleUpdate( providerName, listener, null );
+      LocationUpdateAsync task = new LocationUpdateAsync( locationManager, providerName, listener );
+      task.execute( (Void)null );
     }
     else {
       throw new SecurityException( "No location permissions available" );
@@ -305,6 +312,41 @@ public class ZmanimLocationManager {
     boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
 
     return hasFineAccess || hasCoarseAccess;
+  }
+
+
+
+  private static class LocationUpdateAsync
+    extends AsyncTask<Void,Void,Void> {
+
+    private final LocationManager                           locationManager;
+    private final String                                    providerName;
+    private final LocationListener                          locationListener;
+
+
+    LocationUpdateAsync(
+      LocationManager   locationManager,
+      String            providerName,
+      LocationListener  locationListener
+    ) {
+      this.locationManager = locationManager;
+      this.providerName = providerName;
+      this.locationListener = locationListener;
+    }
+
+
+    @SuppressLint( "MissingPermission" )
+    @Override
+    protected Void doInBackground( Void... voids ) {
+
+      if ( Looper.myLooper() == null ) {
+        Looper.prepare();
+      }
+
+      locationManager.requestSingleUpdate( providerName, locationListener, null );
+
+      return null;
+    }
   }
 
 }  // End of ZmanimLocation class

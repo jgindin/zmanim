@@ -200,9 +200,7 @@ public class ZmanimActivity
 
     super.onStart();
 
-    Intent zmanimService = new Intent( this, ZmanimService.class );
-    zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
-    startService( zmanimService );
+    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, this );
   }
 
 
@@ -222,9 +220,7 @@ public class ZmanimActivity
   @Override
   protected void onStop() {
 
-    Intent zmanimService = new Intent( this, ZmanimService.class );
-    zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STOPPED.name() );
-    startService( zmanimService );
+    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STOPPED, this );
 
     super.onStop();
   }
@@ -535,9 +531,7 @@ public class ZmanimActivity
   private void refresh() {
 
     // Just kick the service and let it do the work...
-    Intent zmanimService = new Intent( this, ZmanimService.class );
-    zmanimService.setAction( ZmanimService.Actions.ACTIVITY_STARTED.name() );
-    startService( zmanimService );
+    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, this );
   }
 
 

@@ -21,19 +21,16 @@ import com.gindin.zmanlib.zman.Zman;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.IBinder;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,7 +48,7 @@ import java.util.Date;
  *  </ol>
  */
 public class ZmanimService
-  extends Service {
+  extends JobIntentService {
 
 
   public enum Actions {
@@ -82,39 +79,37 @@ public class ZmanimService
 
   private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
 
-  /**
-   * When we get a command to start coming from the Zmanim activity, then we know we're providing services for
-   *  the user. In that case, we must make sure not to shut down until we receive an explicit command to do so.
-   */
-  private boolean                                           servicingUser = false;
-
-  /**
-   * If we're invoked from some other intent, keep track of it. This way we can (a) not do something if we're already
-   *  handling for an intent; and (b) cleanup if something goes really wrong.
-   * In addition, this serves as a flag that we need to shut ourselves down after the notification has been
-   *  displayed and the next alarm scheduled. Unless, that is, we're also currently servicing a user.
-   */
-  @Nullable
-  private Intent                                            handlingAlarmsFor;
-
   private ZmanNotificationScheduler                         zmanNotificationScheduler;
 
   private LocationToAddressConverter                        locationToAddressConverter;
 
 
 
-  /**
-   * Creates an intent that can be used to have this service schedule alarms.
-   */
-  public static Intent createIntentForSchedulingAlarms(
+  public static void enqueueWork(
+    Actions   action,
+    Context   context
+  ) {
+
+    enqueueWork( action, false, context );
+  }
+
+
+  public static void enqueueWork(
+    Actions action,
+    boolean force,
     Context context
   ) {
 
-    Intent startZmanimServiceIntent = new Intent( context, ZmanimService.class );
-    startZmanimServiceIntent.setAction( ZmanimService.Actions.SCHEDULE_ALARM.name() );
+    Intent zmanimService = new Intent( context, ZmanimService.class );
+    zmanimService.setAction( action.name() );
 
-    return startZmanimServiceIntent;
+    if ( force ) {
+      zmanimService.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
+    }
+
+    enqueueWork( context, ZmanimService.class, 5170, zmanimService );
   }
+
 
 
   public void onCreate() {
@@ -122,21 +117,12 @@ public class ZmanimService
 
     final Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
-    Thread.setDefaultUncaughtExceptionHandler(
-      new Thread.UncaughtExceptionHandler() {
-        @Override
-        public void uncaughtException(
-          final Thread    thread,
-          final Throwable throwable
-        ) {
+    Thread.setDefaultUncaughtExceptionHandler( exceptionHandler );
+  }
 
-          servicingUser = false;
-          releaseWakefulIntent();
 
-          exceptionHandler.uncaughtException( thread, throwable );
-        }
-      }
-    );
+  @Override
+  protected void onHandleWork( @NonNull Intent intent ) {
 
     final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
@@ -171,74 +157,23 @@ public class ZmanimService
     };
 
     zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
-  }
 
+    String action = intent.getAction();
 
-  @Override
-  public IBinder onBind( Intent intent ) {
-    return null;
-  }
-
-
-  @Override
-  public int onStartCommand(
-    Intent  intent,
-    int     flags,
-    int     startId
-  ) {
-
-    // NOTE: It helps to read the JavaDocs -- it clearly states that:
-    //    [the intent parameter] may be null if the service is being restarted after
-    //    its process has gone away...
-    String action = ( intent == null ? "" : intent.getAction() );
-
-    if ( intent == null ) {
-      // We got killed and now Android is restarting us. But this means we don't have a wake lock! Just
-      //  quickly schedule ourselves to get back on track...
-      ZmanimReceiver.scheduleRepeatingChecks( this );
-      releaseWakefulIntent();
-    }
-    else if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
-      servicingUser = true;
-
+    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
       findCurrentLocation();
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
-      servicingUser = false;
-      releaseWakefulIntent();
+      // Nothing to do...
     }
     else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
 
       // If we already have a handler, then we're already in the process of figuring out where we are to be
       //  able to schedule the next alarm.
       if ( locationAcquiredHandler == null ) {
-        handlingAlarmsFor = intent;
-
         findCurrentLocation();
       }
-      else {
-        // We're not going to do anything for this request, so make sure to release the wake lock!
-        WakefulBroadcastReceiver.completeWakefulIntent( intent );
-      }
     }
-
-    // In case the process is killed while running, what should happen? "The Busy Coder's Guide to
-    //  Android Development", v6.9, explains in the "Services and the Command Pattern" chapter, that
-    //  the options are:
-    //  1. START_STICKY, meaning that the service should be moved back into the
-    //      started state (as if onStartCommand() had been called), but do not re-deliver
-    //      the Intent to onStartCommand()
-    //  2. START_REDELIVER_INTENT, meaning that the service should be restarted via a
-    //      call to onStartCommand() , supplying the same Intent as was delivered this time
-    //  3. START_NOT_STICKY, meaning that the service should remain stopped until
-    //      explicitly started by application code
-    //
-    // Note that by doing nothing, "The Guide" (in "Embedding a Web Server" chapter), goes on to
-    //  say that:
-    //    ...the default implementation of onStartCommand() returns START_STICKY, which means
-    //    that Android will keep trying to restart our service after our process gets terminated.
-    //    This is a ridiculous default value and goes a long way towards explaining Android’s memory issues.
-    return START_STICKY;
   }
 
 
@@ -290,7 +225,6 @@ public class ZmanimService
       // This is NOT supposed to happen. Send some data to try and diagnose.
       //  UPDATE: Yet, now all of a sudden, I am seeing it! For me, this is happening after I go into the emulator
       //    settings and change the time to test some alerting functionality...
-      releaseWakefulIntent();
       return;
     }
     else {
@@ -301,34 +235,14 @@ public class ZmanimService
       if ( location.isInvalid ) {
         // Generally, this means that we don't have permission to acquire the location. This can happen
         //  after the initial installation, before the user has had a chance to respond to the prompt.
-        releaseWakefulIntent();
         return;
       }
     }
 
 
-    // Supressing because this is *not* going to be a long running task...
-    @SuppressLint( "StaticFieldLeak" )
-    AsyncTask<Void, Void, Void> schedulerTask = new AsyncTask<Void, Void, Void>() {
-      @Override
-      protected Void doInBackground( Void... params ) {
-
-        Calendar now = Calendar.getInstance();
-        now.setTimeZone( location.getTimeZone() );
-        zmanNotificationScheduler.run( location, now );
-
-        return null;
-      }
-
-
-      @Override
-      protected void onPostExecute( Void aVoid ) {
-        super.onPostExecute( aVoid );
-        releaseWakefulIntent();
-      }
-    };
-
-    schedulerTask.execute( (Void[])null );
+    Calendar now = Calendar.getInstance();
+    now.setTimeZone( location.getTimeZone() );
+    zmanNotificationScheduler.run( location, now );
   }
 
 
@@ -344,7 +258,7 @@ public class ZmanimService
     int intentId = ( ( (byte)alertAt.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zman.type.ordinal() & 0xFF ) );
 
     //noinspection MagicNumber
-    PendingIntent pendingIntent = PendingIntent.getService( this, intentId,
+    PendingIntent pendingIntent = PendingIntent.getBroadcast( this, intentId,
 
       DisplayNotificationService.createIntentForService( this, zman, location, alertAt ),
 
@@ -396,19 +310,6 @@ public class ZmanimService
       );
     }
 
-  }
-
-
-  private void releaseWakefulIntent() {
-
-    if ( handlingAlarmsFor != null ) {
-      WakefulBroadcastReceiver.completeWakefulIntent( handlingAlarmsFor );
-      handlingAlarmsFor = null;
-    }
-
-    if ( !servicingUser ) {
-      stopSelf();
-    }
   }
 
 

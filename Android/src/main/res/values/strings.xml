@@ -134,4 +134,6 @@
   <string name="feedback_email_instructions">If you would like me to contact you, please add your email address.</string>
   <string name="feedback_note">Note: Some additional data will be sent along with your feedback. None of this information is personally identifiable. This data includes your location and basic data about your device which can be used to help debug issues.</string>
 
+  <string name="ZmanimServiceDescription">Schedule Zmanim notifications.</string>
+  <string name="NotificationServiceDescription">Displays Zmanim notifications.</string>
 </resources>

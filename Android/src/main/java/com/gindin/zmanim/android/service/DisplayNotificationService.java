@@ -13,6 +13,7 @@ import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.app.*;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,14 +23,15 @@ import android.support.v4.app.NotificationCompat;
 import java.util.Calendar;
 import java.util.Date;
 
+
 /**
  * An {@link IntentService} subclass for handling asynchronous requests to display a notification
  *  to the user about an upcoming zman.
  */
 public class DisplayNotificationService
-  extends IntentService {
+  extends BroadcastReceiver {
   
-  private static final String                               ACTION_NOTIFICATION = "com.gindin.zmanim.android.service.action.NOTIFICATION";
+  public static final String                                DISPLAY_NOTIFICATION = "com.gindin.zmanim.android.service.action.NOTIFICATION";
 
   private static final String                               EXTRA_ZMAN_LOCATION = "com.gindin.zmanim.android.service.extra.ZMAN_LOCATION";
   private static final String                               EXTRA_ZMAN_TIME = "com.gindin.zmanim.android.service.extra.ZMAN_TIME";
@@ -43,11 +45,6 @@ public class DisplayNotificationService
   private NotificationChannel                               notificationChannel;
 
 
-  public DisplayNotificationService() {
-    super( "DisplayNotificationService" );
-  }
-
-
 
   public static Intent createIntentForService(
     Context         context,
@@ -57,7 +54,7 @@ public class DisplayNotificationService
   ) {
 
     Intent intent = new Intent( context, DisplayNotificationService.class );
-    intent.setAction( ACTION_NOTIFICATION );
+    intent.setAction( DISPLAY_NOTIFICATION );
 
     // NOTE: I tried making the Zman serializable, but there are things there that I can't control.
     // NOTE: I tried storing the Zmanim.Type, but even though it's an enum and should work just fine,
@@ -72,47 +69,48 @@ public class DisplayNotificationService
 
 
   @Override
-  protected void onHandleIntent( Intent intent ) {
-    if ( intent != null ) {
+  public void onReceive(
+    Context context,
+    Intent  intent
+  ) {
 
-      if ( zmanCallback == null ) {
-        zmanCallback = new PrefsBasedZmanCallback( this ) {
-          @Override public void scheduleAlert(
-            Zman zman,
-            ZmanimLocation    location,
-            Calendar          alertAt
-          ) {
-            // This implementation will NEVER schedule any alerts...;
-          }
-        };
+    if ( zmanCallback == null ) {
+      zmanCallback = new PrefsBasedZmanCallback( context ) {
+        @Override public void scheduleAlert(
+          Zman zman,
+          ZmanimLocation    location,
+          Calendar          alertAt
+        ) {
+          // This implementation will NEVER schedule any alerts...;
+        }
+      };
+    }
+
+
+    final String action = intent.getAction();
+    if ( DISPLAY_NOTIFICATION.equals( action ) ) {
+
+      if ( notificationChannel == null ) {
+        createNotificationChannel( context );
       }
 
+      Zmanim.Type type = Zmanim.Type.valueOf( intent.getStringExtra( EXTRA_ZMAN_TYPE ) );
+      Calendar time = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_TIME );
+      Calendar alertAt = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_ALERT_AT );
 
-      final String action = intent.getAction();
-      if ( ACTION_NOTIFICATION.equals( action ) ) {
-
-        if ( notificationChannel == null ) {
-          createNotificationChannle();
-        }
-
-        Zmanim.Type type = Zmanim.Type.valueOf( intent.getStringExtra( EXTRA_ZMAN_TYPE ) );
-        Calendar time = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_TIME );
-        Calendar alertAt = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_ALERT_AT );
-
-        try {
-          ZmanimLocation location = ZmanLocationJSON.fromJSON( intent.getStringExtra( EXTRA_ZMAN_LOCATION ) );
-          handleNotificationAction( type, time, location, alertAt );
-        }
-        catch ( Exception e ) {
-          // Something happened and we can't translate it back...
-          LogUtils.logError( "DisplayNotificationService::onHandleIntent", "JSONException", e );
-        }
+      try {
+        ZmanimLocation location = ZmanLocationJSON.fromJSON( intent.getStringExtra( EXTRA_ZMAN_LOCATION ) );
+        handleNotificationAction( context, type, time, location, alertAt );
+      }
+      catch ( Exception e ) {
+        // Something happened and we can't translate it back...
+        LogUtils.logError( "DisplayNotificationService::onHandleWork", "JSONException", e );
       }
     }
   }
 
 
-  private void createNotificationChannle() {
+  private void createNotificationChannel( Context context ) {
 
     // Notification channel should only be created for devices running Android 26
     if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
@@ -127,7 +125,7 @@ public class DisplayNotificationService
       // Sets whether notifications from these Channel should be visible on Lockscreen or not
       notificationChannel.setLockscreenVisibility( Notification.VISIBILITY_PUBLIC );
 
-      NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE) ;
+      NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
       notificationManager.createNotificationChannel( notificationChannel );
     }
   }
@@ -139,6 +137,7 @@ public class DisplayNotificationService
    */
   @SuppressWarnings( "FeatureEnvy" )
   private void handleNotificationAction(
+    final Context         context,
     final Zmanim.Type     zmanType,
     final Calendar        zmanTime,
     final ZmanimLocation  location,
@@ -156,10 +155,10 @@ public class DisplayNotificationService
     final int notificationID = zmanType.ordinal();
 
 
-    Intent openZmanim = new Intent( this, ZmanimActivity.class );
+    Intent openZmanim = new Intent( context, ZmanimActivity.class );
 
     ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
-    String notificationText = getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
+    String notificationText = context.getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
     // Keep this...it's very useful at times...
     if ( BuildConfig.DEBUG ) {
@@ -179,16 +178,16 @@ public class DisplayNotificationService
       return;
     }
 
-    NotificationCompat.Builder builder = new NotificationCompat.Builder( this, NOTIFICATION_CHANNEL_ID );
+    NotificationCompat.Builder builder = new NotificationCompat.Builder( context, NOTIFICATION_CHANNEL_ID );
     builder
-      .setContentTitle( getString( R.string.app_name ) )
+      .setContentTitle( context.getString( R.string.app_name ) )
       .setContentText( notificationText )
       .setSubText( location.getLocationName() )
       .setSmallIcon( R.drawable.ic_stat_zman_notification )
       .setTicker( notificationText )
       .setAutoCancel( true )
       .setDefaults( Notification.DEFAULT_ALL )
-      .setContentIntent( PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
+      .setContentIntent( PendingIntent.getActivity( context, 0, openZmanim, 0 ) );
 
     String tone = zmanCallback.getNotificationTone();
     if ( tone != null ) {
@@ -197,7 +196,7 @@ public class DisplayNotificationService
       builder.setDefaults( ~Notification.DEFAULT_SOUND );
     }
 
-    NotificationManager notificationManager = (NotificationManager)getSystemService( NOTIFICATION_SERVICE );
+    NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
     notificationManager.notify( notificationID, builder.build() );
   }
 

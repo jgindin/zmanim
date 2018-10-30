@@ -1,21 +1,24 @@
 package com.gindin.zmanim.android.service;
 
+import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.BuildConfig;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.support.v4.content.WakefulBroadcastReceiver;
 
 /**
  * Receives broadcast notifications, such as after the device has booted so that we can schedule our next alarm.
  */
 public class ZmanimReceiver
-  extends WakefulBroadcastReceiver {
+  extends BroadcastReceiver {
 
   private static final long                                 DEBUG_ALARM_INTERVAL = 2 * 60 * 1000;
+
+  private static final String                               SCHEDULE_ALARM = "schedule alarm";
 
 
 
@@ -25,15 +28,15 @@ public class ZmanimReceiver
     Intent  intent
   ) {
 
-    Intent startZmanimServiceIntent = ZmanimService.createIntentForSchedulingAlarms( context );
-
     String action = intent.getAction();
-    if ( Intent.ACTION_BOOT_COMPLETED.equals( action ) ) {
-      startZmanimServiceIntent.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
-    }
 
-    startWakefulService( context, startZmanimServiceIntent );
+    ZmanimService.enqueueWork( ZmanimService.Actions.SCHEDULE_ALARM, !SCHEDULE_ALARM.equals( action ), context );
+
     scheduleRepeatingChecks( context );
+
+    if ( BuildConfig.DEBUG ) {
+      LogUtils.logError( "ZmanimReceiver::onReceive", "action: " + action, null );
+    }
   }
 
 
@@ -45,6 +48,7 @@ public class ZmanimReceiver
     // Broadcast back to ourselves in ~30 minutes, which will then start the ZmanimService
     //  as a wakeful service, and it will cause the alerts to be (re)scheduled.
     Intent alarmIntent = new Intent( context, ZmanimReceiver.class );
+    alarmIntent.setAction( SCHEDULE_ALARM );
     PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, alarmIntent, 0 );
 
     // Make sure to reschedule alarms periodically...
@@ -55,7 +59,6 @@ public class ZmanimReceiver
     else {
       alarmInterval = AlarmManager.INTERVAL_HALF_HOUR;
     }
-
 
     AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
     alarmManager.setInexactRepeating( AlarmManager.ELAPSED_REALTIME_WAKEUP,
