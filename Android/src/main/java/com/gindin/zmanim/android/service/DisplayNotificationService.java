@@ -16,6 +16,7 @@ import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -124,6 +125,17 @@ public class DisplayNotificationService
 
       // Sets whether notifications from these Channel should be visible on Lockscreen or not
       notificationChannel.setLockscreenVisibility( Notification.VISIBILITY_PUBLIC );
+
+      String tone = zmanCallback.getNotificationTone();
+      if ( tone != null ) {
+        Uri toneUri = Uri.parse( tone );
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+          .setContentType( AudioAttributes.CONTENT_TYPE_SONIFICATION )
+          .setUsage( AudioAttributes.USAGE_NOTIFICATION )
+          .build();
+        notificationChannel.setSound( toneUri, audioAttributes );
+      }
 
       NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
       notificationManager.createNotificationChannel( notificationChannel );
