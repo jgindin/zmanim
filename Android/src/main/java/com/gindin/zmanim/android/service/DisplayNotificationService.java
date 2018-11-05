@@ -39,7 +39,14 @@ public class DisplayNotificationService
   private static final String                               EXTRA_ZMAN_TYPE = "com.gindin.zmanim.android.service.extra.ZMAN_TYPE";
   private static final String                               EXTRA_ZMAN_ALERT_AT = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
 
-  private static final String                               NOTIFICATION_CHANNEL_ID = "zmanim-notifications";
+  /**
+   * If any change is needed to the channel, you have to create a new channel, as once a channel is created it cannot
+   *  be changed.
+   *
+   * NOTE: Deleting a channel IS VISIBLE TO THE USER. If you look at the Notifications settings for the app, you'll
+   *  see something like, "1 category deleted". :-(
+   */
+  private static final String                               NOTIFICATION_CHANNEL_ID = "zmanim-notifications_2";
 
   private ZmanCallback                                      zmanCallback;
 
@@ -131,7 +138,7 @@ public class DisplayNotificationService
         Uri toneUri = Uri.parse( tone );
 
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
-          .setContentType( AudioAttributes.CONTENT_TYPE_SONIFICATION )
+          .setContentType( AudioAttributes.CONTENT_TYPE_UNKNOWN )
           .setUsage( AudioAttributes.USAGE_NOTIFICATION )
           .build();
         notificationChannel.setSound( toneUri, audioAttributes );
@@ -139,6 +146,12 @@ public class DisplayNotificationService
 
       NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
       notificationManager.createNotificationChannel( notificationChannel );
+
+      // Removing old channels...
+      final NotificationChannel oldChannel = notificationManager.getNotificationChannel( "zmanim-notifications" );
+      if ( oldChannel != null ) {
+        notificationManager.deleteNotificationChannel( "zmanim-notifications" );
+      }
     }
   }
 
@@ -192,20 +205,28 @@ public class DisplayNotificationService
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder( context, NOTIFICATION_CHANNEL_ID );
     builder
+      .setAutoCancel( true )
       .setContentTitle( context.getString( R.string.app_name ) )
       .setContentText( notificationText )
       .setSubText( location.getLocationName() )
       .setSmallIcon( R.drawable.ic_stat_zman_notification )
       .setTicker( notificationText )
-      .setAutoCancel( true )
-      .setDefaults( Notification.DEFAULT_ALL )
+      .setCategory( NotificationCompat.CATEGORY_REMINDER )
+      .setPriority( NotificationCompat.PRIORITY_HIGH )
+      .setVisibility( NotificationCompat.VISIBILITY_PUBLIC )
       .setContentIntent( PendingIntent.getActivity( context, 0, openZmanim, 0 ) );
 
-    String tone = zmanCallback.getNotificationTone();
-    if ( tone != null ) {
-      Uri toneUri = Uri.parse( tone );
-      builder.setSound( toneUri );
-      builder.setDefaults( ~Notification.DEFAULT_SOUND );
+    // TODO: Group the notifications. To support API 24 and lower, we have to create our own summary.
+    //  See https://developer.android.com/training/notify-user/group.
+
+    if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.O ) {
+
+      String tone = zmanCallback.getNotificationTone();
+      if ( tone != null ) {
+        Uri toneUri = Uri.parse( tone );
+        builder.setSound( toneUri );
+        builder.setDefaults( ~Notification.DEFAULT_SOUND );
+      }
     }
 
     NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
