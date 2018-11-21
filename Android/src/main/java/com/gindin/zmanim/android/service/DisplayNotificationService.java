@@ -34,11 +34,6 @@ public class DisplayNotificationService
   
   public static final String                                DISPLAY_NOTIFICATION = "com.gindin.zmanim.android.service.action.NOTIFICATION";
 
-  private static final String                               EXTRA_ZMAN_LOCATION = "com.gindin.zmanim.android.service.extra.ZMAN_LOCATION";
-  private static final String                               EXTRA_ZMAN_TIME = "com.gindin.zmanim.android.service.extra.ZMAN_TIME";
-  private static final String                               EXTRA_ZMAN_TYPE = "com.gindin.zmanim.android.service.extra.ZMAN_TYPE";
-  private static final String                               EXTRA_ZMAN_ALERT_AT = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
-
   /**
    * If any change is needed to the channel, you have to create a new channel, as once a channel is created it cannot
    *  be changed.
@@ -46,11 +41,15 @@ public class DisplayNotificationService
    * NOTE: Deleting a channel IS VISIBLE TO THE USER. If you look at the Notifications settings for the app, you'll
    *  see something like, "1 category deleted". :-(
    */
-  private static final String                               NOTIFICATION_CHANNEL_ID = "zmanim-notifications_2";
+  public static final String                                NOTIFICATION_CHANNEL_ID = "zmanim-notifications_3";
+
+  private static final String                               EXTRA_ZMAN_LOCATION = "com.gindin.zmanim.android.service.extra.ZMAN_LOCATION";
+  private static final String                               EXTRA_ZMAN_TIME = "com.gindin.zmanim.android.service.extra.ZMAN_TIME";
+  private static final String                               EXTRA_ZMAN_TYPE = "com.gindin.zmanim.android.service.extra.ZMAN_TYPE";
+  private static final String                               EXTRA_ZMAN_ALERT_AT = "com.gindin.zmanim.android.service.extra.ZMAN_NOW";
 
   private ZmanCallback                                      zmanCallback;
 
-  private NotificationChannel                               notificationChannel;
 
 
 
@@ -85,7 +84,7 @@ public class DisplayNotificationService
     if ( zmanCallback == null ) {
       zmanCallback = new PrefsBasedZmanCallback( context ) {
         @Override public void scheduleAlert(
-          Zman zman,
+          Zman              zman,
           ZmanimLocation    location,
           Calendar          alertAt
         ) {
@@ -97,10 +96,6 @@ public class DisplayNotificationService
 
     final String action = intent.getAction();
     if ( DISPLAY_NOTIFICATION.equals( action ) ) {
-
-      if ( notificationChannel == null ) {
-        createNotificationChannel( context );
-      }
 
       Zmanim.Type type = Zmanim.Type.valueOf( intent.getStringExtra( EXTRA_ZMAN_TYPE ) );
       Calendar time = (Calendar)intent.getSerializableExtra( EXTRA_ZMAN_TIME );
@@ -118,11 +113,14 @@ public class DisplayNotificationService
   }
 
 
-  private void createNotificationChannel( Context context ) {
+  public static void createNotificationChannel(
+    Context       context,
+    ZmanCallback  zmanCallback
+  ) {
 
     // Notification channel should only be created for devices running Android 26
     if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
-      notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID, "Zmanim Notifications", NotificationManager.IMPORTANCE_HIGH );
+      NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID, "Zmanim Notifications", NotificationManager.IMPORTANCE_HIGH );
 
       // Boolean value to set if lights are enabled for Notifications from this Channel
       notificationChannel.enableLights( true );
@@ -133,25 +131,26 @@ public class DisplayNotificationService
       // Sets whether notifications from these Channel should be visible on Lockscreen or not
       notificationChannel.setLockscreenVisibility( Notification.VISIBILITY_PUBLIC );
 
+      // Older versions of Zmanim (where we had a somewhat simpler time with notifications) the user could just set
+      //  the sound. So, if they did, preserve that...
+      Uri toneUri = null;
       String tone = zmanCallback.getNotificationTone();
       if ( tone != null ) {
-        Uri toneUri = Uri.parse( tone );
-
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-          .setContentType( AudioAttributes.CONTENT_TYPE_UNKNOWN )
-          .setUsage( AudioAttributes.USAGE_NOTIFICATION )
-          .build();
-        notificationChannel.setSound( toneUri, audioAttributes );
+        toneUri = Uri.parse( tone );
       }
+
+      AudioAttributes audioAttributes = new AudioAttributes.Builder()
+        .setContentType( AudioAttributes.CONTENT_TYPE_UNKNOWN )
+        .setUsage( AudioAttributes.USAGE_NOTIFICATION )
+        .build();
+      notificationChannel.setSound( toneUri, audioAttributes );
 
       NotificationManager notificationManager = (NotificationManager)context.getSystemService( Context.NOTIFICATION_SERVICE );
       notificationManager.createNotificationChannel( notificationChannel );
 
       // Removing old channels...
-      final NotificationChannel oldChannel = notificationManager.getNotificationChannel( "zmanim-notifications" );
-      if ( oldChannel != null ) {
-        notificationManager.deleteNotificationChannel( "zmanim-notifications" );
-      }
+      notificationManager.deleteNotificationChannel( "zmanim-notifications" );
+      notificationManager.deleteNotificationChannel( "zmanim-notifications_2" );
     }
   }
 
@@ -219,6 +218,7 @@ public class DisplayNotificationService
     // TODO: Group the notifications. To support API 24 and lower, we have to create our own summary.
     //  See https://developer.android.com/training/notify-user/group.
 
+    // Setting a sound only works on pre-Oreo builds. Oreo and after we have to deal with channels...
     if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.O ) {
 
       String tone = zmanCallback.getNotificationTone();

@@ -162,6 +162,8 @@ public class ZmanimService
 
     if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
       findCurrentLocation();
+
+      DisplayNotificationService.createNotificationChannel( this, zmanCallback );
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       // Nothing to do...

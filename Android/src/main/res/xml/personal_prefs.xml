@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014. Jay R. Gindin
-  -->
+  ~ Copyright (c) 2014 - 2018. Jay R. Gindin
+-->
 
 <android.support.v7.preference.PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android"
