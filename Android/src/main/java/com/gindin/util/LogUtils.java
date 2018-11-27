@@ -55,7 +55,8 @@ public class LogUtils {
     @NotNull String feedback
   ) {
 
-    LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(), null );
+    LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(),
+      (Pair<String, String>[])null );
     new Thread( task ).start();
   }
 
