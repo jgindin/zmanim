@@ -6,10 +6,7 @@ package com.gindin.eventBus;
 
 import com.gindin.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Acts as a communication 'bus', allowing events to be fired to registered handlers.
@@ -37,7 +34,7 @@ public final class EventBus {
    * If we're currently firing an event, then we'll queue newly added handlers here, and they will be added
    *  after the event is done being dispatched.
    */
-  private final List<Pair<EventHandler, Boolean>>           postponedHandlersToAdd = new ArrayList<Pair<EventHandler, Boolean>>();
+  private final List<Pair<EventHandler, Boolean>>           postponedHandlersToAdd = new ArrayList<>();
 
   /**
    * If we're currently firing an event, then we'll queue handlers which have requested to be removed here, and they
@@ -49,7 +46,7 @@ public final class EventBus {
    * If we're currently firing an event, then we'll queue newly fired events here, and they will be fired, in the order
    *  they were received, after the current event is done being dispatched.
    */
-  private final List<Event<?>>                              postponedEvents = new ArrayList<Event<?>>();
+  private final List<Event<?>>                              postponedEvents = new ArrayList<>();
 
   /**
    * A cache of the most recently fired event for a given event type.
@@ -86,8 +83,10 @@ public final class EventBus {
       actuallyAddHandler( handler, withCatchup );
     }
     else {
-      //noinspection AutoBoxing
-      postponedHandlersToAdd.add( new Pair<EventHandler, Boolean>( handler, withCatchup ) );
+      synchronized ( this ) {
+        //noinspection AutoBoxing
+        postponedHandlersToAdd.add( new Pair<>( handler, withCatchup ) );
+      }
     }
   }
 
@@ -96,7 +95,7 @@ public final class EventBus {
    * Removes the specified handler. If an event of this handler's type is currently being fired, this handler may
    *  still receive the event.
    */
-  public <E extends Event<H>, H extends EventHandler<E>> void removeHandler( H handler ) {
+  public synchronized <E extends Event<H>, H extends EventHandler<E>> void removeHandler( H handler ) {
 
     assert handler != null;
 
@@ -110,15 +109,6 @@ public final class EventBus {
   }
 
 
-  /**
-   * Determine if there are any handlers registered for the specified event.
-   */
-  public <E extends Event<H>, H extends EventHandler<E>> boolean hasHandlers( Class<E> eventType ) {
-    List<?> handlers = handlerCollection.get( eventType );
-    return !handlers.isEmpty();
-  }
-
-
   public <H extends EventHandler, E extends Event<H>> void fire( E event ) {
 
     assert null != event;
@@ -129,14 +119,22 @@ public final class EventBus {
       handlePostponed();
     }
     else {
-      postponedEvents.add( event );
+      synchronized ( this ) {
+        postponedEvents.add( event );
+      }
     }
   }
 
 
-  private <H extends EventHandler, E extends Event<H>> void fireEvent( E event ) {
+  private synchronized <H extends EventHandler, E extends Event<H>> void fireEvent( E event ) {
 
     inProgressEvent = event;
+
+    // It's not clear to me, and I'm hoping its a synchronization thing, but I've seen stack traces where the
+    //  event here is null after we've fired an event and we're handling the postponed stuff...
+    if ( event == null ) {
+      return;
+    }
 
     event.preDispatch( eventCacheControl );
 
@@ -157,30 +155,41 @@ public final class EventBus {
   }
 
 
-  private void handlePostponed() {
+  private synchronized void handlePostponed() {
 
-    // First, add/remove handlers...
+    handlePostponedAdds();
+    handlePostponedRemoves();
+    handlePostponedFiring();
+
+    // Have to go around again...
+    if ( !postponedHandlersToAdd.isEmpty() || !postponedHandlersToRemove.isEmpty() || !postponedEvents.isEmpty() ) {
+      handlePostponed();
+    }
+  }
+
+
+  private void handlePostponedAdds() {
+
     for ( Pair<EventHandler, Boolean> pair : postponedHandlersToAdd ) {
       //noinspection AutoUnboxing
       actuallyAddHandler( pair.first, pair.second );
     }
     postponedHandlersToAdd.clear();
+  }
 
+
+  private void handlePostponedRemoves() {
     handlerCollection.removeAll( postponedHandlersToRemove );
     postponedHandlersToRemove.clear();
+  }
 
 
+  private void handlePostponedFiring() {
     // Have to take a copy in case during the firing of one of these events we get more events to postpone...
     ArrayList<Event<?>> copyOfPostponedEvents = new ArrayList<Event<?>>( postponedEvents );
     postponedEvents.clear();
     for ( Event<?> event : copyOfPostponedEvents ) {
       fireEvent( event );
-    }
-
-
-    // Have to go around again...
-    if ( !postponedHandlersToAdd.isEmpty() || !postponedHandlersToRemove.isEmpty() || !postponedEvents.isEmpty() ) {
-      handlePostponed();
     }
   }
 
@@ -190,7 +199,7 @@ public final class EventBus {
   }
 
 
-  private <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
+  private synchronized  <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
 
     handlerCollection.put( handler, handler.getAssociatedType() );
     if ( withCatchup ) {
@@ -207,7 +216,9 @@ public final class EventBus {
 
     @Override
     public void clearCacheForType( Class<? extends Event> type ) {
-      eventCache.remove( type );
+      synchronized ( EventBus.this ) {
+        eventCache.remove( type );
+      }
     }
   }
 
@@ -223,7 +234,7 @@ public final class EventBus {
      * The actual, non-type safe map. The keys are the event class, and the values are a list of handlers for that
      *  event type.
      */
-    private final Map<Class<? extends Event>, List<? extends EventHandler>>   handlerMap = new HashMap<Class<? extends Event>, List<? extends EventHandler>>();
+    private final Map<Class<? extends Event>, List<? extends EventHandler>>   handlerMap = new HashMap<>();
 
 
     public <H extends EventHandler, E extends Event<H>> void put( H handler, Class<E> eventType ) {
@@ -232,7 +243,7 @@ public final class EventBus {
       @SuppressWarnings( "unchecked" )
       List<H> handlers = (List<H>)handlerMap.get( eventType );
       if ( null == handlers ) {
-        handlers = new ArrayList<H>();
+        handlers = new ArrayList<>();
         handlerMap.put( eventType, handlers );
       }
 
@@ -259,7 +270,7 @@ public final class EventBus {
     }
 
 
-    public void removeAll( HandlerCollection source ) {
+    void removeAll( HandlerCollection source ) {
 
       for ( Map.Entry<Class<? extends Event>, List<? extends EventHandler>> entry : source.handlerMap.entrySet() ) {
 
@@ -284,7 +295,7 @@ public final class EventBus {
      * The actual, non-type safe map. The keys are the event class, and the value is the most recent event for that
      *  event type.
      */
-    private final Map<Class<? extends Event>, Event>        eventCache = new HashMap<Class<? extends Event>, Event>();
+    private final Map<Class<? extends Event>, Event>        eventCache = new HashMap<>();
 
 
     public <H extends EventHandler, E extends Event<H>> void put( Class<E> eventType, E cache ) {
