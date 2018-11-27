@@ -71,11 +71,7 @@ public class LastKnownLocationProvider {
 
     lastKnownLocation = toLocation( newLocation );
 
-    if ( currentlyRunningSaveTask != null ) {
-      currentlyRunningSaveTask.cancel( false );
-    }
-
-    currentlyRunningSaveTask = new SaveLocationTask();
+    currentlyRunningSaveTask = new SaveLocationTask( currentlyRunningSaveTask );
     currentlyRunningSaveTask.execute( newLocation );
   }
 
@@ -123,8 +119,21 @@ public class LastKnownLocationProvider {
   private class SaveLocationTask
     extends AsyncTask<ZmanimLocation, Void, Void> {
 
+    private final SaveLocationTask                          lastSaveTask;
+
+
+    SaveLocationTask( SaveLocationTask lastSaveTask ) {
+      this.lastSaveTask = lastSaveTask;
+    }
+
+
     @Override
     protected Void doInBackground( ZmanimLocation... params ) {
+
+      if ( lastSaveTask != null ) {
+        lastSaveTask.cancel( false );
+      }
+
       saveInBackground( params[0] );
 
       return null;
