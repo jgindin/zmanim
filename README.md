@@ -51,4 +51,4 @@ I've also recently switched to using [YouTrack](https://www.jetbrains.com/youtra
 
 
 ### Developers ###
-So far, just one -- jgindin. I am responsible for everything, good & bad. Feature requests are welcome, though my time is somewhat limited...
+Mostly just me, jgindin. I am responsible for everything, good & bad. Feature requests are welcome, though my time is somewhat limited... However, my son (agindin) has also been lending a hand as he can.
