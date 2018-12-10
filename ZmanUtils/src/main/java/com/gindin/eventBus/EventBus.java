@@ -65,6 +65,7 @@ public final class EventBus {
   private Event<?>                                          inProgressEvent = null;
 
 
+
   /**
    * Adds the specified handler. If an event of this handler's type is currently being fired, the newly added handler
    *  will NOT get this event.
@@ -113,15 +114,20 @@ public final class EventBus {
 
     assert null != event;
 
-    if ( null == inProgressEvent ) {
-
-      fireEvent( event );
-      handlePostponed();
+    boolean inProgress;
+    synchronized ( this ) {
+      inProgress = ( inProgressEvent != null );
     }
-    else {
+
+    if ( inProgress ) {
       synchronized ( this ) {
         postponedEvents.add( event );
       }
+    }
+    else {
+
+      fireEvent( event );
+      handlePostponed();
     }
   }
 
