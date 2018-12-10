@@ -155,7 +155,6 @@ public class ZmanimLocationManager {
   private void determineLocation( final RequestLocationUpdateEvent event ) {
 
     cancel();
-    currentAcquirer = null;
 
     boolean useThis = locationManagementPrefs.getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
     if ( useThis ) {
