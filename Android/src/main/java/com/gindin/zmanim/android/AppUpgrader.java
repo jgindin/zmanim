@@ -6,7 +6,7 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.android.location.LastKnownLocationProvider;
+import com.gindin.zmanim.android.location.acquirers.LastKnownLocationProvider;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.*;
@@ -166,23 +166,11 @@ class AppUpgrader {
 
       ZmanimLocation location = ZmanLocationUtil.fromLocation( lastKnownLocation );
 
-      OutputStream output = null;
-      try {
-        output = activity.openFileOutput( LastKnownLocationProvider.NAME, Context.MODE_PRIVATE );
+      try ( OutputStream output = activity.openFileOutput( LastKnownLocationProvider.NAME, Context.MODE_PRIVATE ) ) {
         location.save( output );
       }
       catch ( IOException e ) {
         // Oh well, we'll lose the last known location, and we'll have to acquire the current location.
-      }
-      finally {
-        if ( output != null ) {
-          try {
-            output.close();
-          }
-          catch ( IOException e ) {
-            // too bad...
-          }
-        }
       }
     }
 
@@ -214,28 +202,25 @@ class AppUpgrader {
     final Snackbar snackbar = Snackbar
       .make( zmanimActivity.findViewById( android.R.id.content ), header, Snackbar.LENGTH_INDEFINITE );
 
-    View.OnClickListener listener = new View.OnClickListener() {
-      @Override
-      public void onClick( final View v ) {
+    View.OnClickListener listener = v -> {
 
-        StringBuilder message = new StringBuilder();
-        for ( int noteId : noteIds ) {
-          if ( noteId != -1 ) {
-            message.append( zmanimActivity.getString( noteId ) ).append( "\n\n" );
-          }
+      StringBuilder message = new StringBuilder();
+      for ( int noteId : noteIds ) {
+        if ( noteId != -1 ) {
+          message.append( zmanimActivity.getString( noteId ) ).append( "\n\n" );
         }
-
-        if ( message.length() == 0 ) {
-          return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder( zmanimActivity );
-        builder
-          .setTitle( R.string.upgrade_header )
-          .setMessage( message )
-          .create()
-          .show();
       }
+
+      if ( message.length() == 0 ) {
+        return;
+      }
+
+      AlertDialog.Builder builder = new AlertDialog.Builder( zmanimActivity );
+      builder
+        .setTitle( R.string.upgrade_header )
+        .setMessage( message )
+        .create()
+        .show();
     };
 
 

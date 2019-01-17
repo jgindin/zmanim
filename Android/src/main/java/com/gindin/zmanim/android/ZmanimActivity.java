@@ -531,7 +531,7 @@ public class ZmanimActivity
   private void refresh() {
 
     // Just kick the service and let it do the work...
-    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, this );
+    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, true, this );
   }
 
 

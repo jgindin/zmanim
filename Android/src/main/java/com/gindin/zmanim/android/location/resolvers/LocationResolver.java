@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import android.location.Address;
 import android.os.AsyncTask;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -188,7 +188,8 @@ abstract class LocationResolver {
         eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false ) );
 
         // Let's keep track of how often we use each resolver.
-        LogUtils.logEvent( "LocationResolved", Arrays.asList( new Pair<String, String>( "Resolver", getClass().getSimpleName() ) ) );
+        LogUtils.logEvent( "LocationResolved",
+          Collections.singletonList( new Pair<>( "Resolver", getClass().getSimpleName() ) ) );
       }
     }
   }

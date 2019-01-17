@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanim.android.location;
+package com.gindin.zmanim.android.location.acquirers;
 
 
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * This is a pseudo-location provider that is used to keep track of the last known location. It cannot be a real location
@@ -35,9 +34,7 @@ public class LastKnownLocationProvider {
   LastKnownLocationProvider( Context context ) {
     this.context = context;
 
-    FileInputStream input = null;
-    try {
-      input = context.openFileInput( NAME );
+    try ( FileInputStream input = context.openFileInput( NAME ) ) {
       ZmanimLocation location = ZmanimLocation.load( input );
       lastKnownLocation = toLocation( location );
     }
@@ -45,25 +42,15 @@ public class LastKnownLocationProvider {
       // Oh well, we can't read the last location, so...we just will have to deal ...
 //      LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
     }
-    finally {
-      if ( input != null ) {
-        try {
-          input.close();
-        }
-        catch ( IOException e ) {
-          // Urgh. Oh well.
-        }
-      }
-    }
   }
 
 
-  public Location getLastKnownLocation() {
+  Location getLastKnownLocation() {
     return lastKnownLocation;
   }
 
 
-  public void save( ZmanimLocation newLocation ) {
+  void save( ZmanimLocation newLocation ) {
 
     if ( null == newLocation ) {
       return;
@@ -89,33 +76,6 @@ public class LastKnownLocationProvider {
   }
 
 
-  private void saveInBackground( ZmanimLocation zmanimLocation ) {
-
-    FileOutputStream output = null;
-    try {
-      output = context.openFileOutput( NAME, Context.MODE_PRIVATE );
-
-      zmanimLocation.save( output );
-    }
-    catch ( Exception e ) {
-      // Just means we can't actually save the last location, and next time the user starts we'll have to go
-      //  query from scratch.
-    }
-    finally {
-      if ( output != null ) {
-        try {
-          output.flush();
-          output.getFD().sync();
-          output.close();
-        }
-        catch ( IOException e ) {
-          // Oh well.
-        }
-      }
-    }
-  }
-
-
   private class SaveLocationTask
     extends AsyncTask<ZmanimLocation, Void, Void> {
 
@@ -134,9 +94,21 @@ public class LastKnownLocationProvider {
         lastSaveTask.cancel( false );
       }
 
-      saveInBackground( params[0] );
+      final ZmanimLocation zmanimLocation = params[ 0 ];
+      try ( FileOutputStream output = context.openFileOutput( NAME, Context.MODE_PRIVATE ) ) {
+
+        zmanimLocation.save( output );
+        output.flush();
+        output.getFD().sync();
+      }
+      catch ( Exception e ) {
+        // Just means we can't actually save the last location, and next time the user starts we'll have to go
+        //  query from scratch.
+      }
 
       return null;
     }
+
   }
+
 } // End of LocationProvider class

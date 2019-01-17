@@ -27,8 +27,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
-import android.location.LocationManager;
 import android.os.Build;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
@@ -124,46 +124,58 @@ public class ZmanimService
   @Override
   protected void onHandleWork( @NonNull Intent intent ) {
 
+    // If we don't do this, then when we ask Android's location manager for a location update, it'll throw an exception
+    //  'Can't create handler inside thread Thread[AsyncTask #1,5,main] that has not called Looper.prepare()'
+    if ( Looper.myLooper() == null ) {
+      Looper.prepare();
+    }
+
     final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
-    LocationManager systemLocationManager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
-    locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs, systemLocationManager );
+    if ( locationManager == null ) {
+      locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs );
+    }
 
-    locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ) );
+    if ( locationToAddressConverter == null ) {
+      locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ) );
+    }
 
-    ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
-      @Override public void scheduleAlert(
-        Zman              zman,
-        ZmanimLocation    location,
-        Calendar          alertAt
-      ) {
-        scheduleUserAlert( zman, location, alertAt );
-      }
-
-
-      @Override
-      public void log(
-        String                  where,
-        String                  message,
-        Throwable               error,
-        @Nullable Pair<String, String>... moreInfo
-      ) {
-
-        if ( BuildConfig.DEBUG ) {
-          LogUtils.logError( where, message, error, moreInfo );
+    if ( zmanNotificationScheduler == null ) {
+      ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
+        @Override public void scheduleAlert(
+          Zman              zman,
+          ZmanimLocation    location,
+          Calendar          alertAt
+        ) {
+          scheduleUserAlert( zman, location, alertAt );
         }
-      }
-    };
 
-    zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
 
-    String action = intent.getAction();
+        @Override
+        public void log(
+          String                  where,
+          String                  message,
+          Throwable               error,
+          @Nullable Pair<String, String>... moreInfo
+        ) {
 
-    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
-      findCurrentLocation();
+          if ( BuildConfig.DEBUG ) {
+            LogUtils.logError( where, message, error, moreInfo );
+          }
+        }
+      };
+
+      zmanNotificationScheduler = new ZmanNotificationScheduler( zmanCallback );
 
       DisplayNotificationService.createNotificationChannel( this, zmanCallback );
+    }
+
+    String action = intent.getAction();
+    boolean force = intent.getBooleanExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), false );
+
+    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
+      findCurrentLocation( force );
     }
     else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
       // Nothing to do...
@@ -173,7 +185,7 @@ public class ZmanimService
       // If we already have a handler, then we're already in the process of figuring out where we are to be
       //  able to schedule the next alarm.
       if ( locationAcquiredHandler == null ) {
-        findCurrentLocation();
+        findCurrentLocation( force );
       }
     }
   }
@@ -197,21 +209,27 @@ public class ZmanimService
   }
 
 
-  private void findCurrentLocation() {
+  private void findCurrentLocation( boolean force ) {
 
     // We have to figure out where we are in order to see when the next alarm is.
     locationAcquiredHandler = new LocationAcquiredHandler();
     eventBus.addHandler( locationAcquiredHandler );
 
-    SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-    boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
-
-    RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
-    if ( preferCachedLocation ) {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
+    final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
+    if ( force ) {
+      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
     }
     else {
-      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
+
+      SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+      boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
+
+      if ( preferCachedLocation ) {
+        cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
+      }
+      else {
+        cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
+      }
     }
 
     eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );

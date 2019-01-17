@@ -9,11 +9,13 @@ import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 
 import java.util.*;
 
@@ -65,10 +69,8 @@ public class DynamicLocationAcquirer
   extends LocationAcquirer {
 
 
-  private final ZmanimLocationManager                       locationManager;
-
   /** We have one listener for every location provider. */
-  private final List<AndroidLocationListener>               locationListeners = new ArrayList<AndroidLocationListener>();
+  private final List<AndroidLocationListener>               locationListeners = new ArrayList<>();
 
   /**
    * We need to wait for "some time" before giving up on all the location providers. So, when any of the location
@@ -80,19 +82,32 @@ public class DynamicLocationAcquirer
   /** Do we prefer to receive GPS fixes over other providers? */
   private boolean                                           preferGPS;
 
+  @org.jetbrains.annotations.NotNull
+  private final Context                                     context;
+
+  /** System-wide, actual location manager. */
+  private final LocationManager                             locationManager;
+
+  /**
+   * Used to store & retrieve the last fix we received, but in a way that will survive restarts of the app.
+   */
+  private final LastKnownLocationProvider                   lastKnownLocationProvider;
+
+
 
   public DynamicLocationAcquirer(
     EventBus              eventBus,
     SharedPreferences     locationManagementPrefs,
     SharedPreferences     personalPrefs,
-    ZmanimLocationManager locationManager
+    Context               context
   ) {
 
     super( eventBus, locationManagementPrefs, personalPrefs );
-    this.locationManager = locationManager;
 
-
-    preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
+    this.context = context;
+    this.locationManager = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
+    this.lastKnownLocationProvider = new LastKnownLocationProvider( context );
+    this.preferGPS = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_GPS.name(), false );
   }
 
 
@@ -128,6 +143,15 @@ public class DynamicLocationAcquirer
   }
 
 
+  private boolean hasLocationPermissions() {
+
+    boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+    boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+
+    return hasFineAccess || hasCoarseAccess;
+  }
+
+
   /**
    * Check the various location providers for their last known locations, and try to use the most recent.
    *
@@ -137,15 +161,15 @@ public class DynamicLocationAcquirer
   @NonNull
   private ZmanimLocation getLastKnownLocation() throws SecurityException {
 
-    List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<Pair<Location,Long>>();
+    List<Pair<Location,Long>> lastKnownLocationsWithTime = new ArrayList<>();
 
     boolean noLocationPermissions = false;
 
-    for ( String provider : locationManager.getAllProviders( true ) ) {
+    for ( String provider : getAllProviders( true ) ) {
       Location lastKnownLocation;
 
       try {
-        lastKnownLocation = locationManager.getLastKnownLocation( provider );
+        lastKnownLocation = getLastKnownLocation( provider );
       }
       catch ( SecurityException e ) {
         noLocationPermissions = true;
@@ -153,11 +177,11 @@ public class DynamicLocationAcquirer
       }
 
       if ( null != lastKnownLocation ) {
-        lastKnownLocationsWithTime.add( new Pair<Location,Long>( lastKnownLocation, lastKnownLocation.getTime() ) );
+        lastKnownLocationsWithTime.add( new Pair<>( lastKnownLocation, lastKnownLocation.getTime() ) );
       }
     }
 
-    Pair<Location,Long> bestLocation = new Pair<Location, Long>( null, Long.MIN_VALUE );
+    Pair<Location,Long> bestLocation = new Pair<>( null, Long.MIN_VALUE );
     for ( Pair<Location, Long> pair : lastKnownLocationsWithTime ) {
       if ( pair.second > bestLocation.second ) {
         bestLocation = pair;
@@ -211,6 +235,8 @@ public class DynamicLocationAcquirer
     final TimeZone timeZone = getTimeZoneFromPrefs();
     ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
 
+    lastKnownLocationProvider.save( location );
+
     fireLocationAcquiredEvent( location, false );
   }
 
@@ -246,11 +272,11 @@ public class DynamicLocationAcquirer
     // Now, kick off a timer such that if the timer expires, we're going to assume we can't get any
     //  location fix... Start this BEFORE any listeners get added in case one of the listeners returns
     //  a fix right away...
-    final boolean gpsProviderEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+    final boolean gpsProviderEnabled = isProviderEnabled( LocationManager.GPS_PROVIDER );
     waitingForLocationTimer = new WaitingForLocationTimer( gpsProviderEnabled );
 
     // I'm going to listen to whatever providers might be available.
-    final List<String> providers = locationManager.getAllProviders( false );
+    final List<String> providers = getAllProviders( false );
     for ( String provider : providers ) {
       AndroidLocationListener listener = new AndroidLocationListener( provider );
       locationListeners.add( listener );
@@ -281,6 +307,12 @@ public class DynamicLocationAcquirer
   }
 
 
+  private boolean isProviderEnabled( String providerName ) {
+
+    return !LastKnownLocationProvider.NAME.equals( providerName ) && locationManager.isProviderEnabled( providerName );
+  }
+
+
   private boolean isLocationEnabled() {
 
     if ( null == locationManager ) {
@@ -293,7 +325,7 @@ public class DynamicLocationAcquirer
       return false;
     }
 
-    List<String> providers = locationManager.getAllProviders( true );
+    List<String> providers = getAllProviders( true );
     boolean foundAProvider = false;
     for ( String provider : providers ) {
       if ( locationManager.isProviderEnabled( provider ) ) {
@@ -317,6 +349,50 @@ public class DynamicLocationAcquirer
 
 
   /**
+   * @return The location provider's last known location, null if it doesn't know it.
+   *
+   * @throws SecurityException in case we don't have the location permission.
+   */
+  @Nullable
+  private Location getLastKnownLocation( String providerName ) throws SecurityException {
+
+    if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
+      return lastKnownLocationProvider.getLastKnownLocation();
+    }
+    else if ( hasLocationPermissions() ) {
+      //noinspection MissingPermission
+      return locationManager.getLastKnownLocation( providerName );
+    }
+    else {
+      throw new SecurityException( "No location permissions available" );
+    }
+  }
+
+
+  private List<String> getAllProviders( boolean evenDisabledProviders ) {
+
+    ArrayList<String> providerNames;
+
+    if ( evenDisabledProviders ) {
+      providerNames = new ArrayList<>( locationManager.getAllProviders() );
+
+      // We treat the last known provider as disabled because we don't want someone thinking that they can (or should)
+      //  ask this provider for an update. (We also prevent that in the requestSingleUpdate method, but this is a good
+      //  safe guard.)
+      providerNames.add( LastKnownLocationProvider.NAME );
+    }
+    else {
+      providerNames = new ArrayList<>( locationManager.getProviders( true ) );
+    }
+
+    return providerNames;
+  }
+
+
+
+
+
+  /**
    * Listens to location changes for a given provider.
    */
   private class AndroidLocationListener
@@ -326,7 +402,7 @@ public class DynamicLocationAcquirer
      * Who provides the location updates for this listener? Common identifiers are taken from the
      *  LocationManager class, e.g., LocationManager.NETWORK_PROVIDER or LocationManager.GPS_PROVIDER.
      */
-    public final String                                     providerName;
+    private final String                                    providerName;
 
 
     AndroidLocationListener(
@@ -336,7 +412,10 @@ public class DynamicLocationAcquirer
       this.providerName = providerName;
 
       try {
-        locationManager.requestSingleUpdate( providerName, this );
+        // TODO: I think with the move to JobIntent blah...we preobably can't rely on the service hanging around
+        // TODO:  until we get the location update. I think we need to pass in a PendingIntent instead...
+        // TODO:  Methinks this may require a good amount of refactoring....
+        requestSingleUpdate( providerName, this );
       }
       catch ( SecurityException e ) {
 
@@ -362,8 +441,12 @@ public class DynamicLocationAcquirer
     }
 
 
-    public void cancel() {
-      locationManager.removeUpdates( this );
+    void cancel() {
+
+      if ( hasLocationPermissions() ) {
+        //noinspection MissingPermission
+        locationManager.removeUpdates( this );
+      }
     }
 
 
@@ -380,6 +463,30 @@ public class DynamicLocationAcquirer
 
     public void onProviderDisabled( String provider ) {
       // Inherited from LocationListener...Not used
+    }
+
+
+    /**
+     * Tries to use the specified provider to get a one-time location update.
+     *
+     * @throws SecurityException in case we don't have the location permission.
+     */
+    private void requestSingleUpdate(
+      String            providerName,
+      LocationListener  listener
+    )
+      throws SecurityException {
+
+      //noinspection StatementWithEmptyBody
+      if ( LastKnownLocationProvider.NAME.equals( providerName ) ) {
+        // Don't allow this. It'll prevent the real providers from having a chance....
+      }
+      else if ( hasLocationPermissions() ) {
+        locationManager.requestSingleUpdate( providerName, listener, null );
+      }
+      else {
+        throw new SecurityException( "No location permissions available" );
+      }
     }
 
   } // End of AndroidLocationListener
@@ -439,12 +546,7 @@ public class DynamicLocationAcquirer
 
     private void fireOnUIThread() {
 
-      new Handler( Looper.getMainLooper() ).post( new Runnable() {
-        @Override public void run() {
-          onFailedToGetAnyFixes();
-        }
-      } );
-
+      new Handler( Looper.getMainLooper() ).post( DynamicLocationAcquirer.this::onFailedToGetAnyFixes );
     }
 
   } // End of WaitingForLocationTimer
