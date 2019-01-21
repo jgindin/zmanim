@@ -14,7 +14,7 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 public class HebrewDateChangedEvent
   extends Event<HebrewDateChangedEvent.Handler> {
 
-  public static abstract class Handler implements EventHandler {
+  public static abstract class Handler implements EventHandler<HebrewDateChangedEvent> {
     public abstract void onHebrewDateChanged( HebrewDate newDate );
 
 
