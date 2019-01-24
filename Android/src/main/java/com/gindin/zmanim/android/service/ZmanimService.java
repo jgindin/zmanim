@@ -5,12 +5,8 @@ import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.ZmanimActivity;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
-import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
-import com.gindin.zmanim.android.location.ZmanimLocationManager;
+import com.gindin.zmanim.android.location.*;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
-import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanlib.ZmanCallback;
@@ -59,7 +55,15 @@ public class ZmanimService
     ACTIVITY_STOPPED,
 
     /** Ask the service to schedule the next alarm. May optionally have a boolean extra to force the alarm scheduling. */
-    SCHEDULE_ALARM
+    SCHEDULE_ALARM,
+
+    /** A location request has (finally) come through. */
+    LOCATION_ACQUIRED,
+
+    /** An error occurred when trying to get the location. */
+    LOCATION_NOT_ACQUIRED,
+
+    PLACE_ACQUIRED
   }
 
 
@@ -67,10 +71,18 @@ public class ZmanimService
 
     /** Can be specified with the SCHEDULE_ALARM action to indicate the alarm should be scheduled no matter what. */
     FORCE_SCHEDULE,
+
+    /** Can be specified with LOCATION_ACQUIRED */
+    LOCATION,
+
+    /** Can be specified with the LOCATION_NOT_ACQUIRED */
+    ERROR
   }
 
 
   public static final EventBus                              ZMANIM_EVENT_BUS = new EventBus();
+
+  private static final int                                  JOB_ID = 5170;
 
   private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
@@ -86,28 +98,61 @@ public class ZmanimService
 
 
   public static void enqueueWork(
-    Actions   action,
-    Context   context
+    Context context,
+    Actions action
   ) {
 
-    enqueueWork( action, false, context );
+    enqueueWork( context, action, false );
   }
 
 
   public static void enqueueWork(
+    Context context,
     Actions action,
-    boolean force,
-    Context context
+    boolean force
   ) {
 
     Intent zmanimService = new Intent( context, ZmanimService.class );
     zmanimService.setAction( action.name() );
 
     if ( force ) {
-      zmanimService.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
+      zmanimService.putExtra( ActionParams.FORCE_SCHEDULE.name(), true );
     }
 
-    enqueueWork( context, ZmanimService.class, 5170, zmanimService );
+    enqueueWork( context, ZmanimService.class, JOB_ID, zmanimService );
+  }
+
+
+  public static void enqueueWork(
+    Context         context,
+    ZmanimLocation  location
+  ) {
+
+    Intent zmanimService = new Intent( context, ZmanimService.class );
+
+    if ( location.isResolved() ) {
+      zmanimService.setAction( Actions.LOCATION_ACQUIRED.name() );
+    }
+    else {
+      zmanimService.setAction( Actions.PLACE_ACQUIRED.name() );
+    }
+
+    zmanimService.putExtra( ActionParams.LOCATION.name(), ZmanLocationUtil.toBundle( location ) );
+
+    enqueueWork( context, ZmanimService.class, JOB_ID, zmanimService );
+  }
+
+
+  public static void enqueueWork(
+    Context       context,
+    LocationError error
+  ) {
+
+    Intent zmanimService = new Intent( context, ZmanimService.class );
+    zmanimService.setAction( Actions.LOCATION_NOT_ACQUIRED.name() );
+    zmanimService.putExtra( ActionParams.ERROR.name(), error.toBundle() );
+
+    enqueueWork( context, ZmanimService.class, JOB_ID, zmanimService );
   }
 
 
@@ -171,23 +216,50 @@ public class ZmanimService
       DisplayNotificationService.createNotificationChannel( this, zmanCallback );
     }
 
-    String action = intent.getAction();
     boolean force = intent.getBooleanExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), false );
 
-    if ( Actions.ACTIVITY_STARTED.name().equals( action ) ) {
-      findCurrentLocation( force );
-    }
-    else if ( Actions.ACTIVITY_STOPPED.name().equals( action ) ) {
-      // Nothing to do...
-    }
-    else if ( Actions.SCHEDULE_ALARM.name().equals( action ) ) {
 
-      // If we already have a handler, then we're already in the process of figuring out where we are to be
-      //  able to schedule the next alarm.
-      if ( locationAcquiredHandler == null ) {
-        findCurrentLocation( force );
-      }
+    Actions action;
+    try {
+      action = Actions.valueOf( intent.getAction() );
     }
+    catch ( Exception e ) {
+      //Ignore this request...
+      return;
+    }
+
+    switch ( action ) {
+      case ACTIVITY_STARTED:
+        findCurrentLocation( force );
+        break;
+
+      case ACTIVITY_STOPPED:
+        // Nothing to do...
+        break;
+
+      case LOCATION_ACQUIRED:
+        ZmanimLocation location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
+        eventBus.fire( new LocationAcquiredEvent( location ) );
+        break;
+
+      case LOCATION_NOT_ACQUIRED:
+        eventBus.fire( new LocationAcquiredEvent( LocationError.fromBundle( intent.getBundleExtra( ActionParams.ERROR.name() ) ) ) );
+        break;
+
+      case PLACE_ACQUIRED:
+        location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
+        eventBus.fire( new PlaceAcquiredEvent( location ) );
+        break;
+
+      case SCHEDULE_ALARM:
+        // If we already have a handler, then we're already in the process of figuring out where we are to be
+        //  able to schedule the next alarm.
+        if ( locationAcquiredHandler == null ) {
+          findCurrentLocation( force );
+        }
+        break;
+    }
+
   }
 
 
@@ -220,16 +292,7 @@ public class ZmanimService
       cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
     }
     else {
-
-      SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-      boolean preferCachedLocation = locationManagementPrefs.getBoolean( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name(), true );
-
-      if ( preferCachedLocation ) {
-        cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
-      }
-      else {
-        cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
-      }
+      cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
     }
 
     eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
@@ -339,8 +402,7 @@ public class ZmanimService
 
     @Override
     public void onLocationAcquired(
-      ZmanimLocation  location,
-      boolean         isCachedLocation
+      ZmanimLocation location
     ) {
       handleLocation( location );
     }
@@ -348,10 +410,8 @@ public class ZmanimService
 
     @Override
     public void onError(
-      @NotNull LocationError  error,
-      @NotNull ZmanimLocation lastKnownLocation
+      @NotNull LocationError  error
     ) {
-      handleLocation( lastKnownLocation );
     }
   }
 

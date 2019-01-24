@@ -4,10 +4,11 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import android.content.Context;
 
 /**
  * A resolver of last resort. Will simply resolve the location as itself.
@@ -17,9 +18,9 @@ class PassthroughResolver
 
 
   PassthroughResolver(
-    EventBus eventBus
+    Context context
   ) {
-    super( eventBus );
+    super( context );
   }
 
 

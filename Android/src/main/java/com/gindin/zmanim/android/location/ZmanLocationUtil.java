@@ -2,10 +2,10 @@ package com.gindin.zmanim.android.location;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.TimeZone;
 
@@ -16,7 +16,19 @@ import java.util.TimeZone;
 public class ZmanLocationUtil {
 
 
-  @NotNull
+  private static final String                               ACCURACY = "accuracy";
+  private static final String                               ELEVATION = "elevation";
+  private static final String                               LATITUDE = "latitude";
+  private static final String                               LOCATION_NAME = "location name";
+  private static final String                               LOCATION_TIME = "location time";
+  private static final String                               LONGITUDE = "longitude";
+  private static final String                               PROVIDER_NAME = "provider";
+  private static final String                               TIME_ZONE = "time zone";
+  private static final String                               USER_NAME = "user name";
+
+
+
+  @NonNull
   public static ZmanimLocation fromLocation(
     @Nullable Location location
   ) {
@@ -25,7 +37,7 @@ public class ZmanLocationUtil {
 
 
   @SuppressWarnings( "FeatureEnvy" )
-  @NotNull
+  @NonNull
   public static ZmanimLocation fromLocation(
     @Nullable Location  location,
     @Nullable TimeZone  timeZone
@@ -47,5 +59,53 @@ public class ZmanLocationUtil {
 
     return builder.build();
   }
+
+
+  @NonNull
+  public static Bundle toBundle(
+    @Nullable ZmanimLocation  location
+  ) {
+
+    Bundle bundle = new Bundle();
+
+    if ( location != null ) {
+
+      bundle.putFloat( ACCURACY, location.accuracy );
+      bundle.putDouble( ELEVATION, location.getElevation() );
+      bundle.putDouble( LATITUDE, location.getLatitude() );
+      bundle.putString( LOCATION_NAME, location.getLocationName() );
+      bundle.putLong( LOCATION_TIME, location.locationTime );
+      bundle.putDouble( LONGITUDE, location.getLongitude() );
+      bundle.putString( PROVIDER_NAME, location.providerName );
+      bundle.putSerializable( TIME_ZONE, location.getTimeZone() );
+      bundle.putString( USER_NAME, location.originalUserName );
+    }
+
+    return bundle;
+  }
+
+
+  @NonNull
+  public static ZmanimLocation fromBundle(
+    @NonNull Bundle bundle
+  ) {
+
+    if ( bundle.keySet().isEmpty() )  {
+      return new ZmanimLocation.Builder().invalidLocation();
+    }
+
+    return new ZmanimLocation.Builder()
+      .withAccuracy( bundle.getFloat( ACCURACY ) )
+      .atElevation( bundle.getDouble( ELEVATION ) )
+      .atLatitude( bundle.getDouble( LATITUDE ) )
+      .locationName( bundle.getString( LOCATION_NAME ) )
+      .at( bundle.getLong( LOCATION_TIME ) )
+      .atLongitude( bundle.getDouble( LONGITUDE ) )
+      .fromProvider( bundle.getString( PROVIDER_NAME ) )
+      .inTimeZone( (TimeZone)bundle.getSerializable( TIME_ZONE ) )
+      .userName( bundle.getString( USER_NAME ) )
+      .build();
+  }
+
 
 } // End of ZmanLocationUtil class

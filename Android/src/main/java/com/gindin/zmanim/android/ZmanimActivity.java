@@ -14,8 +14,8 @@ import com.gindin.zmanim.android.display.daily.header.LocationDisplayModule;
 import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
-import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.android.service.ZmanimReceiver;
@@ -25,14 +25,17 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -53,8 +56,6 @@ import java.util.List;
 public class ZmanimActivity
   extends AppCompatActivity {
 
-  private static final int                                  UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID = 1000;
-
   private final List<Presenter<?>>                          loadedPresenters = new ArrayList<>();
 
   /** What date is currently being viewed? */
@@ -62,6 +63,9 @@ public class ZmanimActivity
 
   /** We want to detect swiping. */
   private GestureDetector                                   gestureDetector;
+
+  /** Listen for requests to get a new location. */
+  private RequestLocationUpdateEvent.Handler                locationRequestHandler;
 
   private LocationAcquiredEvent.Handler                     rawLocationAcquiredHandler;
 
@@ -77,9 +81,6 @@ public class ZmanimActivity
 
   // TODO: Inject this
   private MessageDisplayer                                  messageDisplayer = new MessageDisplayer();
-
-  // TODO: Inject this
-  private MessageDisplayerOneButton                         messageDisplayerOneButton = new MessageDisplayerOneButton();
 
   private HebrewDateChangedEvent.Handler                    dateChangedHandler;
 
@@ -154,12 +155,10 @@ public class ZmanimActivity
     determiningLocationDialog = new ProgressDialog( this );
     determiningLocationDialog.setIndeterminate( true );
     determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
-    determiningLocationDialog.show();
 
     eventBus = ZmanimService.ZMANIM_EVENT_BUS;
 
     // todo: Move to background thread????????
-    // TODO: Move things things into Guice modules, etc....
 
     DateDisplayModule dateDisplayModule = new DateDisplayModule( this, eventBus );
     loadedPresenters.add( dateDisplayModule.create() );
@@ -174,6 +173,14 @@ public class ZmanimActivity
 
     dateChangedHandler = new HebrewDateChangeHandler();
     eventBus.addHandler( dateChangedHandler );
+
+    locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
+      @Override
+      public void onLocationUpdateRequested( final RequestLocationUpdateEvent event ) {
+        runOnUiThread( () -> determiningLocationDialog.show() );
+      }
+    };
+    eventBus.addHandler( locationRequestHandler );
 
     // Now start listening for location changes...
     rawLocationAcquiredHandler = new RawLocationAcquiredHandler();
@@ -197,16 +204,15 @@ public class ZmanimActivity
 
   @Override
   protected void onStart() {
-
     super.onStart();
-
-    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, this );
   }
 
 
   @Override
   protected void onResume() {
     super.onResume();
+
+    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STARTED, true );
   }
 
 
@@ -220,7 +226,7 @@ public class ZmanimActivity
   @Override
   protected void onStop() {
 
-    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STOPPED, this );
+    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STOPPED );
 
     super.onStop();
   }
@@ -229,6 +235,7 @@ public class ZmanimActivity
   @Override
   protected void onDestroy() {
 
+    eventBus.removeHandler( locationRequestHandler );
     eventBus.removeHandler( dateChangedHandler );
     eventBus.removeHandler( rawLocationAcquiredHandler );
 
@@ -258,13 +265,28 @@ public class ZmanimActivity
     switch ( activity ) {
 
       case ENABLE_LOCATION_SERVICES:
-        determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
-        determiningLocationDialog.show();
         refresh();
         break;
 
       case PERSONAL_PREFERENCS:
         personalPrefsManager.personalPrefsChanged();
+        break;
+
+      case PLAY_SERVICES_NOT_AVAILABLE:
+        if ( resultCode == Activity.RESULT_CANCELED ) {
+          // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
+          showErrorMessage( getResources().getString( R.string.play_services_not_available ) );
+        }
+        break;
+
+      case REQUEST_CHECK_SETTINGS:
+        if ( resultCode == Activity.RESULT_OK ) {
+          // Nothing to do; we'll ask for a location update in onResume.
+        }
+        else if ( resultCode == Activity.RESULT_CANCELED ) {
+          // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
+          showErrorMessage( getResources().getString( R.string.no_location_management_action ) );
+        }
         break;
     }
   }
@@ -275,7 +297,11 @@ public class ZmanimActivity
     @Nullable LocationError   error
   ) {
 
-    if ( !location.isInvalid ) {
+    if ( ( snackbar != null ) && snackbar.isShownOrQueued() ){
+      snackbar.dismiss();
+    }
+
+    if ( ( location != null ) && !location.isInvalid ) {
       lastKnownLocation = location;
     }
 
@@ -301,18 +327,8 @@ public class ZmanimActivity
   ) {
 
     // Now...why is it we couldn't determine our location?
-    final String errorMessage;
-    final String action;
-    final View.OnClickListener clickListener;
+    String errorMessage;
     switch ( error.errorCode ) {
-
-      case NO_LOCATION_MANAGER_SERVICE:
-        // This is just weird...
-        errorMessage = "No location manager??? Internal error...";
-        action = null;
-        clickListener = null;
-        break;
-
 
       case CANNOT_DETERMINE_LOCATION:
 
@@ -328,38 +344,57 @@ public class ZmanimActivity
         // TODO: Need to add click listener that will invoke a dialog allowing the user to:
         //  1. try obtaining location again; or
         //  2. manually specify where they are
-        action = null;
-        clickListener = null;
         break;
 
-      
+      case NO_PERMISSIONS:
+        ActivityCompat.requestPermissions( ZmanimActivity.this,
+          new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
+          0
+        );
+
+        errorMessage = null;
+        break;
+
       case NO_PROVIDERS:
-        // Well, gosh..looks like the user hasn't turned on location management!
-        errorMessage = getResources().getString( R.string.no_location_management );
-        action = getResources().getString( R.string.no_location_management_action );
-        clickListener = new View.OnClickListener() {
-          public void onClick( View view ) {
-            showDialog( UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID );
-          }
-        };
+      case NO_LOCATION_MANAGER_SERVICE:
+        try {
+          // Show the dialog by calling startResolutionForResult(), and check the result in onActivityResult().
+          error.apiExceptionStatus.startResolutionForResult( this, Activities.REQUEST_CHECK_SETTINGS.ordinal() );
+          errorMessage = null;
+        }
+        catch ( IntentSender.SendIntentException sendEx ) {
+          errorMessage = sendEx.getMessage();
+        }
         break;
-
 
       case BAD_INPUT:
         errorMessage = error.message;
-        action = null;
-        clickListener = null;
         break;
 
+
+      case NO_PLAY_SERVICES:
+        final int result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable( this );
+        GooglePlayServicesUtil
+          .getErrorDialog( result, this, Activities.PLAY_SERVICES_NOT_AVAILABLE.ordinal() )
+          .show();
+
+        errorMessage = null;
+        break;
 
       default:
         // Seems necessary to have a default case, even though we've specified all the cases, so that the
         //  clickListener gets initialized.
         errorMessage = getResources().getString( R.string.unable_to_determine_location_error );
-        action = null;
-        clickListener = null;
     }
 
+
+    if ( errorMessage != null ) {
+      showErrorMessage( errorMessage );
+    }
+  }
+
+
+  private void showErrorMessage( String errorMessage ) {
 
     if ( snackbar == null ) {
       snackbar = Snackbar
@@ -369,16 +404,9 @@ public class ZmanimActivity
       snackbar.setText( errorMessage );
     }
 
-    if ( null == clickListener ) {
-      snackbar.setAction( R.string.action_dismiss, new View.OnClickListener() {
-        @Override public void onClick( View v ) {
-          // Nothing to do.
-        }
-      } );
-    }
-    else {
-      snackbar.setAction( action, clickListener );
-    }
+    snackbar.setAction( R.string.action_dismiss, v -> {
+      // Nothing to do.
+    } );
 
     snackbar.show();
   }
@@ -387,14 +415,7 @@ public class ZmanimActivity
   private void setupViewListeners() {
 
     // Handle gestures. In our case, we're listening for swiping left, right, up & down...
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
-      public boolean onTouch(
-        View        view,
-        MotionEvent event
-      ) {
-        return gestureDetector.onTouchEvent( event );
-      }
-    };
+    View.OnTouchListener touchListener = ( view, event ) -> gestureDetector.onTouchEvent( event );
 
     View mainView = findViewById( R.id.main_layout );
     mainView.setOnTouchListener( touchListener );
@@ -469,9 +490,6 @@ public class ZmanimActivity
       case R.id.about:
       case R.id.help:
         return messageDisplayer.getInstance( this );
-
-      case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
-        return messageDisplayerOneButton.getInstance( this );
     }
 
     return null;
@@ -493,19 +511,6 @@ public class ZmanimActivity
       case R.id.help:
         messageDisplayer.update( R.string.help_header, "com/gindin/zmanim/android/help.html" );
         break;
-
-      case UNABLE_TO_DETERMINE_LOCATION_DIALOG_ID:
-        messageDisplayerOneButton.update( R.string.unable_to_determine_location_header,
-          "com/gindin/zmanim/android/enable_locations.html", R.string.unable_to_determine_location_button,
-          new DialogInterface.OnClickListener() {
-            @Override public void onClick( DialogInterface dialog, int button ) {
-              // Launch the correct settings screen for the user. Saw this example from:
-              //  http://stackoverflow.com/questions/623225/android-go-to-settings-screen
-              startActivityForResult( new Intent( android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS ),
-                Activities.ENABLE_LOCATION_SERVICES.ordinal() );
-            }
-          }
-        );
 
       default:
         // nothing for the other dialogs.
@@ -531,7 +536,7 @@ public class ZmanimActivity
   private void refresh() {
 
     // Just kick the service and let it do the work...
-    ZmanimService.enqueueWork( ZmanimService.Actions.ACTIVITY_STARTED, true, this );
+    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STARTED, true );
   }
 
 
@@ -622,22 +627,14 @@ public class ZmanimActivity
 
     @Override
     public void onLocationAcquired(
-      final ZmanimLocation  location,
-      final boolean         isCachedLocation
+      final ZmanimLocation location
     ) {
 
       LogUtils.setContext( "Location", location.toString() );
 
       runOnUiThread(
-        new Runnable() {
-          @Override
-          public void run() {
-            if ( ( snackbar != null ) && snackbar.isShownOrQueued() ){
-              snackbar.dismiss();
-            }
-
-            rebuildUI( location, null );
-          }
+        () -> {
+          rebuildUI( location, null );
         }
       );
     }
@@ -645,24 +642,13 @@ public class ZmanimActivity
 
     @Override
     public void onError(
-      @NotNull final LocationError  error,
-      @NotNull final ZmanimLocation lastKnownLocation
+      @NotNull final LocationError  error
     ) {
 
       runOnUiThread(
-        new Runnable() {
-          @Override
-          public void run() {
+        () -> {
 
-            if ( error.errorCode == LocationError.Code.NO_PERMISSIONS ) {
-              ActivityCompat.requestPermissions( ZmanimActivity.this,
-                new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
-                0
-              );
-            }
-
-            rebuildUI( lastKnownLocation, error );
-          }
+          rebuildUI( lastKnownLocation, error );
         }
       );
     }

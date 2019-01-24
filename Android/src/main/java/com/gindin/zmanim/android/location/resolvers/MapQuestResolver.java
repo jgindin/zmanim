@@ -1,6 +1,5 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -8,6 +7,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.location.Address;
 
 import java.net.URLEncoder;
@@ -25,9 +25,9 @@ class MapQuestResolver
 
 
   MapQuestResolver(
-    EventBus eventBus
+    Context context
   ) {
-    super( eventBus );
+    super( context );
   }
 
 
@@ -44,8 +44,8 @@ class MapQuestResolver
     List<Pair<String, String>>   params
   ) {
 
-    params.add( new Pair<String, String>( "lat", latitude ) );
-    params.add( new Pair<String, String>( "lng", longitude ) );
+    params.add( new Pair<>( "lat", latitude ) );
+    params.add( new Pair<>( "lng", longitude ) );
   }
 
 
@@ -55,7 +55,7 @@ class MapQuestResolver
     List<Pair<String, String>>  params
   ) {
 
-    params.add( new Pair<String, String>( "location", URLEncoder.encode( location.getLocationName() ) ) );
+    params.add( new Pair<>( "location", URLEncoder.encode( location.getLocationName() ) ) );
   }
 
 
@@ -66,10 +66,10 @@ class MapQuestResolver
     List<Pair<String, String>>  params
   ) {
 
-    params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
-    params.add( new Pair<String, String>( "outFormat", "json" ) );
-    params.add( new Pair<String, String>( "thumbMaps", "false" ) );
-    params.add( new Pair<String, String>( "maxResults", "1" ) );
+    params.add( new Pair<>( "key", BuildConfig.MAPQUEST_KEY ) );
+    params.add( new Pair<>( "outFormat", "json" ) );
+    params.add( new Pair<>( "thumbMaps", "false" ) );
+    params.add( new Pair<>( "maxResults", "1" ) );
   }
 
 

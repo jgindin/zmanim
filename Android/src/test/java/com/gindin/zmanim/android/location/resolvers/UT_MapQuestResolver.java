@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.content.SharedPreferences;
-
 /**
  *
  */
@@ -21,7 +19,7 @@ public class UT_MapQuestResolver {
   public void setup() {
 
     EventBus eventBus = new EventBus();
-    resolver = new MapQuestResolver( eventBus );
+    resolver = new MapQuestResolver( null );
   }
 
   @Test

@@ -60,18 +60,15 @@ class DatePresenterImpl<V extends DateView>
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
       public void onLocationAcquired(
-        ZmanimLocation  location,
-        final boolean   isCachedLocation
+        ZmanimLocation location
       ) {
         handleLocationChanged( location );
       }
 
       @Override
       public void onError(
-        @NotNull LocationError  error,
-        @NotNull ZmanimLocation lastKnownLocation
+        @NotNull LocationError  error
       ) {
-        handleLocationChanged( lastKnownLocation );
       }
     };
     eventBus.addHandler( locationAcquiredHandler, true );

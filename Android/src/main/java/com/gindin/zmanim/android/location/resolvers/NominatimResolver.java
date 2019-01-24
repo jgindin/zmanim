@@ -4,13 +4,13 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.util.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.location.Address;
 
 import java.net.URLEncoder;
@@ -50,9 +50,9 @@ class NominatimResolver
 
 
   NominatimResolver(
-    EventBus eventBus
+    Context context
   ) {
-    super( eventBus );
+    super( context );
   }
 
 
@@ -69,8 +69,8 @@ class NominatimResolver
     List<Pair<String, String>>  params
     ) {
 
-    params.add( new Pair<String, String>( LATITUDE_PARAM, latitude ) );
-    params.add( new Pair<String, String>( LONGITUDE_PARAM, longitude ) );
+    params.add( new Pair<>( LATITUDE_PARAM, latitude ) );
+    params.add( new Pair<>( LONGITUDE_PARAM, longitude ) );
   }
 
 
@@ -80,7 +80,7 @@ class NominatimResolver
     List<Pair<String, String>>  params
   ) {
 
-    params.add( new Pair<String, String>( "q", URLEncoder.encode( location.getLocationName() ) ) );
+    params.add( new Pair<>( "q", URLEncoder.encode( location.getLocationName() ) ) );
   }
 
 
@@ -91,16 +91,16 @@ class NominatimResolver
     List<Pair<String, String>>  params
   ) {
 
-    params.add( new Pair<String, String>( "key", BuildConfig.MAPQUEST_KEY ) );
+    params.add( new Pair<>( "key", BuildConfig.MAPQUEST_KEY ) );
 
     // We want all the details.
-    params.add( new Pair<String, String>( "addressdetails", "1" ) );
+    params.add( new Pair<>( "addressdetails", "1" ) );
 
-    params.add( new Pair<String, String>( "limit", "1" ) );
+    params.add( new Pair<>( "limit", "1" ) );
 
     // We know we always want JSON returned
-    params.add( new Pair<String, String>( "format", "json" ) );
-    params.add( new Pair<String, String>( "email", "zmanim.apps@gmail.com" ) );
+    params.add( new Pair<>( "format", "json" ) );
+    params.add( new Pair<>( "email", "zmanim.apps@gmail.com" ) );
   }
 
 

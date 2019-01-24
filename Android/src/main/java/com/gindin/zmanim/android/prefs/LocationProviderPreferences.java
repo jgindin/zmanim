@@ -4,7 +4,6 @@
 
 package com.gindin.zmanim.android.prefs;
 
-import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 
 import android.content.Context;
@@ -101,15 +100,6 @@ public class LocationProviderPreferences
     }
 
     overridingSystemTimeZone( overrideSystemTimeZone.isChecked() );
-
-    // Only want the "prefer cached location" property for debugging...
-    if ( !BuildConfig.DEBUG ) {
-
-      // See http://stackoverflow.com/questions/2240326/remove-hide-a-preference-from-the-screen
-      PreferenceCategory category = (PreferenceCategory)findPreference( LocationProviders.DYNAMIC_LOCATION_CATEGORY.name() );
-      CheckBoxPreference preferCachedLocation = (CheckBoxPreference)findPreference( LocationProviders.DynamicProviderOptions.PREFER_CACHED_LOCATION.name() );
-      category.removePreference( preferCachedLocation );
-    }
 
     // Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
     prefsBeforeEditing = prefs.getAll();

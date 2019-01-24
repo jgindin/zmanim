@@ -70,7 +70,7 @@ public class LocationToAddressConverter {
       }
     };
 
-    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( ioFactory, eventBus );
+    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( context, eventBus, ioFactory );
     if ( wipeCacheOnStart ) {
       wipeCacheOnStart = false;
       cachedLocationResolver.wipeCache();
@@ -81,18 +81,17 @@ public class LocationToAddressConverter {
 
     orderedResolvers = new ArrayList<>();
     orderedResolvers.add( cachedLocationResolver );
-    orderedResolvers.add( new AndroidResolver( eventBus, geocoder ) );
+    orderedResolvers.add( new AndroidResolver( context, geocoder ) );
 
-    orderedResolvers.add( new MapQuestResolver( eventBus ) );
-    orderedResolvers.add( new NominatimResolver( eventBus ) );
+    orderedResolvers.add( new MapQuestResolver( context ) );
+    orderedResolvers.add( new NominatimResolver( context ) );
 
-    orderedResolvers.add( new PassthroughResolver( eventBus ) );
+    orderedResolvers.add( new PassthroughResolver( context ) );
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
       public void onLocationAcquired(
-        ZmanimLocation  location,
-        boolean         isCachedLocation
+        ZmanimLocation location
       ) {
         handleLocationAcquired( location );
       }
@@ -100,8 +99,7 @@ public class LocationToAddressConverter {
 
       @Override
       public void onError(
-        @NotNull LocationError  error,
-        @NotNull ZmanimLocation lastKnownLocation
+        @NotNull LocationError  error
       ) {
         // Don't do anything.
       }

@@ -5,11 +5,11 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
@@ -26,10 +26,10 @@ class AndroidResolver
 
 
   AndroidResolver(
-    EventBus eventBus,
-    Geocoder geocoder
+    Context   context,
+    Geocoder  geocoder
   ) {
-    super( eventBus );
+    super( context );
     this.geocoder = geocoder;
   }
 

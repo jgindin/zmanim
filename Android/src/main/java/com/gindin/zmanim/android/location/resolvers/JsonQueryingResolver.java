@@ -1,6 +1,5 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -12,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.content.Context;
 import android.location.Address;
 import android.os.Build;
 
@@ -52,9 +52,9 @@ abstract class JsonQueryingResolver
 
 
   JsonQueryingResolver(
-    EventBus eventBus
+    Context context
   ) {
-    super( eventBus );
+    super( context );
   }
 
 

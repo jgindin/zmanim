@@ -9,6 +9,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.io.*;
@@ -43,23 +44,26 @@ class CachedLocationResolver
 
   private final IOFactory                                   ioFactory;
 
+  private final EventBus                                    eventBus;
+
   private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
 
   final LRULocationCache                                    locationCache = new LRULocationCache();
 
 
   CachedLocationResolver(
-    IOFactory ioFactory,
-    EventBus  eventBus
+    Context   context,
+    EventBus  eventBus,
+    IOFactory ioFactory
   ) {
-    super( eventBus );
+    super( context );
+    this.eventBus = eventBus;
     this.ioFactory = ioFactory;
 
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
       public void onLocationAcquired(
-        ZmanimLocation  newLocation,
-        final boolean   isCachedLocation
+        ZmanimLocation newLocation
       ) {
         // This event is fired when (a) a location is acquired and (b) when a location is resolved.
         //  We don't want to cache unresolved locations...there's no point.
@@ -73,8 +77,7 @@ class CachedLocationResolver
 
       @Override
       public void onError(
-        @NotNull LocationError  error,
-        @NotNull ZmanimLocation lastKnownLocation
+        @NotNull LocationError  error
       ) {
         // ignore.
       }

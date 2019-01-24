@@ -4,14 +4,16 @@
 
 package com.gindin.zmanim.android.location.acquirers;
 
-import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.prefs.LocationProviders;
+import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.support.annotation.Nullable;
 
 import java.util.TimeZone;
@@ -33,21 +35,17 @@ import java.util.TimeZone;
  */
 public abstract class LocationAcquirer {
 
-  protected final EventBus                                  eventBus;
-
   protected final SharedPreferences                         locationManagementPrefs;
 
-  private final SharedPreferences                           personalPrefs;
+  protected final Context                                   context;
 
 
-  protected LocationAcquirer(
-    EventBus          eventBus,
+  LocationAcquirer(
     SharedPreferences locationManagementPrefs,
-    SharedPreferences personalPrefs
+    Context           context
   ) {
-    this.eventBus = eventBus;
     this.locationManagementPrefs = locationManagementPrefs;
-    this.personalPrefs = personalPrefs;
+    this.context = context;
   }
 
 
@@ -78,7 +76,7 @@ public abstract class LocationAcquirer {
    * @return The timezone specified by the user in the preferences, or null if we're to use the system time zone.
    */
   @Nullable
-  protected final TimeZone getTimeZoneFromPrefs() {
+  final TimeZone getTimeZoneFromPrefs() {
 
     if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
       return null;
@@ -98,23 +96,28 @@ public abstract class LocationAcquirer {
   }
 
 
-  protected final void fireLocationAcquiredEvent(
-    ZmanimLocation  newLocation,
-    boolean         isCachedLocation
+  final void fireLocationAcquired(
+    Location  newLocation
   ) {
 
-    fireLocationAcquiredEvent( newLocation, isCachedLocation, null );
+    ZmanimLocation zmanimLocation = ZmanLocationUtil.fromLocation( newLocation, getTimeZoneFromPrefs() );
+    ZmanimService.enqueueWork( context, zmanimLocation );
   }
 
 
-  protected final void fireLocationAcquiredEvent(
-    ZmanimLocation  newLocation,
-    final boolean   isCachedLocation,
-    LocationError   error
+  final void fireLocationNotAcquired(
+    LocationError error
   ) {
 
-    eventBus.fire( new LocationAcquiredEvent( newLocation, isCachedLocation, error ) );
+    ZmanimService.enqueueWork( context, error );
   }
 
+
+  final void firePlaceAcquired(
+    ZmanimLocation newPlace
+  ) {
+
+    ZmanimService.enqueueWork( context, newPlace );
+  }
 
 }  // End of LocationProvider class

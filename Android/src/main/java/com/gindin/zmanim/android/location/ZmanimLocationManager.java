@@ -145,15 +145,15 @@ public class ZmanimLocationManager {
     if ( provider == null ) {
       switch ( type ) {
         case FROM_DEVICE:
-          provider = new DynamicLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs, context );
+          provider = new DynamicLocationAcquirer( locationManagementPrefs, context );
           break;
 
         case LAT_LONG_FROM_USER:
-          provider = new LatitudeLongitudeLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
+          provider = new LatitudeLongitudeLocationAcquirer( locationManagementPrefs, context );
           break;
 
         case NAME_FROM_USER:
-          provider = new StaticLocationAcquirer( eventBus, locationManagementPrefs, personalPrefs );
+          provider = new StaticLocationAcquirer( locationManagementPrefs, context );
           break;
 
         default:

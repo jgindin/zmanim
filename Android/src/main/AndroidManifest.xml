@@ -17,6 +17,9 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+  <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+  <uses-feature android:name="android.hardware.location.network" android:required="false" />
+
   <!--
     Permissions necessary to support notifications.
   -->
@@ -74,6 +77,15 @@
         <action android:name="android.intent.action.TIMEZONE_CHANGED" />
       </intent-filter>
     </receiver>
+
+    <!--
+      Service used for when we obtain a location fix from the Fused Location Provider.
+    -->
+    <service
+      android:name=".location.ZmanimLocationService"
+      android:description="@string/ZmanimLocationServiceDescription"
+      android:exported="false"
+    />
 
     <!--
       Service that can run in the background to do things like schedule alarms so we can display notifications.

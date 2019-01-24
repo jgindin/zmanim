@@ -70,21 +70,15 @@ class ZmanimPresenterImpl<V extends ZmanimView>
     locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
       @Override
       public void onLocationAcquired(
-        ZmanimLocation location,
-        final boolean isCachedLocation
+        ZmanimLocation location
       ) {
         handleLocationChanged( location );
       }
 
       @Override
       public void onError(
-        @NotNull LocationError  error,
-        @NotNull ZmanimLocation lastKnownLocation
+        @NotNull LocationError  error
       ) {
-        // Don't bother updating if there's an error AND we already have a location.
-        if ( currentLocation == null ) {
-          handleLocationChanged( lastKnownLocation );
-        }
       }
     };
     eventBus.addHandler( locationAcquiredHandler, true );

@@ -6,8 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.content.SharedPreferences;
-
 /**
  *
  */
@@ -21,7 +19,7 @@ public class UT_NominatimResolver {
   public void setup() {
 
     final EventBus eventBus = new EventBus();
-    resolver = new NominatimResolver( eventBus );
+    resolver = new NominatimResolver( null );
   }
 
   @Test

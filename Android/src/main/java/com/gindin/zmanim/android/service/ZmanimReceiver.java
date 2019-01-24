@@ -30,7 +30,7 @@ public class ZmanimReceiver
 
     String action = intent.getAction();
 
-    ZmanimService.enqueueWork( ZmanimService.Actions.SCHEDULE_ALARM, !SCHEDULE_ALARM.equals( action ), context );
+    ZmanimService.enqueueWork( context, ZmanimService.Actions.SCHEDULE_ALARM, !SCHEDULE_ALARM.equals( action ) );
 
     scheduleRepeatingChecks( context );
 

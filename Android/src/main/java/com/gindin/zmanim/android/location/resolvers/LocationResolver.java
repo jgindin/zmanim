@@ -4,16 +4,16 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import android.content.Context;
 import android.location.Address;
 import android.os.AsyncTask;
 
@@ -30,8 +30,7 @@ import java.util.List;
 abstract class LocationResolver {
 
 
-  protected final EventBus                                  eventBus;
-
+  private final Context                                     context;
 
 
   protected static String addressToLocationName( Address address ) {
@@ -103,9 +102,9 @@ abstract class LocationResolver {
 
 
   LocationResolver(
-    EventBus eventBus
+    Context context
   ) {
-    this.eventBus = eventBus;
+    this.context = context;
   }
 
 
@@ -180,12 +179,11 @@ abstract class LocationResolver {
       }
 
       if ( resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
-        eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false,
-          new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) ) );
+        ZmanimService.enqueueWork( context, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) );
       }
       else {
 
-        eventBus.fire( new LocationAcquiredEvent( resolvedLocation, false ) );
+        ZmanimService.enqueueWork( context, resolvedLocation );
 
         // Let's keep track of how often we use each resolver.
         LogUtils.logEvent( "LocationResolved",

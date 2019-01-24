@@ -152,6 +152,7 @@ dependencies {
   implementation "com.android.support:design:$supportLibsVersion"
   implementation "com.android.support:appcompat-v7:$supportLibsVersion"
   implementation "com.android.support:preference-v7:$supportLibsVersion"
+  implementation "com.google.android.gms:play-services-location:16.0.0"
 
   // ACRA
   implementation 'ch.acra:acra:4.11'

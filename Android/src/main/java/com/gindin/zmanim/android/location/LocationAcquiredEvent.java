@@ -22,13 +22,10 @@ public class LocationAcquiredEvent
 
     /**
      * Invoked when the location has been acquired.
-     *
-     * @param location The location which has been acquired.
-     * @param isCachedLocation Indicate if the location is cached and, therefore, may not be up-to-date.
+     *  @param location The location which has been acquired.
      */
     public abstract void onLocationAcquired(
-      ZmanimLocation  location,
-      boolean         isCachedLocation
+      ZmanimLocation location
     );
 
     /**
@@ -36,11 +33,9 @@ public class LocationAcquiredEvent
      *  cached and not necessarily correct.
      *
      * @param error Describes the error.
-     * @param lastKnownLocation The last known location.
      */
     public abstract void onError(
-      @NotNull LocationError   error,
-      @NotNull ZmanimLocation  lastKnownLocation
+      @NotNull LocationError   error
     );
 
 
@@ -55,8 +50,6 @@ public class LocationAcquiredEvent
   private final ZmanimLocation                              location;
 
 
-  private final boolean                                     isCachedLocation;
-
   /**
    * If there was any error determining the location, then this describes the error. In this case, the location
    *  is actually the last known location
@@ -65,20 +58,17 @@ public class LocationAcquiredEvent
 
 
   public LocationAcquiredEvent(
-    ZmanimLocation  newLocation,
-    boolean         isCachedLocation
+    @NotNull ZmanimLocation newLocation
   ) {
-    this( newLocation, isCachedLocation, null );
+    this.location = newLocation;
+    this.error = null;
   }
 
 
   public LocationAcquiredEvent(
-    @NotNull ZmanimLocation location,
-    boolean                 isCachedLocation,
     @Nullable LocationError error
   ) {
-    this.location = location;
-    this.isCachedLocation = isCachedLocation;
+    this.location = null;
     this.error = error;
   }
 
@@ -86,10 +76,10 @@ public class LocationAcquiredEvent
   @Override
   public void dispatch( Handler handler ) {
     if ( error == null ) {
-      handler.onLocationAcquired( location, isCachedLocation );
+      handler.onLocationAcquired( location );
     }
     else {
-      handler.onError( error, location );
+      handler.onError( error );
     }
   }
 
@@ -98,7 +88,6 @@ public class LocationAcquiredEvent
   public String toString() {
     return "LocationAcquiredEvent{" +
       "location=" + location +
-      "cached=" + isCachedLocation +
       ", error=" + error +
       '}';
   }

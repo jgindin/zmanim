@@ -27,18 +27,6 @@
       android:summary="@string/dynaic_position_pref_summary"
       android:checked="true"
     />
-    <CheckBoxPreference
-      android:key="PREFER_GPS"
-      android:title="@string/prefer_gps_pref_title"
-      android:summary="@string/prefer_gps_pref_summary"
-      android:dependency="DYNAMIC_POSITION"
-    />
-    <CheckBoxPreference
-      android:key="PREFER_CACHED_LOCATION"
-      android:title="@string/prefer_cached_location_pref_title"
-      android:summary="@string/prefer_cached_location_pref_summary"
-      android:dependency="DYNAMIC_POSITION"
-    />
   </PreferenceCategory>
 
 

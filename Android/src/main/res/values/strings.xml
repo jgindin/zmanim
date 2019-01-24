@@ -38,13 +38,9 @@
 
   <string name="zmanim_selector">Select Zman</string>
 
-  <string name="unable_to_determine_location_header">Enable Location</string>
-
-  <string name="unable_to_determine_location_button">Enable</string>
-
   <string name="unable_to_determine_location_error">Unable to update your current location.</string>
-  <string name="no_location_management">Unable to determine your current location.</string>
   <string name="no_location_management_action"><u>Please enable a location source.</u></string>
+  <string name="play_services_not_available">Google Play Services are required in order for Zmanim to discover your location. Please enable or else use a specified place or an explicit latitude and longitude.</string>
   <string name="cannot_determine_location">Unable to determine your current location.</string>
   <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
@@ -56,10 +52,6 @@
   <string name="dynamic_location">Dynamic Location</string>
   <string name="dynamic_position_pref_title">Use My Location</string>
   <string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
-  <string name="prefer_gps_pref_title">Prefer GPS</string>
-  <string name="prefer_gps_pref_summary">If GPS is turned on, it will be preferred over network location.</string>
-  <string name="prefer_cached_location_pref_title">Use Last Location</string>
-  <string name="prefer_cached_location_pref_summary">Start Zmanim with the last known location, without waiting for either GPS or Network location updates.</string>
   <string name="static_location">Specify Your Location</string>
   <string name="use_static_location_pref_title">Use Specified Place</string>
   <string name="use_static_location_pref_summary">Calculate zmanim for a location. (Requires network.)</string>
@@ -136,4 +128,5 @@
 
   <string name="ZmanimServiceDescription">Schedule Zmanim notifications.</string>
   <string name="NotificationServiceDescription">Displays Zmanim notifications.</string>
+  <string name="ZmanimLocationServiceDescription">Receive notification of new locations.</string>
 </resources>

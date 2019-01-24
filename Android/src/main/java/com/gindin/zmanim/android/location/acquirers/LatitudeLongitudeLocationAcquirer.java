@@ -4,18 +4,15 @@
 
 package com.gindin.zmanim.android.location.acquirers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanlib.location.LatitudeLongitudeParser;
-import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.support.annotation.Nullable;
-
-import java.util.TimeZone;
 
 /**
  * Location provider that deals with a static latitude & longitude location.
@@ -25,12 +22,11 @@ public class LatitudeLongitudeLocationAcquirer
 
 
   public LatitudeLongitudeLocationAcquirer(
-    EventBus          eventBus,
     SharedPreferences locationManagementPrefs,
-    SharedPreferences personalPrefs
+    Context           context
   ) {
 
-    super( eventBus, locationManagementPrefs, personalPrefs );
+    super( locationManagementPrefs, context );
   }
 
 
@@ -41,28 +37,19 @@ public class LatitudeLongitudeLocationAcquirer
 
     String error = updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
     if ( error != null ) {
-      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + error ) );
+      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + error ) );
       return;
     }
 
     error = updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
     if ( error != null ) {
-      fireLocationAcquiredEvent( new ZmanimLocation.Builder().invalidLocation(), true, new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + error ) );
+      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + error ) );
       return;
     }
 
     updateElevationFromPrefs( locationManagementPrefs, ourLocation );
 
-    TimeZone timeZone = getTimeZoneFromPrefs();
-
-    ZmanimLocation newLocation = new ZmanimLocation.Builder()
-      .atLatitude( ourLocation.getLatitude() )
-      .atLongitude( ourLocation.getLongitude() )
-      .atElevation( ourLocation.getAltitude() )
-      .inTimeZone( timeZone )
-      .build();
-
-    fireLocationAcquiredEvent( newLocation, false );
+    fireLocationAcquired( ourLocation );
   }
 
 

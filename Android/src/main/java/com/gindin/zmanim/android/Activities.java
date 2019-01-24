@@ -26,6 +26,16 @@ public enum Activities {
   /**
    * When the user wants to edit their personal preferences
    */
-  PERSONAL_PREFERENCS
+  PERSONAL_PREFERENCS,
+
+  /**
+   * When Google Play services are not available and we've set them off to do something about it.
+   */
+  PLAY_SERVICES_NOT_AVAILABLE,
+
+  /**
+   *
+   */
+  REQUEST_CHECK_SETTINGS,
 
 }  // End of Activities class
