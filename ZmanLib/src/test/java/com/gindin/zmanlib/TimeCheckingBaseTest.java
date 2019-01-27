@@ -23,10 +23,10 @@ abstract class TimeCheckingBaseTest
 
 
   protected final void runTest(
-    HebrewDate startDate,
-    HebrewDate endDate,
-    ZmanimLocation location,
-    String expected
+    HebrewDate      startDate,
+    HebrewDate      endDate,
+    ZmanimLocation  location,
+    String          expected
   )
     throws ParseException {
 

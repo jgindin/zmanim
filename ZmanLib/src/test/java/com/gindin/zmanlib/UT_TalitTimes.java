@@ -25,6 +25,38 @@ public class UT_TalitTimes
   extends TimeCheckingBaseTest {
 
 
+  public static void main(
+    String[] args
+  )
+  throws ParseException {
+
+    HebrewDate start = HebrewCalendar.getForDate( 2020, Calendar.JANUARY, 1 );
+    HebrewDate end = HebrewCalendar.getForDate( 2020, Calendar.DECEMBER, 31 );
+
+    ZmanimOutputHelper helper = new ZmanimOutputHelper();
+    String actual = helper.buildOutput( start, end, seattle, Zmanim.Type.Talit, false,
+      new Validator() {
+        @Override
+        public void validateZmanTimes(
+          String time,
+          String timeWithSeconds
+        ) throws ParseException {
+        }
+
+
+        @Override
+        public void validateResult(
+          String expected,
+          String actual
+        ) {
+        }
+      }
+    );
+
+    System.out.println( actual );
+  }
+
+
   @SuppressWarnings( "AutoBoxing" )
   @Test
   public void talitTimesForSeattle() throws ParseException {
