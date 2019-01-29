@@ -35,7 +35,7 @@ class PassthroughResolver
    */
   @Nullable
   @Override
-  protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {
+  protected ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation ) {
     return zmanimLocation;
   }
 
@@ -45,7 +45,7 @@ class PassthroughResolver
    */
   @Nullable
   @Override
-  protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation ) {
+  protected ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation ) {
     return zmanimLocation;
   }
 

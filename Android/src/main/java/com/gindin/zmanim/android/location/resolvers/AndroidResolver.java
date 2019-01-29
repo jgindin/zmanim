@@ -42,7 +42,7 @@ class AndroidResolver
 
   @SuppressWarnings( "FeatureEnvy" )
   @Nullable
-  protected ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation location ) {
+  protected ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation location ) {
 
     if ( !Geocoder.isPresent() ) {
       return null;
@@ -79,7 +79,7 @@ class AndroidResolver
 
   @Nullable
   @SuppressWarnings( "FeatureEnvy" )
-  protected ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation location ) {
+  protected ZmanimLocation resolveFromName( @NotNull ZmanimLocation location ) {
 
     ZmanimLocation resolved = null;
 

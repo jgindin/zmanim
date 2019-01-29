@@ -53,7 +53,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinatesInBackground( location2 );
+    ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinates( location2 );
     Assert.assertEquals( location, resolvedLocation );
   }
 
@@ -78,7 +78,7 @@ public class UT_CachedLocationResolver {
       .build();
 
     // The caching resolver won't know about this other location, so it'll return null.
-    ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinatesInBackground( location2 );
+    ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinates( location2 );
     Assert.assertNull( resolvedLocation );
   }
 

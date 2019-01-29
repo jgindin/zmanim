@@ -58,7 +58,7 @@ public class UT_NominatimResolver {
       .atLongitude( longitude )
       .build();
 
-    ZmanimLocation resolved = resolver.resolveFromCoordinatesInBackground( unresolved );
+    ZmanimLocation resolved = resolver.resolveFromCoordinates( unresolved );
     Assert.assertNotNull( resolved );
     Assert.assertEquals( expectedLocationName, resolved.getLocationName() );
   }
@@ -75,7 +75,7 @@ public class UT_NominatimResolver {
       .locationName( name )
       .build();
 
-    ZmanimLocation resolved = resolver.resolveFromNameInBackground( unresolved );
+    ZmanimLocation resolved = resolver.resolveFromName( unresolved );
     if ( expectedLocationName == null ) {
       Assert.assertNull( resolved );
     }

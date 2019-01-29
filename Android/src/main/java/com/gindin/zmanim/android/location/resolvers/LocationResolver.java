@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
 import android.location.Address;
-import android.os.AsyncTask;
 
 import java.util.Collections;
 import java.util.List;
@@ -119,27 +118,15 @@ abstract class LocationResolver {
     @NotNull final List<LocationResolver>  nextResolvers
   ) {
 
-    AsyncTask<ZmanimLocation, Void, ZmanimLocation> task = new AsyncTask<ZmanimLocation, Void, ZmanimLocation>() {
-      @Override
-      protected ZmanimLocation doInBackground( ZmanimLocation... zmanimLocations ) {
+    final ZmanimLocation zmanimLocation;
+    if ( location.hasCoordinates() ) {
+      zmanimLocation = resolveFromCoordinates( location );
+    }
+    else {
+      zmanimLocation = resolveFromName( location );
+    }
 
-        if ( location.hasCoordinates() ) {
-          return resolveFromCoordinatesInBackground( zmanimLocations[0] );
-        }
-        else {
-          return resolveFromNameInBackground( zmanimLocations[0] );
-        }
-      }
-
-
-      @Override
-      protected void onPostExecute( ZmanimLocation resolvedLocation ) {
-        super.onPostExecute( resolvedLocation );
-        handlePostExecute( location, resolvedLocation, nextResolvers );
-      }
-    };
-
-    task.execute( location );
+    handlePostExecute( location, zmanimLocation, nextResolvers );
   }
 
 
@@ -150,7 +137,7 @@ abstract class LocationResolver {
    * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
    */
   @Nullable
-  protected abstract ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation );
+  protected abstract ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation );
 
   /**
    * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
@@ -159,7 +146,7 @@ abstract class LocationResolver {
    * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
    */
   @Nullable
-  protected abstract ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation );
+  protected abstract ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation );
 
 
   private void handlePostExecute(

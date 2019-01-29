@@ -60,7 +60,7 @@ abstract class JsonQueryingResolver
 
   @Nullable
   @Override
-  protected final ZmanimLocation resolveFromCoordinatesInBackground( @NotNull ZmanimLocation zmanimLocation ) {
+  protected final ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation ) {
 
     List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
     fillInLatitudeAndLongitude( Double.toString( zmanimLocation.getLatitude() ),
@@ -72,7 +72,7 @@ abstract class JsonQueryingResolver
 
   @Nullable
   @Override
-  protected final ZmanimLocation resolveFromNameInBackground( @NotNull ZmanimLocation zmanimLocation ) {
+  protected final ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation ) {
 
     List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
     fillInSearch( zmanimLocation, params );
