@@ -167,6 +167,22 @@ class PlagHaMincha
       }
     );
 
+    zmanim.add(
+      new Zman( "16.1 deg - 7.083 deg ", "Based on the day starting at alot 16.1 degrees and ending at tzait 7.083 degrees.", Zmanim.Type.PlagHaMincha  ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getPlagAlos16Point1ToTzaisGeonim7Point083Degrees() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "16.1 deg - Sunset", "Based on the day starting at alot 16.1 degrees and ending at sunset.", Zmanim.Type.PlagHaMincha  ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getPlagAlosToSunset() );
+        }
+      }
+    );
+
     return zmanim;
   }
 
