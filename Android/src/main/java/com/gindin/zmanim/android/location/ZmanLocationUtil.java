@@ -85,12 +85,13 @@ public class ZmanLocationUtil {
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   @NonNull
   public static ZmanimLocation fromBundle(
-    @NonNull Bundle bundle
+    @Nullable Bundle bundle
   ) {
 
-    if ( bundle.keySet().isEmpty() )  {
+    if ( ( bundle == null ) || bundle.keySet().isEmpty() )  {
       return new ZmanimLocation.Builder().invalidLocation();
     }
 

@@ -15,6 +15,7 @@ import com.gindin.zmanim.android.display.daily.main.ZmanimDisplayModule;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
@@ -55,6 +56,8 @@ import java.util.List;
  */
 public class ZmanimActivity
   extends AppCompatActivity {
+
+  private static final String                               LOCATION_BUNDLE_KEY = "last known location";
 
   private final List<Presenter<?>>                          loadedPresenters = new ArrayList<>();
 
@@ -193,6 +196,14 @@ public class ZmanimActivity
 
     // Make sure that we're going to update our alarms...
     ZmanimReceiver.scheduleRepeatingChecks( this );
+
+    if ( savedInstanceState != null ) {
+      final Bundle bundle = savedInstanceState.getBundle( LOCATION_BUNDLE_KEY );
+      lastKnownLocation = ZmanLocationUtil.fromBundle( bundle );
+      if ( !lastKnownLocation.isInvalid ) {
+        eventBus.fire( new LocationAcquiredEvent( lastKnownLocation ) );
+      }
+    }
   }
 
 
@@ -226,8 +237,6 @@ public class ZmanimActivity
   @Override
   protected void onStop() {
 
-    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STOPPED );
-
     super.onStop();
   }
 
@@ -247,6 +256,15 @@ public class ZmanimActivity
     loadedPresenters.clear();
 
     super.onDestroy();
+  }
+
+
+  @Override
+  protected void onSaveInstanceState( Bundle outState ) {
+    super.onSaveInstanceState( outState );
+
+    final Bundle bundle = ZmanLocationUtil.toBundle( lastKnownLocation );
+    outState.putBundle( LOCATION_BUNDLE_KEY, bundle );
   }
 
 

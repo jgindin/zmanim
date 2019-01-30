@@ -51,9 +51,6 @@ public class ZmanimService
     /** Request the service to start for the Zmanim Activity. */
     ACTIVITY_STARTED,
 
-    /** Notify the service that the Zmanim Activity is done. */
-    ACTIVITY_STOPPED,
-
     /** Ask the service to schedule the next alarm. May optionally have a boolean extra to force the alarm scheduling. */
     SCHEDULE_ALARM,
 
@@ -231,10 +228,6 @@ public class ZmanimService
     switch ( action ) {
       case ACTIVITY_STARTED:
         findCurrentLocation( force );
-        break;
-
-      case ACTIVITY_STOPPED:
-        // Nothing to do...
         break;
 
       case LOCATION_ACQUIRED:
