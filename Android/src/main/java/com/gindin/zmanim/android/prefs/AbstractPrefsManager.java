@@ -13,8 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
 
-import java.util.Map;
-
 /**
  *
  */
@@ -27,11 +25,6 @@ public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? e
 
   protected final SharedPreferences                         prefs;
 
-  /**
-   * Prior to invoking the user's preferences activity, tuck away the current prefs so that if
-   *  the user doesn't make any changes, then we don't do anything upon return.
-   */
-  private Map<String,?>                                     prefsBeforeEditing;
 
 
   protected AbstractPrefsManager(
@@ -64,22 +57,8 @@ public abstract class AbstractPrefsManager<PREF_ACTIVITY_CLASS extends Class<? e
    */
   public void editPrefs() {
 
-    // Capture all the prefs so that if the user doesn't make any changes, we don't do a bunch of recalculations.
-    prefsBeforeEditing = prefs.getAll();
-
     Activities prefActivity = getPrefActivity();
     activity.startActivityForResult( new Intent( activity, prefActivityClass ), prefActivity.ordinal() );
-  }
-
-
-  public void personalPrefsChanged() {
-
-    final Map<String, ?> prefsAfterEditing = prefs.getAll();
-    if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
-      activity.personalPrefsChanged();
-    }
-
-    prefsBeforeEditing = null;
   }
 
 

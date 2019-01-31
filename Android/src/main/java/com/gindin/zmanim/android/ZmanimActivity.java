@@ -292,7 +292,7 @@ public class ZmanimActivity
         break;
 
       case PERSONAL_PREFERENCS:
-        personalPrefsManager.personalPrefsChanged();
+        // Nothing to do.
         break;
 
       case PLAY_SERVICES_NOT_AVAILABLE:
@@ -585,20 +585,6 @@ public class ZmanimActivity
     ZmanimService.enqueueWork( this, ZmanimService.Actions.FIND_LOCATION, true );
   }
 
-
-  public void personalPrefsChanged() {
-
-    Intent zmanimService = new Intent( this, ZmanimService.class );
-    zmanimService.setAction( ZmanimService.Actions.SCHEDULE_ALARM.name() );
-    zmanimService.putExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), true );
-
-    // Have to guard against a bit of a corner case ... the first time the user uses the application,
-    //  if we don't have a location and they go into the preferences, make a change, and then come back,
-    //  we'll want to rebuild the UI; but if we don't have a location, we can't...
-    if ( lastKnownLocation != null ) {
-      rebuildUI( lastKnownLocation, null );
-    }
-  }
 
 
   private class ZmanimGestureListener
