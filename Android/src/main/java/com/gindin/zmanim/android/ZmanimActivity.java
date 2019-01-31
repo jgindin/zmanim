@@ -17,7 +17,9 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
 import com.gindin.zmanim.android.service.ZmanimReceiver;
 import com.gindin.zmanim.android.service.ZmanimService;
@@ -35,12 +37,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -223,7 +228,7 @@ public class ZmanimActivity
   protected void onResume() {
     super.onResume();
 
-    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STARTED, true );
+    refresh();
   }
 
 
@@ -293,7 +298,7 @@ public class ZmanimActivity
       case PLAY_SERVICES_NOT_AVAILABLE:
         if ( resultCode == Activity.RESULT_CANCELED ) {
           // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
-          showErrorMessage( getResources().getString( R.string.play_services_not_available ) );
+          showErrorMessage( R.string.play_services_not_available );
         }
         break;
 
@@ -303,7 +308,7 @@ public class ZmanimActivity
         }
         else if ( resultCode == Activity.RESULT_CANCELED ) {
           // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
-          showErrorMessage( getResources().getString( R.string.no_location_management_action ) );
+          showErrorMessage( R.string.no_location_management_action );
         }
         break;
     }
@@ -314,10 +319,6 @@ public class ZmanimActivity
     ZmanimLocation            location,
     @Nullable LocationError   error
   ) {
-
-    if ( ( snackbar != null ) && snackbar.isShownOrQueued() ){
-      snackbar.dismiss();
-    }
 
     if ( ( location != null ) && !location.isInvalid ) {
       lastKnownLocation = location;
@@ -365,6 +366,7 @@ public class ZmanimActivity
         break;
 
       case NO_PERMISSIONS:
+        // See onRequestPermissionsResult()
         ActivityCompat.requestPermissions( ZmanimActivity.this,
           new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
           0
@@ -412,7 +414,50 @@ public class ZmanimActivity
   }
 
 
+  @Override
+  public void onRequestPermissionsResult(
+    int               requestCode,
+    @NonNull String[] permissions,
+    @NonNull int[]    grantResults
+  ) {
+    super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+
+    // We're only asking for location permissions, so no need to check what permission was asked for.
+    if ( ( grantResults.length > 0 ) && ( grantResults[0] == PackageManager.PERMISSION_GRANTED ) ) {
+      // Don't have to do anything here... We'll get an onResume() which will do the refresh...
+    }
+    else {
+      // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
+      final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+      locationManagementPrefs
+        .edit()
+        .putBoolean( LocationProviders.STATIC_POSITION.name(), true )
+        .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
+        .putString( LocationProviders.StaticProviderOptions.PLACE.name(), "Jerusalem, Israel" )
+        .apply();
+
+      showErrorMessage( getResources().getString( R.string.cannot_use_dynamic_location ), R.string.edit_location,
+        v -> eventBus.fire( new EditLocationPrefsEvent() )
+      );
+    }
+  }
+
+
+  private void showErrorMessage( @StringRes int errorMessage ) {
+    showErrorMessage( getResources().getString( errorMessage ), R.string.action_dismiss, v -> {} );
+  }
+
+
   private void showErrorMessage( String errorMessage ) {
+    showErrorMessage( errorMessage, R.string.action_dismiss, v -> {} );
+  }
+
+
+  private void showErrorMessage(
+    String                          errorMessage,
+    @StringRes int                  actionTitle,
+    @Nullable View.OnClickListener  action
+  ) {
 
     if ( snackbar == null ) {
       snackbar = Snackbar
@@ -422,9 +467,7 @@ public class ZmanimActivity
       snackbar.setText( errorMessage );
     }
 
-    snackbar.setAction( R.string.action_dismiss, v -> {
-      // Nothing to do.
-    } );
+    snackbar.setAction( actionTitle, action );
 
     snackbar.show();
   }
@@ -536,25 +579,10 @@ public class ZmanimActivity
   }
 
 
-  @Override
-  public void onRequestPermissionsResult(
-    int               requestCode,
-    @NonNull String[] permissions,
-    @NonNull int[]    grantResults
-  ) {
-    super.onRequestPermissionsResult( requestCode, permissions, grantResults );
-
-    // We're only asking for location permissions, so no need to check what permission was asked for.
-    if ( ( grantResults.length > 0 ) && ( grantResults[0] == PackageManager.PERMISSION_GRANTED ) ) {
-      refresh();
-    }
-  }
-
-
   private void refresh() {
 
     // Just kick the service and let it do the work...
-    ZmanimService.enqueueWork( this, ZmanimService.Actions.ACTIVITY_STARTED, true );
+    ZmanimService.enqueueWork( this, ZmanimService.Actions.FIND_LOCATION, true );
   }
 
 

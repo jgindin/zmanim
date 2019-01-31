@@ -48,8 +48,8 @@ public class ZmanimService
 
 
   public enum Actions {
-    /** Request the service to start for the Zmanim Activity. */
-    ACTIVITY_STARTED,
+    /** Request to find the current location. */
+    FIND_LOCATION,
 
     /** Ask the service to schedule the next alarm. May optionally have a boolean extra to force the alarm scheduling. */
     SCHEDULE_ALARM,
@@ -226,7 +226,7 @@ public class ZmanimService
     }
 
     switch ( action ) {
-      case ACTIVITY_STARTED:
+      case FIND_LOCATION:
         findCurrentLocation( force );
         break;
 
@@ -270,6 +270,11 @@ public class ZmanimService
       locationToAddressConverter = null;
     }
 
+    if ( locationAcquiredHandler != null ) {
+      eventBus.removeHandler( locationAcquiredHandler );
+      locationAcquiredHandler = null;
+    }
+
     super.onDestroy();
   }
 
@@ -277,8 +282,10 @@ public class ZmanimService
   private void findCurrentLocation( boolean force ) {
 
     // We have to figure out where we are in order to see when the next alarm is.
-    locationAcquiredHandler = new LocationAcquiredHandler();
-    eventBus.addHandler( locationAcquiredHandler );
+    if ( locationAcquiredHandler == null ) {
+      locationAcquiredHandler = new LocationAcquiredHandler();
+      eventBus.addHandler( locationAcquiredHandler );
+    }
 
     final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
     if ( force ) {

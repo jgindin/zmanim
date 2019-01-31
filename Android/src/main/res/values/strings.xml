@@ -41,6 +41,8 @@
   <string name="unable_to_determine_location_error">Unable to update your current location.</string>
   <string name="no_location_management_action"><u>Please enable a location source.</u></string>
   <string name="play_services_not_available">Google Play Services are required in order for Zmanim to discover your location. Please enable or else use a specified place or an explicit latitude and longitude.</string>
+  <string name="cannot_use_dynamic_location">Without the location permission, you will have to provide a location. Click to open the location settings.</string>
+  <string name="edit_location">Edit Location</string>
   <string name="cannot_determine_location">Unable to determine your current location.</string>
   <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
@@ -52,6 +54,9 @@
   <string name="dynamic_location">Dynamic Location</string>
   <string name="dynamic_position_pref_title">Use My Location</string>
   <string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
+  <string name="dynamic_position__requirements">To have Zmanim update based on your location, you will be asked to allow access to your device\'s location. If you
+    choose not to grant that permission, you will have to manually specify your place or your latitude and longitude.
+  </string>
   <string name="static_location">Specify Your Location</string>
   <string name="use_static_location_pref_title">Use Specified Place</string>
   <string name="use_static_location_pref_summary">Calculate zmanim for a location. (Requires network.)</string>
@@ -129,4 +134,5 @@
   <string name="ZmanimServiceDescription">Schedule Zmanim notifications.</string>
   <string name="NotificationServiceDescription">Displays Zmanim notifications.</string>
   <string name="ZmanimLocationServiceDescription">Receive notification of new locations.</string>
+  <string name="ok">OK</string>
 </resources>

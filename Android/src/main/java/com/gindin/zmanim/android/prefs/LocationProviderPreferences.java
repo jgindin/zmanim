@@ -6,11 +6,15 @@ package com.gindin.zmanim.android.prefs;
 
 import com.gindin.zmanim.android.R;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.*;
+import android.support.v4.app.ActivityCompat;
 
 import java.util.*;
 
@@ -125,87 +129,80 @@ public class LocationProviderPreferences
 
   private void configureDependencies() {
 
-    Preference.OnPreferenceChangeListener prefChangeListener = new Preference.OnPreferenceChangeListener() {
+    Preference.OnPreferenceChangeListener prefChangeListener = ( preference, newValue ) -> {
 
-      @SuppressWarnings( { "UnnecessaryUnboxing" } )
-      public boolean onPreferenceChange(
-        Preference  preference,
-        Object      newValue
-      ) {
-
-        if ( handlingPrefChange ) {
-          return true;
-        }
-
-        handlingPrefChange = true;
-
-        try {
-
-          // TODO: I'm trying to make the checkboxes behave like radio buttons. However, neither setting the
-          //  preference value nor setting the field to be checked seems to actually make the checkbox stay
-          //  checked.
-
-          if ( useDynamicPos == preference ) {
-
-            if ( ((Boolean)newValue).booleanValue() ) {
-              dynamicProviderSelected();
-            }
-            else {
-              prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
-            }
-          }
-          else if ( useStaticLocation == preference ) {
-            if ( ((Boolean)newValue).booleanValue() ) {
-              staticProviderSelected();
-            }
-            else {
-              prefs.edit().putBoolean( LocationProviders.STATIC_POSITION.name(), true ).apply();
-            }
-          }
-          else if ( useLatLong == preference ) {
-            if ( ((Boolean)newValue).booleanValue() ) {
-              latLongProviderSelected();
-            }
-            else {
-              prefs.edit().putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true ).apply();
-            }
-          }
-          else if ( place == preference ) {
-            updateSummary( place, newValue.toString(), "" );
-          }
-          else if ( latitude == preference ) {
-            updateSummary( latitude, newValue.toString(), getString( R.string.use_latitude_pref_summary ) );
-          }
-          else if ( longitude == preference ) {
-            updateSummary( longitude, newValue.toString(), getString( R.string.use_longitude_pref_summary ) );
-          }
-          else if ( ( latLongElevation == preference ) || ( placeElevation == preference ) ) {
-            String str = newValue.toString();
-            if ( str.isEmpty() || "0".equals( str ) ) {
-              updateSummary( preference, getString( R.string.sea_level ), ""  );
-            }
-            else {
-              updateSummary( preference, str, getString( R.string.meters ) );
-            }
-          }
-          else if ( overrideSystemTimeZone == preference ) {
-            overridingSystemTimeZone( ((Boolean)newValue).booleanValue() );
-          }
-          else if ( timeZoneAreas == preference ) {
-            updateSummary( timeZoneAreas, "", newValue.toString() );
-            updateLocaleSelector( newValue.toString() );
-          }
-          else if ( timeZoneLocales == preference ) {
-            updateSummary( timeZoneLocales, "", newValue.toString() );
-          }
-        }
-        finally {
-          handlingPrefChange = false;
-        }
-
-        // Returning true will apply the update.
+      if ( handlingPrefChange ) {
         return true;
       }
+
+      handlingPrefChange = true;
+
+      try {
+
+        // TODO: I'm trying to make the checkboxes behave like radio buttons. However, neither setting the
+        //  preference value nor setting the field to be checked seems to actually make the checkbox stay
+        //  checked.
+
+        if ( useDynamicPos == preference ) {
+
+          if ( ((Boolean)newValue).booleanValue() ) {
+            dynamicProviderSelected();
+          }
+          else {
+            prefs.edit().putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true ).apply();
+          }
+        }
+        else if ( useStaticLocation == preference ) {
+          if ( ((Boolean)newValue).booleanValue() ) {
+            staticProviderSelected();
+          }
+          else {
+            prefs.edit().putBoolean( LocationProviders.STATIC_POSITION.name(), true ).apply();
+          }
+        }
+        else if ( useLatLong == preference ) {
+          if ( ( (Boolean)newValue ).booleanValue() ) {
+            latLongProviderSelected();
+          }
+          else {
+            prefs.edit().putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true ).apply();
+          }
+        }
+        else if ( place == preference ) {
+          updateSummary( place, newValue.toString(), "" );
+        }
+        else if ( latitude == preference ) {
+          updateSummary( latitude, newValue.toString(), getString( R.string.use_latitude_pref_summary ) );
+        }
+        else if ( longitude == preference ) {
+          updateSummary( longitude, newValue.toString(), getString( R.string.use_longitude_pref_summary ) );
+        }
+        else if ( ( latLongElevation == preference ) || ( placeElevation == preference ) ) {
+          String str = newValue.toString();
+          if ( str.isEmpty() || "0".equals( str ) ) {
+            updateSummary( preference, getString( R.string.sea_level ), ""  );
+          }
+          else {
+            updateSummary( preference, str, getString( R.string.meters ) );
+          }
+        }
+        else if ( overrideSystemTimeZone == preference ) {
+          overridingSystemTimeZone( ( (Boolean)newValue ).booleanValue() );
+        }
+        else if ( timeZoneAreas == preference ) {
+          updateSummary( timeZoneAreas, "", newValue.toString() );
+          updateLocaleSelector( newValue.toString() );
+        }
+        else if ( timeZoneLocales == preference ) {
+          updateSummary( timeZoneLocales, "", newValue.toString() );
+        }
+      }
+      finally {
+        handlingPrefChange = false;
+      }
+
+      // Returning true will apply the update.
+      return true;
     };
 
     useDynamicPos.setOnPreferenceChangeListener( prefChangeListener );
@@ -295,6 +292,16 @@ public class LocationProviderPreferences
 
 
   private void dynamicProviderSelected() {
+
+    boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+    boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+    if ( !hasFineAccess && !hasCoarseAccess ) {
+      new AlertDialog.Builder( this )
+        .setTitle( R.string.dynamic_position_pref_title )
+        .setMessage( R.string.dynamic_position__requirements )
+        .setPositiveButton( R.string.ok, null )
+        .show();
+    }
 
     useStaticLocation.setChecked( false );
     useLatLong.setChecked( false );

@@ -76,7 +76,7 @@ public class DynamicLocationAcquirer
 
   private boolean checkRequirements() {
 
-    boolean hasFineAccess = ( ActivityCompat .checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
+    boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
     boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
     if ( !hasFineAccess && !hasCoarseAccess ) {
 
