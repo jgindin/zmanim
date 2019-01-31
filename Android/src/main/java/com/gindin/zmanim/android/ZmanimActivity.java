@@ -298,17 +298,20 @@ public class ZmanimActivity
       case PLAY_SERVICES_NOT_AVAILABLE:
         if ( resultCode == Activity.RESULT_CANCELED ) {
           // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
-          showErrorMessage( R.string.play_services_not_available );
+          handleNoLocationPermissions();
+          showErrorMessage( getResources().getString( R.string.play_services_not_available ), R.string.edit_location,
+            v -> eventBus.fire( new EditLocationPrefsEvent() )
+          );
         }
         break;
 
       case REQUEST_CHECK_SETTINGS:
-        if ( resultCode == Activity.RESULT_OK ) {
-          // Nothing to do; we'll ask for a location update in onResume.
-        }
-        else if ( resultCode == Activity.RESULT_CANCELED ) {
+        if ( resultCode != Activity.RESULT_OK ) {
           // Tell the user they'll have to choose either a specific place or a lat/long, but we can't use their location...
-          showErrorMessage( R.string.no_location_management_action );
+          handleNoLocationPermissions();
+          showErrorMessage( getResources().getString( R.string.no_location_management_action ), R.string.edit_location,
+            v -> eventBus.fire( new EditLocationPrefsEvent() )
+          );
         }
         break;
     }
@@ -423,23 +426,27 @@ public class ZmanimActivity
     super.onRequestPermissionsResult( requestCode, permissions, grantResults );
 
     // We're only asking for location permissions, so no need to check what permission was asked for.
-    if ( ( grantResults.length > 0 ) && ( grantResults[0] == PackageManager.PERMISSION_GRANTED ) ) {
-      // Don't have to do anything here... We'll get an onResume() which will do the refresh...
-    }
-    else {
-      // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
-      final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-      locationManagementPrefs
-        .edit()
-        .putBoolean( LocationProviders.STATIC_POSITION.name(), true )
-        .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
-        .putString( LocationProviders.StaticProviderOptions.PLACE.name(), "Jerusalem, Israel" )
-        .apply();
-
+    //  So, if we were granted permission, we don't have to do anything here... We'll get an onResume() which will do
+    //  the refresh...
+    if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
+      handleNoLocationPermissions();
       showErrorMessage( getResources().getString( R.string.cannot_use_dynamic_location ), R.string.edit_location,
         v -> eventBus.fire( new EditLocationPrefsEvent() )
       );
     }
+  }
+
+
+  private void handleNoLocationPermissions() {
+
+    // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
+    final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+    locationManagementPrefs
+      .edit()
+      .putBoolean( LocationProviders.STATIC_POSITION.name(), true )
+      .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
+      .putString( LocationProviders.StaticProviderOptions.PLACE.name(), "Jerusalem, Israel" )
+      .apply();
   }
 
 

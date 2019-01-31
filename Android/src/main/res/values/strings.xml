@@ -39,7 +39,9 @@
   <string name="zmanim_selector">Select Zman</string>
 
   <string name="unable_to_determine_location_error">Unable to update your current location.</string>
-  <string name="no_location_management_action"><u>Please enable a location source.</u></string>
+  <string name="no_location_management_action">To use your location, enable Google\'s location service when prompted.
+    Otherwise, manually provide your location.
+  </string>
   <string name="play_services_not_available">Google Play Services are required in order for Zmanim to discover your location. Please enable or else use a specified place or an explicit latitude and longitude.</string>
   <string name="cannot_use_dynamic_location">Without the location permission, you will have to provide a location. Click to open the location settings.</string>
   <string name="edit_location">Edit Location</string>
