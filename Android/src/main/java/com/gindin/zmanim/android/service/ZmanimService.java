@@ -160,17 +160,7 @@ public class ZmanimService
     final Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     Thread.setDefaultUncaughtExceptionHandler( exceptionHandler );
-  }
 
-
-  @Override
-  protected void onHandleWork( @NonNull Intent intent ) {
-
-    // If we don't do this, then when we ask Android's location manager for a location update, it'll throw an exception
-    //  'Can't create handler inside thread Thread[AsyncTask #1,5,main] that has not called Looper.prepare()'
-    if ( Looper.myLooper() == null ) {
-      Looper.prepare();
-    }
 
     final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
@@ -213,6 +203,46 @@ public class ZmanimService
       DisplayNotificationService.createNotificationChannel( this, zmanCallback );
     }
 
+
+    if ( locationAcquiredHandler == null ) {
+      locationAcquiredHandler = new LocationAcquiredHandler();
+      eventBus.addHandler( locationAcquiredHandler );
+    }
+  }
+
+
+  @Override
+  public void onDestroy() {
+
+    // Might be null if we get stopped before we're fully started...
+    if ( null != locationManager ) {
+      locationManager.onStop();
+      locationManager = null;
+    }
+
+    if ( locationToAddressConverter != null ) {
+      locationToAddressConverter.onDestroy();
+      locationToAddressConverter = null;
+    }
+
+    if ( locationAcquiredHandler != null ) {
+      eventBus.removeHandler( locationAcquiredHandler );
+      locationAcquiredHandler = null;
+    }
+
+    super.onDestroy();
+  }
+
+
+  @Override
+  protected void onHandleWork( @NonNull Intent intent ) {
+
+    // If we don't do this, then when we ask Android's location manager for a location update, it'll throw an exception
+    //  'Can't create handler inside thread Thread[AsyncTask #1,5,main] that has not called Looper.prepare()'
+    if ( Looper.myLooper() == null ) {
+      Looper.prepare();
+    }
+
     boolean force = intent.getBooleanExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), false );
 
 
@@ -245,48 +275,16 @@ public class ZmanimService
         break;
 
       case SCHEDULE_ALARM:
-        // If we already have a handler, then we're already in the process of figuring out where we are to be
-        //  able to schedule the next alarm.
-        if ( locationAcquiredHandler == null ) {
-          findCurrentLocation( force );
-        }
+        findCurrentLocation( force );
         break;
     }
 
   }
 
 
-  @Override
-  public void onDestroy() {
-
-    // Might be null if we get stopped before we're fully started...
-    if ( null != locationManager ) {
-      locationManager.onStop();
-      locationManager = null;
-    }
-
-    if ( locationToAddressConverter != null ) {
-      locationToAddressConverter.onDestroy();
-      locationToAddressConverter = null;
-    }
-
-    if ( locationAcquiredHandler != null ) {
-      eventBus.removeHandler( locationAcquiredHandler );
-      locationAcquiredHandler = null;
-    }
-
-    super.onDestroy();
-  }
-
-
   private void findCurrentLocation( boolean force ) {
 
     // We have to figure out where we are in order to see when the next alarm is.
-    if ( locationAcquiredHandler == null ) {
-      locationAcquiredHandler = new LocationAcquiredHandler();
-      eventBus.addHandler( locationAcquiredHandler );
-    }
-
     final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage;
     if ( force ) {
       cachedLocationUsage = RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
@@ -338,9 +336,9 @@ public class ZmanimService
     // This rather convoluted mechanism of identifying the pending intent is necessary so that we don't
     //  wind up replacing an intent just because we wind up scheduling a second alarm for the same
     //  zman type on a different day...
+    //noinspection MagicNumber
     int intentId = ( ( (byte)alertAt.get( Calendar.DAY_OF_MONTH ) << 8 ) | ( zman.type.ordinal() & 0xFF ) );
 
-    //noinspection MagicNumber
     PendingIntent pendingIntent = PendingIntent.getBroadcast( this, intentId,
 
       DisplayNotificationService.createIntentForService( this, zman, location, alertAt ),
