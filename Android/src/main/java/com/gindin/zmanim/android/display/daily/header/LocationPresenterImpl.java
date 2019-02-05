@@ -12,6 +12,7 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviderPreferences;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -55,7 +56,8 @@ class LocationPresenterImpl<V extends LocationView>
 
       @Override
       public void onError(
-        @NotNull LocationError  error
+        @NotNull  LocationError   error,
+        @Nullable ZmanimLocation  location
       ) {
       }
     };

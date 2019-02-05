@@ -2,11 +2,14 @@ package com.gindin.zmanim.android.location;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.TimeZone;
 
 /**
@@ -15,6 +18,8 @@ import java.util.TimeZone;
  */
 public class ZmanLocationUtil {
 
+
+  private static final String                               SAVED_LOCATION_FILENAME = "LastKnownLocationProvider";
 
   private static final String                               ACCURACY = "accuracy";
   private static final String                               ELEVATION = "elevation";
@@ -108,5 +113,45 @@ public class ZmanLocationUtil {
       .build();
   }
 
+
+  public static void save(
+    Context         context,
+    ZmanimLocation  location
+  ) {
+
+    if ( location == null ) {
+      return;
+    }
+
+    try ( FileOutputStream output = context.openFileOutput( SAVED_LOCATION_FILENAME, Context.MODE_PRIVATE ) ) {
+
+      location.save( output );
+      output.flush();
+      output.getFD().sync();
+    }
+    catch ( Exception e ) {
+      // Just means we can't actually save the last location, and next time the user starts we'll have to go
+      //  query from scratch.
+    }
+  }
+
+
+  public static ZmanimLocation load(
+    Context context
+  ) {
+
+    ZmanimLocation location;
+
+    try ( FileInputStream input = context.openFileInput( SAVED_LOCATION_FILENAME ) ) {
+      location = ZmanimLocation.load( input );
+    }
+    catch ( Exception e ) {
+      // Oh well, we can't read the last location, so...we just will have to deal ...
+//      LogUtils.logError( "LKLP::ctor", "Couldn't read last location", e );
+      location = new ZmanimLocation.Builder().invalidLocation();
+    }
+
+    return location;
+  }
 
 } // End of ZmanLocationUtil class

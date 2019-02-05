@@ -5,7 +5,9 @@
 package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.ZmanimLocationService;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -80,14 +82,14 @@ public class DynamicLocationAcquirer
     boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
     if ( !hasFineAccess && !hasCoarseAccess ) {
 
-      fireNoPermissions();
+      fireLocationNotAcquired( new LocationError( LocationError.Code.NO_PERMISSIONS ), ZmanLocationUtil.load( context ) );
       return true;
     }
 
     final int result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable( context );
     if ( result != ConnectionResult.SUCCESS ) {
 
-      onFailedToGetAnyFixes( LocationError.Code.NO_PLAY_SERVICES, null );
+      fireLocationNotAcquired( new LocationError( LocationError.Code.NO_PLAY_SERVICES ), ZmanLocationUtil.load( context ) );
       return true;
     }
     return false;
@@ -116,7 +118,11 @@ public class DynamicLocationAcquirer
         final long fixTime = location.getTime();
         if ( System.currentTimeMillis() - fixTime < MAX_LAST_LOCATION_AGE ) {
 
-          fireLocationAcquired( location );
+          final ZmanimLocation newLocation = ZmanLocationUtil.fromLocation( location, getTimeZoneFromPrefs() );
+
+          // See the save() in ZmanimLocationService after we have to acquire the location...
+          ZmanLocationUtil.save( context, newLocation );
+          fireLocationAcquired( newLocation );
         }
         else {
           acquireLocation();
@@ -125,13 +131,7 @@ public class DynamicLocationAcquirer
 
     } );
 
-    lastLocationTask.addOnFailureListener( e -> {
-
-      if ( e instanceof ResolvableApiException ) {
-        // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
-        onFailedToGetAnyFixes( LocationError.Code.NO_LOCATION_MANAGER_SERVICE, (ResolvableApiException)e );
-      }
-    } );
+    lastLocationTask.addOnFailureListener( this::onFailedToGetAnyFixes );
 
   }
 
@@ -170,11 +170,7 @@ public class DynamicLocationAcquirer
       .addOnFailureListener( e -> {
 
         pendingIntent = null;
-
-        if ( e instanceof ResolvableApiException ) {
-          // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
-          onFailedToGetAnyFixes( LocationError.Code.NO_LOCATION_MANAGER_SERVICE, (ResolvableApiException)e );
-        }
+        onFailedToGetAnyFixes( e );
       } );
 
   }
@@ -198,17 +194,18 @@ public class DynamicLocationAcquirer
   }
 
 
+  private void onFailedToGetAnyFixes( @Nullable Exception ex ) {
 
+    ZmanimLocation lastKnownLocation = ZmanLocationUtil.load( context );
 
-  private void onFailedToGetAnyFixes( LocationError.Code errorCode, @Nullable ResolvableApiException ex ) {
-
-    // Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
-    fireLocationNotAcquired( new LocationError( errorCode, ex)  );
-  }
-
-
-  private void fireNoPermissions() {
-    fireLocationNotAcquired( new LocationError( LocationError.Code.NO_PERMISSIONS ) );
+    if ( ex instanceof ResolvableApiException ) {
+      // Well, we're being run, so let someone know that they'll have to use a fall-back mechanism.
+      fireLocationNotAcquired( new LocationError( LocationError.Code.NO_LOCATION_MANAGER_SERVICE, (ResolvableApiException)ex ),
+        lastKnownLocation );
+    }
+    else {
+      fireLocationNotAcquired( new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), lastKnownLocation );
+    }
   }
 
 

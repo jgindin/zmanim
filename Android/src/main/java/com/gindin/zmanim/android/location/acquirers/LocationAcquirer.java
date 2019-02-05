@@ -6,14 +6,12 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
-import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.support.annotation.Nullable;
 
 import java.util.TimeZone;
@@ -97,19 +95,19 @@ public abstract class LocationAcquirer {
 
 
   final void fireLocationAcquired(
-    Location  newLocation
+    ZmanimLocation newLocation
   ) {
 
-    ZmanimLocation zmanimLocation = ZmanLocationUtil.fromLocation( newLocation, getTimeZoneFromPrefs() );
-    ZmanimService.enqueueWork( context, zmanimLocation );
+    ZmanimService.enqueueWork( context, newLocation );
   }
 
 
   final void fireLocationNotAcquired(
-    LocationError error
+    LocationError             error,
+    @Nullable ZmanimLocation  lastKnownLocation
   ) {
 
-    ZmanimService.enqueueWork( context, error );
+    ZmanimService.enqueueWork( context, error, lastKnownLocation );
   }
 
 

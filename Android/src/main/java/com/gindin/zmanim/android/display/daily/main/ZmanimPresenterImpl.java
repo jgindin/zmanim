@@ -17,6 +17,7 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -77,7 +78,8 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
       @Override
       public void onError(
-        @NotNull LocationError  error
+        @NotNull  LocationError   error,
+        @Nullable ZmanimLocation  location
       ) {
       }
     };

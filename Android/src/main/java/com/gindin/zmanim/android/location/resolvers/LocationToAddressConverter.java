@@ -11,6 +11,7 @@ import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
 import android.location.Geocoder;
@@ -99,7 +100,8 @@ public class LocationToAddressConverter {
 
       @Override
       public void onError(
-        @NotNull LocationError  error
+        @NotNull  LocationError   error,
+        @Nullable ZmanimLocation  location
       ) {
         // Don't do anything.
       }

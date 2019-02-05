@@ -141,13 +141,18 @@ public class ZmanimService
 
 
   public static void enqueueWork(
-    Context       context,
-    LocationError error
+    Context                   context,
+    LocationError             error,
+    @Nullable ZmanimLocation  lastKnownLocation
   ) {
 
     Intent zmanimService = new Intent( context, ZmanimService.class );
     zmanimService.setAction( Actions.LOCATION_NOT_ACQUIRED.name() );
     zmanimService.putExtra( ActionParams.ERROR.name(), error.toBundle() );
+
+    if ( lastKnownLocation != null ) {
+      zmanimService.putExtra( ActionParams.LOCATION.name(), ZmanLocationUtil.toBundle( lastKnownLocation ) );
+    }
 
     enqueueWork( context, ZmanimService.class, JOB_ID, zmanimService );
   }
@@ -255,18 +260,22 @@ public class ZmanimService
       return;
     }
 
+    ZmanimLocation location;
+
     switch ( action ) {
       case FIND_LOCATION:
         findCurrentLocation( force );
         break;
 
       case LOCATION_ACQUIRED:
-        ZmanimLocation location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
+        location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
         eventBus.fire( new LocationAcquiredEvent( location ) );
         break;
 
       case LOCATION_NOT_ACQUIRED:
-        eventBus.fire( new LocationAcquiredEvent( LocationError.fromBundle( intent.getBundleExtra( ActionParams.ERROR.name() ) ) ) );
+        location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
+        final LocationError locationError = LocationError.fromBundle( intent.getBundleExtra( ActionParams.ERROR.name() ) );
+        eventBus.fire( new LocationAcquiredEvent( locationError, location ) );
         break;
 
       case PLACE_ACQUIRED:
@@ -408,7 +417,8 @@ public class ZmanimService
 
     @Override
     public void onError(
-      @NotNull LocationError  error
+      @NotNull  LocationError   error,
+      @Nullable ZmanimLocation  location
     ) {
     }
   }

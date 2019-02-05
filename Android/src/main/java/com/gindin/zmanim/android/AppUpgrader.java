@@ -6,25 +6,18 @@ package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.zmanim.android.location.acquirers.LastKnownLocationProvider;
-import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.*;
-import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Hanetz;
 import com.gindin.zmanlib.zman.Shkia;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 
 /**
@@ -51,7 +44,6 @@ class AppUpgrader {
 
         int personalPrefsUpgradeId = personalPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
         int zmanPrefsUpgradeId = zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
-        upgradeLocationPrefs( zmanimActivity, lastKnownCodeVersion );
         upgradeElevationPref( zmanimActivity, lastKnownCodeVersion );
 
         int thisUpgradeId = -1;
@@ -67,8 +59,8 @@ class AppUpgrader {
       catch ( Throwable e ) {
         //noinspection unchecked
         LogUtils.logError( "doUpgrade", "", e,
-          new Pair<String, String>( "ver", Integer.toString( thisCodeVersion ) ),
-          new Pair<String, String>( "old", Integer.toString( lastKnownCodeVersion ) )
+          new Pair<>( "ver", Integer.toString( thisCodeVersion ) ),
+          new Pair<>( "old", Integer.toString( lastKnownCodeVersion ) )
         );
       }
     }
@@ -122,58 +114,6 @@ class AppUpgrader {
 
       LocationToAddressConverter.wipeCacheOnStart = true;
     }
-  }
-
-
-  @SuppressWarnings( "FeatureEnvy" )
-  private static void upgradeLocationPrefs(
-    ZmanimActivity    activity,
-    int               lastKnownCodeVersion
-  ) {
-
-    //noinspection MagicNumber
-    if ( lastKnownCodeVersion > 230 ) {
-      return;
-    }
-
-    Location lastKnownLocation;
-
-    SharedPreferences locationPreferences = activity.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-    String lastFixProviderName = locationPreferences.getString( "lastFixProviderName", null );
-    if ( null != lastFixProviderName ) {
-
-      lastKnownLocation = new Location( lastFixProviderName );
-      if ( locationPreferences.getBoolean( "lastFixHasAccuracy", false ) ) {
-        lastKnownLocation.setAccuracy( locationPreferences.getFloat( "lastFixAccuracy", 0 ) );
-      }
-
-      if ( locationPreferences.getBoolean( "lastfixHasAltitude", false ) ) {
-        lastKnownLocation.setAltitude( Double.parseDouble( locationPreferences.getString( "lastfixAltitude", "0" ) ) );
-      }
-
-      if ( locationPreferences.getBoolean( "lastfixHasBearing", false ) ) {
-        lastKnownLocation.setBearing( locationPreferences.getFloat( "lastfixBearing", 0.0f ) );
-      }
-
-      lastKnownLocation.setLatitude( Double.parseDouble( locationPreferences.getString( "lastfixLatitude", "0" ) ) );
-      lastKnownLocation.setLongitude( Double.parseDouble( locationPreferences.getString( "lastfixLongitude", "0" ) ) );
-
-      if ( locationPreferences.getBoolean( "lastfixHasSpeed", false ) ) {
-        lastKnownLocation.setSpeed( locationPreferences.getFloat( "lastfixSpeed", 0.0f ) );
-      }
-
-      lastKnownLocation.setTime( locationPreferences.getLong( "lastfixTime", 0 ) );
-
-      ZmanimLocation location = ZmanLocationUtil.fromLocation( lastKnownLocation );
-
-      try ( OutputStream output = activity.openFileOutput( LastKnownLocationProvider.NAME, Context.MODE_PRIVATE ) ) {
-        location.save( output );
-      }
-      catch ( IOException e ) {
-        // Oh well, we'll lose the last known location, and we'll have to acquire the current location.
-      }
-    }
-
   }
 
 

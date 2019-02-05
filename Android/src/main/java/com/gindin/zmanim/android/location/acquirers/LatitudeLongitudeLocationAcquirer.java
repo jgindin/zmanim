@@ -8,10 +8,10 @@ import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanlib.location.LatitudeLongitudeParser;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.support.annotation.Nullable;
 
 /**
@@ -30,33 +30,36 @@ public class LatitudeLongitudeLocationAcquirer
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   @Override
   public void acquire( final RequestLocationUpdateEvent.CachedLocationUsage cachedLocationUsage ) {
 
-    Location ourLocation = new Location( "Zmanim Latitude & Longitude Provider" );
+    ZmanimLocation.Builder locationBuilder = new ZmanimLocation.Builder().fromProvider( "Zmanim Latitude & Longitude Provider" );
 
-    String error = updateLatitudeFromPrefs( locationManagementPrefs, ourLocation );
+    String error = updateLatitudeFromPrefs( locationManagementPrefs, locationBuilder );
     if ( error != null ) {
-      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + error ) );
+      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid longitude: " + error ), null );
       return;
     }
 
-    error = updateLongitudeFromPrefs( locationManagementPrefs, ourLocation );
+    error = updateLongitudeFromPrefs( locationManagementPrefs, locationBuilder );
     if ( error != null ) {
-      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + error ) );
+      fireLocationNotAcquired( new LocationError( LocationError.Code.BAD_INPUT, "Invalid latitude: " + error ), null );
       return;
     }
 
-    updateElevationFromPrefs( locationManagementPrefs, ourLocation );
+    updateElevationFromPrefs( locationManagementPrefs, locationBuilder );
+    locationBuilder.at( System.currentTimeMillis() );
+    locationBuilder.inTimeZone( getTimeZoneFromPrefs() );
 
-    fireLocationAcquired( ourLocation );
+    fireLocationAcquired( locationBuilder.build() );
   }
 
 
   @Nullable
   private String updateLatitudeFromPrefs(
-    SharedPreferences locationManagementPrefs,
-    Location          ourLocation
+    SharedPreferences       locationManagementPrefs,
+    ZmanimLocation.Builder  ourLocation
   ) {
 
     String latitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), "0" );
@@ -65,8 +68,7 @@ public class LatitudeLongitudeLocationAcquirer
     }
 
     try {
-      ourLocation.setLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
-      ourLocation.setTime( System.currentTimeMillis() );
+      ourLocation.atLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
 
       return null;
     }
@@ -78,8 +80,8 @@ public class LatitudeLongitudeLocationAcquirer
 
   @Nullable
   private String updateLongitudeFromPrefs(
-    SharedPreferences locationManagementPrefs,
-    Location          ourLocation
+    SharedPreferences       locationManagementPrefs,
+    ZmanimLocation.Builder  ourLocation
   ) {
 
     String longitudePref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), "0" );
@@ -88,8 +90,7 @@ public class LatitudeLongitudeLocationAcquirer
     }
 
     try {
-      ourLocation.setLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
-      ourLocation.setTime( System.currentTimeMillis() );
+      ourLocation.atLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
 
       return null;
     }
@@ -100,16 +101,16 @@ public class LatitudeLongitudeLocationAcquirer
 
 
   private void updateElevationFromPrefs(
-    SharedPreferences locationManagementPrefs,
-    Location          ourLocation
+    SharedPreferences       locationManagementPrefs,
+    ZmanimLocation.Builder  ourLocation
   ) {
 
     String elevationPref = locationManagementPrefs.getString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE_LONGITUDE_ELEVATION.name(), "0" );
     if ( elevationPref.isEmpty() ) {
-      ourLocation.setAltitude( 0.0 );
+      ourLocation.atElevation( 0.0 );
     }
     else {
-      ourLocation.setAltitude( Double.parseDouble( elevationPref ) );
+      ourLocation.atElevation( Double.parseDouble( elevationPref ) );
     }
 
   }

@@ -16,6 +16,7 @@ import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -67,7 +68,8 @@ class DatePresenterImpl<V extends DateView>
 
       @Override
       public void onError(
-        @NotNull LocationError  error
+        @NotNull  LocationError   error,
+        @Nullable ZmanimLocation  location
       ) {
       }
     };

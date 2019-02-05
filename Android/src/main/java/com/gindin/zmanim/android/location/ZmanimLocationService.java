@@ -84,6 +84,9 @@ public class ZmanimLocationService
     TimeZone timeZone = (TimeZone)intent.getSerializableExtra( TIME_ZONE );
     ZmanimLocation location = ZmanLocationUtil.fromLocation( newLocation, timeZone );
 
+    // See the save() in DynamicLocationProvider when we are just using the location provider's last known position...
+    ZmanLocationUtil.save( this, location );
+
     ZmanimService.enqueueWork( this, location );
   }
 }

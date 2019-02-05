@@ -26,6 +26,7 @@ import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
+import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -439,14 +440,38 @@ public class ZmanimActivity
 
   private void handleNoLocationPermissions() {
 
-    // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
     final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-    locationManagementPrefs
-      .edit()
-      .putBoolean( LocationProviders.STATIC_POSITION.name(), true )
-      .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
-      .putString( LocationProviders.StaticProviderOptions.PLACE.name(), "Jerusalem, Israel" )
-      .apply();
+
+    // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
+    if ( ( lastKnownLocation != null ) && !lastKnownLocation.isInvalid ) {
+
+      LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse( Double.toString( lastKnownLocation.getLatitude() ), "", "", LatitudeLongitudeParser.Direction.NORTH );
+      String latitude = holder.toFullString( false );
+
+      holder = LatitudeLongitudeParser.parse( Double.toString( lastKnownLocation.getLongitude() ), "", "", LatitudeLongitudeParser.Direction.EAST );
+      String longitude = holder.toFullString( false );
+
+      locationManagementPrefs
+        .edit()
+        .putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), true )
+        .putBoolean( LocationProviders.STATIC_POSITION.name(), false )
+        .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
+        .putString( LocationProviders.LatitudeLongitudeProviderOptions.LATITUDE.name(), latitude )
+        .putString( LocationProviders.LatitudeLongitudeProviderOptions.LONGITUDE.name(), longitude )
+        .apply();
+
+    }
+    else {
+
+      locationManagementPrefs
+        .edit()
+        .putBoolean( LocationProviders.STATIC_POSITION.name(), true )
+        .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), false )
+        .putBoolean( LocationProviders.LATITUDE_LONGITUDE_POSITION.name(), false )
+        .putString( LocationProviders.StaticProviderOptions.PLACE.name(), "Jerusalem, Israel" )
+        .apply();
+    }
+
   }
 
 
@@ -681,13 +706,14 @@ public class ZmanimActivity
 
     @Override
     public void onError(
-      @NotNull final LocationError  error
+      @NotNull  LocationError   error,
+      @Nullable ZmanimLocation  location
     ) {
 
       runOnUiThread(
         () -> {
 
-          rebuildUI( lastKnownLocation, error );
+          rebuildUI( location, error );
         }
       );
     }

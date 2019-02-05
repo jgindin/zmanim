@@ -166,7 +166,7 @@ abstract class LocationResolver {
       }
 
       if ( resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
-        ZmanimService.enqueueWork( context, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ) );
+        ZmanimService.enqueueWork( context, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), originalLocation );
       }
       else {
 

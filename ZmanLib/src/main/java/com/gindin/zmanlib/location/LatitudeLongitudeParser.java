@@ -65,6 +65,20 @@ public abstract class LatitudeLongitudeParser {
       this.direction = direction;
     }
 
+    void updateDirection() {
+
+      if ( getDegrees() < 1 ) {
+        if ( Direction.NORTH == getDirection() ) {
+          setDirection( Direction.SOUTH );
+        }
+        else if ( Direction.EAST == getDirection() ) {
+          setDirection( Direction.WEST );
+        }
+
+        setDegrees( getDegrees() * -1 );
+      }
+    }
+
 
     public int getDegrees() {
       return degrees;
@@ -171,16 +185,7 @@ public abstract class LatitudeLongitudeParser {
     }
 
     holder.setDegrees( Integer.parseInt( latitudeComponents[ 0 ].trim() ) );
-    if ( holder.getDegrees() < 1 ) {
-      if ( Direction.NORTH == holder.getDirection() ) {
-        holder.setDirection( Direction.SOUTH );
-      }
-      else if ( Direction.EAST == holder.getDirection() ) {
-        holder.setDirection( Direction.WEST );
-      }
-
-      holder.setDegrees( holder.getDegrees() * -1 );
-    }
+    holder.updateDirection();
 
     if ( latitudeComponents.length > 1 ) {
       holder.setMinutes( Integer.parseInt( latitudeComponents[ 1 ].trim() ) );
@@ -225,13 +230,13 @@ public abstract class LatitudeLongitudeParser {
     catch ( NumberFormatException e ) {
       // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
       try {
-        double degreesDouble = Math.abs( Double.parseDouble( degreesText ) );
+        double degreesDouble = Double.parseDouble( degreesText );
 
         // Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
         degrees = (int)degreesDouble;
 
         // Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
-        double doubleMinutes = ( ( degreesDouble - degrees ) * 60 );
+        double doubleMinutes = Math.abs( ( ( degreesDouble - degrees ) * 60 ) );
         minutes = (int)doubleMinutes;
 
         seconds = ( ( doubleMinutes - minutes ) * 60 );
@@ -264,7 +269,10 @@ public abstract class LatitudeLongitudeParser {
       }
     }
 
-    return new Holder( direction, degrees, minutes, seconds );
+    final Holder holder = new Holder( direction, degrees, minutes, seconds );
+    holder.updateDirection();
+
+    return holder;
   }
 
 

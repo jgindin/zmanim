@@ -7,6 +7,7 @@ package com.gindin.zmanim.android.location;
 import com.gindin.eventBus.Event;
 import com.gindin.eventBus.EventHandler;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,9 +34,11 @@ public class LocationAcquiredEvent
      *  cached and not necessarily correct.
      *
      * @param error Describes the error.
+     * @param location The last known location
      */
     public abstract void onError(
-      @NotNull LocationError   error
+      @NotNull  LocationError   error,
+      @Nullable ZmanimLocation  location
     );
 
 
@@ -66,9 +69,10 @@ public class LocationAcquiredEvent
 
 
   public LocationAcquiredEvent(
-    @Nullable LocationError error
+    @NotNull  LocationError   error,
+    @Nullable ZmanimLocation  lastKnownLocation
   ) {
-    this.location = null;
+    this.location = lastKnownLocation;
     this.error = error;
   }
 
@@ -79,7 +83,7 @@ public class LocationAcquiredEvent
       handler.onLocationAcquired( location );
     }
     else {
-      handler.onError( error );
+      handler.onError( error, location );
     }
   }
 
