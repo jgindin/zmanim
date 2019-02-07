@@ -16,6 +16,7 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanim.android.messageDisplay.DeterminingLocation;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
@@ -161,9 +162,7 @@ public class ZmanimActivity
 
     setContentView( R.layout.main );
 
-    determiningLocationDialog = new ProgressDialog( this );
-    determiningLocationDialog.setIndeterminate( true );
-    determiningLocationDialog.setMessage( getString( R.string.determining_location ) );
+    determiningLocationDialog = new DeterminingLocation( this );
 
     eventBus = ZmanimService.ZMANIM_EVENT_BUS;
 
