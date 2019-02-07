@@ -229,7 +229,7 @@ public class ZmanimActivity
   protected void onResume() {
     super.onResume();
 
-    refresh();
+    refresh( ( lastKnownLocation == null ) || lastKnownLocation.isInvalid );
   }
 
 
@@ -288,8 +288,11 @@ public class ZmanimActivity
 
     switch ( activity ) {
 
-      case ENABLE_LOCATION_SERVICES:
-        refresh();
+      case EDIT_LOCATION_PREFERENCES:
+        if ( resultCode == Activity.RESULT_OK ) {
+          // Reset so that we'll have to go re-acquire.
+          lastKnownLocation = new ZmanimLocation.Builder().invalidLocation();
+        }
         break;
 
       case PERSONAL_PREFERENCS:
@@ -568,7 +571,7 @@ public class ZmanimActivity
         return true;
 
       case R.id.refresh:
-        refresh();
+        refresh( true );
         return true;
     }
 
@@ -611,10 +614,14 @@ public class ZmanimActivity
   }
 
 
-  private void refresh() {
+  private void refresh( boolean acquireLocation ) {
 
-    // Just kick the service and let it do the work...
-    ZmanimService.enqueueWork( this, ZmanimService.Actions.FIND_LOCATION, true );
+    if ( acquireLocation ) {
+      ZmanimService.enqueueWork( this, ZmanimService.Actions.FIND_LOCATION, true );
+    }
+    else {
+      ZmanimService.enqueueWork( this, lastKnownLocation );
+    }
   }
 
 

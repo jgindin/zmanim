@@ -6,6 +6,7 @@ package com.gindin.zmanim.android.display.daily.header;
 
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.eventBus.EventBus;
+import com.gindin.zmanim.android.Activities;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -99,7 +100,7 @@ class LocationPresenterImpl<V extends LocationView>
   @Override
   public void userWantsToEditLocationPrefs() {
 
-    owner.startActivity( new Intent( owner, LocationProviderPreferences.class ) );
+    owner.startActivityForResult( new Intent( owner, LocationProviderPreferences.class ), Activities.EDIT_LOCATION_PREFERENCES.ordinal() );
   }
 
 
