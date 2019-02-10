@@ -19,7 +19,7 @@ public class HebrewDateChangedEvent
 
 
     @Override
-    public Class getAssociatedType() {
+    public final Class<HebrewDateChangedEvent> getAssociatedType() {
       return HebrewDateChangedEvent.class;
     }
   }
