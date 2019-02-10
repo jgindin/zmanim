@@ -38,14 +38,15 @@ public class ZmanimDisplayModule
   @Override
   public ZmanimPresenter<ZmanimView> create() {
 
-    boolean showSeconds = personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false );
-    ZmanFormatter zmanFormatter = new ZmanFormatter( showSeconds );
+    ZmanFormatter zmanFormatter = new ZmanFormatter( () ->
+      personalPrefsManager.getBoolean( PersonalPreferences.Prefs.SHOW_SECONDS.name(), false ) );
 
     ZmanimViewImpl view = new ZmanimViewImpl( activity, new ZmanimSelector( activity, zmanFormatter ) );
 
     SharedPreferences zmanSelectionPrefs = activity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
+    SharedPreferences personalPrefs = activity.getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
 
-    return new ZmanimPresenterImpl<ZmanimView>( view, eventBus, zmanSelectionPrefs, zmanFormatter );
+    return new ZmanimPresenterImpl<>( view, eventBus, personalPrefs, zmanSelectionPrefs, zmanFormatter );
   }
 
 } // End of ZmanimDisplayModule class

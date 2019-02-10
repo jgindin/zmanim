@@ -181,7 +181,7 @@ public class DisplayNotificationService
 
     Intent openZmanim = new Intent( context, ZmanimActivity.class );
 
-    ZmanFormatter zmanFormatter = new ZmanFormatter( zmanCallback.formatTimeWithSeconds() );
+    ZmanFormatter zmanFormatter = new ZmanFormatter( () -> zmanCallback.formatTimeWithSeconds() );
     String notificationText = context.getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
     // Keep this...it's very useful at times...

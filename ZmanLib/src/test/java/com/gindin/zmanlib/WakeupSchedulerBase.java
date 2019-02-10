@@ -84,7 +84,7 @@ abstract class WakeupSchedulerBase {
     private final ZmanCallback                              perTestCallback;
 
     /** Format the output. */
-    private final ZmanFormatter                             zmanFormatter = new ZmanFormatter( true );
+    private final ZmanFormatter                             zmanFormatter = new ZmanFormatter( () -> true );
 
     /** Where to generate the output into. */
     private final StringBuilder                             output;

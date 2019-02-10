@@ -4,25 +4,27 @@
 
 package com.gindin.zmanim.android.display.daily.main;
 
+import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
-import com.gindin.eventBus.EventBus;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
+import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,6 +35,8 @@ class ZmanimPresenterImpl<V extends ZmanimView>
   implements ZmanimPresenter<V> {
 
 
+  private final SharedPreferences                           personalPrefs;
+
   /** Get the chosen zmanim. */
   private final SharedPreferences                           zmanimSelectionPrefs;
 
@@ -41,6 +45,8 @@ class ZmanimPresenterImpl<V extends ZmanimView>
   private final HebrewDateChangedEvent.Handler              dateChangeHandler;
 
   private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
+
+  private final SharedPreferences.OnSharedPreferenceChangeListener  preferenceChangeListener;
 
   private HebrewDate                                        currentDate;
 
@@ -52,13 +58,22 @@ class ZmanimPresenterImpl<V extends ZmanimView>
   ZmanimPresenterImpl(
     V                 view,
     EventBus          eventBus,
+    SharedPreferences personalPrefs,
     SharedPreferences zmanimSelectionPrefs,
     ZmanFormatter     zmanFormatter
   ) {
 
     super( view, eventBus );
+    this.personalPrefs = personalPrefs;
     this.zmanimSelectionPrefs = zmanimSelectionPrefs;
     this.zmanFormatter = zmanFormatter;
+
+    preferenceChangeListener = ( sharedPreferences, key ) -> {
+      if ( PersonalPreferences.Prefs.SHOW_SECONDS.name().equals( key ) ) {
+        notifyViewOfZmanim();
+      }
+    };
+    personalPrefs.registerOnSharedPreferenceChangeListener( preferenceChangeListener );
 
     dateChangeHandler = new HebrewDateChangedEvent.Handler() {
       @Override
@@ -89,6 +104,8 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
   @Override
   public void destroy() {
+
+    personalPrefs.unregisterOnSharedPreferenceChangeListener( preferenceChangeListener );
     getEventBus().removeHandler( dateChangeHandler );
     getEventBus().removeHandler( locationAcquiredHandler );
   }
@@ -112,7 +129,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
     editor.putString( selectedType.name, selection.name );
     editor.apply();
 
-    LogUtils.logEvent( "Zman Change", Arrays.asList( new Pair<String, String>( selectedType.name, selection.name ) ) );
+    LogUtils.logEvent( "Zman Change", Collections.singletonList( new Pair<>( selectedType.name, selection.name ) ) );
 
     // This is a bit of a hammer, but it works...
     //  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
@@ -199,7 +216,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
         }
 
         String formattedTime = zmanFormatter.formatZmanTime( zman );
-        publishProgress( new Pair<Zman, String>( zman, formattedTime ) );
+        publishProgress( new Pair<>( zman, formattedTime ) );
       }
       return null;
     }

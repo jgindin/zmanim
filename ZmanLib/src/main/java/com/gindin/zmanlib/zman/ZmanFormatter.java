@@ -12,26 +12,21 @@ import java.util.Calendar;
  */
 public class ZmanFormatter {
 
-  /** Used to format the zmanim times that get displayed. */
-  private final DateFormat                                  timeFormatter;
+  public interface Options {
 
-  /** Used to ensure certain zmanim are rounded properly. */
-  private final ZmanRounder                                 zmanRounder;
+    boolean showSeconds();
+  }
 
-  
+
+  private final Options                                     options;
+
+
+
   public ZmanFormatter(
-    boolean showSeconds
+    Options options
   ) {
-
-    if ( showSeconds ) {
-      timeFormatter = DateFormat.getTimeInstance( DateFormat.MEDIUM );
-      zmanRounder = null;
-    }
-    else {
-      timeFormatter = DateFormat.getTimeInstance( DateFormat.SHORT );
-      zmanRounder = new ZmanRounder();
-    }
-  } 
+    this.options = options;
+  }
 
 
   public String formatZmanTime(
@@ -45,6 +40,19 @@ public class ZmanFormatter {
     Zmanim.Type   zmanType,
     Calendar      zmanTime
   ) {
+
+    final DateFormat  timeFormatter;
+    final ZmanRounder zmanRounder;
+
+    if ( options.showSeconds() ) {
+      timeFormatter = DateFormat.getTimeInstance( DateFormat.MEDIUM );
+      zmanRounder = null;
+    }
+    else {
+      timeFormatter = DateFormat.getTimeInstance( DateFormat.SHORT );
+      zmanRounder = new ZmanRounder();
+    }
+
 
     // This can return null in case the zman just doesn't apply. E.g., there are places where the Sun never
     //  actually gets low enough to be able to calculate Alot @ 26degrees.

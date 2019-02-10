@@ -21,9 +21,9 @@ public class ZmanimOutputHelper {
 
   protected final DateFormat                                mediumFormat = DateFormat.getTimeInstance( DateFormat.MEDIUM );
 
-  protected final ZmanFormatter                             formatter = new ZmanFormatter( false );
+  protected final ZmanFormatter                             formatter = new ZmanFormatter( () -> false );
 
-  protected final ZmanFormatter                             formatterWithSeconds = new ZmanFormatter( true );
+  protected final ZmanFormatter                             formatterWithSeconds = new ZmanFormatter( () -> true );
 
   protected final SecularDateFormatter                      dateFormatter = SecularDateFormatter.getInstance( SecularDateFormatter.Style.SHORT );
 
