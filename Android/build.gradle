@@ -34,7 +34,7 @@ try {
   flurryKey = "\"" + flurry[ 'flurry.key' ] + "\""
 }
 catch ( ignored ) {
-  flurryKey = ""
+  flurryKey = "\"\""
 }
 
 Properties mapQuest = new Properties()
@@ -44,7 +44,7 @@ try {
   mapQuestKey = "\"" + mapQuest[ 'mapquest.key' ] + "\""
 }
 catch ( ignored ) {
-  mapQuestKey = ""
+  mapQuestKey = "\"\""
 }
 
 Properties acraProps = new Properties()
@@ -56,8 +56,8 @@ try {
   acraPassword = "\"" + acraProps[ 'acra.password' ] + "\""
 }
 catch ( ignored ) {
-  acraUser = ""
-  acraPassword = ""
+  acraUser = "\"\""
+  acraPassword = "\"\""
 }
 
 
