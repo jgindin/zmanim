@@ -130,6 +130,7 @@ public class ZmanimActivity
 
 
   /** Called when the activity is first created. */
+  @SuppressWarnings( "FeatureEnvy" )
   @Override
   public void onCreate(
     Bundle savedInstanceState
@@ -203,11 +204,9 @@ public class ZmanimActivity
     ZmanimReceiver.scheduleRepeatingChecks( this );
 
     if ( savedInstanceState != null ) {
+      // We'll get the location and then, in onResume, the refresh() call will get everything going...
       final Bundle bundle = savedInstanceState.getBundle( LOCATION_BUNDLE_KEY );
       lastKnownLocation = ZmanLocationUtil.fromBundle( bundle );
-      if ( !lastKnownLocation.isInvalid ) {
-        eventBus.fire( new LocationAcquiredEvent( lastKnownLocation ) );
-      }
     }
   }
 
@@ -322,7 +321,7 @@ public class ZmanimActivity
 
 
   private void rebuildUI(
-    ZmanimLocation            location,
+    @Nullable ZmanimLocation  location,
     @Nullable LocationError   error
   ) {
 
@@ -477,11 +476,6 @@ public class ZmanimActivity
   }
 
 
-  private void showErrorMessage( @StringRes int errorMessage ) {
-    showErrorMessage( getResources().getString( errorMessage ), R.string.action_dismiss, v -> {} );
-  }
-
-
   private void showErrorMessage( String errorMessage ) {
     showErrorMessage( errorMessage, R.string.action_dismiss, v -> {} );
   }
@@ -578,6 +572,7 @@ public class ZmanimActivity
   }
 
 
+  @Nullable
   @Override
   protected Dialog onCreateDialog( int dialogID ) {
 
@@ -701,12 +696,7 @@ public class ZmanimActivity
     ) {
 
       LogUtils.setContext( "Location", location.toString() );
-
-      runOnUiThread(
-        () -> {
-          rebuildUI( location, null );
-        }
-      );
+      runOnUiThread( () -> rebuildUI( location, null ) );
     }
 
 
@@ -716,12 +706,7 @@ public class ZmanimActivity
       @Nullable ZmanimLocation  location
     ) {
 
-      runOnUiThread(
-        () -> {
-
-          rebuildUI( location, error );
-        }
-      );
+      runOnUiThread( () -> rebuildUI( location, error ) );
     }
   }
 

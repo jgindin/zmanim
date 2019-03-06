@@ -7,7 +7,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.location.Address;
 
 import java.net.URLEncoder;
@@ -21,20 +20,6 @@ import java.util.Locale;
  */
 class MapQuestResolver
   extends JsonQueryingResolver {
-
-
-
-  MapQuestResolver(
-    Context context
-  ) {
-    super( context );
-  }
-
-
-  @Override
-  public void onDestroy() {
-
-  }
 
 
   @Override

@@ -10,7 +10,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.location.Address;
 
 import java.net.URLEncoder;
@@ -46,20 +45,6 @@ class NominatimResolver
   private static final String                               HOUSE_NUMBER = "house_number";
   private static final String                               ROAD = "road";
 */
-
-
-
-  NominatimResolver(
-    Context context
-  ) {
-    super( context );
-  }
-
-
-  @Override
-  public void onDestroy() {
-
-  }
 
 
   @Override

@@ -98,6 +98,17 @@
     />
 
     <!--
+      Service that handles the resolution of a location.
+    -->
+    <service
+      android:name=".location.resolvers.LocationToAddressConverter"
+      android:description="@string/LocationResolverServiceDescription"
+      android:exported="false"
+      android:permission="android.permission.BIND_JOB_SERVICE"
+    />
+
+
+    <!--
       Service that will display our notifications.
     -->
     <receiver

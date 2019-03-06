@@ -30,7 +30,7 @@ public class UT_CachedLocationResolver {
     ioFactory = new TestIOFactory();
 
     eventBus = new EventBus();
-    cachedLocationResolver = new CachedLocationResolver( null, eventBus, ioFactory );
+    cachedLocationResolver = new CachedLocationResolver( ioFactory );
   }
 
 
@@ -228,7 +228,7 @@ public class UT_CachedLocationResolver {
 
 
     @Override
-    public void runInBackground( Runnable runnable ) {
+    public void run( Runnable runnable ) {
       runnable.run();
     }
 

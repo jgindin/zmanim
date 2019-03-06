@@ -4,18 +4,20 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.location.PlaceAcquiredEvent;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,54 +26,99 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Listens for RawLocationAcquiredEvent and PlaceAcquiredEvent and starts the process of translating to an address.
+ * Resolves a location to its name via various resolvers.
  */
-public class LocationToAddressConverter {
+public class LocationToAddressConverter
+  extends JobIntentService {
+
+  private CachedLocationResolver cachedLocationResolver;
+
+  /** Actions which this service can handle. */
+  public enum Actions {
+    RESOLVE_PLACE,
+
+    RESOLVE_LOCATION,
+
+    /** Dummy in case somehow something unexpected is handed into the value() method. */
+    NONE;
 
 
-  /**
-   * Sometimes, after an upgrade, we need to wipe the cache.
-   */
+    /** Better than valueOf() since it won't throw any exception. */
+    static Actions value( @Nullable String actionName ) {
+
+      // Shouldn't ever be null. But...allowing the param to be nullable makes the code that calls this
+      //  method cleaner...no warnings...
+      if ( actionName == null ) {
+        return NONE;
+      }
+
+      try {
+        return Actions.valueOf( actionName );
+      }
+      catch ( Exception e ) {
+        //Ignore this request...
+        return NONE;
+      }
+    }
+  }
+
+
+  private enum ActionParams {
+    LOCATION
+  }
+
+
+
+  /** Sometimes, after an upgrade, we need to wipe the cache. */
   public static boolean                                     wipeCacheOnStart = false;
 
-  private final EventBus                                    eventBus;
+  private static final int                                  JOB_ID = 606;
 
-  private final List<LocationResolver>                      orderedResolvers;
-
-  private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
-  private final PlaceAcquiredEvent.Handler                  placeAcquiredHandler;
+  private List<LocationResolver>                            orderedResolvers;
 
 
-  public LocationToAddressConverter(
-    final Context context,
-    EventBus      eventBus,
-    Geocoder      geocoder
+
+  public static void enqueueWork(
+    Context         context,
+    ZmanimLocation  location,
+    Actions         action
   ) {
 
-    this.eventBus = eventBus;
+    Intent resolveLocation = new Intent( context, LocationToAddressConverter.class );
+    resolveLocation.setAction( action.name() );
+    resolveLocation.putExtra( ActionParams.LOCATION.name(), ZmanLocationUtil.toBundle( location ) );
+
+    enqueueWork( context, LocationToAddressConverter.class, JOB_ID, resolveLocation );
+  }
+
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
 
     CachedLocationResolver.IOFactory ioFactory = new CachedLocationResolver.IOFactory() {
       @Override
       public InputStream openInput() throws FileNotFoundException {
-        return context.openFileInput( "CachedLocations" );
+        return openFileInput( "CachedLocations" );
       }
 
 
       @Override
       public FileOutputStream openOutput() throws FileNotFoundException {
-        return context.openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
+        return openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
       }
 
 
       @Override
-      public void runInBackground( Runnable runnable ) {
-        // Urgh. API 11 adds "execute( Runnable )". Since my min API is 10, that method doesn't exist,
-        //  and we get a NoSuchMethodError... Adding a 'null' argument is enough to get it to do the right thing...
-        new BackgroundTask().execute( runnable, null );
+      public void run( Runnable runnable ) {
+        // We could run this in the background. However I think that will cause issues as we're a service that will
+        //  go away once our work is done. Having some more work happen in the background seems like a recipe for
+        //  the work to not actually be able to happen...
+        runnable.run();
       }
     };
 
-    CachedLocationResolver cachedLocationResolver = new CachedLocationResolver( context, eventBus, ioFactory );
+    cachedLocationResolver = new CachedLocationResolver( ioFactory );
     if ( wipeCacheOnStart ) {
       wipeCacheOnStart = false;
       cachedLocationResolver.wipeCache();
@@ -82,58 +129,64 @@ public class LocationToAddressConverter {
 
     orderedResolvers = new ArrayList<>();
     orderedResolvers.add( cachedLocationResolver );
-    orderedResolvers.add( new AndroidResolver( context, geocoder ) );
 
-    orderedResolvers.add( new MapQuestResolver( context ) );
-    orderedResolvers.add( new NominatimResolver( context ) );
+    if ( Geocoder.isPresent() ) {
+      orderedResolvers.add( new AndroidResolver( new Geocoder( this ) ) );
+    }
 
-    orderedResolvers.add( new PassthroughResolver( context ) );
+    orderedResolvers.add( new MapQuestResolver() );
+    orderedResolvers.add( new NominatimResolver() );
 
-    locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
-      @Override
-      public void onLocationAcquired(
-        ZmanimLocation location
-      ) {
-        handleLocationAcquired( location );
-      }
-
-
-      @Override
-      public void onError(
-        @NotNull  LocationError   error,
-        @Nullable ZmanimLocation  location
-      ) {
-        // Don't do anything.
-      }
-    };
-    eventBus.addHandler( locationAcquiredHandler );
-
-    placeAcquiredHandler = new PlaceAcquiredEvent.Handler() {
-      @Override
-      public void placeAcquired( ZmanimLocation location ) {
-        orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
-      }
-    };
-    eventBus.addHandler( placeAcquiredHandler );
+    orderedResolvers.add( new PassthroughResolver() );
   }
 
 
-  public void onDestroy() {
+  @Override
+  protected void onHandleWork( @NonNull Intent intent ) {
 
-    eventBus.removeHandler( locationAcquiredHandler );
-    eventBus.removeHandler( placeAcquiredHandler );
+    ZmanimLocation location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
+    ZmanimLocation resolved = null;
 
-    for ( LocationResolver resolver : orderedResolvers ) {
-      resolver.onDestroy();
+    switch ( Actions.value( intent.getAction() ) ) {
+      case RESOLVE_LOCATION:
+        if ( location.isResolved() ) {
+          // Nothing what-so-ever to do!
+          return;
+        }
+        else if ( !location.isInvalid ) {
+          resolved = resolve( location );
+        }
+        break;
+
+      case RESOLVE_PLACE:
+        resolved = resolve( location );
+        break;
+
+      default:
+        resolved = null;
     }
+
+    if ( resolved == null ) {
+      //noinspection AssignmentToMethodParameter
+      resolved = new ZmanimLocation.Builder().invalidLocation();
+    }
+
+    if ( resolved.isInvalid || !resolved.isResolved() ) {
+      ZmanimService.enqueueWork( this, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), location );
+    }
+    else {
+
+      ZmanimService.enqueueWork( this, resolved );
+      cachedLocationResolver.cache( resolved );
+    }
+
   }
 
 
-  private void handleLocationAcquired( @NotNull ZmanimLocation location ) {
+  @Nullable
+  private ZmanimLocation resolve( @NotNull ZmanimLocation location ) {
 
-    if ( !location.isResolved() && !location.isInvalid ) {
-      orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
-    }
+    return orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
   }
 
 

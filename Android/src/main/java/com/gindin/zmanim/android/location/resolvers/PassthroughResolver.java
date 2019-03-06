@@ -5,29 +5,15 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import android.content.Context;
 
 /**
  * A resolver of last resort. Will simply resolve the location as itself.
  */
 class PassthroughResolver
   extends LocationResolver {
-
-
-  PassthroughResolver(
-    Context context
-  ) {
-    super( context );
-  }
-
-
-  @Override
-  public void onDestroy() {
-
-  }
 
 
   /**

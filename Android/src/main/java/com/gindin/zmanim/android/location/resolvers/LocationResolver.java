@@ -4,35 +4,25 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
-import com.gindin.zmanim.android.location.LocationError;
-import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.Context;
 import android.location.Address;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Uses the information in either a RawLocationAcquiredEvent or PlaceAcquiredEvent to fill out the full set of
- *  data about a given location.
+ * Base for all resolvers that take a location and determine the name.
  *<p/>
  *
- * After resolving the location, a FullLocationAcquiredEvent will be fired.
+ * After resolving the location, a work item will be enqueued for the ZmanimService to handle the result.
  */
 abstract class LocationResolver {
 
 
-  private final Context                                     context;
-
-
-  protected static String addressToLocationName( Address address ) {
+  static String addressToLocationName( Address address ) {
 
     String locationString = null;
 
@@ -100,20 +90,8 @@ abstract class LocationResolver {
   }
 
 
-  LocationResolver(
-    Context context
-  ) {
-    this.context = context;
-  }
-
-
-  /**
-   * Called when the resolver is being destroyed.
-   */
-  public abstract void onDestroy();
-
-
-  final void resolve(
+  @Nullable
+  final ZmanimLocation resolve(
     @NotNull final ZmanimLocation          location,
     @NotNull final List<LocationResolver>  nextResolvers
   ) {
@@ -126,7 +104,12 @@ abstract class LocationResolver {
       zmanimLocation = resolveFromName( location );
     }
 
-    handlePostExecute( location, zmanimLocation, nextResolvers );
+    if ( ( zmanimLocation == null ) && !nextResolvers.isEmpty() ) {
+      return nextResolvers.get( 0 ).resolve( location, nextResolvers.subList( 1, nextResolvers.size() ) );
+    }
+    else {
+      return zmanimLocation;
+    }
   }
 
 
@@ -147,37 +130,6 @@ abstract class LocationResolver {
    */
   @Nullable
   protected abstract ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation );
-
-
-  private void handlePostExecute(
-    @NotNull ZmanimLocation                originalLocation,
-    @Nullable ZmanimLocation               resolvedLocation,
-    @NotNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    if ( ( resolvedLocation == null ) && !nextResolvers.isEmpty() ) {
-      nextResolvers.get( 0 ).resolve( originalLocation, nextResolvers.subList( 1, nextResolvers.size() ) );
-    }
-    else {
-
-      if ( resolvedLocation == null ) {
-        //noinspection AssignmentToMethodParameter
-        resolvedLocation = new ZmanimLocation.Builder().invalidLocation();
-      }
-
-      if ( resolvedLocation.isInvalid || !resolvedLocation.isResolved() ) {
-        ZmanimService.enqueueWork( context, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), originalLocation );
-      }
-      else {
-
-        ZmanimService.enqueueWork( context, resolvedLocation );
-
-        // Let's keep track of how often we use each resolver.
-        LogUtils.logEvent( "LocationResolved",
-          Collections.singletonList( new Pair<>( "Resolver", getClass().getSimpleName() ) ) );
-      }
-    }
-  }
 
 
 } // End of LocationResolver class

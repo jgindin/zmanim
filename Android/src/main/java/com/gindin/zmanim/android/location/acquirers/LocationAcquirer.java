@@ -21,8 +21,7 @@ import java.util.TimeZone;
  *<p/>
  *
  * The acquirer will do what it needs to in order to provide a location to the application when acquire() is invoked.
- *  When the location is acquired, either a RawLocationAcquiredEvent or PlaceAcquiredEvent will be fired, depending
- *  on what information was acquired.
+ *  When the location is acquired, work will be enqueued to the ZmanimService to handle the result.
  *
  *<p/>
  *  Due to the fact that some acquirers may have a cached location (in order to provide faster startup for the

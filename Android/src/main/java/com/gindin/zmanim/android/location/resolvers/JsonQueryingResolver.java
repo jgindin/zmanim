@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.content.Context;
 import android.location.Address;
 import android.os.Build;
 
@@ -49,13 +48,6 @@ abstract class JsonQueryingResolver
     }
   }
 
-
-
-  JsonQueryingResolver(
-    Context context
-  ) {
-    super( context );
-  }
 
 
   @Nullable

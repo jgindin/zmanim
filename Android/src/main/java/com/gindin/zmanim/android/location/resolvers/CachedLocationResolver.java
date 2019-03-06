@@ -1,15 +1,12 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
 import com.gindin.util.LogUtils;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
-import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanlib.location.ZmanLocationJSON;
 import com.gindin.zmanlib.location.ZmanimLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.io.*;
@@ -37,61 +34,20 @@ class CachedLocationResolver
     FileOutputStream openOutput() throws IOException;
 
     /** The actual loading and saving must be done on a background thread. */
-    void runInBackground( Runnable runnable );
+    void run( Runnable runnable );
   }
 
 
 
   private final IOFactory                                   ioFactory;
 
-  private final EventBus                                    eventBus;
-
-  private final LocationAcquiredEvent.Handler               locationAcquiredHandler;
-
   final LRULocationCache                                    locationCache = new LRULocationCache();
 
 
   CachedLocationResolver(
-    Context   context,
-    EventBus  eventBus,
     IOFactory ioFactory
   ) {
-    super( context );
-    this.eventBus = eventBus;
     this.ioFactory = ioFactory;
-
-    locationAcquiredHandler = new LocationAcquiredEvent.Handler() {
-      @Override
-      public void onLocationAcquired(
-        ZmanimLocation newLocation
-      ) {
-        // This event is fired when (a) a location is acquired and (b) when a location is resolved.
-        //  We don't want to cache unresolved locations...there's no point.
-        if ( !newLocation.isResolved() ) {
-          return;
-        }
-
-        cacheLocation( newLocation );
-      }
-
-
-      @Override
-      public void onError(
-        @NotNull  LocationError   error,
-        @Nullable ZmanimLocation  location
-      ) {
-        // ignore.
-      }
-    };
-
-    eventBus.addHandler( locationAcquiredHandler );
-  }
-
-
-  @Override
-  public void onDestroy() {
-
-    eventBus.removeHandler( locationAcquiredHandler );
   }
 
 
@@ -111,6 +67,7 @@ class CachedLocationResolver
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   @Nullable
   private ZmanimLocation findCachedMatch( ZmanimLocation zmanimLocation ) {
 
@@ -140,59 +97,49 @@ class CachedLocationResolver
 
   void loadCache() {
 
-    Runnable loadCache = new Runnable() {
-      @Override
-      public void run() {
+    DataInputStream input = null;
+    try {
 
-        DataInputStream input = null;
+      // Sync on the entire load process just in case we wind up getting a save() operation
+      //  while we're trying to load!
+      synchronized ( locationCache ) {
+
+        final Set<ZmanimLocation> copy = new HashSet<>();
+        input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
+
+        StringBuilder cacheData = new StringBuilder();
+
+        int numLocations = input.readInt();
+        for ( int i = 0; i < numLocations; i++ ) {
+          final ZmanimLocation location = ZmanimLocation.load( input );
+          copy.add( location );
+          cacheData.append( ZmanLocationJSON.toJSON( location ) );
+        }
+
+        locationCache.addAll( copy );
+        LogUtils.setContext( "location-cache", cacheData.toString() );
+      }
+    }
+    catch( FileNotFoundException fnfe ) {
+      // This seems to happen when the cache file doesn't exist.
+    }
+    catch ( Exception e ) {
+      if ( e.getMessage() != null ) {
+        LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
+      }
+
+      wipeCache();
+    }
+    finally {
+      if ( input != null ) {
         try {
-
-          // Sync on the entire load process just in case we wind up getting a save() operation
-          //  while we're trying to load!
-          synchronized ( locationCache ) {
-
-            final Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
-            input = new DataInputStream( new BufferedInputStream( ioFactory.openInput() ) );
-
-            StringBuilder cacheData = new StringBuilder();
-
-            int numLocations = input.readInt();
-            for ( int i = 0; i < numLocations; i++ ) {
-              final ZmanimLocation location = ZmanimLocation.load( input );
-              copy.add( location );
-              cacheData.append( ZmanLocationJSON.toJSON( location ) );
-            }
-
-            locationCache.addAll( copy );
-            LogUtils.setContext( "location-cache", cacheData.toString() );
-          }
+          input.close();
         }
-        catch( FileNotFoundException fnfe ) {
-          // This seems to happen when the cache file doesn't exist.
-        }
-        catch ( EOFException eof ) {
-          // Something happened to cause the cache to be malformed.
-          wipeCache();
-        }
-        catch ( Exception e ) {
-          if ( e.getMessage() != null ) {
-            LogUtils.logError( "CLR::loadCache", e.getMessage(), e );
-          }
-        }
-        finally {
-          if ( input != null ) {
-            try {
-              input.close();
-            }
-            catch ( IOException e ) {
-              // to bad...
-            }
-          }
+        catch ( IOException e ) {
+          // to bad...
         }
       }
-    };
-
-    ioFactory.runInBackground( loadCache );
+    }
   }
 
 
@@ -206,7 +153,11 @@ class CachedLocationResolver
   }
 
 
-  private void cacheLocation( ZmanimLocation newLocation ) {
+  void cache( @Nullable ZmanimLocation newLocation ) {
+
+    if ( ( newLocation == null ) || !newLocation.isResolved() ) {
+      return;
+    }
 
     synchronized ( locationCache ) {
 
@@ -225,55 +176,33 @@ class CachedLocationResolver
 
   private void saveCache() {
 
-    Runnable saveCache = new Runnable() {
-      @Override
-      public void run() {
+    Runnable saveCache = () -> {
 
-        FileOutputStream fos = null;
-        DataOutputStream output = null;
-        try {
+      // Synchronize the whole writing process so we can't conflict with a load...
+      final Set<ZmanimLocation> copy;
+      synchronized ( locationCache ) {
+        copy = locationCache.newCopy();
+      }
 
-          // Synchronize the whole writing process so we can't conflict with a load...
-          final Set<ZmanimLocation> copy;
-          synchronized ( locationCache ) {
-            copy = locationCache.newCopy();
-          }
+      try ( DataOutputStream output = new DataOutputStream( new BufferedOutputStream( ioFactory.openOutput() ) ) ) {
 
-          fos = ioFactory.openOutput();
-          output = new DataOutputStream( new BufferedOutputStream( fos ) );
-          output.writeInt( copy.size() );
+        output.writeInt( copy.size() );
 
-          StringBuilder cacheData = new StringBuilder();
+        StringBuilder cacheData = new StringBuilder();
 
-          for ( ZmanimLocation location : copy ) {
-            location.save( output );
-            cacheData.append( ZmanLocationJSON.toJSON( location ) );
-          }
-
-          LogUtils.setContext( "location-cache", cacheData.toString() );
+        for ( ZmanimLocation location : copy ) {
+          location.save( output );
+          cacheData.append( ZmanLocationJSON.toJSON( location ) );
         }
-        catch ( Exception e ) {
-          LogUtils.logError( "CLR::saveCache", e.getMessage(), e );
-        }
-        finally {
-          if ( output != null ) {
-            try {
 
-              // According to The Busy Coder's Guide to Android, v6.2, we want to make sure that
-              //  we're calling sync on the FOS.
-              output.flush();
-              fos.getFD().sync();
-              output.close();
-            }
-            catch ( IOException e ) {
-              // Oh well.
-            }
-          }
-        }
+        LogUtils.setContext( "location-cache", cacheData.toString() );
+      }
+      catch ( Exception e ) {
+        LogUtils.logError( "CLR::saveCache", e.getMessage(), e );
       }
     };
 
-    ioFactory.runInBackground( saveCache );
+    ioFactory.run( saveCache );
   }
 
 
@@ -300,21 +229,19 @@ class CachedLocationResolver
     }
 
 
-    public boolean addAll( Collection<? extends ZmanimLocation> collection ) {
+    void addAll( Collection<? extends ZmanimLocation> collection ) {
       for ( ZmanimLocation location : collection ) {
         add( location );
       }
-
-      return true;
     }
 
 
-    public void clear() {
+    void clear() {
       cache.clear();
     }
 
 
-    public boolean contains( Object o ) {
+    boolean contains( Object o ) {
       return cache.containsKey( o );
     }
 
@@ -341,13 +268,7 @@ class CachedLocationResolver
 
 
     Set<ZmanimLocation> newCopy() {
-      Set<ZmanimLocation> copy = new HashSet<ZmanimLocation>();
-
-      for ( ZmanimLocation location : cache.keySet() ) {
-        copy.add( location );
-      }
-
-      return copy;
+      return new HashSet<>( cache.keySet() );
     }
   }
 

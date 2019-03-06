@@ -132,9 +132,11 @@ public final class EventBus {
   }
 
 
-  private synchronized <H extends EventHandler, E extends Event<H>> void fireEvent( E event ) {
+  private <H extends EventHandler, E extends Event<H>> void fireEvent( E event ) {
 
-    inProgressEvent = event;
+    synchronized ( this ) {
+      inProgressEvent = event;
+    }
 
     // It's not clear to me, and I'm hoping its a synchronization thing, but I've seen stack traces where the
     //  event here is null after we've fired an event and we're handling the postponed stuff...
@@ -144,24 +146,32 @@ public final class EventBus {
 
     event.preDispatch( eventCacheControl );
 
-    List<H> handlers = handlerCollection.get( event.getClass() );
-    if ( null != handlers ) {
-
-      List<H> copy = new ArrayList<>( handlers );
-      for ( H handler : copy ) {
-        dispatchEvent( event, handler );
+    List<H> handlers;
+    synchronized ( this ) {
+      handlers = handlerCollection.get( event.getClass() );
+      if ( null != handlers ) {
+        handlers = new ArrayList<>( handlers );
+      }
+      else {
+        handlers = Collections.emptyList();
       }
     }
 
-    if ( event.isCachable() ) {
-      eventCache.put( (Class<Event>)event.getClass(), event );
+    for ( H handler : handlers ) {
+      dispatchEvent( event, handler );
     }
 
-    inProgressEvent = null;
+    synchronized ( this ) {
+      if ( event.isCachable() ) {
+        eventCache.put( (Class<Event>)event.getClass(), event );
+      }
+
+      inProgressEvent = null;
+    }
   }
 
 
-  private synchronized void handlePostponed() {
+  private void handlePostponed() {
 
     handlePostponedAdds();
     handlePostponedRemoves();
@@ -184,7 +194,7 @@ public final class EventBus {
   }
 
 
-  private void handlePostponedRemoves() {
+  private synchronized void handlePostponedRemoves() {
     handlerCollection.removeAll( postponedHandlersToRemove );
     postponedHandlersToRemove.clear();
   }
@@ -205,9 +215,12 @@ public final class EventBus {
   }
 
 
-  private synchronized  <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
+  private <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
 
-    handlerCollection.put( handler, handler.getAssociatedType() );
+    synchronized ( this ) {
+      handlerCollection.put( handler, handler.getAssociatedType() );
+    }
+
     if ( withCatchup ) {
       E cachedEvent = eventCache.get( handler.getAssociatedType() );
       if ( cachedEvent != null ) {

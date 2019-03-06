@@ -22,7 +22,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Geocoder;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -60,11 +59,33 @@ public class ZmanimService
     /** An error occurred when trying to get the location. */
     LOCATION_NOT_ACQUIRED,
 
-    PLACE_ACQUIRED
+    PLACE_ACQUIRED,
+
+    /** Dummy in case somehow something unexpected is handed into the value() method. */
+    NONE;
+
+
+    /** Better than valueOf() since it won't throw any exception. */
+    static Actions value( @Nullable String actionName ) {
+
+      // Shouldn't ever be null. But...allowing the param to be nullable makes the code that calls this
+      //  method cleaner...no warnings...
+      if ( actionName == null ) {
+        return NONE;
+      }
+
+      try {
+        return Actions.valueOf( actionName );
+      }
+      catch ( Exception e ) {
+        //Ignore this request...
+        return NONE;
+      }
+    }
   }
 
 
-  public enum ActionParams {
+  private enum ActionParams {
 
     /** Can be specified with the SCHEDULE_ALARM action to indicate the alarm should be scheduled no matter what. */
     FORCE_SCHEDULE,
@@ -89,18 +110,6 @@ public class ZmanimService
   private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
 
   private ZmanNotificationScheduler                         zmanNotificationScheduler;
-
-  private LocationToAddressConverter                        locationToAddressConverter;
-
-
-
-  public static void enqueueWork(
-    Context context,
-    Actions action
-  ) {
-
-    enqueueWork( context, action, false );
-  }
 
 
   public static void enqueueWork(
@@ -174,10 +183,6 @@ public class ZmanimService
       locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs );
     }
 
-    if ( locationToAddressConverter == null ) {
-      locationToAddressConverter = new LocationToAddressConverter( this, eventBus, new Geocoder( this ) );
-    }
-
     if ( zmanNotificationScheduler == null ) {
       ZmanCallback zmanCallback = new PrefsBasedZmanCallback( this ) {
         @Override public void scheduleAlert(
@@ -225,11 +230,6 @@ public class ZmanimService
       locationManager = null;
     }
 
-    if ( locationToAddressConverter != null ) {
-      locationToAddressConverter.onDestroy();
-      locationToAddressConverter = null;
-    }
-
     if ( locationAcquiredHandler != null ) {
       eventBus.removeHandler( locationAcquiredHandler );
       locationAcquiredHandler = null;
@@ -239,6 +239,7 @@ public class ZmanimService
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   @Override
   protected void onHandleWork( @NonNull Intent intent ) {
 
@@ -250,19 +251,9 @@ public class ZmanimService
 
     boolean force = intent.getBooleanExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), false );
 
-
-    Actions action;
-    try {
-      action = Actions.valueOf( intent.getAction() );
-    }
-    catch ( Exception e ) {
-      //Ignore this request...
-      return;
-    }
-
     ZmanimLocation location;
 
-    switch ( action ) {
+    switch ( Actions.value( intent.getAction() ) ) {
       case FIND_LOCATION:
         findCurrentLocation( force );
         break;
@@ -270,6 +261,7 @@ public class ZmanimService
       case LOCATION_ACQUIRED:
         location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
         eventBus.fire( new LocationAcquiredEvent( location ) );
+        LocationToAddressConverter.enqueueWork( this, location, LocationToAddressConverter.Actions.RESOLVE_LOCATION );
         break;
 
       case LOCATION_NOT_ACQUIRED:
@@ -280,7 +272,7 @@ public class ZmanimService
 
       case PLACE_ACQUIRED:
         location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
-        eventBus.fire( new PlaceAcquiredEvent( location ) );
+        LocationToAddressConverter.enqueueWork( this, location, LocationToAddressConverter.Actions.RESOLVE_PLACE );
         break;
 
       case SCHEDULE_ALARM:

@@ -9,7 +9,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
@@ -26,17 +25,9 @@ class AndroidResolver
 
 
   AndroidResolver(
-    Context   context,
-    Geocoder  geocoder
+    Geocoder geocoder
   ) {
-    super( context );
     this.geocoder = geocoder;
-  }
-
-
-  @Override
-  public void onDestroy() {
-    // Nothing to destroy here...
   }
 
 
