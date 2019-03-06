@@ -9,7 +9,6 @@
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="/opt/devtools/android/android-studio/gradle/gradle-2.2.1" />
-        <option name="gradleJvm" value="JDK 1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
