@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
@@ -242,12 +241,6 @@ public class ZmanimService
   @SuppressWarnings( "FeatureEnvy" )
   @Override
   protected void onHandleWork( @NonNull Intent intent ) {
-
-    // If we don't do this, then when we ask Android's location manager for a location update, it'll throw an exception
-    //  'Can't create handler inside thread Thread[AsyncTask #1,5,main] that has not called Looper.prepare()'
-    if ( Looper.myLooper() == null ) {
-      Looper.prepare();
-    }
 
     boolean force = intent.getBooleanExtra( ZmanimService.ActionParams.FORCE_SCHEDULE.name(), false );
 
