@@ -72,7 +72,17 @@ public class ZmanimLocationService
     }
 
     // The last location in the result is the newest...
-    LocationResult result = LocationResult.extractResult( intent );
+    LocationResult result;
+    try {
+      result = LocationResult.extractResult( intent );
+    }
+    catch ( Exception e ) {
+      // Some errors are coming in where calling extractResult causes a RuntimeException:
+      //  java.lang.RuntimeException: Parcel android.os.Parcel@4e7729e8: Unmarshalling unknown type code 7274595 at offset 308
+      ZmanimService.enqueueWork( this, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), null );
+      result = null;
+    }
+
     if ( result == null ) {
       // OK... we seem to get LocationAvailability sent too. Ignore.
       return;
