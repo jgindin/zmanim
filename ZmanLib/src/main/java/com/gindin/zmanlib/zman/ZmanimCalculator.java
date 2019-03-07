@@ -9,6 +9,7 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import net.sourceforge.zmanim.AstronomicalCalendar;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
+import net.sourceforge.zmanim.util.NOAACalculator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -78,6 +79,8 @@ public class ZmanimCalculator
   ) {
     super( location );
     date.syncCalendar( getCalendar() );
+
+    setAstronomicalCalculator( new NOAACalculator() );
   }
 
 
