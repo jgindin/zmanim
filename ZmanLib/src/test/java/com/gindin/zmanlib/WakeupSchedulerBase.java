@@ -12,7 +12,10 @@ import com.gindin.zmanlib.zman.Zmanim;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
 
@@ -20,6 +23,8 @@ import static com.gindin.zmanlib.UT_ZmanUtils.seattle;
  *
  */
 abstract class WakeupSchedulerBase {
+
+  private static final SimpleDateFormat                     formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss z yyyy" );
 
 
   @SuppressWarnings( "MagicNumber" )
@@ -50,6 +55,8 @@ abstract class WakeupSchedulerBase {
     final ZmanCallback  perTestCallback,
     final String        expectedOutput
   ) {
+
+    testTime.setTimeZone( seattle.getTimeZone() );
 
     final StringBuilder output = new StringBuilder();
     //                       1         2         3         4         5         6         7         8         0
@@ -181,9 +188,11 @@ abstract class WakeupSchedulerBase {
       Calendar          alertAt
     ) {
 
+      formatter.getCalendar().setTimeZone( zman.getTime().getTimeZone() );
+
       output.append(
         String.format( "%-20s| %-15s| %-30s| %-18s|\n", zman.type, zmanFormatter.formatZmanTime( zman ),
-          new Date( alertAt.getTimeInMillis() ), shouldActuallyNotify( location, alertAt ) )
+          formatter.format( alertAt.getTimeInMillis() ), shouldActuallyNotify( location, alertAt ) )
       );
     }
 
