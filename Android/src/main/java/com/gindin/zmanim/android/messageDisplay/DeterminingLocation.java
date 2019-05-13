@@ -17,6 +17,8 @@ import java.util.TimerTask;
 public class DeterminingLocation
   extends ProgressDialog {
 
+  /** How long to delay before showing the activity? Measured in milliseconds. */
+  private static final int                                  DELAY = 250;
 
   private final Activity                                    activity;
 
@@ -48,12 +50,16 @@ public class DeterminingLocation
 
     delayTimer.schedule( new TimerTask() {
         @Override public void run() {
-          delayTimer.cancel();
-          activity.runOnUiThread( DeterminingLocation.super::show );
+
+          // If the timer is null then we got dismissed.
+          if ( delayTimer != null ) {
+            delayTimer.cancel();
+            activity.runOnUiThread( DeterminingLocation.super::show );
+          }
         }
       },
 
-      250
+      DELAY
     );
   }
 
