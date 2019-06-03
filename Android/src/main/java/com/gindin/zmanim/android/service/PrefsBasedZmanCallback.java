@@ -99,7 +99,7 @@ abstract class PrefsBasedZmanCallback
   }
 
 
-  private class SaveNotifiedZmanimTask
+  private static class SaveNotifiedZmanimTask
     extends AsyncTask<NotifiedZmanim, Void, Void> {
 
     @Override
