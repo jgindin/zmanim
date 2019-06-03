@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
@@ -189,16 +188,5 @@ public class LocationToAddressConverter
     return orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
   }
 
-
-  private static class BackgroundTask
-    extends AsyncTask<Runnable, Void, Void> {
-
-    @Override
-    protected Void doInBackground( Runnable... runnables ) {
-      runnables[0].run();
-
-      return null;
-    }
-  }
 
 } // End of LocationToAddressConverter class
