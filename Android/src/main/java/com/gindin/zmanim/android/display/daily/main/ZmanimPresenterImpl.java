@@ -165,8 +165,12 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
   private void notifyViewOfZmanim() {
 
-    assert currentDate != null;
-    assert currentLocation != null;
+    if ( ( currentDate == null ) || ( currentLocation ==  null ) ) {
+      LogUtils.logError( "ZmanPresenterImpl::notifyViewOfZmanim",
+        "Null " + ( currentDate == null ? "date" : "location" ), null );
+
+      return;
+    }
 
     List<Zmanim> daysZmanim = currentDate.getZmanim( currentLocation );
     Zman[] zmanimToDisplay = new Zman[ daysZmanim.size() ];
