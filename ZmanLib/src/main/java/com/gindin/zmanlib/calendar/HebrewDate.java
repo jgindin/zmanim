@@ -190,7 +190,7 @@ public class HebrewDate
   ) {
 
     if ( null == locationToZmanim ) {
-      locationToZmanim = new HashMap<ZmanimLocation, List<Zmanim>>();
+      locationToZmanim = new HashMap<>();
     }
 
     List<Zmanim> zmanimList = locationToZmanim.get( location );
@@ -199,7 +199,7 @@ public class HebrewDate
     }
 
     Details details = getDetails();
-    zmanimList = new ArrayList<Zmanim>();
+    zmanimList = new ArrayList<>();
 
     for ( Zmanim.Type type : details.getZmanim() ) {
       zmanimList.add( getZmanim( location, type ) );

@@ -16,10 +16,10 @@ import java.util.Map;
  */
 public class ZmanimFactory {
 
-  private static final Map<Pair<GeoLocation, HebrewDate>, ZmanimFactory>      locationToFactory = new HashMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory>();
+  private static final Map<Pair<GeoLocation, HebrewDate>, ZmanimFactory>      locationToFactory = new HashMap<>();
 
   /** Cache so that we don't create the zmanim instances more than once. */
-  private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<Zmanim.Type, Zmanim>();
+  private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<>();
 
   private final ZmanimCalculator                            zmanimCalculator;
 
@@ -33,7 +33,7 @@ public class ZmanimFactory {
 
     assert null != location;
 
-    Pair<GeoLocation,HebrewDate>  key = new Pair<GeoLocation, HebrewDate>( location, date );
+    Pair<GeoLocation,HebrewDate>  key = new Pair<>( location, date );
     ZmanimFactory factory = locationToFactory.get( key );
     if ( null == factory ) {
       factory = new ZmanimFactory( location, date );
