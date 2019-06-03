@@ -16,7 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+import android.support.v4.app.SafeJobIntentService;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,7 +28,7 @@ import java.util.List;
  * Resolves a location to its name via various resolvers.
  */
 public class LocationToAddressConverter
-  extends JobIntentService {
+  extends SafeJobIntentService {
 
   private CachedLocationResolver cachedLocationResolver;
 

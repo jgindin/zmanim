@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+import android.support.v4.app.SafeJobIntentService;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +42,7 @@ import java.util.Date;
  *  </ol>
  */
 public class ZmanimService
-  extends JobIntentService {
+  extends SafeJobIntentService {
 
 
   public enum Actions {
