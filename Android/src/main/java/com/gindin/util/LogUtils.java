@@ -46,8 +46,8 @@ public class LogUtils {
     @Nullable Pair<String, String>... moreInfo
   ) {
 
-    LogErrorAsyncTask task = new LogErrorAsyncTask( where, message, error, moreInfo );
-    new Thread( task ).start();
+    LogErrorTask task = new LogErrorTask( where, message, error, moreInfo );
+    task.run();
   }
 
 
@@ -55,9 +55,9 @@ public class LogUtils {
     @NotNull String feedback
   ) {
 
-    LogErrorAsyncTask task = new LogErrorAsyncTask( "User Feedback", feedback, new UserFeedbackException(),
+    LogErrorTask task = new LogErrorTask( "User Feedback", feedback, new UserFeedbackException(),
       (Pair<String, String>[])null );
-    new Thread( task ).start();
+    task.run();
   }
 
 
@@ -66,8 +66,9 @@ public class LogUtils {
     List<Pair<String,String>>   messages
   ) {
 
-    LogEventAsyncTask task = new LogEventAsyncTask( eventName, messages );
-    new Thread( task ).start();
+    // TODO: Find a way to capture this data again...
+//    LogEventTask task = new LogEventTask( eventName, messages );
+//    task.run();
   }
 
 
@@ -88,14 +89,14 @@ public class LogUtils {
 
 
 
-  private static class LogEventAsyncTask
+  private static class LogEventTask
     implements Runnable {
 
     private final String                                    eventName;
     private final List<Pair<String,String>>                 messages;
 
 
-    LogEventAsyncTask(
+    LogEventTask(
       String eventName,
       List<Pair<String, String>> messages
     ) {
@@ -118,20 +119,19 @@ public class LogUtils {
       }
       else {
 
-        Map<String,String> messageMap = new HashMap<String, String>();
+        Map<String,String> messageMap = new HashMap<>();
         if ( null != messages ) {
           for ( Pair<String, String> message : messages ) {
             messageMap.put( message.first, message.second );
           }
         }
 
-//        FlurryAgent.logEvent( eventName, messageMap );
       }
     }
   }
 
 
-  private static class LogErrorAsyncTask
+  private static class LogErrorTask
     implements Runnable {
 
     private final String                                    where;
@@ -145,7 +145,7 @@ public class LogUtils {
     private final Pair<String, String>[]                    moreInfo;
 
 
-    LogErrorAsyncTask(
+    LogErrorTask(
       String                            where,
       String                            message,
       @Nullable Throwable               error,
