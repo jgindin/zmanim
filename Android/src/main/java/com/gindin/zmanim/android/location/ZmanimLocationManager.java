@@ -52,8 +52,6 @@ public class ZmanimLocationManager {
   /** Everyone wants to see what preferences have been set. */
   private final SharedPreferences                           locationManagementPrefs;
 
-  private final SharedPreferences                           personalPrefs;
-
   private final Map<Type, LocationAcquirer>                 typeToAcquirerMap = new HashMap<>();
 
   /** Which provider are we currently using? */
@@ -67,14 +65,12 @@ public class ZmanimLocationManager {
   public ZmanimLocationManager(
     Context           context,
     EventBus          eventBus,
-    SharedPreferences locationManagementPrefs,
-    SharedPreferences personalPrefs
+    SharedPreferences locationManagementPrefs
   ) {
 
     this.context = context;
     this.eventBus = eventBus;
     this.locationManagementPrefs = locationManagementPrefs;
-    this.personalPrefs = personalPrefs;
 
     locationRequestHandler = new RequestLocationUpdateEvent.Handler() {
       @Override

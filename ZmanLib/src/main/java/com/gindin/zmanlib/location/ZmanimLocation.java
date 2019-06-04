@@ -248,6 +248,11 @@ public class ZmanimLocation
       return true;
     }
 
+    // It's also possible the user has switched to (or from) a custom time zone...
+    if ( !getTimeZone().equals( previousLocation.getTimeZone() ) ) {
+      return true;
+    }
+
     return false;
   }
 

@@ -87,6 +87,12 @@ class CachedLocationResolver
       }
 
       if ( !zmanimLocation.isSignificantChangeFrom( cachedLocation ) && cachedLocation.hasName() ) {
+
+        // It's possible that the user has requested a custom time zone. So...we have to honor that.
+        if ( !zmanimLocation.getTimeZone().equals( cachedLocation.getTimeZone() ) ) {
+          cachedLocation.setTimeZone( zmanimLocation.getTimeZone() );
+        }
+
         return cachedLocation;
       }
     }

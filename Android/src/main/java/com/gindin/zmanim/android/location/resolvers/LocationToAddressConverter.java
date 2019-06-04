@@ -166,7 +166,6 @@ public class LocationToAddressConverter
     }
 
     if ( resolved == null ) {
-      //noinspection AssignmentToMethodParameter
       resolved = new ZmanimLocation.Builder().invalidLocation();
     }
 

@@ -79,13 +79,16 @@
     </receiver>
 
     <!--
-      Service used for when we obtain a location fix from the Fused Location Provider.
+      Receiver used for when we obtain a location fix from the Fused Location Provider.
     -->
-    <service
-      android:name=".location.ZmanimLocationService"
+    <receiver
+      android:name=".location.acquirers.ZmanimLocationAcquiredService"
       android:description="@string/ZmanimLocationServiceDescription"
-      android:exported="false"
-    />
+    >
+      <intent-filter>
+        <action android:name="com.gindin.zmanim.android.location.acquirers.ZmanimLocationService.LOCATION_RECEIVED" />
+      </intent-filter>
+    </receiver>>
 
     <!--
       Service that can run in the background to do things like schedule alarms so we can display notifications.

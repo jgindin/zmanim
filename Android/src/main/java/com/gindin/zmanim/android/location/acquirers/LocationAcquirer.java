@@ -32,6 +32,29 @@ import java.util.TimeZone;
  */
 public abstract class LocationAcquirer {
 
+
+  @Nullable
+  static TimeZone getTimeZoneFromPrefs( SharedPreferences prefs ) {
+
+    if ( !prefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
+      return null;
+    }
+
+    final String timeZoneArea = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
+    if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
+      return null;
+    }
+
+    final String timeZoneLocale = prefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
+    if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
+      return null;
+    }
+
+    return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
+  }
+
+
+
   protected final SharedPreferences                         locationManagementPrefs;
 
   protected final Context                                   context;
@@ -74,22 +97,7 @@ public abstract class LocationAcquirer {
    */
   @Nullable
   final TimeZone getTimeZoneFromPrefs() {
-
-    if ( !locationManagementPrefs.getBoolean( LocationProviders.TimeZoneOptions.OVERRIDE_SYSTEM_TIME_ZONE.name(), false ) ) {
-      return null;
-    }
-
-    final String timeZoneArea = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_AREA.name(), null );
-    if ( ( null == timeZoneArea ) || ( 0 == timeZoneArea.trim().length() ) ) {
-      return null;
-    }
-
-    final String timeZoneLocale = locationManagementPrefs.getString( LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name(), null );
-    if ( ( null == timeZoneLocale ) || ( 0 == timeZoneLocale.trim().length() ) ) {
-      return null;
-    }
-
-    return TimeZone.getTimeZone( timeZoneArea + "/" + timeZoneLocale );
+    return getTimeZoneFromPrefs( locationManagementPrefs );
   }
 
 

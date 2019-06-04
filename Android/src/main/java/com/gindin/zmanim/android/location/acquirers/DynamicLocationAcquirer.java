@@ -6,7 +6,6 @@ package com.gindin.zmanim.android.location.acquirers;
 
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
-import com.gindin.zmanim.android.location.ZmanimLocationService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -110,7 +109,7 @@ public class DynamicLocationAcquirer
       //  3. Google Play services on the device has restarted, and there is no active Fused Location Provider client
       //      that has requested location after the services restarted. To avoid this situation you can create a new
       //      client and request location updates yourself.
-        if ( location == null ) {
+      if ( location == null ) {
         acquireLocation();
       }
       else {
@@ -120,7 +119,7 @@ public class DynamicLocationAcquirer
 
           final ZmanimLocation newLocation = ZmanLocationUtil.fromLocation( location, getTimeZoneFromPrefs() );
 
-          // See the save() in ZmanimLocationService after we have to acquire the location...
+          // See the save() in ZmanimLocationAcquiredService after we have to acquire the location...
           ZmanLocationUtil.save( context, newLocation );
           fireLocationAcquired( newLocation );
         }
@@ -156,13 +155,17 @@ public class DynamicLocationAcquirer
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
       .addLocationRequest( request );
     SettingsClient client = LocationServices.getSettingsClient( context );
-    Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+    Task<LocationSettingsResponse> task = client.checkLocationSettings( builder.build() );
 
     task
       .addOnSuccessListener( response -> {
 
-        Intent locationReceivedIntent = ZmanimLocationService.createIntent( context, getTimeZoneFromPrefs() );
-        pendingIntent = PendingIntent.getService( context, 0, locationReceivedIntent, 0 );
+        Intent locationReceivedIntent = ZmanimLocationAcquiredService.createIntent( context );
+
+        // Per the Android sample code (https://github.com/googlesamples/android-play-location/blob/master/LocationUpdatesPendingIntent/app/src/main/java/com/google/android/gms/location/sample/locationupdatespendingintent/MainActivity.java)
+        //    For apps targeting API level O, only PendingIntent.getBroadcast() should be used. This is due to the
+        //      limits placed on services started in the background in "O".
+        pendingIntent = PendingIntent.getBroadcast( context, 0, locationReceivedIntent, PendingIntent.FLAG_UPDATE_CURRENT );
 
         locationProvider.requestLocationUpdates( request, pendingIntent );
       } )

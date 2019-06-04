@@ -104,8 +104,10 @@ public class ZmanimService
   private EventBus                                          eventBus = ZMANIM_EVENT_BUS;
 
   // TODO: Inject this
+  @Nullable
   private ZmanimLocationManager                             locationManager;
 
+  @Nullable
   private LocationAcquiredEvent.Handler                     locationAcquiredHandler;
 
   private ZmanNotificationScheduler                         zmanNotificationScheduler;
@@ -171,15 +173,11 @@ public class ZmanimService
     super.onCreate();
 
     final Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-
     Thread.setDefaultUncaughtExceptionHandler( exceptionHandler );
 
-
-    final SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
-    final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-
     if ( locationManager == null ) {
-      locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs, personalPrefs );
+      final SharedPreferences locationManagementPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+      locationManager = new ZmanimLocationManager( this, eventBus, locationManagementPrefs );
     }
 
     if ( zmanNotificationScheduler == null ) {
@@ -291,7 +289,6 @@ public class ZmanimService
   }
 
 
-  @SuppressWarnings( "AutoUnboxing" )
   private void handleLocation(
     final ZmanimLocation  location
   ) {
