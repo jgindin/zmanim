@@ -77,27 +77,29 @@ class CachedLocationResolver
       copy = locationCache.newCopy();
     }
 
+    ZmanimLocation found = null;
     for ( ZmanimLocation cachedLocation : copy ) {
 
       if ( zmanimLocation.getLocationName().equals( cachedLocation.originalUserName ) ) {
         // This is the case where the user has told us the name of their location and we've gone
         //  and looked it up. The name the user gave us will be the location name in what's passed in, but stored
         //  as the original user name in the resolved location.
-        return cachedLocation;
+        found = cachedLocation;
+        break;
       }
 
       if ( !zmanimLocation.isSignificantChangeFrom( cachedLocation ) && cachedLocation.hasName() ) {
 
-        // It's possible that the user has requested a custom time zone. So...we have to honor that.
-        if ( !zmanimLocation.getTimeZone().equals( cachedLocation.getTimeZone() ) ) {
-          cachedLocation.setTimeZone( zmanimLocation.getTimeZone() );
-        }
-
-        return cachedLocation;
+        found = cachedLocation;
       }
     }
 
-    return null;
+    // It's possible that the user has requested a custom time zone. So...we have to honor that.
+    if ( ( found != null ) && !zmanimLocation.getTimeZone().equals( found.getTimeZone() ) ) {
+      found.setTimeZone( zmanimLocation.getTimeZone() );
+    }
+
+    return found;
   }
 
 
