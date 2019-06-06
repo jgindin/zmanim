@@ -186,11 +186,16 @@ public final class EventBus {
 
   private void handlePostponedAdds() {
 
-    for ( Pair<EventHandler, Boolean> pair : postponedHandlersToAdd ) {
+    List<Pair<EventHandler, Boolean>> copy;
+    synchronized ( this ) {
+      copy = new ArrayList<>( postponedHandlersToAdd );
+      postponedHandlersToAdd.clear();
+    }
+
+    for ( Pair<EventHandler, Boolean> pair : copy ) {
       //noinspection AutoUnboxing
       actuallyAddHandler( pair.first, pair.second );
     }
-    postponedHandlersToAdd.clear();
   }
 
 
@@ -201,9 +206,14 @@ public final class EventBus {
 
 
   private void handlePostponedFiring() {
+
     // Have to take a copy in case during the firing of one of these events we get more events to postpone...
-    ArrayList<Event<?>> copyOfPostponedEvents = new ArrayList<Event<?>>( postponedEvents );
-    postponedEvents.clear();
+    ArrayList<Event<?>> copyOfPostponedEvents;
+    synchronized ( this ) {
+      copyOfPostponedEvents = new ArrayList<Event<?>>( postponedEvents );
+      postponedEvents.clear();
+    }
+
     for ( Event<?> event : copyOfPostponedEvents ) {
       fireEvent( event );
     }
