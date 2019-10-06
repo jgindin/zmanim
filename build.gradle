@@ -9,7 +9,7 @@ buildscript {
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.0-beta03'
+    classpath 'com.android.tools.build:gradle:3.5.1'
 
     // See https://github.com/moallemi/gradle-advanced-build-version
     classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.0'
