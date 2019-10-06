@@ -19,30 +19,30 @@ public class UT_NominatimResolver {
   public void setup() {
 
     final EventBus eventBus = new EventBus();
-    resolver = new NominatimResolver( null );
+    resolver = new NominatimResolver();
   }
 
   @Test
   public void reverseGeocoding() {
 
     testReverse( 57.15, -2.15, "Aberdeen, Scotland" );
-    testReverse( -34.917, 138.6, "North Adelaide, South Australia" );
-    testReverse( 32.067, 34.767, "תל אביב-יפו, מחוז תל אביב" );
+    testReverse( -34.917, 138.6, "Adelaide, South Australia" );
+    testReverse( 32.067, 34.767, "تل أبيب, מחוז תל אביב" );
     testReverse( 47.62, -122.33, "Seattle, Washington" );
     testReverse( 40.78, -73.966, "NYC, New York" );
-    testReverse( 37.78333, -122.433, "San Francisco, California" );
+    testReverse( 37.78333, -122.433, "SF, California" );
     testReverse( 33.48, -112.07, "Phoenix, Arizona" );
-    testReverse( 45.4, -73.717, "Lachine, Québec" );
+    testReverse( 45.4, -73.717, "Kahnawake, Québec" );
   }
 
 
   @Test
   public void forwardGeocoding() {
 
-    testForward( "98118", "Seattle, Washington", 47.5414053555493, -122.275995343744 );
+    testForward( "98118", "Seattle, Washington", 47.5414933691592, -122.276021044533 );
     testForward( "Brooklyn, NY", "NYC, New York", 40.6501038, -73.9495823 );
     testForward( "Broklyn, NY", null, 0, 0 );
-    testForward( "Jerusalem, IL", "Jerusalem, מחוז ירושלים", 31.79681325, 35.2137689549576 );
+    testForward( "Jerusalem, IL", "Jerusalem, מחוז ירושלים", 31.78911765, 35.2229730135452 );
   }
 
 

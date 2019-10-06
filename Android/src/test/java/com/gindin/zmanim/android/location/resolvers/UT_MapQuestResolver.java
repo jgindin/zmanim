@@ -10,6 +10,7 @@ import org.junit.Test;
 /**
  *
  */
+@SuppressWarnings( "MagicNumber" )
 public class UT_MapQuestResolver {
 
   private MapQuestResolver                                  resolver;
@@ -19,15 +20,15 @@ public class UT_MapQuestResolver {
   public void setup() {
 
     EventBus eventBus = new EventBus();
-    resolver = new MapQuestResolver( null );
+    resolver = new MapQuestResolver();
   }
 
   @Test
   public void reverseGeocoding() {
 
     testReverse( 57.15, -2.15, "Aberdeen, Scotland" );
-    testReverse( -34.917, 138.6, "North Adelaide, South Australia" );
-    testReverse( 32.067, 34.767, "תל אביב-יפו, Israel" );
+    testReverse( -34.917, 138.6, "5006, South Australia" );
+    testReverse( 32.067, 34.767, "Tel Aviv-Yafo, Israel" );
     testReverse( 47.62, -122.33, "Seattle, WA" );
     testReverse( 40.78, -73.966, "New York, NY" );
     testReverse( 37.78333, -122.433, "San Francisco, CA" );
@@ -43,7 +44,7 @@ public class UT_MapQuestResolver {
     testForward( "98118", "Seattle, WA", 47.54055, -122.275593 );
     testForward( "Brooklyn, NY", "Brooklyn, NY", 40.692529, -73.990996 );
     testForward( "Broklyn, NY", "Brooklyn, NY", 40.692529, -73.990996 );
-    testForward( "Jerusalem, IL", "Jerusalem, Israel", 31.778408, 35.206626 );
+    testForward( "Jerusalem, IL", "Jerusalem, Israel", 31.796816, 35.213782 );
   }
 
 
