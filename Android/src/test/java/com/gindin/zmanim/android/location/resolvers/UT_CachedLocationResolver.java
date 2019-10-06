@@ -1,14 +1,16 @@
 package com.gindin.zmanim.android.location.resolvers;
 
-import com.gindin.eventBus.EventBus;
-import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.TimeZone;
 
 /**
@@ -16,8 +18,6 @@ import java.util.TimeZone;
  */
 @SuppressWarnings( "MagicNumber" )
 public class UT_CachedLocationResolver {
-
-  private EventBus                                          eventBus;
 
   private CachedLocationResolver                            cachedLocationResolver;
 
@@ -29,7 +29,6 @@ public class UT_CachedLocationResolver {
 
     ioFactory = new TestIOFactory();
 
-    eventBus = new EventBus();
     cachedLocationResolver = new CachedLocationResolver( ioFactory );
   }
 
@@ -44,7 +43,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
 
     ZmanimLocation location2 = new ZmanimLocation.Builder()
       .atLatitude( 47.55 )
@@ -68,7 +67,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
 
     ZmanimLocation location2 = new ZmanimLocation.Builder()
       .atLatitude( 47.56 )
@@ -92,7 +91,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
     Assert.assertEquals( 0, cachedLocationResolver.locationCache.size() );
 
   }
@@ -108,7 +107,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
 
     cachedLocationResolver.locationCache.clear();
 
@@ -132,7 +131,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
 
     ZmanimLocation location2 = new ZmanimLocation.Builder()
       .atLatitude( 47.55 )
@@ -141,7 +140,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location2 ) );
+    cachedLocationResolver.cache( location2 );
 
     Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
   }
@@ -157,7 +156,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( firstLocation ) );
+    cachedLocationResolver.cache( firstLocation );
 
     for ( int i = 0; i < 25; i++ ) {
       ZmanimLocation location = new ZmanimLocation.Builder()
@@ -167,7 +166,7 @@ public class UT_CachedLocationResolver {
         .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
         .build();
 
-      eventBus.fire( new LocationAcquiredEvent( location ) );
+      cachedLocationResolver.cache( location );
     }
 
     Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
@@ -179,7 +178,7 @@ public class UT_CachedLocationResolver {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    eventBus.fire( new LocationAcquiredEvent( location ) );
+    cachedLocationResolver.cache( location );
 
     Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
     Assert.assertFalse( cachedLocationResolver.locationCache.contains( firstLocation ) );
@@ -208,9 +207,13 @@ public class UT_CachedLocationResolver {
     @Override
     public InputStream openInput() throws IOException {
 
-      inputFile = File.createTempFile( "ut_cached_location_", "input" );
-      inputFile.deleteOnExit();
-      input = new FileInputStream( inputFile );
+      // Normally, when this is called `input` will be null; unit tests, however, may instead
+      //  invoke `prepInput`...
+      if ( input == null ) {
+        inputFile = File.createTempFile( "ut_cached_location_", "input" );
+        inputFile.deleteOnExit();
+        input = new FileInputStream( inputFile );
+      }
 
       return input;
     }
