@@ -46,9 +46,17 @@ class AlotHashachar
     );
 
     zmanim.add(
-      new Zman( "120 Minutes Zmaniyot", "GR'A and the Baal Hatanya, based on 1/6th of the day before sea level sunrise.", Zmanim.Type.Alot ) {
+      new Zman( "120 Minutes Zmaniyot", "GR'A, based on 1/6th of the day before sunrise.", Zmanim.Type.Alot ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getAlos120Zmanis() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "Baal HaTanya", "When the sun is 16.9 degrees below the eastern geometric horizon before sunrise.", Zmanim.Type.Alot, false ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getAlosBaalHatanya() );
         }
       }
     );

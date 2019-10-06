@@ -98,6 +98,15 @@ class TzaitHacochavim
     );
 
     zmanim.add(
+      new Zman( "Baal HaTanya", "Based on the sun's position at 6 degrees below the western horizon.", zmanType ) {
+        @Override
+        protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getTzaisBaalHatanya() );
+        }
+      }
+    );
+
+    zmanim.add(
       new Zman( "6.5 deg", "When the sun is 6.5 degrees below the western geometric horizon after sunset.", zmanType ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator,

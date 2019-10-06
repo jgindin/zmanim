@@ -77,7 +77,7 @@ public class UT_MapQuestResolver {
       .build();
 
     ZmanimLocation resolved = resolver.resolveFromName( unresolved );
-    Assert.assertNotNull(resolved );
+    Assert.assertNotNull( resolved );
     Assert.assertEquals( expectedLocationName, resolved.getLocationName() );
     Assert.assertEquals( expectedLatitude, resolved.getLatitude(), 0 );
     Assert.assertEquals( expectedLongitude, resolved.getLongitude(), 0 );

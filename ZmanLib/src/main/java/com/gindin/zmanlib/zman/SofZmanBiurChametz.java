@@ -59,6 +59,14 @@ public class SofZmanBiurChametz
       }
     );
 
+    zmanim.add(
+      new Zman( "Baal HaTanya", "Based on Baal HaTanya's sunrise and sunset calculations.", Type.SofZmanBiurChametz ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzBaalHatanya() );
+        }
+      }
+    );
+
     return zmanim;
   }
 
