@@ -183,6 +183,14 @@ class PlagHaMincha
       }
     );
 
+    zmanim.add(
+      new Zman( "Baal HaTanya", "Based on Baal HaTanya's sunrise and sunset calculations.", Zmanim.Type.PlagHaMincha  ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getPlagHaminchaBaalHatanya() );
+        }
+      }
+    );
+
     return zmanim;
   }
 

@@ -69,6 +69,14 @@ class MinchaKetana
       }
     );
 
+    zmanim.add(
+      new Zman( "Baal HaTanya", "Based on Baal HaTanya's sunrise and sunset calculations.", Zmanim.Type.MinchaKetana ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaKetanaBaalHatanya() );
+        }
+      }
+    );
+
     return zmanim;
   }
 }  // End of MinchaKetana class

@@ -53,7 +53,21 @@ class MinchaGedola
       }
     );
 
-//    minchaGedola.addZman( zmanimCalculator.getMinchaGedola30Minutes(), "30 minutes after chatzot", "30 minutes after chatzos and not 1/2 of a shaah zmanis after chatzos as calculated by getMinchaGedola." );
+    zmanim.add(
+      new Zman( "30 Minutes", "Calculated as 30 minutes after chatzot (and not 1/2 of a shaah zmanit after chatzot).", Zmanim.Type.MinchaGedola ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedola30Minutes() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "Lechumra 30 Minutes", "Calculated as 30 minutes after chatzot (and not 1/2 of a shaah zmanit after chatzot), except in the winter when a shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaGreaterThan30() );
+        }
+      }
+    );
 
     zmanim.add(
       new Zman( "MG'A 72 Minutes", "Magen Avraham, based onthe day starting 72 minutes before sunrise and ending 72 minutes after sunset.", Zmanim.Type.MinchaGedola ) {
@@ -67,6 +81,22 @@ class MinchaGedola
       new Zman( "Chacham Yosef Harari-Raful", "Based on the day starting 1/10th of the day before sunrise and and is usually calculated as ending 40 minutes after sunset.", Zmanim.Type.MinchaGedola ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaAteretTorah() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "Baal HaTanya", "Based on Baal HaTanya's sunrise and sunset calculations.", Zmanim.Type.MinchaGedola ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaBaalHatanya() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman( "Baal HaTanya Lechumra 30 Minutes", "Based on Baal HaTanya's sunrise and sunset calculations, except in the winter when a shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30() );
         }
       }
     );
