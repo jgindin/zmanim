@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -196,6 +196,11 @@ public abstract class Zmanim {
     ShabbatEnd( "Havdalah", "Earliest Havdalah" ) {
       @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
         return new ShabbatEnds( zmanimCalculator );
+      }
+    },
+    YomTovSheniCandleLighting( "Candle Lighting", "When candles should be lit" ) {
+      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
+        return new YomTovSheniCandleLighting( zmanimCalculator );
       }
     },
     NightChatzot( "Midnight", "Halachic Midnight" ) {

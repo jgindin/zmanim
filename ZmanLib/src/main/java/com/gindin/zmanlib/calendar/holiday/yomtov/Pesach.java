@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.yomtov;
@@ -52,10 +52,8 @@ public class Pesach
       case 17:
       case 18:
       case 19:
-        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, false );
-
       case 20:
-        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14, true );
+        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14 );
 
       case 21:
         return new PesachYomTovDetails( date, true );
@@ -146,10 +144,9 @@ public class Pesach
 
     PesachCholHaMoedDetails(
       HebrewDate  date,
-      int         dayOfChag,
-      boolean     lightCandles
+      int         dayOfChag
     ) {
-      super( date, dayOfChag, PESACH, lightCandles );
+      super( date, dayOfChag, PESACH, 6 == dayOfChag );
     }
 
 

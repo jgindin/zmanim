@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
@@ -204,17 +208,16 @@ public class UT_WakeupScheduler_ConfiguredAlerts
         case Talit:
           return UT_ZmanUtils.ZERO_MINUTES;
         case Shkia:
+        case FastEnd:
           return ZmanNotificationScheduler.FIFTEEN_MINUTES;
         case LatestMincha:
           return UT_ZmanUtils.THIRTY_MINUTES;
         case BeinHashmashot:
           return ZmanNotificationScheduler.ONE_HOUR;
         case TzaitHacochavim:
-          return UT_ZmanUtils.TWENTY_MINUTES;
         case CandleLighting:
+        case YomTovSheniCandleLighting:
           return UT_ZmanUtils.TWENTY_MINUTES;
-        case FastEnd:
-          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
       }
 
       assert false;

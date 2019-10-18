@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -115,7 +115,7 @@ public class UT_Pesach
       "Date         | Description                                   | Any   | Erev  | Erev Shabbat | Light | Shabbat | Yom Tov | Havdalah | Pesach | Omer  | Taanit |\n" +
       "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" +
       " 4/ 6/2012 F | Erev Pesach                                   | true  | true  | true         | true  | false   | false   | false    | true   | false | false  |\n" +
-      " 4/ 7/2012 B | Pesach                                        | true  | false | false        | false | true    | true    | false    | true   | false | false  |\n" +
+      " 4/ 7/2012 B | Pesach                                        | true  | false | false        | true  | true    | true    | false    | true   | false | false  |\n" +
       " 4/ 8/2012 S | Pesach                                        | true  | false | false        | false | false   | true    | true     | true   | false | false  |\n" +
       " 4/ 9/2012 M | Chol HaMoed Pesach 3                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +
       " 4/10/2012 T | Chol HaMoed Pesach 4                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +
@@ -238,7 +238,7 @@ public class UT_Pesach
       "Date         | Description                                   | Any   | Erev  | Erev Shabbat | Light | Shabbat | Yom Tov | Havdalah | Pesach | Omer  | Taanit |\n" +
       "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" +
       " 4/ 3/2015 F | Erev Pesach                                   | true  | true  | true         | true  | false   | false   | false    | true   | false | false  |\n" +
-      " 4/ 4/2015 B | Pesach                                        | true  | false | false        | false | true    | true    | false    | true   | false | false  |\n" +
+      " 4/ 4/2015 B | Pesach                                        | true  | false | false        | true  | true    | true    | false    | true   | false | false  |\n" +
       " 4/ 5/2015 S | Pesach                                        | true  | false | false        | false | false   | true    | true     | true   | false | false  |\n" +
       " 4/ 6/2015 M | Chol HaMoed Pesach 3                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +
       " 4/ 7/2015 T | Chol HaMoed Pesach 4                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +
@@ -269,7 +269,7 @@ public class UT_Pesach
       "Date         | Description                                   | Any   | Erev  | Erev Shabbat | Light | Shabbat | Yom Tov | Havdalah | Pesach | Omer  | Taanit |\n" +
       "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" +
       " 4/22/2016 F | Erev Pesach                                   | true  | true  | true         | true  | false   | false   | false    | true   | false | false  |\n" +
-      " 4/23/2016 B | Pesach                                        | true  | false | false        | false | true    | true    | false    | true   | false | false  |\n" +
+      " 4/23/2016 B | Pesach                                        | true  | false | false        | true  | true    | true    | false    | true   | false | false  |\n" +
       " 4/24/2016 S | Pesach                                        | true  | false | false        | false | false   | true    | true     | true   | false | false  |\n" +
       " 4/25/2016 M | Chol HaMoed Pesach 3                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +
       " 4/26/2016 T | Chol HaMoed Pesach 4                          | true  | false | false        | false | false   | false   | false    | true   | false | false  |\n" +

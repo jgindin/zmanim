@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -31,7 +31,19 @@ public abstract class Details {
    * @return A list of the types of zmanim this day has, ordered by the sequence in which they will occur.
    */
   public List<Zmanim.Type> getZmanim() {
-    
+
+    boolean regularCandles;
+    boolean lateCandles;
+    if ( lightCandles() ) {
+
+      lateCandles = ( isShabbat() || ( isErevYomTovSheni() && !isErevShabbat() ) );
+      regularCandles = !lateCandles;
+    }
+    else {
+      regularCandles = false;
+      lateCandles = false;
+    }
+
     List<Zmanim.Type> zmanim = new ArrayList<>();
     zmanim.add( Zmanim.Type.Alot );
     zmanim.add( Zmanim.Type.Talit );
@@ -43,7 +55,7 @@ public abstract class Details {
     zmanim.add( Zmanim.Type.MinchaKetana );
     zmanim.add( Zmanim.Type.PlagHaMincha );
 
-    if ( lightCandles() ) {
+    if ( regularCandles ) {
       zmanim.add( Zmanim.Type.CandleLighting );
     }
 
@@ -56,9 +68,19 @@ public abstract class Details {
       zmanim.add( Zmanim.Type.ShabbatEnd );
     }
 
+    if ( lateCandles ) {
+      zmanim.add( Zmanim.Type.YomTovSheniCandleLighting );
+    }
+
     zmanim.add( Zmanim.Type.NightChatzot );
     
     return Collections.unmodifiableList( zmanim );
+  }
+
+
+  public boolean isErevYomTovSheni() {
+
+    return ( isPesach() || isShavuot() || isRoshHashana() || isSukkot() || isShminiAtzeret() ) && lightCandles() && !isErev() && !isCholHaMoed();
   }
 
 
@@ -359,8 +381,7 @@ public abstract class Details {
     public boolean lightCandles() {
 
       // If we don't want to light candles for this yom tov, but it's erev Shabbat, then we DO light candles.
-      //  Of course, if it is Shabbat then we do not light...
-      return ( !isShabbat() && ( lightCandles || isErevShabbat() ) );
+      return ( lightCandles || isErevShabbat() );
     }
 
 

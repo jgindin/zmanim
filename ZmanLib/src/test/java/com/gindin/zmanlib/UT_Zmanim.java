@@ -1,109 +1,25 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.holiday.ZmanimBaseTest;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import com.gindin.zmanlib.zman.Zman;
-import com.gindin.zmanlib.zman.Zmanim;
-import org.junit.Assert;
+
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Spot-checks some dates to verify the expected zmanim are present and properly calculated.
  */
-@SuppressWarnings( { "MagicNumber", "AutoBoxing", "SpellCheckingInspection" } )
-public class UT_Zmanim {
-
-  private static final ZmanimLocation                       ezraBessaroth;
-
-  private static final ZmanimLocation                       yeshivaUniviersity;
-
-  private static final ZmanimLocation                       haRambanSynagogue;
-
-  private static final List<Zmanim.Type>                    dailyZmanim = new ArrayList<Zmanim.Type>();
-  private static final List<Zmanim.Type>                    erevShabbatZmanim = new ArrayList<Zmanim.Type>();
-  private static final List<Zmanim.Type>                    shabbatZmanim = new ArrayList<Zmanim.Type>();
-  private static final List<Zmanim.Type>                    fastDayZmanim = new ArrayList<Zmanim.Type>();
-  private static final List<Zmanim.Type>                    erevPesachZmanim = new ArrayList<Zmanim.Type>();
-  private static final List<Zmanim.Type>                    erevPesachOnShabbatZmanim = new ArrayList<Zmanim.Type>();
-
-
-  static {
-
-    ezraBessaroth = new ZmanimLocation.Builder()
-      .atLatitude( 47.552827 )
-      .atLongitude( -122.267065 )
-      .locationName( "Ezra Bessaroth" )
-      .atElevation( 61 )
-      .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
-      .build();
-
-    yeshivaUniviersity = new ZmanimLocation.Builder()
-      .atLatitude( 40.851546 )
-      .atLongitude( -73.928937 )
-      .atElevation( 56 )
-      .locationName( "Yeshiva University" )
-      .inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
-      .build();
-
-    haRambanSynagogue = new ZmanimLocation.Builder()
-      .atLatitude( 31.7750 )
-      .atLongitude( 35.2312 )
-      .atElevation( 767.49 )
-      .locationName( "HaRamban Synagogue" )
-      .inTimeZone( TimeZone.getTimeZone( "Asia/Jerusalem" ) )
-      .build();
-
-    Collections.addAll( dailyZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,        Zmanim.Type.Hanetz,       Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.Chatzot,      Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-      Zmanim.Type.PlagHaMincha,     Zmanim.Type.Shkia,        Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot,
-      Zmanim.Type.TzaitHacochavim,  Zmanim.Type.NightChatzot
-    );
-
-    Collections.addAll( erevShabbatZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,            Zmanim.Type.Hanetz,       Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.Chatzot,          Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-      Zmanim.Type.PlagHaMincha,     Zmanim.Type.CandleLighting,   Zmanim.Type.Shkia,        Zmanim.Type.LatestMincha,
-      Zmanim.Type.BeinHashmashot,   Zmanim.Type.TzaitHacochavim,  Zmanim.Type.NightChatzot
-    );
-
-    Collections.addAll( shabbatZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,        Zmanim.Type.Hanetz,       Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.Chatzot,      Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-      Zmanim.Type.PlagHaMincha,     Zmanim.Type.Shkia,        Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot,
-      Zmanim.Type.TzaitHacochavim,  Zmanim.Type.ShabbatEnd,   Zmanim.Type.NightChatzot
-    );
-
-    Collections.addAll( fastDayZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,            Zmanim.Type.Hanetz,       Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.Chatzot,          Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-      Zmanim.Type.PlagHaMincha,     Zmanim.Type.Shkia,            Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot,
-      Zmanim.Type.FastEnd,          Zmanim.Type.TzaitHacochavim,  Zmanim.Type.NightChatzot
-    );
-
-    Collections.addAll( erevPesachZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,                  Zmanim.Type.Hanetz,             Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.SofZmanAchilatChametz,  Zmanim.Type.SofZmanBiurChametz, Zmanim.Type.Chatzot,
-      Zmanim.Type.MinchaGedola,     Zmanim.Type.MinchaKetana,           Zmanim.Type.PlagHaMincha,       Zmanim.Type.CandleLighting,
-      Zmanim.Type.Shkia,            Zmanim.Type.LatestMincha,           Zmanim.Type.BeinHashmashot,     Zmanim.Type.FastEnd,
-      Zmanim.Type.TzaitHacochavim,  Zmanim.Type.NightChatzot
-    );
-
-    Collections.addAll( erevPesachOnShabbatZmanim,
-      Zmanim.Type.Alot,             Zmanim.Type.Talit,        Zmanim.Type.Hanetz,       Zmanim.Type.SofZmanShema,
-      Zmanim.Type.SofZmanTefila,    Zmanim.Type.Chatzot,      Zmanim.Type.MinchaGedola, Zmanim.Type.MinchaKetana,
-      Zmanim.Type.PlagHaMincha,     Zmanim.Type.Shkia,        Zmanim.Type.LatestMincha, Zmanim.Type.BeinHashmashot,
-      Zmanim.Type.TzaitHacochavim,  Zmanim.Type.NightChatzot
-    );
-
-  }
+@SuppressWarnings( { "MagicNumber", "SpellCheckingInspection" } )
+public class UT_Zmanim
+  extends ZmanimBaseTest {
 
 
   /**
@@ -232,8 +148,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:44:21\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:07\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:59:34\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:58:25\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 19:03:25\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:58:25\n" +
         "            Midnight - Mid-night                     :  0:54:20\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n";
 
@@ -357,8 +273,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:36:48\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:51\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:50:23\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:54:18\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:59:18\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:54:18\n" +
         "            Midnight - Mid-night                     :  0:40:53\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:55:42\n";
 
@@ -482,8 +398,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:27:06\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:28\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:39:11\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:41\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:41\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:41\n" +
         "            Midnight - Mid-night                     :  0:24:12\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:39:04\n";
 
@@ -628,8 +544,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:35:48\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:38\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:51:08\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:49:33\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:54:33\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:49:33\n" +
         "            Midnight - Mid-night                     :  0:53:35\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -763,8 +679,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:34:09\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:41:00\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:49:30\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:50\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:50\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:50\n" +
         "            Havdalah - MG'A 120 Minutes              : 20:02:50\n" +
         "            Havdalah - GR'A 120 Minutes Zmaniyot     : 19:46:12\n" +
         "            Havdalah - 3.5 deg                       : 18:19:16\n" +
@@ -791,8 +707,8 @@ public class UT_Zmanim {
         "            Havdalah - Geonim 5.95 deg               : 18:34:09\n" +
         "            Havdalah - Geonim 7.083 deg              : 18:41:00\n" +
         "            Havdalah - Geonim 8.5 deg                : 18:49:30\n" +
-        "            Havdalah - Seattle Sephardic             : 18:47:50\n" +
         "            Havdalah - Rabbi Moshe Feinstein         : 18:52:50\n" +
+        "            Havdalah - Seattle Sephardic             : 18:47:50\n" +
         "            Midnight - Mid-night                     :  0:53:28\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -926,8 +842,35 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:14:04\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:21:04\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:29:53\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 20:27:56\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:32:56\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 20:27:56\n" +
+        "     Candle Lighting - MG'A 120 Minutes              : 21:42:56\n" +
+        "     Candle Lighting - GR'A 120 Minutes Zmaniyot     : 21:53:06\n" +
+        "     Candle Lighting - 3.5 deg                       : 19:59:04\n" +
+        "     Candle Lighting - Baal HaTanya                  : 20:14:22\n" +
+        "     Candle Lighting - 6.5 deg                       : 20:17:27\n" +
+        "     Candle Lighting - 8.5 deg                       : 20:29:53\n" +
+        "     Candle Lighting - 16.1 deg                      : 21:19:05\n" +
+        "     Candle Lighting - 18 deg                        : 21:32:04\n" +
+        "     Candle Lighting - 19.8 deg                      : 21:44:43\n" +
+        "     Candle Lighting - 26 deg                        : 22:32:17\n" +
+        "     Candle Lighting - Chavas Yair and Divray Malkiel: 20:42:56\n" +
+        "     Candle Lighting - Rambam / Rabainu Tam          : 20:54:56\n" +
+        "     Candle Lighting - 72 Minutes Zmaniyot           : 21:01:02\n" +
+        "     Candle Lighting - MG'A 90 Minutes               : 21:12:56\n" +
+        "     Candle Lighting - GR'A 90 Minutes Zmaniyot      : 21:20:33\n" +
+        "     Candle Lighting - 96 Minutes                    : 21:18:56\n" +
+        "     Candle Lighting - GR'A 96 Minutes Zmaniyot      : 21:27:04\n" +
+        "     Candle Lighting - Chacham Yosef Harari-Raful    : 20:22:56\n" +
+        "     Candle Lighting - Geonim 3.65 deg               : 19:59:59\n" +
+        "     Candle Lighting - Geonim 4.37 deg               : 20:04:22\n" +
+        "     Candle Lighting - Geonim 4.61 deg               : 20:05:50\n" +
+        "     Candle Lighting - Geonim 4.8 deg                : 20:07:00\n" +
+        "     Candle Lighting - Geonim 5.88 deg               : 20:13:38\n" +
+        "     Candle Lighting - Geonim 5.95 deg               : 20:14:04\n" +
+        "     Candle Lighting - Geonim 7.083 deg              : 20:21:04\n" +
+        "     Candle Lighting - Geonim 8.5 deg                : 20:29:53\n" +
+        "     Candle Lighting - Rabbi Moshe Feinstein         : 20:32:56\n" +
         "            Midnight - Mid-night                     :  1:11:29\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -1085,6 +1028,7 @@ public class UT_Zmanim {
         "           Fast Ends - Geonim 5.95 deg               : 20:29:25\n" +
         "           Fast Ends - Geonim 7.083 deg              : 20:36:41\n" +
         "           Fast Ends - Geonim 8.5 deg                : 20:45:51\n" +
+        "           Fast Ends - Rabbi Moshe Feinstein         : 20:47:25\n" +
         "           Fast Ends - Seattle Sephardic             : 20:27:25\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 21:57:25\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 22:13:18\n" +
@@ -1112,8 +1056,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:29:25\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:36:41\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:45:51\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 20:42:25\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:47:25\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 20:42:25\n" +
         "            Midnight - Mid-night                     :  1:08:47\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
@@ -1244,6 +1188,7 @@ public class UT_Zmanim {
         "           Fast Ends - Geonim 5.95 deg               : 17:03:49\n" +
         "           Fast Ends - Geonim 7.083 deg              : 17:11:22\n" +
         "           Fast Ends - Geonim 8.5 deg                : 17:20:42\n" +
+        "           Fast Ends - Rabbi Moshe Feinstein         : 17:18:24\n" +
         "           Fast Ends - Seattle Sephardic             : 16:58:24\n" +
         "    Tzait Hacochavim - MG'A 120 Minutes              : 18:28:24\n" +
         "    Tzait Hacochavim - GR'A 120 Minutes Zmaniyot     : 17:53:37\n" +
@@ -1271,8 +1216,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 17:03:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 17:11:22\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 17:20:42\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 17:13:24\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:18:24\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 17:13:24\n" +
         "            Midnight - Mid-night                     :  0:12:44\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:09:04\n"
     );
@@ -1426,8 +1371,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:06\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:56\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:03\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:03\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:03\n" +
         "            Midnight - Mid-night                     :  0:46:37\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
@@ -1559,8 +1504,8 @@ public class UT_Zmanim {
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:06\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:44:56\n" +
-        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:03\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:03\n" +
+        "    Tzait Hacochavim - Seattle Sephardic             : 18:47:03\n" +
         "            Midnight - Mid-night                     :  0:46:37\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
@@ -1689,44 +1634,13 @@ public class UT_Zmanim {
       "    Tzait Hacochavim - Geonim 5.95 deg               : 17:01:44\n" +
       "    Tzait Hacochavim - Geonim 7.083 deg              : 17:07:26\n" +
       "    Tzait Hacochavim - Geonim 8.5 deg                : 17:14:32\n" +
-      "    Tzait Hacochavim - Seattle Sephardic             : 17:20:38\n" +
       "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:25:38\n" +
+      "    Tzait Hacochavim - Seattle Sephardic             : 17:20:38\n" +
       "            Midnight - Mid-night                     : 23:26:42\n" +
       "            Midnight - Fixed Local Mid-Night         : 23:39:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2017, Calendar.NOVEMBER, 26 );
     verifyZmanim( haRambanSynagogue, date, dailyZmanim, haRambanSynagogueExpected );
-  }
-
-
-  private void verifyZmanim(
-    ZmanimLocation    location,
-    HebrewDate        date,
-    List<Zmanim.Type> expectedZmanim,
-    String            expected
-  ) {
-
-    List<Zmanim> zmanimForDay = date.getZmanim( location );
-
-    List<Zmanim.Type> day = new ArrayList<>();
-    for ( Zmanim zmanim : zmanimForDay ) {
-      day.add( zmanim.type );
-    }
-    Assert.assertEquals( expectedZmanim.toString(), day.toString() );
-
-    StringBuilder output = new StringBuilder();
-    output.append( location.getLocationName() ).append( "\n" );
-    for ( Zmanim zmanim : zmanimForDay ) {
-      for ( Zman zman : zmanim.asList() ) {
-        Calendar zmanTime = zman.getTime();
-        if ( zmanTime != null ) {
-          output.append( String.format( "%20s - %-30s: %2d:%02d:%02d\n", zmanim.type.name, zman.name,
-            zmanTime.get( Calendar.HOUR_OF_DAY ), zmanTime.get( Calendar.MINUTE ), zmanTime.get( Calendar.SECOND ) ) );
-        }
-      }
-    }
-
-    Assert.assertEquals( expected, output.toString() );
   }
 
 

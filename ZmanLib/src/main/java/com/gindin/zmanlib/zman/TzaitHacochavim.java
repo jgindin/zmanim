@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -283,6 +283,13 @@ class TzaitHacochavim
       }
     );
 
+    zmanim.add(
+      new Zman( "Rabbi Moshe Feinstein", "For use in the New York area: Fixed 50 minutes after sunset.", zmanType ) {
+        @Nullable @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitRavMoshe() );
+        }
+      } );
+
     return zmanim;
   }
 
@@ -302,13 +309,6 @@ class TzaitHacochavim
         }
       }
     );
-
-    zmanim.add(
-      new Zman( "Rabbi Moshe Feinstein", "For use in the New York area: Fixed 50 minutes after sunset.", zmanType ) {
-        @Nullable @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getTzaitRavMoshe() );
-        }
-      } );
 
     return zmanim;
   }

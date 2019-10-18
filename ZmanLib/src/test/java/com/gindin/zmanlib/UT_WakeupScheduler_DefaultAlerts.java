@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.notification.NotificationDefaults;
@@ -233,7 +237,7 @@ public class UT_WakeupScheduler_DefaultAlerts
         "FastEnd             | 8:22:09 PM     | Mon Apr 10 20:17:09 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:09:43 AM     | Tue Apr 11 00:54:43 PDT 2017  | true              |\n" +
         "Alot                | 4:48:39 AM     | Tue Apr 11 04:33:39 PDT 2017  | true              |\n" +
-        "CandleLighting      | 7:35:33 PM     | Tue Apr 11 19:20:33 PDT 2017  | true              |\n" +
+        "YomTovSheniCandleLighting| 8:41:33 PM     | Tue Apr 11 20:26:33 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:09:27 AM     | Wed Apr 12 00:54:27 PDT 2017  | true              |\n" +
         "Alot                | 4:46:16 AM     | Wed Apr 12 04:31:16 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:09:12 AM     | Thu Apr 13 00:54:12 PDT 2017  | true              |\n" +
@@ -248,7 +252,7 @@ public class UT_WakeupScheduler_DefaultAlerts
         "CandleLighting      | 7:42:37 PM     | Sun Apr 16 19:27:37 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:08:16 AM     | Mon Apr 17 00:53:16 PDT 2017  | true              |\n" +
         "Alot                | 4:34:20 AM     | Mon Apr 17 04:19:20 PDT 2017  | true              |\n" +
-        "CandleLighting      | 7:44:01 PM     | Mon Apr 17 19:29:01 PDT 2017  | true              |\n" +
+        "YomTovSheniCandleLighting| 8:51:04 PM     | Mon Apr 17 20:36:04 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:08:03 AM     | Tue Apr 18 00:53:03 PDT 2017  | true              |\n" +
         "Alot                | 4:31:56 AM     | Tue Apr 18 04:16:56 PDT 2017  | true              |\n" +
         "NightChatzot        | 1:07:50 AM     | Wed Apr 19 00:52:50 PDT 2017  | true              |\n" +
@@ -304,43 +308,29 @@ public class UT_WakeupScheduler_DefaultAlerts
 
       switch ( type ) {
         case Alot:
-          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-        case Talit:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case Hanetz:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case SofZmanShema:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case SofZmanTefila:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case SofZmanAchilatChametz:
-          return ZmanNotificationScheduler.ONE_HOUR;
-        case SofZmanBiurChametz:
-          return ZmanNotificationScheduler.ONE_HOUR;
-        case Chatzot:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case MinchaGedola:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case MinchaKetana:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case PlagHaMincha:
-          return ZmanNotificationScheduler.NO_ALERT;
         case CandleLighting:
-          return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-        case Shkia:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case BeinHashmashot:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case LatestMincha:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case FastEnd:
-          return UT_ZmanUtils.FIVE_MINUTES;
-        case TzaitHacochavim:
-          return ZmanNotificationScheduler.NO_ALERT;
-        case ShabbatEnd:
-          return ZmanNotificationScheduler.NO_ALERT;
+        case YomTovSheniCandleLighting:
         case NightChatzot:
           return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+        case Talit:
+        case Hanetz:
+        case SofZmanShema:
+        case SofZmanTefila:
+        case Chatzot:
+        case MinchaGedola:
+        case MinchaKetana:
+        case PlagHaMincha:
+        case Shkia:
+        case BeinHashmashot:
+        case LatestMincha:
+        case TzaitHacochavim:
+        case ShabbatEnd:
+          return ZmanNotificationScheduler.NO_ALERT;
+        case SofZmanAchilatChametz:
+        case SofZmanBiurChametz:
+          return ZmanNotificationScheduler.ONE_HOUR;
+        case FastEnd:
+          return UT_ZmanUtils.FIVE_MINUTES;
       }
 
       assert false;

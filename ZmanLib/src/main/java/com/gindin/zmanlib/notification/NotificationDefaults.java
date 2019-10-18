@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib.notification;
 
 import com.gindin.zmanlib.zman.Zmanim;
@@ -11,43 +15,28 @@ public final class NotificationDefaults {
 
     switch ( type ) {
       case Alot:
-        return ZmanNotificationScheduler.NO_ALERT;
-      case Talit:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
       case Hanetz:
-        return ZmanNotificationScheduler.NO_ALERT;
-      case SofZmanShema:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case SofZmanTefila:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case SofZmanAchilatChametz:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case SofZmanBiurChametz:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
       case Chatzot:
-        return ZmanNotificationScheduler.NO_ALERT;
       case MinchaGedola:
-        return ZmanNotificationScheduler.NO_ALERT;
       case MinchaKetana:
-        return ZmanNotificationScheduler.NO_ALERT;
-      case PlagHaMincha:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case CandleLighting:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case Shkia:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
       case BeinHashmashot:
-        return ZmanNotificationScheduler.NO_ALERT;
-      case LatestMincha:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
-      case FastEnd:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
       case TzaitHacochavim:
-        return ZmanNotificationScheduler.NO_ALERT;
       case ShabbatEnd:
-        return ZmanNotificationScheduler.NO_ALERT;
       case NightChatzot:
         return ZmanNotificationScheduler.NO_ALERT;
+
+      case Talit:
+      case SofZmanShema:
+      case SofZmanTefila:
+      case SofZmanAchilatChametz:
+      case SofZmanBiurChametz:
+      case PlagHaMincha:
+      case CandleLighting:
+      case Shkia:
+      case LatestMincha:
+      case FastEnd:
+      case YomTovSheniCandleLighting:
+        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
     }
 
     assert false;
