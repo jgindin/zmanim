@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.service;
 
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
@@ -18,7 +22,7 @@ import java.util.Calendar;
 /**
  * Zman callback that works from the shared preferences.
  */
-abstract class PrefsBasedZmanCallback
+public abstract class PrefsBasedZmanCallback
   extends ZmanCallback {
 
   private final SharedPreferences                           zmanimSelectionPrefs;
@@ -26,7 +30,7 @@ abstract class PrefsBasedZmanCallback
   private final SharedPreferences                           personalPrefs;
 
 
-  PrefsBasedZmanCallback(
+  public PrefsBasedZmanCallback(
     Context context
   ) {
     this.zmanimSelectionPrefs = context.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );

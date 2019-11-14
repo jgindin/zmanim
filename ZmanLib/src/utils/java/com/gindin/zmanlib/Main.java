@@ -1,10 +1,12 @@
+/*
+ * Copyright (c) 2019. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.zman.Zmanim;
-
-import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -40,7 +42,6 @@ public class Main
   };
 
 
-  @Test
   public void justRun() throws ParseException {
 
     HebrewDate start = HebrewCalendar.getForDate( 2016, Calendar.OCTOBER, 1 );
