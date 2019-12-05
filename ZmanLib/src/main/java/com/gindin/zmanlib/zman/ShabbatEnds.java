@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -26,7 +26,7 @@ class ShabbatEnds
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
     return mergeZmanimLists(
-      buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ),
+      buildStandardTzaitZmanim( Type.ShabbatEnd, zmanimCalculator, false ),
       buildExtraTzaitZmanim( Type.ShabbatEnd, zmanimCalculator ) );
   }
 

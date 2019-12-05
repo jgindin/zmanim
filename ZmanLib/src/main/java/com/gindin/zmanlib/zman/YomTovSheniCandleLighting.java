@@ -19,6 +19,6 @@ public class YomTovSheniCandleLighting
 
   @Override
   protected List<Zman> buildZmanimList( ZmanimCalculator zmanimCalculator ) {
-    return buildStandardTzaitZmanim( Type.YomTovSheniCandleLighting, zmanimCalculator );
+    return buildStandardTzaitZmanim( Type.YomTovSheniCandleLighting, zmanimCalculator, false );
   }
 }

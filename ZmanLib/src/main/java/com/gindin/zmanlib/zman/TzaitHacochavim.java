@@ -45,7 +45,7 @@ class TzaitHacochavim
   @Override
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-    return mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ),
+    return mergeZmanimLists( buildStandardTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator, true ),
       buildExtraTzaitZmanim( Type.TzaitHacochavim, zmanimCalculator ) );
   }
 
@@ -66,10 +66,11 @@ class TzaitHacochavim
   @SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
   protected static List<Zman> buildStandardTzaitZmanim(
     final Type              zmanType,
-    final ZmanimCalculator  zmanimCalculator
+    final ZmanimCalculator  zmanimCalculator,
+    final boolean           includeBaalHaTanya
   ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
 
     zmanim.add(
@@ -97,14 +98,16 @@ class TzaitHacochavim
       }
     );
 
-    zmanim.add(
-      new Zman( "Baal HaTanya", "Based on the sun's position at 6 degrees below the western horizon.", zmanType ) {
-        @Override
-        protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getTzaisBaalHatanya() );
+    if ( includeBaalHaTanya ) {
+      zmanim.add(
+        new Zman( "Baal HaTanya", "Based on the sun's position at 6 degrees below the western horizon.", zmanType ) {
+          @Override
+          protected Calendar calculate() {
+            return toCalendar( zmanimCalculator, zmanimCalculator.getTzaisBaalHatanya() );
+          }
         }
-      }
-    );
+      );
+    }
 
     zmanim.add(
       new Zman( "6.5 deg", "When the sun is 6.5 degrees below the western geometric horizon after sunset.", zmanType ) {
@@ -300,7 +303,7 @@ class TzaitHacochavim
     final ZmanimCalculator  zmanimCalculator
   ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
     zmanim.add(
       new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition (45 minutes).", zmanType ) {

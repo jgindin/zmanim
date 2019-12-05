@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -26,7 +26,7 @@ class FastEnds
     final ZmanimCalculator zmanimCalculator
   ) {
 
-    List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator );
+    List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator, true );
 
     zmanim.add(
       new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {

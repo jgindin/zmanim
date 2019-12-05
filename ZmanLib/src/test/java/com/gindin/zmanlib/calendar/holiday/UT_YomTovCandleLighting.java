@@ -145,7 +145,6 @@ public class UT_YomTovCandleLighting
         "     Candle Lighting - MG'A 120 Minutes              : 20:23:07\n" +
         "     Candle Lighting - GR'A 120 Minutes Zmaniyot     : 20:12:36\n" +
         "     Candle Lighting - 3.5 deg                       : 18:39:09\n" +
-        "     Candle Lighting - Baal HaTanya                  : 18:54:04\n" +
         "     Candle Lighting - 6.5 deg                       : 18:57:02\n" +
         "     Candle Lighting - 8.5 deg                       : 19:08:55\n" +
         "     Candle Lighting - 16.1 deg                      : 19:53:56\n" +
@@ -491,7 +490,6 @@ public class UT_YomTovCandleLighting
         "     Candle Lighting - MG'A 120 Minutes              : 21:37:40\n" +
         "     Candle Lighting - GR'A 120 Minutes Zmaniyot     : 21:45:41\n" +
         "     Candle Lighting - 3.5 deg                       : 19:53:41\n" +
-        "     Candle Lighting - Baal HaTanya                  : 20:08:51\n" +
         "     Candle Lighting - 6.5 deg                       : 20:11:54\n" +
         "     Candle Lighting - 8.5 deg                       : 20:24:11\n" +
         "     Candle Lighting - 16.1 deg                      : 21:12:34\n" +
@@ -651,7 +649,6 @@ public class UT_YomTovCandleLighting
         "            Havdalah - MG'A 120 Minutes              : 21:52:50\n" +
         "            Havdalah - GR'A 120 Minutes Zmaniyot     : 22:06:55\n" +
         "            Havdalah - 3.5 deg                       : 20:09:13\n" +
-        "            Havdalah - Baal HaTanya                  : 20:24:50\n" +
         "            Havdalah - 6.5 deg                       : 20:27:59\n" +
         "            Havdalah - 8.5 deg                       : 20:40:45\n" +
         "            Havdalah - 16.1 deg                      : 21:31:47\n" +
