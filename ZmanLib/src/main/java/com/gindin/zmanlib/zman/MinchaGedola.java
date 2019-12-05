@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2019. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -94,7 +94,7 @@ class MinchaGedola
     );
 
     zmanim.add(
-      new Zman( "Baal HaTanya Lechumra 30 Minutes", "Based on Baal HaTanya's sunrise and sunset calculations, except in the winter when a shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
+      new Zman( "Baal HaTanya Lechumra 30 Minutes", "Based on Baal HaTanya's sunrise and sunset calculations, except in the winter when 1/2 shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30() );
         }
