@@ -62,7 +62,7 @@ class MinchaGedola
     );
 
     zmanim.add(
-      new Zman( "Lechumra 30 Minutes", "Calculated as 30 minutes after chatzot (and not 1/2 of a shaah zmanit after chatzot), except in the winter when a shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
+      new Zman( "Lechumra 30 Minutes", "Calculated as 30 minutes after chatzot (and not 1/2 of a shaah zmanit after chatzot), except in the winter when 1/2 shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaGreaterThan30() );
         }
