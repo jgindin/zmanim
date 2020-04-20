@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2020. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -36,6 +36,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:04:05\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:50:12\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:58:37\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:45:23\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:34:24\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:30:14\n" +
         "       Talit/Tefilin - 11 deg                        :  6:25:30\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:22:32\n" +
@@ -196,6 +198,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:15:53\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:15:29\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:09:31\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:10:26\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  5:59:04\n" +
         "       Talit/Tefilin - 10.2 deg                      :  5:54:44\n" +
         "       Talit/Tefilin - 11 deg                        :  5:49:46\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:46:38\n" +
@@ -381,6 +385,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:13:27\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:13:29\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:07:03\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:08:20\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  5:56:57\n" +
         "       Talit/Tefilin - 10.2 deg                      :  5:52:36\n" +
         "       Talit/Tefilin - 11 deg                        :  5:47:36\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:44:28\n" +
@@ -540,6 +546,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  4:47:42\n" +
         "      Alot Hashachar - 96 Minutes                    :  4:52:16\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  4:41:00\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  5:45:59\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  5:34:09\n" +
         "       Talit/Tefilin - 10.2 deg                      :  5:29:37\n" +
         "       Talit/Tefilin - 11 deg                        :  5:24:23\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:21:06\n" +
@@ -701,6 +709,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:03:08\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:49:28\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:57:39\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:44:40\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:33:41\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:29:32\n" +
         "       Talit/Tefilin - 11 deg                        :  6:24:47\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:21:49\n" +
@@ -840,6 +850,8 @@ public class UT_YomTovCandleLighting
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:31:46\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:25:23\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:25:47\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:20:53\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:09:49\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:05:36\n" +
         "       Talit/Tefilin - 11 deg                        :  6:00:47\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:57:46\n" +

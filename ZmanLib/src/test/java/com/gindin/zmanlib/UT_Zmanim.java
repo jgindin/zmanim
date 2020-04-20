@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2020. Jay R. Gindin
  */
 
 package com.gindin.zmanlib;
@@ -44,6 +44,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:13:48\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:57:46\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:08:28\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:52:38\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:41:36\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:37:26\n" +
         "       Talit/Tefilin - 11 deg                        :  6:32:41\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:29:43\n" +
@@ -169,6 +171,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:49:08\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:35:22\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:43:39\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:34:46\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:24:55\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:21:12\n" +
         "       Talit/Tefilin - 11 deg                        :  6:16:58\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:14:18\n" +
@@ -294,6 +298,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:20:16\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:08:59\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  5:14:37\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:12:29\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:03:43\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:00:24\n" +
         "       Talit/Tefilin - 11 deg                        :  5:56:37\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:54:16\n" +
@@ -433,6 +439,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:23:12\n" +
         "      Alot Hashachar - 96 Minutes                    :  6:05:08\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:18:01\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:59:36\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:48:31\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:44:20\n" +
         "       Talit/Tefilin - 11 deg                        :  6:39:34\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:36:35\n" +
@@ -575,6 +583,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:25:06\n" +
         "      Alot Hashachar - 96 Minutes                    :  6:06:37\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:19:56\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  7:01:00\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:49:54\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:45:43\n" +
         "       Talit/Tefilin - 11 deg                        :  6:40:56\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:37:57\n" +
@@ -737,6 +747,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  5:04:24\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:06:01\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  4:57:54\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:00:32\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  5:49:01\n" +
         "       Talit/Tefilin - 10.2 deg                      :  5:44:36\n" +
         "       Talit/Tefilin - 11 deg                        :  5:39:33\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:36:22\n" +
@@ -898,6 +910,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  4:40:08\n" +
         "      Alot Hashachar - 96 Minutes                    :  4:46:03\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  4:33:20\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  5:39:19\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  5:27:18\n" +
         "       Talit/Tefilin - 10.2 deg                      :  5:22:42\n" +
         "       Talit/Tefilin - 11 deg                        :  5:17:23\n" +
         "       Talit/Tefilin - 11.5 deg                      :  5:14:03\n" +
@@ -1082,6 +1096,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:53:10\n" +
         "      Alot Hashachar - 96 Minutes                    :  6:21:05\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:48:55\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  7:10:22\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:58:17\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:53:46\n" +
         "       Talit/Tefilin - 11 deg                        :  6:48:38\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:45:26\n" +
@@ -1258,6 +1274,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:13:51\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:56:32\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:08:36\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:54:24\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:44:12\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:40:21\n" +
         "       Talit/Tefilin - 11 deg                        :  6:35:58\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:33:14\n" +
@@ -1391,6 +1409,8 @@ public class UT_Zmanim
         "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  6:13:51\n" +
         "      Alot Hashachar - 96 Minutes                    :  5:56:32\n" +
         "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  6:08:36\n" +
+        "       Talit/Tefilin - 7.65 deg                      :  6:54:24\n" +
+        "       Talit/Tefilin - 9.5 deg                       :  6:44:12\n" +
         "       Talit/Tefilin - 10.2 deg                      :  6:40:21\n" +
         "       Talit/Tefilin - 11 deg                        :  6:35:58\n" +
         "       Talit/Tefilin - 11.5 deg                      :  6:33:14\n" +
@@ -1528,6 +1548,8 @@ public class UT_Zmanim
       "      Alot Hashachar - GR'A 90 Minutes Zmaniyot      :  4:59:35\n" +
       "      Alot Hashachar - 96 Minutes                    :  4:40:55\n" +
       "      Alot Hashachar - GR'A 96 Minutes Zmaniyot      :  4:54:25\n" +
+      "       Talit/Tefilin - 7.65 deg                      :  5:42:16\n" +
+      "       Talit/Tefilin - 9.5 deg                       :  5:33:02\n" +
       "       Talit/Tefilin - 10.2 deg                      :  5:29:33\n" +
       "       Talit/Tefilin - 11 deg                        :  5:25:36\n" +
       "       Talit/Tefilin - 11.5 deg                      :  5:23:07\n" +
