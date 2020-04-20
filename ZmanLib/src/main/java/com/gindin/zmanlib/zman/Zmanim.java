@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2020. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -133,7 +133,7 @@ public abstract class Zmanim {
         return new SofZmanTefila( zmanimCalculator );
       }
     },
-    SofZmanAchilatChametz( "Achilat Chametz", "Latest time to each Chametz" ) {
+    SofZmanAchilatChametz( "Achilat Chametz", "Latest time to eat Chametz" ) {
       @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
         return new SofZmanAchilatChametz( zmanimCalculator );
       }
