@@ -81,6 +81,7 @@ local.properties
 
 # IntelliJ
 /out/
+.idea/caches/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
