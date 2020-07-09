@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2020. Jay R. Gindin
  */
 
 package com.gindin.util;
@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Wraps our usage of the Flurry analytics agent.
- */
 public class LogUtils {
 
 

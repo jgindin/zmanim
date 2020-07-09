@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2020. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -31,16 +31,6 @@ apply from: '../common/gindin-versioning.gradle'
  * NOTE: Since these files contain secret keys, they're never committed to source control. So...that means
  *  that not everyone will have them.
  */
-Properties flurry = new Properties()
-String flurryKey
-try {
-  flurry.load( new FileInputStream( project.projectDir.getPath() + "/../common/flurry.properties" ) )
-  flurryKey = "\"" + flurry[ 'flurry.key' ] + "\""
-}
-catch ( ignored ) {
-  flurryKey = "\"\""
-}
-
 Properties mapQuest = new Properties()
 String mapQuestKey
 try {
@@ -66,6 +56,13 @@ catch ( ignored ) {
 
 
 android {
+  /**
+   * TODO: When updating to version 29, going to have to add ACCESS_BACKGROUND_LOCATION permission
+   *  into the AndroidManifest.xml, and deal with all that implies...
+   *  See:
+   *    - https://android-developers.googleblog.com/2020/02/safer-location-access.html
+   *    - https://developer.android.com/preview/privacy/permissions
+   */
   compileSdkVersion 28
 
   defaultConfig {
@@ -97,7 +94,6 @@ android {
     release {
 
       buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
-      buildConfigField "String", "FLURRY_KEY", "${flurryKey}"
       buildConfigField "String", "ACRA_KEY", "${acraPassword}"
       buildConfigField "String", "ACRA_USER", "${acraUser}"
 
@@ -107,7 +103,6 @@ android {
        * Library-specific proguard files.
        * See https://github.com/krschultz/android-proguard-snippets.
        */
-      proguardFile 'proguard-flurry.pro'
       proguardFile 'proguard-google-play-services.pro'
       proguardFile 'proguard-support-design.pro'
       proguardFile 'proguard-support-v7-appcompat.pro'
@@ -127,7 +122,6 @@ android {
 
     debug {
       buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
-      buildConfigField "String", "FLURRY_KEY", "\"DEV\""
       buildConfigField "String", "ACRA_KEY", "\"DEV\""
       buildConfigField "String", "ACRA_USER", "\"DEV\""
     }
