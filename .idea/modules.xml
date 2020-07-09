@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android/Android.iml" filepath="$PROJECT_DIR$/Android/Android.iml" group="zmanim/Android" />
-      <module fileurl="file://$PROJECT_DIR$/ZehutYosef/ZehutYosef.iml" filepath="$PROJECT_DIR$/ZehutYosef/ZehutYosef.iml" group="zmanim/ZehutYosef" />
-      <module fileurl="file://$PROJECT_DIR$/ZmanLib/ZmanLib.iml" filepath="$PROJECT_DIR$/ZmanLib/ZmanLib.iml" group="zmanim/ZmanLib" />
-      <module fileurl="file://$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" filepath="$PROJECT_DIR$/ZmanUtils/ZmanUtils.iml" group="zmanim/ZmanUtils" />
-      <module fileurl="file://$PROJECT_DIR$/zmanim.iml" filepath="$PROJECT_DIR$/zmanim.iml" group="zmanim" />
+      <module fileurl="file://$PROJECT_DIR$/zmanim.iml" filepath="$PROJECT_DIR$/zmanim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android/zmanim.Android.iml" filepath="$PROJECT_DIR$/.idea/modules/Android/zmanim.Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZehutYosef/zmanim.ZehutYosef.iml" filepath="$PROJECT_DIR$/.idea/modules/ZehutYosef/zmanim.ZehutYosef.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZmanLib/zmanim.ZmanLib.iml" filepath="$PROJECT_DIR$/.idea/modules/ZmanLib/zmanim.ZmanLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZmanUtils/zmanim.ZmanUtils.iml" filepath="$PROJECT_DIR$/.idea/modules/ZmanUtils/zmanim.ZmanUtils.iml" />
     </modules>
   </component>
 </project>
