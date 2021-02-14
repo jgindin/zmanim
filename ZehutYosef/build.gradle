@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 import org.moallemi.gradle.internal.VersionCodeType
 
 
@@ -20,11 +24,11 @@ apply from: '../common/gindin-versioning.gradle'
 
 android {
 
-  compileSdkVersion 25
+  compileSdkVersion 30
 
   defaultConfig {
     minSdkVersion 14
-    targetSdkVersion 25
+    targetSdkVersion 30
     versionCode appVersionCode
     versionName appVersionName
   }
@@ -68,7 +72,7 @@ android {
 dependencies {
 
   ext.supportLibsVersion = "25.4.0"
-  implementation "com.android.support:appcompat-v7:$supportLibsVersion"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
 
   /* Used to provide out of the box icon font support. simplifies development, and provides scalable icons.
    *  the core is very very light. https://github.com/mikepenz/Android-Iconics

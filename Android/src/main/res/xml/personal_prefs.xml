@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014 - 2018. Jay R. Gindin
--->
+  ~ Copyright (c) 2021. Jay R. Gindin
+  -->
 
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orderingFromXml="true"
   android:title="@string/personal_prefs"
@@ -22,7 +22,7 @@
     android:defaultValue="false"
   />
 
-  <android.support.v7.preference.PreferenceCategory
+  <androidx.preference.PreferenceCategory
     android:title="@string/notifications_category"
     android:orderingFromXml="true"
   >
@@ -196,6 +196,6 @@
       android:dependency="SHOW_NOTIFICATIONS"
     />
 
-  </android.support.v7.preference.PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

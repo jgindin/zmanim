@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.mvp;
 
 import com.gindin.eventBus.EventBus;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * Base for a module which is used to tie together a presenter and view.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
@@ -11,7 +11,7 @@ import com.gindin.zmanlib.notification.NotificationDefaults;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import android.content.SharedPreferences;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 /**
  * Takes care of dealing with the user's preferences--invoking the activity, notifying the main app

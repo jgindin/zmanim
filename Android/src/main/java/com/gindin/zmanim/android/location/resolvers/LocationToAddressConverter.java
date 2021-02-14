@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location.resolvers;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
-import android.support.annotation.NonNull;
-import android.support.v4.app.SafeJobIntentService;
+import androidx.annotation.NonNull;
+import androidx.core.app.SafeJobIntentService;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

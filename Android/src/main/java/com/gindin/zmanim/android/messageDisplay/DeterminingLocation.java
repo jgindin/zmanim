@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.messageDisplay;
 
 import com.gindin.zmanim.android.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import java.util.Timer;
 import java.util.TimerTask;

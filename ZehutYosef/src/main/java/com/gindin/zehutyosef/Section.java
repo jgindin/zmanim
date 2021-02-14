@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zehutyosef;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
@@ -5,8 +9,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import android.content.res.AssetManager;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import android.widget.TextView;
 
 import java.util.List;

@@ -1,7 +1,11 @@
-package android.support.v4.app;
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
+package androidx.core.app;
 
 import android.os.Build;
-import android.support.annotation.RestrictTo;
+import androidx.annotation.RestrictTo;
 
 /**
  * @author rwondratschek
@@ -32,7 +36,7 @@ public abstract class SafeJobIntentService
     super.onCreate();
     // override mJobImpl with safe class to ignore SecurityException
     if ( Build.VERSION.SDK_INT >= 26 ) {
-      mJobImpl = new SafeJobServiceEngineImpl( this );
+      mJobImpl = new androidx.core.app.SafeJobServiceEngineImpl( this );
     }
     else {
       mJobImpl = null;

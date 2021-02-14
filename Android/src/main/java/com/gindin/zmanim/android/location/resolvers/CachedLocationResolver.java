@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
@@ -7,7 +11,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.*;
 import java.util.*;

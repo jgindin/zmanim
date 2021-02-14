@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.service;
 
 import com.gindin.eventBus.EventBus;
@@ -23,8 +27,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.SafeJobIntentService;
+import androidx.annotation.NonNull;
+import androidx.core.app.SafeJobIntentService;
 
 import java.util.Calendar;
 import java.util.Date;

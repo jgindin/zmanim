@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.location;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
@@ -5,8 +9,8 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

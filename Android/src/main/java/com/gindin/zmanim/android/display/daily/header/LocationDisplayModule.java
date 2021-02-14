@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.display.daily.header;
@@ -8,7 +8,7 @@ import com.gindin.mvp.AbstractMvpModule;
 import com.gindin.eventBus.EventBus;
 
 import android.content.res.Resources;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * Module to handle presentation and interaction with the current location.
@@ -30,8 +30,8 @@ public class LocationDisplayModule
 
     Resources resources = activity.getResources();
 
-    LocationViewImpl view = new LocationViewImpl<LocationPresenter>( activity );
-    return new LocationPresenterImpl<LocationView>( view, eventBus, activity, resources );
+    LocationViewImpl view = new LocationViewImpl<>( activity );
+    return new LocationPresenterImpl<>( view, eventBus, activity, resources );
   }
 
 

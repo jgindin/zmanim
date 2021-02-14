@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zehutyosef.tefilla;
 
 import com.gindin.zehutyosef.Section;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import java.util.ArrayList;
 import java.util.List;
