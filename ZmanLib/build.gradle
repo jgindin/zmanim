@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 apply plugin: 'java-library'
@@ -12,7 +12,9 @@ dependencies {
   api fileTree( include: ['*.jar'], dir: 'libs' )
   implementation project( ':ZmanUtils' )
   compileOnly 'org.json:json:20160810'
+
   testImplementation 'junit:junit:4.12'
+  testImplementation 'org.json:json:20160810'
 }
 
 sourceSets {
