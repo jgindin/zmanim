@@ -30,3 +30,13 @@ location. This location is ONLY used to display the correct zmanim for you in yo
 Except as noted above (see Crash Reports and User Submitted Feedback), this location data does not
 leave your device.
 
+You CAN choose to not allow this. Instead, you can manually enter your location. 
+  * If you enter a location name, a network call will be made to resolve this location to a 
+    latitude and longitude. Without the latitude and longitude, there is no way to determine
+    the zmanim.
+  * If you enter a latitude and longitude, a network call will be made to determine a name (such
+    as the city and state) corresponding to this location.
+    
+
+If you choose to allow Zmanim for Android to determine you location, it *will* acquire your location
+in the background in order to display notifications. 
