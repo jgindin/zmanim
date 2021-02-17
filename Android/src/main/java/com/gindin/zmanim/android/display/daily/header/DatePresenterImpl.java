@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.display.daily.header;
@@ -15,8 +15,9 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.calendar.formatters.SecularDateFormatter;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  *
@@ -68,7 +69,7 @@ class DatePresenterImpl<V extends DateView>
 
       @Override
       public void onError(
-        @NotNull  LocationError   error,
+        @NonNull  LocationError   error,
         @Nullable ZmanimLocation  location
       ) {
       }
@@ -119,7 +120,7 @@ class DatePresenterImpl<V extends DateView>
   }
 
 
-  private void handleLocationChanged( @NotNull ZmanimLocation location ) {
+  private void handleLocationChanged( @NonNull ZmanimLocation location ) {
 
     if ( !location.isInvalid && location.isSignificantChangeFrom( currentLocation ) ) {
       currentLocation = location;

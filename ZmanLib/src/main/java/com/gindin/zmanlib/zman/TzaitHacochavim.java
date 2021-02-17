@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
 
-import net.sourceforge.zmanim.AstronomicalCalendar;
+import com.kosherjava.zmanim.AstronomicalCalendar;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

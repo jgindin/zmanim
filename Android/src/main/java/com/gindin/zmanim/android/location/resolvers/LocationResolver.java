@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import android.location.Address;
 
@@ -92,8 +92,8 @@ abstract class LocationResolver {
 
   @Nullable
   final ZmanimLocation resolve(
-    @NotNull final ZmanimLocation          location,
-    @NotNull final List<LocationResolver>  nextResolvers
+    @NonNull final ZmanimLocation          location,
+    @NonNull final List<LocationResolver>  nextResolvers
   ) {
 
     final ZmanimLocation zmanimLocation;
@@ -120,7 +120,7 @@ abstract class LocationResolver {
    * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
    */
   @Nullable
-  protected abstract ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation );
+  protected abstract ZmanimLocation resolveFromCoordinates( @NonNull ZmanimLocation zmanimLocation );
 
   /**
    * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
@@ -129,7 +129,7 @@ abstract class LocationResolver {
    * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
    */
   @Nullable
-  protected abstract ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation );
+  protected abstract ZmanimLocation resolveFromName( @NonNull ZmanimLocation zmanimLocation );
 
 
 } // End of LocationResolver class

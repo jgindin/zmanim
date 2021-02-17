@@ -31,14 +31,13 @@ import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.material.snackbar.Snackbar;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import android.Manifest;
 import android.app.Activity;
@@ -702,7 +701,7 @@ public class ZmanimActivity
 
     @Override
     public void onError(
-      @NotNull  LocationError   error,
+      @NonNull  LocationError   error,
       @Nullable ZmanimLocation  location
     ) {
 

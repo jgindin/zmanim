@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
 
 import com.gindin.util.Pair;
 import com.gindin.zmanlib.calendar.HebrewDate;
-import net.sourceforge.zmanim.util.GeoLocation;
+import com.kosherjava.zmanim.util.GeoLocation;
 
 import java.util.HashMap;
 import java.util.Map;

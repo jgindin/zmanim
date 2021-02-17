@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.display.daily.main;
@@ -18,8 +18,8 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -93,7 +93,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
 
       @Override
       public void onError(
-        @NotNull  LocationError   error,
+        @NonNull  LocationError   error,
         @Nullable ZmanimLocation  location
       ) {
       }
@@ -149,7 +149,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
   }
 
 
-  private void handleLocationChanged( @NotNull ZmanimLocation newLocation ) {
+  private void handleLocationChanged( @NonNull ZmanimLocation newLocation ) {
 
     if ( !newLocation.isInvalid && newLocation.isSignificantChangeFrom( currentLocation ) ) {
       currentLocation = newLocation;

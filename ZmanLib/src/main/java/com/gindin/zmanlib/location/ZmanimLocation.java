@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.location;
 
-import net.sourceforge.zmanim.util.GeoLocation;
+import com.kosherjava.zmanim.util.GeoLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -122,7 +122,7 @@ public abstract class Zman {
    *  and our need for Calendar-based API.
    *
    * @return a calendar representing the date & time of this zman; May be null if the zman cannot be calculated.
-   *  See detailed explanation on top of the {@link net.sourceforge.zmanim.AstronomicalCalendar} as to the particular cases when sunrise,
+   *  See detailed explanation on top of the {@link com.kosherjava.zmanim.AstronomicalCalendar} as to the particular cases when sunrise,
    *  sunset and twilight cannot be calculated.
    */
   protected final Calendar toCalendar(

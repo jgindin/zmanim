@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
 
-import net.sourceforge.zmanim.AstronomicalCalendar;
-import net.sourceforge.zmanim.ComplexZmanimCalendar;
-import net.sourceforge.zmanim.util.GeoLocation;
-import net.sourceforge.zmanim.util.NOAACalculator;
+import com.kosherjava.zmanim.AstronomicalCalendar;
+import com.kosherjava.zmanim.ComplexZmanimCalendar;
+import com.kosherjava.zmanim.util.GeoLocation;
+import com.kosherjava.zmanim.util.NOAACalculator;
 
 import java.util.Calendar;
 import java.util.Date;

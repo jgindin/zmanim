@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -33,7 +34,7 @@ class AndroidResolver
 
   @SuppressWarnings( "FeatureEnvy" )
   @Nullable
-  protected ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation location ) {
+  protected ZmanimLocation resolveFromCoordinates( @NonNull ZmanimLocation location ) {
 
     if ( !Geocoder.isPresent() ) {
       return null;
@@ -70,7 +71,7 @@ class AndroidResolver
 
   @Nullable
   @SuppressWarnings( "FeatureEnvy" )
-  protected ZmanimLocation resolveFromName( @NotNull ZmanimLocation location ) {
+  protected ZmanimLocation resolveFromName( @NonNull ZmanimLocation location ) {
 
     ZmanimLocation resolved = null;
 

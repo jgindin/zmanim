@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.display.daily.header;
@@ -7,7 +7,8 @@ package com.gindin.zmanim.android.display.daily.header;
 import com.gindin.mvp.View;
 import com.gindin.zmanlib.calendar.HebrewDate;
 
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.Nullable;
+
 
 /**
  * Knows how to render the Hebrew & Secular dates, and notify the presenter when the user initiates an interaction

@@ -18,9 +18,6 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.notification.ZmanNotificationScheduler;
 import com.gindin.zmanlib.zman.Zman;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.SafeJobIntentService;
 
 import java.util.Calendar;
@@ -403,7 +401,7 @@ public class ZmanimService
 
     @Override
     public void onError(
-      @NotNull  LocationError   error,
+      @NonNull  LocationError   error,
       @Nullable ZmanimLocation  location
     ) {
     }

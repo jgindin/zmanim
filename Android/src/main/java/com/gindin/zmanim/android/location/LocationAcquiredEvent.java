@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location;
@@ -8,8 +8,9 @@ import com.gindin.eventBus.Event;
 import com.gindin.eventBus.EventHandler;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 
 /**
  * An event fired when the current location has been acquired. If a handler needs to know if the location
@@ -37,7 +38,7 @@ public class LocationAcquiredEvent
      * @param location The last known location
      */
     public abstract void onError(
-      @NotNull  LocationError   error,
+      @NonNull LocationError   error,
       @Nullable ZmanimLocation  location
     );
 
@@ -61,7 +62,7 @@ public class LocationAcquiredEvent
 
 
   public LocationAcquiredEvent(
-    @NotNull ZmanimLocation newLocation
+    @NonNull ZmanimLocation newLocation
   ) {
     this.location = newLocation;
     this.error = null;
@@ -69,7 +70,7 @@ public class LocationAcquiredEvent
 
 
   public LocationAcquiredEvent(
-    @NotNull  LocationError   error,
+    @NonNull  LocationError   error,
     @Nullable ZmanimLocation  lastKnownLocation
   ) {
     this.location = lastKnownLocation;

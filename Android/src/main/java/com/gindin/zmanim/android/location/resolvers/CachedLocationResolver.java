@@ -8,10 +8,8 @@ import com.gindin.util.LogUtils;
 import com.gindin.zmanlib.location.ZmanLocationJSON;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -57,7 +55,7 @@ class CachedLocationResolver
 
   @Nullable
   @Override
-  protected ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation ) {
+  protected ZmanimLocation resolveFromCoordinates( @NonNull ZmanimLocation zmanimLocation ) {
 
     return findCachedMatch( zmanimLocation );
   }
@@ -65,7 +63,7 @@ class CachedLocationResolver
 
   @Nullable
   @Override
-  protected ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation ) {
+  protected ZmanimLocation resolveFromName( @NonNull ZmanimLocation zmanimLocation ) {
 
     return findCachedMatch( zmanimLocation );
   }

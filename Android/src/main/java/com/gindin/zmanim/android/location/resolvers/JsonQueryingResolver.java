@@ -1,11 +1,15 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
 import com.gindin.util.Pair;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +56,7 @@ abstract class JsonQueryingResolver
 
   @Nullable
   @Override
-  protected final ZmanimLocation resolveFromCoordinates( @NotNull ZmanimLocation zmanimLocation ) {
+  protected final ZmanimLocation resolveFromCoordinates( @NonNull ZmanimLocation zmanimLocation ) {
 
     List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
     fillInLatitudeAndLongitude( Double.toString( zmanimLocation.getLatitude() ),
@@ -64,7 +68,7 @@ abstract class JsonQueryingResolver
 
   @Nullable
   @Override
-  protected final ZmanimLocation resolveFromName( @NotNull ZmanimLocation zmanimLocation ) {
+  protected final ZmanimLocation resolveFromName( @NonNull ZmanimLocation zmanimLocation ) {
 
     List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
     fillInSearch( zmanimLocation, params );

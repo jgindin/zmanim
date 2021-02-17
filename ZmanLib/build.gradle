@@ -11,6 +11,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
   api fileTree( include: ['*.jar'], dir: 'libs' )
   implementation project( ':ZmanUtils' )
+  implementation group: 'com.kosherjava', name: 'zmanim', version: '2.1.0'
+  implementation 'org.jetbrains:annotations:15.0'
   compileOnly 'org.json:json:20160810'
 
   testImplementation 'junit:junit:4.12'

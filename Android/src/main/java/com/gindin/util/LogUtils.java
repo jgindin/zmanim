@@ -1,22 +1,20 @@
 /*
- * Copyright (c) 2020. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.util;
 
 import com.gindin.zmanim.android.BuildConfig;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import android.util.Log;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class LogUtils {
@@ -31,7 +29,6 @@ public class LogUtils {
     String              message,
     @Nullable Throwable error
   ) {
-    //noinspection NullArgumentToVariableArgMethod
     logError( where, message, error, (Pair<String, String>[])null );
   }
 
@@ -49,7 +46,7 @@ public class LogUtils {
 
 
   public static void logFeedback(
-    @NotNull String feedback
+    @NonNull String feedback
   ) {
 
     LogErrorTask task = new LogErrorTask( "User Feedback", feedback, new UserFeedbackException(),
@@ -80,49 +77,6 @@ public class LogUtils {
       }
       else {
         ACRA.getErrorReporter().putCustomData( key, data );
-      }
-    }
-  }
-
-
-
-  private static class LogEventTask
-    implements Runnable {
-
-    private final String                                    eventName;
-    private final List<Pair<String,String>>                 messages;
-
-
-    LogEventTask(
-      String eventName,
-      List<Pair<String, String>> messages
-    ) {
-      this.eventName = eventName;
-      this.messages = messages;
-    }
-
-
-    @Override
-    public void run() {
-
-      if ( BuildConfig.DEBUG ) {
-
-        StringBuilder msg = new StringBuilder();
-        for ( Pair<String, String> pair : messages ) {
-          msg.append( pair.first ).append( ": " ).append( pair.second );
-        }
-
-        Log.i( eventName, msg.toString() );
-      }
-      else {
-
-        Map<String,String> messageMap = new HashMap<>();
-        if ( null != messages ) {
-          for ( Pair<String, String> message : messages ) {
-            messageMap.put( message.first, message.second );
-          }
-        }
-
       }
     }
   }

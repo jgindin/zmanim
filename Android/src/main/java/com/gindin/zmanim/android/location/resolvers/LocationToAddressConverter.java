@@ -9,13 +9,11 @@ import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.SafeJobIntentService;
 
 import java.io.FileNotFoundException;
@@ -182,7 +180,7 @@ public class LocationToAddressConverter
 
 
   @Nullable
-  private ZmanimLocation resolve( @NotNull ZmanimLocation location ) {
+  private ZmanimLocation resolve( @NonNull ZmanimLocation location ) {
 
     return orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
   }

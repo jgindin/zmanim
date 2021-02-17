@@ -12,11 +12,12 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.prefs.LocationProviderPreferences;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import android.content.Intent;
 import android.content.res.Resources;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 /**
@@ -57,7 +58,7 @@ class LocationPresenterImpl<V extends LocationView>
 
       @Override
       public void onError(
-        @NotNull  LocationError   error,
+        @NonNull  LocationError   error,
         @Nullable ZmanimLocation  location
       ) {
       }
@@ -104,7 +105,7 @@ class LocationPresenterImpl<V extends LocationView>
   }
 
 
-  private void handleLocationChanged( @NotNull ZmanimLocation location ) {
+  private void handleLocationChanged( @NonNull ZmanimLocation location ) {
 
     if ( location.isSignificantChangeFrom( currentLocation ) || ( location.hasName() && !currentLocation.hasName() ) ) {
 

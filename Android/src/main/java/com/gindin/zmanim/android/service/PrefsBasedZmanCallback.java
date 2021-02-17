@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.service;
@@ -10,7 +10,7 @@ import com.gindin.zmanlib.ZmanCallback;
 import com.gindin.zmanlib.notification.NotifiedZmanim;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.Nullable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
