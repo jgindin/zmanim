@@ -547,10 +547,6 @@ public class ZmanimActivity
         eventBus.fire( new EditLocationPrefsEvent() );
         return true;
 
-      case R.id.about:
-        showDialog( id );
-        return true;
-
 /*
       case R.id.feedback:
         FeedbackFragment feedbackFragment = new FeedbackFragment();
@@ -558,6 +554,8 @@ public class ZmanimActivity
         return true;
 */
 
+      case R.id.privacy:
+      case R.id.about:
       case R.id.help:
         showDialog( id );
         return true;
@@ -576,6 +574,7 @@ public class ZmanimActivity
   protected Dialog onCreateDialog( int dialogID ) {
 
     switch ( dialogID ) {
+      case R.id.privacy:
       case R.id.about:
       case R.id.help:
         return messageDisplayer.getInstance( this );
@@ -593,6 +592,10 @@ public class ZmanimActivity
     super.onPrepareDialog( dialogID, dialog );
 
     switch ( dialogID ) {
+      case R.id.privacy:
+        messageDisplayer.update( R.string.privacy, "com/gindin/zmanim/android/privacy.html" );
+        break;
+
       case R.id.about:
         messageDisplayer.update( R.string.about_header, "com/gindin/zmanim/android/about.html" );
         break;

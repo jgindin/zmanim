@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014. Jay R. Gindin
+  ~ Copyright (c) 2021. Jay R. Gindin
   -->
 
 <menu 
@@ -37,6 +37,13 @@ should this be included in the menu above?
     android:icon="@android:drawable/ic_menu_send"
   />
 -->
+  <item
+    android:id="@+id/privacy"
+    android:title="@string/privacy"
+    android:icon="@android:drawable/ic_menu_manage"
+  >
+
+  </item>
   <item
     android:id="@+id/about"
     android:title="@string/about_menu"

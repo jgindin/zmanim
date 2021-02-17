@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014. Jay R. Gindin
+  ~ Copyright (c) 2021. Jay R. Gindin
   -->
 
 <resources>
@@ -33,6 +33,8 @@
 
   <string name="help_menu">Help</string>
   <string name="help_header">Zmanim Help</string>
+
+  <string name="privacy">Privacy Policy</string>
 
   <string name="refresh_menu">Refresh</string>
 
