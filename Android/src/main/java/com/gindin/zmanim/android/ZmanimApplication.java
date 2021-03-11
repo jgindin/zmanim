@@ -1,34 +1,42 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android;
 
 import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.config.ACRAConfiguration;
-import org.acra.config.ACRAConfigurationException;
-import org.acra.config.ConfigurationBuilder;
+import org.acra.annotation.AcraCore;
+import org.acra.annotation.AcraHttpSender;
+import org.acra.annotation.AcraScheduler;
+import org.acra.annotation.AcraToast;
+import org.acra.data.StringFormat;
+import org.acra.sender.HttpSender;
 
 import android.app.Application;
+import android.app.job.JobInfo;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 /**
  *
  */
-@ReportsCrashes(
-  formUri = "http://crashes.zmanim.today:6095/acra-zmanim/_design/acra-storage/_update/report",
-  reportType = org.acra.sender.HttpSender.Type.JSON,
-  httpMethod = org.acra.sender.HttpSender.Method.PUT,
+@AcraCore(
+  buildConfigClass = BuildConfig.class,
+  reportFormat = StringFormat.JSON,
 
   // Log the preferences. See ZmanimPrefs; but note we can't use the enums .name(), because
   //  the values here have to be constants.
   additionalSharedPreferences = { "ZMANIM_SELECTION", "LOCATION_MANAGEMENT", "PERSONAL" },
-
-  // Your usual ACRA configuration
-  mode = ReportingInteractionMode.TOAST,
-  resToastText = R.string.crash_toast_text,
   alsoReportToAndroidFramework = true
 )
+@AcraHttpSender(
+  httpMethod = HttpSender.Method.PUT,
+  uri = "http://crashes.zmanim.today:6095/acra-zmanim/_design/acra-storage/_update/report",
+  basicAuthLogin = BuildConfig.ACRA_USER,
+  basicAuthPassword = BuildConfig.ACRA_KEY
+)
+@AcraToast( resText = R.string.crash_toast_text )
+@AcraScheduler( requiresNetworkType = JobInfo.NETWORK_TYPE_UNMETERED, requiresBatteryNotLow = true )
 public class ZmanimApplication
   extends Application {
 
@@ -39,17 +47,7 @@ public class ZmanimApplication
 
     if ( !BuildConfig.DEBUG ) {
 
-      try {
-        ACRAConfiguration config = new ConfigurationBuilder( this )
-          .setFormUriBasicAuthLogin( BuildConfig.ACRA_USER )
-          .setFormUriBasicAuthPassword( BuildConfig.ACRA_KEY )
-          .build();
-        ACRA.init( this, config );
-      }
-      catch ( ACRAConfigurationException e ) {
-        Log.e( "init", "Unable to init ACRA", e );
-      }
-
+      ACRA.init( this );
     }
     else {
       // Just so we *KNOW* we're dealing with a dev version...
