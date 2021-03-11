@@ -28,7 +28,8 @@ public class LocationError {
     NO_LOCATION_MANAGER_SERVICE,
     NO_PROVIDERS,
     NO_PERMISSIONS,
-    NO_PLAY_SERVICES
+    NO_PLAY_SERVICES,
+    NO_BACKGROUND_PERMISSIONS
   }
 
   private static final String                               ERROR_CODE = "error code";

@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="Android/src/main/res/layout/fragment_feedback.xml" value="0.34927314460596787" />
+        <entry key="Android/src/main/res/layout/message_display.xml" value="0.19357306809487376" />
+        <entry key="Android/src/main/res/layout/preference_seekbar.xml" value="0.22092578423871462" />
         <entry key="Android/src/main/res/menu/main_menu.xml" value="0.3284722222222222" />
+        <entry key="Android/src/main/res/xml/personal_prefs.xml" value="0.32661570535093815" />
+        <entry key="Android/src/main/res/xml/personal_prefs_oreo.xml" value="0.32661570535093815" />
       </map>
     </option>
   </component>

@@ -78,8 +78,7 @@ public class DynamicLocationAcquirer
   private boolean checkRequirements() {
 
     boolean hasFineAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
-    boolean hasCoarseAccess = ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED );
-    if ( !hasFineAccess && !hasCoarseAccess ) {
+    if ( !hasFineAccess ) {
 
       fireLocationNotAcquired( new LocationError( LocationError.Code.NO_PERMISSIONS ), ZmanLocationUtil.load( context ) );
       return true;
@@ -91,6 +90,7 @@ public class DynamicLocationAcquirer
       fireLocationNotAcquired( new LocationError( LocationError.Code.NO_PLAY_SERVICES ), ZmanLocationUtil.load( context ) );
       return true;
     }
+
     return false;
   }
 
@@ -143,14 +143,13 @@ public class DynamicLocationAcquirer
     }
 
     // Have to actually go get the location.
-    LocationRequest request = new LocationRequest();
-
     // These settings are largely taken from
     //  https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest#setFastestInterval(long)
-    request.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
-    request.setInterval( 5 * 1000 );
-    request.setNumUpdates( 1 );
-    request.setFastestInterval( ONE_MINUTE );
+    LocationRequest request = new LocationRequest()
+      .setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY )
+      .setInterval( 5 * 1000 )
+      .setNumUpdates( 1 )
+      .setFastestInterval( ONE_MINUTE );
 
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
       .addLocationRequest( request );

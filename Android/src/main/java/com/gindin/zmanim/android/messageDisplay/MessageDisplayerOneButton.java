@@ -1,12 +1,15 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.messageDisplay;
 
+import androidx.annotation.StringRes;
+
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
 import android.widget.Button;
 
 /**
@@ -16,27 +19,35 @@ public class MessageDisplayerOneButton
   extends MessageDisplayer {
 
 
-  public void update(
-    int                                   titleResource,
-    String                                textLocation,
-    int                                   buttonTextResource,
-    final DialogInterface.OnClickListener clickListener
+  private final Context                                     context;
+
+  private final int                                         buttonTextResource;
+
+  private final DialogInterface.OnClickListener             clickListener;
+
+
+  public MessageDisplayerOneButton(
+    Context                         context,
+    @StringRes int                  buttonTextResource,
+    DialogInterface.OnClickListener clickListener
   ) {
-    super.update( titleResource, textLocation );
 
-    String buttonText = messageDialog.getContext().getResources().getString( buttonTextResource );
+    this.context = context;
+    this.buttonTextResource = buttonTextResource;
+    this.clickListener = clickListener;
+  }
 
-    Button button = messageDialog.getButton( DialogInterface.BUTTON_POSITIVE );
-    button.setText( buttonText );
-    button.setOnClickListener(
-      new View.OnClickListener() {
-        @Override
-        public void onClick( View view ) {
-          messageDialog.dismiss();
-          clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
-        }
-      }
-    );
+
+  public void show(
+    @StringRes int  titleResource,
+    String          textLocation
+  ) {
+
+    final Dialog dialog = getInstance( context );
+
+    update( titleResource, textLocation );
+
+    dialog.show();
   }
 
 
@@ -44,8 +55,12 @@ public class MessageDisplayerOneButton
   protected void customize( AlertDialog.Builder builder ) {
     super.customize( builder );
 
-    // Just like with the title, trying to set an empty string won't allow us to later set the real string.
-    builder.setPositiveButton( " x  ", null );
+    builder.setPositiveButton( context.getString( buttonTextResource ),
+      ( dialog, which ) -> {
+        messageDialog.dismiss();
+        clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
+      }
+    );
   }
 
 } // End of MessageDisplayerOneButton class

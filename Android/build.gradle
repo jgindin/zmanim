@@ -56,13 +56,6 @@ catch ( ignored ) {
 
 
 android {
-  /**
-   * TODO: When updating to version 29, going to have to add ACCESS_BACKGROUND_LOCATION permission
-   *  into the AndroidManifest.xml, and deal with all that implies...
-   *  See:
-   *    - https://android-developers.googleblog.com/2020/02/safer-location-access.html
-   *    - https://developer.android.com/preview/privacy/permissions
-   */
   compileSdkVersion 30
 
   defaultConfig {

@@ -45,8 +45,10 @@
     Otherwise, manually provide your location.
   </string>
   <string name="play_services_not_available">Google Play Services are required in order for Zmanim to discover your location. Please enable or else use a specified place or an explicit latitude and longitude.</string>
-  <string name="cannot_use_dynamic_location">Without the location permission, you will have to provide a location. Click to open the location settings.</string>
+  <string name="cannot_use_dynamic_location">Without the location permission, you will have to provide a location.</string>
   <string name="edit_location">Edit Location</string>
+  <string name="cannot_show_notifications">Without \“All the time\” location access, Zmanim notifications won\'t work.</string>
+
   <string name="cannot_determine_location">Unable to determine your current location.</string>
   <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
@@ -140,4 +142,6 @@
   <string name="ZmanimLocationServiceDescription">Receive notification of new locations.</string>
   <string name="LocationResolverServiceDescription">Resolve a location to its name.</string>
   <string name="ok">OK</string>
+
+  <string name="why_we_need_location_title">Acquire Your Location</string>
 </resources>

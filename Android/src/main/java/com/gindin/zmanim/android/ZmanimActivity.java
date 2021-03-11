@@ -18,6 +18,7 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.messageDisplay.DeterminingLocation;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
+import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
@@ -48,9 +49,15 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -64,6 +71,8 @@ public class ZmanimActivity
   extends AppCompatActivity {
 
   private static final String                               LOCATION_BUNDLE_KEY = "last known location";
+
+  private static final boolean                              NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
 
   private final List<Presenter<?>>                          loadedPresenters = new ArrayList<>();
 
@@ -328,16 +337,8 @@ public class ZmanimActivity
       lastKnownLocation = location;
     }
 
-    buildFooter( error );
-
     // Make sure to clean up!
     determiningLocationDialog.dismiss();
-  }
-
-
-  private void buildFooter(
-    @Nullable final LocationError error
-  ) {
 
     if ( null != error ) {
       handleLocationError( error );
@@ -371,13 +372,33 @@ public class ZmanimActivity
 
       case NO_PERMISSIONS:
         // See onRequestPermissionsResult()
+
         ActivityCompat.requestPermissions( ZmanimActivity.this,
           new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
-          0
+          LocationError.Code.NO_PERMISSIONS.ordinal()
         );
 
         errorMessage = null;
         break;
+
+
+      case NO_BACKGROUND_PERMISSIONS:
+        if ( NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION ) {
+
+          MessageDisplayerOneButton displayer = new MessageDisplayerOneButton( this, R.string.ok,
+            ( dialog, which ) ->
+              ActivityCompat.requestPermissions( ZmanimActivity.this,
+                new String[] { Manifest.permission.ACCESS_BACKGROUND_LOCATION },
+                LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal()
+              )
+          );
+
+          displayer.show( R.string.why_we_need_location_title, "com/gindin/zmanim/android/why_location.html" );
+        }
+
+        errorMessage = null;
+        break;
+
 
       case NO_PROVIDERS:
       case NO_LOCATION_MANAGER_SERVICE:
@@ -426,15 +447,32 @@ public class ZmanimActivity
   ) {
     super.onRequestPermissionsResult( requestCode, permissions, grantResults );
 
-    // We're only asking for location permissions, so no need to check what permission was asked for.
-    //  So, if we were granted permission, we don't have to do anything here... We'll get an onResume() which will do
-    //  the refresh...
-    if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
-      handleNoLocationPermissions();
-      showErrorMessage( getResources().getString( R.string.cannot_use_dynamic_location ), R.string.edit_location,
-        v -> eventBus.fire( new EditLocationPrefsEvent() )
-      );
+    if ( requestCode == LocationError.Code.NO_PERMISSIONS.ordinal() ) {
+
+      if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
+        handleNoLocationPermissions();
+        showErrorMessage( R.string.cannot_use_dynamic_location, R.string.edit_location,
+          v -> eventBus.fire( new EditLocationPrefsEvent() )
+        );
+      }
+      else if ( NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION ) {
+        // Now make sure we can ask for background permissions too...
+
+        if ( shouldShowRequestPermissionRationale( Manifest.permission.ACCESS_BACKGROUND_LOCATION ) ) {
+          handleLocationError( new LocationError( LocationError.Code.NO_BACKGROUND_PERMISSIONS ) );
+        }
+      }
+
     }
+    else if ( requestCode == LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal() ) {
+
+      //  So, if we were granted permission, we don't have to do anything here... We'll get an onResume() which will do
+      //  the refresh...
+      if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
+        showErrorMessage( R.string.cannot_show_notifications, R.string.action_dismiss, v -> {} );
+      }
+    }
+
   }
 
 
@@ -477,6 +515,15 @@ public class ZmanimActivity
 
   private void showErrorMessage( String errorMessage ) {
     showErrorMessage( errorMessage, R.string.action_dismiss, v -> {} );
+  }
+
+
+  private void showErrorMessage(
+    @StringRes int                  message,
+    @StringRes int                  actionTitle,
+    @Nullable View.OnClickListener  action
+  ) {
+    showErrorMessage( getResources().getString( message ), actionTitle, action );
   }
 
 
