@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.taaniyot;
@@ -30,7 +30,7 @@ public class AsaraBTevet
 
 
   @Override
-  protected boolean canFallOnFriday() {
+  protected boolean canFallOnFriday( HebrewDate date ) {
     return true;
   }
 

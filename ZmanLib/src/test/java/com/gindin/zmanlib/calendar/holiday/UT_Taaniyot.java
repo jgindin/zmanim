@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -63,6 +63,12 @@ public class UT_Taaniyot {
     assertIsTaanit( taanitBechorot, 2014, Calendar.APRIL, 14 );
     assertIsTaanit( taanitBechorot, 2015, Calendar.APRIL, 3 );
     assertIsTaanit( taanitBechorot, 2016, Calendar.APRIL, 22 );
+
+    // Pesach is Friday night, so the fast really is observed on Friday.
+    assertIsTaanit( taanitBechorot, 2019, Calendar.APRIL, 19 );
+
+    // Pesach is Saturday night, so the fast gets pulled back to Thursday.
+    assertIsTaanit( taanitBechorot, 2021, Calendar.MARCH, 25 );
   }
 
 

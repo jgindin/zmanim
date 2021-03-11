@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.taaniyot;
@@ -53,7 +53,7 @@ public abstract class Taanit
 
 
   /** Can the fast take place on a Friday? */
-  protected abstract boolean canFallOnFriday();
+  protected abstract boolean canFallOnFriday( HebrewDate date );
 
   protected abstract Details createErevDetails( HebrewDate date );
 
@@ -107,7 +107,7 @@ public abstract class Taanit
 
     if ( Calendar.FRIDAY == dayOfWeek ) {
 
-      if ( canFallOnFriday() ) {
+      if ( canFallOnFriday( date ) ) {
         if ( normalDayOfFast == jewishDayOfMonth ) {
           return createYomDetails( date );
         }
@@ -159,7 +159,7 @@ public abstract class Taanit
 
     final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
-    if ( canFallOnFriday() ) {
+    if ( canFallOnFriday( date ) ) {
       if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
         return createErevDetails( date );
       }
@@ -180,13 +180,13 @@ public abstract class Taanit
 
     final int jewishDayOfMonth = date.getHebrewDayOfMonth();
 
-    if ( canFallOnFriday() ) {
+    if ( canFallOnFriday( date ) ) {
       if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
         return createErevDetails( date );
       }
     }
     else {
-      if ( ( normalDayOfFast -1 ) == jewishDayOfMonth ) {
+      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
         return createYomDetails( date );
       }
     }
