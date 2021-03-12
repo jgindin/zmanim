@@ -72,12 +72,12 @@ public class LogUtils {
   ) {
 
     if ( !BuildConfig.DEBUG ) {
-      if ( data == null ) {
-        ACRA.getErrorReporter().removeCustomData( key );
-      }
-      else {
-        ACRA.getErrorReporter().putCustomData( key, data );
-      }
+//      if ( data == null ) {
+//        ACRA.getErrorReporter().removeCustomData( key );
+//      }
+//      else {
+//        ACRA.getErrorReporter().putCustomData( key, data );
+//      }
     }
   }
 
@@ -120,7 +120,7 @@ public class LogUtils {
 
       String message = msg;
 
-      if ( BuildConfig.DEBUG ) {
+//      if ( BuildConfig.DEBUG ) {
         if ( moreInfo != null ) {
           StringBuilder extra = new StringBuilder( "\n" );
           for ( Pair<String, String> info : moreInfo ) {
@@ -131,37 +131,37 @@ public class LogUtils {
         }
 
         Log.e( where, "Msg: " + message, error );
-      }
-      else {
-
-        final ErrorReporter errorReporter = ACRA.getErrorReporter();
-        errorReporter.putCustomData( "Where", where );
-        errorReporter.putCustomData( "Message", message );
-        errorReporter.putCustomData( "LogTime", new Date( System.currentTimeMillis() ).toString() );
-
-        if ( null != moreInfo ) {
-          for ( Pair<String, String> info : moreInfo ) {
-            errorReporter.putCustomData( info.first, info.second );
-          }
-        }
-
-
-        // We want this to be silent...it's something we're interested in logging, but the user
-        //  shouldn't know/care...
-        errorReporter.handleSilentException( error );
-
-        // Remove the extra data that was passed in here. But if someone had added additional info
-        //  besides this, then presumably it should remain...
-        errorReporter.removeCustomData( "Where" );
-        errorReporter.removeCustomData( "Message" );
-        errorReporter.removeCustomData( "LogTime" );
-
-        if ( moreInfo != null ) {
-          for ( Pair<String, String> info : moreInfo ) {
-            errorReporter.removeCustomData( info.first );
-          }
-        }
-      }
+//      }
+//      else {
+//
+//        final ErrorReporter errorReporter = ACRA.getErrorReporter();
+//        errorReporter.putCustomData( "Where", where );
+//        errorReporter.putCustomData( "Message", message );
+//        errorReporter.putCustomData( "LogTime", new Date( System.currentTimeMillis() ).toString() );
+//
+//        if ( null != moreInfo ) {
+//          for ( Pair<String, String> info : moreInfo ) {
+//            errorReporter.putCustomData( info.first, info.second );
+//          }
+//        }
+//
+//
+//        // We want this to be silent...it's something we're interested in logging, but the user
+//        //  shouldn't know/care...
+//        errorReporter.handleSilentException( error );
+//
+//        // Remove the extra data that was passed in here. But if someone had added additional info
+//        //  besides this, then presumably it should remain...
+//        errorReporter.removeCustomData( "Where" );
+//        errorReporter.removeCustomData( "Message" );
+//        errorReporter.removeCustomData( "LogTime" );
+//
+//        if ( moreInfo != null ) {
+//          for ( Pair<String, String> info : moreInfo ) {
+//            errorReporter.removeCustomData( info.first );
+//          }
+//        }
+//      }
 
     }
   }
