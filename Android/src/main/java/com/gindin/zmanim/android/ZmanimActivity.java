@@ -18,7 +18,7 @@ import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.messageDisplay.DeterminingLocation;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
-import com.gindin.zmanim.android.messageDisplay.MessageDisplayerOneButton;
+import com.gindin.zmanim.android.messageDisplay.ExplainWhyWeNeedLocationDialog;
 import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
 import com.gindin.zmanim.android.prefs.ZmanimPrefs;
@@ -45,6 +45,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -350,6 +351,8 @@ public class ZmanimActivity
     LocationError error
   ) {
 
+    ExplainWhyWeNeedLocationDialog displayer;
+
     // Now...why is it we couldn't determine our location?
     String errorMessage;
     switch ( error.errorCode ) {
@@ -373,10 +376,21 @@ public class ZmanimActivity
       case NO_PERMISSIONS:
         // See onRequestPermissionsResult()
 
-        ActivityCompat.requestPermissions( ZmanimActivity.this,
-          new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
-          LocationError.Code.NO_PERMISSIONS.ordinal()
+        displayer = new ExplainWhyWeNeedLocationDialog( this,
+          ( dialog, which ) -> {
+            if ( which == DialogInterface.BUTTON_POSITIVE ) {
+              ActivityCompat.requestPermissions( ZmanimActivity.this,
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
+                LocationError.Code.NO_PERMISSIONS.ordinal()
+              );
+            }
+            else {
+              eventBus.fire( new EditLocationPrefsEvent() );
+            }
+          }
         );
+
+        displayer.show( R.string.why_we_need_location_title, "com/gindin/zmanim/android/why_location.html" );
 
         errorMessage = null;
         break;
@@ -385,15 +399,22 @@ public class ZmanimActivity
       case NO_BACKGROUND_PERMISSIONS:
         if ( NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION ) {
 
-          MessageDisplayerOneButton displayer = new MessageDisplayerOneButton( this, R.string.ok,
-            ( dialog, which ) ->
-              ActivityCompat.requestPermissions( ZmanimActivity.this,
-                new String[] { Manifest.permission.ACCESS_BACKGROUND_LOCATION },
-                LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal()
-              )
+          displayer = new ExplainWhyWeNeedLocationDialog( this,
+            ( dialog, which ) -> {
+
+              if ( which == DialogInterface.BUTTON_POSITIVE ) {
+                ActivityCompat.requestPermissions( ZmanimActivity.this,
+                  new String[] { Manifest.permission.ACCESS_BACKGROUND_LOCATION },
+                  LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal()
+                );
+              }
+              else {
+                eventBus.fire( new EditLocationPrefsEvent() );
+              }
+            }
           );
 
-          displayer.show( R.string.why_we_need_location_title, "com/gindin/zmanim/android/why_location.html" );
+          displayer.show( R.string.why_we_need_location_background_title, "com/gindin/zmanim/android/why_background_location.html" );
         }
 
         errorMessage = null;
@@ -462,6 +483,9 @@ public class ZmanimActivity
           handleLocationError( new LocationError( LocationError.Code.NO_BACKGROUND_PERMISSIONS ) );
         }
       }
+      else {
+        refresh( true );
+      }
 
     }
     else if ( requestCode == LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal() ) {
@@ -469,7 +493,12 @@ public class ZmanimActivity
       //  So, if we were granted permission, we don't have to do anything here... We'll get an onResume() which will do
       //  the refresh...
       if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
-        showErrorMessage( R.string.cannot_show_notifications, R.string.action_dismiss, v -> {} );
+        showErrorMessage( R.string.cannot_show_notifications, R.string.action_dismiss,
+          v -> eventBus.fire( new EditLocationPrefsEvent() )
+        );
+      }
+      else {
+        refresh( true );
       }
     }
 

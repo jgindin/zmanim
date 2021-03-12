@@ -27,6 +27,8 @@ class AppUpgrader {
 
   private static final String                               LAST_KNOWN_CODE_VERSION = "lastKnownCodeVersion";
 
+
+  @SuppressWarnings( "MagicNumber" )
   public static void handle(
     ZmanimActivity              zmanimActivity,
     PersonalPrefsManager        personalPrefsManager,
@@ -46,14 +48,18 @@ class AppUpgrader {
         int zmanPrefsUpgradeId = zmanimSelectionPrefsManager.onHandleUpgrade( thisCodeVersion, lastKnownCodeVersion );
         upgradeElevationPref( zmanimActivity, lastKnownCodeVersion );
 
-        int thisUpgradeId = -1;
-        
-        //noinspection MagicNumber
+
+        int locationFixes = -1;
         if ( lastKnownCodeVersion < 279 ) {
-          thisUpgradeId = R.string.upgrade_from_279;
+          locationFixes = R.string.upgrade_from_279;
         }
 
-        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, thisUpgradeId );
+        int privacyPolicy = -1;
+        if ( lastKnownCodeVersion <= 377 ) {
+          privacyPolicy = R.string.added_privacy_policy;
+        }
+
+        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy );
 
       }
       catch ( Throwable e ) {

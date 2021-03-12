@@ -34,6 +34,7 @@
   <string name="help_menu">Help</string>
   <string name="help_header">Zmanim Help</string>
 
+  <string name="added_privacy_policy">Added a new privacy policy. (See the application menu.)</string>
   <string name="privacy">Privacy Policy</string>
 
   <string name="refresh_menu">Refresh</string>
@@ -143,5 +144,9 @@
   <string name="LocationResolverServiceDescription">Resolve a location to its name.</string>
   <string name="ok">OK</string>
 
-  <string name="why_we_need_location_title">Acquire Your Location</string>
+  <string name="turn_on_location">Turn on</string>
+  <string name="no_thanks">No thanks</string>
+
+  <string name="why_we_need_location_title">Access Your Location</string>
+  <string name="why_we_need_location_background_title">Access Your Location in the Background</string>
 </resources>

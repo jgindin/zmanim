@@ -4,6 +4,8 @@
 
 package com.gindin.zmanim.android.messageDisplay;
 
+import com.gindin.zmanim.android.R;
+
 import androidx.annotation.StringRes;
 
 import android.app.AlertDialog;
@@ -15,25 +17,21 @@ import android.widget.Button;
 /**
  *
  */
-public class MessageDisplayerOneButton
+public class ExplainWhyWeNeedLocationDialog
   extends MessageDisplayer {
 
 
   private final Context                                     context;
 
-  private final int                                         buttonTextResource;
-
   private final DialogInterface.OnClickListener             clickListener;
 
 
-  public MessageDisplayerOneButton(
+  public ExplainWhyWeNeedLocationDialog(
     Context                         context,
-    @StringRes int                  buttonTextResource,
     DialogInterface.OnClickListener clickListener
   ) {
 
     this.context = context;
-    this.buttonTextResource = buttonTextResource;
     this.clickListener = clickListener;
   }
 
@@ -55,12 +53,21 @@ public class MessageDisplayerOneButton
   protected void customize( AlertDialog.Builder builder ) {
     super.customize( builder );
 
-    builder.setPositiveButton( context.getString( buttonTextResource ),
-      ( dialog, which ) -> {
-        messageDialog.dismiss();
-        clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
-      }
-    );
+    builder
+      .setPositiveButton( context.getString( R.string.turn_on_location ),
+        ( dialog, which ) -> {
+          messageDialog.dismiss();
+          clickListener.onClick( messageDialog, DialogInterface.BUTTON_POSITIVE );
+        }
+      )
+      .setNegativeButton( context.getString( R.string.no_thanks ),
+        ( dialog, which ) -> {
+          messageDialog.dismiss();
+          clickListener.onClick( messageDialog, DialogInterface.BUTTON_NEGATIVE );
+        }
+      )
+      ;
+
   }
 
-} // End of MessageDisplayerOneButton class
+}
