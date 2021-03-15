@@ -8,12 +8,9 @@ import com.gindin.zmanim.android.BuildConfig;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.acra.ACRA;
-import org.acra.ErrorReporter;
 
 import android.util.Log;
 
-import java.util.Date;
 import java.util.List;
 
 

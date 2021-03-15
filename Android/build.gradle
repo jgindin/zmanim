@@ -68,7 +68,7 @@ android {
      *					See http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
      *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
      */
-    minSdkVersion 22
+    minSdkVersion 14
     targetSdkVersion 30
 
     versionCode appVersionCode
@@ -144,11 +144,11 @@ dependencies {
   implementation 'com.google.android.material:material:1.0.0'
   implementation "com.google.android.gms:play-services-location:16.0.0"
 
-  def acraVersion = "5.7.0"
-  implementation "ch.acra:acra-http:$acraVersion"
-  implementation "ch.acra:acra-toast:$acraVersion"
-  implementation "ch.acra:acra-limiter:$acraVersion"
-  implementation "ch.acra:acra-advanced-scheduler:$acraVersion"
+//  def acraVersion = "5.7.0"
+//  implementation "ch.acra:acra-http:$acraVersion"
+//  implementation "ch.acra:acra-toast:$acraVersion"
+//  implementation "ch.acra:acra-limiter:$acraVersion"
+//  implementation "ch.acra:acra-advanced-scheduler:$acraVersion"
 
 
   testImplementation 'junit:junit:4.12'

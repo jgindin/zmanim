@@ -7,7 +7,10 @@ package com.gindin.zmanim.android.feedback;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.R;
 
-import org.acra.ACRA;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,10 +18,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +105,7 @@ public class FeedbackFragment
     getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( getContext() );
-    prefs.edit().putString( ACRA.PREF_USER_EMAIL_ADDRESS, emailText ).apply();
+//    prefs.edit().putString( ACRA.PREF_USER_EMAIL_ADDRESS, emailText ).apply();
     LogUtils.logFeedback( feedback );
   }
 

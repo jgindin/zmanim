@@ -11,7 +11,7 @@ import android.widget.Toast;
 // TODO: Turn Acra back on after we get the new and updated backend setup. See
 //  https://github.com/ACRA/acra, and https://github.com/F43nd1r/Acrarium
 //
-// TODO: Re-enable ACRA usage in LogUtils
+// TODO: Re-enable ACRA usage in LogUtils & FeedbackFragment
 //@AcraCore(
 //  buildConfigClass = BuildConfig.class,
 //  reportFormat = StringFormat.JSON,
