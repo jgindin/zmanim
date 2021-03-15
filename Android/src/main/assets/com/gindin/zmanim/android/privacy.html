@@ -10,11 +10,41 @@ If you have ANY questions, please do not hesitate to email <a href="mailto:zmani
 (Please note that doing so will reveal your email address. But...you probably knew that already.)
 
 
+<h2>Permissions</h2>
+Zmanim for Android does give you the <i>option</i> of allowing the application to determine your current
+location. This location is ONLY used to display the correct zmanim for you in your current location.
+Except as noted above (see Crash Reports and User Submitted Feedback), this location data does not
+leave your device.
+
+<p/>
+Zmanim for Android also gives you the <i>option</i> of allowing the application to get your location
+in the background, even when it is closed or not in use. This capability is provided to allow you
+to have timely and accurate notifications based on your current location.
+
+<p/>
+You CAN choose to not allow this. Instead, you can manually enter your location.
+<ul>
+  <li> If you enter a location name, a network call will be made to resolve this location to a
+    latitude and longitude. Without the latitude and longitude, there is no way to determine
+    the zmanim.
+  <li> If you enter a latitude and longitude, a network call will be made to determine a name (such
+    as the city and state) corresponding to this location.
+</ul>
+
+<p/>
+If you choose to allow Zmanim for Android to determine you location, it <i>will</i> acquire your location
+in the background in order to display notifications.
+
+
 <h2> Crash Reports</h2>
 The only data which ever leaves your phone may be a crash report (and, honestly, let's hope that
 never happens).
 
-The crash report will include location information, but there is ABSOLUTELY no way for that
+The crash report <b>does not contain any information</b> which is personally identifiable or
+in any way related to you; it simply contains data which will (hopefully) allow us to track down
+the bug and get it fixed.
+
+The crash report may include location information. As noted before, there is ABSOLUTELY no way for that
 location to be traced back or in any way identified with you.
 
 The crash report will also include some basic data about your device. Again, there is NO WAY for
@@ -27,22 +57,3 @@ of Zmanim for Android, then you may also choose to include an email address. Or 
 you. The information sent with the feedback is the same as what is included with a crash report,
 plus any additional message you may (or may not!) choose to include.
 
-
-<h2>Permissions</h2>
-Zmanim for Android does give you the <i>option</i> of allowing the application to determine your current
-location. This location is ONLY used to display the correct zmanim for you in your current location.
-Except as noted above (see Crash Reports and User Submitted Feedback), this location data does not
-leave your device.
-
-You CAN choose to not allow this. Instead, you can manually enter your location.
-<ul>
-  <li> If you enter a location name, a network call will be made to resolve this location to a
-    latitude and longitude. Without the latitude and longitude, there is no way to determine
-    the zmanim.
-  <li> If you enter a latitude and longitude, a network call will be made to determine a name (such
-  as the city and state) corresponding to this location.
-</ul>
-
-
-If you choose to allow Zmanim for Android to determine you location, it <i>will</i> acquire your location
-in the background in order to display notifications.<!--
