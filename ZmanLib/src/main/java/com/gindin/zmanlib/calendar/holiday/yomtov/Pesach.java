@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.yomtov;
@@ -94,11 +94,9 @@ public class Pesach
       zmanim.add( Zmanim.Type.SofZmanTefila );
       zmanim.add( Zmanim.Type.SofZmanAchilatChametz );
 
-      // When erev Pesach falls out on Shabbat, then we cannot do Biur. Technically, the time still exists, but
-      //  it's not quite the same...
-      if ( !isShabbat() ) {
-        zmanim.add( Zmanim.Type.SofZmanBiurChametz );
-      }
+      // NOTE: Even when erev Pesach falls out on Shabbat, there is Biur. True, it's not the same
+      //  action (just the declaration), but still...
+      zmanim.add( Zmanim.Type.SofZmanBiurChametz );
 
       zmanim.add( Zmanim.Type.Chatzot );
       zmanim.add( Zmanim.Type.MinchaGedola );
