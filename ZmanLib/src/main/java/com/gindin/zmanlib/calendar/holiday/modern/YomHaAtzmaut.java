@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.modern;
@@ -92,8 +92,14 @@ public class YomHaAtzmaut
         break;
 
       case Calendar.FRIDAY:
-        if ( 5 == jewishDayOfMonth ) {
+        if ( ( 4 == jewishDayOfMonth ) || ( 5 == jewishDayOfMonth ) ) {
           // In this case, we pushed it back to the Thursday the 4th...
+          return null;
+        }
+
+      case Calendar.SATURDAY:
+        if ( 5 == jewishDayOfMonth ) {
+          // In this case, we pushed it back to the Thursday the 3rd...
           return null;
         }
     }

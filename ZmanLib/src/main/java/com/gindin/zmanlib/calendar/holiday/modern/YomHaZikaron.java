@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday.modern;
@@ -85,6 +85,11 @@ public class YomHaZikaron
           return null;
         }
 
+      case Calendar.FRIDAY:
+        if ( 4 == jewishDayOfMonth ) {
+          // We pushed it back to the 2nd.
+          return null;
+        }
 
       case Calendar.SATURDAY:
         if ( 3 == jewishDayOfMonth ) {
