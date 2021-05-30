@@ -132,7 +132,7 @@ android {
 dependencies {
   implementation project( ':ZmanUtils' )
 
-  implementation group: 'com.kosherjava', name: 'zmanim', version: '2.1.0'
+  implementation group: 'com.kosherjava', name: 'zmanim', version: '2.2.0'
 
   // https://github.com/consp1racy/android-support-preference
   implementation 'net.xpece.android:support-preference:1.3.1'
