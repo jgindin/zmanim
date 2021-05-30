@@ -13,7 +13,7 @@ buildscript {
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.0.0-alpha11'
+    classpath 'com.android.tools.build:gradle:7.0.0-beta02'
 
     // See https://github.com/moallemi/gradle-advanced-build-version
     classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.0'
