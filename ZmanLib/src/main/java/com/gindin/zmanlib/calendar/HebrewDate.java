@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar;
@@ -8,14 +8,17 @@ import com.gindin.zmanlib.calendar.holiday.Details;
 import com.gindin.zmanlib.calendar.holiday.Holidays;
 import com.gindin.zmanlib.calendar.holiday.Observance;
 import com.gindin.zmanlib.location.ZmanimLocation;
-import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 import com.gindin.zmanlib.zman.ZmanimFactory;
+import com.gindin.zmanlib.zman.ZmanimList;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
@@ -60,7 +63,7 @@ public class HebrewDate
   private Details                                           dateDetails;
 
   /** Cache the zmanim which are applicable to today. */
-  private Map<ZmanimLocation, List<Zmanim>>                 locationToZmanim;
+  private Map<ZmanimLocation, ZmanimList>                   locationToZmanim;
 
 
   HebrewDate(
@@ -175,17 +178,7 @@ public class HebrewDate
   }
 
 
-  public Zmanim getZmanim(
-    ZmanimLocation  location,
-    Zmanim.Type     type
-  ) {
-
-    return ZmanimFactory.get( location, this, type );
-  }
-
-
-  @SuppressWarnings( "FeatureEnvy" )
-  public List<Zmanim> getZmanim(
+  public ZmanimList getZmanim(
     ZmanimLocation location
   ) {
 
@@ -193,31 +186,21 @@ public class HebrewDate
       locationToZmanim = new HashMap<>();
     }
 
-    List<Zmanim> zmanimList = locationToZmanim.get( location );
+    ZmanimList zmanimList = locationToZmanim.get( location );
     if ( null != zmanimList ) {
       return zmanimList;
     }
 
     Details details = getDetails();
-    zmanimList = new ArrayList<>();
+    zmanimList = new ZmanimList();
 
     for ( Zmanim.Type type : details.getZmanim() ) {
-      zmanimList.add( getZmanim( location, type ) );
+      zmanimList.add( ZmanimFactory.get( location, this, type ) );
     }
 
     locationToZmanim.put( location, zmanimList );
 
     return zmanimList;
-  }
-
-
-  public Zman getZman(
-    ZmanimLocation  location,
-    Zmanim.Type     type
-  ) {
-
-    Zmanim zmanim = getZmanim( location, type );
-    return zmanim.getDefault();
   }
 
 
@@ -369,7 +352,12 @@ public class HebrewDate
       return false;
     }
 
-    final Calendar zmanTime = getZman( location, type ).getTime();
+    final Zmanim zmanim = getZmanim( location ).findType( type );
+    if ( zmanim == null ) {
+      return false;
+    }
+
+    final Calendar zmanTime = zmanim.getDefault().getTime();
     if ( zmanTime == null ) {
       // If the zman doesn't have a time then the current time cannot be after the time of the zman.
       return false;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.zmanList;
@@ -95,7 +95,11 @@ public class ZmanimSelector {
 
     typeSelectionCallback = callback;
 
-    final Zmanim zmanim = currentDate.getZmanim( currentLocation, type );
+    final Zmanim zmanim = currentDate.getZmanim( currentLocation ).findType( type );
+    if ( zmanim == null ) {
+      return;
+    }
+
     final ZmanimListAdapter listAdapter = new ZmanimListAdapter( context, zmanim.asList() ) {
       @Override protected ZmanRowHolder createRowHolder( View rowView ) {
         return new SelectorRowHolder( rowView, zmanFormatter );

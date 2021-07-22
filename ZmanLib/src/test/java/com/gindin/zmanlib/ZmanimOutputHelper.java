@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib;
 
 import com.gindin.zmanlib.calendar.HebrewDate;
@@ -37,7 +41,7 @@ public class ZmanimOutputHelper {
     Zmanim.Type     type
   ) {
 
-    Zmanim zmanim = startDate.getZmanim( location, type );
+    Zmanim zmanim = startDate.getZmanim( location ).findType( type );
     List<Zman> zmans = zmanim.asList();
     int maxLength = computeColumnWidth( zmans );
 
@@ -107,7 +111,7 @@ public class ZmanimOutputHelper {
 
     while ( endDate.compareTo( startDate ) >= 0 ) {
 
-      Zmanim zmanim = startDate.getZmanim( location, type );
+      Zmanim zmanim = startDate.getZmanim( location ).findType( type );
       List<Zman> zmans = zmanim.asList();
 
       StringBuilder line1 = new StringBuilder()
