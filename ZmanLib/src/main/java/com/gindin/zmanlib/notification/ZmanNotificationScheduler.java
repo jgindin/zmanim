@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.notification;
@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Utilities for working with zmanim.
  */
-@SuppressWarnings( "Convert2Diamond" )
 public class ZmanNotificationScheduler {
 
   public static final int                                   FIFTEEN_MINUTES = 15;
@@ -59,7 +58,6 @@ public class ZmanNotificationScheduler {
    * @param location Where are we?
    * @param now What time is it?
    */
-  @SuppressWarnings( "FeatureEnvy" )
   public void run(
     final ZmanimLocation    location,
     final Calendar          now
@@ -115,7 +113,6 @@ public class ZmanNotificationScheduler {
    * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of
    *  time (in ms) until the zman occurs.
    */
-  @SuppressWarnings( "FeatureEnvy" )
   private List<ZmanNotification> findTheRestOfTheDaysZmanim(
     final ZmanimLocation    location,
     final Calendar          now,
