@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -20,7 +20,7 @@ public class UT_YomTovCandleLighting
 
     // 2nd day of Sukkot
     HebrewDate date = HebrewCalendar.getForDate( 2019, Calendar.OCTOBER, 14 );
-    verifyZmanim( ezraBessaroth, date, yomSheniZemanim,
+    verifyZmanim( ezraBessaroth, date, false, yomSheniZemanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:26:12\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:36:43\n" +
@@ -182,7 +182,7 @@ public class UT_YomTovCandleLighting
 
     // 1st day of Pesach
     HebrewDate date = HebrewCalendar.getForDate( 2018, Calendar.MARCH, 30 );
-    verifyZmanim( ezraBessaroth, date, erevPesachZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevPesachZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:51:29\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:44:02\n" +
@@ -369,7 +369,7 @@ public class UT_YomTovCandleLighting
 
     // 2nd day of Pesach
     HebrewDate date = HebrewCalendar.getForDate( 2018, Calendar.MARCH, 31 );
-    verifyZmanim( ezraBessaroth, date, yomSheniZemanim,
+    verifyZmanim( ezraBessaroth, date, false, yomSheniZemanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:49:29\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:41:27\n" +
@@ -530,7 +530,7 @@ public class UT_YomTovCandleLighting
 
     // 8th day of Pesach
     HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.APRIL, 11 );
-    verifyZmanim( ezraBessaroth, date, shabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, shabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:28:16\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:14:11\n" +
@@ -693,7 +693,7 @@ public class UT_YomTovCandleLighting
 
     // Simchat Torah 2017
     HebrewDate date = HebrewCalendar.getForDate( 2017, Calendar.OCTOBER, 13 );
-    verifyZmanim( ezraBessaroth, date, erevShabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevShabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:25:28\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:35:41\n" +
@@ -834,7 +834,7 @@ public class UT_YomTovCandleLighting
 
     // 2nd day of Rosh Hashana
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.SEPTEMBER, 26 );
-    verifyZmanim( ezraBessaroth, date, erevShabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevShabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:01:23\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:01:53\n" +

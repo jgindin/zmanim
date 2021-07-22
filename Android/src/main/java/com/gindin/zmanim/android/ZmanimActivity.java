@@ -30,6 +30,7 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.formatters.HebrewDateFormatter;
 import com.gindin.zmanlib.location.LatitudeLongitudeParser;
 import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.zman.ZmanimFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -774,7 +775,17 @@ public class ZmanimActivity
     ) {
 
       LogUtils.setContext( "Location", location.toString() );
+
+      ZmanimFactory.useElevation( isUsingElevation() );
+
       runOnUiThread( () -> rebuildUI( location, null ) );
+    }
+
+
+    private boolean isUsingElevation() {
+      final SharedPreferences locationPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+
+      return locationPrefs.getBoolean( LocationProviders.USE_ELEVATION.name(), false );
     }
 
 

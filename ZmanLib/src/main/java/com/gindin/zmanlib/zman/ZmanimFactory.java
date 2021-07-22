@@ -18,12 +18,7 @@ public class ZmanimFactory {
 
   private static final Map<Pair<GeoLocation, HebrewDate>, ZmanimFactory>      locationToFactory = new HashMap<>();
 
-  /** Cache so that we don't create the zmanim instances more than once. */
-  private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<>();
-
-  private final ZmanimCalculator                            zmanimCalculator;
-
-
+  private static boolean                                                      useElevation = false;
 
   public static Zmanim get(
     GeoLocation location,
@@ -40,14 +35,48 @@ public class ZmanimFactory {
       locationToFactory.put( key, factory );
     }
 
+    factory.usingElevation( useElevation );
+
     return factory.get( type );
   }
 
+
+  public static void useElevation( boolean use ) {
+    useElevation = use;
+    for ( ZmanimFactory factory : locationToFactory.values() ) {
+      factory.usingElevation( use );
+    }
+  }
+
+
+
+  /** Cache so that we don't create the zmanim instances more than once. */
+  private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<>();
+
+  private final ZmanimCalculator                            zmanimCalculator;
+
+  private boolean                                           usingElevation;
+
+
+  // TODO: If we were using Dagger to create as needed, we could just have each instance get
+  //  injected with something that could be called when the user wants (doesn't want) to use
+  //  elevation. Instead...well, we've got something more complicated to deal with...
   private ZmanimFactory(
     GeoLocation location,
     HebrewDate  date
   ) {
     this.zmanimCalculator = new ZmanimCalculator( location, date );
+  }
+
+
+  void usingElevation( boolean useElevation ) {
+
+    if ( usingElevation != useElevation ) {
+      usingElevation = useElevation;
+      zmanimCalculator.setUseElevation( useElevation );
+
+      typeToZmanimMap.clear();
+    }
   }
 
 

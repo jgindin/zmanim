@@ -32,10 +32,11 @@ public class LocationProviderPreferences
    * Only want to build this map once. Using a TreeMap so that the time zones get sorted upon addition,
    *  and we don't have to do it again..
    */
-  private static final Map<String, List<String>>            timeZoneAreasToLocales = new TreeMap<String, List<String>>();
+  private static final Map<String, List<String>>            timeZoneAreasToLocales = new TreeMap<>();
 
   private boolean                                           handlingPrefChange = false;
 
+  private CheckBoxPreference                                useElevation;
   private CheckBoxPreference                                useDynamicPos;
   private CheckBoxPreference                                useStaticLocation;
   private EditTextPreference                                place;
@@ -74,6 +75,7 @@ public class LocationProviderPreferences
 
     prefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
 
+    useElevation = (CheckBoxPreference)findPreference( LocationProviders.USE_ELEVATION.name() );
     useDynamicPos = (CheckBoxPreference)findPreference( LocationProviders.DYNAMIC_POSITION.name() );
     useStaticLocation = (CheckBoxPreference)findPreference( LocationProviders.STATIC_POSITION.name() );
     useLatLong = (CheckBoxPreference)findPreference( LocationProviders.LATITUDE_LONGITUDE_POSITION.name() );
@@ -127,6 +129,7 @@ public class LocationProviderPreferences
   }
 
 
+  @SuppressWarnings( "AutoUnboxing" )
   private void configureDependencies() {
 
     Preference.OnPreferenceChangeListener prefChangeListener = ( preference, newValue ) -> {
@@ -139,13 +142,22 @@ public class LocationProviderPreferences
 
       try {
 
+        final boolean usingElevation = (Boolean)newValue;
+        latLongElevation.setEnabled( usingElevation );
+        placeElevation.setEnabled( usingElevation );
+
+        if ( !usingElevation ) {
+          latLongElevation.setText( "" );
+          placeElevation.setText( "" );
+        }
+
         // TODO: I'm trying to make the checkboxes behave like radio buttons. However, neither setting the
         //  preference value nor setting the field to be checked seems to actually make the checkbox stay
         //  checked.
 
         if ( useDynamicPos == preference ) {
 
-          if ( ((Boolean)newValue).booleanValue() ) {
+          if ( (Boolean)newValue ) {
             dynamicProviderSelected();
           }
           else {
@@ -153,7 +165,7 @@ public class LocationProviderPreferences
           }
         }
         else if ( useStaticLocation == preference ) {
-          if ( ((Boolean)newValue).booleanValue() ) {
+          if ( (Boolean)newValue ) {
             staticProviderSelected();
           }
           else {
@@ -161,7 +173,7 @@ public class LocationProviderPreferences
           }
         }
         else if ( useLatLong == preference ) {
-          if ( ( (Boolean)newValue ).booleanValue() ) {
+          if ( (Boolean)newValue ) {
             latLongProviderSelected();
           }
           else {
@@ -187,7 +199,7 @@ public class LocationProviderPreferences
           }
         }
         else if ( overrideSystemTimeZone == preference ) {
-          overridingSystemTimeZone( ( (Boolean)newValue ).booleanValue() );
+          overridingSystemTimeZone( (Boolean)newValue );
         }
         else if ( timeZoneAreas == preference ) {
           updateSummary( timeZoneAreas, "", newValue.toString() );
@@ -205,6 +217,7 @@ public class LocationProviderPreferences
       return true;
     };
 
+    useElevation.setOnPreferenceChangeListener( prefChangeListener );
     useDynamicPos.setOnPreferenceChangeListener( prefChangeListener );
     useStaticLocation.setOnPreferenceChangeListener( prefChangeListener );
     useLatLong.setOnPreferenceChangeListener( prefChangeListener );
@@ -245,7 +258,7 @@ public class LocationProviderPreferences
           String locale = timeZoneID.substring( slash + 1 );
           List<String> locales = timeZoneAreasToLocales.get( area );
           if ( null == locales ) {
-            locales = new ArrayList<String>();
+            locales = new ArrayList<>();
             timeZoneAreasToLocales.put( area, locales );
           }
           locales.add( locale );
@@ -329,6 +342,8 @@ public class LocationProviderPreferences
     else {
       updateSummary( placeElevation, elevationStr, getString( R.string.meters ) );
     }
+
+    placeElevation.setEnabled( useElevation.isChecked() );
   }
 
 
@@ -358,6 +373,8 @@ public class LocationProviderPreferences
     else {
       updateSummary( latLongElevation, elevationStr, getString( R.string.meters ) );
     }
+
+    latLongElevation.setEnabled( useElevation.isChecked() );
   }
 
 

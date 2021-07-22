@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.calendar.holiday;
@@ -8,6 +8,7 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
+import com.gindin.zmanlib.zman.ZmanimFactory;
 
 import org.junit.Assert;
 
@@ -120,9 +121,12 @@ public class ZmanimBaseTest {
   protected final void verifyZmanim(
     ZmanimLocation    location,
     HebrewDate        date,
+    boolean           useElevation,
     List<Zmanim.Type> expectedZmanim,
     String            expected
   ) {
+
+    ZmanimFactory.useElevation( useElevation );
 
     List<Zmanim> zmanimForDay = date.getZmanim( location );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
@@ -19,7 +19,14 @@ public enum LocationProviders {
   STATIC_POSITION,
 
   /** The user has pinpointed their location. */
-  LATITUDE_LONGITUDE_POSITION;
+  LATITUDE_LONGITUDE_POSITION,
+
+  /** The name of the general location preferences category. */
+  GENERAL_PREFS,
+
+  /** The user wants to take elevation into account for (nearly) everything. */
+  USE_ELEVATION
+  ;
 
 
   /** Options specific to the DynamicLocationProvider. */

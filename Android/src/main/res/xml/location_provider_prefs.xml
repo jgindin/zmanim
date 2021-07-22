@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014. Jay R. Gindin
+  ~ Copyright (c) 2021. Jay R. Gindin
   -->
 
 <PreferenceScreen
@@ -9,6 +9,20 @@
   android:orderingFromXml="true"
   android:title="@string/edit_location_prefs_title"
 >
+
+  <PreferenceCategory
+    android:key="GENERAL_PREFS"
+    android:title="@string/general_location_prefs"
+    android:orderingFromXml="true"
+    >
+
+    <CheckBoxPreference
+      android:key="USE_ELEVATION"
+      android:title="@string/use_elevation_title"
+      android:summary="@string/use_elevation_summary"
+      android:checked="false"
+      />
+  </PreferenceCategory>
 
   <!--
     See the com.gindin.zmanim.android.prefs.LocationProviders enum, which corresponds to the keys (e.g.,

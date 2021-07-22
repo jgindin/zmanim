@@ -413,9 +413,9 @@ public class UT_Zmanim
         "            Midnight - Fixed Local Mid-Night         :  0:39:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 19 );
-    verifyZmanim( ezraBessaroth, date, dailyZmanim, ezraBessarothExpected );
-    verifyZmanim( yeshivaUniviersity, date, dailyZmanim, yeshivaUniversityExpected );
-    verifyZmanim( haRambanSynagogue, date, dailyZmanim, haRambanSynagogueExpected );
+    verifyZmanim( ezraBessaroth, date, false, dailyZmanim, ezraBessarothExpected );
+    verifyZmanim( yeshivaUniviersity, date, false, dailyZmanim, yeshivaUniversityExpected );
+    verifyZmanim( haRambanSynagogue, date, false, dailyZmanim, haRambanSynagogueExpected );
   }
 
 
@@ -426,7 +426,7 @@ public class UT_Zmanim
   public void october_24_2014() {
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 24 );
-    verifyZmanim( ezraBessaroth, date, erevShabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevShabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:41:08\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:57:14\n" +
@@ -570,7 +570,7 @@ public class UT_Zmanim
   public void october_25_2014() {
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 25 );
-    verifyZmanim( ezraBessaroth, date, shabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, shabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:42:37\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:59:15\n" +
@@ -734,7 +734,7 @@ public class UT_Zmanim
   public void april_4_2015() {
 
     HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.APRIL, 4 );
-    verifyZmanim( ezraBessaroth, date, erevPesachOnShabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevPesachOnShabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:42:01\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:31:52\n" +
@@ -897,7 +897,7 @@ public class UT_Zmanim
   public void april_14_2014() {
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.APRIL, 14 );
-    verifyZmanim( ezraBessaroth, date, erevPesachZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevPesachZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:22:03\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:06:10\n" +
@@ -1090,7 +1090,7 @@ public class UT_Zmanim
     erevPesachShabbatZmanim.remove( Zmanim.Type.CandleLighting );
 
     HebrewDate date = HebrewCalendar.getForDate( 2021, Calendar.MARCH, 27 );
-    verifyZmanim( ezraBessaroth, date, erevPesachShabbatZmanim,
+    verifyZmanim( ezraBessaroth, date, false, erevPesachShabbatZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  4:56:59\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  4:51:05\n" +
@@ -1268,7 +1268,7 @@ public class UT_Zmanim
   public void asara_bTevet_2015() {
 
     HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.JANUARY, 1 );
-    verifyZmanim( ezraBessaroth, date, fastDayZmanim,
+    verifyZmanim( ezraBessaroth, date, false, fastDayZmanim,
       "Ezra Bessaroth\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:57:05\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  6:31:52\n" +
@@ -1446,7 +1446,7 @@ public class UT_Zmanim
       .build();
 
     HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.FEBRUARY, 13 );
-    verifyZmanim( oakPark, date, erevShabbatZmanim,
+    verifyZmanim( oakPark, date, false, erevShabbatZmanim,
       "Oak Park, Michigan\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:32:32\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:47:37\n" +
@@ -1581,7 +1581,7 @@ public class UT_Zmanim
         "            Midnight - Fixed Local Mid-Night         :  0:32:48\n"
     );
 
-    verifyZmanim( oakParkWithElevation, date, erevShabbatZmanim,
+    verifyZmanim( oakParkWithElevation, date, false, erevShabbatZmanim,
       "Oak Park, Michigan\n" +
         "      Alot Hashachar - 120 Minutes                   :  5:32:32\n" +
         "      Alot Hashachar - 120 Minutes Zmaniyot          :  5:47:37\n" +
@@ -1848,7 +1848,7 @@ public class UT_Zmanim
       "            Midnight - Fixed Local Mid-Night         : 23:39:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2017, Calendar.NOVEMBER, 26 );
-    verifyZmanim( haRambanSynagogue, date, dailyZmanim, haRambanSynagogueExpected );
+    verifyZmanim( haRambanSynagogue, date, false, dailyZmanim, haRambanSynagogueExpected );
   }
 
 

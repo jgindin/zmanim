@@ -58,6 +58,9 @@
 
   <string name="location_prefs">Location</string>
   <string name="edit_location_prefs_title">Edit Location Preferences</string>
+  <string name="general_location_prefs">General Preferences</string>
+  <string name="use_elevation_title">Use Elevation</string>
+  <string name="use_elevation_summary">Use elevation for (most) zmanim</string>
   <string name="dynamic_location">Dynamic Location</string>
   <string name="dynamic_position_pref_title">Use My Location</string>
   <string name="dynaic_position_pref_summary">Update zmanim depending where you are</string>
