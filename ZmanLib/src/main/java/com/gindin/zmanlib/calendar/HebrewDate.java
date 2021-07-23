@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
@@ -62,8 +60,6 @@ public class HebrewDate
   /** Cache the details lookup. */
   private Details                                           dateDetails;
 
-  /** Cache the zmanim which are applicable to today. */
-  private Map<ZmanimLocation, ZmanimList>                   locationToZmanim;
 
 
   HebrewDate(
@@ -182,23 +178,12 @@ public class HebrewDate
     ZmanimLocation location
   ) {
 
-    if ( null == locationToZmanim ) {
-      locationToZmanim = new HashMap<>();
-    }
-
-    ZmanimList zmanimList = locationToZmanim.get( location );
-    if ( null != zmanimList ) {
-      return zmanimList;
-    }
-
     Details details = getDetails();
-    zmanimList = new ZmanimList();
+    ZmanimList zmanimList = new ZmanimList();
 
     for ( Zmanim.Type type : details.getZmanim() ) {
       zmanimList.add( ZmanimFactory.get( location, this, type ) );
     }
-
-    locationToZmanim.put( location, zmanimList );
 
     return zmanimList;
   }
