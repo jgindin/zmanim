@@ -237,6 +237,10 @@ public class ZmanimActivity
   protected void onResume() {
     super.onResume();
 
+    final SharedPreferences locationPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
+    final boolean isUsingElevation = locationPrefs.getBoolean( LocationProviders.USE_ELEVATION.name(), false );
+    ZmanimFactory.useElevation( isUsingElevation );
+
     refresh( ( lastKnownLocation == null ) || lastKnownLocation.isInvalid );
   }
 
@@ -776,16 +780,7 @@ public class ZmanimActivity
 
       LogUtils.setContext( "Location", location.toString() );
 
-      ZmanimFactory.useElevation( isUsingElevation() );
-
       runOnUiThread( () -> rebuildUI( location, null ) );
-    }
-
-
-    private boolean isUsingElevation() {
-      final SharedPreferences locationPrefs = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE );
-
-      return locationPrefs.getBoolean( LocationProviders.USE_ELEVATION.name(), false );
     }
 
 
