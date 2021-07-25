@@ -142,13 +142,15 @@ public class LocationProviderPreferences
 
       try {
 
-        final boolean usingElevation = (Boolean)newValue;
-        latLongElevation.setEnabled( usingElevation );
-        placeElevation.setEnabled( usingElevation );
+        if ( useElevation == preference ) {
+          final boolean usingElevation = (Boolean)newValue;
+          latLongElevation.setEnabled( usingElevation );
+          placeElevation.setEnabled( usingElevation );
 
-        if ( !usingElevation ) {
-          latLongElevation.setText( "" );
-          placeElevation.setText( "" );
+          if ( !usingElevation ) {
+            latLongElevation.setText( "" );
+            placeElevation.setText( "" );
+          }
         }
 
         // TODO: I'm trying to make the checkboxes behave like radio buttons. However, neither setting the
