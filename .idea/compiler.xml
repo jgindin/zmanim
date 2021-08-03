@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
-      <module name="zmanim.Android" target="14" />
-      <module name="zmanim.ZehutYosef" target="14" />
+      <module name="zmanim.Android" target="11" />
+      <module name="zmanim.ZehutYosef" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
