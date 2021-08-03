@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2021. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -27,7 +27,7 @@ class NightChatzot
     zmanim.add(
       new Zman( "Mid-night", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.NightChatzot, false ) {
         @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getNightChatzos() );
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSolarMidnight() );
         }
       }
     );

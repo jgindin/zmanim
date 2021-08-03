@@ -190,25 +190,6 @@ public class ZmanimCalculator
     return getTimeOffset(getSeaLevelSunset(), -minutesBeforeShkia * MINUTE_MILLIS);
   }
 
-  /**
-   * Method to calculate the middle of the night as defined by the midpoint between sunset and sunrise.
-   *
-   * @return the <code>Date</code> representing the middle of the night. Will return null if either the
-   *  sunset or sunrise cannot be calculated.
-   */
-  public Date getNightChatzos() {
-
-    ZmanimCalculator clonedCal = (ZmanimCalculator)clone();
-    clonedCal.getCalendar().add( Calendar.DAY_OF_MONTH, 1);
-    Date sunset = getSeaLevelSunset();
-    Date sunrise = clonedCal.getSeaLevelSunrise();
-    if ( ( null == sunset ) || ( null == sunrise ) ) {
-      return null;
-    }
-
-    return getTimeOffset( sunset, ( sunrise.getTime() - sunset.getTime() ) / 2 );
-  }
-
 
   /**
    * Calculates the middle of the night as a 12 hours after the fixed local chatzot.
