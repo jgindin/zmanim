@@ -23,6 +23,7 @@ project.ext.set( "versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP )
 apply from: '../common/gindin-versioning.gradle'
 
 android {
+  namespace 'com.gindin.zehutyosef'
 
   compileSdkVersion 30
 

@@ -5,7 +5,6 @@
 
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.gindin.zmanim.android"
   android:installLocation="auto"
 >
 
@@ -51,6 +50,7 @@
 
     <activity
       android:name=".ZmanimActivity"
+      android:exported="true"
     >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -71,7 +71,10 @@
     <!--
       Register the receiver for the BOOT_COMPLETED notification.
     -->
-    <receiver android:name=".service.ZmanimReceiver">
+    <receiver
+      android:name=".service.ZmanimReceiver"
+      android:exported="false"
+    >
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.TIME_SET" />
@@ -85,6 +88,7 @@
     <receiver
       android:name=".location.acquirers.ZmanimLocationAcquiredService"
       android:description="@string/ZmanimLocationServiceDescription"
+      android:exported="false"
     >
       <intent-filter>
         <action android:name="com.gindin.zmanim.android.location.acquirers.ZmanimLocationService.LOCATION_RECEIVED" />
