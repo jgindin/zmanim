@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -131,12 +131,17 @@ android {
 }
 
 dependencies {
+  // The net.xpece.android support libraries only exist in jcenter for the older version that
+  //  is in use here (to support older Android OS versions). Since jcenter has gone away, I've
+  //  just copied the necessary files into our libs directory.
+  //  So, this now replaces "implementation 'net.xpece.android:support-preference:1.3.1'"
+  // Newer versions are hosted on Maven Central.
+  // See https://github.com/consp1racy/android-support-preference
+  api fileTree( include: ['*.aar'], dir: 'libs' )
+
   implementation project( ':ZmanUtils' )
 
   implementation group: 'com.kosherjava', name: 'zmanim', version: '2.2.0'
-
-  // https://github.com/consp1racy/android-support-preference
-  implementation 'net.xpece.android:support-preference:1.3.1'
 
   implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
