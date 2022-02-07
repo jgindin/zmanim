@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.prefs;
@@ -33,7 +33,7 @@ public class LongitudeLatitudePreference
   private View                                              view;
 
   private boolean                                           showingLatitude;
-  private LatitudeLongitudeParser.Holder                    valueHolder;
+  private LatitudeLongitudeParser                           valueHolder;
 
 
   public LongitudeLatitudePreference(
@@ -51,10 +51,10 @@ public class LongitudeLatitudePreference
     this.showingLatitude = showingLatitude;
 
     if ( showingLatitude ) {
-      valueHolder = LatitudeLongitudeParser.LATITUDE_PARSER.parse( value );
+      valueHolder = LatitudeLongitudeParser.latitude( value );
     }
     else {
-      valueHolder = LatitudeLongitudeParser.LONGITUDE_PARSER.parse( value );
+      valueHolder = LatitudeLongitudeParser.longitude( value );
     }
   }
 
@@ -84,16 +84,16 @@ public class LongitudeLatitudePreference
 
     ValueFilter minutesFilter = new ValueFilter( 0, 60 );
 
-    EditText degrees = (EditText)view.findViewById( R.id.lat_long_editor_degrees_editor );
-    degrees.setText( String.format( "%d", valueHolder.getDegrees() ) );
+    EditText degrees = view.findViewById( R.id.lat_long_editor_degrees_editor );
+    degrees.setText( String.format( "%d", valueHolder.degrees ) );
     degrees.setFilters( new InputFilter[] { degreesFilter } );
 
-    EditText minutes = (EditText)view.findViewById( R.id.lat_long_editor_minutes_editor );
-    minutes.setText( String.format( "%d", valueHolder.getMinutes() ) );
+    EditText minutes = view.findViewById( R.id.lat_long_editor_minutes_editor );
+    minutes.setText( String.format( "%d", valueHolder.minutes ) );
     minutes.setFilters( new InputFilter[] { minutesFilter } );
 
-    TextView seconds = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
-    seconds.setText( String.format( "%f", valueHolder.getSeconds() ) );
+    TextView seconds = view.findViewById( R.id.lat_long_editor_seconds_editor );
+    seconds.setText( String.format( "%f", valueHolder.seconds ) );
 
 
     // Configuring the spinner comes straight from the Android JavaDocs:
@@ -112,13 +112,13 @@ public class LongitudeLatitudePreference
     ArrayAdapter adapter = ArrayAdapter.createFromResource( getContext(), arrayResource, android.R.layout.simple_spinner_item );
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-    Spinner spinner = (Spinner)view.findViewById( R.id.lat_long_editor_ns_ew_picker );
+    Spinner spinner = view.findViewById( R.id.lat_long_editor_ns_ew_picker );
     spinner.setAdapter( adapter );
 
-    TextView label = (TextView)view.findViewById( R.id.lat_long_editor_ns_text );
+    TextView label = view.findViewById( R.id.lat_long_editor_ns_text );
     label.setText( labelText );
 
-    LatitudeLongitudeParser.Direction direction = valueHolder.getDirection();
+    LatitudeLongitudeParser.Direction direction = valueHolder.direction;
     if ( ( LatitudeLongitudeParser.Direction.NORTH == direction ) || ( LatitudeLongitudeParser.Direction.EAST == direction ) ) {
       spinner.setSelection( 0, true );
     }
@@ -137,27 +137,29 @@ public class LongitudeLatitudePreference
     }
 
     // Have to convert the degrees, minutes, N/S (or E/W) to something we can store...
-    TextView value = (TextView)view.findViewById( R.id.lat_long_editor_degrees_editor );
+    TextView value = view.findViewById( R.id.lat_long_editor_degrees_editor );
     String degreesText = value.getText().toString();
 
-    value = (TextView)view.findViewById( R.id.lat_long_editor_minutes_editor );
+    value = view.findViewById( R.id.lat_long_editor_minutes_editor );
     String minutesText = value.getText().toString();
 
-    value = (TextView)view.findViewById( R.id.lat_long_editor_seconds_editor );
+    value = view.findViewById( R.id.lat_long_editor_seconds_editor );
     String secondsText = value.getText().toString();
 
     LatitudeLongitudeParser.Direction direction;
-    Spinner spinner = (Spinner)view.findViewById( R.id.lat_long_editor_ns_ew_picker );
+    Spinner spinner = view.findViewById( R.id.lat_long_editor_ns_ew_picker );
     int item = spinner.getSelectedItemPosition();
+    LatitudeLongitudeParser holder;
     if ( showingLatitude ) {
       direction = ( 0 == item ? LatitudeLongitudeParser.Direction.NORTH : LatitudeLongitudeParser.Direction.SOUTH );
+      holder = LatitudeLongitudeParser.latitude( direction, degreesText, minutesText, secondsText );
     }
     else {
       direction = ( 0 == item ? LatitudeLongitudeParser.Direction.EAST : LatitudeLongitudeParser.Direction.WEST );
+      holder = LatitudeLongitudeParser.longitude( direction, degreesText, minutesText, secondsText );
     }
 
 
-    LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse( degreesText, minutesText, secondsText, direction );
     String newValue = holder.toFullString( false );
 
     if ( callChangeListener( newValue ) ) {

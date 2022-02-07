@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location.acquirers;
@@ -68,7 +68,7 @@ public class LatitudeLongitudeLocationAcquirer
     }
 
     try {
-      ourLocation.atLatitude( LatitudeLongitudeParser.LATITUDE_PARSER.parseAsDouble( latitudePref ) );
+      ourLocation.atLatitude( LatitudeLongitudeParser.latitudeValue( latitudePref ) );
 
       return null;
     }
@@ -90,7 +90,7 @@ public class LatitudeLongitudeLocationAcquirer
     }
 
     try {
-      ourLocation.atLongitude( LatitudeLongitudeParser.LONGITUDE_PARSER.parseAsDouble( longitudePref ) );
+      ourLocation.atLongitude( LatitudeLongitudeParser.longitudeValue( longitudePref ) );
 
       return null;
     }

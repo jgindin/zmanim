@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -517,10 +517,12 @@ public class ZmanimActivity
     // The user didn't grant our permissions. The app can work, but they'll have to tell us where we are.
     if ( ( lastKnownLocation != null ) && !lastKnownLocation.isInvalid ) {
 
-      LatitudeLongitudeParser.Holder holder = LatitudeLongitudeParser.parse( Double.toString( lastKnownLocation.getLatitude() ), "", "", LatitudeLongitudeParser.Direction.NORTH );
+      LatitudeLongitudeParser holder = LatitudeLongitudeParser.latitude(
+        LatitudeLongitudeParser.Direction.NORTH, Double.toString( lastKnownLocation.getLatitude() ), "", "" );
       String latitude = holder.toFullString( false );
 
-      holder = LatitudeLongitudeParser.parse( Double.toString( lastKnownLocation.getLongitude() ), "", "", LatitudeLongitudeParser.Direction.EAST );
+      holder = LatitudeLongitudeParser.longitude(
+        LatitudeLongitudeParser.Direction.EAST, Double.toString( lastKnownLocation.getLongitude() ), "", "" );
       String longitude = holder.toFullString( false );
 
       locationManagementPrefs
