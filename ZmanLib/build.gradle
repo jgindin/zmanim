@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 apply plugin: 'java-library'
@@ -11,7 +11,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
   api fileTree( include: ['*.jar'], dir: 'libs' )
   implementation project( ':ZmanUtils' )
-  implementation group: 'com.kosherjava', name: 'zmanim', version: '2.1.0'
+  implementation group: 'com.kosherjava', name: 'zmanim', version: '2.3.0'
   implementation 'org.jetbrains:annotations:15.0'
   compileOnly 'org.json:json:20160810'
 
