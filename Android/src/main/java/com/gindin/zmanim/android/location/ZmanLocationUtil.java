@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location;
@@ -34,15 +34,6 @@ public class ZmanLocationUtil {
   private static final String                               PROVIDER_NAME = "provider";
   private static final String                               TIME_ZONE = "time zone";
   private static final String                               USER_NAME = "user name";
-
-
-
-  @NonNull
-  public static ZmanimLocation fromLocation(
-    @Nullable Location location
-  ) {
-    return fromLocation( location, null );
-  }
 
 
   @SuppressWarnings( "FeatureEnvy" )
