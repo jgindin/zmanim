@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Jay R. Gindin
+ */
+
 package com.gindin.zmanlib.location;
 
 import org.json.JSONObject;
@@ -22,7 +26,6 @@ public class ZmanLocationJSON {
   private static final String                               NO_NAME = " - - ";
 
 
-  @SuppressWarnings( "FeatureEnvy" )
   public static String toJSON( ZmanimLocation location ) {
 
     JSONObject jsonLocation = new JSONObject();
@@ -46,6 +49,7 @@ public class ZmanLocationJSON {
   }
 
 
+  @SuppressWarnings( "FeatureEnvy" )
   public static ZmanimLocation fromJSON( String json ) {
 
     JSONTokener tokener = new JSONTokener( json );
