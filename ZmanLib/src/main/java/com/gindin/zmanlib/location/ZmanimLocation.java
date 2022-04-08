@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2022. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.location;
@@ -103,12 +103,24 @@ public class ZmanimLocation
     }
 
     public Builder atElevation( double elevation ) {
-      this.elevation = elevation;
+      if ( ( elevation < 0 ) || Double.isInfinite( elevation ) || Double.isNaN( elevation ) ) {
+        this.elevation = 0.0;
+      }
+      else {
+        this.elevation = elevation;
+      }
+
       return this;
     }
 
     public Builder withAccuracy( float accuracy ) {
-      this.accuracy = accuracy;
+      if ( accuracy >= 0 ) {
+        this.accuracy = accuracy;
+      }
+      else {
+        this.accuracy = -1;
+      }
+
       return this;
     }
 
@@ -178,29 +190,12 @@ public class ZmanimLocation
     this.providerName = builder.providerName;
     this.locationTime = builder.locationTime;
     this.originalUserName = builder.userName;
+    this.accuracy = builder.accuracy;
     setLocationName( builder.locationName );
     setLatitude( builder.latitude );
     setLongitude( builder.longitude );
-
-    if ( builder.accuracy >= 0 ) {
-      this.accuracy = builder.accuracy;
-    }
-    else {
-      this.accuracy = -1;
-    }
-
-    if ( builder.elevation < 0 ) {
-      builder.elevation = 0.0;
-    }
     setElevation( builder.elevation );
-
-    // If we don't set a time zone, then it defaults to GMT...
-    if ( null == builder.timeZone ) {
-      setTimeZone( TimeZone.getDefault() );
-    }
-    else {
-      setTimeZone( builder.timeZone );
-    }
+    setTimeZone( builder.timeZone );
   }
 
 
@@ -210,10 +205,11 @@ public class ZmanimLocation
   private ZmanimLocation() {
 
     this.isInvalid = true;
-    this.accuracy = -1;
+
     this.providerName = UNKNOWN_LOCATION;
     this.locationTime = 0;
     this.originalUserName = "";
+    this.accuracy = -1;
   }
 
 
