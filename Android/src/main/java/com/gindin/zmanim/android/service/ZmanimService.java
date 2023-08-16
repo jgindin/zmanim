@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.service;
@@ -341,7 +341,7 @@ public class ZmanimService
        //    reschedule the alarm for a different time you don't need any flag at all; just create a duplicate
        //    PendingIntent with flags of zero and then use it to set() an alarm: this will implicitly cancel the
        //    existing alarm and then set it for the newly-specified time."
-      0
+      PendingIntent.FLAG_MUTABLE
     );
 
     long alertTime = alertAt.getTimeInMillis();
@@ -354,17 +354,20 @@ public class ZmanimService
     SharedPreferences personalPrefs = getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE );
     boolean useAlarmClock = personalPrefs.getBoolean( PersonalPreferences.Prefs.USE_ALARM_CLOCK.name(), false );
 
-    if ( Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP && useAlarmClock ) {
+    final boolean canSetExactAlarm = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms();
+
+    if ( ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) && useAlarmClock && canSetExactAlarm ) {
       Intent openZmanim = new Intent( this, ZmanimActivity.class );
 
       AlarmManager.AlarmClockInfo  alarmClockInfo = new AlarmManager.AlarmClockInfo( alertTime,
-        PendingIntent.getActivity( this, 0, openZmanim, 0 ) );
+        PendingIntent.getActivity( this, 0, openZmanim,
+        PendingIntent.FLAG_MUTABLE ) );
       alarmManager.setAlarmClock( alarmClockInfo, pendingIntent );
     }
-    else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+    else if ( ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) && canSetExactAlarm ) {
       alarmManager.setExactAndAllowWhileIdle( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
-    else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
+    else if ( ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) && canSetExactAlarm ) {
       alarmManager.setExact( AlarmManager.RTC_WAKEUP, alertTime, pendingIntent );
     }
     else {

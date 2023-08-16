@@ -12,10 +12,10 @@ dependencies {
   api fileTree( include: ['*.jar'], dir: 'libs' )
   implementation project( ':ZmanUtils' )
   implementation group: 'com.kosherjava', name: 'zmanim', version: '2.3.0'
-  implementation 'org.jetbrains:annotations:15.0'
+  implementation 'org.jetbrains:annotations:24.0.1'
   compileOnly 'org.json:json:20160810'
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.13.2'
   testImplementation 'org.json:json:20160810'
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.location.acquirers;
@@ -145,11 +145,11 @@ public class DynamicLocationAcquirer
     // Have to actually go get the location.
     // These settings are largely taken from
     //  https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest#setFastestInterval(long)
-    LocationRequest request = new LocationRequest()
-      .setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY )
-      .setInterval( 5 * 1000 )
-      .setNumUpdates( 1 )
-      .setFastestInterval( ONE_MINUTE );
+    LocationRequest request = new LocationRequest.Builder(5 * 1000)
+      .setPriority( Priority.PRIORITY_HIGH_ACCURACY )
+      .setMaxUpdates( 1 )
+      .setMaxUpdateAgeMillis( ONE_MINUTE )
+      .build();
 
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
       .addLocationRequest( request );
@@ -164,7 +164,8 @@ public class DynamicLocationAcquirer
         // Per the Android sample code (https://github.com/googlesamples/android-play-location/blob/master/LocationUpdatesPendingIntent/app/src/main/java/com/google/android/gms/location/sample/locationupdatespendingintent/MainActivity.java)
         //    For apps targeting API level O, only PendingIntent.getBroadcast() should be used. This is due to the
         //      limits placed on services started in the background in "O".
-        pendingIntent = PendingIntent.getBroadcast( context, 0, locationReceivedIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+        pendingIntent = PendingIntent.getBroadcast( context, 0, locationReceivedIntent,
+          PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         locationProvider.requestLocationUpdates( request, pendingIntent );
       } )

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023. Jay R. Gindin
+ */
+
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
@@ -49,7 +53,8 @@ public class ZmanimReceiver
     //  as a wakeful service, and it will cause the alerts to be (re)scheduled.
     Intent alarmIntent = new Intent( context, ZmanimReceiver.class );
     alarmIntent.setAction( SCHEDULE_ALARM );
-    PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, alarmIntent, 0 );
+    PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, alarmIntent,
+      PendingIntent.FLAG_MUTABLE );
 
     // Make sure to reschedule alarms periodically...
     final long alarmInterval;

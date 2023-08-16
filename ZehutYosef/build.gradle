@@ -25,11 +25,11 @@ apply from: '../common/gindin-versioning.gradle'
 android {
   namespace 'com.gindin.zehutyosef'
 
-  compileSdkVersion 30
+  compileSdk 33
 
   defaultConfig {
     minSdkVersion 22
-    targetSdkVersion 30
+    targetSdkVersion 33
     versionCode appVersionCode
     versionName appVersionName
   }
@@ -65,15 +65,15 @@ android {
 
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
   }
 }
 
 dependencies {
 
   ext.supportLibsVersion = "25.4.0"
-  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation 'androidx.appcompat:appcompat:1.6.1'
 
   /* Used to provide out of the box icon font support. simplifies development, and provides scalable icons.
    *  the core is very very light. https://github.com/mikepenz/Android-Iconics
@@ -90,5 +90,5 @@ dependencies {
     transitive = true
   }
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.13.2'
 }

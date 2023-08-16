@@ -6,5 +6,5 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
   implementation fileTree( include: ['*.jar'], dir: 'libs' )
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.13.2'
 }

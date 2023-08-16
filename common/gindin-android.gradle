@@ -1,42 +1,5 @@
 apply plugin: 'com.android.application'
 
-import java.text.DateFormat
-
-
-// These methods inspired from https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij
-static def hgVersion( isDev ) {
-  def hgVersion = 'hg log --limit 1 --template {node|short}'.execute().text.trim();
-
-  return "\"" + hgVersion.toString() + ( isDev ? "-DEV" : "" ) + "\""
-}
-
-
-static def buildTime() {
-    def DateFormat df = DateFormat.getDateTimeInstance()
-    df.setTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
-    return "\"" + df.format( new Date() ) + "\"";
-  }
-
-
-
-android {
-
-  buildTypes {
-
-    // Adding fields to the BuildConfig inspired by http://toastdroid.com/2014/03/28/customizing-your-build-with-gradle/
-    release {
-      buildConfigField "String", "HG_VERSION", "${hgVersion( false )}"
-      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
-    }
-
-    debug {
-      buildConfigField "String", "HG_VERSION", "${hgVersion( true )}"
-      buildConfigField "String", "BUILD_TIME", "${buildTime()}"
-    }
-  }
-
-}
-
 dependencies {
   implementation fileTree( include: ['*.jar'], dir: 'libs' )
 

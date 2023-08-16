@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android.service;
@@ -217,7 +217,8 @@ public class DisplayNotificationService
       .setCategory( NotificationCompat.CATEGORY_REMINDER )
       .setPriority( NotificationCompat.PRIORITY_HIGH )
       .setVisibility( NotificationCompat.VISIBILITY_PUBLIC )
-      .setContentIntent( PendingIntent.getActivity( context, 0, openZmanim, 0 ) );
+      .setContentIntent( PendingIntent.getActivity( context, 0, openZmanim,
+        PendingIntent.FLAG_MUTABLE ) );
 
     // TODO: Group the notifications. To support API 24 and lower, we have to create our own summary.
     //  See https://developer.android.com/training/notify-user/group.

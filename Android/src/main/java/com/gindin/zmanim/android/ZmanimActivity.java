@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanim.android;
@@ -251,10 +251,8 @@ public class ZmanimActivity
   }
 
 
-  @SuppressWarnings( "FeatureEnvy" )
   @Override
   protected void onStop() {
-
     super.onStop();
   }
 
@@ -278,7 +276,7 @@ public class ZmanimActivity
 
 
   @Override
-  protected void onSaveInstanceState( Bundle outState ) {
+  protected void onSaveInstanceState( @NonNull Bundle outState ) {
     super.onSaveInstanceState( outState );
 
     final Bundle bundle = ZmanLocationUtil.toBundle( lastKnownLocation );
@@ -286,7 +284,6 @@ public class ZmanimActivity
   }
 
 
-  @SuppressWarnings( { "FeatureEnvy" } )
   @Override
   protected void onActivityResult(
     int     requestCode,
@@ -713,8 +710,8 @@ public class ZmanimActivity
 
     @Override
     public boolean onFling(
-      MotionEvent startMotionEvent,
-      MotionEvent endMotionEvent,
+      @NonNull MotionEvent startMotionEvent,
+      @NonNull MotionEvent endMotionEvent,
       float       xVelocity,
       float       yVelocity
     ) {
@@ -722,15 +719,6 @@ public class ZmanimActivity
       // Did the user want to move to the next/prev day (swiping right or left) or next/prev month
       //  (swiping up or down)?
       // TODO: Re-enable the up/down swiping if we can...
-
-      // From a bit of StackOverflow reading, it seems that startMotionEvent could possibly be null if, e.g.,
-      //  something else has consumed the initial gesture.
-      //  See https://stackoverflow.com/questions/4151385/android-simpleongesturelistener-onfling-getting-a-null-motionevent
-      // Anyways, just because we're going to be paranoid now, we might as well guard against the endMotionEvent
-      //  being null too...
-      if ( ( startMotionEvent == null ) || ( endMotionEvent == null ) ) {
-        return false;
-      }
 
       float xDiff = startMotionEvent.getRawX() - endMotionEvent.getRawX();
 

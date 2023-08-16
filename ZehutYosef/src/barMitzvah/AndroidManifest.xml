@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2021. Jay R. Gindin
+  ~ Copyright (c) 2023. Jay R. Gindin
   -->
 
 <manifest
@@ -16,6 +16,7 @@
     <activity
       android:name=".ZehutYosefActivity"
       android:label="@string/app_name"
+      android:exported="true"
     >
 
       <intent-filter>
