@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023. Jay R. Gindin
+ */
+
 package com.gindin.zehutyosef;
 
 import com.mikepenz.aboutlibraries.LibsBuilder;
@@ -31,7 +35,7 @@ class About {
   private void build( Context context ) {
 
     String description = context.getString( R.string.about_description_text ) + "<br/><br/>" +
-      "<small><i>Type: " + BuildConfig.BUILD_TYPE + "; Built on: " + BuildConfig.BUILD_TIME + "</i></small>";
+      "<small><i>Type: " + BuildConfig.BUILD_TYPE + "</i></small>";
 
     aboutBuilder = new LibsBuilder()
       .withFields( "define_zehut_yosef", "define_zmanim", "define_kosherjava", "define_materialdrawer", "define_AboutLibraries" )
