@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -15,7 +15,7 @@ class SofZmanTefila
   extends Zmanim {
 
   private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
-  
+
 
   SofZmanTefila(
     final ZmanimCalculator zmanimCalculator
@@ -35,7 +35,7 @@ class SofZmanTefila
   @Override
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
     zmanim.add(
       new Zman( "2 Hours before Chatzot", "2 hours before chatzot.", Zmanim.Type.SofZmanTefila ) {
@@ -44,8 +44,6 @@ class SofZmanTefila
         }
       }
     );
-
-//    sofZmanTefila.addZman( zmanimCalculator.getSofZmanTfilaFixedLocal(), "", "" );
 
     zmanim.add(
       new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanTefila, false ) {
@@ -144,6 +142,16 @@ class SofZmanTefila
         }
       }
     );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - GR'A half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at alot defined sunrise and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanTfilaGRASunriseToFixedLocalChatzos());
+        }
+      }
+    );
+
 
     return zmanim;
   }

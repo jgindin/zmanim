@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -35,7 +35,7 @@ class MinchaKetana
   @Override
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
     zmanim.add(
       new Zman( DEFAULT_ZMAN_NAME, "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaKetana, false ) {
@@ -76,6 +76,24 @@ class MinchaKetana
         }
       }
     );
+
+    zmanim.add(
+      new Zman("Rabbi Yaakov Moshe Hillel", "Calculated as 2.5 shaot zmaniyot before tzait 3.8 deg with shaot zmaniyot "
+          + "calculated based on a day starting at alot 16.1 deg and ending at tzait 3.8 deg.", Type.MinchaKetana) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaKetanaAhavatShalom());
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - GR'A half day", "Calculated according to the GR'A as 3.5 shaot zmaniyot (solar hours) after fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaKetanaGRAFixedLocalChatzosToSunset());
+        }
+      }
+    );
+
 
     return zmanim;
   }

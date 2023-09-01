@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2014. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -17,7 +16,7 @@ class SofZmanShema
   extends Zmanim {
 
   private static final String                               DEFAULT_ZMAN_NAME = "MG'A 16.1 deg";
-  
+
 
   SofZmanShema(
     final ZmanimCalculator zmanimCalculator
@@ -37,7 +36,7 @@ class SofZmanShema
   @Override
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
     zmanim.add(
       new Zman( "3 Hours before Chatzot", "Shach in the Nekudas Hakesef (Yora Deah 184), Shevus Yaakov, Chasan Sofer and others.", Zmanim.Type.SofZmanShema ) {
@@ -48,7 +47,7 @@ class SofZmanShema
     );
 
     zmanim.add(
-      new Zman( "16.1 deg to Sunset", "Based on the day starting at at alot 16.1 degrees and ending at sunset.", Zmanim.Type.SofZmanShema ) {
+      new Zman( "16.1 deg to Sunset", "Based on the day starting at at alot 16.1° and ending at sunset.", Zmanim.Type.SofZmanShema ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point1ToSunset() );
         }
@@ -56,7 +55,7 @@ class SofZmanShema
     );
 
     zmanim.add(
-      new Zman( "16.1 deg to tzait 7.083 deg", "Based on the day starting at at alot 16.1 degrees and ending at tzait 7.083 degrees.",Zmanim.Type.SofZmanShema ) {
+      new Zman( "16.1 deg to tzait 7.083 deg", "Based on the day starting at at alot 16.1° and ending at tzait 7.083°.",Zmanim.Type.SofZmanShema ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees() );
         }
@@ -105,7 +104,7 @@ class SofZmanShema
     );
 
     zmanim.add(
-      new Zman( DEFAULT_ZMAN_NAME, "Based on alot being 16.1 degrees before sunrise.", Zmanim.Type.SofZmanShema, false ) {
+      new Zman( DEFAULT_ZMAN_NAME, "Based on alot being 16.1° before sunrise.", Zmanim.Type.SofZmanShema, false ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA16Point1Degrees() );
         }
@@ -113,7 +112,7 @@ class SofZmanShema
     );
 
     zmanim.add(
-      new Zman( "MG'A 19.8 deg", "Based on alot being 19.8 degrees before sunrise.", Zmanim.Type.SofZmanShema ) {
+      new Zman( "MG'A 19.8 deg", "Based on alot being 19.8° before sunrise.", Zmanim.Type.SofZmanShema ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA19Point8Degrees() );
         }
@@ -163,7 +162,7 @@ class SofZmanShema
     );
 
     zmanim.add(
-      new Zman( "R. Yaakov Moshe Hillel of Bet Horaah", "Based on alot being 72 minutes (16.01 degrees) before sunrise, and tzait being when the sun's position at 3.8 degrees below the western horizon.", Type.SofZmanShema ) {
+      new Zman( "R. Yaakov Moshe Hillel of Bet Horaah", "Based on alot being 72 minutes (16.01°) before sunrise, and tzait being when the sun's position at 3.8° below the western horizon.", Type.SofZmanShema ) {
         @Nullable @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees() );
         }
@@ -174,6 +173,51 @@ class SofZmanShema
       new Zman( "Baal HaTanya", "Based on the Baal HaTanya's sunrise and sunset calculations.", Type.SofZmanShema ) {
         @Nullable @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaBaalHatanya() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - MG'A 18° half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at alot defined as 18° and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA18DegreesToFixedLocalChatzos());
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - MG'A 16.1° half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at alot defined as 16.1° and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA16Point1DegreesToFixedLocalChatzos());
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - MG'A 90 minutes half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at alot defined as 90 minutes before sunrise and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA90MinutesToFixedLocalChatzos());
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - MG'A 72 minutes half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at alot defined as 72 minutes before sunrise and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA72MinutesToFixedLocalChatzos());
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman(" Rav Moshe Feinstein - GR'A half day", "Calculated from dawn to nightfall, but calculated "
+        + "using the first half of the day only, which starts at sunrise and ends at fixed local chatzot.", Type.SofZmanShema) {
+        @Override protected Calendar calculate() {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaGRASunriseToFixedLocalChatzos());
         }
       }
     );

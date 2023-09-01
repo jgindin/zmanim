@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Jay R. Gindin
+ * Copyright (c) 2023. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -35,7 +35,7 @@ class MinchaGedola
   @Override
   protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    List<Zman>  zmanim = new ArrayList<>();
 
     zmanim.add(
       new Zman( DEFAULT_ZMAN_NAME, "GR'A and the Baal Hatanya, based on the day as calculated from sunrise to sunset.", Zmanim.Type.MinchaGedola, false ) {
@@ -97,6 +97,15 @@ class MinchaGedola
       new Zman( "Baal HaTanya Lechumra 30 Minutes", "Based on Baal HaTanya's sunrise and sunset calculations, except in the winter when 1/2 shaah zmanit is less than 30 minutes.", Zmanim.Type.MinchaGedola ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30() );
+        }
+      }
+    );
+
+    zmanim.add(
+      new Zman("Rabbi Yaakov Moshe Hillel", "Calculated as half a shaah zmanit after chatzot with shaot zmaniyot calculated based on a day starting 72 minutes befoe sunrise"
+          + "and ending 13.5 minutes after sunset", Type.MinchaGedola) {
+        @Override protected Calendar calculate() {
+          return toCalendar( zmanimCalculator, zmanimCalculator.getMinchaGedolaAhavatShalom());
         }
       }
     );
