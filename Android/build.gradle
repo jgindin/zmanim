@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. Jay R. Gindin
+ * Copyright (c) 2024. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -70,7 +70,7 @@ android {
      *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
      */
     minSdkVersion 14
-    targetSdkVersion 33
+    targetSdkVersion 34
 
     versionCode appVersionCode
     versionName appVersionName
