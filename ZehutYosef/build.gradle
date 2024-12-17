@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. Jay R. Gindin
+ * Copyright (c) 2024. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -29,7 +29,7 @@ android {
 
   defaultConfig {
     minSdkVersion 22
-    targetSdkVersion 33
+    targetSdkVersion 35
     versionCode appVersionCode
     versionName appVersionName
   }
