@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Jay R. Gindin
+ * Copyright (c) 2025. Jay R. Gindin
  */
 
 package com.gindin.zmanlib.zman;
@@ -74,15 +74,6 @@ class SofZmanShema
       new Zman( "GR'A", "Based on the day as calculated from sunrise to sunset.", Zmanim.Type.SofZmanShema, false ) {
         @Override protected Calendar calculate() {
           return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaGRA() );
-        }
-      }
-    );
-
-    // todo: deprecated
-    zmanim.add(
-      new Zman( "GR'A Kol Eliyahu", "Based on Kol Eliyahu on Berachos #173 (zman kriat shema is half the time from sunrise to fixed local chatzot).",Zmanim.Type.SofZmanShema ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanShmaKolEliyahu() );
         }
       }
     );
