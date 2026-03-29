@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. Jay R. Gindin
+ * Copyright (c) 2026. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -34,6 +34,10 @@ android {
     versionName appVersionName
   }
 
+  buildFeatures {
+    buildConfig = true
+  }
+
   buildTypes {
 
     release {
@@ -65,8 +69,8 @@ android {
 
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_11
-    targetCompatibility JavaVersion.VERSION_11
+    sourceCompatibility JavaVersion.VERSION_21
+    targetCompatibility JavaVersion.VERSION_21
   }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. Jay R. Gindin
+ * Copyright (c) 2026. Jay R. Gindin
  */
 
 import org.moallemi.gradle.internal.VersionCodeType
@@ -12,16 +12,16 @@ apply from: '../common/gindin-android.gradle'
 try {
   apply from: 'zmanim.gradle'
 }
-catch ( ignored ) {
+catch (ignored) {
   println "\n\n    ==================================================================="
   println "    You can't build the release version. Build a debug version instead."
   println "    ==================================================================="
 }
 
 
-project.ext.set( "majorVersion", 4 )
-project.ext.set( "minorVersion", 0 )
-project.ext.set( "versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP )
+project.ext.set("majorVersion", 4)
+project.ext.set("minorVersion", 0)
+project.ext.set("versionCodeType", VersionCodeType.AUTO_INCREMENT_ONE_STEP)
 
 apply from: '../common/gindin-versioning.gradle'
 
@@ -34,10 +34,10 @@ apply from: '../common/gindin-versioning.gradle'
 Properties mapQuest = new Properties()
 String mapQuestKey
 try {
-  mapQuest.load( new FileInputStream( project.projectDir.getPath() + "/../common/MapQuest.properties" ) )
-  mapQuestKey = "\"" + mapQuest[ 'mapquest.key' ] + "\""
+  mapQuest.load(new FileInputStream(project.projectDir.getPath() + "/../common/MapQuest.properties"))
+  mapQuestKey = "\"" + mapQuest['mapquest.key'] + "\""
 }
-catch ( ignored ) {
+catch (ignored) {
   mapQuestKey = "\"\""
 }
 
@@ -45,11 +45,11 @@ Properties acraProps = new Properties()
 String acraUser
 String acraPassword
 try {
-  acraProps.load( new FileInputStream( project.projectDir.getPath() + "/../common/AcraApiKey.properties" ) )
-  acraUser = "\"" + acraProps[ 'acra.user' ] + "\""
-  acraPassword = "\"" + acraProps[ 'acra.password' ] + "\""
+  acraProps.load(new FileInputStream(project.projectDir.getPath() + "/../common/AcraApiKey.properties"))
+  acraUser = "\"" + acraProps['acra.user'] + "\""
+  acraPassword = "\"" + acraProps['acra.password'] + "\""
 }
-catch ( ignored ) {
+catch (ignored) {
   acraUser = "\"\""
   acraPassword = "\"\""
 }
@@ -70,15 +70,19 @@ android {
      *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
      */
     minSdkVersion 14
-    targetSdkVersion 34
+    targetSdkVersion 35
 
     versionCode appVersionCode
     versionName appVersionName
 
+    buildFeatures {
+      buildConfig = true
+    }
+
     String replace = appVersionName
     copy {
-      from( 'src/template/assets/com/gindin/zmanim/android/about.html' ) {
-        filter { String line -> line.replace( "@@VERSION@@", replace ) }
+      from('src/template/assets/com/gindin/zmanim/android/about.html') {
+        filter { String line -> line.replace("@@VERSION@@", replace) }
       }
       into 'src/main/assets/com/gindin/zmanim/android'
     }
@@ -103,13 +107,14 @@ android {
       proguardFile "proguard-project.pro"
 
       /* Reminder: Use the default proguard from the SDK, and then add in our custom proguard rules. */
-      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.pro'
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
       try {
         // In case this dev doesn't have the signing keys, this will fail...
         signingConfig signingConfigs.release
       }
-      catch ( ignored ) {}
+      catch (ignored) {
+      }
     }
 
     debug {
@@ -123,8 +128,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_11
-    targetCompatibility JavaVersion.VERSION_11
+    sourceCompatibility JavaVersion.VERSION_21
+    targetCompatibility JavaVersion.VERSION_21
   }
 }
 
@@ -135,9 +140,9 @@ dependencies {
   //  So, this now replaces "implementation 'net.xpece.android:support-preference:1.3.1'"
   // Newer versions are hosted on Maven Central.
   // See https://github.com/consp1racy/android-support-preference
-  api fileTree( include: ['*.aar'], dir: 'libs' )
+  api fileTree(include: ['*.aar'], dir: 'libs')
 
-  implementation project( ':ZmanUtils' )
+  implementation project(':ZmanUtils')
 
   implementation group: 'com.kosherjava', name: 'zmanim', version: '2.5.0'
 

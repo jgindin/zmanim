@@ -1,7 +1,14 @@
+/*
+ * Copyright (c) 2026. Jay R. Gindin
+ */
+
 apply plugin: 'java-library'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
 
 dependencies {
   implementation fileTree( include: ['*.jar'], dir: 'libs' )
