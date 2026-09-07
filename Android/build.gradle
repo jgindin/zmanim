@@ -31,16 +31,6 @@ apply from: '../common/gindin-versioning.gradle'
  * NOTE: Since these files contain secret keys, they're never committed to source control. So...that means
  *  that not everyone will have them.
  */
-Properties mapQuest = new Properties()
-String mapQuestKey
-try {
-  mapQuest.load(new FileInputStream(project.projectDir.getPath() + "/../common/MapQuest.properties"))
-  mapQuestKey = "\"" + mapQuest['mapquest.key'] + "\""
-}
-catch (ignored) {
-  mapQuestKey = "\"\""
-}
-
 Properties acraProps = new Properties()
 String acraUser
 String acraPassword
@@ -91,7 +81,6 @@ android {
   buildTypes {
     release {
 
-      buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
       buildConfigField "String", "ACRA_KEY", "${acraPassword}"
       buildConfigField "String", "ACRA_USER", "${acraUser}"
 
@@ -107,7 +96,7 @@ android {
       proguardFile "proguard-project.pro"
 
       /* Reminder: Use the default proguard from the SDK, and then add in our custom proguard rules. */
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
       try {
         // In case this dev doesn't have the signing keys, this will fail...
@@ -118,7 +107,6 @@ android {
     }
 
     debug {
-      buildConfigField "String", "MAPQUEST_KEY", "${mapQuestKey}"
       buildConfigField "String", "ACRA_KEY", "\"DEV\""
       buildConfigField "String", "ACRA_USER", "\"DEV\""
     }

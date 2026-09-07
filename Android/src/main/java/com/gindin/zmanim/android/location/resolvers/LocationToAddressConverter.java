@@ -131,9 +131,6 @@ public class LocationToAddressConverter
       orderedResolvers.add( new AndroidResolver( new Geocoder( this ) ) );
     }
 
-    orderedResolvers.add( new MapQuestResolver() );
-    orderedResolvers.add( new NominatimResolver() );
-
     orderedResolvers.add( new PassthroughResolver() );
   }
 
