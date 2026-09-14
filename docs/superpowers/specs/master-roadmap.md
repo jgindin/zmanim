@@ -24,12 +24,12 @@ The application architecture is governed by five non-negotiable principles:
 ## 2. High-Level Multi-Phase Architecture
 
 ```mermaid
-graph TD
-    P1["Phase 1: Foundation Modernization, VCS Migration to jj & Visual Safety"]
-    P2["Phase 2: Modern Location Architecture & Offline Resilience"]
-    P3["Phase 3: Zehut Yosef Liturgical Engine & DavkaWriter Ingestion"]
-    P4["Phase 4: Modern Architecture, Dependency Injection & Jetpack Compose UI"]
-    P5["Phase 5: Wear OS App & Watchface Complications"]
+flowchart TD
+    P1["Phase 1: Foundation Modernization, VCS Migration to jj, and Visual Safety"]
+    P2["Phase 2: Modern Location Architecture and Offline Resilience"]
+    P3["Phase 3: Zehut Yosef Liturgical Engine and DavkaWriter Ingestion"]
+    P4["Phase 4: Modern Architecture, Dependency Injection, and Jetpack Compose UI"]
+    P5["Phase 5: Wear OS App and Watchface Complications"]
     P6["Phase 6: Pure Compose Multiplatform for iOS"]
 
     P1 --> P2
@@ -49,15 +49,15 @@ graph TD
 **Objective:** Stabilize existing code and tests, capture untouched golden visual baselines, align SDKs, introduce Kotlin Multiplatform, migrate version control to `jj`, modernize core libraries, and enable R8 minification.
 
 ```mermaid
-graph LR
-    T1[Task 1: ZmanLib Test Fixes] --> T2[Task 2: ZehutYosef sidur Build Fix]
-    T2 --> T3[Task 3: Roborazzi Baseline Snapshots]
-    T3 --> T4[Task 4: JUnit 5 Upgrade]
-    T4 --> T5[Task 5: SDK 24/35 Alignment]
-    T5 --> T6[Task 6: KMP ZmanUtils & Drop Pair]
-    T6 --> T7[Task 7: Migration from hg to jj]
-    T7 --> T8[Task 8: Library Modernization & Visual Parity]
-    T8 --> T9[Task 9: Proguard/R8 Minification]
+flowchart LR
+    T1["Task 1: ZmanLib Test Fixes"] --> T2["Task 2: ZehutYosef sidur Build Fix"]
+    T2 --> T3["Task 3: Roborazzi Baseline Snapshots"]
+    T3 --> T4["Task 4: JUnit 5 Upgrade"]
+    T4 --> T5["Task 5: SDK 24 and 35 Alignment"]
+    T5 --> T6["Task 6: KMP ZmanUtils and Drop Pair"]
+    T6 --> T7["Task 7: Migration from hg to jj"]
+    T7 --> T8["Task 8: Library Modernization and Visual Parity"]
+    T8 --> T9["Task 9: Proguard and R8 Minification"]
 ```
 
 - **Task 1: Stabilize `ZmanLib` Test Suite:** Realign table fixtures in `UT_ShemaTimes`, `UT_Zmanim`, `UT_WakeupScheduler_*`, and `UT_YomTovCandleLighting` to match `kosherjava 2.5.0` output without deprecated `GR'A Kol Eliyahu` (commit 1350). Achieve 191/191 green tests.
@@ -90,13 +90,13 @@ graph LR
 **Objective:** Overhaul location acquisition and geocoding following the removal of MapQuest and Nominatim in commit 1356, providing fast, battery-efficient, asynchronous, and offline-capable location resolution.
 
 ```mermaid
-graph TD
-    subgraph "Phase 2: Location Subsystem"
-        L1[Google Play Services FusedLocationProviderClient] --> L2[Kotlin Flow Location Stream]
-        L2 --> L3[Asynchronous Geocoder API 33+ GeocodeListener]
-        L3 --> L4[Local SQLite / Room / KMP Geocoding Cache]
-        L4 --> L5[Offline Community / City Database Fallback]
-        L5 --> L6[Elevation Lookup Service]
+flowchart TD
+    subgraph Location_Subsystem ["Phase 2: Location Subsystem"]
+        L1["Google Play Services FusedLocationProviderClient"] --> L2["Kotlin Flow Location Stream"]
+        L2 --> L3["Asynchronous Geocoder API 33 GeocodeListener"]
+        L3 --> L4["Local SQLite, Room, or KMP Geocoding Cache"]
+        L4 --> L5["Offline Community and City Database Fallback"]
+        L5 --> L6["Elevation Lookup Service"]
     end
 ```
 
@@ -123,13 +123,13 @@ graph TD
 **Objective:** Transform the Siddur from static text files into a dynamic, halachically intelligent liturgical engine that faithfully represents the **Zehut Yosef** prayer book, handles footnotes, and supports both the **Rhodesli** and **Turkish** customs.
 
 ```mermaid
-graph TD
-    subgraph "Phase 3: Liturgical Engine"
-        D1[DavkaWriter .dwd / Text Sources] --> D2[Ingestion & Parser Pipeline]
-        D2 --> D3[Structured Prayer Domain Model KMP]
-        D3 --> D4[Calendar-Aware Rule Engine :ZmanLib]
-        D4 --> D5[Tradition Switch: Rhodesli vs Turkish]
-        D5 --> D6[Interactive Footnote & Rubric Renderer]
+flowchart TD
+    subgraph Liturgical_Engine ["Phase 3: Liturgical Engine"]
+        D1["DavkaWriter Sources"] --> D2["Ingestion and Parser Pipeline"]
+        D2 --> D3["Structured Prayer Domain Model KMP"]
+        D3 --> D4["Calendar-Aware Rule Engine ZmanLib"]
+        D4 --> D5["Tradition Switch: Rhodesli vs Turkish"]
+        D5 --> D6["Interactive Footnote and Rubric Renderer"]
     end
 ```
 
@@ -178,14 +178,14 @@ graph TD
 **Objective:** Retire the legacy `EventBus` and MVP architecture, introduce modern Kotlin Dependency Injection, and build a modern, reactive Jetpack Compose interface for both Zmanim and Zehut Yosef.
 
 ```mermaid
-graph TD
-    subgraph "Phase 4: Architecture & UI Modernization"
-        A1[Retire EventBus & MVP] --> A2[Introduce Modern DI: kotlin-inject / Koin]
-        A2 --> A3[Unidirectional Data Flow: ViewModel + StateFlow]
-        A3 --> A4[Compose UI: Zmanim Daily Screen & Calendar]
-        A3 --> A5[Compose UI: Zehut Yosef Siddur Reader]
-        A5 --> A6[Interactive Footnotes & Typography Controls]
-        A4 --> A7[Modern Glance Home Screen Widgets]
+flowchart TD
+    subgraph Modernization ["Phase 4: Architecture and UI Modernization"]
+        A1["Retire EventBus and MVP"] --> A2["Introduce Modern DI: kotlin-inject or Koin"]
+        A2 --> A3["Unidirectional Data Flow: ViewModel and StateFlow"]
+        A3 --> A4["Compose UI: Zmanim Daily Screen and Calendar"]
+        A3 --> A5["Compose UI: Zehut Yosef Siddur Reader"]
+        A5 --> A6["Interactive Footnotes and Typography Controls"]
+        A4 --> A7["Modern Glance Home Screen Widgets"]
     end
 ```
 
@@ -217,13 +217,13 @@ graph TD
 **Objective:** Deliver a first-class smartwatch experience for Wear OS, putting essential zmanim and prayer reminders directly on the user's wrist.
 
 ```mermaid
-graph TD
-    subgraph "Phase 5: Wear OS"
-        W1[Wear OS Module :wear] --> W2[Compose for Wear OS App]
-        W2 --> W3[Wear OS Watchface Complications]
-        W3 --> W4[Next Zman Countdown Complication]
-        W3 --> W5[Hebrew Date Complication]
-        W3 --> W6[Fast Day / Holiday Indicator]
+flowchart TD
+    subgraph Wear_OS ["Phase 5: Wear OS"]
+        W1["Wear OS Module"] --> W2["Compose for Wear OS App"]
+        W2 --> W3["Wear OS Watchface Complications"]
+        W3 --> W4["Next Zman Countdown Complication"]
+        W3 --> W5["Hebrew Date Complication"]
+        W3 --> W6["Fast Day and Holiday Indicator"]
     end
 ```
 
@@ -245,12 +245,12 @@ graph TD
 **Objective:** Deliver an authentic, high-performance iOS application built purely in Compose Multiplatform (CMP), maximizing code reuse with zero unnecessary third-party bridge libraries.
 
 ```mermaid
-graph TD
-    subgraph "Phase 6: Pure Compose Multiplatform iOS"
-        C1[Shared KMP Business Logic :ZmanLib & :PrayerEngine] --> C2[Shared Compose Multiplatform UI]
-        C2 --> C3[Skia / Metal Native iOS Rendering]
-        C3 --> C4[Pure Compose iOS App - No 3rd Party UI Bridges]
-        C4 --> C5[Native iOS System Integrations: CoreLocation & iOS Notifications]
+flowchart TD
+    subgraph iOS_Platform ["Phase 6: Pure Compose Multiplatform iOS"]
+        C1["Shared KMP Business Logic ZmanLib and PrayerEngine"] --> C2["Shared Compose Multiplatform UI"]
+        C2 --> C3["Skia and Metal Native iOS Rendering"]
+        C3 --> C4["Pure Compose iOS App - No 3rd Party UI Bridges"]
+        C4 --> C5["Native iOS System Integrations: CoreLocation and Notifications"]
     end
 ```
 

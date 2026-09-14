@@ -9,25 +9,25 @@
 **Architecture Diagram:**
 
 ```mermaid
-graph TD
-    subgraph "Stage 1A: Green Baseline & Visual Safety Net (Mercurial)"
-        T1[Task 1: Fix ZmanLib Test Fixtures] --> T2[Task 2: Fix ZehutYosef:sidur Resources]
-        T2 --> T3[Task 3: Establish Roborazzi Baseline Snapshots]
+flowchart TD
+    subgraph Stage_1A ["Stage 1A: Green Baseline and Visual Safety Net"]
+        T1["Task 1: Fix ZmanLib Test Fixtures"] --> T2["Task 2: Fix ZehutYosef sidur Resources"]
+        T2 --> T3["Task 3: Establish Roborazzi Baseline Snapshots"]
     end
 
-    subgraph "Stage 1B: Toolchain Modernization & KMP (Mercurial)"
-        T3 --> T4[Task 4: Upgrade Testing to JUnit 5]
-        T4 --> T5[Task 5: Align Android SDK Targets 24/35]
-        T5 --> T6[Task 6: Configure KMP & Port ZmanUtils to Kotlin]
+    subgraph Stage_1B ["Stage 1B: Toolchain Modernization and KMP"]
+        T3 --> T4["Task 4: Upgrade Testing to JUnit 5"]
+        T4 --> T5["Task 5: Align Android SDK Targets 24 and 35"]
+        T5 --> T6["Task 6: Configure KMP and Port ZmanUtils to Kotlin"]
     end
 
-    subgraph "Stage 1C: VCS Migration"
-        T6 --> T7[Task 7: Fast-Export hg to Git & Init Colocated jj]
+    subgraph Stage_1C ["Stage 1C: VCS Migration"]
+        T6 --> T7["Task 7: Fast-Export hg to Git and Init Colocated jj"]
     end
 
-    subgraph "Stage 1D: Controlled Library Upgrades & R8 (Jujutsu)"
-        T7 --> T8[Task 8: Upgrade Libraries & Verify Visual Parity]
-        T8 --> T9[Task 9: Modernize & Enable Proguard / R8 Minification]
+    subgraph Stage_1D ["Stage 1D: Controlled Library Upgrades and R8"]
+        T7 --> T8["Task 8: Upgrade Libraries and Verify Visual Parity"]
+        T8 --> T9["Task 9: Modernize and Enable Proguard and R8 Minification"]
     end
 ```
 
