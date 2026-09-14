@@ -11,13 +11,15 @@
 
 The goal of this initiative is to modernize the **Zmanim** and **Zehut Yosef** codebases into a premier, unified, multiplatform Jewish calendar and Sephardic liturgical suite. 
 
-The application architecture is governed by five non-negotiable principles:
+The application architecture is governed by seven core principles:
 
 1. **100% Idiomatic Kotlin & Kotlin Multiplatform (KMP):** Pure business logic, calendar calculations, and liturgical text processing will reside in platform-agnostic KMP modules shared across Android, Wear OS, and iOS.
 2. **Elimination of Legacy Event Bus & Adoption of Modern DI:** The bespoke `EventBus` and legacy MVP patterns are retired in favor of Unidirectional Data Flow (UDF) with Kotlin `StateFlow` and compile-time, KMP-compatible Dependency Injection (`kotlin-inject` / `Koin`).
 3. **Safety-First, Evidence-Driven Evolution:** UI and architectural changes are guarded by Roborazzi screen snapshot testing running on the host JVM. Zero visual regressions are permitted against recorded golden baselines.
 4. **Faithful Sephardic Liturgical Preservation (Zehut Yosef):** The prayer engine faithfully preserves the **Zehut Yosef** text (ingested from DavkaWriter sources), including vocalization (nikud), cantillation (teamim), footnotes, and dynamic halachic custom switching between the **Rhodesli** and **Turkish** traditions.
 5. **Declarative UI via Compose Everywhere:** The user experience is built entirely with Jetpack Compose on Android, Compose for Wear OS, and Compose Multiplatform for iOS, minimizing platform-specific UI code.
+6. **Modern Google Play Store Delivery:** Full adoption of Android App Bundles (`.aab`), the Play In-App Updates API, the In-App Review API, and automated track deployment via Gradle Play Publisher.
+7. **Privacy-Respecting Telemetry & Insights:** Comprehensive visibility into real-world user configurations (zmanim selections, prayer engagement, session durations, tradition choices) through a decoupled KMP telemetry abstraction with user opt-out control.
 
 ---
 
@@ -28,7 +30,7 @@ flowchart TD
     P1["Phase 1: Foundation Modernization, VCS Migration to jj, and Visual Safety"]
     P2["Phase 2: Modern Location Architecture and Offline Resilience"]
     P3["Phase 3: Zehut Yosef Liturgical Engine and DavkaWriter Ingestion"]
-    P4["Phase 4: Modern Architecture, Dependency Injection, and Jetpack Compose UI"]
+    P4["Phase 4: Modern Architecture, Dependency Injection, Telemetry, and Jetpack Compose UI"]
     P5["Phase 5: Wear OS App and Watchface Complications"]
     P6["Phase 6: Pure Compose Multiplatform for iOS"]
 
@@ -46,7 +48,7 @@ flowchart TD
 
 ### Phase 1: Foundation Modernization, VCS Migration to Jujutsu (`jj`), and Visual Safety Net
 
-**Objective:** Stabilize existing code and tests, capture untouched golden visual baselines, align SDKs, introduce Kotlin Multiplatform, migrate version control to `jj`, modernize core libraries, and enable R8 minification.
+**Objective:** Stabilize existing code and tests, capture untouched golden visual baselines, align SDKs, introduce Kotlin Multiplatform, migrate version control to `jj`, modernize core libraries, prepare `.aab` bundles, and enable R8 minification.
 
 ```mermaid
 flowchart LR
@@ -54,10 +56,10 @@ flowchart LR
     T2 --> T3["Task 3: Roborazzi Baseline Snapshots"]
     T3 --> T4["Task 4: JUnit 5 Upgrade"]
     T4 --> T5["Task 5: SDK 24 and 35 Alignment"]
-    T5 --> T6["Task 6: KMP ZmanUtils and Drop Pair"]
+    T5 --> T6["Task 6: KMP ZmanUtils, Telemetry API, Drop Pair"]
     T6 --> T7["Task 7: Migration from hg to jj"]
     T7 --> T8["Task 8: Library Modernization and Visual Parity"]
-    T8 --> T9["Task 9: Proguard and R8 Minification"]
+    T8 --> T9["Task 9: Proguard, R8, and AAB Bundling"]
 ```
 
 - **Task 1: Stabilize `ZmanLib` Test Suite:** Realign table fixtures in `UT_ShemaTimes`, `UT_Zmanim`, `UT_WakeupScheduler_*`, and `UT_YomTovCandleLighting` to match `kosherjava 2.5.0` output without deprecated `GR'A Kol Eliyahu` (commit 1350). Achieve 191/191 green tests.
@@ -65,10 +67,11 @@ flowchart LR
 - **Task 3: Establish Roborazzi Snapshot Safety Net (Untouched Baseline):** Integrate Roborazzi + Robolectric Native Graphics in `./gradlew testDebugUnitTest`. Record untouched golden baseline PNGs of `ZmanimActivity`, `PersonalPreferences`, and `ZehutYosefActivity` matching the reference screenshots (`zmanim.png`, `preferences.png`, `location.png`, `barmitzvah.png`).
 - **Task 4: Upgrade Test Suite to JUnit 5 (Jupiter):** Configure `useJUnitPlatform()` across all modules and migrate test annotations and assertions to JUnit 5.11+.
 - **Task 5: Align Android SDK Baselines:** Set `minSdkVersion 24` and `compileSdk 35` across `:Android` and `:ZehutYosef`. Verify with Roborazzi that zero visual regressions occur.
-- **Task 6: Configure Kotlin Multiplatform (KMP), Drop Custom `Pair`, and Migrate `:ZmanUtils`:**
+- **Task 6: Configure Kotlin Multiplatform (KMP), Drop Custom `Pair`, Migrate `:ZmanUtils`, and Add Telemetry Abstraction:**
   - Delete `com.gindin.util.Pair` in favor of standard `kotlin.Pair`.
   - Re-configure `:ZmanUtils` with `kotlin("multiplatform")` targeting JVM + Android.
   - Port `EventBus`, `Event`, `EventHandler`, `EventCacheControl`, and MVP contracts to idiomatic Kotlin.
+  - Define the vendor-neutral `TelemetryTracker` interface in `commonMain`.
   - Rewrite `UT_EventBus` as an idiomatic Kotlin test suite on JUnit 5.
 - **Task 7: Migrate Version Control from Mercurial (`hg`) to Jujutsu (`jj`):**
   - Stream full 1356+ changeset history into Git via `fast-export`.
@@ -81,7 +84,7 @@ flowchart LR
   - Replace `com.mikepenz:materialdrawer` with standard AndroidX `DrawerLayout` + `NavigationView`.
   - Replace `com.mikepenz:iconics-core` with standard Vector Drawables.
   - Verify 100% visual parity against Task 3 golden baselines via `./gradlew verifyRoborazziDebug`.
-- **Task 9: Modernize & Enable Proguard / R8 Minification:** Clean out obsolete pre-AndroidX Proguard rules, configure modern rules in `proguard-rules.pro`, enable `minifyEnabled true`, and verify release APK assembly (`./gradlew assembleRelease`).
+- **Task 9: Modernize Proguard / R8 Minification and App Bundle Packaging:** Clean out obsolete pre-AndroidX Proguard rules, configure modern rules in `proguard-rules.pro`, enable `minifyEnabled true`, and verify both release APK assembly (`./gradlew assembleRelease`) and Android App Bundle generation (`./gradlew bundleRelease`).
 
 ---
 
@@ -173,19 +176,21 @@ flowchart TD
 
 ---
 
-### Phase 4: Modern Architecture, Dependency Injection & Jetpack Compose UI
+### Phase 4: Modern Architecture, Dependency Injection, Telemetry, and Jetpack Compose UI
 
-**Objective:** Retire the legacy `EventBus` and MVP architecture, introduce modern Kotlin Dependency Injection, and build a modern, reactive Jetpack Compose interface for both Zmanim and Zehut Yosef.
+**Objective:** Retire the legacy `EventBus` and MVP architecture, introduce modern Kotlin Dependency Injection, implement telemetry and Play Store APIs, and build a modern, reactive Jetpack Compose interface for both Zmanim and Zehut Yosef.
 
 ```mermaid
 flowchart TD
-    subgraph Modernization ["Phase 4: Architecture and UI Modernization"]
+    subgraph Modernization ["Phase 4: Architecture, Telemetry, and UI Modernization"]
         A1["Retire EventBus and MVP"] --> A2["Introduce Modern DI: kotlin-inject or Koin"]
         A2 --> A3["Unidirectional Data Flow: ViewModel and StateFlow"]
+        A2 --> AT["Wire TelemetryTracker to Analytics Provider"]
         A3 --> A4["Compose UI: Zmanim Daily Screen and Calendar"]
         A3 --> A5["Compose UI: Zehut Yosef Siddur Reader"]
         A5 --> A6["Interactive Footnotes and Typography Controls"]
         A4 --> A7["Modern Glance Home Screen Widgets"]
+        A4 --> AP["Google Play In-App Updates and Reviews"]
     end
 ```
 
@@ -193,20 +198,32 @@ flowchart TD
   - Completely remove `com.gindin.eventBus.EventBus` from the codebase.
   - Implement a modern, Kotlin Multiplatform compatible DI framework:
     - **`kotlin-inject`** (preferred: pure compile-time KSP, zero reflection, 100% KMP compatible for Android and iOS) or **Koin**.
-    - Inject repositories, location providers, zmanim calculators, and preference stores cleanly.
+    - Inject repositories, location providers, zmanim calculators, telemetry trackers, and preference stores cleanly.
   - Adopt Unidirectional Data Flow (UDF) with Android `ViewModel` and `StateFlow` / `SharedFlow`.
-- **4.2: Jetpack Compose UI for Zmanim:**
+- **4.2: Telemetry Implementation & User Insights:**
+  - Implement the concrete `TelemetryTracker` using Firebase Analytics & Crashlytics (or TelemetryDeck).
+  - **Metric Tracking:**
+    - **Session Duration:** Accurately measure how long users remain engaged with the app and individual prayer sections.
+    - **Zmanim Configuration Snapshot:** Log aggregate user preferences: active zmanim count, Shema/Tefila opinion choices (GR'A vs MG'A), elevation status, and exact seconds mode.
+    - **Notification Lead Times:** Log chosen alarm/notification offsets (e.g. 15m before Hanetz, 30m before Plag).
+    - **Liturgical Engagement:** Log which prayers are recited most frequently (`Shacharit`, `Mincha`, `Arvit`, `Birkat Hamazon`), reading duration, and scroll completion.
+    - **Tradition Distribution:** Measure user breakdown between Rhodesli and Turkish customs.
+    - **Privacy:** Include an explicit opt-out toggle in Settings (*"Send Anonymous Usage Statistics"*).
+- **4.3: Google Play Store In-App Experience:**
+  - **In-App Updates API (`play:app-update`):** Add flexible background update prompts for routine releases and immediate modal update prompts for urgent calendar/halachic patches.
+  - **In-App Review API (`play:review`):** Display native Play Store rating prompts at optimal positive engagement milestones (e.g. after 7 consecutive days of use or after customized zmanim setup).
+- **4.4: Jetpack Compose UI for Zmanim:**
   - Build modern declarative Compose screens:
     - **Main Zmanim Screen:** Clean, high-contrast list of times, countdown timer to the next upcoming zman, circular or linear solar day progress indicator, and Shabbat/Yom Tov candle lighting badges.
     - **Hebrew & Secular Date Picker:** Seamless Compose date selection with Jewish calendar navigation.
     - **Preferences Screen:** Modern Compose settings with Material 3 components, replacing legacy preference XMLs.
-- **4.3: Jetpack Compose Reader for Zehut Yosef Siddur:**
+- **4.5: Jetpack Compose Reader for Zehut Yosef Siddur:**
   - **Hebrew Layout Engine:** Exceptional right-to-left (RTL) typography with pixel-perfect vowel (nikud) alignment using bundled authentic Sephardic typefaces (`Shlomo.ttf`, `TaameyCLM`).
   - **Interactive Footnotes:** Subtle, non-intrusive superscript footnote indicators that open a bottom sheet or expand in-place upon tapping, preserving prayer concentration.
   - **Reading Customizations:** Font size slider, line-spacing controls, contrast themes (AMOLED Pure Black, Soft Sepia, Bright White), and "Keep Screen On" mode during prayer.
   - **Navigation Drawer / Bottom Sheet:** Instant jump list to prayer milestones (e.g. *Pesukei D'Zimra*, *Shema*, *Amidah*, *Tachanun*, *Torah Reading*, *Alenu*).
   - **Tradition Switch in Toolbar:** Instant visual indicator and toggle between Rhodesli and Turkish customs.
-- **4.4: Modern Home Screen Widgets (Jetpack Glance):**
+- **4.6: Modern Home Screen Widgets (Jetpack Glance):**
   - Implement modern Android widgets using Jetpack Glance (Compose for widgets).
   - Provide glanceable next-zman countdowns and candle lighting times with efficient background updates via WorkManager.
 
@@ -265,6 +282,7 @@ flowchart TD
   - Minimal native integration points for platform services:
     - Location: Apple `CoreLocation` provider feeding the shared KMP location flow.
     - Notifications: Apple `UserNotifications` framework for zmanim alerts.
+    - Telemetry: Shared `TelemetryTracker` routing to Firebase iOS SDK or TelemetryDeck.
     - Haptics & Screen wake lock.
 
 ---

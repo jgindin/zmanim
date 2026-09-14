@@ -85,6 +85,7 @@ Stage 1D: Controlled Library Modernization & Visual Parity Verification (Jujutsu
 - Delete `com.gindin.util.Pair` in favor of standard `kotlin.Pair` across all call sites in `:ZmanLib` and `:Android`.
 - Configure `:ZmanUtils` as a Kotlin Multiplatform library (`kotlin("multiplatform")` targeting JVM + Android, ready for iOS/Desktop).
 - Port `EventBus`, `Event`, `EventHandler`, `EventCacheControl`, and MVP contracts to idiomatic Kotlin with proper null-safety and Java-interop annotations.
+- Define platform-agnostic `TelemetryTracker` interface in `commonMain` for privacy-first analytics and session measurement.
 - Rewrite unit tests in idiomatic Kotlin with JUnit 5.
 - Verify `./gradlew test assembleDebug verifyRoborazziDebug` succeeds 100%.
 
@@ -108,19 +109,20 @@ Stage 1D: Controlled Library Modernization & Visual Parity Verification (Jujutsu
   - Run `./gradlew verifyRoborazziDebug`.
   - Inspect diff reports and adjust theme attributes until 100% visual parity with Task 3 baselines is achieved.
 
-### 3.9. Task 9: Modernize & Enable Proguard / R8 Minification
+### 3.9. Task 9: Modernize & Enable Proguard / R8 Minification and Android App Bundle (.aab) Packaging
 - Remove obsolete pre-AndroidX Proguard files (`proguard-support-v7-appcompat.pro`, etc.).
 - Configure modern R8 rules in `proguard-rules.pro` protecting reflection and serialization points.
 - Enable `minifyEnabled true` in `buildTypes.release` for `:Android` and `:ZehutYosef`.
-- Verify `./gradlew assembleRelease` and minified Roborazzi/unit tests pass cleanly.
+- Verify `./gradlew assembleRelease bundleRelease` produces optimized, minified APKs and Google Play App Bundles (`.aab`).
+- Verify minified Roborazzi/unit tests pass cleanly.
 
 ---
 
 ## 4. Success Criteria & Deliverables
 - [ ] Roborazzi visual regression tests pass with 0 regressions against recorded baselines.
 - [ ] Unit tests pass 100% on JUnit 5 across all modules.
-- [ ] `:ZmanUtils` is structured as a Kotlin Multiplatform library in idiomatic Kotlin with no custom `Pair`.
+- [ ] `:ZmanUtils` is structured as a Kotlin Multiplatform library in idiomatic Kotlin with no custom `Pair`, including `TelemetryTracker`.
 - [ ] All Android modules build with `minSdkVersion 24` and `compileSdk 35`.
 - [ ] Repository is fully migrated to colocated Jujutsu (`jj`).
 - [ ] Local legacy AARs and obsolete MikePenz libraries are completely retired in favor of standard AndroidX/Material components.
-- [ ] Release builds assemble with R8 minification enabled (`minifyEnabled true`).
+- [ ] Release builds assemble with R8 minification enabled (`minifyEnabled true`) and generate verified `.aab` bundles.

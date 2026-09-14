@@ -334,13 +334,14 @@ hg commit -m "Raise minSdkVersion to 24 and compileSdk to 35 across Android and 
   - `com/gindin/mvp/Presenter.kt`
   - `com/gindin/mvp/AbstractPresenter.kt`
   - `com/gindin/mvp/MvpModule.kt`
+  - `com/gindin/telemetry/TelemetryTracker.kt`
 - Create Kotlin test in `ZmanUtils/src/commonTest/kotlin/`:
   - `com/gindin/eventBus/UT_EventBus.kt`
 - Delete old Java files in `ZmanUtils/src/main/java/` and `ZmanUtils/src/test/java/`.
 
 **Interfaces:**
 - Consumes: standard library `kotlin.Pair`, Kotlin 2.1.0 Multiplatform
-- Produces: Idiomatic Kotlin implementations of `EventBus`, MVP interfaces, and unit tests
+- Produces: Idiomatic Kotlin implementations of `EventBus`, MVP interfaces, `TelemetryTracker` API, and unit tests
 
 - [ ] **Step 1: Replace `com.gindin.util.Pair` with `kotlin.Pair` at all call sites and remove `Pair.java`**
 
@@ -388,9 +389,21 @@ fun interface EventHandler<in T : Event> {
 }
 ```
 
-- [ ] **Step 4: Convert `EventBus.kt` and MVP contracts to idiomatic Kotlin**
+- [ ] **Step 4: Convert `EventBus.kt` and MVP contracts to idiomatic Kotlin, and define `TelemetryTracker.kt`**
 
 Implement thread-safe event dispatch with `ConcurrentHashMap`, Kotlin null-safety, and Java-interop annotations (`@JvmStatic`, `@JvmOverloads`).
+
+Define `TelemetryTracker.kt` in `ZmanUtils/src/commonMain/kotlin/com/gindin/telemetry/`:
+```kotlin
+package com.gindin.telemetry
+
+interface TelemetryTracker {
+    fun trackScreen(screenName: String)
+    fun trackEvent(name: String, parameters: Map<String, Any?> = emptyMap())
+    fun setUserProperty(key: String, value: String)
+    fun recordNonFatal(throwable: Throwable)
+}
+```
 
 - [ ] **Step 5: Write `UT_EventBus.kt` using JUnit 5 assertions**
 
