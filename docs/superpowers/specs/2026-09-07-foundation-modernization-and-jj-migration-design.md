@@ -1,6 +1,6 @@
 # Phase 1: Foundation Modernization, VCS Migration to Jujutsu (jj) + GitHub, and Visual Safety Net
 
-**Date:** 2026-09-07 (Revised 2026-09-14, twice — see Section 0)
+**Date:** 2026-09-07 (Revised 2026-09-14 twice and 2026-09-15 — see Section 0)
 **Status:** Approved
 **Scope:** `zmanim` repository (`:ZmanUtils`, `:ZmanLib`, `:Android`, `:ZehutYosef`) and preparation for `zehut-yosef-text` integration
 
@@ -16,6 +16,18 @@
 - **KMP task (now Task 7) expanded:** `:ZmanLib` converts to idiomatic Kotlin alongside `:ZmanUtils` (test-netted by Task 1's 191 tests) — but stays JVM/Android-only in this phase, since true multiplatform depends on a calculation-engine question resolved in Phase 6, not Phase 1. `explicitApiMode` applied to both KMP-facing library modules. `kotlinx.serialization`/`kotlinx-datetime` replace the last `org.json`/JVM-date usage in shared code.
 - **CI task (now Task 9) gains `detekt`/`ktlint`** alongside unit tests and Roborazzi.
 - **R8/AAB task (now Task 11) gains a 16 KB memory page size compliance check** (Play deadline February 1, 2027 — this app has no native dependencies today and should stay that way through Task 11's release-readiness checklist).
+
+**2026-09-15 (third pass)** — repo visibility confirmed **public**, plus a working-tree audit that found live-looking secrets:
+- **Task 8 gains a mandatory secrets audit and history scrub**, inserted before the GitHub push, not after: a real signing keystore (`common/jay-gindin-android-apps.keystore`, dated 2015) and a likely-live API key (`common/ProjectApiKey.txt`, dated 2012) are sitting in the working tree today, and `hg-fast-export` carries full history forward regardless of current `.gitignore` entries. If either was ever committed, `git-filter-repo` scrubs it before the first push; either way, treat any exposed key as compromised and rotate it.
+- **Task 8 also adds a top-level `LICENSE`** (Apache-2.0, confirmed) now that the repo is public.
+- **Task 9 gains Gradle Wrapper Validation, a `dependabot.yml` for the version catalog, and branch protection** requiring the CI check to pass before merge.
+- **Task 11 gains a step migrating release signing to Google Play App Signing**, removing the checked-in keystore from the repository rather than merely `.gitignore`-ing it going forward.
+- **New Task 12: author a repo-root `AGENTS.md`**, added last so it documents the structure Tasks 1–11 actually produce, not the structure planned before they ran. Phase 1 is now 12 tasks.
+- **Task 4's Step 6 corrected** to commit the Groovy→Kotlin DSL conversion via `hg move --after` rather than `hg rm` + `hg add`, preserving each build script's Mercurial history instead of making it look newly created — this was going to silently break `git log --follow`/blame on every build script once Task 8's `fast-export` ran.
+
+**2026-09-15 (fourth pass)** — Task 8's secrets-audit step corrected: it was written entirely as `git` commands, which don't work until Step 2's `hg-fast-export` has run, so it wasn't actually runnable as the standalone pre-check the surrounding text described. It now leads with an `hg`-native audit that only needs Mercurial and can be run today, with the `git`-based sweep kept as a secondary cross-check once Step 2 has produced a local git conversion.
+
+**2026-09-15 (fifth pass)** — the `hg`-native audit was actually run against the real repository. Result: `common/jay-gindin-android-apps.keystore`, `common/ProjectApiKey.txt`, and `common/MapQuest.properties.orig` were never committed to Mercurial under any path across the full history — the original "treat as compromised" framing for these no longer applies, and there's nothing to scrub for them. Two other files were found in history instead: `common/AcraApiKey.properties` (2016, self-hosted tool, long unused) and `thirdparty/flurry/ProjectApiKey.txt` (Flurry Analytics, service shut down March 2024) — both low current risk, both still folded into the `git-filter-repo` pass since it's free to include them.
 
 ---
 
@@ -57,12 +69,14 @@ Stage 1C: Toolchain Modernization & KMP Preparation (Mercurial)
               enable Kotlin interop in app modules
          │
          ▼
-Stage 1D: Version Control Migration from hg to jj, Hosting Move to GitHub
-  └── Task 8: Push hg tip to sr.ht, fast-export to Git, initialize colocated jj, push to GitHub
+Stage 1D: Version Control Migration from hg to jj, Hosting Move to Public GitHub
+  └── Task 8: Push hg tip to sr.ht, audit + scrub secrets, fast-export to Git, initialize colocated jj,
+              add LICENSE, push to public GitHub
          │
          ▼
 Stage 1E: Continuous Verification
-  └── Task 9: Establish CI on GitHub Actions (unit tests + detekt/ktlint + Roborazzi + emulator smoke matrix)
+  └── Task 9: Establish CI on GitHub Actions (wrapper validation + detekt/ktlint + Roborazzi + emulator
+              smoke matrix + Dependabot + branch protection)
          │
          ▼
 Stage 1F: Controlled Library Modernization & Visual Parity Verification (jj + GitHub, CI-protected)
@@ -71,7 +85,12 @@ Stage 1F: Controlled Library Modernization & Visual Parity Verification (jj + Gi
          │
          ▼
 Stage 1G: Release Hardening
-  └── Task 11: Modernize and enable Proguard / R8 minification, verify 16 KB page size compliance
+  └── Task 11: Modernize and enable Proguard / R8 minification, migrate to Play App Signing,
+               verify 16 KB page size compliance
+         │
+         ▼
+Stage 1H: Agent-Handoff Documentation
+  └── Task 12: Author AGENTS.md documenting the modernized structure for later phases
 ```
 
 ---
@@ -97,6 +116,7 @@ Stage 1G: Release Hardening
 - Scaffold a `build-logic` included build with at least one convention plugin (e.g. `zmanim.android-library` or similar) capturing the shared Java 21 toolchain and lint configuration currently duplicated across modules, applied starting with `:ZmanLib` and `:ZmanUtils`.
 - This is done before Tasks 5–7 so JUnit5 configuration, SDK alignment, and KMP setup are written directly in idiomatic Kotlin DSL, rather than edited in Groovy now and converted a second time later.
 - Verify `./gradlew test assembleDebug verifyRoborazziDebug` still passes after the conversion, with zero behavior change — this task is a mechanical translation, not an opportunity to also change build logic.
+- Commit the file renames via `hg move --after`, not `hg rm` + `hg add` — the working tree ends up identical either way, but only `hg move --after` records the pair as a rename, preserving each build script's pre-conversion history so it survives Task 8's `fast-export` into Git.
 
 ### 3.5. Task 5: Upgrade Testing Framework to JUnit 5 (Jupiter)
 - Add `org.junit.jupiter:junit-jupiter:5.11.4` (via the version catalog) and configure `tasks.withType<Test> { useJUnitPlatform() }` in Kotlin DSL.
@@ -118,18 +138,21 @@ Stage 1G: Release Hardening
 - Apply the `kotlin-android` plugin to `:Android` and `:ZehutYosef` (interop enablement only — do not convert any existing `.java` files in this task; that's deferred to Phase 4a/4b, screen-by-screen).
 - Verify `./gradlew test assembleDebug verifyRoborazziDebug` succeeds 100%.
 
-### 3.8. Task 8: Migrate Version Control from `hg` to `jj`, and Move Hosting to GitHub
-- Confirm tooling: `hg` at `/usr/bin/hg`, `jj` at `~/.local/bin/jj` (add to `PATH` if needed), `hg-fast-export` at `~/src/fast-export`.
+### 3.8. Task 8: Migrate Version Control from `hg` to `jj`, and Move Hosting to Public GitHub
+- Confirm tooling: `hg` at `/usr/bin/hg`, `jj` at `~/.local/bin/jj` (add to `PATH` if needed), `hg-fast-export` at `~/src/fast-export`, `git-filter-repo` (install before this task).
 - Push the current Mercurial tip to sr.ht as a pre-conversion checkpoint. Bitbucket is stale/non-functional and is not used.
 - `fast-export` full Mercurial history into Git; verify commit-count parity before proceeding.
-- Initialize colocated Jujutsu: `jj git init --colocated`.
-- Convert `.hgignore` to `.gitignore`, archive `.hg/` to `.hg.backup/`.
-- Push the converted, colocated history to **https://github.com/jgindin/zmanim** as the new canonical `origin` (check whether it already exists before trying to create it). sr.ht may remain as a secondary mirror; Bitbucket is retired.
-- Verify `jj status`, `jj log -r '::@'`, and `./gradlew test assembleDebug verifyRoborazziDebug` against the GitHub-hosted repo.
+- **Secrets audit — complete, findings below (2026-09-15).** A full-history `hg`-native sweep (`hg log -r "all()"` file-add templates across all 1356+ revisions, plus `hg log --follow`/`hg cat` on specific candidates) confirmed `common/jay-gindin-android-apps.keystore`, `common/ProjectApiKey.txt`, and `common/MapQuest.properties.orig` were **never committed to Mercurial** under any path, despite sitting in the working tree today — nothing to scrub for these. The same sweep found two items that **were** committed: `common/AcraApiKey.properties` (2016, self-hosted tool, long unused) and `thirdparty/flurry/ProjectApiKey.txt` (Flurry Analytics — the service itself was shut down in March 2024). Both are low current risk since neither's underlying service is live, but both get scrubbed with `git-filter-repo` once Task 8's Step 2 has produced the git conversion, since it costs nothing extra to include them. Re-run the same full-history sweep once more immediately before Task 8's push (Step 4b), in case the working tree has changed since this audit.
+- Initialize colocated Jujutsu: `jj git init --colocated` (after the audit/scrub, not before — rewriting history post-`jj init` is messier).
+- Convert `.hgignore` to `.gitignore`, archive `.hg/` to `.hg.backup/`. Add a top-level `LICENSE` (Apache-2.0, confirmed) now that the repo is public.
+- Push the converted, colocated history to **https://github.com/jgindin/zmanim**, created **public**, as the new canonical `origin` (check whether it already exists before trying to create it, and that its visibility is actually public if so). sr.ht may remain as a secondary mirror; Bitbucket is retired.
+- Verify `jj status`, `jj log -r '::@'`, and `./gradlew test assembleDebug verifyRoborazziDebug` against the GitHub-hosted repo; spot-check that the `LICENSE` is recognized on the repo page and nothing sensitive is visible under `common/`.
 
 ### 3.9. Task 9: Establish CI on GitHub Actions
-- Workflow runs on every push/PR: `./gradlew test verifyRoborazziDebug`, plus `detekt` and `ktlint` checks.
+- Workflow runs on every push/PR: `gradle/actions/wrapper-validation@v6` first (catches a tampered wrapper jar before anything else runs — a real supply-chain concern for a public repo), then `./gradlew test verifyRoborazziDebug`, plus `detekt` and `ktlint` checks.
 - Second job: instrumented smoke test matrix on emulator images for API 24 and API 36 (e.g. via `reactivecircus/android-emulator-runner`), asserting basic screen-visibility/insets expectations. Fully unattended on GitHub-hosted runners.
+- `.github/dependabot.yml` for the `gradle` and `github-actions` ecosystems, weekly, so the versions this phase just pinned in the catalog don't go stale again the way they did before. Dependabot first (zero-config, native); Renovate documented as the fallback if its version-catalog support proves insufficient in practice.
+- Branch protection on the push branch requiring the `verify` job to pass before merge — the actual point of building CI is that it can't be silently ignored.
 - From this point forward, Tasks 10 and 11 (and every later phase) are protected by CI running on every push.
 
 ### 3.10. Task 10: Comprehensive Library Modernization & Visual Parity Verification
@@ -141,11 +164,20 @@ Five independently committed and verified sub-tasks:
 - **10.5 — ZehutYosef Module, About Screen:** modernize or replace `aboutlibraries`.
 - **Final verification:** `./gradlew verifyRoborazziDebug` against all five combined; reconcile until 100% visual parity with Task 3 baselines.
 
-### 3.11. Task 11: Modernize & Enable Proguard / R8 Minification, App Bundle Packaging, and Release-Readiness Checks
+### 3.11. Task 11: Modernize & Enable Proguard / R8 Minification, Migrate to Play App Signing, App Bundle Packaging, and Release-Readiness Checks
 - Remove obsolete pre-AndroidX Proguard files. Configure modern R8 rules protecting KosherJava/Kotlin `:ZmanLib` classes, the Kotlin `EventBus` classes from Task 7, JSON/serialization models, and view/ViewModel components.
+- **Migrate release signing to Google Play App Signing**: Task 8's audit confirmed the keystore was never actually committed to Mercurial history, so there's no history to scrub for it, but it's still one accidental `add` away from becoming exactly that as long as it lives in `common/`. Enroll both apps if not already enrolled, move the release keystore out of the repository to a local gitignored path or secrets manager, and point `signingConfigs.release` at gitignored properties/environment variables instead of a hardcoded path. Once confirmed working, delete `common/jay-gindin-android-apps.keystore` from the working tree — the point is that it no longer lives in the repo at all, not merely that it's `.gitignore`d going forward.
 - Enable `minifyEnabled true` in `buildTypes.release` for `:Android` and `:ZehutYosef`. Verify `./gradlew assembleRelease bundleRelease`.
 - **Verify 16 KB memory page size compliance**: this app has no native (`.so`) dependencies today and Java/Kotlin-only apps are already compatible, but confirm via APK Analyzer that no `.so` files have been introduced by any Task 10 library upgrade, given Google Play's compliance deadline of February 1, 2027 for apps targeting API 35+ (which Task 6 now does). Cheap to check now; expensive to discover at release time in 2027.
 - Manually install and smoke-test the minified release build on a real device or emulator (R8 is the one change in this phase that can pass every automated check and still crash at runtime via a missing `-keep` rule surfacing only through reflection).
+
+### 3.12. Task 12: Author `AGENTS.md` for Agent-Directed Development
+- Added last, deliberately, so it documents what Tasks 1–11 actually produced rather than what was planned before they ran.
+- Document the module map (`:ZmanUtils`, `:ZmanLib`, `:Android`, `:ZehutYosef` and its flavors) with purpose, current language, and the exact build/test command for each in isolation, plus the full-repo verification command and the one real-device exception (Task 6/Task 9).
+- Document where `detekt`/`ktlint` config lives and the exact local command to run both, so an agent runs them before committing rather than discovering a red CI check afterward.
+- Document version-control conventions: colocated `jj` over Git, public GitHub hosting, `jj commit` for day-to-day work, plain descriptive commit messages, and — since the repo is public — what to do if a credential is ever committed by mistake (treat it as compromised, don't just delete it in a follow-up commit).
+- Document how this plan, its design spec, and the master roadmap relate, so an agent picking up Phase 2 knows where to look for direction versus task-level detail.
+- Verify the document by having a fresh read (ideally a new agent session) answer a few concrete questions using only `AGENTS.md` — if an answer requires guessing or searching the repo, revise it.
 
 ---
 
@@ -160,7 +192,10 @@ Five independently committed and verified sub-tasks:
 - [ ] The three remaining `org.json` usages are replaced with `kotlinx.serialization`; any shared date/time code uses `kotlinx-datetime`.
 - [ ] `:Android` and `:ZehutYosef` have the `kotlin-android` interop plugin applied (no mass file conversion in Phase 1).
 - [ ] All Android modules build with `minSdkVersion 24` and `compileSdk`/`targetSdk` **36**, verified against both Roborazzi and a real device/emulator check at API 24 and API 36, and against current Play Console install-base data.
-- [ ] Repository is fully migrated to colocated Jujutsu (`jj`), with commit-count parity confirmed against the original Mercurial history, hosted canonically at `github.com/jgindin/zmanim`.
-- [ ] CI is live on GitHub Actions: unit tests, static analysis, Roborazzi verification, and an emulator smoke matrix on every push/PR.
+- [ ] Repository history re-swept for secrets immediately before the public push (Task 8, Step 4b), confirming no new finding since the 2026-09-15 audit; `common/AcraApiKey.properties` and `thirdparty/flurry/ProjectApiKey.txt` scrubbed via `git-filter-repo`.
+- [ ] All build-script renames from Task 4 preserve file history via `hg move --after` — confirmed with `hg log --follow` (pre-migration) or `git log --follow` (post-migration) on at least one converted script.
+- [ ] Repository is fully migrated to colocated Jujutsu (`jj`), with commit-count parity confirmed against the original Mercurial history, hosted canonically at `github.com/jgindin/zmanim`, **public**, with a top-level Apache-2.0 `LICENSE`.
+- [ ] CI is live on GitHub Actions: Gradle Wrapper validation, unit tests, static analysis, Roborazzi verification, and an emulator smoke matrix on every push/PR; Dependabot is configured for the Gradle version catalog and GitHub Actions; branch protection requires the CI check to pass before merge.
 - [ ] Local legacy AARs and obsolete MikePenz libraries are completely retired, landed as five independently verified sub-tasks.
-- [ ] Release builds assemble with R8 minification enabled and generate verified `.aab` bundles, with 16 KB page size compliance confirmed.
+- [ ] Release builds assemble with R8 minification enabled and generate verified `.aab` bundles, with 16 KB page size compliance confirmed, signed via Google Play App Signing with no keystore file remaining in the repository.
+- [ ] `AGENTS.md` exists at the repo root and correctly answers, without guessing, how to build/test each module in isolation, how to run static analysis locally, and what version-control tool and host the repo uses.
