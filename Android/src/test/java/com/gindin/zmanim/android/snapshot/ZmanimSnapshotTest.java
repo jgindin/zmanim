@@ -119,6 +119,11 @@ public class ZmanimSnapshotTest {
    *  render), then the fixed location, directly on the app's own event bus -- the same bus
    *  {@code ZmanimActivity} and its presenters are already listening to by the time
    *  {@code ActivityScenario.launch()} returns.
+   *
+   * NOTE: this fixes the *calendar* date/location used for zman calculation, but
+   *  {@code HebrewDate.isToday()}'s holiday-description branch still compares against the real
+   *  system clock rather than this fixed date. That's a narrow, self-healing edge case (it can
+   *  only mis-render on the one calendar day where the two disagree) and isn't itself fixed here.
    */
   private void fireFixedDateAndLocation() {
 

@@ -192,8 +192,10 @@ abstract class WakeupSchedulerBase {
 
       // NOTE: newer JDKs (the CLDR locale data used since JDK 20) format the AM/PM designator with a
       //  narrow no-break space (U+202F) instead of a regular space. Normalize it to a plain space so the
-      //  output matches the plain-ASCII golden-string fixtures in the test source.
-      String formattedZmanTime = zmanFormatter.formatZmanTime( zman ).replace( ' ', ' ' );
+      //  output matches the plain-ASCII golden-string fixtures in the test source. Delegates to the
+      //  shared helper (ZmanimOutputHelper.normalizeWhitespace(), same package) instead of duplicating
+      //  the replace() call inline.
+      String formattedZmanTime = ZmanimOutputHelper.normalizeWhitespace( zmanFormatter.formatZmanTime( zman ) );
 
       output.append(
         String.format( "%-20s| %-15s| %-30s| %-18s|\n", zman.type, formattedZmanTime,
