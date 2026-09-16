@@ -73,7 +73,7 @@ flowchart TD
 - Google Play App Signing for release signing (Task 11) — replaces the keystore file previously checked into `common/`
 - Apache License 2.0 as the repository's top-level `LICENSE` (Task 8) — a normal dependency relationship with the LGPL-2.1 `kosherjava`/KosherKotlin library (not vendoring or embedding its source) is standard practice under both licenses, but this isn't legal advice; confirm with counsel before Phase 6 if `KosherKotlin` ends up vendored rather than pulled as a binary dependency
 
-**Spec:** [`docs/plans/specs/2026-09-07-phase-1-foundation-modernization-design.md`](file:///home/jgindin/src/gindin/zmanim/zmanim/docs/plans/specs/2026-09-07-phase-1-foundation-modernization-design.md)
+**Spec:** [`docs/modernization/phase1/phase-1-design.md`](file:///home/jgindin/src/gindin/zmanim/zmanim/docs/modernization/phase1/phase-1-design.md)
 
 ## Global Constraints
 - Target SDK / Compile SDK: **36** (Android 16) — corrected from an earlier API 35 target to match Google Play's compliance requirement effective August 31, 2026
@@ -222,9 +222,9 @@ hg commit -m "Provide default resources in main so sidur flavor compiles alongsi
 - Consumes: Roborazzi 1.40+, Robolectric 4.14+ Native Graphics
 - Produces: Deterministic JVM-rendered PNG screenshots serving as the self-referential golden baseline for every later Roborazzi comparison in this phase
 
-**Important framing:** the goal of this task is a baseline that later runs are diffed *against*, not a literal pixel match to the reference photos in `docs/plans/specs/screenshots/`. Robolectric Native Graphics' font rendering, anti-aliasing, and DPI handling do not reproduce a real device photo pixel-for-pixel — don't iterate trying to close that gap. Use the reference photos once, as a human sanity check that the recorded baseline is roughly right, then treat the recorded PNGs in `screenshots/` as the only thing `verifyRoborazziDebug` ever compares against from here on.
+**Important framing:** the goal of this task is a baseline that later runs are diffed *against*, not a literal pixel match to the reference photos in `docs/modernization/phase1/screenshots/`. Robolectric Native Graphics' font rendering, anti-aliasing, and DPI handling do not reproduce a real device photo pixel-for-pixel — don't iterate trying to close that gap. Use the reference photos once, as a human sanity check that the recorded baseline is roughly right, then treat the recorded PNGs in `screenshots/` as the only thing `verifyRoborazziDebug` ever compares against from here on.
 
-**The reference-photo set and this task's planned snapshots don't line up 1:1 — don't try to force a match that isn't there.** `docs/plans/specs/screenshots/` currently contains `zmanim.png`, `location.png`, `preferences.png`, and `barmitzvah.png`. Step 3 below plans a `captureSiddurReader()` snapshot (the `sidur` flavor) with no corresponding reference photo — that's expected; just eyeball it against the app's actual current UI or skip the sanity-check for that one snapshot and note as much in the commit message. `location.png` has no planned Roborazzi snapshot at all in this task — that's also fine; it isn't in scope here (a location-picker screenshot may be added in a later phase), don't add a snapshot test just to make the reference-photo count match.
+**The reference-photo set and this task's planned snapshots don't line up 1:1 — don't try to force a match that isn't there.** `docs/modernization/phase1/screenshots/` currently contains `zmanim.png`, `location.png`, `preferences.png`, and `barmitzvah.png`. Step 3 below plans a `captureSiddurReader()` snapshot (the `sidur` flavor) with no corresponding reference photo — that's expected; just eyeball it against the app's actual current UI or skip the sanity-check for that one snapshot and note as much in the commit message. `location.png` has no planned Roborazzi snapshot at all in this task — that's also fine; it isn't in scope here (a location-picker screenshot may be added in a later phase), don't add a snapshot test just to make the reference-photo count match.
 
 **Note:** this task is written against `build.gradle` (Groovy) since it runs before Task 4's Kotlin DSL conversion. If Task 4 is reordered ahead of this task for any reason, translate the snippets below to Kotlin DSL syntax accordingly.
 
@@ -1020,7 +1020,7 @@ State plainly: the repository uses colocated Jujutsu (`jj`) over Git, hosted pub
 
 - [ ] **Step 4: Document where the planning documents live and how they relate**
 
-Point to `docs/plans/specs/modernization-roadmap.md` (the multi-phase architectural roadmap), this phase's design spec, and this implementation plan itself, and state the relationship: the roadmap sets direction across all phases, each phase gets its own design spec and implementation plan, and an agent executing a task should treat this plan's checkboxes as the source of truth for what's done, updating them as work completes.
+Point to `docs/modernization/modernization-roadmap.md` (the multi-phase architectural roadmap), this phase's design spec, and this implementation plan itself, and state the relationship: the roadmap sets direction across all phases, each phase gets its own design spec and implementation plan, and an agent executing a task should treat this plan's checkboxes as the source of truth for what's done, updating them as work completes.
 
 - [ ] **Step 5: Verify the document against a fresh read**
 

@@ -369,4 +369,4 @@ This is a multi-quarter-to-multi-year program for a solo-maintained pair of apps
 
 With the complete roadmap established, execution begins with **Phase 1: Foundation Modernization, VCS Migration to `jj` + GitHub, and Visual Safety Net**.
 
-The 12 tasks of Phase 1 are detailed in the accompanying [**implementation plan**](../2026-09-07-phase-1-foundation-modernization.md) and will be executed task-by-task using **subagent-driven-development**.
+The 12 tasks of Phase 1 are detailed in the accompanying [**implementation plan**](phase1/phase-1-implementation.md) and will be executed task-by-task using **subagent-driven-development**.
