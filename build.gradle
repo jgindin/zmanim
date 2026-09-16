@@ -18,6 +18,10 @@ buildscript {
     // See https://github.com/moallemi/gradle-advanced-build-version
     classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.0'
 
+    // Roborazzi: JVM-rendered (Robolectric) screenshot testing, used to establish and later
+    //  verify a visual regression safety net against golden PNGs. See docs/modernization/phase1.
+    classpath 'io.github.takahirom.roborazzi:roborazzi-gradle-plugin:1.74.0'
+
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
   }

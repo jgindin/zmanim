@@ -7,6 +7,10 @@ import org.moallemi.gradle.internal.VersionCodeType
 
 apply from: '../common/gindin-android.gradle'
 
+// Roborazzi: records/verifies golden PNG screenshots rendered by Robolectric. See
+//  docs/modernization/phase1 and ZehutYosef/src/test/java/com/gindin/zehutyosef/snapshot.
+apply plugin: "io.github.takahirom.roborazzi"
+
 // Wrap with try/catch so the build is working even if the signing stuff is missing.
 //  Got this idea from Mike Penz's AboutLibraries
 try {
@@ -72,6 +76,22 @@ android {
     sourceCompatibility JavaVersion.VERSION_21
     targetCompatibility JavaVersion.VERSION_21
   }
+
+  testOptions {
+    unitTests {
+      // Roborazzi/Robolectric need real resources (layouts, drawables, styles) loaded to render
+      //  screenshots that look like the actual app, not just default/stub values.
+      includeAndroidResources = true
+
+      // gradle.properties' robolectric.graphicsMode=NATIVE only configures the Gradle build
+      //  itself; it is NOT forwarded to the forked test JVM automatically. Without this, Robolectric
+      //  falls back to drawing a debug view-hierarchy diagram instead of real pixels, and every
+      //  Roborazzi capture comes out as a diagram of colored boxes/property dumps, not a screenshot.
+      all {
+        it.systemProperty 'robolectric.graphicsMode', 'NATIVE'
+      }
+    }
+  }
 }
 
 dependencies {
@@ -95,4 +115,20 @@ dependencies {
   }
 
   testImplementation 'junit:junit:4.13.2'
+
+  // Roborazzi screen snapshot safety net (see ZehutYosef/src/test/.../snapshot).
+  testImplementation 'org.robolectric:robolectric:4.15.1'
+  testImplementation 'io.github.takahirom.roborazzi:roborazzi:1.74.0'
+  testImplementation 'io.github.takahirom.roborazzi:roborazzi-junit-rule:1.74.0'
+  testImplementation 'androidx.test:core:1.6.1'
+  testImplementation 'androidx.test.ext:junit:1.2.1'
+
+  // Not used by this app (no Jetpack Compose here) -- Roborazzi's single facade class exposes
+  //  both View- and Compose-based captureRoboImage() overloads, so javac needs these Compose
+  //  testing types resolvable at compile time just to resolve the plain View overload we call.
+  //  transitive = false: we only need the .class files to exist for overload resolution, and
+  //  pulling their real transitive graphs (a much newer Kotlin/AndroidX/coroutines stack) fights
+  //  this project's existing dependency locking/consistent resolution.
+  testCompileOnly( 'androidx.compose.ui:ui-test:1.12.1' ) { transitive = false }
+  testCompileOnly( 'androidx.compose.ui:ui-test-junit4:1.12.1' ) { transitive = false }
 }
