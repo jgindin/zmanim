@@ -10,6 +10,8 @@ import com.github.takahirom.roborazzi.RoborazziOptions;
 
 import com.gindin.zehutyosef.BuildConfig;
 import com.gindin.zehutyosef.ZehutYosefActivity;
+import com.gindin.zmanlib.calendar.HebrewCalendar;
+import com.gindin.zmanlib.calendar.HebrewDate;
 
 import android.os.Looper;
 import android.view.View;
@@ -22,6 +24,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Calendar;
 
 /**
  * Roborazzi baseline snapshots of {@link ZehutYosefActivity}, which is shared, unmodified, by
@@ -41,10 +47,39 @@ import org.robolectric.annotation.Config;
  *  {@link Assume#assumeTrue} to only actually capture under the flavor it names, and cleanly
  *  skips (not fails) under the other -- otherwise "captureBarMitzvahReader" run under the
  *  {@code sidur} variant would silently capture the wrong theme under the right-sounding name.
+ *<p/>
+ *
+ * {@code ZehutYosefActivity}'s {@code zehut_yosef} options menu declares a single
+ *  {@code showAsAction="ifRoom"} item (see {@code res/menu/zehut_yosef.xml}) whose action view is
+ *  a plain {@code TextView} showing the current Hebrew date -- AppCompat inflates and populates
+ *  "ifRoom" action items eagerly (they must be visible in the toolbar immediately, not only once
+ *  the overflow menu is opened), so that badge is already on screen by the time
+ *  {@code ActivityScenario.launch()} returns control here, and it lands in the captured PNG. The
+ *  activity computes that date from real wall-clock time ({@code hebrewDate} is initialized in its
+ *  constructor from {@link HebrewCalendar#today()}), so left alone, these baselines would only
+ *  ever match on the exact calendar day they were recorded -- exactly the live-clock problem
+ *  {@link com.gindin.zmanim.android.snapshot.ZmanimSnapshotTest} avoids for {@code ZmanimActivity}
+ *  by firing a fixed {@code HebrewDateChangedEvent} on that activity's event bus.
+ *<p/>
+ *
+ * {@code ZehutYosefActivity} has no equivalent event bus (or any other production seam) for
+ *  pushing in a date -- its only date mutation path is the private {@code hebrewDate} field plus
+ *  the private {@code updateHebrewDate()} method, both driven internally by the date-picker
+ *  dialog. Rather than add a test-only seam to production code for this, {@link #fixHebrewDate}
+ *  reaches into that existing private field/method pair via reflection and drives it exactly the
+ *  way {@code onDateSet()} already does in production: set {@code hebrewDate}, then call
+ *  {@code updateHebrewDate()} to refresh the toolbar {@code TextView}. Same fixed date as
+ *  {@code ZmanimSnapshotTest} (September 7, 2026) for consistency across the two test suites.
  */
 @RunWith( RobolectricTestRunner.class )
 @Config( sdk = 33 )
 public class SiddurSnapshotTest {
+
+  /** Same fixed date {@code ZmanimSnapshotTest} uses, so both suites' baselines agree on "today". */
+  private static final int     FIXED_YEAR = 2026;
+  private static final int     FIXED_MONTH = Calendar.SEPTEMBER;
+  private static final int     FIXED_DAY_OF_MONTH = 7;
+
 
   @Test
   public void captureBarMitzvahReader() {
@@ -78,6 +113,11 @@ public class SiddurSnapshotTest {
         //  finishes wiring up the drawer selection/typeface/size; wait for it the same bounded
         //  way we do in ZmanimSnapshotTest, rather than assuming a single idle() is enough.
         settle();
+
+        // Overwrite the live "today" the activity computed at construction time with a fixed
+        //  date, and refresh the toolbar's date badge to match -- see the class Javadoc for why
+        //  this goes through reflection rather than a production-code seam.
+        fixHebrewDate( activity );
 
         // The tefillah text overflows the ScrollView (R.id.scrollView in
         //  activity_zehut_yosef.xml), so Android "awakens" its scrollbar with a one-shot fade
@@ -126,6 +166,34 @@ public class SiddurSnapshotTest {
         Thread.currentThread().interrupt();
         return;
       }
+    }
+  }
+
+
+  /**
+   * Drives {@code ZehutYosefActivity}'s private {@code hebrewDate} field and
+   *  {@code updateHebrewDate()} method via reflection, exactly the way its own
+   *  {@code onDateSet()} callback already does in production, so both the toolbar date badge and
+   *  (should any future capture exercise it) any tefillah content keyed off {@code hebrewDate}
+   *  are pinned to a fixed date instead of real wall-clock "today".
+   */
+  private void fixHebrewDate(
+    ZehutYosefActivity  activity
+  ) {
+
+    HebrewDate fixedDate = HebrewCalendar.getForDate( FIXED_YEAR, FIXED_MONTH, FIXED_DAY_OF_MONTH );
+
+    try {
+      Field hebrewDateField = ZehutYosefActivity.class.getDeclaredField( "hebrewDate" );
+      hebrewDateField.setAccessible( true );
+      hebrewDateField.set( activity, fixedDate );
+
+      Method updateHebrewDateMethod = ZehutYosefActivity.class.getDeclaredMethod( "updateHebrewDate" );
+      updateHebrewDateMethod.setAccessible( true );
+      updateHebrewDateMethod.invoke( activity );
+    }
+    catch ( ReflectiveOperationException reflectionFailure ) {
+      throw new RuntimeException( "Unable to pin ZehutYosefActivity's Hebrew date for a deterministic snapshot", reflectionFailure );
     }
   }
 
