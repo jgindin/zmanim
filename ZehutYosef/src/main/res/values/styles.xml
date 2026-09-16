@@ -5,4 +5,8 @@
     <!-- Customize your theme here. -->
   </style>
 
+  <style name="EliPurple" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Default theme properties for Zehut Yosef; overridden in barMitzvah flavor -->
+  </style>
+
 </resources>

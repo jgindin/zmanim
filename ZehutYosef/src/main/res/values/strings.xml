@@ -29,5 +29,6 @@
   <string name="pref_fonts_size_summary">Choose the size of the text in the Siddur</string>
   <string name="pref_fonts_size_choose">Select a Size</string>
   <string name="app_name">Zehut Yosef</string>
+  <string name="about_description_text">Zehut Yosef Siddur</string>
 
 </resources>
