@@ -8,22 +8,22 @@ buildscript {
   repositories {
     mavenCentral()
     maven {
-      url "https://maven.google.com"
+      url = uri("https://maven.google.com")
     }
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:9.4.0'
+    classpath(libs.android.gradlePlugin)
 
     // See https://github.com/moallemi/gradle-advanced-build-version
-    classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.0'
+    classpath(libs.moallemi.advanced.build.version.gradlePlugin)
 
     // Roborazzi: JVM-rendered (Robolectric) screenshot testing, used to establish and later
     //  verify a visual regression safety net against golden PNGs. See docs/modernization/phase1.
-    classpath 'io.github.takahirom.roborazzi:roborazzi-gradle-plugin:1.74.0'
+    classpath(libs.roborazzi.gradlePlugin)
 
     // NOTE: Do not place your application dependencies here; they belong
-    // in the individual module build.gradle files
+    // in the individual module build.gradle.kts files
   }
 }
 
@@ -31,9 +31,8 @@ allprojects {
   repositories {
     mavenCentral()
     maven {
-      url 'https://raw.githubusercontent.com/jgindin/maven-repo/master/'
+      url = uri("https://raw.githubusercontent.com/jgindin/maven-repo/master/")
     }
     google()
   }
 }
-

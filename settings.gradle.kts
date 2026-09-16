@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2026. Jay R. Gindin
+ */
+
+pluginManagement {
+  includeBuild("build-logic")
+
+  repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+  }
+}
+
+plugins {
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+}
+
+include(":ZmanUtils")
+include(":ZmanLib")
+include(":Android")
+include(":ZehutYosef")
