@@ -4,8 +4,8 @@
 
 package com.gindin.zmanlib.calendar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Validate the days in a Hebrew month (in various types of years) are correct.
@@ -63,8 +63,8 @@ public class UT_DaysInJewishMonth {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
-    Assert.assertFalse( date.isCheshvanLong() );
-    Assert.assertTrue( date.isKislevShort() );
+    Assertions.assertFalse( date.isCheshvanLong() );
+    Assertions.assertTrue( date.isKislevShort() );
   }
 
 
@@ -73,7 +73,7 @@ public class UT_DaysInJewishMonth {
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
     assertHaser( year );
-    Assert.assertTrue( date.isHebrewLeapYear() );
+    Assertions.assertTrue( date.isHebrewLeapYear() );
   }
 
 
@@ -81,8 +81,8 @@ public class UT_DaysInJewishMonth {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
-    Assert.assertFalse( date.isCheshvanLong() );
-    Assert.assertFalse( date.isKislevShort() );
+    Assertions.assertFalse( date.isCheshvanLong() );
+    Assertions.assertFalse( date.isKislevShort() );
   }
 
 
@@ -91,7 +91,7 @@ public class UT_DaysInJewishMonth {
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
     assertQesidrah( year );
-    Assert.assertTrue( date.isHebrewLeapYear() );
+    Assertions.assertTrue( date.isHebrewLeapYear() );
   }
 
 
@@ -99,8 +99,8 @@ public class UT_DaysInJewishMonth {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
-    Assert.assertTrue( date.isCheshvanLong() );
-    Assert.assertFalse( date.isKislevShort() );
+    Assertions.assertTrue( date.isCheshvanLong() );
+    Assertions.assertFalse( date.isKislevShort() );
   }
 
 
@@ -109,7 +109,7 @@ public class UT_DaysInJewishMonth {
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
 
     assertShalem( year );
-    Assert.assertTrue( date.isHebrewLeapYear() );
+    Assertions.assertTrue( date.isHebrewLeapYear() );
   }
 
 } // End of UT_DaysInJewishMonth class

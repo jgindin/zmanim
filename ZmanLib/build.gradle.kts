@@ -13,8 +13,19 @@ dependencies {
   implementation(libs.jetbrains.annotations)
   compileOnly(libs.org.json)
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit.jupiter)
+  testRuntimeOnly(libs.junit.vintage.engine)
+  testRuntimeOnly(libs.junit.platform.launcher)
   testImplementation(libs.org.json)
+
+  // Hamcrest is JUnit-version-agnostic; still needed directly here (not transitively via
+  //  junit:junit, which this module no longer depends on) for
+  //  UT_LatitudeLongitudeParser's custom BaseMatcher + MatcherAssert.assertThat usage.
+  testImplementation(libs.hamcrest)
+}
+
+tasks.withType<Test> {
+  useJUnitPlatform()
 }
 
 sourceSets {

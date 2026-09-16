@@ -11,8 +11,8 @@ import com.gindin.zmanlib.calendar.holiday.modern.YomHaAtzmaut;
 import com.gindin.zmanlib.calendar.holiday.modern.YomHaShoah;
 import com.gindin.zmanlib.calendar.holiday.modern.YomHaZikaron;
 import com.gindin.zmanlib.calendar.holiday.modern.YomYerushalayim;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -231,11 +231,11 @@ public class UT_Modern
     // Yom HaShoah
     date = HebrewCalendar.getForDate( year, yomHaShoahMonth, yomHaShoahDay );
     details = date.yesterday().getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
     outputDetails( output, details );
 
     details = date.getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_SHOAH.getName() ) );
     outputDetails( output, details );
 
     date = date.tomorrow();
@@ -251,11 +251,11 @@ public class UT_Modern
     // Note that we KNOW this is Erev Yom HaAtzma'ut...
     date = HebrewCalendar.getForDate( year, yomHaZikaronMonth, yomHaZikaronDay );
     details = date.yesterday().getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
     outputDetails( output, details );
 
     details = date.getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_ZIKARON.getName() ) );
     outputDetails( output, details );
 
 
@@ -263,12 +263,12 @@ public class UT_Modern
     /////////////////////////////////////////////////////////////////////////////////////
     // Yom HaAtzmaut
     // Yes, Erev Yom HaAtzmaut is the same day as Yom HaZikaron...
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
     outputDetails( output, details );
 
     date = date.tomorrow();
     details = date.getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_HA_ATZMAUT.getName() ) );
     outputDetails( output, details );
 
     date = date.tomorrow();
@@ -283,11 +283,11 @@ public class UT_Modern
     // Yom Yerushalyim
     date = HebrewCalendar.getForDate( year, yomYerushalyimMonth, yomYerushalyimDay );
     details = date.yesterday().getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
     outputDetails( output, details );
 
     details = date.getDetails();
-    Assert.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
+    Assertions.assertTrue( details.getDescription().contains( YOM_YERUSHALAYIM.getName() ) );
     outputDetails( output, details );
 
     date = date.tomorrow();
@@ -296,21 +296,21 @@ public class UT_Modern
 
     /////////////////////////////////////////////////////////////////////////////////////
     // Now check the full set of expectations
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
 
 
     // Sprinkle some sanity checks in...
     date = HebrewCalendar.getForDate( year, yomHaShoahMonth - 1, 1 );
-    Assert.assertNull( YOM_HA_SHOAH.getDetailsFor( date ) );
-    Assert.assertNull( YOM_HA_ZIKARON.getDetailsFor( date ) );
-    Assert.assertNull( YOM_HA_ATZMAUT.getDetailsFor( date ) );
-    Assert.assertNull( YOM_YERUSHALAYIM.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_SHOAH.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_ZIKARON.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_ATZMAUT.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_YERUSHALAYIM.getDetailsFor( date ) );
 
     date = HebrewCalendar.getForDate( year, yomYerushalyimMonth + 2, 1 );
-    Assert.assertNull( YOM_HA_SHOAH.getDetailsFor( date ) );
-    Assert.assertNull( YOM_HA_ZIKARON.getDetailsFor( date ) );
-    Assert.assertNull( YOM_HA_ATZMAUT.getDetailsFor( date ) );
-    Assert.assertNull( YOM_YERUSHALAYIM.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_SHOAH.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_ZIKARON.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_HA_ATZMAUT.getDetailsFor( date ) );
+    Assertions.assertNull( YOM_YERUSHALAYIM.getDetailsFor( date ) );
 
   }
 

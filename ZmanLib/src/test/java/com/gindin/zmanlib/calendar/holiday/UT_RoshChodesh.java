@@ -7,7 +7,8 @@ package com.gindin.zmanlib.calendar.holiday;
 import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -759,10 +760,10 @@ public class UT_RoshChodesh
       outputDetails( output, details );
     }
     else {
-      Assert.assertNull( details );
+      Assertions.assertNull( details );
     }
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 
@@ -774,7 +775,7 @@ public class UT_RoshChodesh
 
     HebrewDate date = HebrewCalendar.getForDate( year, month, day );
     Details details = ROSH_CHODESH.getDetailsFor( date );
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
   }
 
 } // End of UT_RoshChodesh class

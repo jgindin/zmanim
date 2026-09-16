@@ -10,7 +10,7 @@ import com.gindin.zmanlib.zman.Zman;
 import com.gindin.zmanlib.zman.Zmanim;
 import com.gindin.zmanlib.zman.ZmanimFactory;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -134,7 +134,7 @@ public class ZmanimBaseTest {
     for ( Zmanim zmanim : zmanimForDay ) {
       day.add( zmanim.type );
     }
-    Assert.assertEquals( expectedZmanim.toString(), day.toString() );
+    Assertions.assertEquals( expectedZmanim.toString(), day.toString() );
 
     StringBuilder output = new StringBuilder();
     output.append( location.getLocationName() ).append( "\n" );
@@ -148,6 +148,6 @@ public class ZmanimBaseTest {
       }
     }
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 }

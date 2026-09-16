@@ -9,7 +9,8 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.yomtov.RoshHashana;
 import com.gindin.zmanlib.calendar.holiday.yomtov.YomKippur;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -137,7 +138,7 @@ public class UT_YamimNoraim
     details = YOM_KIPPUR.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 

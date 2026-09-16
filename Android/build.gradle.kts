@@ -229,6 +229,9 @@ dependencies {
 
 
   "testImplementation"(libs.junit)
+  "testImplementation"(libs.junit.jupiter)
+  "testRuntimeOnly"(libs.junit.vintage.engine)
+  "testRuntimeOnly"(libs.junit.platform.launcher)
   "testImplementation"(libs.org.json)
 
   // Roborazzi screen snapshot safety net (see Android/src/test/.../snapshot).
@@ -246,4 +249,11 @@ dependencies {
   //  this project's existing dependency locking/consistent resolution.
   "testCompileOnly"(libs.androidx.compose.ui.test) { isTransitive = false }
   "testCompileOnly"(libs.androidx.compose.ui.test.junit4) { isTransitive = false }
+}
+
+// JUnit4-style tests here (including Task 3's Roborazzi snapshot tests) keep running unmodified
+//  via the vintage engine under the same JUnit Platform runner used by :ZmanUtils/:ZmanLib's
+//  Jupiter-native tests. See docs/modernization/phase1 Task 5.
+tasks.withType<Test> {
+  useJUnitPlatform()
 }

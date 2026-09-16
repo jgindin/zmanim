@@ -9,5 +9,11 @@ plugins {
 dependencies {
   implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit.jupiter)
+  testRuntimeOnly(libs.junit.vintage.engine)
+  testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.withType<Test> {
+  useJUnitPlatform()
 }

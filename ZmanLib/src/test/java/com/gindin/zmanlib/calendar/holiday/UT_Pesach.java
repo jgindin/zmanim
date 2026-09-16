@@ -11,7 +11,8 @@ import com.gindin.zmanlib.calendar.holiday.minor.LagBOmer;
 import com.gindin.zmanlib.calendar.holiday.other.Omer;
 import com.gindin.zmanlib.calendar.holiday.minor.PesachSheni;
 import com.gindin.zmanlib.calendar.holiday.yomtov.Pesach;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -354,7 +355,7 @@ public class UT_Pesach
     details = PESACH.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 
@@ -378,7 +379,7 @@ public class UT_Pesach
     outputDetails( output, details );
 
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 
@@ -391,8 +392,8 @@ public class UT_Pesach
 
     HebrewDate date = HebrewCalendar.getForDate( year, month, day );
     Details details = OMER.getDetailsFor( date );
-    Assert.assertNotNull( details );
-    Assert.assertTrue( details.getDescription().contains( "" + expectedDayOfOmer ) );
+    Assertions.assertNotNull( details );
+    Assertions.assertTrue( details.getDescription().contains( "" + expectedDayOfOmer ) );
   }
 
 
@@ -405,7 +406,7 @@ public class UT_Pesach
     HebrewDate date = HebrewCalendar.getForDate( year, month, day );
     Details details = OMER.getDetailsFor( date );
 
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
   }
 
 
@@ -425,7 +426,7 @@ public class UT_Pesach
     details = LAG_B_OMER.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 } // End of UT_Pesach class

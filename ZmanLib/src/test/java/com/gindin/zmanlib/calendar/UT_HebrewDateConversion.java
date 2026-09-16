@@ -4,8 +4,8 @@
 
 package com.gindin.zmanlib.calendar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -52,9 +52,9 @@ public class UT_HebrewDateConversion {
   
   private void assertGregorianDate( HebrewDate date, int year, int month, int dayOfMonth ) {
 
-    Assert.assertEquals( year, date.getGregorianYear() );
-    Assert.assertEquals( month, date.getGregorianMonth() );
-    Assert.assertEquals( dayOfMonth, date.getGregorianDayOfMonth() );
+    Assertions.assertEquals( year, date.getGregorianYear() );
+    Assertions.assertEquals( month, date.getGregorianMonth() );
+    Assertions.assertEquals( dayOfMonth, date.getGregorianDayOfMonth() );
   }
 
 } // End of UT_HebrewDateConversion class

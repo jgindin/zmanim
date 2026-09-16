@@ -8,7 +8,8 @@ import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.taaniyot.*;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -127,22 +128,22 @@ public class UT_Taaniyot {
 
     HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );
     Details details = observance.getDetailsFor( date );
-    Assert.assertNotNull( details );
-    Assert.assertFalse( details.isErev() );
+    Assertions.assertNotNull( details );
+    Assertions.assertFalse( details.isErev() );
 
     date = date.yesterday();
     details = observance.getDetailsFor( date );
-    Assert.assertNotNull( details );
-    Assert.assertTrue( details.isErev() );
+    Assertions.assertNotNull( details );
+    Assertions.assertTrue( details.isErev() );
 
     date = date.yesterday();
     details = observance.getDetailsFor( date );
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
 
     date = HebrewCalendar.getForDate( year, month, dayOfMonth );
     date = date.tomorrow();
     details = observance.getDetailsFor( date );
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
   }
 
 
@@ -155,7 +156,7 @@ public class UT_Taaniyot {
 
     HebrewDate date = HebrewCalendar.getForDate( year, month, dayOfMonth );
     Details details = observance.getDetailsFor( date );
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
   }
 
 } // End of UT_Taaniyot class

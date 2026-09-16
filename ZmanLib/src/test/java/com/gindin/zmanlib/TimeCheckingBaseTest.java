@@ -4,7 +4,7 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -60,15 +60,17 @@ abstract class TimeCheckingBaseTest
           // This is OK. Both times are "N/A".
         }
         else if ( ( zmanTime == null ) || ( zmanTimeWithSeconds == null ) ) {
-          Assert.fail( "zmanTime & zmanTimeWithSeconds must both be null if either is null" );
+          Assertions.fail( "zmanTime & zmanTimeWithSeconds must both be null if either is null" );
         }
         else if ( shouldRoundDown() ) {
-          Assert.assertTrue( time + " is supposed to be <= " + timeWithSeconds,
-            zmanTime.before( zmanTimeWithSeconds ) || zmanTime.equals( zmanTimeWithSeconds ) );
+          Assertions.assertTrue(
+            zmanTime.before( zmanTimeWithSeconds ) || zmanTime.equals( zmanTimeWithSeconds ),
+            time + " is supposed to be <= " + timeWithSeconds );
         }
         else {
-          Assert.assertTrue( time + " is supposed to be >= " + timeWithSeconds,
-            zmanTime.after( zmanTimeWithSeconds ) || zmanTime.equals( zmanTimeWithSeconds ) );
+          Assertions.assertTrue(
+            zmanTime.after( zmanTimeWithSeconds ) || zmanTime.equals( zmanTimeWithSeconds ),
+            time + " is supposed to be >= " + timeWithSeconds );
         }
       }
 
@@ -79,7 +81,7 @@ abstract class TimeCheckingBaseTest
         String actual
       ) {
 
-        Assert.assertEquals( expected, actual );
+        Assertions.assertEquals( expected, actual );
       }
     };
 

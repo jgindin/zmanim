@@ -1,7 +1,7 @@
 package com.gindin.zmanlib.location;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.TimeZone;
 
@@ -23,7 +23,7 @@ public class UT_ZmanimLocationJSON {
       .build();
 
     String json = ZmanLocationJSON.toJSON( location );
-    Assert.assertEquals(
+    Assertions.assertEquals(
       "{\n" +
         "  \"ac\": -1,\n" +
         "  \"tz\": \"America/Los_Angeles\",\n" +
@@ -60,6 +60,6 @@ public class UT_ZmanimLocationJSON {
       .inTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) )
       .build();
 
-    Assert.assertEquals( expected, location );
+    Assertions.assertEquals( expected, location );
   }
 }

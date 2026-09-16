@@ -10,7 +10,8 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.rabbanan.Purim;
 import com.gindin.zmanlib.calendar.holiday.rabbanan.PurimKatan;
 import com.gindin.zmanlib.calendar.holiday.rabbanan.ShushanPurim;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -159,7 +160,7 @@ public class UT_Purim
     details = SHUSHAN_PURIM.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 
@@ -182,7 +183,7 @@ public class UT_Purim
       outputDetails( output, details );
     }
     else {
-      Assert.assertNull( details );
+      Assertions.assertNull( details );
     }
 
     details = PURIM_KATAN.getDetailsFor( date );
@@ -190,10 +191,10 @@ public class UT_Purim
       outputDetails( output, details );
     }
     else {
-      Assert.assertNull( details );
+      Assertions.assertNull( details );
     }
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 } // End of UT_Purim class

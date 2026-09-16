@@ -4,9 +4,9 @@
 
 package com.gindin.eventBus;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class UT_EventBus {
   private EventBus                                          eventBus;
 
 
-  @Before
+  @BeforeEach
   public void setup() {
     eventBus = new EventBus();
   }
@@ -44,7 +44,7 @@ public class UT_EventBus {
     eventBus.fire( event1 );
     eventBus.removeHandler( handler );
     
-    Assert.assertTrue( receivedEvent[ 0 ] );
+    Assertions.assertTrue( receivedEvent[ 0 ] );
   }
 
 
@@ -82,7 +82,7 @@ public class UT_EventBus {
     Event1 event1 = new Event1();
     eventBus.fire( event1 );
 
-    Assert.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
   }
 
 
@@ -121,7 +121,7 @@ public class UT_EventBus {
     Event1 event1 = new Event1();
     eventBus.fire( event1 );
 
-    Assert.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
   }
 
 
@@ -162,7 +162,7 @@ public class UT_EventBus {
     Event1 event1 = new Event1();
     eventBus.fire( event1 );
 
-    Assert.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( handlersInOrder.size() - 1 ) );
   }
 
 
@@ -204,10 +204,10 @@ public class UT_EventBus {
     Event1 event1 = new Event1();
     eventBus.fire( event1 );
 
-    Assert.assertEquals( 3, handlersInOrder.size() );
-    Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
-    Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
-    Assert.assertEquals( handler3, handlersInOrder.get( 2 ) );
+    Assertions.assertEquals( 3, handlersInOrder.size() );
+    Assertions.assertEquals( handler1, handlersInOrder.get( 0 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( 1 ) );
+    Assertions.assertEquals( handler3, handlersInOrder.get( 2 ) );
   }
 
 
@@ -244,9 +244,9 @@ public class UT_EventBus {
     Event1 event1 = new Event1();
     eventBus.fire( event1 );
 
-    Assert.assertEquals( 2, handlersInOrder.size() );
-    Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
-    Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
+    Assertions.assertEquals( 2, handlersInOrder.size() );
+    Assertions.assertEquals( handler1, handlersInOrder.get( 0 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( 1 ) );
   }
 
 
@@ -274,8 +274,8 @@ public class UT_EventBus {
     };
     eventBus.addHandler( handler2, true );
 
-    Assert.assertEquals( handler1, handlersInOrder.get( 0 ) );
-    Assert.assertEquals( handler2, handlersInOrder.get( 1 ) );
+    Assertions.assertEquals( handler1, handlersInOrder.get( 0 ) );
+    Assertions.assertEquals( handler2, handlersInOrder.get( 1 ) );
   }
 
 
@@ -295,7 +295,7 @@ public class UT_EventBus {
       }
     };
     eventBus.addHandler( handler, true );
-    Assert.assertNull( received[0] );
+    Assertions.assertNull( received[0] );
   }
 
 
@@ -315,7 +315,7 @@ public class UT_EventBus {
       }
     };
     eventBus.addHandler( handler1, true );
-    Assert.assertEquals( Boolean.TRUE, received[ 0 ] );
+    Assertions.assertEquals( Boolean.TRUE, received[ 0 ] );
 
     //  3. fire event that will clear that event from the cache
     eventBus.fire( new EventWithCacheControl() );
@@ -329,7 +329,7 @@ public class UT_EventBus {
       }
     };
     eventBus.addHandler( handler2, true );
-    Assert.assertNull( received[ 0 ] );
+    Assertions.assertNull( received[ 0 ] );
   }
 
 

@@ -10,7 +10,7 @@ import com.gindin.zmanlib.calendar.holiday.ZmanimBaseTest;
 import com.gindin.zmanlib.location.ZmanimLocation;
 import com.gindin.zmanlib.zman.Zmanim;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;

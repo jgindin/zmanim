@@ -5,7 +5,8 @@
 package com.gindin.zmanlib.calendar;
 
 import com.gindin.zmanlib.calendar.holiday.Details;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -20,7 +21,7 @@ public class UT_CompositeDate {
 
     HebrewDate date = HebrewCalendar.getForDate( 2011, Calendar.APRIL, 18 );
     Details details = date.getDetails();
-    Assert.assertEquals( "Ta'anit Bechorot / Erev Pesach", details.getDescription() );
+    Assertions.assertEquals( "Ta'anit Bechorot / Erev Pesach", details.getDescription() );
   }
 
   @Test
@@ -28,7 +29,7 @@ public class UT_CompositeDate {
 
     HebrewDate date = HebrewCalendar.getForDate( 2010, Calendar.DECEMBER, 6 );
     Details details = date.getDetails();
-    Assert.assertEquals( "Chanukah 5 / Erev Rosh Chodesh Tevet", details.getDescription() );
+    Assertions.assertEquals( "Chanukah 5 / Erev Rosh Chodesh Tevet", details.getDescription() );
   }
 
   @Test
@@ -36,7 +37,7 @@ public class UT_CompositeDate {
 
     HebrewDate date = HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 15 );
     Details details = date.getDetails();
-    Assert.assertEquals( "Rosh Hashana / Erev Tzom Gedaliah", details.getDescription() );
+    Assertions.assertEquals( "Rosh Hashana / Erev Tzom Gedaliah", details.getDescription() );
   }
 
 } // End of UT_CompositeDate class

@@ -6,13 +6,13 @@ package com.gindin.zmanlib.location;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test our ability to properly parse latitude & longitude.
@@ -22,10 +22,26 @@ import java.util.Collection;
  * <p>
  * <p/>
  * A good converter seems to be: http://www.csgnetwork.com/gpscoordconv.html
+ * <p/>
+ * <p>
+ * NOTE ON JUNIT 5 MIGRATION: this was originally a JUnit 4 {@code @RunWith(Parameterized.class)}
+ *  test with the current {@code CityInfo} injected via constructor. JUnit 5 has no
+ *  {@code @RunWith}/{@code Parameterized} equivalent at all, so each of the five original
+ *  {@code @Test} methods below is now its own {@code @ParameterizedTest} sourced from the same
+ *  {@link #gatherTestData()} data set (still the same 8 cities), with the {@code CityInfo}
+ *  passed as a method parameter instead of a constructor-injected field -- JUnit 5 creates a
+ *  fresh test instance per invocation anyway (the default PER_METHOD lifecycle), so there's no
+ *  benefit to re-introducing a field just to mirror the old constructor-injection shape.
+ * <p>
+ * Separately, {@code Assert.assertThat(...)} (used below with the custom {@code BaseMatcher})
+ *  has no equivalent on JUnit 5's {@code org.junit.jupiter.api.Assertions} -- Jupiter
+ *  deliberately did not carry `assertThat` forward from JUnit 4. Hamcrest itself is
+ *  JUnit-version-agnostic, so {@link org.hamcrest.MatcherAssert#assertThat} is used directly
+ *  instead (see the {@code testImplementation(libs.hamcrest)} dependency added to
+ *  ZmanLib/build.gradle.kts for this).
  */
 @SuppressWarnings( "MagicNumber" )
-@RunWith( Parameterized.class )
-public class UT_LatitudeLongitudeParser {
+class UT_LatitudeLongitudeParser {
 
 
   private static class CityInfo {
@@ -62,16 +78,9 @@ public class UT_LatitudeLongitudeParser {
   }
 
 
-  /**
-   * Info for the city we're currently testing.
-   */
-  private final CityInfo cityInfoToTest;
+  private static Stream<CityInfo> gatherTestData() {
 
-
-  @Parameterized.Parameters( name = "{0}" )
-  public static Collection<CityInfo> gatherTestData() {
-
-    return Arrays.asList(
+    return Stream.of(
 
       new CityInfo(
         "Aberdeen, Scotland",
@@ -141,94 +150,94 @@ public class UT_LatitudeLongitudeParser {
   }
 
 
-  public UT_LatitudeLongitudeParser( CityInfo cityInfoToTest ) {
-    this.cityInfoToTest = cityInfoToTest;
+  @ParameterizedTest( name = "{0}" )
+  @MethodSource( "gatherTestData" )
+  void testFullStringParsing( CityInfo cityInfoToTest ) {
+    fullString( cityInfoToTest, false );
   }
 
 
-  @Test
-  public void testFullStringParsing() {
-    fullString( false );
+  @ParameterizedTest( name = "{0}" )
+  @MethodSource( "gatherTestData" )
+  void testFullStringParsingWithMarkers( CityInfo cityInfoToTest ) {
+    fullString( cityInfoToTest, true );
   }
 
 
-  @Test
-  public void testFullStringParsingWithMarkers() {
-    fullString( true );
+  @ParameterizedTest( name = "{0}" )
+  @MethodSource( "gatherTestData" )
+  void testSimpleStringParsing( CityInfo cityInfoToTest ) {
+    simpleString( cityInfoToTest, false );
   }
 
 
-  @Test
-  public void testSimpleStringParsing() {
-    simpleString( false );
+  @ParameterizedTest( name = "{0}" )
+  @MethodSource( "gatherTestData" )
+  void testSimpleStringParsingWithMarkers( CityInfo cityInfoToTest ) {
+    simpleString( cityInfoToTest, true );
   }
 
 
-  @Test
-  public void testSimpleStringParsingWithMarkers() {
-    simpleString( true );
-  }
-
-
-  @Test
-  public void fullDecimalInDegrees() {
+  @ParameterizedTest( name = "{0}" )
+  @MethodSource( "gatherTestData" )
+  void fullDecimalInDegrees( CityInfo cityInfoToTest ) {
 
     final LatitudeLongitudeParser latitude = cityInfoToTest.latitude;
     LatitudeLongitudeParser holder = LatitudeLongitudeParser.latitude( latitude.direction,
       Double.toString( cityInfoToTest.convertedLatitude ), "", "" );
-    Assert.assertEquals( cityInfoToTest.cityName + " latitude.degrees", latitude.degrees,
-      holder.degrees );
+    Assertions.assertEquals( latitude.degrees,
+      holder.degrees, cityInfoToTest.cityName + " latitude.degrees" );
 
     // This gets a bit complicated because IF the actual is ONE degree larger AND we have seconds, THEN that has
     //  happened because of rounding...
-    Assert.assertThat( cityInfoToTest.cityName + " latitude.getMinutes()", latitude,
+    assertThat( cityInfoToTest.cityName + " latitude.getMinutes()", latitude,
       new DegreesWithRoundingMatcher( holder ) );
 
     if ( latitude.seconds != 0 ) {
-      Assert.assertEquals( cityInfoToTest.cityName + " latitude.seconds", latitude.seconds,
-        holder.seconds, 0 );
+      Assertions.assertEquals( latitude.seconds,
+        holder.seconds, 0, cityInfoToTest.cityName + " latitude.seconds" );
     }
 
     final LatitudeLongitudeParser longitude = cityInfoToTest.longitude;
     holder = LatitudeLongitudeParser.longitude( longitude.direction,
       Double.toString( cityInfoToTest.convertedLongitude ), "", "" );
-    Assert.assertEquals( cityInfoToTest.cityName + " longitude.degrees", longitude.degrees,
-      holder.degrees );
-    Assert.assertThat( cityInfoToTest.cityName + " longitude.getMinutes()", longitude,
+    Assertions.assertEquals( longitude.degrees,
+      holder.degrees, cityInfoToTest.cityName + " longitude.degrees" );
+    assertThat( cityInfoToTest.cityName + " longitude.getMinutes()", longitude,
       new DegreesWithRoundingMatcher( holder ) );
 
     if ( longitude.seconds != 0 ) {
-      Assert.assertEquals( cityInfoToTest.cityName + " longitude.seconds", longitude.seconds,
-        holder.seconds, 0 );
+      Assertions.assertEquals( longitude.seconds,
+        holder.seconds, 0, cityInfoToTest.cityName + " longitude.seconds" );
     }
   }
 
 
-  private void fullString( boolean withMarkers ) {
+  private void fullString( CityInfo cityInfoToTest, boolean withMarkers ) {
 
     double converted = LatitudeLongitudeParser.latitudeValue(
       cityInfoToTest.latitude.toFullString( withMarkers ) );
-    Assert.assertEquals( cityInfoToTest.cityName + " latitude", cityInfoToTest.convertedLatitude,
-      converted, 0.1 );
+    Assertions.assertEquals( cityInfoToTest.convertedLatitude,
+      converted, 0.1, cityInfoToTest.cityName + " latitude" );
 
     converted = LatitudeLongitudeParser.longitudeValue(
       cityInfoToTest.longitude.toFullString( withMarkers ) );
-    Assert.assertEquals( cityInfoToTest.cityName + " longitude", cityInfoToTest.convertedLongitude,
-      converted, 0.1 );
+    Assertions.assertEquals( cityInfoToTest.convertedLongitude,
+      converted, 0.1, cityInfoToTest.cityName + " longitude" );
   }
 
 
-  private void simpleString( boolean withMarkers ) {
+  private void simpleString( CityInfo cityInfoToTest, boolean withMarkers ) {
 
     double converted = LatitudeLongitudeParser.latitudeValue(
       cityInfoToTest.latitude.toSimpleString( withMarkers ) );
-    Assert.assertEquals( cityInfoToTest.cityName + " latitude", cityInfoToTest.convertedLatitude,
-      converted, 0.1 );
+    Assertions.assertEquals( cityInfoToTest.convertedLatitude,
+      converted, 0.1, cityInfoToTest.cityName + " latitude" );
 
     converted = LatitudeLongitudeParser.longitudeValue(
       cityInfoToTest.longitude.toSimpleString( withMarkers ) );
-    Assert.assertEquals( cityInfoToTest.cityName + " longitude", cityInfoToTest.convertedLongitude,
-      converted, 0.1 );
+    Assertions.assertEquals( cityInfoToTest.convertedLongitude,
+      converted, 0.1, cityInfoToTest.cityName + " longitude" );
   }
 
 

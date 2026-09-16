@@ -8,7 +8,8 @@ import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.rabbanan.Chanukah;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -143,48 +144,48 @@ public class UT_Chanukah
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "1" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "1" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "2" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "2" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "3" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "3" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "4" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "4" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "5" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "5" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "6" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "6" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "7" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "7" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().endsWith( "8" ) );
+    Assertions.assertTrue( details.getDescription().endsWith( "8" ) );
 
     date = date.tomorrow();
     details = CHANUKAH.getDetailsFor( date );
-    Assert.assertNull( details );
+    Assertions.assertNull( details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
 
   }
 

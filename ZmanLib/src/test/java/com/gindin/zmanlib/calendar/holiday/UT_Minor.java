@@ -9,7 +9,8 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.minor.TuBAv;
 import com.gindin.zmanlib.calendar.holiday.minor.TuBShvat;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -156,7 +157,7 @@ public class UT_Minor
     details = TU_B_SHVAT.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
   
   
@@ -179,7 +180,7 @@ public class UT_Minor
     details = TU_B_AV.getDetailsFor( date );
     outputDetails( output, details );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
 
 } // End of UT_Minor class

@@ -4,8 +4,8 @@
 
 package com.gindin.zmanlib.calendar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verify correct calculations of when a Hebrew leap year occurs.
@@ -52,14 +52,14 @@ public class UT_HebrewLeapYear {
   private void shouldBeLeapYear( int year ) {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
-    Assert.assertTrue( date.isHebrewLeapYear() );
+    Assertions.assertTrue( date.isHebrewLeapYear() );
   }
 
 
   private void shouldNotBeLeapYear( int year ) {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( year, HebrewMonth.TISHREI, 1 );
-    Assert.assertFalse( date.isHebrewLeapYear() );
+    Assertions.assertFalse( date.isHebrewLeapYear() );
   }
 
 } // End of UT_HebrewLeapYear class

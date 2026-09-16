@@ -10,7 +10,7 @@ import com.gindin.zmanlib.zman.ZmanFormatter;
 import com.gindin.zmanlib.zman.Zmanim;
 
 import org.jetbrains.annotations.Nullable;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -76,7 +76,7 @@ abstract class WakeupSchedulerBase {
       testTime.set( Calendar.MINUTE, 0 );
     }
 
-    Assert.assertEquals( expectedOutput, output.toString() );
+    Assertions.assertEquals( expectedOutput, output.toString() );
   }
 
 

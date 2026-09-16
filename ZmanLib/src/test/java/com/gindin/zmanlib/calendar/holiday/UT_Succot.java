@@ -8,7 +8,8 @@ import com.gindin.zmanlib.calendar.CalendarMonth;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.yomtov.Sukkot;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -203,21 +204,21 @@ public class UT_Succot
     date = date.tomorrow();
     details = SUKKOT.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().contains( "Hoshana Rabba" ) );
+    Assertions.assertTrue( details.getDescription().contains( "Hoshana Rabba" ) );
 
     // Shmini Atzeret
     date = date.tomorrow();
     details = SUKKOT.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().contains( "Shmini Atzeret" ) );
+    Assertions.assertTrue( details.getDescription().contains( "Shmini Atzeret" ) );
 
     // Simchat Torah
     date = date.tomorrow();
     details = SUKKOT.getDetailsFor( date );
     outputDetails( output, details );
-    Assert.assertTrue( details.getDescription().contains( "Simchat Torah" ) );
+    Assertions.assertTrue( details.getDescription().contains( "Simchat Torah" ) );
 
-    Assert.assertEquals( expected, output.toString() );
+    Assertions.assertEquals( expected, output.toString() );
   }
   
 } // End of UT_Succot class
