@@ -8,6 +8,7 @@
 - **2026-09-15 (third pass):** repo visibility confirmed **public** — Task 8 gains a mandatory secrets audit and history-scrub gate before the first push (a real signing keystore and API key files were found sitting in `common/`, dated 2012–2015; their Mercurial history hasn't been checked yet and must be before anything is pushed publicly), and a top-level `LICENSE` (Apache-2.0). Task 8's `gh repo create` corrected from `--private` to `--public` to match. Task 9 gains Gradle Wrapper Validation, a `dependabot.yml` for the version catalog, and branch protection tied to CI. Task 11 gains a step migrating release signing to Google Play App Signing so the keystore no longer needs to live in the repo at all. New **Task 12** authors a repo-root `AGENTS.md` so later phases can actually be handed to agents the way Task 4's history preservation below and everything else in this phase assumes. Task 4's Step 6 corrected to use `hg move --after` instead of `hg rm` + `hg add`, so the Groovy→Kotlin DSL conversion preserves file history instead of making every build script look newly created. Phase 1 is now 12 tasks.
 - **2026-09-15 (fourth pass):** Task 8's Step 4 corrected — its original commands were all `git log`/`git filter-repo`, which only work once Step 2's `hg-fast-export` has created a local git conversion; as written it couldn't actually be run as a standalone pre-check the way the surrounding text implied. Step 4 now leads with an `hg`-native audit (`hg log` templates across all revisions, `hg log --follow`/`hg cat` on the specific candidate paths) that only needs Mercurial and can be run today, before Task 8 otherwise begins; the `git`-based sweep is kept as a secondary cross-check that naturally runs after Step 2 within Task 8's own sequence.
 - **2026-09-15 (fifth pass):** the `hg`-native audit from the fourth pass has actually been run against the real repository, and Step 4 is rewritten from an open-ended "go find out" into the confirmed findings plus a bounded fix. Result: `common/jay-gindin-android-apps.keystore`, `common/ProjectApiKey.txt`, and `common/MapQuest.properties.orig` were **never** committed to Mercurial under any path, across the full 1356+-revision history — nothing to scrub, and the original "treat as compromised, hard blocker" framing for these three no longer applies. Two different files **were** found in history: `common/AcraApiKey.properties` (2016, self-hosted tool, long unused) and `thirdparty/flurry/ProjectApiKey.txt` (Flurry Analytics, shut down March 2024) — both low current risk since neither service is live, but both get folded into the same `git-filter-repo` pass since it costs nothing extra. Step 4 now ends with an explicit re-sweep (Step 4b) immediately before the push, since this plan's findings are a snapshot and the working tree could change before Task 8 actually executes.
+- **2026-09-16 (sixth pass) — adversarial review, 7 blocking + 6 non-blocking fixes applied:** an independent adversarial pass against the live repository found real defects, not style issues. **Task 2's Steps 2/3** were rewritten from "Create [file]: [3-line snippet]" to explicit "insert into the existing file" instructions — the real `strings.xml` has 33 in-use entries and the real `styles.xml` defines the module's base `AppTheme`; executed literally as written, both steps would have deleted them. **Task 1's file list** was corrected after grepping the actual test sources: 4 of the original 8 files (`UT_TalitTimes.java`, all three `UT_WakeupScheduler_*.java`) contain zero occurrences of the `GR'A Kol Eliyahu` string the task is built around removing — they're now called out explicitly as unconfirmed, with Step 1 rewritten to diagnose actual failures rather than blindly apply Step 3's fix everywhere. **Task 8's Step 7 push command had invalid git syntax** (`git push <remote> <branch> --all`, which git rejects outright) on the single most irreversible step in the plan — fixed. **Task 8** also gained an unresolved branch/bookmark identity problem (the Mercurial named branch is `default`, not `zmanim-v4`; `zmanim-v4` is one of seven bookmarks; nothing verified `hg-fast-export`'s output branch actually corresponds to the right commit) and a licensing conflict (the repo already has `LICENSE.md` declaring LGPL-2.1; the plan's Apache-2.0 `LICENSE` addition was decided without knowing this and now needs Jay's explicit confirmation, not a mechanical file-add) — both are now flagged as requiring a human decision before Task 8 proceeds. **`master-roadmap.md` was stale** (still said "11 tasks," no mention of Task 12 or the third-pass additions) and has been updated to match. Non-blocking fixes: Task 4 was missing two real Groovy build files (`common/gindin-android.gradle`, `common/gindin-versioning.gradle`, the latter containing a non-mechanical APK-renaming closure); Task 5's scope was ambiguous about which modules' test files actually migrate to Jupiter (now explicit: `:ZmanUtils`/`:ZmanLib` only, `:Android`/`:ZehutYosef` stay on JUnit4 via the vintage engine); Task 3's reference-photo set doesn't 1:1 match its planned snapshots (now noted as expected, not a gap to close); three Play Console-dependent steps (Task 6 Steps 1–2, Task 11 Step 2) are now explicitly flagged as requiring human hand-off, which an autonomous agent cannot do itself; Task 9's `gh api` branch-protection call switched from a `--field`-based encoding with documented reliability problems to an explicit JSON `--input` payload; Task 8's secrets-scrub step now clarifies it rewrites history only, not the current working-tree `AcraApiKey.properties` symlink.
 
 **Goal:** Establish an immediate Roborazzi screen snapshot safety net from the untouched app baseline, stabilize tests and compilation in Mercurial, convert all build scripts to Kotlin DSL with a version catalog (preserving file history via `hg move`), upgrade the testing framework to JUnit 5, align Android SDK targets to 24/36 (with real-device verification and current Play compliance), migrate `:ZmanUtils` and `:ZmanLib` to idiomatic Kotlin (dropping custom `Pair`, adopting `kotlinx.serialization`/`kotlinx-datetime`), enable Kotlin interop in the app modules, audit and scrub secrets before migrating version control from Mercurial to Jujutsu (`jj`) and hosting to a **public** GitHub repo, stand up CI with static analysis and dependency-update automation, comprehensively modernize Android libraries as independently-verified sub-tasks, fully enable Proguard / R8 minification with a 16 KB page size compliance check and a move to Play App Signing, and close the phase by documenting the result in an `AGENTS.md` so subsequent phases can be executed by agents with the context this one required a live conversation to establish.
 
@@ -85,6 +86,7 @@ flowchart TD
 - `:ZmanLib` converts to Kotlin in this phase but stays JVM/Android-only — do not attempt to add an iOS target to it in Phase 1; that depends on the KosherKotlin spike scoped for the start of Phase 6
 - The Kotlin port of `EventBus`/MVP in Task 7 is a deliberately mechanical stepping stone — Phase 4a deletes this pattern outright when DI lands. Do not invest effort improving its design.
 - No Android emulator required for Tasks 1–5 and 7–11: screenshot tests run on host JVM via Roborazzi + Robolectric Native Graphics. Task 6 is the one exception — it requires one manual real-device/emulator check in addition to Roborazzi. Task 9 automates this going forward via CI.
+- Play Console access is required and cannot be substituted by an autonomous agent: Task 6's Steps 1 and 2 (install-base distribution, current API-36 compliance status) and Task 11's Step 2 (Play App Signing enrollment) all need an authenticated human session against Jay's Play Console account. An agent executing this plan should stop at each of these specific steps and hand off, not guess a plausible-sounding answer to keep moving.
 - Zero visual regression against the recorded Roborazzi baseline; zero `detekt`/`ktlint` violations once CI (Task 9) establishes the baseline
 - sr.ht is the pre-migration source of truth; Bitbucket is stale/non-functional and is not used as a migration target; GitHub (`github.com/jgindin/zmanim`) is the canonical host going forward, created **public**
 - The repository will be public: Task 8's secrets audit and any resulting `git-filter-repo` scrub is a hard gate before the first push to GitHub, not an optional cleanup step. Do not proceed to Task 8's push step if the audit is incomplete or its findings are unresolved.
@@ -96,38 +98,44 @@ flowchart TD
 
 ### Task 1: Stabilize `ZmanLib` Test Suite
 
-**Files:**
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_ShemaTimes.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_TalitTimes.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_Zmanim.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_ZmanimWithElevation.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_ConfiguredAlerts.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_DefaultAlerts.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_NoShabbat.java`
-- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/calendar/holiday/UT_YomTovCandleLighting.java`
+**Files — confirmed by direct grep against the live repository (2026-09-16) to contain the `GR'A Kol Eliyahu` fixture string this task removes:**
+- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_ShemaTimes.java` (8 occurrences)
+- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_Zmanim.java` (12 occurrences)
+- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/UT_ZmanimWithElevation.java` (12 occurrences)
+- Modify: `ZmanLib/src/test/java/com/gindin/zmanlib/calendar/holiday/UT_YomTovCandleLighting.java` (6 occurrences)
+
+**Files listed in earlier drafts of this task, but confirmed to contain *zero* occurrences of `GR'A Kol Eliyahu` — do not assume they need this same fix:**
+- `ZmanLib/src/test/java/com/gindin/zmanlib/UT_TalitTimes.java`
+- `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_ConfiguredAlerts.java`
+- `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_DefaultAlerts.java`
+- `ZmanLib/src/test/java/com/gindin/zmanlib/UT_WakeupScheduler_NoShabbat.java`
+
+These four were carried forward from an earlier pass without re-verifying against the actual file contents. Either they don't need any change for this task (in which case leave them alone and remove them from the commit in Step 5), or Step 1's baseline test run will show them failing for some *other*, currently undocumented reason — Step 3 below tells you how to tell which.
 
 **Interfaces:**
-- Consumes: `SofZmanShema.java` (with `GR'A Kol Eliyahu` removed in commit 1350)
-- Produces: 100% passing tests in `:ZmanLib:test` (191 tests)
+- Consumes: `SofZmanShema.java`, which no longer contains `GR'A Kol Eliyahu` in the live repository (confirmed by grep) — the exact prior commit that removed it was not independently re-verified for this pass
+- Produces: 100% passing tests in `:ZmanLib:test`
 
-- [ ] **Step 1: Run failing tests to verify existing failure baseline**
+- [ ] **Step 1: Run failing tests and record the actual baseline — do not assume the counts below are current**
 
 Run: `./gradlew :ZmanLib:test`
-Expected: FAIL with 52 failures
+The "52 failures" / "191 tests" figures from earlier drafts of this plan were never independently confirmed by actually running the suite — treat them as a rough prior, not ground truth. Record the real failure count and, critically, **which test classes/methods are actually failing and why** (open the HTML/XML test report, not just the console summary). Cross-check that list against the two file groups above:
+- If a failure is in one of the four confirmed files and the failure message shows an expected-vs-actual mismatch involving `GR'A Kol Eliyahu`, it's this task's bug — proceed to Step 2/3.
+- If a failure is in one of the four zero-occurrence files, or shows a *different* mismatch, **stop and diagnose it as its own issue** (per `systematic-debugging`) rather than applying Step 3's find-and-remove instructions to a file where there's nothing matching to find. Note what you find in the commit message either way.
 
 - [ ] **Step 2: Update `UT_ShemaTimes.java` header and column fixtures**
 
 Remove the `GR'A Kol Eliyahu` header column (`| GR'A Kol Eliyahu |`) and its corresponding data value column from:
 `shemaTimesForSeattle1` through `shemaTimesForSeattle6`, `ahavatShalomLondon`, `ahavatShalomKotel`.
 
-- [ ] **Step 3: Update remaining test classes**
+- [ ] **Step 3: Update remaining confirmed test classes**
 
-Realign formatted table columns in `UT_TalitTimes.java`, `UT_Zmanim.java`, `UT_ZmanimWithElevation.java`, `UT_WakeupScheduler_*.java`, and `UT_YomTovCandleLighting.java`. Every literal occurrence of the string `GR'A Kol Eliyahu` and its adjacent time value must be removed from expected-output fixtures — search each file for that exact string to find every occurrence rather than relying on the line numbers above, since expected-output blocks repeat per test case.
+Realign formatted table columns in `UT_Zmanim.java`, `UT_ZmanimWithElevation.java`, and `UT_YomTovCandleLighting.java` (the three other files confirmed in Step 1/the file list above to actually contain the string). Every literal occurrence of `GR'A Kol Eliyahu` and its adjacent time value must be removed from expected-output fixtures — search each file for that exact string to find every occurrence rather than relying on line numbers, since expected-output blocks repeat per test case. Do **not** apply this same edit to `UT_TalitTimes.java` or the `UT_WakeupScheduler_*` files unless Step 1's actual test run showed them failing for this reason — grep them yourself if in doubt; as of this plan's writing, none of them contain the string.
 
 - [ ] **Step 4: Verify all tests in `:ZmanLib` pass**
 
 Run: `./gradlew :ZmanLib:test`
-Expected: BUILD SUCCESSFUL (191 tests completed, 0 failed)
+Expected: BUILD SUCCESSFUL, 0 failed. If the four zero-occurrence files were genuinely failing for an unrelated reason (per Step 1), they need their own fix before this gate passes — don't consider this task done with them still red.
 
 - [ ] **Step 5: Commit changes in Mercurial**
 
@@ -141,10 +149,12 @@ hg commit -m "Fix ZmanLib test fixtures following removal of deprecated GR'A Kol
 ### Task 2: Fix `ZehutYosef:sidur` Compilation and Resource Architecture
 
 **Files:**
-- Create: `ZehutYosef/src/main/res/values/strings.xml`
+- **Modify (not create — see Step 2):** `ZehutYosef/src/main/res/values/strings.xml`
 - Modify: `ZehutYosef/src/main/res/values/styles.xml`
 - Create: `ZehutYosef/src/main/res/drawable/header.xml`
 - Verify: `ZehutYosef/src/barMitzvah/res/values/purple_gray_style.xml`
+
+**Read this before Step 2 or 3:** both `strings.xml` and `styles.xml` already exist and are not empty. `strings.xml` currently has 33 real, in-use string entries (`birkat_amazon`, `mincha`, `action_about`, font names, preference titles, and more — referenced from `BirkatAmmazon.java`, `Mincha.java`, `ZehutYosefActivity.java`, and others). `styles.xml` defines the module's base `AppTheme`. The snippets in Steps 2 and 3 below show only the *new* element each one adds — they are not complete replacement files. Writing either snippet as the file's entire new content deletes everything else already in it, which will break compilation far more severely than the 3 unresolved symbols this task is fixing. Open each file, find its `<resources>` block, and insert the shown element alongside what's already there.
 
 **Interfaces:**
 - Consumes: `About.java:37` (`R.string.about_description_text`), `About.java:46` (`R.style.EliPurple`), `ZehutYosefActivity.java:229` (`R.drawable.header`)
@@ -155,25 +165,23 @@ hg commit -m "Fix ZmanLib test fixtures following removal of deprecated GR'A Kol
 Run: `./gradlew :ZehutYosef:compileSidurDebugJavaWithJavac`
 Expected: FAIL with 3 unresolved symbol errors (`about_description_text`, `EliPurple`, `header`)
 
-- [ ] **Step 2: Add default fallback string to `src/main/res/values/strings.xml`**
+- [ ] **Step 2: Add default fallback string into the existing `src/main/res/values/strings.xml`**
 
+**This is an insertion into the existing file, not a replacement.** Open `ZehutYosef/src/main/res/values/strings.xml` (33 existing `<string>` entries), and add one new element inside its existing `<resources>` block, leaving every other entry untouched:
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="about_description_text">Zehut Yosef Siddur</string>
-</resources>
+<string name="about_description_text">Zehut Yosef Siddur</string>
 ```
+Verify after saving that the file still has all 33 original entries plus this new one (`grep -c '<string ' ZehutYosef/src/main/res/values/strings.xml` should now report 34, not 1).
 
-- [ ] **Step 3: Add base theme and EliPurple fallback in `src/main/res/values/styles.xml`**
+- [ ] **Step 3: Add EliPurple fallback into the existing `src/main/res/values/styles.xml`**
 
+**This is an insertion into the existing file, not a replacement.** Open `ZehutYosef/src/main/res/values/styles.xml` (already defines the module's base `AppTheme`), and add one new `<style>` element inside its existing `<resources>` block, leaving `AppTheme` and everything else untouched:
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <style name="EliPurple" parent="Theme.AppCompat.Light.DarkActionBar">
-    <!-- Default theme properties for Zehut Yosef; overridden in barMitzvah flavor -->
-  </style>
-</resources>
+<style name="EliPurple" parent="Theme.AppCompat.Light.DarkActionBar">
+  <!-- Default theme properties for Zehut Yosef; overridden in barMitzvah flavor -->
+</style>
 ```
+Verify after saving that `AppTheme` (or whatever styles already existed) is still present alongside the new `EliPurple` entry.
 
 - [ ] **Step 4: Add default neutral header drawable in `src/main/res/drawable/header.xml`**
 
@@ -215,6 +223,8 @@ hg commit -m "Provide default resources in main so sidur flavor compiles alongsi
 - Produces: Deterministic JVM-rendered PNG screenshots serving as the self-referential golden baseline for every later Roborazzi comparison in this phase
 
 **Important framing:** the goal of this task is a baseline that later runs are diffed *against*, not a literal pixel match to the reference photos in `docs/superpowers/specs/screenshots/`. Robolectric Native Graphics' font rendering, anti-aliasing, and DPI handling do not reproduce a real device photo pixel-for-pixel — don't iterate trying to close that gap. Use the reference photos once, as a human sanity check that the recorded baseline is roughly right, then treat the recorded PNGs in `screenshots/` as the only thing `verifyRoborazziDebug` ever compares against from here on.
+
+**The reference-photo set and this task's planned snapshots don't line up 1:1 — don't try to force a match that isn't there.** `docs/superpowers/specs/screenshots/` currently contains `zmanim.png`, `location.png`, `preferences.png`, and `barmitzvah.png`. Step 3 below plans a `captureSiddurReader()` snapshot (the `sidur` flavor) with no corresponding reference photo — that's expected; just eyeball it against the app's actual current UI or skip the sanity-check for that one snapshot and note as much in the commit message. `location.png` has no planned Roborazzi snapshot at all in this task — that's also fine; it isn't in scope here (a location-picker screenshot may be added in a later phase), don't add a snapshot test just to make the reference-photo count match.
 
 **Note:** this task is written against `build.gradle` (Groovy) since it runs before Task 4's Kotlin DSL conversion. If Task 4 is reordered ahead of this task for any reason, translate the snippets below to Kotlin DSL syntax accordingly.
 
@@ -265,14 +275,16 @@ hg commit -m "Establish Roborazzi screen snapshot safety net with golden baselin
 - Convert: `ZmanLib/build.gradle` → `ZmanLib/build.gradle.kts`
 - Convert: `Android/build.gradle` → `Android/build.gradle.kts`
 - Convert: `ZehutYosef/build.gradle` → `ZehutYosef/build.gradle.kts`
+- **Convert: `common/gindin-android.gradle` → `common/gindin-android.gradle.kts`** (applied from `Android/build.gradle` via `apply from:`; wires the `:ZmanLib` dependency and the `com.android.application` plugin — easy to miss since it isn't one of the five main module build files, but it's a real Groovy script in active use)
+- **Convert: `common/gindin-versioning.gradle` → `common/gindin-versioning.gradle.kts`** (applies `org.moallemi.advanced-build-version` and renames output APKs via `android.applicationVariants.all { variant -> variant.outputs.all { outputFileName = ... } }`) — **flagged as non-mechanical, see Step 3a below**
 - Create: `gradle/libs.versions.toml`
 - Create: `build-logic/settings.gradle.kts`, `build-logic/build.gradle.kts`, and at least one convention plugin (e.g. `build-logic/src/main/kotlin/zmanim.java-library-conventions.gradle.kts`)
 
 **Interfaces:**
-- Consumes: the current Groovy build scripts (verified working as of Task 3's checkpoint)
-- Produces: Kotlin DSL build scripts, a populated version catalog, and a `build-logic` included build, with **zero behavior change** — this task is a mechanical translation
+- Consumes: the current Groovy build scripts (verified working as of Task 3's checkpoint), including the two `common/*.gradle` scripts applied via `apply from:` and the two optionally-applied per-module scripts described in Step 3a
+- Produces: Kotlin DSL build scripts, a populated version catalog, and a `build-logic` included build, with **zero behavior change** — this task is a mechanical translation for everything except the APK-renaming closure called out in Step 3a
 
-**Scope note:** this task deliberately does nothing but change *how* the build is expressed, not what it does. Resist the temptation to also fix or upgrade anything while in these files — Tasks 5, 6, 7, and 10 do that, each with their own verification gate. Mixing a translation with a behavior change here makes it much harder to tell which caused a regression.
+**Scope note:** this task deliberately does nothing but change *how* the build is expressed, not what it does. Resist the temptation to also fix or upgrade anything while in these files — Tasks 5, 6, 7, and 10 do that, each with their own verification gate. Mixing a translation with a behavior change here makes it much harder to tell which caused a regression. The Global Constraint "all build scripts are Kotlin DSL" isn't actually true until `common/gindin-android.gradle` and `common/gindin-versioning.gradle` are converted too — don't consider this task complete with only the five main module files done.
 
 - [ ] **Step 1: Create the version catalog**
 
@@ -285,6 +297,12 @@ Translate to `build.gradle.kts` and `settings.gradle.kts`, referencing the versi
 - [ ] **Step 3: Convert each module's `build.gradle` to `build.gradle.kts`**
 
 For `ZmanUtils`, `ZmanLib`, `Android`, and `ZehutYosef`: translate Groovy syntax to Kotlin DSL (`apply plugin: 'x'` → `plugins { id("x") }`, `dependencies { implementation 'g:a:v' }` → `dependencies { implementation(libs.g.a) }`, etc.), replacing every inline coordinate with its version-catalog reference from Step 1.
+
+- [ ] **Step 3a: Convert the two `common/*.gradle` scripts, including the non-mechanical one**
+
+`common/gindin-android.gradle` is a straightforward translation — convert it the same way as Step 3. `common/gindin-versioning.gradle` is not: its APK-renaming logic uses the Groovy-closure idiom `android.applicationVariants.all { variant -> variant.outputs.all { outputFileName = ... } }`, which doesn't translate 1:1 into Kotlin DSL's more strictly-typed `ApplicationVariant`/variant-output APIs (the exact typed replacement depends on the AGP version already in use — check current AGP documentation for the supported Kotlin DSL equivalent rather than guessing at a Groovy-to-Kotlin transliteration). Verify after conversion that a release build still produces identically-named output APKs/AABs to before — this is exactly the kind of change that can compile fine and only surface as a problem when someone goes looking for a specific version-named artifact.
+
+Separately, `Android/zmanim.gradle` and `ZehutYosef/zehut-yosef.gradle` exist in the working tree today but are deliberately gitignored and never committed — the Groovy build wraps their application in a try/catch specifically to tolerate their absence on a fresh checkout. Confirm whether an equivalent optional-apply pattern exists and is used for these in Kotlin DSL (`File(...).exists()` guard around `apply(from = ...)`, or drop the pattern entirely if these scripts turn out to be dead weight) — don't let them silently stop being applied because the try/catch that used to swallow their absence doesn't exist anymore.
 
 - [ ] **Step 4: Scaffold `build-logic` with one convention plugin**
 
@@ -306,10 +324,12 @@ hg move --after ZmanUtils/build.gradle ZmanUtils/build.gradle.kts
 hg move --after ZmanLib/build.gradle ZmanLib/build.gradle.kts
 hg move --after Android/build.gradle Android/build.gradle.kts
 hg move --after ZehutYosef/build.gradle ZehutYosef/build.gradle.kts
+hg move --after common/gindin-android.gradle common/gindin-android.gradle.kts
+hg move --after common/gindin-versioning.gradle common/gindin-versioning.gradle.kts
 hg add gradle/libs.versions.toml build-logic
 hg commit -m "Convert build scripts to Kotlin DSL, adopt a version catalog and build-logic convention plugins (history preserved via hg move --after)"
 ```
-Expected: `hg log --follow build.gradle.kts` (run before Task 8) shows the pre-conversion Groovy commits, not just this one. If any of the six `hg move --after` calls reports it can't find a matching removed source (e.g. because a file was moved by hand rather than translated in place), fall back to `hg add`/`hg rm` for that file only rather than blocking the whole commit — but note it in the commit message so the history gap is visible later, not silently lost.
+Expected: `hg log --follow build.gradle.kts` (run before Task 8) shows the pre-conversion Groovy commits, not just this one. If any of the eight `hg move --after` calls reports it can't find a matching removed source (e.g. because a file was moved by hand rather than translated in place), fall back to `hg add`/`hg rm` for that file only rather than blocking the whole commit — but note it in the commit message so the history gap is visible later, not silently lost.
 
 ---
 
@@ -321,15 +341,17 @@ Expected: `hg log --follow build.gradle.kts` (run before Task 8) shows the pre-c
 - Modify: `ZmanLib/build.gradle.kts`
 - Modify: `Android/build.gradle.kts`
 - Modify: `ZehutYosef/build.gradle.kts`
-- Modify test files across modules to use `org.junit.jupiter.api.*`
+- **Modify test files in `:ZmanUtils` and `:ZmanLib` only** to use `org.junit.jupiter.api.*` (see scope note below — this was ambiguous in earlier drafts)
+
+**Scope, stated explicitly because an earlier draft of this task left it ambiguous:** only `:ZmanUtils` and `:ZmanLib` test annotations are migrated to Jupiter in this task (Step 2). `:Android` and `:ZehutYosef` test files — including the `ZmanimSnapshotTest.java`/`SiddurSnapshotTest.java` Task 3 just wrote, necessarily against JUnit4/Robolectric idioms since Task 3 runs before this task — are **not** migrated here and are not expected to be migrated in this phase at all. They keep running as JUnit4 tests via the `junit-vintage-engine` compatibility layer configured in Step 1 below, which is applied to all four modules' Gradle configuration (so `useJUnitPlatform()` works everywhere) even though only two modules' test *files* actually change. Don't take the build-script change in all four modules as a signal that all four modules' test files need migrating too.
 
 **Interfaces:**
 - Consumes: JUnit 5 (Jupiter 5.11.4), the version catalog from Task 4
-- Produces: Modern test execution via Gradle `useJUnitPlatform()`
+- Produces: Modern test execution via Gradle `useJUnitPlatform()` across all four modules; Jupiter-native tests in `:ZmanUtils`/`:ZmanLib`, JUnit4 tests in `:Android`/`:ZehutYosef` running under the vintage engine
 
-- [ ] **Step 1: Add JUnit 5 catalog entries and configure Gradle**
+- [ ] **Step 1: Add JUnit 5 catalog entries and configure Gradle in all four modules**
 
-Add `junit-jupiter` and `junit-vintage-engine` (version 5.11.4) to `gradle/libs.versions.toml`. In each module's `build.gradle.kts`:
+Add `junit-jupiter` and `junit-vintage-engine` (version 5.11.4) to `gradle/libs.versions.toml`. In each of the four modules' `build.gradle.kts` — including `Android` and `ZehutYosef`, even though their test files aren't being rewritten this task — add:
 ```kotlin
 dependencies {
   testImplementation(libs.junit.jupiter)
@@ -340,6 +362,7 @@ tasks.withType<Test> {
   useJUnitPlatform()
 }
 ```
+The vintage engine is what lets `Android`'s and `ZehutYosef`'s existing (and Task 3's newly-added) JUnit4-style tests keep running unmodified under the same `useJUnitPlatform()` configuration.
 
 - [ ] **Step 2: Migrate test annotations in `:ZmanUtils` and `:ZmanLib`**
 
@@ -368,9 +391,9 @@ hg commit -m "Upgrade test suite across all modules to JUnit 5 (Jupiter 5.11+)"
 - Consumes: AGP 9.4.0
 - Produces: `minSdkVersion 24` and `compileSdk`/`targetSdk` **36** across both Android apps, verified on both Roborazzi and one real device/emulator at each SDK boundary
 
-- [ ] **Step 1: Pull current Android-version install-base distribution**
+- [ ] **Step 1 — REQUIRES A HUMAN: Pull current Android-version install-base distribution**
 
-Before changing any value, check Play Console's Android version/API level distribution for both `com.gindin.zmanim.android` and the `ZehutYosef` flavors. Confirm that raising `minSdkVersion` to 24 does not silently drop a meaningful share of the existing install base. Record the observed distribution in the commit message for this task.
+An autonomous agent cannot complete this step on its own — it requires an authenticated human session in Play Console, which agents executing this plan will not have credentials for. **Stop here and hand this specific step to Jay (or whoever holds Play Console access), then resume at Step 2 once the answer is in hand.** What's needed: the Android version/API level distribution for both `com.gindin.zmanim.android` and the `ZehutYosef` flavors, to confirm that raising `minSdkVersion` to 24 does not silently drop a meaningful share of the existing install base. Record the observed distribution in the commit message for this task once available. Do not guess a distribution or skip this check to keep the task moving — this is exactly the kind of thing a plan says "cheap to check now, expensive to discover after a release."
 
 - [ ] **Step 2: Update `Android/build.gradle.kts`**
 
@@ -386,7 +409,7 @@ compileSdk = 36
 minSdk = 24
 targetSdk = 36
 ```
-**36, not 35** — Google Play requires apps to target API 36 (Android 16) for updates effective August 31, 2026, with a grace extension available to November 1, 2026 if genuinely needed. Check Play Console independently of this task for whether either app needs that extension right now, since that deadline does not wait for the rest of this phase to finish.
+**36, not 35** — Google Play requires apps to target API 36 (Android 16) for updates; the primary deadline was August 31, 2026, which has already passed as of this plan's writing (2026-09-15/16), so any update to either app on Google Play right now is already relying on the grace extension to November 1, 2026. **This is also a human-required check**, same as Step 1 — confirm current status in Play Console (whether either app is already past-due, currently in the grace window, or already compliant) before assuming there's slack left; don't treat "grace extension available" as meaning there's no urgency.
 
 - [ ] **Step 3: Update `ZehutYosef/build.gradle.kts`**
 
@@ -397,7 +420,7 @@ Same change: `compileSdk = 36`, `minSdk = 24`, `targetSdk = 36`.
 Run: `./gradlew test assembleDebug verifyRoborazziDebug`
 Expected: BUILD SUCCESSFUL with 0 visual regressions
 
-- [ ] **Step 5: Real-device/emulator smoke check (does not run on host JVM — this is the one manual exception in this phase)**
+- [ ] **Step 5 — REQUIRES A HUMAN OR A DEVICE THE AGENT DOESN'T HAVE: Real-device/emulator smoke check (does not run on host JVM)**
 
 Targeting API 36 turns on edge-to-edge-by-default enforcement (introduced at API 35, still in force) and other targetSdk-gated behavior changes. Robolectric's simulated window insets are not reliable for this category of regression. Install a debug build on one real device or emulator image at API 24 and one at API 36, and manually confirm: no content is drawn under the status bar or navigation bar, no interactive control (buttons, sliders in `PersonalPreferencesActivity`) is obscured by system bars, and the app launches and navigates normally on both. Note the device/emulator images used in the commit message. (Task 9 automates an equivalent check in CI going forward.)
 
@@ -546,13 +569,18 @@ hg commit -m "Migrate ZmanUtils to Kotlin Multiplatform and ZmanLib to idiomatic
 
 **Files:**
 - Create: `.gitignore`
-- Create: `LICENSE` (Apache License 2.0)
+- Create: `LICENSE` (Apache License 2.0) — **and see the relicensing note below; this is not a green-field choice**
+- **Remove or reconcile: `LICENSE.md`** (already exists in the repo, already declares LGPL-2.1 — see below)
 - Remove/Archive: `.hg/` ➔ `.hg.backup/`
 - Create (new remote, not a repo file): `github.com/jgindin/zmanim` (**public**)
 
 **Interfaces:**
 - Consumes: Full Mercurial changeset history (1356+ revisions), tooling at `/usr/bin/hg`, `~/.local/bin/jj`, `~/src/fast-export`, `git-filter-repo` (install before this task if not already present)
-- Produces: Colocated Jujutsu repository (`.jj` + `.git`) tracking the active branch, its history audited and scrubbed of secrets, pushed to `github.com/jgindin/zmanim` as canonical `origin`, public, with a top-level `LICENSE`
+- Produces: Colocated Jujutsu repository (`.jj` + `.git`) tracking the correct branch (see the branch/bookmark note below), its history audited and scrubbed of secrets, pushed to `github.com/jgindin/zmanim` as canonical `origin`, public, with a single, unambiguous top-level `LICENSE`
+
+**REQUIRES A HUMAN DECISION — relicensing, not a mechanical file-creation step:** the repository already has a `LICENSE.md` on disk, and it already declares the project licensed under **LGPL-2.1** (`"Zmanim for Android is licensed under the LGPL 2.1"`, pointing at the FSF's LGPL-2.1 text). This plan's earlier passes decided on Apache-2.0 for the new top-level `LICENSE` file without knowing `LICENSE.md` existed — the decision was made as if this were a green-field project with no prior license, which it isn't. Relicensing an already-publicly-LGPL-2.1-declared codebase to Apache-2.0 is Jay's call to make (he's presumably the sole copyright holder, but that assumption itself hasn't been confirmed — e.g. no other contributors ever landed code under the LGPL-2.1 declaration), not something an agent should decide or silently carry out. **Before Task 8 runs:** confirm with Jay whether Apache-2.0 is still the intended choice now that the existing LGPL-2.1 declaration is known, and if so, remove or update `LICENSE.md` in the same commit that adds the new `LICENSE` — don't leave both files present with contradictory terms, which is exactly the kind of thing that confuses GitHub's own license-detection badge (which Step 8 below asks you to check).
+
+**REQUIRES VERIFICATION — which branch/bookmark actually gets migrated:** the Mercurial repository has a single named branch, `default` — not `zmanim-v4`. `zmanim-v4` is one of **seven** bookmarks currently in the repo (`zmanim-v4`, `zmanim-v5`, `zmanim-prev-v5`, `shachrit`, `user-holidays`, `z-35-save-favorites`, `Z-93-new-plag-hanmincha`); `.hg/bookmarks.current` does confirm `zmanim-v4` is the one currently checked out, so it's the right target, but Step 2's `git checkout zmanim-v4 || git checkout -b zmanim-v4` has no verification that the branch `hg-fast-export` actually produces (very likely named `default`, not `zmanim-v4`, depending on the installed version) lands on the correct commit — it will silently fall into the `git checkout -b` branch and create a new pointer at whatever HEAD happens to be, with nothing catching a mismatch. Step 3's revision-count parity check only compares total commit counts across all branches, not that any specific branch tip is correct. See Step 2's revised verification below. Separately, nothing in this plan says what happens to the other six bookmarks — newer abandoned work, older experiments, or something worth keeping? **This needs a decision from Jay** (push all of them to GitHub as branches too, or leave them Mercurial-only) before Step 7's push; don't assume they're safe to drop.
 
 **Why the audit matters, and what it found (2026-09-15):** `common/jay-gindin-android-apps.keystore` and `common/ProjectApiKey.txt` looked like the obvious risk when this task was first drafted, sitting untracked in the working tree today. The audit (Step 4 below) has since actually been run against the real repository: neither of those two files, nor `common/MapQuest.properties.orig`, was ever committed to Mercurial under any path — confirmed via a full 1356+-revision sweep, not just a check of the current tip. What the same sweep did find were two older, already-lower-risk items: `common/AcraApiKey.properties` (committed once in 2016, self-hosted tool, long unused) and `thirdparty/flurry/ProjectApiKey.txt` (Flurry Analytics, the service itself shut down in March 2024). Step 4 below has the specifics and the scrub command for those two.
 
@@ -565,15 +593,25 @@ hg push ssh://hg@hg.sr.ht/~jgindin/zmanim
 ```
 Expected: push succeeds with no new heads / no errors. The Bitbucket remote is stale and no longer functional — not used as a target here.
 
-- [ ] **Step 2: Run `hg-fast-export` to convert Mercurial history into Git**
+- [ ] **Step 2: Run `hg-fast-export` to convert Mercurial history into Git, then verify the branch it produces is actually the right one**
 
 ```bash
 cd /home/jgindin/src/gindin/zmanim/zmanim
 git init
 ~/src/fast-export/hg-fast-export.sh -r . --force
-git checkout zmanim-v4 || git checkout -b zmanim-v4
+git branch -a
 ```
-Adjust flags to match whatever `hg-fast-export.sh --help` reports for the checked-out version.
+Adjust flags to match whatever `hg-fast-export.sh --help` reports for the checked-out version. `git branch -a` will most likely show a branch named `default` (the Mercurial named branch), not `zmanim-v4` — `zmanim-v4` is a Mercurial *bookmark*, not the named branch, and `hg-fast-export` may or may not translate bookmarks into git branches depending on the flags used above; check its `--help` output for a bookmark-import option before assuming it did.
+
+**Do not just `git checkout zmanim-v4 || git checkout -b zmanim-v4` and move on** — if the checkout falls into the `-b` branch (creating a brand-new pointer), that new branch's HEAD is only correct by coincidence, not by verification. Instead, confirm which commit is the real target and check that out explicitly:
+```bash
+hg log -r zmanim-v4 --template '{node|short}\n'    # the changeset the zmanim-v4 bookmark actually points to
+git log --all --oneline | grep <that-changeset-short-hash-or-nearby-commit-message>
+git checkout -b zmanim-v4 <the-matching-git-commit>
+```
+`hg-fast-export` doesn't preserve Mercurial hashes as git hashes, so matching by hash won't work directly — match by commit message/author/date from the `hg log -r zmanim-v4` output against `git log`, and confirm you've found the right commit before branching from it. If `hg-fast-export` did import bookmarks as branches and one is already named `zmanim-v4` pointing at the right place, this step is just a confirmation, not extra work — but confirm it, don't assume it.
+
+**Separately, decide what happens to the other six bookmarks** (`zmanim-v5`, `zmanim-prev-v5`, `shachrit`, `user-holidays`, `z-35-save-favorites`, `Z-93-new-plag-hanmincha`) before Step 7's push — this plan doesn't have an answer, and it needs one from Jay, not an assumption that they're safe to leave behind or safe to publish.
 
 - [ ] **Step 3: Verify revision-count parity between Mercurial and Git**
 
@@ -601,6 +639,8 @@ Once Step 2 has produced the local git conversion:
 git filter-repo --path common/AcraApiKey.properties --path thirdparty/flurry/ProjectApiKey.txt --invert-paths
 ```
 Then re-run Step 3's parity check, since `filter-repo` rewrites commit hashes. Neither finding requires panicked rotation before proceeding — both are attached to dead or unused services — but there's no reason to leave secret-shaped filenames sitting in a public repo's history once the fix is a single extra `--path` argument on a command you're already running.
+
+**Note what this does and doesn't touch:** `--invert-paths` rewrites *history* only — it removes `common/AcraApiKey.properties` and `thirdparty/flurry/ProjectApiKey.txt` from every past commit, but has no effect on the current working tree. `common/AcraApiKey.properties` on disk today is a symlink (not the real 2016 file), and `Android/build.gradle` reads it via a try/catch-wrapped `FileInputStream` — this scrub doesn't delete that symlink or otherwise change how ACRA config loading currently works. Don't assume this step also cleans up the live file; if that symlink needs to go too, that's a separate, deliberate decision, not a side effect of the history scrub.
 
 - [ ] **Step 4b: Re-run the full-history sweep as a final check**
 
@@ -634,7 +674,7 @@ ZehutYosef/zehut-yosef.gradle
 .hgtags
 *.orig
 ```
-Add a top-level `LICENSE` file containing the Apache License 2.0 text (confirmed choice, since the repo is going public) and a one-line `## License` section in the README pointing to it. Archive `.hg/` to `.hg.backup/` (kept locally in addition to the sr.ht push in Step 1).
+**Do not run this step until the relicensing question above is actually resolved with Jay.** Once it is: add a top-level `LICENSE` file containing the Apache License 2.0 text and a one-line `## License` section in the README pointing to it, and remove (or rewrite) the existing `LICENSE.md`'s LGPL-2.1 declaration so the repo doesn't end up with two files stating different licenses. Archive `.hg/` to `.hg.backup/` (kept locally in addition to the sr.ht push in Step 1).
 
 - [ ] **Step 7: Point at the confirmed GitHub destination and push, public**
 
@@ -646,13 +686,14 @@ gh repo view jgindin/zmanim
 If that succeeds, confirm its visibility matches (`gh repo view jgindin/zmanim --json visibility`; if it was created private earlier, switch it with `gh repo edit jgindin/zmanim --visibility public`), then add the remote and push:
 ```bash
 git remote add github git@github.com:jgindin/zmanim.git
-git push github zmanim-v4 --all
+git push github zmanim-v4
 git push github --tags
 ```
+(`git push <remote> <branch> --all` is invalid — `--all` pushes every branch under `refs/heads/` and git rejects combining it with an explicit branch name. Push just `zmanim-v4` unless Step 2's decision about the other six bookmarks was to publish them too, in which case push each by name explicitly, or use `--all` on its own with no branch argument once you've confirmed every local branch is one you actually want public.)
 If it reports not found, create it first, then push:
 ```bash
 gh repo create jgindin/zmanim --public --source=. --remote=github
-git push github zmanim-v4 --all
+git push github zmanim-v4
 git push github --tags
 ```
 If `gh` isn't available or authenticated, do the equivalent manually on github.com (confirm or create `jgindin/zmanim` as **Public**), then run the `git remote add` / `git push` commands above. Do not run this step until Step 4's secrets audit is complete and clean (or scrubbed) — there is no undo once a public push has been fetched by anyone or any crawler.
@@ -716,7 +757,7 @@ jobs:
           name: roborazzi-diffs
           path: '**/build/outputs/roborazzi/**'
 ```
-The `wrapper-validation` step checks `gradle-wrapper.jar`'s checksum against Gradle's published list before anything else runs, so a tampered wrapper (a real supply-chain vector for public repos) fails the build immediately instead of silently executing. Cheap to add since this workflow is being written from scratch anyway.
+The `wrapper-validation` step checks `gradle-wrapper.jar`'s checksum against Gradle's published list before anything else runs, so a tampered wrapper (a real supply-chain vector for public repos) fails the build immediately instead of silently executing. Cheap to add since this workflow is being written from scratch anyway. (Note: `gradle/actions/setup-gradle@v4+` performs this same validation automatically as part of its own setup, and additionally provides build caching between CI runs — if a future revision of this workflow adopts `setup-gradle` for the caching benefit, the standalone `wrapper-validation` step becomes redundant and can be dropped. Not worth blocking this task on switching now; just don't add both and assume you need both.)
 
 - [ ] **Step 2: Add `detekt` and `ktlint` Gradle configuration**
 
@@ -764,16 +805,26 @@ This is the automated counterpart to the "state of the art" goal — without it,
 
 - [ ] **Step 5: Require CI to pass before merge**
 
+**The `--field` nested-array encoding below is known to be fragile against this exact endpoint** — GitHub's branch-protection API has documented cases of rejecting `--field required_status_checks[contexts][]=...`-style calls with a 422 ("No subschema in `anyOf` matched") due to JSON-schema ambiguity between array and object encodings, and the API has also been shifting from the legacy `contexts: [...]` array toward `checks: [{context, app_id}]`. Use `--input` with an explicit JSON payload instead of `--field`, and confirm the current field names against `gh api --help` / GitHub's REST API docs at execution time rather than trusting this verbatim, since this is exactly the kind of CLI/API surface that drifts between when a plan is written and when it's run:
+
 ```bash
 gh api repos/jgindin/zmanim/branches/zmanim-v4/protection \
   --method PUT \
-  --field required_status_checks[strict]=true \
-  --field required_status_checks[contexts][]=verify \
-  --field enforce_admins=true \
-  --field required_pull_request_reviews=null \
-  --field restrictions=null
+  --input - <<'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["verify"]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
 ```
-This makes the `verify` job (tests, static analysis, wrapper validation, Roborazzi) a hard requirement before anything merges to `zmanim-v4`, rather than a check that's easy to ignore. `enforce_admins=true` means this applies even to you/agents pushing directly — if that turns out too strict for a solo-maintained repo where you sometimes want to push straight to the branch, drop it, but keep the status-check requirement itself; it's the actual safety net Task 9 exists to build. Adjust `contexts` if the `emulator-smoke` matrix job should also gate merges once it's stable — it's left out initially since a flaky emulator matrix blocking every merge is worse than not gating on it yet.
+If this still 422s, check whether the installed `gh`/API version wants `checks: [{"context": "verify"}]` in place of `contexts: ["verify"]` and adjust accordingly — don't spend more than one retry guessing before checking the docs.
+
+This makes the `verify` job (tests, static analysis, wrapper validation, Roborazzi) a hard requirement before anything merges to `zmanim-v4`, rather than a check that's easy to ignore. `enforce_admins: true` means this applies even to you/agents pushing directly — if that turns out too strict for a solo-maintained repo where you sometimes want to push straight to the branch, drop it, but keep the status-check requirement itself; it's the actual safety net Task 9 exists to build. Adjust `contexts`/`checks` if the `emulator-smoke` matrix job should also gate merges once it's stable — it's left out initially since a flaky emulator matrix blocking every merge is worse than not gating on it yet.
 
 - [ ] **Step 6: Verify the workflow runs green on the current `zmanim-v4` branch**
 
@@ -883,7 +934,9 @@ Expected: BUILD SUCCESSFUL, 100% visual parity with Task 3 baselines.
 
 Remove `proguard-support-design.pro`, `proguard-support-v7-appcompat.pro`, `proguard-project.pro`. Remove their references in `Android/build.gradle.kts`.
 
-- [ ] **Step 2: Migrate release signing to Google Play App Signing**
+- [ ] **Step 2 — REQUIRES A HUMAN: Migrate release signing to Google Play App Signing**
+
+The Play Console enrollment sub-step below needs an authenticated human session and cannot be done by an autonomous agent. Hand that part off, get confirmation it's enrolled and the upload key is in hand, then resume with the rest of this step (moving the keystore, updating the Gradle signing config) yourself.
 
 `common/jay-gindin-android-apps.keystore` has been sitting in the repository's working tree since 2015. Task 8's secrets audit confirmed it was never actually committed to Mercurial history, so there's no history to scrub for it — but it's still one accidental `hg add`/`git add -A` away from becoming exactly that, for as long as it keeps living in `common/`. Google Play App Signing removes the need for it to live anywhere in the repo at all:
 - In Play Console, for both `Android` and `ZehutYosef` (both flavors), enroll in Play App Signing if not already enrolled, generating an upload key.

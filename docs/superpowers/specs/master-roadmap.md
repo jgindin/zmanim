@@ -1,7 +1,7 @@
 # Master Architectural Roadmap: Zmanim & Zehut Yosef
 
 **Author:** Jay R. Gindin & Antigravity
-**Date:** 2026-09-13 (Revised 2026-09-14, twice — see Revision Notes)
+**Date:** 2026-09-13 (Revised 2026-09-14 twice and 2026-09-16 — see Revision Notes)
 **Status:** Approved Architectural Blueprint
 **Platforms:** Android (Mobile & Tablet), Wear OS, iOS (Compose Multiplatform), Desktop
 
@@ -26,6 +26,8 @@
 - Added Baseline Profiles + Macrobenchmark and modern test tooling (Turbine, MockK, Compose UI testing) to Phase 4a/4b's scope.
 - Added the 16 KB page size Play compliance deadline (February 1, 2027) as a release-readiness checkpoint, and a note to avoid `firebase-crashlytics-ndk` unless there's a specific reason to need it, since this app currently has zero native (`.so`) dependencies and should stay that way by default.
 - Added Play Integrity API and staged-rollout/pre-launch-report usage to the Play Store delivery principle.
+
+**2026-09-16** — sync with the Phase 1 design spec and implementation plan, which had drifted several revisions ahead of this document without it being updated. Phase 1 is now **12 tasks**, not 11: Task 8 gained a secrets audit/scrub gate, a repo-visibility decision (public), and a `LICENSE` addition (pending confirmation given the repo's existing `LICENSE.md`); Task 9 gained Gradle Wrapper Validation, Dependabot, and branch protection; Task 11 gained a migration to Google Play App Signing; a new **Task 12** authors a repo-root `AGENTS.md`. Also corrected here: Task 1's "191/191" test claim and its file list were never independently verified against the live repository — an adversarial pass found 4 of the original 8 listed files contain none of the fixture string the task is built around removing; see the implementation plan's Task 1 for the corrected, grep-verified file list. This document should be treated as the durable cross-phase reference; when the Phase 1 plan/spec change materially, update this section too rather than letting it drift, since Phase 1's own Task 12 (`AGENTS.md`) points future agents here for orientation.
 
 ---
 
@@ -121,13 +123,14 @@ flowchart LR
     T4 --> T5["Task 5: JUnit 5 Upgrade"]
     T5 --> T6["Task 6: SDK 24/36 Alignment"]
     T6 --> T7["Task 7: KMP ZmanUtils, Kotlin ZmanLib, Telemetry, Serialization"]
-    T7 --> T8["Task 8: Migrate hg to jj, Move Hosting to GitHub"]
-    T8 --> T9["Task 9: CI on GitHub Actions incl. detekt/ktlint"]
+    T7 --> T8["Task 8: Secrets Audit, Migrate hg to jj, Move Hosting to Public GitHub"]
+    T8 --> T9["Task 9: CI on GitHub Actions incl. detekt/ktlint, Dependabot, Branch Protection"]
     T9 --> T10["Task 10: Library Modernization and Visual Parity (10.1-10.5)"]
-    T10 --> T11["Task 11: Proguard, R8, AAB Bundling, 16KB Page Size Check"]
+    T10 --> T11["Task 11: Proguard, R8, Play App Signing, AAB Bundling, 16KB Page Size Check"]
+    T11 --> T12["Task 12: Author AGENTS.md"]
 ```
 
-- **Task 1: Stabilize `ZmanLib` Test Suite:** Realign table fixtures in `UT_ShemaTimes`, `UT_TalitTimes`, `UT_Zmanim`, `UT_ZmanimWithElevation`, `UT_WakeupScheduler_*`, and `UT_YomTovCandleLighting` to match `kosherjava 2.5.0` output without the deprecated `GR'A Kol Eliyahu` (commit 1350). Achieve 191/191 green tests.
+- **Task 1: Stabilize `ZmanLib` Test Suite:** Realign table fixtures to match `kosherjava 2.5.0` output without the deprecated `GR'A Kol Eliyahu`. Confirmed by grep against the live repository: only `UT_ShemaTimes`, `UT_Zmanim`, `UT_ZmanimWithElevation`, and `UT_YomTovCandleLighting` actually contain the string — `UT_TalitTimes` and the `UT_WakeupScheduler_*` files, listed in earlier drafts, don't, and shouldn't be assumed to need the same fix without checking their actual failures first. See the implementation plan's Task 1 for the verified file list and diagnostic approach.
 - **Task 2: Fix `ZehutYosef:sidur` Compilation:** Provide default fallback resources (`about_description_text`, base `EliPurple` style, neutral `header.xml`) in `ZehutYosef/src/main/res/` so both `sidur` and `barMitzvah` assemble cleanly.
 - **Task 3: Establish Roborazzi Snapshot Safety Net (Untouched Baseline):** Integrate Roborazzi + Robolectric Native Graphics. Record untouched golden baseline PNGs of `ZmanimActivity`, `PersonalPreferences`, and `ZehutYosefActivity`. The reference photos are a human sanity check, not the automated comparison target — that's the recorded baseline itself.
 - **Task 4: Convert Build Scripts to Kotlin DSL and Adopt a Version Catalog:** Convert every `build.gradle`/`settings.gradle` to `.gradle.kts`, extract all dependency coordinates into `gradle/libs.versions.toml`, and scaffold a `build-logic` module with convention plugins for shared Java/Kotlin toolchain and lint configuration. Done once, early, so every later Phase 1 task (JUnit5, SDK alignment, KMP setup, library modernization) edits Kotlin DSL directly instead of Groovy that gets converted later.
@@ -141,13 +144,16 @@ flowchart LR
   - Port `EventBus`, `Event`, `EventHandler`, `EventCacheControl`, and MVP contracts to idiomatic Kotlin — mechanically, since Phase 4a replaces this pattern outright.
   - Define the vendor-neutral `TelemetryTracker` interface in `commonMain`.
   - Apply the `kotlin-android` plugin to `:Android` and `:ZehutYosef` (interop enablement only — no Java file conversion yet).
-- **Task 8: Migrate Version Control from Mercurial (`hg`) to Jujutsu (`jj`), and Move Hosting to GitHub:**
+- **Task 8: Migrate Version Control from Mercurial (`hg`) to Jujutsu (`jj`), and Move Hosting to Public GitHub:**
   - Push the current Mercurial tip to sr.ht (pre-migration source of truth; Bitbucket is stale and not used) as a checkpoint.
-  - `fast-export` full history into Git, initialize colocated `jj`, verify commit-count parity.
-  - Push to **https://github.com/jgindin/zmanim** as the canonical host (check whether it exists before creating it).
-- **Task 9: Establish CI on GitHub Actions:** Run `./gradlew test verifyRoborazziDebug` plus `detekt`/`ktlint` on every push/PR, plus an instrumented-emulator smoke job (API 24 and API 36) — fully automated on GitHub-hosted runners, no manual step once this task lands.
+  - Audit the full Mercurial history for secrets before anything goes public — already run once (2026-09-16): the repo's actual signing keystore and a stray API-key file were confirmed *never* committed, but an older, already-lower-risk API key (a self-hosted ACRA reporting key, and a Flurry Analytics key for a service shut down in 2024) was found in history and gets scrubbed with `git-filter-repo`.
+  - `fast-export` full history into Git, verify which branch it actually produced corresponds to the `zmanim-v4` bookmark's real commit (the Mercurial named branch is `default`, not `zmanim-v4` — this needs explicit verification, not an assumed match), initialize colocated `jj`, verify commit-count parity.
+  - Confirm with Jay whether the repo's existing `LICENSE.md` (LGPL-2.1) is being deliberately replaced by a new Apache-2.0 `LICENSE`, since that's a real relicensing decision, not a mechanical file-add.
+  - Push to **https://github.com/jgindin/zmanim** as the canonical host, **public** (check whether it exists before creating it).
+- **Task 9: Establish CI on GitHub Actions:** Run `./gradlew test verifyRoborazziDebug` plus `detekt`/`ktlint` on every push/PR, plus Gradle Wrapper Validation (supply-chain protection now that the repo is public) and an instrumented-emulator smoke job (API 24 and API 36) — fully automated on GitHub-hosted runners, no manual step once this task lands. Adds `dependabot.yml` for the Gradle version catalog and GitHub Actions, and branch protection requiring the CI check to pass before merge.
 - **Task 10: Comprehensive Library Modernization & Visual Parity (sub-tasks 10.1–10.5, each independently committed and verified):** retire legacy Xpece AARs and migrate to `androidx.preference`; upgrade Material/ConstraintLayout/AppCompat/Play Services Location; replace MikePenz MaterialDrawer with standard `DrawerLayout`/`NavigationView` (a real UI rewrite); replace Iconics with Vector Drawables; modernize `aboutlibraries`.
-- **Task 11: Modernize Proguard / R8 Minification and App Bundle Packaging:** Clean out obsolete pre-AndroidX Proguard rules, enable `minifyEnabled true`, verify `assembleRelease`/`bundleRelease`, and verify 16 KB memory page size compliance (Play deadline February 1, 2027 — this app has no native `.so` dependencies today; keep it that way by default, and specifically avoid `firebase-crashlytics-ndk` in Phase 4a.2 unless there's a concrete reason to need native crash symbolication).
+- **Task 11: Modernize Proguard / R8 Minification, Migrate to Play App Signing, and App Bundle Packaging:** Clean out obsolete pre-AndroidX Proguard rules, migrate release signing to Google Play App Signing so the keystore no longer needs to live in the repository, enable `minifyEnabled true`, verify `assembleRelease`/`bundleRelease`, and verify 16 KB memory page size compliance (Play deadline February 1, 2027 — this app has no native `.so` dependencies today; keep it that way by default, and specifically avoid `firebase-crashlytics-ndk` in Phase 4a.2 unless there's a concrete reason to need native crash symbolication).
+- **Task 12: Author `AGENTS.md` for Agent-Directed Development:** written last, once Tasks 1–11 have actually produced the structure it describes — module map and per-module build/test commands, where static-analysis config lives, version-control conventions now that the repo is `jj`/public-GitHub, and how this roadmap, the Phase 1 design spec, and the implementation plan relate to each other for an agent picking up Phase 2.
 
 ---
 
@@ -363,4 +369,4 @@ This is a multi-quarter-to-multi-year program for a solo-maintained pair of apps
 
 With the complete roadmap established, execution begins with **Phase 1: Foundation Modernization, VCS Migration to `jj` + GitHub, and Visual Safety Net**.
 
-The 11 tasks of Phase 1 are detailed in the accompanying [**implementation plan**](../plans/2026-09-07-foundation-modernization-and-jj-migration.md) and will be executed task-by-task using **subagent-driven-development**.
+The 12 tasks of Phase 1 are detailed in the accompanying [**implementation plan**](../plans/2026-09-07-foundation-modernization-and-jj-migration.md) and will be executed task-by-task using **subagent-driven-development**.
