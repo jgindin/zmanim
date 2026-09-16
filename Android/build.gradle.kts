@@ -93,6 +93,8 @@ val acraProps = Properties()
 var acraUser: String
 var acraPassword: String
 try {
+  // .use{} auto-closes the stream after load() - a harmless, intentional improvement over the
+  // original Groovy, which never closed it explicitly.
   FileInputStream(project.projectDir.path + "/../common/AcraApiKey.properties").use { acraProps.load(it) }
   acraUser = "\"" + acraProps.getProperty("acra.user") + "\""
   acraPassword = "\"" + acraProps.getProperty("acra.password") + "\""
