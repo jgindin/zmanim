@@ -83,6 +83,18 @@ public class ZmanimOutputHelper {
   }
 
 
+  /**
+   * Replaces the narrow no-break space (U+202F) that newer JDKs' CLDR locale data inserts before the AM/PM
+   *  designator with a plain ASCII space, so formatted times can be compared against the golden-string
+   *  fixtures in the test source, which use plain spaces throughout.
+   */
+  protected static String normalizeWhitespace(
+    final String text
+  ) {
+    return text.replace( ' ', ' ' );
+  }
+
+
   private int computeColumnWidth( final List<Zman> zmans ) {
 
     int maxLength = -1;
@@ -122,14 +134,19 @@ public class ZmanimOutputHelper {
 
       for ( Zman zman : zmans ) {
 
+        // NOTE: newer JDKs (the CLDR locale data used since JDK 20) format the AM/PM designator with a
+        //  narrow no-break space (U+202F) instead of a regular space. DateFormat.parse() actually requires
+        //  that narrow no-break space to successfully parse the string back, so we keep the raw, unmodified
+        //  value for validateZmanTimes()'s round-trip parsing below, and only normalize the copy that goes
+        //  into the golden-string output so it matches the plain-ASCII fixtures in the test source.
         String timeWithSeconds = formatterWithSeconds.formatZmanTime( zman );
-        line1.append( timeWithSeconds );
+        line1.append( normalizeWhitespace( timeWithSeconds ) );
         pad( line1, maxLength - timeWithSeconds.length() - 1 );
         line1.append( "| " );
 
         String time = formatter.formatZmanTime( zman );
         if ( includeShort ) {
-          line2.append( time );
+          line2.append( normalizeWhitespace( time ) );
           pad( line2, maxLength - time.length() - 1 );
           line2.append( "| " );
         }

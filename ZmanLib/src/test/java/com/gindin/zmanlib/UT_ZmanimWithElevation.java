@@ -59,7 +59,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:14:35\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:34:42\n" +
         "      Sof Zman Shema - GR'A                          : 10:12:55\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:20:39\n" +
         "      Sof Zman Shema - MG'A                          :  9:36:55\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:12:55\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:27:58\n" +
@@ -204,7 +203,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:03:11\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:15:40\n" +
         "      Sof Zman Shema - GR'A                          :  9:55:12\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:53\n" +
         "      Sof Zman Shema - MG'A                          :  9:19:12\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  8:55:12\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:15:07\n" +
@@ -349,7 +347,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:47:33\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:50:48\n" +
         "      Sof Zman Shema - GR'A                          :  9:32:16\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:39:53\n" +
         "      Sof Zman Shema - MG'A                          :  8:56:16\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  8:32:16\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  8:58:11\n" +
@@ -498,7 +495,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:17:36\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:39:13\n" +
         "      Sof Zman Shema - GR'A                          : 10:16:13\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:24:19\n" +
         "      Sof Zman Shema - MG'A                          :  9:40:13\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:16:13\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:31:01\n" +
@@ -653,7 +649,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:18:13\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:40:09\n" +
         "      Sof Zman Shema - GR'A                          : 10:16:54\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:25:04\n" +
         "      Sof Zman Shema - MG'A                          :  9:40:54\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:16:54\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:31:38\n" +
@@ -828,7 +823,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:55:02\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:07:42\n" +
         "      Sof Zman Shema - GR'A                          :  9:56:30\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:54:47\n" +
         "      Sof Zman Shema - MG'A                          :  9:20:30\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  8:56:30\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:09:32\n" +
@@ -1002,7 +996,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:40:46\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:53:45\n" +
         "      Sof Zman Shema - GR'A                          :  9:45:08\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              :  9:44:47\n" +
         "      Sof Zman Shema - MG'A                          :  9:09:08\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  8:45:08\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  8:56:05\n" +
@@ -1206,7 +1199,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:05:08\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:18:12\n" +
         "      Sof Zman Shema - GR'A                          : 10:05:05\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:17\n" +
         "      Sof Zman Shema - MG'A                          :  9:29:05\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:05:05\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:19:12\n" +
@@ -1395,7 +1387,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:00:16\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:35:24\n" +
         "      Sof Zman Shema - GR'A                          : 10:04:01\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:11\n" +
         "      Sof Zman Shema - MG'A                          :  9:28:01\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:04:01\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:14:39\n" +
@@ -1576,7 +1567,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:24\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:32:42\n" +
         "      Sof Zman Shema - GR'A                          : 10:09:55\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:02:40\n" +
         "      Sof Zman Shema - MG'A                          :  9:33:55\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:09:55\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:27:45\n" +
@@ -1737,7 +1727,6 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:15:24\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:31:05\n" +
         "      Sof Zman Shema - GR'A                          : 10:08:40\n" +
-        "      Sof Zman Shema - GR'A Kol Eliyahu              : 10:01:25\n" +
         "      Sof Zman Shema - MG'A                          :  9:32:40\n" +
         "      Sof Zman Shema - MG'A 120 Minutes              :  9:08:40\n" +
         "      Sof Zman Shema - MG'A 16.1 deg                 :  9:27:45\n" +
@@ -1887,7 +1876,6 @@ public class UT_ZmanimWithElevation
       "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:02:17\n" +
       "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:12:13\n" +
       "      Sof Zman Shema - GR'A                          :  8:49:18\n" +
-      "      Sof Zman Shema - GR'A Kol Eliyahu              :  8:55:42\n" +
       "      Sof Zman Shema - MG'A                          :  8:13:18\n" +
       "      Sof Zman Shema - MG'A 120 Minutes              :  7:49:18\n" +
       "      Sof Zman Shema - MG'A 16.1 deg                 :  8:13:25\n" +

@@ -190,8 +190,13 @@ abstract class WakeupSchedulerBase {
 
       formatter.getCalendar().setTimeZone( zman.getTime().getTimeZone() );
 
+      // NOTE: newer JDKs (the CLDR locale data used since JDK 20) format the AM/PM designator with a
+      //  narrow no-break space (U+202F) instead of a regular space. Normalize it to a plain space so the
+      //  output matches the plain-ASCII golden-string fixtures in the test source.
+      String formattedZmanTime = zmanFormatter.formatZmanTime( zman ).replace( ' ', ' ' );
+
       output.append(
-        String.format( "%-20s| %-15s| %-30s| %-18s|\n", zman.type, zmanFormatter.formatZmanTime( zman ),
+        String.format( "%-20s| %-15s| %-30s| %-18s|\n", zman.type, formattedZmanTime,
           formatter.format( alertAt.getTimeInMillis() ), shouldActuallyNotify( location, alertAt ) )
       );
     }
