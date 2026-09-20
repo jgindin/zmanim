@@ -57,11 +57,11 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVarian
 configure<BaseAppModuleExtension> {
   namespace = "com.gindin.zehutyosef"
 
-  compileSdk = 33
+  compileSdk = 36
 
   defaultConfig {
-    minSdk = 22
-    targetSdk = 35
+    minSdk = 24
+    targetSdk = 36
     versionCode = project.extra["appVersionCode"] as Int
     versionName = project.extra["appVersionName"] as String
   }

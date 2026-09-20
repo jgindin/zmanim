@@ -107,7 +107,7 @@ catch (ignored: Exception) {
 
 configure<BaseAppModuleExtension> {
   namespace = "com.gindin.zmanim.android"
-  compileSdk = 33
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.gindin.zmanim.android"
@@ -119,8 +119,8 @@ configure<BaseAppModuleExtension> {
      *					See http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
      *					For minSdkVersion >= 11, there's some other interesting stuff in that article...
      */
-    minSdk = 14
-    targetSdk = 35
+    minSdk = 24
+    targetSdk = 36
 
     versionCode = project.extra["appVersionCode"] as Int
     versionName = project.extra["appVersionName"] as String
