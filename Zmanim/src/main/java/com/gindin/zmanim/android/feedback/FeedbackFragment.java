@@ -105,7 +105,6 @@ public class FeedbackFragment
     getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( getContext() );
-//    prefs.edit().putString( ACRA.PREF_USER_EMAIL_ADDRESS, emailText ).apply();
     LogUtils.logFeedback( feedback );
   }
 

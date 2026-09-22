@@ -3,8 +3,6 @@
  */
 
 import com.gindin.buildlogic.zmanimAppVersion
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
   // build-logic's precompiled convention plugin. It applies com.android.application,
@@ -49,27 +47,6 @@ if (file("zmanim.gradle").exists()) {
 //  through Zmanim/version.properties exactly as before.
 val appVersion = zmanimAppVersion(major = 4, minor = 0)
 
-/*
- * Stuff that we need to load...
- *
- * NOTE: Since these files contain secret keys, they're never committed to source control. So...that means
- *  that not everyone will have them.
- */
-val acraProps = Properties()
-var acraUser: String
-var acraPassword: String
-try {
-  // .use{} auto-closes the stream after load() - a harmless, intentional improvement over the
-  // original Groovy, which never closed it explicitly.
-  FileInputStream(project.projectDir.path + "/../common/AcraApiKey.properties").use { acraProps.load(it) }
-  acraUser = "\"" + acraProps.getProperty("acra.user") + "\""
-  acraPassword = "\"" + acraProps.getProperty("acra.password") + "\""
-}
-catch (ignored: Exception) {
-  acraUser = "\"\""
-  acraPassword = "\"\""
-}
-
 
 android {
   namespace = "com.gindin.zmanim.android"
@@ -108,9 +85,6 @@ android {
   buildTypes {
     getByName("release") {
 
-      buildConfigField("String", "ACRA_KEY", acraPassword)
-      buildConfigField("String", "ACRA_USER", acraUser)
-
       isMinifyEnabled = false
 
       /*
@@ -134,8 +108,6 @@ android {
     }
 
     getByName("debug") {
-      buildConfigField("String", "ACRA_KEY", "\"DEV\"")
-      buildConfigField("String", "ACRA_USER", "\"DEV\"")
     }
   }
 }
@@ -159,12 +131,6 @@ dependencies {
   implementation(libs.androidx.preference)
   implementation(libs.google.material)
   implementation(libs.play.services.location)
-
-//  def acraVersion = "5.7.0"
-//  implementation "ch.acra:acra-http:$acraVersion"
-//  implementation "ch.acra:acra-toast:$acraVersion"
-//  implementation "ch.acra:acra-limiter:$acraVersion"
-//  implementation "ch.acra:acra-advanced-scheduler:$acraVersion"
 
   testImplementation(libs.org.json)
 }
