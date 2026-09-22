@@ -34,8 +34,8 @@
 -keep class android.support.v4.** { *; }
 -keep interface android.support.v4.** { *; }
 
-## The following set of Keeps comes from ACRA's sample.
-##  See https://github.com/ACRA/acra/wiki/ProGuard
+## Keep the standard Android component base classes, since their subclasses are referenced from
+##  the manifest and can otherwise be stripped/renamed in a way that breaks manifest resolution.
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service

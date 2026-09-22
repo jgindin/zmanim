@@ -16,9 +16,7 @@ public class ZmanimApplication
   protected void attachBaseContext( Context base ) {
     super.attachBaseContext( base );
 
-    if ( !BuildConfig.DEBUG ) {
-    }
-    else {
+    if ( BuildConfig.DEBUG ) {
       // Just so we *KNOW* we're dealing with a dev version...
       Toast toast = Toast.makeText( base, "This is dev...", Toast.LENGTH_LONG );
       toast.show();

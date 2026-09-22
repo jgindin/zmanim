@@ -95,6 +95,7 @@ fabric.properties
 # Files generated during our build
 Zmanim/src/main/assets/com/gindin/zmanim/android/about.html
 .superpowers/
+\.hprof$
 .idea/deviceManager.xml
 .idea/deploymentTargetSelector.xml
 .idea/deploymentTargetDropDown.xml

@@ -23,7 +23,7 @@ The project is divided into four modules:
 * `ZmanUtils`: A simple Java library with no external dependencies that likely
   contains utility classes used by the other modules.
 
-The project is built with Gradle and uses Java 11.
+The project is built with Gradle and uses Java 21.
 
 # Building and Running
 
