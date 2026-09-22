@@ -17,7 +17,7 @@ plugins {
 //  try/catch to swallow the way Groovy's dynamic `apply from:` allowed), so an explicit
 //  existence check is used for that case. The try/catch around the apply() call itself is kept
 //  (matching the original) to also tolerate the file existing but failing while it evaluates --
-//  which, empirically, is exactly what happens with the copy of this file on disk today.  Got
+//  which, empirically, is exactly what happens with the copy of this file on disk today. Got
 //  this idea from Mike Penz's AboutLibraries.
 if (file("zehut-yosef.gradle").exists()) {
   try {
