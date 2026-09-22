@@ -149,8 +149,8 @@ public class SiddurSnapshotTest {
 
     Assume.assumeTrue( "Only meaningful when built as the sidur flavor", isFlavor( "sidur" ) );
 
-    // No reference photo exists for this one in docs/modernization/phase1/screenshots -- that's
-    //  expected per the Task 3 brief. Eyeballed against the app's current sidur-flavor UI instead.
+    // No pre-existing reference photo exists for the sidur flavor's reader screen; this baseline
+    //  was eyeballed against the app's current sidur-flavor UI instead when first recorded.
     captureReaderScreen( "screenshots/sidur.png" );
   }
 

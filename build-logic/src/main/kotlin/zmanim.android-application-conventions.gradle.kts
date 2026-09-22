@@ -23,8 +23,8 @@ plugins {
   id("com.android.application")
   id("org.moallemi.advanced-build-version")
 
-  // Roborazzi: records/verifies golden PNG screenshots rendered by Robolectric. See
-  //  docs/modernization/phase1 and each app's src/test/.../snapshot package.
+  // Roborazzi: records/verifies golden PNG screenshots rendered by Robolectric, used as a visual
+  //  regression safety net for these apps' screens. See each app's src/test/.../snapshot package.
   id("io.github.takahirom.roborazzi")
 }
 
@@ -94,9 +94,9 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVarian
 //  JDK the Gradle daemon itself happens to be launched with, which is NOT pinned and can silently
 //  vary machine to machine. This matters here specifically because JDK 20+'s CLDR locale data
 //  formats the AM/PM designator with U+202F (narrow no-break space) instead of a plain ASCII
-//  space, which changes what Roborazzi's Robolectric-rendered golden screenshots look like (see
-//  Task 1's :ZmanLib fix for the same underlying JDK/CLDR difference, and
-//  docs/modernization/phase1 final-review-fix-report). AGP applies JavaBasePlugin internally
+//  space, which changes what Roborazzi's Robolectric-rendered golden screenshots look like (the
+//  same underlying JDK/CLDR difference also required a test-fixture fix in :ZmanLib, where golden
+//  strings had hardcoded a plain ASCII space). AGP applies JavaBasePlugin internally
 //  rather than via a `plugins {}` block, so the bare `java {}` accessor isn't generated even here;
 //  `configure<JavaPluginExtension> {}` is the equivalent typed form that is always resolvable.
 configure<JavaPluginExtension> {
@@ -133,9 +133,10 @@ dependencies {
   testCompileOnly(libs.findLibrary("androidx-compose-ui-test-junit4").get()) { isTransitive = false }
 }
 
-// JUnit4-style tests in these modules (including the Roborazzi snapshot tests) keep running
-//  unmodified via the vintage engine under the same JUnit Platform runner used by
-//  :ZmanUtils/:ZmanLib's Jupiter-native tests. See docs/modernization/phase1 Task 5.
+// JUnit4-style tests in these modules (including the Roborazzi snapshot tests, which stay on
+//  JUnit 4 since Robolectric has no official JUnit 5 support) keep running unmodified via the
+//  vintage engine under the same JUnit Platform runner used by :ZmanUtils/:ZmanLib's
+//  Jupiter-native tests.
 tasks.withType<Test> {
   useJUnitPlatform()
 }

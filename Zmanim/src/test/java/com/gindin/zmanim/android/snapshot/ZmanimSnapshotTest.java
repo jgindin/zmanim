@@ -35,8 +35,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Roborazzi baseline snapshots of the two {@code :Zmanim} screens named in the Phase 1
- *  modernization plan (Task 3): the main daily zmanim list and the personal preferences screen.
+ * Roborazzi baseline snapshots of two {@code :Zmanim} screens: the main daily zmanim list and the
+ *  personal preferences screen.
  *<p/>
  *
  * {@link ZmanimActivity} determines "today" via {@link HebrewCalendar#today()} (real wall-clock
@@ -60,13 +60,13 @@ import java.util.TimeZone;
  *
  * {@code qualifiers = "w411dp-h869dp"} sizes the simulated device to a modern phone (Robolectric's
  *  un-configured default is a much smaller/shorter screen); without it, {@code capturePreferencesScreen()}
- *  would cut off before showing any of the per-zman notification sliders the Task 3 brief calls for.
+ *  would cut off before showing any of the per-zman notification sliders this test captures.
  */
 @RunWith( RobolectricTestRunner.class )
 @Config( sdk = 33, qualifiers = "w411dp-h869dp" )
 public class ZmanimSnapshotTest {
 
-  /** Yonkers, NY -- an arbitrary, fixed test location. See docs/modernization/phase1. */
+  /** Yonkers, NY -- an arbitrary, fixed test location, matching the reference screenshot. */
   private static final double  YONKERS_LATITUDE = 40.9312;
   private static final double  YONKERS_LONGITUDE = -73.8988;
 
