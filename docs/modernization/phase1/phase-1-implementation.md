@@ -10,6 +10,7 @@
 - **2026-09-15 (fifth pass):** the `hg`-native audit from the fourth pass has actually been run against the real repository, and Step 4 is rewritten from an open-ended "go find out" into the confirmed findings plus a bounded fix. Result: `common/jay-gindin-android-apps.keystore`, `common/ProjectApiKey.txt`, and `common/MapQuest.properties.orig` were **never** committed to Mercurial under any path, across the full 1356+-revision history — nothing to scrub, and the original "treat as compromised, hard blocker" framing for these three no longer applies. Two different files **were** found in history: `common/AcraApiKey.properties` (2016, self-hosted tool, long unused) and `thirdparty/flurry/ProjectApiKey.txt` (Flurry Analytics, shut down March 2024) — both low current risk since neither service is live, but both get folded into the same `git-filter-repo` pass since it costs nothing extra. Step 4 now ends with an explicit re-sweep (Step 4b) immediately before the push, since this plan's findings are a snapshot and the working tree could change before Task 8 actually executes.
 - **2026-09-16 (sixth pass) — adversarial review, 7 blocking + 6 non-blocking fixes applied:** an independent adversarial pass against the live repository found real defects, not style issues. **Task 2's Steps 2/3** were rewritten from "Create [file]: [3-line snippet]" to explicit "insert into the existing file" instructions — the real `strings.xml` has 33 in-use entries and the real `styles.xml` defines the module's base `AppTheme`; executed literally as written, both steps would have deleted them. **Task 1's file list** was corrected after grepping the actual test sources: 4 of the original 8 files (`UT_TalitTimes.java`, all three `UT_WakeupScheduler_*.java`) contain zero occurrences of the `GR'A Kol Eliyahu` string the task is built around removing — they're now called out explicitly as unconfirmed, with Step 1 rewritten to diagnose actual failures rather than blindly apply Step 3's fix everywhere. **Task 8's Step 7 push command had invalid git syntax** (`git push <remote> <branch> --all`, which git rejects outright) on the single most irreversible step in the plan — fixed. **Task 8** also gained an unresolved branch/bookmark identity problem (the Mercurial named branch is `default`, not `zmanim-v4`; `zmanim-v4` is one of seven bookmarks; nothing verified `hg-fast-export`'s output branch actually corresponds to the right commit) and a licensing conflict (the repo already has `LICENSE.md` declaring LGPL-2.1; the plan's Apache-2.0 `LICENSE` addition was decided without knowing this and now needs Jay's explicit confirmation, not a mechanical file-add) — both are now flagged as requiring a human decision before Task 8 proceeds. **`master-roadmap.md` was stale** (still said "11 tasks," no mention of Task 12 or the third-pass additions) and has been updated to match. Non-blocking fixes: Task 4 was missing two real Groovy build files (`common/gindin-android.gradle`, `common/gindin-versioning.gradle`, the latter containing a non-mechanical APK-renaming closure); Task 5's scope was ambiguous about which modules' test files actually migrate to Jupiter (now explicit: `:ZmanUtils`/`:ZmanLib` only, `:Android`/`:ZehutYosef` stay on JUnit4 via the vintage engine); Task 3's reference-photo set doesn't 1:1 match its planned snapshots (now noted as expected, not a gap to close); three Play Console-dependent steps (Task 6 Steps 1–2, Task 11 Step 2) are now explicitly flagged as requiring human hand-off, which an autonomous agent cannot do itself; Task 9's `gh api` branch-protection call switched from a `--field`-based encoding with documented reliability problems to an explicit JSON `--input` payload; Task 8's secrets-scrub step now clarifies it rewrites history only, not the current working-tree `AcraApiKey.properties` symlink.
 - **2026-09-16 (seventh pass) — pre-execution readiness check, run against the live repository rather than the documents alone:** independently confirmed exactly as documented — Task 1's "191 tests / 52 failures" baseline (actually ran `./gradlew :ZmanLib:test`), Task 1's 4-file grep list, Task 2's 3-symbol compile failure, the two `common/*.gradle` files from Task 4, the three never-committed secret-shaped files plus the `AcraApiKey.properties` symlink from Task 8's audit, the LGPL-2.1 text in `LICENSE.md`, and all seven Mercurial bookmarks (`zmanim-v4` currently points at the same revision as the `default` branch tip). **Fixed:** Task 2's "33 existing `strings.xml` entries" was wrong — the live file has 24 (`grep -c '<string '`); 33 was the file's line count, not its entry count. Step 2's post-insertion verification target is corrected from 34 to 25. **Flagged, not fixed (real, currently-undiagnosed scope for whoever runs Task 1):** the four files Task 1 lists as "confirmed zero occurrences of `GR'A Kol Eliyahu`, don't assume they need the fix" (`UT_TalitTimes`, all three `UT_WakeupScheduler_*`) are not actually passing at baseline — they fail too (2 + 4 + 6 + 2 = 14 failures), which combined with the 4 confirmed files' 38 failures accounts for the documented total of 52 exactly. Task 1's Step 1 already instructs diagnosing these separately rather than assuming Step 3's fix applies — this pass confirms that instruction is load-bearing, not defensive boilerplate. **Tooling resolved:** `gh` CLI, missing at review time (which would have left Task 8 Step 7 and Task 9 Step 5 without their primary path), is now installed and authenticated (`gh auth status` confirms account `jgindin`, `repo` scope) — see the tooling note added to Tasks 8 and 9 below. `git-filter-repo` remains not installed; installing it is still a precondition of Task 8 Step 4a, unchanged from earlier passes.
+- **2026-09-21 — post-Task-6 follow-up batch:** six chat-directed items landed ahead of Task 7 (real `build-logic` convention plugins replacing the `apply(from=...)`/`GroovyObject` workaround, ACRA removal, the `:Android`→`:Zmanim` module rename, `:Zmanim`/`:ZehutYosef`'s plain JUnit-4 tests migrated to Jupiter, "Task N" comment cleanup, and this doc's Kotlin target corrected from 2.1.0 to 2.4.20) — full record in `docs/modernization/modernization-roadmap.md`'s 2026-09-21 note. Every `:Android`/`Android/`-path reference in Task 7 onward below is updated to `:Zmanim`; Tasks 1-6 describe what actually ran under the old name and are left as-is.
 
 **Goal:** Establish an immediate Roborazzi screen snapshot safety net from the untouched app baseline, stabilize tests and compilation in Mercurial, convert all build scripts to Kotlin DSL with a version catalog (preserving file history via `hg move`), upgrade the testing framework to JUnit 5, align Android SDK targets to 24/36 (with real-device verification and current Play compliance), migrate `:ZmanUtils` and `:ZmanLib` to idiomatic Kotlin (dropping custom `Pair`, adopting `kotlinx.serialization`/`kotlinx-datetime`), enable Kotlin interop in the app modules, audit and scrub secrets before migrating version control from Mercurial to Jujutsu (`jj`) and hosting to a **public** GitHub repo, stand up CI with static analysis and dependency-update automation, comprehensively modernize Android libraries as independently-verified sub-tasks, fully enable Proguard / R8 minification with a 16 KB page size compliance check and a move to Play App Signing, and close the phase by documenting the result in an `AGENTS.md` so subsequent phases can be executed by agents with the context this one required a live conversation to establish.
 
@@ -58,7 +59,7 @@ flowchart TD
 **Tech Stack:**
 - Android Gradle Plugin (AGP) 9.4.0 / Gradle 9.6.0
 - Java 21 / 25 Toolchains
-- Kotlin 2.1.0 / Kotlin Multiplatform (KMP), all build scripts as Kotlin DSL with a `gradle/libs.versions.toml` version catalog and a `build-logic` convention-plugin build
+- Kotlin 2.4.20 / Kotlin Multiplatform (KMP), all build scripts as Kotlin DSL with a `gradle/libs.versions.toml` version catalog and a `build-logic` convention-plugin build
 - Jujutsu (`jj`) — installed at `~/.local/bin/jj`; confirm exact version with `jj --version` before Task 8
 - Mercurial (`hg`) — installed at `/usr/bin/hg`
 - `hg-fast-export` — checked out at `~/src/fast-export`; confirm invocation with `~/src/fast-export/hg-fast-export.sh --help` before Task 8
@@ -442,11 +443,11 @@ hg commit -m "Raise minSdkVersion to 24 and compileSdk/targetSdk to 36 across An
   - `ZmanLib/src/main/java/com/gindin/zmanlib/location/LatitudeLongitudeParser.java` (converts to `.kt` in Step 3 below)
   - `ZmanLib/src/main/java/com/gindin/zmanlib/ZmanCallback.java` (converts to `.kt`)
   - `ZmanLib/src/main/java/com/gindin/zmanlib/zman/ZmanimFactory.java` (converts to `.kt`)
-  - `Android/src/main/java/com/gindin/zmanim/android/AppUpgrader.java`
-  - `Android/src/main/java/com/gindin/zmanim/android/location/resolvers/JsonQueryingResolver.java`
-  - `Android/src/main/java/com/gindin/zmanim/android/service/ZmanimService.java`
-  - `Android/src/main/java/com/gindin/zmanim/android/service/DisplayNotificationService.java`
-  - `Android/src/main/java/com/gindin/zmanim/android/display/daily/main/ZmanimPresenterImpl.java`
+  - `Zmanim/src/main/java/com/gindin/zmanim/android/AppUpgrader.java`
+  - `Zmanim/src/main/java/com/gindin/zmanim/android/location/resolvers/JsonQueryingResolver.java`
+  - `Zmanim/src/main/java/com/gindin/zmanim/android/service/ZmanimService.java`
+  - `Zmanim/src/main/java/com/gindin/zmanim/android/service/DisplayNotificationService.java`
+  - `Zmanim/src/main/java/com/gindin/zmanim/android/display/daily/main/ZmanimPresenterImpl.java`
 - Re-configure `ZmanUtils/build.gradle.kts` with `kotlin("multiplatform")` (JVM + Android targets, Java 21/25 toolchain), `explicitApiMode`
 - Re-configure `ZmanLib/build.gradle.kts` as a Kotlin JVM/Android library (not multiplatform yet — see scope note), `explicitApiMode`
 - Create Kotlin files in `ZmanUtils/src/commonMain/kotlin/`:
@@ -456,13 +457,13 @@ hg commit -m "Raise minSdkVersion to 24 and compileSdk/targetSdk to 36 across An
 - Create Kotlin test in `ZmanUtils/src/commonTest/kotlin/com/gindin/eventBus/UT_EventBus.kt`
 - Convert all of `ZmanLib/src/main/java/**/*.java` to `ZmanLib/src/main/kotlin/**/*.kt` (entire module — see Step 5)
 - Delete old Java files in `ZmanUtils/src/main/java/`, `ZmanUtils/src/test/java/`, and all of `ZmanLib/src/main/java/` once converted
-- Modify: `Android/build.gradle.kts` (apply `kotlin-android` plugin, interop only)
+- Modify: `Zmanim/build.gradle.kts` (apply `kotlin-android` plugin, interop only)
 - Modify: `ZehutYosef/build.gradle.kts` (apply `kotlin-android` plugin, interop only)
 - Modify: the 3 current `org.json` call sites (locate via `grep -rl "org.json" --include=*.java ZmanLib Android ZehutYosef`) to use `kotlinx.serialization` instead
 
 **Interfaces:**
-- Consumes: standard library `kotlin.Pair`, Kotlin 2.1.0 (Multiplatform for `:ZmanUtils`; JVM/Android-only for `:ZmanLib`), `kotlinx.serialization`, `kotlinx-datetime`
-- Produces: Idiomatic Kotlin `:ZmanUtils` (KMP) and `:ZmanLib` (JVM/Android), `EventBus`, MVP interfaces, `TelemetryTracker` API, unit tests, and Kotlin-interop-ready `:Android`/`:ZehutYosef` modules
+- Consumes: standard library `kotlin.Pair`, Kotlin 2.4.20 (Multiplatform for `:ZmanUtils`; JVM/Android-only for `:ZmanLib`), `kotlinx.serialization`, `kotlinx-datetime`
+- Produces: Idiomatic Kotlin `:ZmanUtils` (KMP) and `:ZmanLib` (JVM/Android), `EventBus`, MVP interfaces, `TelemetryTracker` API, unit tests, and Kotlin-interop-ready `:Zmanim`/`:ZehutYosef` modules
 
 **Scope note:** the `EventBus`/MVP port below is a deliberately mechanical stepping stone — Phase 4a's DI work deletes this entire pattern in favor of `StateFlow`/UDF. Don't spend time improving its design beyond what's needed to compile cleanly and pass its tests. `:ZmanLib`'s conversion to Kotlin is a **separate, lower-risk decision** from making it multiplatform: this task converts its *language* (Java → Kotlin, safety-netted by 191 existing tests) but explicitly does **not** attempt to add an iOS/Native target, because `:ZmanLib` depends on `com.kosherjava:zmanim`, a JVM-only Java library with no first-party multiplatform build. True multiplatform support for `:ZmanLib` is scoped as a dedicated spike at the start of Phase 6 (see the master roadmap's Phase 6.1), evaluating the community **KosherKotlin** port (`github.com/Sternbach-Software/KosherKotlin`) against this module's own golden-fixture tests before committing to a migration. Do not pull `KosherKotlin` into this task.
 
@@ -535,7 +536,7 @@ public interface TelemetryTracker {
     public fun recordNonFatal(throwable: Throwable)
 }
 ```
-Note for callers: the default value on `parameters` is visible to Kotlin call sites but not to Java call sites — existing Java code in `:Android`/`:ZehutYosef` calling `trackEvent` must pass `emptyMap()` explicitly rather than omitting the argument. This is expected, not a bug to fix.
+Note for callers: the default value on `parameters` is visible to Kotlin call sites but not to Java call sites — existing Java code in `:Zmanim`/`:ZehutYosef` calling `trackEvent` must pass `emptyMap()` explicitly rather than omitting the argument. This is expected, not a bug to fix.
 
 - [ ] **Step 5: Convert `:ZmanLib` from Java to Kotlin**
 
@@ -549,9 +550,9 @@ Locate the 3 current `org.json` call sites and replace them with `kotlinx.serial
 
 Rewrite the test cases in idiomatic Kotlin using `kotlin.test.Test`, `kotlin.test.assertEquals`, etc.
 
-- [ ] **Step 8: Enable Kotlin interop in `:Android` and `:ZehutYosef` (no file conversion)**
+- [ ] **Step 8: Enable Kotlin interop in `:Zmanim` and `:ZehutYosef` (no file conversion)**
 
-Apply the `kotlin-android` plugin in `Android/build.gradle.kts` and `ZehutYosef/build.gradle.kts`. Do **not** convert any existing `.java` file to Kotlin in this step. Full conversion of these modules' Java sources to Kotlin is deferred to Phase 4a/4b, screen-by-screen alongside each Compose rewrite.
+Apply the `kotlin-android` plugin in `Zmanim/build.gradle.kts` and `ZehutYosef/build.gradle.kts`. Do **not** convert any existing `.java` file to Kotlin in this step. Full conversion of these modules' Java sources to Kotlin is deferred to Phase 4a/4b, screen-by-screen alongside each Compose rewrite.
 
 - [ ] **Step 9: Run full verification across all modules**
 
@@ -561,7 +562,7 @@ Expected: BUILD SUCCESSFUL with 0 failures and 0 visual regressions
 - [ ] **Step 10: Commit Stage 1C milestone in Mercurial**
 
 ```bash
-hg add ZmanUtils ZmanLib Android/build.gradle.kts ZehutYosef/build.gradle.kts
+hg add ZmanUtils ZmanLib Zmanim/build.gradle.kts ZehutYosef/build.gradle.kts
 hg commit -m "Migrate ZmanUtils to Kotlin Multiplatform and ZmanLib to idiomatic Kotlin (JVM/Android only); drop custom Pair; adopt kotlinx.serialization/kotlinx-datetime; enable Kotlin interop in app modules; complete Stage 1C"
 ```
 
@@ -642,7 +643,7 @@ git filter-repo --path common/AcraApiKey.properties --path thirdparty/flurry/Pro
 ```
 Then re-run Step 3's parity check, since `filter-repo` rewrites commit hashes. Neither finding requires panicked rotation before proceeding — both are attached to dead or unused services — but there's no reason to leave secret-shaped filenames sitting in a public repo's history once the fix is a single extra `--path` argument on a command you're already running.
 
-**Note what this does and doesn't touch:** `--invert-paths` rewrites *history* only — it removes `common/AcraApiKey.properties` and `thirdparty/flurry/ProjectApiKey.txt` from every past commit, but has no effect on the current working tree. `common/AcraApiKey.properties` on disk today is a symlink (not the real 2016 file), and `Android/build.gradle` reads it via a try/catch-wrapped `FileInputStream` — this scrub doesn't delete that symlink or otherwise change how ACRA config loading currently works. Don't assume this step also cleans up the live file; if that symlink needs to go too, that's a separate, deliberate decision, not a side effect of the history scrub.
+**Note what this does and doesn't touch:** `--invert-paths` rewrites *history* only — it removes `common/AcraApiKey.properties` and `thirdparty/flurry/ProjectApiKey.txt` from every past commit, but has no effect on the current working tree. `common/AcraApiKey.properties` on disk today is a symlink (not the real 2016 file), and `Zmanim/build.gradle` reads it via a try/catch-wrapped `FileInputStream` — this scrub doesn't delete that symlink or otherwise change how ACRA config loading currently works. Don't assume this step also cleans up the live file; if that symlink needs to go too, that's a separate, deliberate decision, not a side effect of the history scrub.
 
 - [ ] **Step 4b: Re-run the full-history sweep as a final check**
 
@@ -669,7 +670,7 @@ local.properties
 *.p12
 keystore.properties
 common/ProjectApiKey.txt
-Android/zmanim.gradle
+Zmanim/zmanim.gradle
 ZehutYosef/zehut-yosef.gradle
 .hg/
 .hgignore
@@ -763,7 +764,7 @@ The `wrapper-validation` step checks `gradle-wrapper.jar`'s checksum against Gra
 
 - [ ] **Step 2: Add `detekt` and `ktlint` Gradle configuration**
 
-Add the `detekt` and `ktlint` (e.g. `org.jlleitschuh.gradle.ktlint`) Gradle plugins via the version catalog and `build-logic` convention plugin from Task 4, applied to every Kotlin-bearing module (`:ZmanUtils`, `:ZmanLib` as of Task 7, and `:Android`/`:ZehutYosef` once they gain Kotlin files in Phase 4a/4b). Establish the baseline: run `./gradlew detekt ktlintCheck` locally, fix or explicitly and narrowly suppress any findings so the baseline starts clean, and commit a `detekt.yml` config capturing the agreed rule set.
+Add the `detekt` and `ktlint` (e.g. `org.jlleitschuh.gradle.ktlint`) Gradle plugins via the version catalog and `build-logic` convention plugin from Task 4, applied to every Kotlin-bearing module (`:ZmanUtils`, `:ZmanLib` as of Task 7, and `:Zmanim`/`:ZehutYosef` once they gain Kotlin files in Phase 4a/4b). Establish the baseline: run `./gradlew detekt ktlintCheck` locally, fix or explicitly and narrowly suppress any findings so the baseline starts clean, and commit a `detekt.yml` config capturing the agreed rule set.
 
 - [ ] **Step 3: Add an instrumented emulator smoke matrix**
 
@@ -854,13 +855,13 @@ Each sub-task follows the same pattern: make the change, run `./gradlew verifyRo
 #### Task 10.1: Retire local Xpece AARs and migrate preference XMLs
 
 **Files:**
-- Delete: `Android/libs/support-preference-1.3.1.*`
-- Delete: `Android/libs/support-spinner-1.3.1.*`
-- Modify: `Android/build.gradle.kts`
-- Modify: `Android/src/main/res/xml/personal_prefs.xml`
-- Modify: `Android/src/main/res/xml/personal_prefs_oreo.xml`
+- Delete: `Zmanim/libs/support-preference-1.3.1.*`
+- Delete: `Zmanim/libs/support-spinner-1.3.1.*`
+- Modify: `Zmanim/build.gradle.kts`
+- Modify: `Zmanim/src/main/res/xml/personal_prefs.xml`
+- Modify: `Zmanim/src/main/res/xml/personal_prefs_oreo.xml`
 
-- [ ] **Step 1:** Delete the local AAR files. Remove `api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))`-equivalent from `Android/build.gradle.kts`.
+- [ ] **Step 1:** Delete the local AAR files. Remove `api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))`-equivalent from `Zmanim/build.gradle.kts`.
 - [ ] **Step 2:** In `personal_prefs.xml` and `personal_prefs_oreo.xml`, replace `net.xpece.android.support.preference.CheckBoxPreference` with `androidx.preference.CheckBoxPreference` (and any other Xpece preference types referenced).
 - [ ] **Step 3:** Run `./gradlew verifyRoborazziDebug`. Expected: 0 diffs (or reconcile any theme/spacing diff before proceeding).
 - [ ] **Step 4:** Commit: `jj commit -m "10.1: Retire local Xpece preference AARs in favor of androidx.preference"`
@@ -868,7 +869,7 @@ Each sub-task follows the same pattern: make the change, run `./gradlew verifyRo
 #### Task 10.2: Upgrade core AndroidX and Google libraries
 
 **Files:**
-- Modify: `Android/build.gradle.kts`, `gradle/libs.versions.toml`
+- Modify: `Zmanim/build.gradle.kts`, `gradle/libs.versions.toml`
 
 - [ ] **Step 1:** Upgrade `com.google.android.material:material` (1.0 ➔ 1.12.0), `androidx.constraintlayout:constraintlayout` (1.1.3 ➔ 2.2.0), `androidx.appcompat:appcompat` (1.6.1 ➔ 1.7.0), `com.google.android.gms:play-services-location` (21.0.1 ➔ 21.3.0) in the version catalog. Remove `androidx.legacy:legacy-support-v4:1.0.0`.
 - [ ] **Step 2:** Run `./gradlew verifyRoborazziDebug`. Expected: 0 diffs, or reconcile Material 1.12's updated default component styling against the Task 3 baseline before proceeding.
@@ -923,11 +924,11 @@ Expected: BUILD SUCCESSFUL, 100% visual parity with Task 3 baselines.
 ### Task 11: Modernize & Enable Proguard / R8 Minification, Migrate to Play App Signing, AAB Bundling, and Release-Readiness Checks
 
 **Files:**
-- Modify: `Android/build.gradle.kts`
+- Modify: `Zmanim/build.gradle.kts`
 - Modify: `ZehutYosef/build.gradle.kts`
-- Modify: `Android/proguard-rules.pro`
+- Modify: `Zmanim/proguard-rules.pro`
 - Modify: `ZehutYosef/proguard-rules.pro`
-- Delete: Obsolete `Android/proguard-support-*.pro` files
+- Delete: Obsolete `Zmanim/proguard-support-*.pro` files
 - Delete (from the working tree, once Play App Signing is confirmed live): `common/jay-gindin-android-apps.keystore`
 
 **Interfaces:**
@@ -936,7 +937,7 @@ Expected: BUILD SUCCESSFUL, 100% visual parity with Task 3 baselines.
 
 - [ ] **Step 1: Clean out legacy Proguard files**
 
-Remove `proguard-support-design.pro`, `proguard-support-v7-appcompat.pro`, `proguard-project.pro`. Remove their references in `Android/build.gradle.kts`.
+Remove `proguard-support-design.pro`, `proguard-support-v7-appcompat.pro`, `proguard-project.pro`. Remove their references in `Zmanim/build.gradle.kts`.
 
 - [ ] **Step 2 — REQUIRES A HUMAN: Migrate release signing to Google Play App Signing**
 
@@ -945,7 +946,7 @@ The Play Console enrollment sub-step below needs an authenticated human session 
 `common/jay-gindin-android-apps.keystore` has been sitting in the repository's working tree since 2015. Task 8's secrets audit confirmed it was never actually committed to Mercurial history, so there's no history to scrub for it — but it's still one accidental `hg add`/`git add -A` away from becoming exactly that, for as long as it keeps living in `common/`. Google Play App Signing removes the need for it to live anywhere in the repo at all:
 - In Play Console, for both `Android` and `ZehutYosef` (both flavors), enroll in Play App Signing if not already enrolled, generating an upload key.
 - Move the (existing or new upload) keystore out of the repository entirely — a local, gitignored path on your machine, or a secrets manager, not `common/`.
-- Update `Android/build.gradle.kts` and `ZehutYosef/build.gradle.kts` `signingConfigs.release` to read the keystore path/password/alias from local, gitignored properties (e.g. `keystore.properties`, already added to `.gitignore` in Task 8) or environment variables, never hardcoded.
+- Update `Zmanim/build.gradle.kts` and `ZehutYosef/build.gradle.kts` `signingConfigs.release` to read the keystore path/password/alias from local, gitignored properties (e.g. `keystore.properties`, already added to `.gitignore` in Task 8) or environment variables, never hardcoded.
 - Once Play App Signing is confirmed handling releases, delete the keystore file from the working tree (not just `.gitignore` it — it shouldn't exist in the repo's current tree either).
 
 - [ ] **Step 3: Configure modern R8 rules in `proguard-rules.pro`**
@@ -958,7 +959,7 @@ Add rules protecting:
 
 - [ ] **Step 4: Enable minification in release build types**
 
-In `Android/build.gradle.kts` and `ZehutYosef/build.gradle.kts`:
+In `Zmanim/build.gradle.kts` and `ZehutYosef/build.gradle.kts`:
 ```kotlin
 buildTypes {
   release {
@@ -977,7 +978,7 @@ Expected: BUILD SUCCESSFUL with minified release APKs generated, signed with the
 
 Google Play requires apps targeting API 35+ (which Task 6 now does) to support 16 KB memory page sizes, effective February 1, 2027. Java/Kotlin-only apps are already compatible and this app currently has no native (`.so`) dependencies, but confirm none were introduced by Task 10's library upgrades:
 ```bash
-unzip -l Android/build/outputs/apk/release/*.apk | grep "\.so$"
+unzip -l Zmanim/build/outputs/apk/release/*.apk | grep "\.so$"
 unzip -l ZehutYosef/build/outputs/apk/*/release/*.apk | grep "\.so$"
 ```
 Expected: no `.so` files present. If any are found (e.g. pulled in transitively by an upgraded dependency), verify their ELF alignment with `zipalign -c -v -P 16 4 <apk>` rather than assuming AGP 9.4.0 handled it automatically.
@@ -989,7 +990,7 @@ Expected: 100% pass rate across all modules, tests, and visual checks. Confirm C
 
 - [ ] **Step 8: Manually install and smoke-test the minified release build**
 
-R8 minification is the one change in this phase that can produce a build that compiles and passes automated checks but crashes at runtime (missing `-keep` rule surfacing only at runtime via reflection). Install `Android/build/outputs/apk/release/*.apk` and `ZehutYosef`'s release APKs for both flavors on a real device or emulator and exercise the main screens before considering this task done.
+R8 minification is the one change in this phase that can produce a build that compiles and passes automated checks but crashes at runtime (missing `-keep` rule surfacing only at runtime via reflection). Install `Zmanim/build/outputs/apk/release/*.apk` and `ZehutYosef`'s release APKs for both flavors on a real device or emulator and exercise the main screens before considering this task done.
 
 - [ ] **Step 9: Commit in Jujutsu**
 
@@ -1012,7 +1013,7 @@ jj commit -m "Enable R8 minification, migrate release signing to Play App Signin
 
 - [ ] **Step 1: Document the module map and build/test commands**
 
-For each module (`:ZmanUtils`, `:ZmanLib`, `:Android`, `:ZehutYosef` with its `sidur`/`barMitzvah` flavors), state its purpose in one or two sentences, its current language (Kotlin/KMP vs. Java), and the exact command to build and test it in isolation (e.g. `./gradlew :ZmanLib:test`, `./gradlew :Android:assembleDebug`). Include the full-repo commands (`./gradlew test assembleDebug verifyRoborazziDebug`) and note which modules require the one real-device/emulator exception documented in Task 6/Task 9.
+For each module (`:ZmanUtils`, `:ZmanLib`, `:Zmanim`, `:ZehutYosef` with its `sidur`/`barMitzvah` flavors), state its purpose in one or two sentences, its current language (Kotlin/KMP vs. Java), and the exact command to build and test it in isolation (e.g. `./gradlew :ZmanLib:test`, `./gradlew :Zmanim:assembleDebug`). Include the full-repo commands (`./gradlew test assembleDebug verifyRoborazziDebug`) and note which modules require the one real-device/emulator exception documented in Task 6/Task 9.
 
 - [ ] **Step 2: Document code-quality gates and how to run them locally**
 
