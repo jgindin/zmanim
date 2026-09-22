@@ -4,8 +4,8 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.HebrewMonth;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -48,14 +48,14 @@ public class UT_DoWeSayTachanun {
   public void onShabbat() {
 
     final HebrewDate jan_6_2017 = HebrewCalendar.getForDate( 2017, Calendar.JANUARY, 6 );
-    Assert.assertTrue( new DoWeSay( jan_6_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_6_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_6_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( jan_6_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_6_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_6_2017, TefillaType.Arvit ).tachanun() );
 
     final HebrewDate jan_7_2017 = HebrewCalendar.getForDate( 2017, Calendar.JANUARY, 7 );
-    Assert.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_7_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -64,27 +64,27 @@ public class UT_DoWeSayTachanun {
 
     // This is also Shabbat...
     HebrewDate jan_28_2017 = HebrewCalendar.getForDate( 2017, Calendar.JANUARY, 28 );
-    Assert.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jan_28_2017, TefillaType.Arvit ).tachanun() );
 
     // Erev Rosh Chodesh
     HebrewDate aug_22_2017 = HebrewCalendar.getForDate( 2017, Calendar.AUGUST, 21 );
-    Assert.assertTrue( new DoWeSay( aug_22_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_22_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_22_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( aug_22_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_22_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_22_2017, TefillaType.Arvit ).tachanun() );
 
     // 30 Av
     HebrewDate aug_23_2017 = aug_22_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_23_2017, TefillaType.Arvit ).tachanun() );
 
     // 1 Elul
     HebrewDate aug_24_2017 = aug_23_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_24_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -92,55 +92,55 @@ public class UT_DoWeSayTachanun {
   public void onPurim() {
 
     HebrewDate march_12_2017 = HebrewCalendar.getForDate( 2017, Calendar.MARCH, 12 );
-    Assert.assertFalse( new DoWeSay( march_12_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( march_12_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( march_12_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_12_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_12_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_12_2017, TefillaType.Arvit ).tachanun() );
 
     // Shushan Purim
     HebrewDate march_13_2017 = march_12_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( march_13_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( march_13_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( march_13_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_13_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_13_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( march_13_2017, TefillaType.Arvit ).tachanun() );
 
 
     // Feb 27, 2018 is erev Ta'anit Esther, with Purim on March 1, and Shushan Purim on the 2nd.
     HebrewDate feb_27_2018 = HebrewCalendar.getForDate( 2018, Calendar.FEBRUARY, 27 );
-    Assert.assertTrue( new DoWeSay( feb_27_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertTrue( new DoWeSay( feb_27_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_27_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( feb_27_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( feb_27_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_27_2018, TefillaType.Arvit ).tachanun() );
 
     HebrewDate feb_28_2018 = feb_27_2018.tomorrow();
-    Assert.assertTrue( new DoWeSay( feb_28_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_28_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_28_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( feb_28_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_28_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_28_2018, TefillaType.Arvit ).tachanun() );
 
     HebrewDate mar_1_2018 = feb_28_2018.tomorrow();
-    Assert.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_1_2018, TefillaType.Arvit ).tachanun() );
 
     HebrewDate mar_2_2018 = mar_1_2018.tomorrow();
-    Assert.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( mar_2_2018, TefillaType.Arvit ).tachanun() );
 
 
     // Check the 14th & 15th of Adar I in a leap year.
     //  Feb 18 is Erev Purim Katan.
     HebrewDate feb_18_2019 = HebrewCalendar.getForDate( 2019, Calendar.FEBRUARY, 18 );
-    Assert.assertTrue( new DoWeSay( feb_18_2019, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_18_2019, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_18_2019, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( feb_18_2019, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_18_2019, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_18_2019, TefillaType.Arvit ).tachanun() );
 
     HebrewDate feb_19_2019 = feb_18_2019.tomorrow();
-    Assert.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_19_2019, TefillaType.Arvit ).tachanun() );
 
     HebrewDate feb_20_2019 = feb_18_2019.tomorrow();
-    Assert.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( feb_20_2019, TefillaType.Arvit ).tachanun() );
 
   }
 
@@ -149,15 +149,15 @@ public class UT_DoWeSayTachanun {
   public void allOfNissan() {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( 5777, HebrewMonth.ADAR, 29 );
-    Assert.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
 
     while ( date.getHebrewDayOfMonth() < 30 ) {
       date = date.tomorrow();
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Shachrit ).tachanun(), date.toString() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun(), date.toString() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun(), date.toString() );
     }
   }
 
@@ -166,19 +166,19 @@ public class UT_DoWeSayTachanun {
   public void yomHaZikaron_yomHaAtzmaut() {
 
     HebrewDate apr_30_2017 = HebrewCalendar.getForDate( 2017, Calendar.APRIL, 30 );
-    Assert.assertTrue( new DoWeSay( apr_30_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( apr_30_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( apr_30_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( apr_30_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( apr_30_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( apr_30_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate may_1_2017 = apr_30_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( may_1_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_1_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_1_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_1_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_1_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_1_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate may_2_2017 = may_1_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( may_2_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_2_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_2_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_2_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_2_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_2_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -186,14 +186,14 @@ public class UT_DoWeSayTachanun {
   public void pesachSheni() {
 
     HebrewDate may_9_2017 = HebrewCalendar.getForDate( 2017, Calendar.MAY, 9 );
-    Assert.assertTrue( new DoWeSay( may_9_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_9_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_9_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( may_9_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_9_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_9_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate may_10_2017 = may_9_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( may_10_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_10_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_10_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_10_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_10_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_10_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -201,9 +201,9 @@ public class UT_DoWeSayTachanun {
   public void lagLaOmer() {
 
     HebrewDate may_14_2017 = HebrewCalendar.getForDate( 2017, Calendar.MAY, 14 );
-    Assert.assertFalse( new DoWeSay( may_14_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_14_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_14_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_14_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_14_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_14_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -211,14 +211,14 @@ public class UT_DoWeSayTachanun {
   public void yomYerushalyim() {
 
     HebrewDate may_23_2017 = HebrewCalendar.getForDate( 2017, Calendar.MAY, 23 );
-    Assert.assertTrue( new DoWeSay( may_23_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_23_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_23_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( may_23_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_23_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_23_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate may_24_2017 = may_23_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( may_24_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_24_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_24_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_24_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_24_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_24_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -226,22 +226,22 @@ public class UT_DoWeSayTachanun {
   public void first12DaysOfSivan() {
 
     HebrewDate date = HebrewCalendar.getForJewishDate( 5777, HebrewMonth.IYAR, 29 );
-    Assert.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
 
     do {
       date = date.tomorrow();
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-      Assert.assertFalse( date.toString(), new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Shachrit ).tachanun(), date.toString() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun(), date.toString() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun(), date.toString() );
     }
     while ( date.getHebrewDayOfMonth() < 12 );
 
     date = date.tomorrow();
-    Assert.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-    Assert.assertTrue( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -249,19 +249,19 @@ public class UT_DoWeSayTachanun {
   public void onShavuot() {
 
     HebrewDate may_30_2017 = HebrewCalendar.getForDate( 2017, Calendar.MAY, 30);
-    Assert.assertFalse( new DoWeSay( may_30_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_30_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_30_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_30_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_30_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_30_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate may_31_2017 = may_30_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( may_31_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_31_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( may_31_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_31_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_31_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( may_31_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate june_1_2017 = may_31_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( june_1_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( june_1_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( june_1_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( june_1_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( june_1_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( june_1_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -269,14 +269,14 @@ public class UT_DoWeSayTachanun {
   public void tishaBAv() {
 
     HebrewDate jul_31_2017 = HebrewCalendar.getForDate( 2017, Calendar.JULY, 31 );
-    Assert.assertTrue( new DoWeSay( jul_31_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jul_31_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( jul_31_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( jul_31_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jul_31_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( jul_31_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate aug_1_2017 = jul_31_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_1_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -284,14 +284,14 @@ public class UT_DoWeSayTachanun {
   public void tuBAv() {
 
     HebrewDate aug_6_2017 = HebrewCalendar.getForDate( 2017, Calendar.AUGUST, 6 );
-    Assert.assertTrue( new DoWeSay( aug_6_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_6_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_6_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( aug_6_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_6_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_6_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate aug_7_2017 = aug_6_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( aug_7_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -300,26 +300,26 @@ public class UT_DoWeSayTachanun {
 
     // The 28th of Elul...still have tachanun
     HebrewDate sept_19_2017 = HebrewCalendar.getForDate( 2017, Calendar.SEPTEMBER, 19 );
-    Assert.assertTrue( new DoWeSay( sept_19_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertTrue( new DoWeSay( sept_19_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_19_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( sept_19_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( sept_19_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_19_2017, TefillaType.Arvit ).tachanun() );
 
     // The 29th, however, we don't...
     HebrewDate sept_20_2017 = sept_19_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_20_2017, TefillaType.Arvit ).tachanun() );
 
     // ..of course not on Rosh Hashana...
     HebrewDate sept_21_2017 = sept_20_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_21_2017, TefillaType.Arvit ).tachanun() );
 
     HebrewDate sept_22_2017 = sept_21_2017.tomorrow();
-    Assert.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_22_2017, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -327,21 +327,21 @@ public class UT_DoWeSayTachanun {
   public void onYomKippur() {
 
     HebrewDate sept_17_2018 = HebrewCalendar.getForDate( 2018, Calendar.SEPTEMBER, 17 );
-    Assert.assertTrue( new DoWeSay( sept_17_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertTrue( new DoWeSay( sept_17_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_17_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( sept_17_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertTrue( new DoWeSay( sept_17_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_17_2018, TefillaType.Arvit ).tachanun() );
 
     // Erev Yom Kippur -- no tachanun
     HebrewDate sept_18_2018 = sept_17_2018.tomorrow();
-    Assert.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_18_2018, TefillaType.Arvit ).tachanun() );
 
     // And not on Kippur!
     HebrewDate sept_19_2018 = sept_18_2018.tomorrow();
-    Assert.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Shachrit ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Mincha ).tachanun() );
-    Assert.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Arvit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Shachrit ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Mincha ).tachanun() );
+    Assertions.assertFalse( new DoWeSay( sept_19_2018, TefillaType.Arvit ).tachanun() );
   }
 
 
@@ -351,9 +351,9 @@ public class UT_DoWeSayTachanun {
     HebrewDate date = HebrewCalendar.getForDate( 2018, Calendar.SEPTEMBER, 19 );
     while ( date.getHebrewMonth() == HebrewMonth.TISHREI ) {
 
-      Assert.assertFalse( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
-      Assert.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
-      Assert.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Shachrit ).tachanun() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Mincha ).tachanun() );
+      Assertions.assertFalse( new DoWeSay( date, TefillaType.Arvit ).tachanun() );
 
       date = date.tomorrow();
     }

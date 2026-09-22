@@ -2,9 +2,9 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ public class UT_CachedLocationResolver {
   private TestIOFactory                                     ioFactory;
 
 
-  @Before
+  @BeforeEach
   public void setup() {
 
     ioFactory = new TestIOFactory();
@@ -53,7 +53,7 @@ public class UT_CachedLocationResolver {
       .build();
 
     ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinates( location2 );
-    Assert.assertEquals( location, resolvedLocation );
+    Assertions.assertEquals( location, resolvedLocation );
   }
 
 
@@ -78,7 +78,7 @@ public class UT_CachedLocationResolver {
 
     // The caching resolver won't know about this other location, so it'll return null.
     ZmanimLocation resolvedLocation = cachedLocationResolver.resolveFromCoordinates( location2 );
-    Assert.assertNull( resolvedLocation );
+    Assertions.assertNull( resolvedLocation );
   }
 
 
@@ -92,7 +92,7 @@ public class UT_CachedLocationResolver {
       .build();
 
     cachedLocationResolver.cache( location );
-    Assert.assertEquals( 0, cachedLocationResolver.locationCache.size() );
+    Assertions.assertEquals( 0, cachedLocationResolver.locationCache.size() );
 
   }
 
@@ -114,10 +114,10 @@ public class UT_CachedLocationResolver {
     ioFactory.prepInput( ioFactory.outputFile );
 
     cachedLocationResolver.loadCache();
-    Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
+    Assertions.assertEquals( 1, cachedLocationResolver.locationCache.size() );
 
     ZmanimLocation cachedLocation = cachedLocationResolver.locationCache.iterator().next();
-    Assert.assertEquals( location, cachedLocation );
+    Assertions.assertEquals( location, cachedLocation );
   }
 
 
@@ -142,7 +142,7 @@ public class UT_CachedLocationResolver {
 
     cachedLocationResolver.cache( location2 );
 
-    Assert.assertEquals( 1, cachedLocationResolver.locationCache.size() );
+    Assertions.assertEquals( 1, cachedLocationResolver.locationCache.size() );
   }
 
 
@@ -169,7 +169,7 @@ public class UT_CachedLocationResolver {
       cachedLocationResolver.cache( location );
     }
 
-    Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
+    Assertions.assertEquals( 25, cachedLocationResolver.locationCache.size() );
 
     ZmanimLocation location = new ZmanimLocation.Builder()
       .atLatitude( firstLocation.getLatitude() + 25 )
@@ -180,8 +180,8 @@ public class UT_CachedLocationResolver {
 
     cachedLocationResolver.cache( location );
 
-    Assert.assertEquals( 25, cachedLocationResolver.locationCache.size() );
-    Assert.assertFalse( cachedLocationResolver.locationCache.contains( firstLocation ) );
+    Assertions.assertEquals( 25, cachedLocationResolver.locationCache.size() );
+    Assertions.assertFalse( cachedLocationResolver.locationCache.contains( firstLocation ) );
   }
 
 

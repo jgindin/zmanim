@@ -1,8 +1,8 @@
 package com.gindin.zehutyosef.tefilla;
 
 import com.gindin.zmanlib.calendar.HebrewCalendar;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -17,15 +17,15 @@ public class UT_DoWeSay {
   public void may_30_2015() {
 
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2015, Calendar.MAY, 30 ), TefillaType.Arvit );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -33,15 +33,15 @@ public class UT_DoWeSay {
   public void sept_16_2015() {
 
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 16 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertTrue( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertTrue( doWeSay.taanitDayInsertions() );
-    Assert.assertTrue( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertTrue( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertTrue( doWeSay.taanitDayInsertions() );
+    Assertions.assertTrue( doWeSay.tachanun() );
   }
 
 
@@ -50,15 +50,15 @@ public class UT_DoWeSay {
 
     // Friday in late Elul
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2015, Calendar.SEPTEMBER, 11 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertTrue( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertTrue( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -67,15 +67,15 @@ public class UT_DoWeSay {
 
     // Erev Rosh Hashana
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2018, Calendar.SEPTEMBER, 9 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -84,15 +84,15 @@ public class UT_DoWeSay {
 
     // Erev Yom Kippur
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2018, Calendar.SEPTEMBER, 18 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertTrue( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertTrue( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -101,15 +101,15 @@ public class UT_DoWeSay {
 
     // 1st day of Chanukah
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2018, Calendar.DECEMBER, 3 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertTrue( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertTrue( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -118,15 +118,15 @@ public class UT_DoWeSay {
 
     // 8th day of Chanukah and Rosh Chodesh
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2018, Calendar.DECEMBER, 9 ), TefillaType.Mincha );
-    Assert.assertFalse( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertTrue( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertTrue( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertFalse( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertTrue( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertTrue( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -135,15 +135,15 @@ public class UT_DoWeSay {
 
     // Erev Purim katan
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2019, Calendar.FEBRUARY, 18 ), TefillaType.Mincha );
-    Assert.assertFalse( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertFalse( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -152,15 +152,15 @@ public class UT_DoWeSay {
 
     // Purim Katan
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2019, Calendar.FEBRUARY, 19 ), TefillaType.Mincha );
-    Assert.assertFalse( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertFalse( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -169,15 +169,15 @@ public class UT_DoWeSay {
 
     // Erev Purim
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2019, Calendar.MARCH, 20 ), TefillaType.Mincha );
-    Assert.assertFalse( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertTrue( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertFalse( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertTrue( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -186,15 +186,15 @@ public class UT_DoWeSay {
 
     // Simchat Torah
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2016, Calendar.OCTOBER, 25 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -204,15 +204,15 @@ public class UT_DoWeSay {
     // Just some date that's making sure we're in the new Hebrew year before the new secular year.
     //  It happens to be erev Rosh Chodesh, though, so no Tachanun!
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2016, Calendar.NOVEMBER, 30 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
   }
 
 
@@ -221,15 +221,15 @@ public class UT_DoWeSay {
 
     // Just some date that's making sure we're in the new Hebrew year before the new secular year.
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2016, Calendar.DECEMBER, 14 ), TefillaType.Mincha );
-    Assert.assertFalse( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertFalse( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertTrue( doWeSay.tachanun() );
+    Assertions.assertFalse( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertFalse( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertTrue( doWeSay.tachanun() );
   }
 
   @Test
@@ -237,27 +237,27 @@ public class UT_DoWeSay {
 
     // Erev Tu B'Av
     DoWeSay doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2016, Calendar.AUGUST, 18 ), TefillaType.Mincha );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertFalse( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertFalse( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
 
     // Tu B'Av
     doWeSay = new DoWeSay( HebrewCalendar.getForDate( 2016, Calendar.AUGUST, 19 ), TefillaType.Shachrit );
-    Assert.assertTrue( doWeSay.barechenu() );
-    Assert.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
-    Assert.assertFalse( doWeSay.chanukahAdditions() );
-    Assert.assertTrue( doWeSay.erevShabbatModifications() );
-    Assert.assertFalse( doWeSay.purimAdditions() );
-    Assert.assertTrue( doWeSay.moridHaTal() );
-    Assert.assertFalse( doWeSay.roshChodeshAdditions() );
-    Assert.assertFalse( doWeSay.taanitDayInsertions() );
-    Assert.assertFalse( doWeSay.tachanun() );
+    Assertions.assertTrue( doWeSay.barechenu() );
+    Assertions.assertFalse( doWeSay.aseretYameiTeshuvaInsertions() );
+    Assertions.assertFalse( doWeSay.chanukahAdditions() );
+    Assertions.assertTrue( doWeSay.erevShabbatModifications() );
+    Assertions.assertFalse( doWeSay.purimAdditions() );
+    Assertions.assertTrue( doWeSay.moridHaTal() );
+    Assertions.assertFalse( doWeSay.roshChodeshAdditions() );
+    Assertions.assertFalse( doWeSay.taanitDayInsertions() );
+    Assertions.assertFalse( doWeSay.tachanun() );
 
   }
 
