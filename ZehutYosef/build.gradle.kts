@@ -5,7 +5,7 @@
 import com.gindin.buildlogic.zmanimAppVersion
 
 plugins {
-  // See Android/build.gradle.kts for what this convention plugin (build-logic) brings in.
+  // See Zmanim/build.gradle.kts for what this convention plugin (build-logic) brings in.
   id("zmanim.android-application-conventions")
 }
 

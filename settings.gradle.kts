@@ -24,5 +24,5 @@ plugins {
 
 include(":ZmanUtils")
 include(":ZmanLib")
-include(":Android")
+include(":Zmanim")
 include(":ZehutYosef")

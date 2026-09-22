@@ -5,7 +5,7 @@
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import org.gradle.api.artifacts.VersionCatalogsExtension
 
-// Convention plugin holding everything :Android and :ZehutYosef configure identically.
+// Convention plugin holding everything :Zmanim and :ZehutYosef configure identically.
 //
 // This replaces the former `apply(from = "../common/gindin-android.gradle.kts")` /
 //  `apply(from = "../common/gindin-versioning.gradle.kts")` script-plugin pair plus a large block
@@ -76,7 +76,7 @@ android {
  *  https://developer.android.com/build/build-variants#customize-artifact-name -- which exposes
  *  each output's file name as a settable Property<String> instead of a closure property.
  *
- * This was briefly duplicated byte-for-byte in Android/build.gradle.kts and
+ * This was briefly duplicated byte-for-byte in Zmanim/build.gradle.kts and
  *  ZehutYosef/build.gradle.kts, because a script applied via `apply(from = ...)` could not safely
  *  hold a typed reference to AGP's Variant API types. A real convention plugin can, so it is back
  *  to living in exactly one place.

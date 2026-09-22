@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Roborazzi baseline snapshots of the two {@code :Android} screens named in the Phase 1
+ * Roborazzi baseline snapshots of the two {@code :Zmanim} screens named in the Phase 1
  *  modernization plan (Task 3): the main daily zmanim list and the personal preferences screen.
  *<p/>
  *

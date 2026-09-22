@@ -17,8 +17,8 @@ hg.number
 .*.swp$
 
 # Ignore generated files
-^Android/gen/
-^Android/bin/
+^Zmanim/gen/
+^Zmanim/bin/
 ^ZmanUtils/gen/
 ^ZmanUtils/bin/
 ^ZmanLib/gen/
@@ -41,7 +41,7 @@ local.properties
 ^common/jay-gindin-android-apps.keystore
 ^common/ProjectApiKey.txt
 ^ZehutYosef/zehut-yosef.gradle
-^Android/zmanim.gradle
+^Zmanim/zmanim.gradle
 
 
 ### JetBrains template
@@ -93,7 +93,7 @@ fabric.properties
 
 
 # Files generated during our build
-Android/src/main/assets/com/gindin/zmanim/android/about.html
+Zmanim/src/main/assets/com/gindin/zmanim/android/about.html
 .superpowers/
 .idea/deviceManager.xml
 .idea/deploymentTargetSelector.xml

@@ -20,7 +20,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Android" />
+            <option value="$PROJECT_DIR$/Zmanim" />
             <option value="$PROJECT_DIR$/ZehutYosef" />
             <option value="$PROJECT_DIR$/ZmanLib" />
             <option value="$PROJECT_DIR$/ZmanUtils" />

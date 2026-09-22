@@ -16,7 +16,7 @@ plugins {
 }
 
 // Optional-apply pattern replacing the Groovy try/catch: zmanim.gradle is a never-committed,
-//  gitignored file (see .hgignore, "^Android/zmanim.gradle") with the real release signing
+//  gitignored file (see .hgignore, "^Zmanim/zmanim.gradle") with the real release signing
 //  config, so it may simply not exist on a fresh checkout. Kotlin DSL's `apply(from = ...)`
 //  fails the whole script evaluation before the applied file's own contents are even parsed
 //  when the file is missing (there's no analogous runtime exception for a bare try/catch to
@@ -46,7 +46,7 @@ if (file("zmanim.gradle").exists()) {
 
 // Feeds this module's major/minor into the advanced-build-version plugin (applied by the
 //  convention plugin) and reads back the computed code/name. The version code auto-increments
-//  through Android/version.properties exactly as before.
+//  through Zmanim/version.properties exactly as before.
 val appVersion = zmanimAppVersion(major = 4, minor = 0)
 
 /*

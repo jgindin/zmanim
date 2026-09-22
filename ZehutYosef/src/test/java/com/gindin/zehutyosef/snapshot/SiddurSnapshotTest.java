@@ -45,7 +45,7 @@ import java.util.List;
  *  runs it once per flavor variant (e.g. {@code testBarMitzvahDebugUnitTest} and
  *  {@code testSidurDebugUnitTest} -- and correspondingly
  *  {@code recordRoborazziBarMitzvahDebug}/{@code recordRoborazziSidurDebug} for Roborazzi, NOT a
- *  flavor-less {@code recordRoborazziDebug} the way the single-flavor {@code :Android} module
+ *  flavor-less {@code recordRoborazziDebug} the way the single-flavor {@code :Zmanim} module
  *  has). Both methods below therefore exist in both variant runs; each uses
  *  {@link Assume#assumeTrue} to only actually capture under the flavor it names, and cleanly
  *  skips (not fails) under the other -- otherwise "captureBarMitzvahReader" run under the

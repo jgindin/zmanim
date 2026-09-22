@@ -16,7 +16,7 @@ prayer book). It has two product flavors: "barMitzvah" and "sidur". It uses the
 
 The project is divided into four modules:
 
-* `Android`: The main "Zmanim" application module.
+* `Zmanim`: The main "Zmanim" application module.
 * `ZehutYosef`: The "Zehut Yosef" application module.
 * `ZmanLib`: A Java library module that likely contains common logic for both
   applications, wrapping the `kosherjava.zmanim` library.
@@ -36,8 +36,8 @@ To build the project, you can use the following Gradle command:
 This will build both the "Zmanim" and "Zehut Yosef" applications.
 
 To run the "Zmanim" application, you can install the generated APK file from
-`Android/build/outputs/apk/debug/Android-debug.apk` on an Android device or
-emulator.
+`Zmanim/build/outputs/apk/debug/Zmanim--debug-<versionName>.apk` (e.g.
+`Zmanim--debug-4.0.402.apk`) on an Android device or emulator.
 
 To run the "Zehut Yosef" application, you can install the generated APK file
 from `ZehutYosef/build/outputs/apk/sidur/debug/ZehutYosef-sidur-debug.apk` or
