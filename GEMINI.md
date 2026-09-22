@@ -55,7 +55,8 @@ versions of the applications.
 * The project is divided into modules to promote code reuse and separation of
   concerns.
 * The project uses a versioning system that is managed by the
-  `gindin-versioning.gradle` file.
+  `zmanim.android-application-conventions` convention plugin in `build-logic`
+  (see `build-logic/src/main/kotlin/com/gindin/buildlogic/Versioning.kt`).
 * The project uses several open-source libraries, which are listed in the
   `build.gradle` files.
 * The project uses `AndroidX` libraries for modern Android development.
