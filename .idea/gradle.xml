@@ -4,6 +4,17 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/build-logic" name="build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/build-logic" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="CHOOSE_PER_TEST" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
@@ -13,6 +24,7 @@
             <option value="$PROJECT_DIR$/ZehutYosef" />
             <option value="$PROJECT_DIR$/ZmanLib" />
             <option value="$PROJECT_DIR$/ZmanUtils" />
+            <option value="$PROJECT_DIR$/build-logic" />
           </set>
         </option>
       </GradleProjectSettings>
