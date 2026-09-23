@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.android.prefs;
 
+import com.gindin.util.EdgeToEdgeUtil;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.service.DisplayNotificationService;
 
@@ -37,6 +38,7 @@ public class PersonalPreferences
   @Override
   protected void onCreate( @Nullable Bundle savedInstanceState ) {
     super.onCreate( savedInstanceState );
+    EdgeToEdgeUtil.padForActionBarOverlay( this, findViewById( android.R.id.content ) );
 
     if ( getSupportFragmentManager().findFragmentById( android.R.id.content ) == null ) {
       getSupportFragmentManager()

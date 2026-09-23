@@ -6,6 +6,7 @@ package com.gindin.zmanim.android;
 
 import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.Presenter;
+import com.gindin.util.EdgeToEdgeUtil;
 import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.display.daily.header.DateDisplayModule;
@@ -172,6 +173,7 @@ public class ZmanimActivity
     AppUpgrader.handle( this, personalPrefsManager, new ZmanimSelectionPrefsManager( this ) );
 
     setContentView( R.layout.main );
+    EdgeToEdgeUtil.padForActionBarOverlay( this, findViewById( R.id.main_layout ) );
 
     determiningLocationDialog = new DeterminingLocation( this );
 
