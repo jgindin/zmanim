@@ -24,21 +24,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * A good converter seems to be: http://www.csgnetwork.com/gpscoordconv.html
  * <p/>
  * <p>
- * NOTE ON JUNIT 5 MIGRATION: this was originally a JUnit 4 {@code @RunWith(Parameterized.class)}
- *  test with the current {@code CityInfo} injected via constructor. JUnit 5 has no
- *  {@code @RunWith}/{@code Parameterized} equivalent at all, so each of the five original
- *  {@code @Test} methods below is now its own {@code @ParameterizedTest} sourced from the same
- *  {@link #gatherTestData()} data set (still the same 8 cities), with the {@code CityInfo}
- *  passed as a method parameter instead of a constructor-injected field -- JUnit 5 creates a
- *  fresh test instance per invocation anyway (the default PER_METHOD lifecycle), so there's no
- *  benefit to re-introducing a field just to mirror the old constructor-injection shape.
+ * Each of the five test methods below is a {@code @ParameterizedTest} sourced from
+ *  {@link #gatherTestData()}'s 8 cities, with {@code CityInfo} passed as a method parameter
+ *  rather than a constructor-injected field -- JUnit 5 creates a fresh test instance per
+ *  invocation anyway (the default PER_METHOD lifecycle), so a field would add nothing.
  * <p>
- * Separately, {@code Assert.assertThat(...)} (used below with the custom {@code BaseMatcher})
- *  has no equivalent on JUnit 5's {@code org.junit.jupiter.api.Assertions} -- Jupiter
- *  deliberately did not carry `assertThat` forward from JUnit 4. Hamcrest itself is
- *  JUnit-version-agnostic, so {@link org.hamcrest.MatcherAssert#assertThat} is used directly
- *  instead (see the {@code testImplementation(libs.hamcrest)} dependency added to
- *  ZmanLib/build.gradle.kts for this).
+ * {@code assertThat(...)} below (used with the custom {@code BaseMatcher}) is
+ *  {@link org.hamcrest.MatcherAssert#assertThat}, not a JUnit assertion -- JUnit 5's
+ *  {@code org.junit.jupiter.api.Assertions} has no {@code assertThat} method at all. Hamcrest is
+ *  JUnit-version-agnostic, so this only needs the {@code testImplementation(libs.hamcrest)}
+ *  dependency in ZmanLib/build.gradle.kts, no JUnit-specific wiring.
  */
 @SuppressWarnings( "MagicNumber" )
 class UT_LatitudeLongitudeParser {

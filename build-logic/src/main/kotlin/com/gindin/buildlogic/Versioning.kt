@@ -16,8 +16,8 @@ data class AppVersion(val code: Int, val name: String)
  * `zmanim.android-application-conventions`) with this module's major/minor numbers and returns the
  * resulting version code/name, ready to be assigned to `android.defaultConfig`.
  *
- * The version *name* deliberately keeps the historical `<major>.<minor>.<code>` shape - e.g.
- * `4.0.402` - which the APK file names and the about-screen template both depend on.
+ * The version *name* deliberately keeps the `<major>.<minor>.<code>` shape - e.g. `4.0.402` -
+ * that the APK file names and the about-screen template both depend on.
  *
  * ### What the upstream plugin actually does
  *
@@ -33,12 +33,11 @@ data class AppVersion(val code: Int, val name: String)
  * (`codeOptions.dependsOnTasks`, default `["release"]`, matched case-insensitively). So the
  * counter advances once per release-task invocation, not once per read.
  *
- * This is still a plain function rather than a custom Gradle extension applied from the
- * convention plugin, because the reads must happen *after* the module supplies its major/minor
- * and *before* `android.defaultConfig.versionCode` is assigned. Making that ordering an explicit
- * call in the module's own build script - instead of hiding it behind an `afterEvaluate {}` race
- * with AGP's own DSL finalization - is both simpler and more predictable, and it is exactly the
- * order the previous `common/gindin-versioning.gradle.kts` ran in.
+ * This is a plain function rather than a custom Gradle extension applied from the convention
+ * plugin, because the reads must happen *after* the module supplies its major/minor and *before*
+ * `android.defaultConfig.versionCode` is assigned. Making that ordering an explicit call in the
+ * module's own build script - instead of hiding it behind an `afterEvaluate {}` race with AGP's
+ * own DSL finalization - is both simpler and more predictable.
  *
  * ### Hazard: every application module must call this
  *
@@ -51,10 +50,10 @@ data class AppVersion(val code: Int, val name: String)
  * would sail through every debug and test build and only blow up at release time, so if you add a
  * new application module, call this function from it.
  *
- * Note that unlike the old script, this holds a real, typed reference to
- * [AdvancedBuildVersionExtension]: a plugin declared in a convention plugin's `plugins {}` block
- * is loaded through a single classloader, so there is no classloader-identity mismatch to work
- * around and no need for `groovy.lang.GroovyObject` dynamic dispatch.
+ * This holds a real, typed reference to [AdvancedBuildVersionExtension]: a plugin declared in a
+ * convention plugin's `plugins {}` block is loaded through a single classloader, so there's no
+ * classloader-identity mismatch to work around and no need for `groovy.lang.GroovyObject`
+ * dynamic dispatch.
  */
 fun Project.zmanimAppVersion(
   major: Int,

@@ -7,18 +7,17 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 
 // Convention plugin holding everything :Zmanim and :ZehutYosef configure identically.
 //
-// This replaces the former `apply(from = "../common/gindin-android.gradle.kts")` /
-//  `apply(from = "../common/gindin-versioning.gradle.kts")` script-plugin pair plus a large block
-//  of copy-pasted config in each app module. Because this IS a real, precompiled script plugin,
-//  the plugins below are declared in a normal `plugins {}` block, which means:
+// Because this IS a real, precompiled script plugin, the plugins below are declared in a normal
+//  `plugins {}` block, which means:
 //    * Kotlin DSL generates the type-safe `android {}` / `implementation(...)` accessors here,
 //      so no `configure<BaseAppModuleExtension> {}` / string-keyed-configuration workarounds; and
 //    * there is exactly ONE classloader for each plugin's classes, so the advanced-build-version
-//      extension can be referenced by its real type (see com.gindin.buildlogic.Versioning) instead
-//      of being driven dynamically through `groovy.lang.GroovyObject`. The classloader-identity
-//      problem documented at length in the deleted common/*.gradle.kts scripts was a consequence
-//      of `apply(from = ...)` not inheriting the applying project's buildscript classpath; it does
-//      not exist for a plugin declared this way.
+//      extension can be referenced by its real type (see com.gindin.buildlogic.Versioning)
+//      instead of being driven dynamically through `groovy.lang.GroovyObject`. That dynamic-
+//      dispatch approach is only needed when a plugin is applied from a script via
+//      `apply(from = ...)`, since such a script doesn't inherit the applying project's
+//      buildscript classpath and ends up loading the plugin's classes through a second, distinct
+//      classloader instance -- a problem a plugin declared in a `plugins {}` block doesn't have.
 plugins {
   id("com.android.application")
   id("org.moallemi.advanced-build-version")
@@ -66,20 +65,9 @@ android {
 }
 
 /**
- * Swizzle the APK name.
- *
- * Historically this used the old (now-removed) variant API:
- *   android.applicationVariants.all { variant -> variant.outputs.all { outputFileName = ... } }
- * (originally in common/gindin-versioning.gradle, shared with ZehutYosef). That API no longer
- *  exists as of the AGP version in use here. The AGP-recommended Kotlin DSL replacement is the
- *  androidComponents.onVariants {} Variant API -- see
- *  https://developer.android.com/build/build-variants#customize-artifact-name -- which exposes
- *  each output's file name as a settable Property<String> instead of a closure property.
- *
- * This was briefly duplicated byte-for-byte in Zmanim/build.gradle.kts and
- *  ZehutYosef/build.gradle.kts, because a script applied via `apply(from = ...)` could not safely
- *  hold a typed reference to AGP's Variant API types. A real convention plugin can, so it is back
- *  to living in exactly one place.
+ * Renames each build variant's output APK using AGP's Variant API: `output.outputFileName` is a
+ *  settable `Property<String>`. See
+ *  https://developer.android.com/build/build-variants#customize-artifact-name.
  */
 extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVariants { variant ->
   variant.outputs.forEach { output ->

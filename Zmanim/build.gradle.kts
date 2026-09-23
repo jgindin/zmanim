@@ -67,11 +67,9 @@ android {
     versionName = appVersion.name
   }
 
-  // NOTE: this `copy` was nested inside `defaultConfig {}` in the original Groovy, relying on
-  //  Groovy's closure owner-chain fallback to resolve it against the project (the defaultConfig
-  //  object has no `copy` member of its own). Kotlin DSL lambdas don't fall back to an outer
-  //  scope like that, so it is hoisted here as a direct sibling -- same net effect (running the
-  //  copy at project-configuration time), just addressed explicitly instead of implicitly.
+  // `copy` is a `Project` member, not something `defaultConfig {}` exposes, so this has to be a
+  //  direct sibling of `defaultConfig` rather than nested inside it. Runs at project-
+  //  configuration time, filling the version placeholder into the about-screen template.
   run {
     val replace = appVersion.name
     project.copy {
