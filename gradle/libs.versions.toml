@@ -65,6 +65,21 @@ mikepenz-fontawesome-typeface = { group = "com.mikepenz", name = "fontawesome-ty
 mikepenz-materialdrawer = { group = "com.mikepenz", name = "materialdrawer", version.ref = "mikepenzMaterialdrawer" }
 mikepenz-aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries", version.ref = "mikepenzAboutlibraries" }
 
+[bundles]
+# The Roborazzi screen-snapshot safety net (see each app's src/test/.../snapshot): all five are
+#  always pulled in together, all as plain testImplementation with no per-dependency config, so a
+#  bundle is a clean fit. NOT included here: junit/junit-jupiter/junit-vintage-engine/
+#  junit-platform-launcher (they split across testImplementation and testRuntimeOnly, and a bundle
+#  applies everything under one configuration) and the two androidx-compose-ui-test* entries (they
+#  each need transitive = false, which a bundle member can't carry).
+roborazzi = ["robolectric", "roborazzi", "roborazzi-junit-rule", "androidx-test-core", "androidx-test-ext-junit"]
+
+# Zmanim's own UI/location dependency stack (Zmanim/build.gradle.kts) -- all six are plain
+#  implementation with no per-dependency config, and (unlike the Roborazzi bundle above) this one
+#  is module-specific rather than shared with :ZehutYosef, so it stays out of the convention
+#  plugin and is applied directly in Zmanim/build.gradle.kts instead.
+zmanim-ui = ["androidx-constraintlayout", "androidx-legacy-support-v4", "androidx-appcompat", "androidx-preference", "google-material", "play-services-location"]
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 moallemi-advanced-build-version = { id = "org.moallemi.advanced-build-version", version.ref = "moallemiAdvancedBuildVersion" }

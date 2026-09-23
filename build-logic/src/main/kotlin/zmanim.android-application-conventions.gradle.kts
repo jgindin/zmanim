@@ -116,12 +116,10 @@ dependencies {
   testRuntimeOnly(libs.findLibrary("junit-vintage-engine").get())
   testRuntimeOnly(libs.findLibrary("junit-platform-launcher").get())
 
-  // Roborazzi screen snapshot safety net (see each app's src/test/.../snapshot).
-  testImplementation(libs.findLibrary("robolectric").get())
-  testImplementation(libs.findLibrary("roborazzi").get())
-  testImplementation(libs.findLibrary("roborazzi-junit-rule").get())
-  testImplementation(libs.findLibrary("androidx-test-core").get())
-  testImplementation(libs.findLibrary("androidx-test-ext-junit").get())
+  // Roborazzi screen snapshot safety net (see each app's src/test/.../snapshot). Grouped as a
+  //  single [bundles] entry in gradle/libs.versions.toml since these five are always pulled in
+  //  together as plain testImplementation, with no per-dependency configuration.
+  testImplementation(libs.findBundle("roborazzi").get())
 
   // Not used by these apps (no Jetpack Compose here) -- Roborazzi's single facade class exposes
   //  both View- and Compose-based captureRoboImage() overloads, so javac needs these Compose

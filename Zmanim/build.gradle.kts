@@ -125,12 +125,7 @@ dependencies {
 
   implementation(libs.kosherjava.zmanim)
 
-  implementation(libs.androidx.constraintlayout)
-  implementation(libs.androidx.legacy.support.v4)
-  implementation(libs.androidx.appcompat)
-  implementation(libs.androidx.preference)
-  implementation(libs.google.material)
-  implementation(libs.play.services.location)
+  implementation(libs.bundles.zmanim.ui)
 
   testImplementation(libs.org.json)
 }
