@@ -42,13 +42,13 @@
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
 -keep public class com.android.vending.licensing.ILicensingService
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     native <methods>;
 }
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 -keepclassmembers enum * {
