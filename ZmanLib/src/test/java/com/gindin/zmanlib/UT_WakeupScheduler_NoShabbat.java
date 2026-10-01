@@ -66,6 +66,100 @@ public class UT_WakeupScheduler_NoShabbat
   }
 
 
+  /**
+   * Chol HaMoed Pesach is neither Shabbat nor Yom Tov, so notifications should continue as normal
+   *  on those days even though Shabbat notifications are disabled:
+   *  <ul>
+   *    <li>Thu Apr 13 (Chol HaMoed): alerts all day.
+   *    <li>Fri Apr 14 (Chol HaMoed, erev Shabbat): alerts until candle lighting, then suppressed
+   *      because tomorrow is Shabbat.
+   *    <li>Sat Apr 15 (Shabbat Chol HaMoed): suppressed all day because today IS Shabbat.
+   *    <li>Sun Apr 16 (Chol HaMoed): alerts resume once Shabbat ends, continue until candle
+   *      lighting, then suppressed because tomorrow is the 7th day of Pesach (Yom Tov).
+   *    <li>Mon Apr 17 (7th day of Pesach, Yom Tov): suppressed all day because today IS Yom Tov.
+   *  </ul>
+   */
+  @Test
+  public void pesach_cholHamoed_2017() {
+    Calendar testTime = UT_ZmanUtils.configureTestTime( 2017, Calendar.APRIL, 13, 6, 34 );
+    runDays( testTime, 5, new NoShabbatZmanCallback(),
+      "Zman                | Time           | Action Time                   | Actually Alert?   | \n"
+        + "--------------------|----------------|-------------------------------|-------------------|\n"
+        + "SofZmanShema        | 8:57:02 AM     | Thu Apr 13 08:42:02 PDT 2017  | true              |\n"
+        + "SofZmanTefila       | 10:54:25 AM    | Thu Apr 13 10:39:25 PDT 2017  | true              |\n"
+        + "Chatzot             | 1:09:34 PM     | Thu Apr 13 12:54:34 PDT 2017  | true              |\n"
+        + "MinchaGedola        | 1:43:47 PM     | Thu Apr 13 13:28:47 PDT 2017  | true              |\n"
+        + "MinchaKetana        | 5:07:01 PM     | Thu Apr 13 16:52:01 PDT 2017  | true              |\n"
+        + "PlagHaMincha        | 6:31:42 PM     | Thu Apr 13 18:16:42 PDT 2017  | true              |\n"
+        + "Shkia               | 7:56:23 PM     | Thu Apr 13 19:41:23 PDT 2017  | true              |\n"
+        + "LatestMincha        | 8:11:37 PM     | Thu Apr 13 19:56:37 PDT 2017  | true              |\n"
+        + "BeinHashmashot      | 8:31:40 PM     | Thu Apr 13 20:16:40 PDT 2017  | true              |\n"
+        + "TzaitHacochavim     | 8:44:42 PM     | Thu Apr 13 20:29:42 PDT 2017  | true              |\n"
+        + "NightChatzot        | 1:09:27 AM     | Fri Apr 14 00:54:27 PDT 2017  | true              |\n"
+        + "Alot                | 4:41:30 AM     | Fri Apr 14 04:26:30 PDT 2017  | true              |\n"
+        + "Talit               | 5:22:08 AM     | Fri Apr 14 05:07:08 PDT 2017  | true              |\n"
+        + "Hanetz              | 6:21:33 AM     | Fri Apr 14 06:06:33 PDT 2017  | true              |\n"
+        + "SofZmanShema        | 8:55:44 AM     | Fri Apr 14 08:40:44 PDT 2017  | true              |\n"
+        + "SofZmanTefila       | 10:53:38 AM    | Fri Apr 14 10:38:38 PDT 2017  | true              |\n"
+        + "Chatzot             | 1:09:19 PM     | Fri Apr 14 12:54:19 PDT 2017  | true              |\n"
+        + "MinchaGedola        | 1:43:41 PM     | Fri Apr 14 13:28:41 PDT 2017  | true              |\n"
+        + "MinchaKetana        | 5:07:44 PM     | Fri Apr 14 16:52:44 PDT 2017  | true              |\n"
+        + "PlagHaMincha        | 6:32:46 PM     | Fri Apr 14 18:17:46 PDT 2017  | true              |\n"
+        + "CandleLighting      | 7:39:47 PM     | Fri Apr 14 19:24:47 PDT 2017  | true              |\n"
+        + "Shkia               | 7:57:47 PM     | Fri Apr 14 19:42:47 PDT 2017  | false             |\n"
+        + "LatestMincha        | 8:13:06 PM     | Fri Apr 14 19:58:06 PDT 2017  | false             |\n"
+        + "BeinHashmashot      | 8:33:17 PM     | Fri Apr 14 20:18:17 PDT 2017  | false             |\n"
+        + "TzaitHacochavim     | 8:46:17 PM     | Fri Apr 14 20:31:17 PDT 2017  | false             |\n"
+        + "NightChatzot        | 1:09:12 AM     | Sat Apr 15 00:54:12 PDT 2017  | false             |\n"
+        + "Alot                | 4:39:07 AM     | Sat Apr 15 04:24:07 PDT 2017  | false             |\n"
+        + "Talit               | 5:20:01 AM     | Sat Apr 15 05:05:01 PDT 2017  | false             |\n"
+        + "Hanetz              | 6:19:39 AM     | Sat Apr 15 06:04:39 PDT 2017  | false             |\n"
+        + "SofZmanShema        | 8:54:25 AM     | Sat Apr 15 08:39:25 PDT 2017  | false             |\n"
+        + "SofZmanTefila       | 10:52:50 AM    | Sat Apr 15 10:37:50 PDT 2017  | false             |\n"
+        + "Chatzot             | 1:09:05 PM     | Sat Apr 15 12:54:05 PDT 2017  | false             |\n"
+        + "MinchaGedola        | 1:43:35 PM     | Sat Apr 15 13:28:35 PDT 2017  | false             |\n"
+        + "MinchaKetana        | 5:08:28 PM     | Sat Apr 15 16:53:28 PDT 2017  | false             |\n"
+        + "PlagHaMincha        | 6:33:50 PM     | Sat Apr 15 18:18:50 PDT 2017  | false             |\n"
+        + "Shkia               | 7:59:12 PM     | Sat Apr 15 19:44:12 PDT 2017  | false             |\n"
+        + "LatestMincha        | 8:14:34 PM     | Sat Apr 15 19:59:34 PDT 2017  | false             |\n"
+        + "BeinHashmashot      | 8:34:55 PM     | Sat Apr 15 20:19:55 PDT 2017  | false             |\n"
+        + "TzaitHacochavim     | 8:47:52 PM     | Sat Apr 15 20:32:52 PDT 2017  | false             |\n"
+        + "ShabbatEnd          | 8:44:12 PM     | Sat Apr 15 20:29:12 PDT 2017  | false             |\n"
+        + "NightChatzot        | 1:08:58 AM     | Sun Apr 16 00:53:58 PDT 2017  | true              |\n"
+        + "Alot                | 4:36:43 AM     | Sun Apr 16 04:21:43 PDT 2017  | true              |\n"
+        + "Talit               | 5:17:54 AM     | Sun Apr 16 05:02:54 PDT 2017  | true              |\n"
+        + "Hanetz              | 6:17:47 AM     | Sun Apr 16 06:02:47 PDT 2017  | true              |\n"
+        + "SofZmanShema        | 8:53:07 AM     | Sun Apr 16 08:38:07 PDT 2017  | true              |\n"
+        + "SofZmanTefila       | 10:52:03 AM    | Sun Apr 16 10:37:03 PDT 2017  | true              |\n"
+        + "Chatzot             | 1:08:51 PM     | Sun Apr 16 12:53:51 PDT 2017  | true              |\n"
+        + "MinchaGedola        | 1:43:29 PM     | Sun Apr 16 13:28:29 PDT 2017  | true              |\n"
+        + "MinchaKetana        | 5:09:11 PM     | Sun Apr 16 16:54:11 PDT 2017  | true              |\n"
+        + "PlagHaMincha        | 6:34:54 PM     | Sun Apr 16 18:19:54 PDT 2017  | true              |\n"
+        + "CandleLighting      | 7:42:37 PM     | Sun Apr 16 19:27:37 PDT 2017  | true              |\n"
+        + "Shkia               | 8:00:37 PM     | Sun Apr 16 19:45:37 PDT 2017  | false             |\n"
+        + "LatestMincha        | 8:16:02 PM     | Sun Apr 16 20:01:02 PDT 2017  | false             |\n"
+        + "BeinHashmashot      | 8:36:33 PM     | Sun Apr 16 20:21:33 PDT 2017  | false             |\n"
+        + "TzaitHacochavim     | 8:49:28 PM     | Sun Apr 16 20:34:28 PDT 2017  | false             |\n"
+        + "NightChatzot        | 1:08:44 AM     | Mon Apr 17 00:53:44 PDT 2017  | false             |\n"
+        + "Alot                | 4:34:20 AM     | Mon Apr 17 04:19:20 PDT 2017  | false             |\n"
+        + "Talit               | 5:15:47 AM     | Mon Apr 17 05:00:47 PDT 2017  | false             |\n"
+        + "Hanetz              | 6:15:55 AM     | Mon Apr 17 06:00:55 PDT 2017  | false             |\n"
+        + "SofZmanShema        | 8:51:48 AM     | Mon Apr 17 08:36:48 PDT 2017  | false             |\n"
+        + "SofZmanTefila       | 10:51:17 AM    | Mon Apr 17 10:36:17 PDT 2017  | false             |\n"
+        + "Chatzot             | 1:08:37 PM     | Mon Apr 17 12:53:37 PDT 2017  | false             |\n"
+        + "MinchaGedola        | 1:43:23 PM     | Mon Apr 17 13:28:23 PDT 2017  | false             |\n"
+        + "MinchaKetana        | 5:09:55 PM     | Mon Apr 17 16:54:55 PDT 2017  | false             |\n"
+        + "PlagHaMincha        | 6:35:58 PM     | Mon Apr 17 18:20:58 PDT 2017  | false             |\n"
+        + "Shkia               | 8:02:01 PM     | Mon Apr 17 19:47:01 PDT 2017  | false             |\n"
+        + "LatestMincha        | 8:17:31 PM     | Mon Apr 17 20:02:31 PDT 2017  | false             |\n"
+        + "BeinHashmashot      | 8:38:11 PM     | Mon Apr 17 20:23:11 PDT 2017  | false             |\n"
+        + "TzaitHacochavim     | 8:51:04 PM     | Mon Apr 17 20:36:04 PDT 2017  | false             |\n"
+        + "YomTovSheniCandleLighting| 8:51:04 PM     | Mon Apr 17 20:36:04 PDT 2017  | false             |\n"
+        + "NightChatzot        | 1:08:30 AM     | Tue Apr 18 00:53:30 PDT 2017  | false             |\n"
+    );
+  }
+
+
   @Test
   public void yomKippur_5777() {
 
