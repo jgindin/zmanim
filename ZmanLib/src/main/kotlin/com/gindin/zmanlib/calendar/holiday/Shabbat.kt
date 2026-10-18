@@ -2,75 +2,54 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday;
+package com.gindin.zmanlib.calendar.holiday
 
-import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewDate
+import java.util.Calendar
 
-import java.util.Calendar;
+private const val SHABBAT = "Shabbat"
 
 /**
  * Represents Shabbat.
  */
-public class Shabbat
-  extends Observance {
+public class Shabbat : Observance() {
 
-
-  private static final String                               SHABBAT = "Shabbat";
-
-
-  @Override
-  public String getName() {
-    return SHABBAT;
+  override fun getName(): String {
+    return SHABBAT
   }
 
 
-  @Override
-  public Details getDetailsFor( final HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( Calendar.FRIDAY == date.getDayOfWeek() ) {
-      return new ErevShabbatDetails( date );
+    if (Calendar.FRIDAY == date.dayOfWeek) {
+      return ErevShabbatDetails(date)
     }
 
-    if ( Calendar.SATURDAY == date.getDayOfWeek() ) {
-      return new ShabbatDetails( date );
+    if (Calendar.SATURDAY == date.dayOfWeek) {
+      return ShabbatDetails(date)
     }
 
-    return null;
+    return null
   }
 
 
-  private static class ShabbatDetails
-    extends Details.Yom {
+  private class ShabbatDetails(date: HebrewDate) : Details.Yom(date, SHABBAT) {
 
-    private ShabbatDetails( HebrewDate date ) {
-      super( date, SHABBAT );
+    override fun lightCandles(): Boolean {
+      return false
     }
 
-
-    @Override public boolean lightCandles() {
-      return false;
-    }
-
-    @Override public boolean sayHavdalah() {
-      return true;
+    override fun sayHavdalah(): Boolean {
+      return true
     }
   }
 
 
-  private static class ErevShabbatDetails
-    extends Details.Erev {
+  private class ErevShabbatDetails(date: HebrewDate) : Details.Erev(date, SHABBAT, true) {
 
-    private ErevShabbatDetails(
-      HebrewDate date
-    ) {
-      super( date, SHABBAT, true );
-    }
-
-
-    @Override
-    public String getDescription() {
+    override fun getDescription(): String {
       // No one wants to see "Erev Shabbat" for every Friday...
-      return "";
+      return ""
     }
   }
 
