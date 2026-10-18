@@ -126,10 +126,10 @@ class ZmanimPresenterImpl<V extends ZmanimView>
     Zmanim.Type selectedType = selection.type;
 
     final SharedPreferences.Editor editor = zmanimSelectionPrefs.edit();
-    editor.putString( selectedType.name, selection.name );
+    editor.putString( selectedType.displayName, selection.name );
     editor.apply();
 
-    LogUtils.logEvent( "Zman Change", Collections.singletonList( new Pair<>( selectedType.name, selection.name ) ) );
+    LogUtils.logEvent( "Zman Change", Collections.singletonList( new Pair<>( selectedType.displayName, selection.name ) ) );
 
     // This is a bit of a hammer, but it works...
     //  I tried to find the existing zman in the list, remove it, and add the newly selected one, but
@@ -188,7 +188,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
     Zmanim      zmanim
   ) {
 
-    String zmanName = zmanimSelectionPrefs.getString( zmanim.type.name, null );
+    String zmanName = zmanimSelectionPrefs.getString( zmanim.type.displayName, null );
     Zman zman = zmanim.getByName( zmanName );
 
     return zman;

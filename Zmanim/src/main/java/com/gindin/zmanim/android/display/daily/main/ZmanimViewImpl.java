@@ -219,7 +219,7 @@ class ZmanimViewImpl<P extends ZmanimPresenter>
     protected void updateTextFields( Zman zman ) {
 
       // The time will get displayed later...
-      nameField.setText( zman.type.name );
+      nameField.setText( zman.type.displayName );
       descriptionField.setText( zman.name );
     }
 

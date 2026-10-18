@@ -43,7 +43,7 @@ public abstract class PrefsBasedZmanCallback
 
   @Override
   public String getPreferredZman( final Zmanim.Type type ) {
-    return zmanimSelectionPrefs.getString( type.name, null );
+    return zmanimSelectionPrefs.getString( type.displayName, null );
   }
 
 

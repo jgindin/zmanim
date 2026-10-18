@@ -2,99 +2,93 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import kotlin.Pair;
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.kosherjava.zmanim.util.GeoLocation;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.kosherjava.zmanim.util.GeoLocation
 
 /**
  * Handle creation of zmanim.
  */
-public class ZmanimFactory {
-
-  private static final Map<Pair<GeoLocation, HebrewDate>, ZmanimFactory>      locationToFactory = new HashMap<>();
-
-  private static boolean                                                      useElevation = false;
-
-  public static Zmanim get(
-    GeoLocation location,
-    HebrewDate  date,
-    Zmanim.Type type
-  ) {
-
-    assert null != location;
-
-    Pair<GeoLocation,HebrewDate>  key = new Pair<>( location, date );
-    ZmanimFactory factory = locationToFactory.get( key );
-    if ( null == factory ) {
-      factory = new ZmanimFactory( location, date );
-      locationToFactory.put( key, factory );
-    }
-
-    factory.usingElevation( useElevation );
-
-    return factory.get( type );
-  }
-
-
-  public static void useElevation( boolean use ) {
-    useElevation = use;
-    for ( ZmanimFactory factory : locationToFactory.values() ) {
-      factory.usingElevation( use );
-    }
-  }
-
-
+public class ZmanimFactory private constructor(
+  location: GeoLocation,
+  date: HebrewDate
+) {
 
   /** Cache so that we don't create the zmanim instances more than once. */
-  private final Map<Zmanim.Type, Zmanim>                    typeToZmanimMap = new HashMap<>();
-
-  private final ZmanimCalculator                            zmanimCalculator;
-
-  private boolean                                           usingElevation;
-
+  private val typeToZmanimMap: MutableMap<Zmanim.Type, Zmanim> = HashMap()
 
   // TODO: If we were using Dagger to create as needed, we could just have each instance get
   //  injected with something that could be called when the user wants (doesn't want) to use
   //  elevation. Instead...well, we've got something more complicated to deal with...
-  private ZmanimFactory(
-    GeoLocation location,
-    HebrewDate  date
-  ) {
-    this.zmanimCalculator = new ZmanimCalculator( location, date );
-  }
+  private val zmanimCalculator: ZmanimCalculator = ZmanimCalculator(location, date)
+
+  private var usingElevation: Boolean = false
 
 
-  void usingElevation( boolean useElevation ) {
+  private fun usingElevation(useElevation: Boolean) {
 
-    if ( usingElevation != useElevation ) {
-      usingElevation = useElevation;
-      zmanimCalculator.setUseElevation( useElevation );
+    if (usingElevation != useElevation) {
+      usingElevation = useElevation
+      zmanimCalculator.setUseElevation(useElevation)
 
-      typeToZmanimMap.clear();
+      typeToZmanimMap.clear()
     }
   }
 
 
-  private Zmanim get(
-    Zmanim.Type type
-  ) {
+  private fun get(
+    type: Zmanim.Type
+  ): Zmanim {
 
-    synchronized ( typeToZmanimMap ) {
+    synchronized(typeToZmanimMap) {
 
-      Zmanim zmanim = typeToZmanimMap.get( type );
-      if ( null != zmanim ) {
-        return zmanim;
+      var zmanim = typeToZmanimMap[type]
+      if (null != zmanim) {
+        return zmanim
       }
 
-      zmanim = type.get( zmanimCalculator );
-      typeToZmanimMap.put( type, zmanim );
-      return zmanim;
+      zmanim = type.get(zmanimCalculator)
+      typeToZmanimMap[type] = zmanim
+      return zmanim
     }
   }
-  
-}  // End of ZmanimFactory class
+
+
+  public companion object {
+
+    private val locationToFactory: MutableMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory> = HashMap()
+
+    private var useElevation: Boolean = false
+
+    @JvmStatic
+    public fun get(
+      location: GeoLocation,
+      date: HebrewDate,
+      type: Zmanim.Type
+    ): Zmanim {
+
+      val key = Pair(location, date)
+      var factory = locationToFactory[key]
+      if (null == factory) {
+        factory = ZmanimFactory(location, date)
+        locationToFactory[key] = factory
+      }
+
+      factory.usingElevation(useElevation)
+
+      return factory.get(type)
+    }
+
+
+    @JvmStatic
+    public fun useElevation(use: Boolean) {
+      useElevation = use
+      for (factory in locationToFactory.values) {
+        factory.usingElevation(use)
+      }
+    }
+
+  }
+
+}
