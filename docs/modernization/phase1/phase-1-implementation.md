@@ -438,6 +438,16 @@ hg commit -m "Raise minSdkVersion to 24 and compileSdk/targetSdk to 36 across An
 
 ### Task 7: Configure Kotlin Multiplatform (KMP), Convert `:ZmanUtils` and `:ZmanLib` to Kotlin, Drop Custom `Pair`, Adopt `kotlinx.serialization`/`kotlinx-datetime`, and Enable Kotlin Interop in App Modules
 
+> **Completed 2026-10-18 (PR #11), with these differences from the steps below.** The steps are kept as the original plan.
+> - **Android target:** AGP 9 no longer supports `androidTarget()`; `:ZmanUtils` uses the `com.android.kotlin.multiplatform.library` plugin. The toolchain is Java 21 everywhere (not 25).
+> - **`:ZmanUtils` layout:** the event bus depends on `java.lang.Class`, so `EventBus`, `Event`, `EventHandler`, `EventCacheControl` and `AbstractPresenter` live in a `jvmCommonMain` source set (JVM + Android), not `commonMain`. `View`, `Presenter`, `MvpModule` and `TelemetryTracker` are in `commonMain`. `Event` stays an abstract class and `EventCacheControl` a callback interface (not an interface/enum), because the unchanged Java callers subclass and call them. Two small `EventBus` behavior differences: removing a never-registered handler is now a no-op (Java threw an NPE), and a dead null-event check is gone.
+> - **`Zmanim.Type.name` is now `displayName`:** a Kotlin enum cannot declare a `name` property. The values are unchanged (they are `SharedPreferences` keys), and about 18 Java call sites were renamed mechanically.
+> - **`org.json` replacement uses the `JsonElement` API**, not `@Serializable` data classes, for exact control of key order and number format; the persisted location JSON is read and written compatibly (round-trip tests use literals captured from the old writer on the JVM and on Android). `JsonQueryingResolver` now reads exact response bytes (the old loop appended the whole 1024-byte buffer on every read) and no longer accepts single-quoted JSON or trailing text. Exceptions changed from `JSONException` to `SerializationException`; every caller catches `Exception`.
+> - **No `kotlinx-datetime` conversion:** `:ZmanLib` is JVM-only and built on `Calendar`/`Date` (KosherJava), and nothing in it is shared multiplatform logic yet. The `kotlinx-datetime` catalog entry stays declared for the Phase 6 work.
+> - **Kotlin in the app modules uses AGP's built-in Kotlin**, not `org.jetbrains.kotlin.android`: that plugin cannot coexist with `android.builtInKotlin=false` under AGP 9.4.0/KGP 2.4.20, so the flag was removed (`android.newDsl=false` stays). The Kotlin Gradle plugin is applied through build-logic convention plugins (`zmanim.java-library-conventions` for `:ZmanLib`, `zmanim.kotlin-multiplatform-conventions` for `:ZmanUtils`).
+> - **History:** each Java-to-Kotlin conversion is preceded by a rename-only commit that moves the file to its Kotlin path with the content unchanged, so `git log --follow` and blame trace through. **Merge PR #11 with "Rebase and merge", not squash**, or the renames are flattened.
+> - **Before the next Play upload,** smoke-test on a device: GPS and lat/long location, a cached location surviving an upgrade install over the current Play build, a notification firing, and the zman-selection settings. Kotlin now rejects nulls that Java let through, which unit tests do not fully cover.
+
 **Files:**
 - Delete: `ZmanUtils/src/main/java/com/gindin/util/Pair.java`
 - Modify call sites:
