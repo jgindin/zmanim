@@ -332,7 +332,7 @@ public class ZmanimLocation : GeoLocation {
      *  stream or perform any other operations to the stream.
      *
      * @throws IOException If there is any error interacting with the stream.
-     * @throws org.json.JSONException If there is any error reading the location from the stream.
+     * @throws kotlinx.serialization.SerializationException If the stored location text is not a valid location.
      */
     @JvmStatic
     @Throws(IOException::class)

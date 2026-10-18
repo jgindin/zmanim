@@ -18,7 +18,7 @@ dependencies {
   implementation(project(":ZmanUtils"))
   implementation(libs.kosherjava.zmanim)
   implementation(libs.jetbrains.annotations)
-  compileOnly(libs.org.json)
+  implementation(libs.kotlinx.serialization.json)
 
   testImplementation(libs.junit.jupiter)
   // No JUnit 4 tests remain in this module (fully migrated to Jupiter) -- the vintage engine is
@@ -27,7 +27,6 @@ dependencies {
   //  classpath, which would otherwise collide with the hamcrest 2.2 dependency declared just
   //  below.
   testRuntimeOnly(libs.junit.platform.launcher)
-  testImplementation(libs.org.json)
 
   // Hamcrest is JUnit-version-agnostic; still needed directly here (not transitively via
   //  junit:junit, which this module no longer depends on) for
