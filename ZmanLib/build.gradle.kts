@@ -4,6 +4,13 @@
 
 plugins {
   id("zmanim.java-library-conventions")
+  alias(libs.plugins.kotlin.jvm)
+}
+
+kotlin {
+  explicitApi()
+
+  jvmToolchain(21)
 }
 
 dependencies {

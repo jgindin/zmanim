@@ -2,312 +2,299 @@
  * Copyright (c) 2022. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.location;
+package com.gindin.zmanlib.location
 
-import com.kosherjava.zmanim.util.GeoLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.kosherjava.zmanim.util.GeoLocation
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the
  *  zmanim app.
  */
-public class ZmanimLocation
-  extends GeoLocation {
+public class ZmanimLocation : GeoLocation {
 
-  public static final class Builder {
+  public class Builder {
 
     /** Name of the location provider. */
-    private String                                          providerName = ZMANIM_PROVIDER;
+    internal var providerName: String? = ZMANIM_PROVIDER
 
     /** What time is it in this location? */
-    private long                                            locationTime = System.currentTimeMillis();
+    internal var locationTime: Long = System.currentTimeMillis()
 
     /** How accurate is the location? -1 to indicate this isn't applicable. */
-    private float                                           accuracy = -1;
+    internal var accuracy: Float = -1f
 
     /** What's the name of this location? */
-    private String                                          locationName = UNKNOWN_LOCATION;
+    internal var locationName: String = UNKNOWN_LOCATION
 
     /** Time zone for this location. */
-    private TimeZone                                        timeZone = TimeZone.getDefault();
+    internal var timeZone: TimeZone = TimeZone.getDefault()
 
     /** What's the latitude of this location? */
-    private double                                          latitude = 0.0;
+    internal var latitude: Double = 0.0
 
     /** What's the longitude of this location? */
-    private double                                          longitude = 0.0;
+    internal var longitude: Double = 0.0
 
     /** What's the altitude of this location? <= 0 to indicate unknown. */
-    private double                                          elevation = 0.0;
+    internal var elevation: Double = 0.0
 
     /** Only used when the user gives us a name and we have to go find out where it is. */
-    private String                                          userName;
+    internal var userName: String? = null
 
 
-    public Builder fromProvider( String providerName ) {
-      this.providerName = providerName;
-      return this;
+    public fun fromProvider(providerName: String?): Builder {
+      this.providerName = providerName
+      return this
     }
 
-    public Builder locationName( String locationName ) {
-      if ( locationName == null ) {
-        this.locationName = UNKNOWN_LOCATION;
+    public fun locationName(locationName: String?): Builder {
+      if (locationName == null) {
+        this.locationName = UNKNOWN_LOCATION
       }
       else {
-        this.locationName = locationName;
+        this.locationName = locationName
       }
-      return this;
+      return this
     }
 
-    public Builder userName( String userName ) {
-      this.userName = userName;
-      return this;
+    public fun userName(userName: String?): Builder {
+      this.userName = userName
+      return this
     }
 
-    public Builder at( long locationTime ) {
-      this.locationTime = locationTime;
-      return this;
+    public fun at(locationTime: Long): Builder {
+      this.locationTime = locationTime
+      return this
     }
 
 
     /**
      * @param timeZone if null, the default time zone will be used.
      */
-    public Builder inTimeZone( @Nullable TimeZone timeZone ) {
-      if ( timeZone != null ) {
-        this.timeZone = timeZone;
+    public fun inTimeZone(timeZone: TimeZone?): Builder {
+      if (timeZone != null) {
+        this.timeZone = timeZone
       }
       else {
-        this.timeZone = TimeZone.getDefault();
+        this.timeZone = TimeZone.getDefault()
       }
-      return this;
-    }
-
-    public Builder atLatitude( double latitude ) {
-      this.latitude = latitude;
-      return this;
-    }
-
-    public Builder atLongitude( double longitude ) {
-      this.longitude = longitude;
-      return this;
-    }
-
-    public Builder atElevation( double elevation ) {
-      if ( ( elevation < 0 ) || Double.isInfinite( elevation ) || Double.isNaN( elevation ) ) {
-        this.elevation = 0.0;
-      }
-      else {
-        this.elevation = elevation;
-      }
-
-      return this;
-    }
-
-    public Builder withAccuracy( float accuracy ) {
-      if ( accuracy >= 0 ) {
-        this.accuracy = accuracy;
-      }
-      else {
-        this.accuracy = -1;
-      }
-
-      return this;
-    }
-
-    public Builder from( ZmanimLocation source ) {
       return this
-        .fromProvider( source.providerName )
-        .locationName( source.getLocationName() )
-        .userName( source.originalUserName )
-        .at( source.locationTime )
-        .inTimeZone( source.getTimeZone() )
-        .atLatitude( source.getLatitude() )
-        .atLongitude( source.getLongitude() )
-        .atElevation( source.getElevation() )
-        .withAccuracy( source.accuracy );
+    }
+
+    public fun atLatitude(latitude: Double): Builder {
+      this.latitude = latitude
+      return this
+    }
+
+    public fun atLongitude(longitude: Double): Builder {
+      this.longitude = longitude
+      return this
+    }
+
+    public fun atElevation(elevation: Double): Builder {
+      if ((elevation < 0) || elevation.isInfinite() || elevation.isNaN()) {
+        this.elevation = 0.0
+      }
+      else {
+        this.elevation = elevation
+      }
+
+      return this
+    }
+
+    public fun withAccuracy(accuracy: Float): Builder {
+      if (accuracy >= 0) {
+        this.accuracy = accuracy
+      }
+      else {
+        this.accuracy = -1f
+      }
+
+      return this
+    }
+
+    public fun from(source: ZmanimLocation): Builder {
+      return this
+        .fromProvider(source.providerName)
+        .locationName(source.getLocationName())
+        .userName(source.originalUserName)
+        .at(source.locationTime)
+        .inTimeZone(source.timeZone)
+        .atLatitude(source.latitude)
+        .atLongitude(source.longitude)
+        .atElevation(source.elevation)
+        .withAccuracy(source.accuracy)
     }
 
 
-    public ZmanimLocation invalidLocation() {
-      return INVALID_LOCATION;
+    public fun invalidLocation(): ZmanimLocation {
+      return INVALID_LOCATION
     }
 
-    public ZmanimLocation build() {
-      return new ZmanimLocation( this );
+    public fun build(): ZmanimLocation {
+      return ZmanimLocation(this)
     }
   }
 
 
-  /**
-   * Whenever we need an invalid location, this one instance will do.
-   */
-  private static final ZmanimLocation                       INVALID_LOCATION = new ZmanimLocation();
-
-
-  /** When the location name is unknown, use this, and an appropriate substitution will be made. */
-  public static final String                                UNKNOWN_LOCATION = " _unk_ ";
-
-  private static final String                               ZMANIM_PROVIDER = "Zmanim";
-
   /** Who provided this location to us? E.g., 'network', 'gps'. */
-  public final String                                       providerName;
+  @JvmField
+  public val providerName: String?
 
   /** When was this location determined? */
-  public final long                                         locationTime;
+  @JvmField
+  public val locationTime: Long
 
   /** How accurate do we believe this location to be? */
-  public final float                                        accuracy;
+  @JvmField
+  public val accuracy: Float
 
   /**
    * True indicates this is a known invalid location; false simply means we believe it to be valid, but cannot be
    *  completely sure.
    */
-  public final boolean                                      isInvalid;
+  @JvmField
+  public val isInvalid: Boolean
 
   /**
    * When the user gives us just a name of a location, and we have to go track it down, holding on to that name
    *  allows us to recognize when we're seeing the same location again.
    */
-  public final String                                       originalUserName;
+  @JvmField
+  public val originalUserName: String?
 
 
-  private ZmanimLocation(
-    Builder builder
-  ) {
+  private constructor(
+    builder: Builder
+  ) : super() {
 
-    this.isInvalid = false;
+    this.isInvalid = false
 
-    this.providerName = builder.providerName;
-    this.locationTime = builder.locationTime;
-    this.originalUserName = builder.userName;
-    this.accuracy = builder.accuracy;
-    setLocationName( builder.locationName );
-    setLatitude( builder.latitude );
-    setLongitude( builder.longitude );
-    setElevation( builder.elevation );
-    setTimeZone( builder.timeZone );
+    this.providerName = builder.providerName
+    this.locationTime = builder.locationTime
+    this.originalUserName = builder.userName
+    this.accuracy = builder.accuracy
+    setLocationName(builder.locationName)
+    setLatitude(builder.latitude)
+    setLongitude(builder.longitude)
+    setElevation(builder.elevation)
+    setTimeZone(builder.timeZone)
   }
 
 
   /**
    * Only used when we need to build an invalid location.
    */
-  private ZmanimLocation() {
+  private constructor() : super() {
 
-    this.isInvalid = true;
+    this.isInvalid = true
 
-    this.providerName = UNKNOWN_LOCATION;
-    this.locationTime = 0;
-    this.originalUserName = "";
-    this.accuracy = -1;
+    this.providerName = UNKNOWN_LOCATION
+    this.locationTime = 0
+    this.originalUserName = ""
+    this.accuracy = -1f
   }
 
 
-  @Override
-  @NotNull
-  public String getLocationName() {
-    String name = super.getLocationName();
-    if ( ( name == null ) || name.equals( UNKNOWN_LOCATION ) || name.trim().isEmpty() ) {
-      name = toLatLongString( getLatitude(), getLongitude() );
+  override fun getLocationName(): String {
+    var name: String? = super.getLocationName()
+    if ((name == null) || name == UNKNOWN_LOCATION || name.trim { it <= ' ' }.isEmpty()) {
+      name = toLatLongString(latitude, longitude)
     }
 
-    return name;
+    return name
   }
 
 
+  public fun isSignificantChangeFrom(previousLocation: ZmanimLocation?): Boolean {
 
-  public final boolean isSignificantChangeFrom( ZmanimLocation previousLocation ) {
-
-    if ( previousLocation == null ) {
-      return true;
+    if (previousLocation == null) {
+      return true
     }
 
     // Less than 1km? Don't bother...
     // I suppose you could run into an issue if that 1km puts you in a different time zone
     //  or something like that...
-    if ( getGeodesicDistance( previousLocation ) >= 1000 ) {
-      return true;
+    if (getGeodesicDistance(previousLocation) >= 1000) {
+      return true
     }
 
     // So, we're within 1km, but Has the elevation changed?
-    if ( Math.abs( getElevation() - previousLocation.getElevation() ) > 5 ) {
-      return true;
+    if (Math.abs(elevation - previousLocation.elevation) > 5) {
+      return true
     }
 
     // It's also possible the user has switched to (or from) a custom time zone...
-    if ( !getTimeZone().equals( previousLocation.getTimeZone() ) ) {
-      return true;
+    if (timeZone != previousLocation.timeZone) {
+      return true
     }
 
-    return false;
+    return false
   }
 
 
-  @Override
-  public String toString() {
+  override fun toString(): String {
 
-    @SuppressWarnings( { "MagicNumber" } )
-    int MILLIS_IN_HOUR = 60 * 60 * 1000;
+    val millisInHour = 60 * 60 * 1000
 
-    StringBuilder sb = new StringBuilder();
-    sb.append( "Location Name:\t" ).append( getLocationName() );
-    sb.append( "\nLatitude:\t" ).append( getLatitudeString( getLatitude(), 5 ) ).append( " deg" );
-    sb.append( "\nLongitude:\t" ).append( getLongitudeString( getLongitude(), 5 ) ).append( " deg" );
-    sb.append( "\nElevation:\t" ).append( getElevation() ).append( " Meters" );
-    sb.append( "\nTZ Name:\t" ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
-    sb.append( "\nTZ GMT Offset:\t" ).append( getTimeZone().getRawOffset() / MILLIS_IN_HOUR );
-    sb.append( "\nTZ DST Offset:\t" ).append( getTimeZone().getDSTSavings() / MILLIS_IN_HOUR );
-    sb.append( "\nProvider:\t" ).append( providerName );
-    sb.append( "\nAccuracy:\t" ).append( accuracy );
+    val sb = StringBuilder()
+    sb.append("Location Name:\t").append(getLocationName())
+    sb.append("\nLatitude:\t").append(getLatitudeString(latitude, 5)).append(" deg")
+    sb.append("\nLongitude:\t").append(getLongitudeString(longitude, 5)).append(" deg")
+    sb.append("\nElevation:\t").append(elevation).append(" Meters")
+    sb.append("\nTZ Name:\t").append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
+    sb.append("\nTZ GMT Offset:\t").append(timeZone.rawOffset / millisInHour)
+    sb.append("\nTZ DST Offset:\t").append(timeZone.dstSavings / millisInHour)
+    sb.append("\nProvider:\t").append(providerName)
+    sb.append("\nAccuracy:\t").append(accuracy)
 
-    DateFormat sdf = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault() );
-    sb.append( "\nFix:\t" ).append( sdf.format( new Date( locationTime ) ) );
+    val sdf = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    sb.append("\nFix:\t").append(sdf.format(Date(locationTime)))
 
-    return sb.toString();
+    return sb.toString()
   }
 
 
-  public boolean hasName() {
+  public fun hasName(): Boolean {
 
     // Make sure to NOT compare against our overridden getLocationName!
-    return !UNKNOWN_LOCATION.equals( super.getLocationName() );
+    return UNKNOWN_LOCATION != super.getLocationName()
   }
 
 
-  public boolean hasCoordinates() {
-    return ( getLatitude() != 0 ) && ( getLongitude() != 0 );
+  public fun hasCoordinates(): Boolean {
+    return (latitude != 0.0) && (longitude != 0.0)
   }
 
 
   /**
    * Check if this is a resolved location, meaning that we know both the coordinates AND the name.
    */
-  public boolean isResolved() {
-    return hasCoordinates() && hasName();
+  public fun isResolved(): Boolean {
+    return hasCoordinates() && hasName()
   }
 
 
-  public String toShortString() {
-    
-    StringBuilder sb = new StringBuilder();
-    sb.append( "Where: " ).append( getLocationName());
-    sb.append( ";L: " ).append( toLatLongString( getLatitude(), getLongitude() ) );
-    sb.append( ";TZ: " ).append( getTimeZone().getDisplayName( false, TimeZone.SHORT, Locale.getDefault() ) );
+  public fun toShortString(): String {
 
-    DateFormat sdf = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault() );
-    sb.append( ";Fix: " ).append( sdf.format( new Date( locationTime ) ) );
+    val sb = StringBuilder()
+    sb.append("Where: ").append(getLocationName())
+    sb.append(";L: ").append(toLatLongString(latitude, longitude))
+    sb.append(";TZ: ").append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
 
-    return sb.toString();
+    val sdf = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    sb.append(";Fix: ").append(sdf.format(Date(locationTime)))
+
+    return sb.toString()
   }
 
 
@@ -316,46 +303,62 @@ public class ZmanimLocation
    *
    * @throws IOException if there is any error writing to the stream.
    */
-  public void save( OutputStream output ) throws IOException {
+  @Throws(IOException::class)
+  public fun save(output: OutputStream) {
 
-    DataOutputStream dataOutputStream = new DataOutputStream( output );
+    val dataOutputStream = DataOutputStream(output)
 
-    String json = ZmanLocationJSON.toJSON( this );
-    dataOutputStream.writeUTF( json );
+    val json = ZmanLocationJSON.toJSON(this)
+    dataOutputStream.writeUTF(json)
   }
 
 
-  /**
-   * Loads a zmanim location from the specified input, assuming the stream is correctly positioned. Does NOT close the
-   *  stream or perform any other operations to the stream.
-   *
-   * @throws IOException If there is any error interacting with the stream.
-   * @throws JSONException If there is any error reading the location from the stream.
-   */
-  public static ZmanimLocation load( InputStream input ) throws IOException {
+  public companion object {
 
-    DataInputStream inputStream = new DataInputStream( input );
-    String json = inputStream.readUTF();
+    /**
+     * Whenever we need an invalid location, this one instance will do.
+     */
+    private val INVALID_LOCATION: ZmanimLocation = ZmanimLocation()
 
-    return ZmanLocationJSON.fromJSON( json );
+
+    /** When the location name is unknown, use this, and an appropriate substitution will be made. */
+    public const val UNKNOWN_LOCATION: String = " _unk_ "
+
+    private const val ZMANIM_PROVIDER = "Zmanim"
+
+
+    /**
+     * Loads a zmanim location from the specified input, assuming the stream is correctly positioned. Does NOT close the
+     *  stream or perform any other operations to the stream.
+     *
+     * @throws IOException If there is any error interacting with the stream.
+     * @throws org.json.JSONException If there is any error reading the location from the stream.
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    public fun load(input: InputStream): ZmanimLocation {
+
+      val inputStream = DataInputStream(input)
+      val json = inputStream.readUTF()
+
+      return ZmanLocationJSON.fromJSON(json)
+    }
+
+
+    private fun getLatitudeString(latitude: Double, precision: Int): String {
+      return String.format("%." + precision + "f", latitude)
+    }
+
+
+    private fun getLongitudeString(longitude: Double, precision: Int): String {
+      return String.format("%." + precision + "f", longitude)
+    }
+
+
+    @JvmStatic
+    public fun toLatLongString(latitude: Double, longitude: Double): String {
+      return getLatitudeString(latitude, 1) + " lat; " + getLongitudeString(longitude, 1) + " long"
+    }
   }
-
-
-  private static String getLatitudeString(double latitude, int precision) {
-    //noinspection AutoBoxing
-    return String.format( "%." + precision + "f", latitude );
-  }
-
-
-  private static String getLongitudeString(double longitude, int precision) {
-    //noinspection AutoBoxing
-    return String.format( "%." + precision + "f", longitude );
-  }
-
-
-  public static String toLatLongString( double latitude, double longitude ) {
-    return getLatitudeString( latitude, 1 ) + " lat; " + getLongitudeString( longitude, 1 ) + " long";
-  }
-
 
 }  // End of ZmanimLocation class
