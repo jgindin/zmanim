@@ -86,11 +86,10 @@ roborazzi = ["robolectric", "roborazzi", "roborazzi-junit-rule", "androidx-test-
 zmanim-ui = ["androidx-constraintlayout", "androidx-legacy-support-v4", "androidx-appcompat", "androidx-preference", "google-material", "play-services-location"]
 
 [plugins]
+# There is deliberately no org.jetbrains.kotlin.android alias: AGP's built-in Kotlin support
+#  provides Kotlin for the app modules, and applying that plugin on top of it breaks the build.
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 moallemi-advanced-build-version = { id = "org.moallemi.advanced-build-version", version.ref = "moallemiAdvancedBuildVersion" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
