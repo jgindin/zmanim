@@ -18,10 +18,10 @@ The project is divided into four modules:
 
 * `Zmanim`: The main "Zmanim" application module.
 * `ZehutYosef`: The "Zehut Yosef" application module.
-* `ZmanLib`: A Java library module that likely contains common logic for both
-  applications, wrapping the `kosherjava.zmanim` library.
-* `ZmanUtils`: A simple Java library with no external dependencies that likely
-  contains utility classes used by the other modules.
+* `ZmanLib`: A Kotlin (JVM/Android) library module that likely contains common
+  logic for both applications, wrapping the `kosherjava.zmanim` library.
+* `ZmanUtils`: A simple Kotlin Multiplatform library with no external
+  dependencies that likely contains utility classes used by the other modules.
 
 The project is built with Gradle and uses Java 21.
 

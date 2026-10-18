@@ -95,8 +95,8 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVarian
 }
 
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to
-//  JDK 21, matching :ZmanUtils/:ZmanLib's zmanim.java-library-conventions toolchain and the
-//  sourceCompatibility/targetCompatibility declared above. `compileOptions {}` only controls
+//  JDK 21, matching the JDK 21 toolchains of :ZmanLib (zmanim.java-library-conventions) and
+//  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared above. `compileOptions {}` only controls
 //  javac's bytecode target -- absent an explicit toolchain, the Test task instead runs on whatever
 //  JDK the Gradle daemon itself happens to be launched with, which is NOT pinned and can silently
 //  vary machine to machine. This matters here specifically because JDK 20+'s CLDR locale data
