@@ -2,155 +2,117 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.yomtov;
+package com.gindin.zmanlib.calendar.holiday.yomtov
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
-import com.gindin.zmanlib.zman.Zmanim;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+import com.gindin.zmanlib.zman.Zmanim
+import java.util.ArrayList
 
-import java.util.ArrayList;
-import java.util.List;
+private const val PESACH = "Pesach"
 
 /**
  *
  */
-@SuppressWarnings( "MagicNumber" )
-public class Pesach
-  extends Observance {
+@Suppress("MagicNumber")
+public class Pesach : Observance() {
 
-  private static final String PESACH = "Pesach";
-
-
-  @Override
-  public String getName() {
-    return PESACH;
+  override fun getName(): String {
+    return PESACH
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    final int hebrewMonth = date.getHebrewMonth();
+    val hebrewMonth = date.hebrewMonth
 
-    if ( HebrewMonth.NISSAN != hebrewMonth ) {
-      return null;
+    if (HebrewMonth.NISSAN != hebrewMonth) {
+      return null
     }
 
-    final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-    switch ( hebrewDayOfMonth ) {
-      case 14:
-        return new ErevPesachDetails( date );
+    val hebrewDayOfMonth = date.hebrewDayOfMonth
+    when (hebrewDayOfMonth) {
+      14 -> return ErevPesachDetails(date)
 
-      case 15:
-        return new PesachYomTovDetails( date, true );
+      15 -> return PesachYomTovDetails(date, true)
 
-      case 16:
-        return new PesachYomTovDetails( date, false );
+      16 -> return PesachYomTovDetails(date, false)
 
-      case 17:
-      case 18:
-      case 19:
-      case 20:
-        return new PesachCholHaMoedDetails( date, hebrewDayOfMonth - 14 );
+      17, 18, 19, 20 -> return PesachCholHaMoedDetails(date, hebrewDayOfMonth - 14)
 
-      case 21:
-        return new PesachYomTovDetails( date, true );
+      21 -> return PesachYomTovDetails(date, true)
 
-      case 22:
-        return new PesachYomTovDetails( date, false );
+      22 -> return PesachYomTovDetails(date, false)
     }
 
-    return null;
+    return null
   }
 
 
-  protected static class ErevPesachDetails
-    extends Details.ErevYomTov {
+  protected open class ErevPesachDetails internal constructor(
+    date: HebrewDate
+  ) : Details.ErevYomTov(date, PESACH) {
 
-    
-    ErevPesachDetails(
-      HebrewDate  date
-    ) {
-      super( date, PESACH );
+    override fun isPesach(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isPesach() {
-      return true;
-    }
+    override fun getZmanim(): List<Zmanim.Type> {
 
-
-    @Override
-    public List<Zmanim.Type> getZmanim() {
-
-      List<Zmanim.Type> zmanim = new ArrayList<>();
-      zmanim.add( Zmanim.Type.Alot );
-      zmanim.add( Zmanim.Type.Talit );
-      zmanim.add( Zmanim.Type.Hanetz );
-      zmanim.add( Zmanim.Type.SofZmanShema );
-      zmanim.add( Zmanim.Type.SofZmanTefila );
-      zmanim.add( Zmanim.Type.SofZmanAchilatChametz );
+      val zmanim = ArrayList<Zmanim.Type>()
+      zmanim.add(Zmanim.Type.Alot)
+      zmanim.add(Zmanim.Type.Talit)
+      zmanim.add(Zmanim.Type.Hanetz)
+      zmanim.add(Zmanim.Type.SofZmanShema)
+      zmanim.add(Zmanim.Type.SofZmanTefila)
+      zmanim.add(Zmanim.Type.SofZmanAchilatChametz)
 
       // NOTE: Even when erev Pesach falls out on Shabbat, there is Biur. True, it's not the same
       //  action (just the declaration), but still...
-      zmanim.add( Zmanim.Type.SofZmanBiurChametz );
+      zmanim.add(Zmanim.Type.SofZmanBiurChametz)
 
-      zmanim.add( Zmanim.Type.Chatzot );
-      zmanim.add( Zmanim.Type.MinchaGedola );
-      zmanim.add( Zmanim.Type.MinchaKetana );
-      zmanim.add( Zmanim.Type.PlagHaMincha );
+      zmanim.add(Zmanim.Type.Chatzot)
+      zmanim.add(Zmanim.Type.MinchaGedola)
+      zmanim.add(Zmanim.Type.MinchaKetana)
+      zmanim.add(Zmanim.Type.PlagHaMincha)
 
-      if ( lightCandles() ) {
-        zmanim.add( Zmanim.Type.CandleLighting );
+      if (lightCandles()) {
+        zmanim.add(Zmanim.Type.CandleLighting)
       }
 
-      zmanim.add( Zmanim.Type.Shkia );
-      zmanim.add( Zmanim.Type.LatestMincha );
-      zmanim.add( Zmanim.Type.BeinHashmashot );
-      zmanim.add( Zmanim.Type.FastEnd );
-      zmanim.add( Zmanim.Type.TzaitHacochavim );
-      zmanim.add( Zmanim.Type.NightChatzot );
+      zmanim.add(Zmanim.Type.Shkia)
+      zmanim.add(Zmanim.Type.LatestMincha)
+      zmanim.add(Zmanim.Type.BeinHashmashot)
+      zmanim.add(Zmanim.Type.FastEnd)
+      zmanim.add(Zmanim.Type.TzaitHacochavim)
+      zmanim.add(Zmanim.Type.NightChatzot)
 
-      return zmanim;
+      return zmanim
     }
   }
 
 
-  protected static class PesachYomTovDetails
-    extends Details.YomTovDetails {
+  protected open class PesachYomTovDetails internal constructor(
+    date: HebrewDate,
+    lightCandles: Boolean
+  ) : Details.YomTovDetails(date, PESACH, lightCandles) {
 
-    PesachYomTovDetails(
-      HebrewDate  date,
-      boolean     lightCandles
-    ) {
-      super( date, PESACH, lightCandles );
-    }
-
-
-    @Override
-    public boolean isPesach() {
-      return true;
+    override fun isPesach(): Boolean {
+      return true
     }
   }
 
 
-  protected static class PesachCholHaMoedDetails
-    extends Details.CholHaMoedDetails {
+  protected open class PesachCholHaMoedDetails internal constructor(
+    date: HebrewDate,
+    dayOfChag: Int
+  ) : Details.CholHaMoedDetails(date, dayOfChag, PESACH, 6 == dayOfChag) {
 
-    PesachCholHaMoedDetails(
-      HebrewDate  date,
-      int         dayOfChag
-    ) {
-      super( date, dayOfChag, PESACH, 6 == dayOfChag );
-    }
-
-
-    @Override
-    public boolean isPesach() {
-      return true;
+    override fun isPesach(): Boolean {
+      return true
     }
   }
 
