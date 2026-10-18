@@ -10,3 +10,8 @@ throw-away JUnit 4 test placed in that extracted tree, invoked with
 edits `PreferenceManager.getDefaultSharedPreferences` using the `Settings.PreferenceKey` keys
 (`pref_font_choice`, `pref_font_size`, `pref_keep_screen_on`, `pref_full_screen_on`) and copies the
 resulting file out.
+
+The key `navigation_drawer_learned`, which appears in preference files from real installs, does not exist anywhere in
+the released source (nothing reads or writes it), so it is not in this fixture.
+
+The file is generated once and committed.

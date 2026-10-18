@@ -8,3 +8,8 @@ see the README there for how every file was produced from the released Java sour
 order, taken from that same release. The constant names are the keys of the per-zman notification
 offsets in `PERSONAL.xml` and the display names are the keys of `ZMANIM_SELECTION.xml`, so neither
 may change.
+
+The binary files are generated once and committed. Regenerating them changes their bytes (a `HashSet` of enum
+constants is serialized, and the cached locations are saved in `HashSet` order), so replace the whole fixture
+set, here and in `:Zmanim`, from a single run. `UT_UpgradeFixturesAgree` in `:Zmanim` checks that the two copies
+of `files/` are identical.

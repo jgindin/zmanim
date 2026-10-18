@@ -25,6 +25,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -59,14 +60,17 @@ public class UT_UpgradeLocationManagementPrefs {
 
 
   @Test
-  public void theSelectedProviderIsRecognized() {
+  public void theLatitudeLongitudeProviderIsChosen() {
 
     EventBus eventBus = new EventBus();
-    new ZmanimLocationManager( context, eventBus, prefs );
+    ZmanimLocationManager manager = new ZmanimLocationManager( context, eventBus, prefs );
 
     // The manager falls back to the device's location, and records that choice, only when it finds no selected
     //  provider.
     eventBus.fire( new RequestLocationUpdateEvent( RequestLocationUpdateEvent.CachedLocationUsage.NEVER ) );
+
+    // The manager keeps the acquirer it chose in a private field; there is no other way to see which one it is.
+    Assert.assertTrue( currentAcquirer( manager ) instanceof LatitudeLongitudeLocationAcquirer );
 
     Assert.assertFalse( prefs.getBoolean( "DYNAMIC_POSITION", true ) );
     Assert.assertFalse( prefs.getBoolean( "STATIC_POSITION", true ) );
@@ -89,8 +93,8 @@ public class UT_UpgradeLocationManagementPrefs {
   @Test
   public void thePlaceTheUserEnteredIsRead() {
 
-    Assert.assertEquals( "Lake Placid, New York", prefs.getString( "PLACE", null ) );
-    Assert.assertEquals( "570", prefs.getString( "PLACE_ELEVATION", null ) );
+    Assert.assertEquals( "Saratoga Springs, New York", prefs.getString( "PLACE", null ) );
+    Assert.assertEquals( "94", prefs.getString( "PLACE_ELEVATION", null ) );
   }
 
 
@@ -111,6 +115,19 @@ public class UT_UpgradeLocationManagementPrefs {
       LocationProviders.TimeZoneOptions.TIME_ZONE_LOCALE.name() );
 
     Assert.assertEquals( constantNames, prefs.getAll().keySet() );
+  }
+
+
+  private static Object currentAcquirer( ZmanimLocationManager manager ) {
+
+    try {
+      Field field = ZmanimLocationManager.class.getDeclaredField( "currentAcquirer" );
+      field.setAccessible( true );
+      return field.get( manager );
+    }
+    catch ( ReflectiveOperationException e ) {
+      throw new AssertionError( e );
+    }
   }
 
 }

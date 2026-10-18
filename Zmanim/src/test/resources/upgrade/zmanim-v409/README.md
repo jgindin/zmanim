@@ -12,7 +12,7 @@ writers and copies the resulting `files/` and `shared_prefs/` directories out:
 | File | Written by |
 | --- | --- |
 | `files/LastKnownLocationProvider` | `ZmanLocationUtil.save` of `ZmanLocationUtil.fromLocation` for an `android.location.Location("fused")` fix (unresolved name, so `"name": " - - "`, and no `userName`) |
-| `files/CachedLocations` | `CachedLocationResolver.cache` for four resolved locations (Albany with no `userName`, Lake Placid with a typed `userName`, Jerusalem and New York City with `"userName": ""`), which saves through the resolver's own `saveCache` |
+| `files/CachedLocations` | `CachedLocationResolver.cache` for four resolved locations (Albany with no `userName`, Saratoga Springs with a typed `userName`, Jerusalem and New York City with `"userName": ""`), which saves through the resolver's own `saveCache` |
 | `files/2026_9_16.notifiedZmanim`, `2026_9_17...`, `2026_9_18...` | `NotifiedZmanim.Manager.get`, `notified`, `save`; the 16th has no zman notified |
 | `shared_prefs/PERSONAL.xml` | `SharedPreferences` editor with `PersonalPreferences.Prefs` constant names and `Zmanim.Type.name()` keys |
 | `shared_prefs/ZMANIM_SELECTION.xml` | `SharedPreferences` editor storing `Zmanim.Type.name` (the display name) -> the zman name, the way `ZmanimPresenterImpl.userChangedZman` stores it |
@@ -23,3 +23,10 @@ Android's `org.json` writes `/` as `\/` and keeps the keys in insertion order, w
 `LastKnownLocationProvider` and `CachedLocations` contain `"America\/New_York"`.
 
 The same `files/` content is also in `:ZmanLib`'s test resources.
+
+Notes:
+- The binary files are generated once and committed. Regenerating them changes their bytes (a `HashSet` of
+  enum constants is serialized, and the cached locations are saved in `HashSet` order), so do not regenerate them
+  to update a test; edit the generator's inputs and replace the whole fixture set from a single run.
+- `USE_ELEVATION` is absent from `PERSONAL.xml` and `LOCATION_MANAGEMENT.xml` on purpose: `AppUpgrader` removes it
+  from both for any install at version code 338 or lower, so a 409 install does not have it.

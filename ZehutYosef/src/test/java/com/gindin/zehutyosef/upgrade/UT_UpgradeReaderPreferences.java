@@ -39,6 +39,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 /**
  * The default shared preferences file written by the released BarMitzvah app (version code 77) holds the font,
@@ -122,8 +124,9 @@ public class UT_UpgradeReaderPreferences {
 
       scenario.onActivity( activity -> {
 
-        // onCreate() reads the preferences on a background task and applies them when it finishes.
-        settle();
+        // onCreate() reads the preferences on a background task and applies them when it finishes, which is when the
+        //  active font becomes known.
+        awaitCondition( "the reader to apply the saved preferences", () -> activeFontId( activity ) != null );
 
         TextView textContent = activity.findViewById( R.id.text_content );
         Resources resources = activity.getResources();
@@ -136,12 +139,20 @@ public class UT_UpgradeReaderPreferences {
   }
 
 
+  /**
+   * The active font is only held in a private field of the activity; the typeface set on the text view has no way of
+   *  telling which font it came from. Null until the preferences have been applied.
+   */
   private static String activeFontId( ZehutYosefActivity activity ) {
 
     try {
       Field field = ZehutYosefActivity.class.getDeclaredField( "activeFont" );
       field.setAccessible( true );
       Object fontInfo = field.get( activity );
+      if ( fontInfo == null ) {
+        return null;
+      }
+
       return (String)fontInfo.getClass().getMethod( "getId" ).invoke( fontInfo );
     }
     catch ( ReflectiveOperationException e ) {
@@ -150,18 +161,34 @@ public class UT_UpgradeReaderPreferences {
   }
 
 
-  private static void settle() {
+  /**
+   * Pumps the main looper until the condition holds. The reader reads its preferences on a background task whose result
+   *  is posted back to the main looper.
+   */
+  private static void awaitCondition(
+    String          description,
+    BooleanSupplier condition
+  ) {
 
-    for ( int attempt = 0; attempt < 25; attempt++ ) {
+    long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos( 10 );
+
+    while ( true ) {
 
       Shadows.shadowOf( Looper.getMainLooper() ).idle();
+      if ( condition.getAsBoolean() ) {
+        return;
+      }
+
+      if ( System.nanoTime() > deadline ) {
+        throw new AssertionError( "Timed out after 10 seconds waiting for " + description );
+      }
 
       try {
-        Thread.sleep( 20 );
+        Thread.sleep( 10 );
       }
       catch ( InterruptedException interrupted ) {
         Thread.currentThread().interrupt();
-        return;
+        throw new AssertionError( "Interrupted while waiting for " + description, interrupted );
       }
     }
   }
