@@ -137,7 +137,7 @@ public open class LatitudeLongitudeParser protected constructor(
     public fun latitude(
       direction: Direction,
       degreesText: String,
-      minutesText: String,
+      minutesText: String?,
       secondsText: String
     ): LatitudeLongitudeParser {
       return parse(direction, degreesText, minutesText, secondsText, MAX_LATITUDE)
@@ -178,7 +178,7 @@ public open class LatitudeLongitudeParser protected constructor(
     public fun longitude(
       direction: Direction,
       degreesText: String,
-      minutesText: String,
+      minutesText: String?,
       secondsText: String
     ): LatitudeLongitudeParser {
       return parse(direction, degreesText, minutesText, secondsText, MAX_LONGITUDE)
@@ -208,7 +208,7 @@ public open class LatitudeLongitudeParser protected constructor(
     private fun parse(
       direction: Direction,
       degreesText: String,
-      minutesText: String,
+      minutesText: String?,
       secondsText: String,
       maxDegrees: Int
     ): LatitudeLongitudeParser {
@@ -249,7 +249,7 @@ public open class LatitudeLongitudeParser protected constructor(
       if (parseMinutes) {
 
         try {
-          minutes = minutesText.toInt()
+          minutes = minutesText?.toInt() ?: 0
         }
         catch (e: NumberFormatException) {
           minutes = 0

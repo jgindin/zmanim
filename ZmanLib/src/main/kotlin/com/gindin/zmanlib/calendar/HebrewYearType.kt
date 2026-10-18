@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar;
+package com.gindin.zmanlib.calendar
 
 /**
  * In the Hebrew calendar, the six single year lengths give rise to the terms haser, qesidrah, and shalem.
@@ -47,21 +47,20 @@ package com.gindin.zmanlib.calendar;
  *<p>
  * (Partially taken from http://www.jewishvirtuallibrary.org/jsource/Judaism/calendar.html.)
  */
-
-public enum HebrewYearType {
+public enum class HebrewYearType {
 
   /**
-   * A short year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 29 days.
+   * A short year where both [HebrewMonth.CHESHVAN] and [HebrewMonth.KISLEV] are 29 days.
    */
   HASER,
 
   /**
-   * An ordered year where {@link HebrewMonth#CHESHVAN} is 29 days and {@link HebrewMonth#KISLEV} is 30 days.
+   * An ordered year where [HebrewMonth.CHESHVAN] is 29 days and [HebrewMonth.KISLEV] is 30 days.
    */
   QESIDRAH,
 
   /**
-   * A long year where both {@link HebrewMonth#CHESHVAN} and {@link HebrewMonth#KISLEV} are 30 days.
+   * A long year where both [HebrewMonth.CHESHVAN] and [HebrewMonth.KISLEV] are 30 days.
    */
   SHALEM
 

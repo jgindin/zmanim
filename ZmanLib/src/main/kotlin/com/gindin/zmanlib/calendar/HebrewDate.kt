@@ -2,190 +2,164 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar;
+package com.gindin.zmanlib.calendar
 
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Holidays;
-import com.gindin.zmanlib.calendar.holiday.Observance;
-import com.gindin.zmanlib.location.ZmanimLocation;
-import com.gindin.zmanlib.zman.Zmanim;
-import com.gindin.zmanlib.zman.ZmanimFactory;
-import com.gindin.zmanlib.zman.ZmanimList;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Calendar;
-import java.util.Date;
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Holidays
+import com.gindin.zmanlib.location.ZmanimLocation
+import com.gindin.zmanlib.zman.Zmanim
+import com.gindin.zmanlib.zman.ZmanimFactory
+import com.gindin.zmanlib.zman.ZmanimList
+import java.util.Calendar
+import java.util.Date
 
 /**
  * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created.
  */
-@SuppressWarnings( { "UnusedDeclaration", "ClassWithTooManyFields", "ClassWithTooManyMethods" } )
-public class HebrewDate
-  implements Comparable<HebrewDate> {
-
-  private final int                                         hebrewYear;
-
-  @HebrewMonth.Constant
-  private final int                                         hebrewMonth;
-
-  private final int                                         hebrewDay;
-
-  /** The Gregorian year */
-  private final int                                         gregorianYear;
+@Suppress("UnusedDeclaration", "ClassWithTooManyFields", "ClassWithTooManyMethods")
+public class HebrewDate internal constructor(
+  /** The Hebrew year (e.g., 5772). */
+  public val hebrewYear: Int,
 
   /**
-   * The month, in a format compatible with java.util.Calendar's definition of month zero being January, through to
-   *  month 11 being December.
+   * The Hebrew month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
+   * for Adar II
    */
-  @CalendarMonth
-  private final int                                         gregorianMonth;
+  @param:HebrewMonth.Constant @get:HebrewMonth.Constant
+  public val hebrewMonth: Int,
+
+  /** The Hebrew day of month. */
+  public val hebrewDayOfMonth: Int,
+
+  /** The Gregorian year (e.g., 2012). */
+  public val gregorianYear: Int,
+
+  /**
+   * The Gregorian month, in a format compatible with java.util.Calendar's definition of month zero being January,
+   *  through to month 11 being December. Can be directly compared to the months as defined in java.util.Calendar.
+   */
+  @param:CalendarMonth @get:CalendarMonth
+  public val gregorianMonth: Int,
 
   /** The day of the Gregorian month */
-  private final int                                         gregorianDayOfMonth;
+  public val gregorianDayOfMonth: Int,
 
-  /** 1 == Sunday, 2 == Monday, etc... */
-  @CalendarDay
-  private final int                                         dayOfWeek;
+  /** The day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc... */
+  @param:CalendarDay @get:CalendarDay
+  public val dayOfWeek: Int,
 
   /** Internal representation of the date. */
-  private final int                                         gregorianAbsDate;
+  internal val gregorianAbsDate: Int,
 
-  private int                                               moladHours;
-  private int                                               moladMinutes;
-  private int                                               moladChalakim;
+  moladHours: Int,
+
+  /**
+   * The molad minutes. Only a HebrewDate created via the getMolad() method will have this field set. Other
+   *  HebrewDates will have this field set to 0.
+   */
+  public val moladMinutes: Int,
+
+  /**
+   * The molad chalakim/parts. Only a HebrewDate created via the getMolad() method will have this field set. Other
+   *  HebrewDates will have this field set to 0.
+   */
+  public val moladChalakim: Int
+) : Comparable<HebrewDate> {
+
+  /**
+   * The molad hours. Only a HebrewDate created via the getMolad() method will have this field set. Other
+   *  HeberwDates will have this field set to 0.
+   */
+  public var moladHours: Int = moladHours
+    private set
 
 
   /** Cache the details lookup. */
-  private Details                                           dateDetails;
+  private var dateDetails: Details? = null
 
 
-
-  HebrewDate(
-    int                       hebrewYear,
-    @HebrewMonth.Constant int hebrewMonth,
-    int                       hebrewDay,
-    int                       gregorianYear,
-    @CalendarMonth int        gregorianMonth,
-    int                       gregorianDayOfMonth,
-    @CalendarDay int          dayOfWeek,
-    int                       gregorianAbsDate
-  ) {
-    this( hebrewYear, hebrewMonth, hebrewDay, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek, gregorianAbsDate, 0, 0, 0 );
-  }
-
-
-  HebrewDate(
-    int hebrewYear,
-    @HebrewMonth.Constant int hebrewMonth,
-    int                       hebrewDay,
-    int                       gregorianYear,
-    @CalendarMonth int        gregorianMonth,
-    int                       gregorianDayOfMonth,
-    @CalendarDay int          dayOfWeek,
-    int                       gregorianAbsDate,
-    int                       moladHours,
-    int                       moladMinutes,
-    int                       moladChalakim
-  ) {
-
-    this.hebrewYear = hebrewYear;
-    this.hebrewMonth = hebrewMonth;
-    this.hebrewDay = hebrewDay;
-    this.gregorianYear = gregorianYear;
-    this.gregorianMonth = gregorianMonth;
-    this.gregorianDayOfMonth = gregorianDayOfMonth;
-    this.dayOfWeek = dayOfWeek;
-    this.gregorianAbsDate = gregorianAbsDate;
-    this.moladHours = moladHours;
-    this.moladMinutes = moladMinutes;
-    this.moladChalakim = moladChalakim;
-  }
+  internal constructor(
+    hebrewYear: Int,
+    @HebrewMonth.Constant hebrewMonth: Int,
+    hebrewDayOfMonth: Int,
+    gregorianYear: Int,
+    @CalendarMonth gregorianMonth: Int,
+    gregorianDayOfMonth: Int,
+    @CalendarDay dayOfWeek: Int,
+    gregorianAbsDate: Int
+  ) : this(
+    hebrewYear, hebrewMonth, hebrewDayOfMonth, gregorianYear, gregorianMonth, gregorianDayOfMonth, dayOfWeek,
+    gregorianAbsDate, 0, 0, 0
+  )
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Find out about this date
-  public String getDescription() {
-    return getDetails().getDescription();
+  public fun getDescription(): String {
+    return getDetails().getDescription()
   }
 
 
-  @SuppressWarnings( "FeatureEnvy" )
-  public Details getDetails() {
+  public fun getDetails(): Details {
 
-    if ( null != dateDetails ) {
-      return dateDetails;
+    val cached = dateDetails
+    if (null != cached) {
+      return cached
     }
 
     // Create a NullDetails here...it avoids a bunch of null checking...
-    dateDetails = new NullDetails( this );
+    var details: Details = NullDetails(this)
+    dateDetails = details
 
-    Details shabbat = Holidays.SHABBAT.getDetailsFor( this );
-    if ( null != shabbat ) {
-      dateDetails = dateDetails.composeWith( shabbat );
-    }
-
-    Details roshChodeshDetails = Holidays.ROSH_CHODESH.getDetailsFor( this );
-    if ( null != roshChodeshDetails ) {
-      dateDetails = dateDetails.composeWith( roshChodeshDetails );
-    }
-
-
-    Details holidayDetails;
-    for ( Observance holiday : Holidays.MAJOR_HOLIDAYS ) {
-      holidayDetails = holiday.getDetailsFor( this );
-      if ( null != holidayDetails ) {
-        dateDetails = dateDetails.composeWith( holidayDetails );
+    fun compose(additional: Details?) {
+      if (null != additional) {
+        details = details.composeWith(additional)
+        dateDetails = details
       }
     }
 
-    for ( Observance holiday : Holidays.MINOR_HOLIDAYS ) {
-      holidayDetails = holiday.getDetailsFor( this );
-      if ( null != holidayDetails ) {
-        dateDetails = dateDetails.composeWith( holidayDetails );
-      }
+    compose(Holidays.SHABBAT.getDetailsFor(this))
+
+    compose(Holidays.ROSH_CHODESH.getDetailsFor(this))
+
+    for (holiday in Holidays.MAJOR_HOLIDAYS) {
+      compose(holiday.getDetailsFor(this))
     }
 
-    for ( Observance fastDay : Holidays.FAST_DAYS ) {
-      holidayDetails = fastDay.getDetailsFor( this );
-      if ( null != holidayDetails ) {
-        dateDetails = dateDetails.composeWith( holidayDetails );
-      }
+    for (holiday in Holidays.MINOR_HOLIDAYS) {
+      compose(holiday.getDetailsFor(this))
     }
 
-    for ( Observance modernHoliday : Holidays.MODERN_HOLIDAYS ) {
-      holidayDetails = modernHoliday.getDetailsFor( this );
-      if ( null != holidayDetails ) {
-        dateDetails = dateDetails.composeWith( holidayDetails );
-      }
+    for (fastDay in Holidays.FAST_DAYS) {
+      compose(fastDay.getDetailsFor(this))
     }
 
-    for ( Observance observance : Holidays.OTHER ) {
-      holidayDetails = observance.getDetailsFor( this );
-      if ( null != holidayDetails ) {
-        dateDetails = dateDetails.composeWith( holidayDetails );
-      }
+    for (modernHoliday in Holidays.MODERN_HOLIDAYS) {
+      compose(modernHoliday.getDetailsFor(this))
+    }
+
+    for (observance in Holidays.OTHER) {
+      compose(observance.getDetailsFor(this))
     }
 
 
-    return dateDetails;
+    return details
   }
 
 
-  public ZmanimList getZmanim(
-    ZmanimLocation location
-  ) {
+  public fun getZmanim(
+    location: ZmanimLocation
+  ): ZmanimList {
 
-    Details details = getDetails();
-    ZmanimList zmanimList = new ZmanimList();
+    val details = getDetails()
+    val zmanimList = ZmanimList()
 
-    for ( Zmanim.Type type : details.getZmanim() ) {
-      zmanimList.add( ZmanimFactory.get( location, this, type ) );
+    for (type in details.getZmanim()) {
+      zmanimList.add(ZmanimFactory.get(location, this, type))
     }
 
-    return zmanimList;
+    return zmanimList
   }
 
 
@@ -193,88 +167,25 @@ public class HebrewDate
   //
   // Queries about this date.
 
-  /**
-   * @return the Hebrew year (e.g., 5772).
-   */
-  public int getHebrewYear() {
-    return hebrewYear;
-  }
-
-
-  /**
-   * @return  the Hebrew month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13
-   * for Adar II
-   */
-  @HebrewMonth.Constant
-  public int getHebrewMonth() {
-    return hebrewMonth;
-  }
-
-
-  /**
-   * @return the Hebrew day of month.
-   */
-  public int getHebrewDayOfMonth() {
-    return hebrewDay;
-  }
-
-
-  /**
-   * @return the day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc...
-   */
-  @CalendarDay
-  public int getDayOfWeek() {
-    return dayOfWeek;
-  }
-
-
-  /**
-   * @return the gregorian year (e.g., 2012).
-   */
-  public int getGregorianYear() {
-    return gregorianYear;
-  }
-
-
-  /**
-   * @return A month which can be directly compared to the months as defined in java.util.Calendar.
-   */
-  @CalendarMonth
-  public int getGregorianMonth() {
-    return gregorianMonth;
-  }
-
-
-  public int getGregorianDayOfMonth() {
-    return gregorianDayOfMonth;
-  }
-
-
-  int getGregorianAbsDate() {
-    return gregorianAbsDate;
-  }
-
-
-  public boolean isGregorianLeapYear() {
+  public fun isGregorianLeapYear(): Boolean {
 
     // If the year isn't divisible by 4, it cannot be a leap year.
     // But, if it is divisible by 100, it is NOT a leap year.
     // But....if ti is divisible by 400, then it IS a leap year.
 
-    if ( gregorianYear % 4 != 0 ) {
-      return false;
+    if (gregorianYear % 4 != 0) {
+      return false
     }
 
-    //noinspection MagicNumber
-    if ( gregorianYear % 400 == 0 ) {
-      return true;
+    if (gregorianYear % 400 == 0) {
+      return true
     }
 
-    if ( gregorianYear % 100 == 0 ) {
-      return false;
+    if (gregorianYear % 100 == 0) {
+      return false
     }
 
-    return true;
+    return true
   }
 
 
@@ -283,12 +194,12 @@ public class HebrewDate
    *
    * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
    *
-   * @return The <code>Date</code>
+   * @return The `Date`
    */
-  public Date getTime() {
-    Calendar cal = Calendar.getInstance();
-    syncCalendar( cal );
-    return cal.getTime();
+  public fun getTime(): Date {
+    val cal = Calendar.getInstance()
+    syncCalendar(cal)
+    return cal.time
   }
 
 
@@ -297,18 +208,18 @@ public class HebrewDate
    *
    * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
    */
-  public Calendar getCalendar() {
-    Calendar cal = Calendar.getInstance();
-    syncCalendar( cal );
+  public fun getCalendar(): Calendar {
+    val cal = Calendar.getInstance()
+    syncCalendar(cal)
 
-    return cal;
+    return cal
   }
 
 
-  public boolean isToday() {
+  public fun isToday(): Boolean {
 
-    HebrewDate today = HebrewCalendar.today();
-    return equals( today );
+    val today = HebrewCalendar.today()
+    return equals(today)
   }
 
 
@@ -322,33 +233,33 @@ public class HebrewDate
    *
    * @return true if this HebrewDate represents a time after the zman for the current day.
    */
-  public boolean isAfter(
-    Calendar                  currentTime,
-    Zmanim.Type               type,
-    @Nullable ZmanimLocation  location
-  ) {
+  public fun isAfter(
+    currentTime: Calendar,
+    type: Zmanim.Type,
+    location: ZmanimLocation?
+  ): Boolean {
 
-    if ( location == null ) {
-      return false;
+    if (location == null) {
+      return false
     }
 
-    HebrewDate currentDate = HebrewCalendar.getForDate( currentTime );
-    if ( 0 != currentDate.compareTo( this ) ) {
-      return false;
+    val currentDate = HebrewCalendar.getForDate(currentTime)
+    if (0 != currentDate.compareTo(this)) {
+      return false
     }
 
-    final Zmanim zmanim = getZmanim( location ).findType( type );
-    if ( zmanim == null ) {
-      return false;
+    val zmanim = getZmanim(location).findType(type)
+    if (zmanim == null) {
+      return false
     }
 
-    final Calendar zmanTime = zmanim.getDefault().getTime();
-    if ( zmanTime == null ) {
+    val zmanTime = zmanim.getDefault().time
+    if (zmanTime == null) {
       // If the zman doesn't have a time then the current time cannot be after the time of the zman.
-      return false;
+      return false
     }
 
-    return currentTime.getTime().after( zmanTime.getTime() );
+    return currentTime.time.after(zmanTime.time)
   }
 
 
@@ -360,11 +271,11 @@ public class HebrewDate
    *
    * @return true if this HebrewDate represents a time after sunset for the current day.
    */
-  public boolean isAfterSunset(
-    @Nullable ZmanimLocation  location
-  ) {
+  public fun isAfterSunset(
+    location: ZmanimLocation?
+  ): Boolean {
 
-    return isAfter( getCalendar(), Zmanim.Type.Shkia, location );
+    return isAfter(getCalendar(), Zmanim.Type.Shkia, location)
   }
 
 
@@ -373,10 +284,10 @@ public class HebrewDate
    *
    * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
    */
-  public void syncCalendar( Calendar calendar ) {
+  public fun syncCalendar(calendar: Calendar) {
 
-    calendar.setTimeInMillis( System.currentTimeMillis() );
-    calendar.set( gregorianYear, gregorianMonth, gregorianDayOfMonth );
+    calendar.timeInMillis = System.currentTimeMillis()
+    calendar.set(gregorianYear, gregorianMonth, gregorianDayOfMonth)
   }
 
 
@@ -386,62 +297,62 @@ public class HebrewDate
    *
    * @return true if it is a leap year
    */
-  public boolean isHebrewLeapYear() {
-    return HebrewCalendar.isHebrewLeapYear( getHebrewYear() );
+  public fun isHebrewLeapYear(): Boolean {
+    return HebrewCalendar.isHebrewLeapYear(hebrewYear)
   }
 
-  
+
   /**
    * Returns the number of days for the current year that the calendar is set to.
    *
-   * @see #isCheshvanLong()
-   * @see #isKislevShort()
-   * @see #isHebrewLeapYear
+   * @see isCheshvanLong
+   * @see isKislevShort
+   * @see isHebrewLeapYear
    */
-  public int getDaysInHebrewYear() {
-    return HebrewCalendar.getElapsedDays( getHebrewYear() + 1 ) - HebrewCalendar.getElapsedDays( getHebrewYear() );
+  public fun getDaysInHebrewYear(): Int {
+    return HebrewCalendar.getElapsedDays(hebrewYear + 1) - HebrewCalendar.getElapsedDays(hebrewYear)
   }
 
 
   /**
    * @return true if Cheshvan is long (29 or 30 days) for the current year that the calendar is set to
    */
-  public boolean isCheshvanLong() {
-    return HebrewCalendar.isCheshvanLong( getHebrewYear() );
+  public fun isCheshvanLong(): Boolean {
+    return HebrewCalendar.isCheshvanLong(hebrewYear)
   }
 
 
   /**
    * @return true if Kislev is short (29 or 30 days) for the year that this class is set to
    */
-  public boolean isKislevShort() {
-    return HebrewCalendar.isKislevShort( getHebrewYear() );
+  public fun isKislevShort(): Boolean {
+    return HebrewCalendar.isKislevShort(hebrewYear)
   }
 
 
   /**
-   * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It will return {@link
-   * HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if Cheshvan is 29
-   * days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
+   * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It will return
+   * [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days, [HebrewYearType.QESIDRAH] if Cheshvan is 29
+   * days and Kislev is 30 days and [HebrewYearType.HASER] if both are 29 days.
    *
-   * @return {@link HebrewYearType#SHALEM} if both Cheshvan and Kislev are 30 days, {@link HebrewYearType#QESIDRAH} if
-   *         Cheshvan is 29 days and Kislev is 30 days and {@link HebrewYearType#HASER} if both are 29 days.
+   * @return [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days, [HebrewYearType.QESIDRAH] if
+   *         Cheshvan is 29 days and Kislev is 30 days and [HebrewYearType.HASER] if both are 29 days.
    *
-   * @see #isCheshvanLong()
-   * @see #isKislevShort()
+   * @see isCheshvanLong
+   * @see isKislevShort
    */
-  public HebrewYearType getYearType() {
-    return HebrewCalendar.getYearType( getHebrewYear() );
+  public fun getYearType(): HebrewYearType {
+    return HebrewCalendar.getYearType(hebrewYear)
   }
 
 
   /**
    * @return the number of days for a given Heberw month that the calendar is currently set to.
    */
-  public int getDaysInHebrewMonth() {
-    return HebrewCalendar.getDaysInHebrewMonth( hebrewMonth, hebrewYear );
+  public fun getDaysInHebrewMonth(): Int {
+    return HebrewCalendar.getDaysInHebrewMonth(hebrewMonth, hebrewYear)
   }
-  
+
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -455,167 +366,126 @@ public class HebrewDate
    * Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29 Adar I / March 5, 2011 12:00 AM and 7
    * chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
    */
-  public HebrewDate getMolad() {
+  public fun getMolad(): HebrewDate {
 
-    HebrewDate moladDate = HebrewCalendar.getForMolad( HebrewCalendar.getChalakimSinceMoladTohu( hebrewYear, hebrewMonth ) );
+    var moladDate = HebrewCalendar.getForMolad(HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth))
 
-    if ( moladDate.getMoladHours() >= 6 ) {
-      moladDate = moladDate.tomorrow();
+    if (moladDate.moladHours >= 6) {
+      moladDate = moladDate.tomorrow()
     }
-    
-    moladDate.moladHours = ( moladDate.getMoladHours() + HebrewCalendar.CHALAKIM_PER_MINUTE ) % HebrewCalendar.HOURS_PER_DAY;
-    return moladDate;
-  }
 
-  
-  
-  /**
-   * Returns the molad hours. Only a HebrewDate created via the getMolad() method will have this field set. Other
-   *  HeberwDates will have this field set to 0.
-   *
-   * @return the molad hours
-   */
-  public int getMoladHours() {
-    return moladHours;
+    moladDate.moladHours = (moladDate.moladHours + HebrewCalendar.CHALAKIM_PER_MINUTE) % HebrewCalendar.HOURS_PER_DAY
+    return moladDate
   }
 
 
-  /**
-   * Returns the molad minutes. Only a HebrewDate created via the getMolad() method will have this field set. Other
-   *  HebrewDates will have this field set to 0.
-   *
-   * @return the molad minutes
-   */
-  public int getMoladMinutes() {
-    return moladMinutes;
-  }
-
-
-  /**
-   * Returns the molad chalakim/parts. Only a HebrewDate created via the getMolad() method will have this field set. Other
-   *  HebrewDates will have this field set to 0.
-   *
-   * @return the molad chalakim/parts
-   */
-  public int getMoladChalakim() {
-    return moladChalakim;
-  }
-
-  
   /**
    * Returns the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu to the year and
    * month passed in.
    *
    * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
    */
-  public long getChalakimSinceMoladTohu() {
-    return HebrewCalendar.getChalakimSinceMoladTohu( hebrewYear, hebrewMonth );
+  public fun getChalakimSinceMoladTohu(): Long {
+    return HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth)
   }
 
 
-  
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Date navigation
 
-  public HebrewDate tomorrow() {
-    return HebrewCalendar.forward( this );
+  public fun tomorrow(): HebrewDate {
+    return HebrewCalendar.forward(this)
   }
 
-  public HebrewDate forward( int numDays ) {
-    return HebrewCalendar.forward( this, numDays );
+  public fun forward(numDays: Int): HebrewDate {
+    return HebrewCalendar.forward(this, numDays)
   }
 
 
-  public HebrewDate yesterday() {
-    return HebrewCalendar.back( this );
+  public fun yesterday(): HebrewDate {
+    return HebrewCalendar.back(this)
   }
 
-  public HebrewDate back( int numDays ) {
-    return HebrewCalendar.back( this, numDays );
+  public fun back(numDays: Int): HebrewDate {
+    return HebrewCalendar.back(this, numDays)
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Base class overrides
-  
-  @Override
-  public int compareTo( @NotNull HebrewDate otherDate ) {
+
+  override fun compareTo(other: HebrewDate): Int {
 
     // We use gregorian because with the Hebrew months, because Nisan is the first month, it gets more complex.
     //  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN < ADAR...
 
-    if ( gregorianYear < otherDate.gregorianYear ) {
-      return -1;
+    if (gregorianYear < other.gregorianYear) {
+      return -1
     }
-    else if ( gregorianYear > otherDate.gregorianYear ) {
-      return 1;
+    else if (gregorianYear > other.gregorianYear) {
+      return 1
     }
-    
-    if ( gregorianMonth < otherDate.gregorianMonth ) {
-      return -1;
+
+    if (gregorianMonth < other.gregorianMonth) {
+      return -1
     }
-    else if ( gregorianMonth > otherDate.gregorianMonth ) {
-      return 1;
+    else if (gregorianMonth > other.gregorianMonth) {
+      return 1
     }
-    
-    if ( gregorianDayOfMonth < otherDate.gregorianDayOfMonth ) {
-      return -1;
+
+    if (gregorianDayOfMonth < other.gregorianDayOfMonth) {
+      return -1
     }
-    else if ( gregorianDayOfMonth > otherDate.gregorianDayOfMonth ) {
-      return 1;
+    else if (gregorianDayOfMonth > other.gregorianDayOfMonth) {
+      return 1
     }
-    
-    return 0;
+
+    return 0
   }
 
 
-  @SuppressWarnings( "RedundantIfStatement" )
-  @Override
-  public boolean equals( Object o ) {
-    if ( this == o ) {
-      return true;
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
     }
-    if ( !( o instanceof HebrewDate ) ) {
-      return false;
+    if (other !is HebrewDate) {
+      return false
     }
 
-    HebrewDate that = (HebrewDate)o;
-
-    if ( hebrewDay != that.hebrewDay ) {
-      return false;
+    if (hebrewDayOfMonth != other.hebrewDayOfMonth) {
+      return false
     }
-    if ( hebrewMonth != that.hebrewMonth ) {
-      return false;
+    if (hebrewMonth != other.hebrewMonth) {
+      return false
     }
-    if ( hebrewYear != that.hebrewYear ) {
-      return false;
+    if (hebrewYear != other.hebrewYear) {
+      return false
     }
 
-    return true;
+    return true
   }
 
 
-  @Override
-  public int hashCode() {
-    int result = hebrewMonth;
-    result = 31 * result + hebrewYear;
-    result = 31 * result + hebrewDay;
-    return result;
+  override fun hashCode(): Int {
+    var result = hebrewMonth
+    result = 31 * result + hebrewYear
+    result = 31 * result + hebrewDayOfMonth
+    return result
   }
 
 
-  @Override
-  public String toString() {
+  override fun toString(): String {
     return "HebrewDate{" +
       "hebrewYear=" + hebrewYear +
       ", hebrewMonth=" + hebrewMonth +
-      ", hebrewDay=" + hebrewDay +
+      ", hebrewDay=" + hebrewDayOfMonth +
       ", gregorianYear=" + gregorianYear +
       ", gregorianMonth=" + gregorianMonth +
       ", gregorianDayOfMonth=" + gregorianDayOfMonth +
       ", dateDetails=" + dateDetails +
-      '}';
+      '}'
   }
 
 
@@ -623,37 +493,27 @@ public class HebrewDate
   //
   //
 
-  private static class NullDetails
-    extends Details {
+  private class NullDetails(date: HebrewDate) : Details(date) {
 
-    NullDetails( HebrewDate date ) {
-      super( date );
+    override fun isErev(): Boolean {
+      return false
     }
 
-    @Override
-    public boolean isErev() {
-      return false;
+    override fun lightCandles(): Boolean {
+      return false
     }
 
-    @Override
-    public boolean lightCandles() {
-      return false;
+    override fun sayHavdalah(): Boolean {
+      return false
     }
 
-    @Override
-    public boolean sayHavdalah() {
-      return false;
-    }
-
-    @Override
-    public String getDescription() {
-      return "";
+    override fun getDescription(): String {
+      return ""
     }
 
 
-    @Override
-    public boolean isAnything() {
-      return false;
+    override fun isAnything(): Boolean {
+      return false
     }
   }
 
