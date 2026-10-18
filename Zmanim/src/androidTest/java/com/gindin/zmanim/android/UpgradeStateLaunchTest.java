@@ -93,6 +93,7 @@ public class UpgradeStateLaunchTest {
    *  again must be answered from the cache, which gives the place its full name, rather than from a geocoding service
    *  (which would need the network, and which the released app's cache exists to avoid).
    */
+  // Detects a broken cache path only when the Geocoder cannot answer (an offline emulator); online CI may not catch it.
   @Test
   public void typedPlaceIsAnsweredFromTheSavedLocationCache() throws Exception {
 

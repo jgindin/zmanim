@@ -11,10 +11,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Build;
+import android.os.Bundle;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Assume;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,6 +46,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *  byte for byte.
  *<p/>
  *
+ * Because {@link #reset()} deletes every preference file and data file the app owns, these helpers refuse to touch a
+ *  device that might hold a real installation. Installers skip the calling test (a failed JUnit {@code Assume}) unless
+ *  the device looks like an emulator; {@link #reset()} then does nothing at all. To run on a physical device anyway,
+ *  accept that the app's data on it will be erased and pass
+ *  {@code -Pandroid.testInstrumentationRunnerArguments.allowPhysicalDevice=true} to Gradle.
+ *<p/>
+ *
  * The fixture is the synthetic saved state of the released app (versionCode 409) that
  *  {@code src/test/resources/upgrade/zmanim-v409} holds for the Robolectric tests; the build exposes the same
  *  directory to this source set as assets, so nothing is duplicated.
@@ -51,6 +60,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 final class AppState {
 
   private static final String                               FIXTURE_ROOT = "zmanim-v409";
+
+  /** Instrumentation argument that lets the tests erase the app's data on a device that is not an emulator. */
+  private static final String                               ALLOW_PHYSICAL_DEVICE_ARGUMENT = "allowPhysicalDevice";
 
   /** Preference files that make up the static latitude/longitude location (Albany, New York). */
   private static final String                               LOCATION_PREFS = ZmanimPrefs.LOCATION_MANAGEMENT.name();
@@ -83,8 +95,55 @@ final class AppState {
   }
 
 
-  /** Removes every file and preference the app has written. */
+  /** True when the device is an emulator, or the caller explicitly accepted the loss of the app's data. */
+  static boolean isSafeToWipe() {
+
+    Bundle arguments = InstrumentationRegistry.getArguments();
+    if ( Boolean.parseBoolean( arguments.getString( ALLOW_PHYSICAL_DEVICE_ARGUMENT ) ) ) {
+      return true;
+    }
+
+    return isEmulator( Build.FINGERPRINT, Build.HARDWARE, Build.PRODUCT, Build.MODEL );
+  }
+
+
+  /** Recognizes the emulator images by the build properties they all share. */
+  static boolean isEmulator(
+    String fingerprint,
+    String hardware,
+    String product,
+    String model
+  ) {
+
+    return fingerprint.startsWith( "generic" )
+      || fingerprint.contains( "/sdk_" )
+      || fingerprint.contains( "emulator" )
+      || hardware.contains( "goldfish" )
+      || hardware.contains( "ranchu" )
+      || product.contains( "sdk_gphone" )
+      || product.contains( "emulator" )
+      || model.contains( "Emulator" )
+      || model.contains( "Android SDK built for" );
+  }
+
+
+  /** Skips the calling test unless it is safe to erase and rewrite the app's data on this device. */
+  static void assumeSafeToWipe() {
+
+    Assume.assumeTrue(
+      "Skipped: these tests erase the app's data and this does not look like an emulator (fingerprint "
+        + Build.FINGERPRINT + "). Pass -Pandroid.testInstrumentationRunnerArguments." + ALLOW_PHYSICAL_DEVICE_ARGUMENT
+        + "=true to run them anyway.",
+      isSafeToWipe() );
+  }
+
+
+  /** Removes every file and preference the app has written. Does nothing on a device that is not safe to wipe. */
   static void reset() throws IOException {
+
+    if ( !isSafeToWipe() ) {
+      return;
+    }
 
     Context context = targetContext();
 
@@ -115,6 +174,7 @@ final class AppState {
    */
   static void installStaticLocation() throws IOException {
 
+    assumeSafeToWipe();
     reset();
     installPreferences( LOCATION_PREFS );
     installFile( LOCATION_CACHE_FILE );
@@ -132,6 +192,7 @@ final class AppState {
   /** Starts from nothing, then installs every file and preference the released version 409 app had saved. */
   static void installUpgradeState() throws IOException {
 
+    assumeSafeToWipe();
     reset();
 
     AssetManager assets = InstrumentationRegistry.getInstrumentation().getContext().getAssets();
