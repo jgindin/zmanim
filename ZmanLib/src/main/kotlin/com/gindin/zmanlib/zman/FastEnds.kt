@@ -2,43 +2,36 @@
  * Copyright (c) 2019. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.Calendar;
-import java.util.List;
-
+import java.util.Calendar
 
 /**
  * Used for allowing the user to see when a full-day fast ends.
  */
-class FastEnds
-  extends TzaitHacochavim {
+internal class FastEnds(
+  zmanimCalculator: ZmanimCalculator
+) : TzaitHacochavim(Zmanim.Type.FastEnd, zmanimCalculator) {
 
-  FastEnds(
-    final ZmanimCalculator zmanimCalculator
-  ) {
+  override fun buildZmanimList(
+    zmanimCalculator: ZmanimCalculator
+  ): List<Zman> {
 
-    super( Type.FastEnd, zmanimCalculator );
-  }
-
-
-  protected List<Zman> buildZmanimList(
-    final ZmanimCalculator zmanimCalculator
-  ) {
-
-    List<Zman>  zmanim = buildStandardTzaitZmanim( Type.FastEnd, zmanimCalculator, true );
+    val zmanim = buildStandardTzaitZmanim(Zmanim.Type.FastEnd, zmanimCalculator, true)
 
     zmanim.add(
-      new Zman( "Seattle Sephardic", "Based on the Seattle Sephardic community's tradition.", Type.FastEnd ) {
-        @Override protected Calendar calculate() {
-          //noinspection MagicNumber
-          return toCalendar( zmanimCalculator, zmanimCalculator.getEndOfFast( 30 ) );
+      object : Zman(
+        "Seattle Sephardic",
+        "Based on the Seattle Sephardic community's tradition.",
+        Zmanim.Type.FastEnd
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getEndOfFast(30))
         }
       }
-    );
+    )
 
-    return zmanim;
+    return zmanim
   }
 
-
-}  // End of TzaitHacochavim class
+}

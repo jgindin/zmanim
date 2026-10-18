@@ -2,64 +2,61 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.Calendar
 
-/**
- *
- */
-public class Shkia
-  extends Zmanim {
+private const val DEFAULT_ZMAN_NAME = "Sunset"
 
-  public static final String                                ZMAN_WITH_ELEVATION = "Sunset (with elevation)";
+public class Shkia internal constructor(
+  zmanimCalculator: ZmanimCalculator
+) : Zmanim(Zmanim.Type.Shkia, zmanimCalculator) {
 
-  private static final String                               DEFAULT_ZMAN_NAME = "Sunset";
+  public companion object {
 
+    public const val ZMAN_WITH_ELEVATION: String = "Sunset (with elevation)"
 
-
-  Shkia(
-    final ZmanimCalculator zmanimCalculator
-  ) {
-
-    super( Type.Shkia, zmanimCalculator );
   }
 
 
-  @Override
-  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    val zmanim = ArrayList<Zman>()
 
     zmanim.add(
-      new Zman( DEFAULT_ZMAN_NAME, "The exact sunset time.", Zmanim.Type.Shkia, false ) {
-        @Override protected Calendar calculate() {
-          final Date sunset = zmanimCalculator.getSeaLevelSunset();
-          return toCalendar( zmanimCalculator, sunset );
+      object : Zman(
+        DEFAULT_ZMAN_NAME,
+        "The exact sunset time.",
+        Zmanim.Type.Shkia,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          val sunset = zmanimCalculator.getSeaLevelSunset()
+          return toCalendar(zmanimCalculator, sunset)
         }
       }
-    );
+    )
 
     zmanim.add(
-      new Zman( ZMAN_WITH_ELEVATION, "The exact sunset time, taking elevation into account.", Zmanim.Type.Shkia, false ) {
-        @Override protected Calendar calculate() {
-          final Date sunset = zmanimCalculator.getSunset();
-          return toCalendar( zmanimCalculator, sunset );
+      object : Zman(
+        ZMAN_WITH_ELEVATION,
+        "The exact sunset time, taking elevation into account.",
+        Zmanim.Type.Shkia,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          val sunset = zmanimCalculator.getSunset()
+          return toCalendar(zmanimCalculator, sunset)
         }
       }
-    );
+    )
 
-    return zmanim;
+    return zmanim
   }
 
 
-  @Override
-  public Zman getDefault() {
-    return getByName( DEFAULT_ZMAN_NAME );
+  override fun getDefault(): Zman? {
+    return getByName(DEFAULT_ZMAN_NAME)
   }
 
-
-}  // End of Shkia class
+}

@@ -2,73 +2,74 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Calendar
 
-/**
- *
- */
-public class SofZmanBiurChametz
-  extends Zmanim {
+private const val DEFAULT_ZMAN_NAME = "GR'A"
 
-  private static final String                               DEFAULT_ZMAN_NAME = "GR'A";
+public class SofZmanBiurChametz internal constructor(
+  zmanimCalculator: ZmanimCalculator
+) : Zmanim(Zmanim.Type.SofZmanBiurChametz, zmanimCalculator) {
 
-
-  SofZmanBiurChametz(
-    final ZmanimCalculator zmanimCalculator
-  ) {
-    super( Type.SofZmanBiurChametz, zmanimCalculator );
+  override fun getDefault(): Zman? {
+    return getByName(DEFAULT_ZMAN_NAME)
   }
 
 
-  @Override
-  public Zman getDefault() {
-    return getByName( DEFAULT_ZMAN_NAME );
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
+
+    val zmanim = ArrayList<Zman>()
+
+    zmanim.add(
+      object : Zman(
+        DEFAULT_ZMAN_NAME,
+        "Based on the day as calculated from sunrise to sunset.",
+        Zmanim.Type.SofZmanBiurChametz
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzGRA())
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "MG'A 72 Minutes",
+        "Based on alot being 72 minutes before sunrise.",
+        Zmanim.Type.SofZmanBiurChametz
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA72Minutes())
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "MG'A 16.1 deg",
+        "Based on alot being 16.1 degrees before sunrise.",
+        Zmanim.Type.SofZmanBiurChametz
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees())
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "Baal HaTanya",
+        "Based on Baal HaTanya's sunrise and sunset calculations.",
+        Zmanim.Type.SofZmanBiurChametz
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzBaalHatanya())
+        }
+      }
+    )
+
+    return zmanim
   }
 
-
-  @Override
-  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
-
-    List<Zman> zmanim = new ArrayList<Zman>();
-
-    zmanim.add(
-      new Zman( DEFAULT_ZMAN_NAME, "Based on the day as calculated from sunrise to sunset.", Type.SofZmanBiurChametz ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzGRA() );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "MG'A 72 Minutes", "Based on alot being 72 minutes before sunrise.", Type.SofZmanBiurChametz ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA72Minutes() );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "MG'A 16.1 deg", "Based on alot being 16.1 degrees before sunrise.", Type.SofZmanBiurChametz ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees() );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "Baal HaTanya", "Based on Baal HaTanya's sunrise and sunset calculations.", Type.SofZmanBiurChametz ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzBaalHatanya() );
-        }
-      }
-    );
-
-    return zmanim;
-  }
-
-
-} // End of SofZmanBiurChametz class
+}

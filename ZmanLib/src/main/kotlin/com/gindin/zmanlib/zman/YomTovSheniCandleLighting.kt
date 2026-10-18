@@ -2,23 +2,14 @@
  * Copyright (c) 2019. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.List;
+internal class YomTovSheniCandleLighting(
+  zmanimCalculator: ZmanimCalculator
+) : TzaitHacochavim(Zmanim.Type.YomTovSheniCandleLighting, zmanimCalculator) {
 
-public class YomTovSheniCandleLighting
-  extends TzaitHacochavim {
-
-
-  YomTovSheniCandleLighting(
-    ZmanimCalculator zmanimCalculator
-  ) {
-    super( Type.YomTovSheniCandleLighting, zmanimCalculator );
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
+    return buildStandardTzaitZmanim(Zmanim.Type.YomTovSheniCandleLighting, zmanimCalculator, false)
   }
 
-
-  @Override
-  protected List<Zman> buildZmanimList( ZmanimCalculator zmanimCalculator ) {
-    return buildStandardTzaitZmanim( Type.YomTovSheniCandleLighting, zmanimCalculator, false );
-  }
 }

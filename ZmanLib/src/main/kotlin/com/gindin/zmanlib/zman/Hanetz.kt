@@ -2,61 +2,59 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Calendar
 
-/**
- *
- */
-public class Hanetz
-  extends Zmanim {
+private const val DEFAULT_ZMAN_NAME = "Sunrise"
 
+public class Hanetz internal constructor(
+  zmanimCalculator: ZmanimCalculator
+) : Zmanim(Zmanim.Type.Hanetz, zmanimCalculator) {
 
-  public static final String                                ZMAN_WITH_ELEVATION = "Sunrise (with elevation)";
+  public companion object {
 
-  private static final String                               DEFAULT_ZMAN_NAME = "Sunrise";
+    public const val ZMAN_WITH_ELEVATION: String = "Sunrise (with elevation)"
 
-
-  Hanetz(
-    final ZmanimCalculator zmanimCalculator
-  ) {
-
-    super( Type.Hanetz, zmanimCalculator );
   }
 
 
-  @Override
-  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    val zmanim = ArrayList<Zman>()
 
     zmanim.add(
-      new Zman( DEFAULT_ZMAN_NAME, "The exact sunrise time.", Zmanim.Type.Hanetz, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSeaLevelSunrise() );
+      object : Zman(
+        DEFAULT_ZMAN_NAME,
+        "The exact sunrise time.",
+        Zmanim.Type.Hanetz,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSeaLevelSunrise())
         }
       }
-    );
+    )
 
     zmanim.add(
-      new Zman( ZMAN_WITH_ELEVATION, "The exact sunrise time, taking elevation into account.", Zmanim.Type.Hanetz, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSunrise() );
+      object : Zman(
+        ZMAN_WITH_ELEVATION,
+        "The exact sunrise time, taking elevation into account.",
+        Zmanim.Type.Hanetz,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSunrise())
         }
       }
-    );
+    )
 
-    return zmanim;
+    return zmanim
   }
 
 
-  @Override
-  public Zman getDefault() {
-    return getByName( DEFAULT_ZMAN_NAME );
+  override fun getDefault(): Zman? {
+    return getByName(DEFAULT_ZMAN_NAME)
   }
 
-
-}  // End of Hanetz class
+}
