@@ -2,345 +2,241 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.eventBus;
-
-import kotlin.Pair;
-
-import java.util.*;
+package com.gindin.eventBus
 
 /**
  * Acts as a communication 'bus', allowing events to be fired to registered handlers.
- *<p/>
  *
  * Guarantees that if event 'a' is fired, all handlers of 'a' will be invoked before handlers for any subsequent
  *  events are invoked. In other words, if A fires 'a' and B and C are registered handlers, and B fires 'b' in
  *  the course of handling 'a', B and C will both receive and have a chance to handle 'a' before anyone is notified
  *  about 'b'.
- *<p/>
  *
  * If a handler of event 'a' is added during the firing of an 'a', that handler will not be notified of this event.
- *<p/>
  *
  * Also adds caching of the most recent event. This allows 'late' handlers to receive "catchup" events if they so desire.
  *
  * Roughly based on the event bus from GWT.
  */
-public final class EventBus {
+public class EventBus {
 
   /** The registered handlers, keyed by the event they're interested in. */
-  private final HandlerCollection                           handlerCollection = new HandlerCollection();
+  private val handlerCollection = HandlerCollection()
 
   /**
    * If we're currently firing an event, then we'll queue newly added handlers here, and they will be added
    *  after the event is done being dispatched.
    */
-  private final List<Pair<EventHandler, Boolean>>           postponedHandlersToAdd = new ArrayList<>();
+  private val postponedHandlersToAdd = ArrayList<Pair<EventHandler<*>, Boolean>>()
 
   /**
    * If we're currently firing an event, then we'll queue handlers which have requested to be removed here, and they
-   *  will be added after the event is done being dispatched.
+   *  will be removed after the event is done being dispatched.
    */
-  private final HandlerCollection                           postponedHandlersToRemove = new HandlerCollection();
+  private val postponedHandlersToRemove = HandlerCollection()
 
   /**
    * If we're currently firing an event, then we'll queue newly fired events here, and they will be fired, in the order
    *  they were received, after the current event is done being dispatched.
    */
-  private final List<Event<?>>                              postponedEvents = new ArrayList<>();
+  private val postponedEvents = ArrayList<Event<*>>()
 
-  /**
-   * A cache of the most recently fired event for a given event type.
-   */
-  private final EventCache                                  eventCache = new EventCache();
+  /** A cache of the most recently fired event for a given event type. */
+  private val eventCache = EventCache()
 
-  /**
-   * Used to allow interaction with our cache prior to dispatching an event.
-   */
-  private final EventCacheControl                           eventCacheControl = new EventCacheControlImpl();
+  /** Used to allow interaction with our cache prior to dispatching an event. */
+  private val eventCacheControl: EventCacheControl = EventCacheControlImpl()
 
   /**
    * When we're actively firing an event, this will be set. Used to ensure that (a) handler add/removes only happen
    *  after the event is fully dispatched; (b) events are dispatched in the proper order.
    */
-  private Event<?>                                          inProgressEvent = null;
-
-
+  private var inProgressEvent: Event<*>? = null
 
   /**
    * Adds the specified handler. If an event of this handler's type is currently being fired, the newly added handler
    *  will NOT get this event.
    */
-  public <E extends Event<H>, H extends EventHandler<E>> void addHandler( H handler ) {
-
-    addHandler( handler, false );
-  }
-
-
-  public <E extends Event<H>, H extends EventHandler<E>> void addHandler( H handler, boolean withCatchup ) {
-
-    assert null != handler;
-
-    if ( null == inProgressEvent ) {
-      actuallyAddHandler( handler, withCatchup );
-    }
-    else {
-      synchronized ( this ) {
-        //noinspection AutoBoxing
-        postponedHandlersToAdd.add( new Pair<>( handler, withCatchup ) );
+  @JvmOverloads
+  public fun <E : Event<H>, H : EventHandler<E>> addHandler(handler: H, withCatchup: Boolean = false) {
+    if (inProgressEvent == null) {
+      actuallyAddHandler(handler, withCatchup)
+    } else {
+      synchronized(this) {
+        postponedHandlersToAdd.add(Pair(handler, withCatchup))
       }
     }
   }
-
 
   /**
    * Removes the specified handler. If an event of this handler's type is currently being fired, this handler may
    *  still receive the event.
    */
-  public synchronized <E extends Event<H>, H extends EventHandler<E>> void removeHandler( H handler ) {
-
-    assert handler != null;
-
-    if ( null == inProgressEvent ) {
-      List<H> handlers = handlerCollection.get( handler.getAssociatedType() );
-      handlers.remove( handler );
-    }
-    else {
-      postponedHandlersToRemove.put( handler, handler.getAssociatedType() );
+  @Synchronized
+  public fun <E : Event<H>, H : EventHandler<E>> removeHandler(handler: H) {
+    if (inProgressEvent == null) {
+      handlerCollection.get(handler.associatedType)?.remove(handler)
+    } else {
+      postponedHandlersToRemove.put(handler, handler.associatedType)
     }
   }
 
+  public fun <H : EventHandler<*>, E : Event<H>> fire(event: E) {
+    val inProgress = synchronized(this) { inProgressEvent != null }
 
-  public <H extends EventHandler, E extends Event<H>> void fire( E event ) {
-
-    assert null != event;
-
-    boolean inProgress;
-    synchronized ( this ) {
-      inProgress = ( inProgressEvent != null );
-    }
-
-    if ( inProgress ) {
-      synchronized ( this ) {
-        postponedEvents.add( event );
+    if (inProgress) {
+      synchronized(this) {
+        postponedEvents.add(event)
       }
-    }
-    else {
-
-      fireEvent( event );
-      handlePostponed();
+    } else {
+      fireEvent(event)
+      handlePostponed()
     }
   }
 
-
-  private <H extends EventHandler, E extends Event<H>> void fireEvent( E event ) {
-
-    synchronized ( this ) {
-      inProgressEvent = event;
+  private fun <H : EventHandler<*>, E : Event<H>> fireEvent(event: E) {
+    synchronized(this) {
+      inProgressEvent = event
     }
 
-    // It's not clear to me, and I'm hoping its a synchronization thing, but I've seen stack traces where the
-    //  event here is null after we've fired an event and we're handling the postponed stuff...
-    if ( event == null ) {
-      return;
+    event.preDispatch(eventCacheControl)
+
+    val handlers: List<H> = synchronized(this) {
+      handlerCollection.get(event.javaClass)?.let { ArrayList(it) } ?: emptyList()
     }
 
-    event.preDispatch( eventCacheControl );
-
-    List<H> handlers;
-    synchronized ( this ) {
-      handlers = handlerCollection.get( event.getClass() );
-      if ( null != handlers ) {
-        handlers = new ArrayList<>( handlers );
-      }
-      else {
-        handlers = Collections.emptyList();
-      }
+    for (handler in handlers) {
+      event.dispatch(handler)
     }
 
-    for ( H handler : handlers ) {
-      dispatchEvent( event, handler );
-    }
-
-    synchronized ( this ) {
-      if ( event.isCachable() ) {
-        eventCache.put( (Class<Event>)event.getClass(), event );
+    synchronized(this) {
+      if (event.isCachable()) {
+        eventCache.put(event.javaClass, event)
       }
 
-      inProgressEvent = null;
+      inProgressEvent = null
     }
   }
 
-
-  private void handlePostponed() {
-
-    handlePostponedAdds();
-    handlePostponedRemoves();
-    handlePostponedFiring();
+  private fun handlePostponed() {
+    handlePostponedAdds()
+    handlePostponedRemoves()
+    handlePostponedFiring()
 
     // Have to go around again...
-    if ( !postponedHandlersToAdd.isEmpty() || !postponedHandlersToRemove.isEmpty() || !postponedEvents.isEmpty() ) {
-      handlePostponed();
+    if (postponedHandlersToAdd.isNotEmpty() || !postponedHandlersToRemove.isEmpty() || postponedEvents.isNotEmpty()) {
+      handlePostponed()
     }
   }
 
-
-  private void handlePostponedAdds() {
-
-    List<Pair<EventHandler, Boolean>> copy;
-    synchronized ( this ) {
-      copy = new ArrayList<>( postponedHandlersToAdd );
-      postponedHandlersToAdd.clear();
+  private fun handlePostponedAdds() {
+    val copy = synchronized(this) {
+      ArrayList(postponedHandlersToAdd).also { postponedHandlersToAdd.clear() }
     }
 
-    for ( Pair<EventHandler, Boolean> pair : copy ) {
-      //noinspection AutoUnboxing
-      actuallyAddHandler( pair.getFirst(), pair.getSecond() );
+    for ((handler, withCatchup) in copy) {
+      actuallyAddHandler(handler, withCatchup)
     }
   }
 
-
-  private synchronized void handlePostponedRemoves() {
-    handlerCollection.removeAll( postponedHandlersToRemove );
-    postponedHandlersToRemove.clear();
+  @Synchronized
+  private fun handlePostponedRemoves() {
+    handlerCollection.removeAll(postponedHandlersToRemove)
+    postponedHandlersToRemove.clear()
   }
 
-
-  private void handlePostponedFiring() {
-
+  private fun handlePostponedFiring() {
     // Have to take a copy in case during the firing of one of these events we get more events to postpone...
-    ArrayList<Event<?>> copyOfPostponedEvents;
-    synchronized ( this ) {
-      copyOfPostponedEvents = new ArrayList<Event<?>>( postponedEvents );
-      postponedEvents.clear();
+    val copyOfPostponedEvents = synchronized(this) {
+      ArrayList(postponedEvents).also { postponedEvents.clear() }
     }
 
-    for ( Event<?> event : copyOfPostponedEvents ) {
-      fireEvent( event );
+    for (event in copyOfPostponedEvents) {
+      fireEvent(event)
     }
   }
 
+  // The postponed collections hold handlers whose event types were erased when they were queued; the
+  //  bus only ever pairs a handler with the event type it reports, so re-establishing the type is safe.
+  @Suppress("UNCHECKED_CAST")
+  private fun actuallyAddHandler(handler: EventHandler<*>, withCatchup: Boolean) {
+    val eventType = handler.associatedType as Class<Event<EventHandler<*>>>
 
-  private <H extends EventHandler, E extends Event<H>> void dispatchEvent( E event, H handler ) {
-    event.dispatch( handler );
-  }
-
-
-  private <E extends Event<H>, H extends EventHandler<E>> void actuallyAddHandler( H handler, boolean withCatchup ) {
-
-    synchronized ( this ) {
-      handlerCollection.put( handler, handler.getAssociatedType() );
+    synchronized(this) {
+      handlerCollection.put(handler, eventType)
     }
 
-    if ( withCatchup ) {
-      E cachedEvent = eventCache.get( handler.getAssociatedType() );
-      if ( cachedEvent != null ) {
-        cachedEvent.dispatch( handler );
+    if (withCatchup) {
+      eventCache.get(eventType)?.dispatch(handler)
+    }
+  }
+
+  private inner class EventCacheControlImpl : EventCacheControl {
+    override fun clearCacheForType(type: Class<out Event<*>>) {
+      synchronized(this@EventBus) {
+        eventCache.remove(type)
       }
     }
   }
-
-
-  private class EventCacheControlImpl
-    implements EventCacheControl {
-
-    @Override
-    public void clearCacheForType( Class<? extends Event> type ) {
-      synchronized ( EventBus.this ) {
-        eventCache.remove( type );
-      }
-    }
-  }
-
 
   /**
-   * Type-safe heterogeneous container, associating an event type with the handlers for that type..
+   * Type-safe heterogeneous container, associating an event type with the handlers for that type.
    *
    * See Effective Java, 2nd ed.
    */
-  private static class HandlerCollection {
+  private class HandlerCollection {
 
     /**
      * The actual, non-type safe map. The keys are the event class, and the values are a list of handlers for that
      *  event type.
      */
-    private final Map<Class<? extends Event>, List<? extends EventHandler>>   handlerMap = new HashMap<>();
+    private val handlerMap = HashMap<Class<out Event<*>>, MutableList<EventHandler<*>>>()
 
-
-    public <H extends EventHandler, E extends Event<H>> void put( H handler, Class<E> eventType ) {
-
-      // This is OK because we're the only ones with access to put things into the map...
-      @SuppressWarnings( "unchecked" )
-      List<H> handlers = (List<H>)handlerMap.get( eventType );
-      if ( null == handlers ) {
-        handlers = new ArrayList<>();
-        handlerMap.put( eventType, handlers );
-      }
-
-      handlers.add( handler );
+    fun <H : EventHandler<*>, E : Event<H>> put(handler: H, eventType: Class<E>) {
+      handlerMap.getOrPut(eventType) { ArrayList() }.add(handler)
     }
 
+    // This is OK because we're the only ones with access to put things into the map...
+    @Suppress("UNCHECKED_CAST")
+    fun <H : EventHandler<*>, E : Event<H>> get(eventType: Class<E>): MutableList<H>? =
+      handlerMap[eventType] as MutableList<H>?
 
-    public <H extends EventHandler, E extends Event<H>> List<H> get( Class<E> eventType ) {
-
-      // This is OK because we're the only ones with access to put things into the map...
-      @SuppressWarnings( "unchecked" )
-      List<H> handlers = (List<H>)handlerMap.get( eventType );
-      return handlers;
+    fun clear() {
+      handlerMap.clear()
     }
 
+    fun isEmpty(): Boolean = handlerMap.isEmpty()
 
-    public void clear() {
-      handlerMap.clear();
-    }
-
-
-    public boolean isEmpty() {
-      return handlerMap.isEmpty();
-    }
-
-
-    void removeAll( HandlerCollection source ) {
-
-      for ( Map.Entry<Class<? extends Event>, List<? extends EventHandler>> entry : source.handlerMap.entrySet() ) {
-
-        List<? extends EventHandler> handlers = handlerMap.get( entry.getKey() );
-        if ( null != handlers ) {
-          handlers.removeAll( entry.getValue() );
-        }
+    fun removeAll(source: HandlerCollection) {
+      for ((eventType, handlersToRemove) in source.handlerMap) {
+        handlerMap[eventType]?.removeAll(handlersToRemove)
       }
     }
   }
 
-
-
   /**
-   * Type-safe heterogeneous container, associating an event type with the most recent event for that type..
+   * Type-safe heterogeneous container, associating an event type with the most recent event for that type.
    *
    * See Effective Java, 2nd ed.
    */
-  private static class EventCache {
+  private class EventCache {
 
     /**
      * The actual, non-type safe map. The keys are the event class, and the value is the most recent event for that
      *  event type.
      */
-    private final Map<Class<? extends Event>, Event>        eventCache = new HashMap<>();
+    private val eventCache = HashMap<Class<out Event<*>>, Event<*>>()
 
-
-    public <H extends EventHandler, E extends Event<H>> void put( Class<E> eventType, E cache ) {
-      eventCache.put( eventType, cache );
+    fun <H : EventHandler<*>, E : Event<H>> put(eventType: Class<E>, cache: E) {
+      eventCache[eventType] = cache
     }
 
+    // This is OK because we're the only ones with access to put things into the map...
+    @Suppress("UNCHECKED_CAST")
+    fun <H : EventHandler<*>, E : Event<H>> get(eventType: Class<E>): E? = eventCache[eventType] as E?
 
-    public <H extends EventHandler, E extends Event<H>> E get( Class<E> eventType ) {
-      //noinspection unchecked
-      return (E)eventCache.get( eventType );
-    }
-
-
-    public <H extends EventHandler, E extends Event<H>> void remove( Class<E> eventType ) {
-      eventCache.remove( eventType );
+    fun remove(eventType: Class<out Event<*>>) {
+      eventCache.remove(eventType)
     }
   }
-
-} // End of EventBus class
+}
