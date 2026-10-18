@@ -84,6 +84,21 @@ public class UT_ZmanimGoldenTable {
 
 
   @Test
+  public void everyRowHasOneCellForEachColumn() throws IOException {
+
+    List<String[]> rows = loadTable();
+    int columns = rows.get( 0 ).length;
+
+    for ( int i = 1; i < rows.size(); i++ ) {
+      String[] row = rows.get( i );
+      Assertions.assertEquals( columns, row.length,
+        "Row " + i + " (" + row[ 0 ] + ", " + row[ 2 ] + ", elevation " + row[ 1 ] + ") has " + row.length
+          + " cells but the header has " + columns + " columns" );
+    }
+  }
+
+
+  @Test
   public void everyZmanTimeMatchesTheTable() throws IOException {
 
     List<String[]> rows = loadTable();
@@ -205,7 +220,7 @@ public class UT_ZmanimGoldenTable {
     String[] parts = column.split( "\\|", -1 );
     String what = ZmanimGoldenTable.LISTED_COLUMN.equals( column )
       ? "zman types listed for the day"
-      : parts[ 0 ] + " / " + parts[ 1 ];
+      : parts[ 0 ] + " / " + parts[ 1 ] + ( Boolean.parseBoolean( parts[ 2 ] ) ? " (advanced)" : "" );
 
     return row[ 0 ] + ", " + row[ 2 ] + ", elevation " + row[ 1 ] + ", " + what
       + ": expected " + expected + " but was " + actual;

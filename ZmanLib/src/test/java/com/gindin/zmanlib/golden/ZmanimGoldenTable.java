@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -235,7 +236,7 @@ public final class ZmanimGoldenTable {
 
 
   public static String formatDate( int[] date ) {
-    return String.format( "%04d-%02d-%02d", date[ 0 ], date[ 1 ], date[ 2 ] );
+    return String.format( Locale.ROOT, "%04d-%02d-%02d", date[ 0 ], date[ 1 ], date[ 2 ] );
   }
 
 

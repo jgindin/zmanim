@@ -136,6 +136,11 @@ public class UT_NotificationScheduling extends NotificationTestBase {
   }
 
 
+  /**
+   * Alarms are still scheduled when SHOW_NOTIFICATIONS is false; the display service suppresses the notification
+   *  when the alarm goes off, and still marks the zman as notified. This records how scheduling behaves today, so
+   *  flip this test if scheduling is ever skipped while notifications are turned off.
+   */
   @Test
   public void alarmsAreStillScheduledWhenNotificationsAreTurnedOff() throws Exception {
 
@@ -164,6 +169,37 @@ public class UT_NotificationScheduling extends NotificationTestBase {
     Assert.assertEquals( List.of( midnight - 30 * MINUTE_MS ), triggerTimes() );
     Assert.assertTrue( "the alarm is still ahead of the time of day used",
       midnight - 30 * MINUTE_MS > timeIs( NEW_YORK_ZONE, YEAR, MONTH, DAY, 23, 50 ).getTimeInMillis() );
+  }
+
+
+  @Test
+  public void whenNoZmanimRemainTodayTheNextDaysZmanimAreScheduled() throws Exception {
+
+    // In standard time the halachic midnight falls a few minutes before midnight, so nothing remains of this day.
+    int year = 2026;
+    int month = Calendar.DECEMBER;
+    int day = 15;
+    Calendar now = timeIs( NEW_YORK_ZONE, year, month, day, 23, 58 );
+    Assert.assertTrue( "the last zman of the day has passed",
+      defaultZman( ALBANY, year, month, day, Zmanim.Type.NightChatzot ).getTime().getTimeInMillis() < now.getTimeInMillis() );
+
+    Map<Zmanim.Type, Integer> alertMinutes = new EnumMap<>( Zmanim.Type.class );
+    for ( Zmanim.Type type : Zmanim.Type.values() ) {
+      alertMinutes.put( type, 10 );
+    }
+    givenPreferences( true, false, false, alertMinutes );
+
+    startService();
+    scheduleAlarmsAsOf( ALBANY, now );
+
+    List<Long> triggers = triggerTimes();
+    long firstZmanOfTheNextDay = defaultZman( ALBANY, year, month, day + 1, Zmanim.Type.Alot ).getTime().getTimeInMillis();
+    Assert.assertEquals( firstZmanOfTheNextDay - 10 * MINUTE_MS, (long)triggers.get( 0 ) );
+
+    long startOfTheNextDay = timeIs( NEW_YORK_ZONE, year, month, day + 1, 0, 0 ).getTimeInMillis();
+    for ( long trigger : triggers ) {
+      Assert.assertTrue( "alarm at " + trigger + " belongs to the next day", trigger >= startOfTheNextDay - 10 * MINUTE_MS );
+    }
   }
 
 
