@@ -2,49 +2,41 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.taaniyot;
+package com.gindin.zmanlib.calendar.holiday.taaniyot
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
 
 /**
  *
  */
-@SuppressWarnings( "MagicNumber" )
-public class Taanit17Tamuz
-  extends Taanit {
+@Suppress("MagicNumber")
+public class Taanit17Tamuz : Taanit(HebrewMonth.TAMMUZ, 17) {
 
-
-  private static final String                               TAANIT_17_TAMUZ = TAANIT + "17 Tamuz";
-
-
-  public Taanit17Tamuz() {
-    super( HebrewMonth.TAMMUZ, 17 );
+  override fun getName(): String {
+    return TAANIT_17_TAMUZ
   }
 
 
-  @Override
-  public String getName() {
-    return TAANIT_17_TAMUZ;
+  override fun canFallOnFriday(date: HebrewDate): Boolean {
+    return false
   }
 
 
-  @Override
-  protected boolean canFallOnFriday( HebrewDate date ) {
-    return false;
+  override fun createErevDetails(date: HebrewDate): Details {
+    return ErevTaanitDetails(date, TAANIT_17_TAMUZ)
   }
 
 
-  @Override
-  protected Details createErevDetails( HebrewDate date ) {
-    return new ErevTaanitDetails( date, TAANIT_17_TAMUZ );
+  override fun createYomDetails(date: HebrewDate): Details {
+    return TaanitDetails(date, TAANIT_17_TAMUZ)
   }
 
 
-  @Override
-  protected Details createYomDetails( HebrewDate date ) {
-    return new TaanitDetails( date, TAANIT_17_TAMUZ );
+  private companion object {
+
+    private const val TAANIT_17_TAMUZ: String = TAANIT + "17 Tamuz"
   }
 
-}  // End of Taanit class
+}  // End of Taanit17Tamuz class
