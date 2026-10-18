@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="pref_font_choice">font_shlomo</string>
+    <boolean name="pref_full_screen_on" value="false" />
+    <string name="pref_font_size">20</string>
+    <boolean name="pref_keep_screen_on" value="false" />
+</map>
