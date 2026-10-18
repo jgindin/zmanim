@@ -2,12 +2,14 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.modern;
+package com.gindin.zmanlib.calendar.holiday.modern
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val NAME = "Yom Yerushalyim"
 
 /**
  * An Israeli national holiday commemorating the reunification of Jerusalem and the establishment of Israeli control
@@ -18,40 +20,33 @@ import com.gindin.zmanlib.calendar.holiday.Observance;
  *  the Hebrew date on which the divided city of Jerusalem became one.
  *    -- http://en.wikipedia.org/wiki/Yom_Yerushalayim
  */
-@SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
-public class YomYerushalayim
-  extends Observance {
+@Suppress("FeatureEnvy", "MagicNumber")
+public class YomYerushalayim : Observance() {
 
-  private static final String                               NAME = "Yom Yerushalyim";
-
-
-  @Override
-  public String getName() {
-    return NAME;
+  override fun getName(): String {
+    return NAME
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( HebrewMonth.IYAR != date.getHebrewMonth() ) {
-      return null;
+    if (HebrewMonth.IYAR != date.hebrewMonth) {
+      return null
     }
 
-    if ( 27 == date.getHebrewDayOfMonth() ) {
-      return new Details.Erev( date, NAME, false );
+    if (27 == date.hebrewDayOfMonth) {
+      return Details.Erev(date, NAME, false)
     }
 
-    if ( 28 == date.getHebrewDayOfMonth() ) {
-      return new Details.Yom( date, NAME ) {
-        @Override
-        public boolean sayTachanun() {
-          return false;
+    if (28 == date.hebrewDayOfMonth) {
+      return object : Details.Yom(date, NAME) {
+        override fun sayTachanun(): Boolean {
+          return false
         }
-      };
+      }
     }
 
-    return null;
+    return null
   }
 
 
