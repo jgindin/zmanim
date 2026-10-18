@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="Chatzot">Fixed Local Mid-Day</string>
+    <string name="Havdalah">Rabbi Moshe Feinstein</string>
+    <string name="Sof Zman Tefila"> Rav Moshe Feinstein - GR'A half day</string>
+    <string name="Tzait Hacochavim">Seattle Sephardic</string>
+    <string name="Mincha Ketana"> Rav Moshe Feinstein - GR'A half day</string>
+    <string name="Mincha Gedola">Rabbi Yaakov Moshe Hillel</string>
+    <string name="Shkia">Sunset (with elevation)</string>
+    <string name="Talit/Tefilin">11.5 deg</string>
+    <string name="Alot Hashachar">GR'A 96 Minutes Zmaniyot</string>
+    <string name="Hanetz">Sunrise (with elevation)</string>
+    <string name="Sof Zman Shema"> Rav Moshe Feinstein - GR'A half day</string>
+    <string name="Biur Chametz">Baal HaTanya</string>
+    <string name="Plag HaMincha"> Rav Moshe Feinstein - GR'A half day</string>
+    <string name="Fast Ends">Seattle Sephardic</string>
+    <string name="Bein Hashmashot">13.5 Minutes</string>
+    <string name="Candle Lighting">Rabbi Moshe Feinstein</string>
+    <string name="Achilat Chametz">Baal HaTanya</string>
+    <string name="Midnight">Fixed Local Mid-Night</string>
+    <string name="Latest Mincha">Hacham Ben Sion</string>
+</map>

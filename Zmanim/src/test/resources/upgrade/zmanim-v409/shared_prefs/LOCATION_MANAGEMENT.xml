@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="DYNAMIC_POSITION" value="false" />
+    <string name="PLACE_ELEVATION">570</string>
+    <boolean name="LATITUDE_LONGITUDE_POSITION" value="true" />
+    <string name="LONGITUDE">W 73 45 22.32000000002472</string>
+    <boolean name="OVERRIDE_SYSTEM_TIME_ZONE" value="true" />
+    <string name="LATITUDE">N 42 39 9.35999999999865</string>
+    <string name="PLACE">Lake Placid, New York</string>
+    <string name="LATITUDE_LONGITUDE_ELEVATION">47</string>
+    <string name="TIME_ZONE_AREA">America</string>
+    <string name="TIME_ZONE_LOCALE">Chicago</string>
+    <boolean name="STATIC_POSITION" value="false" />
+</map>

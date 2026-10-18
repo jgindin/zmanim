@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="TzaitHacochavim" value="7" />
+    <int name="Chatzot" value="60" />
+    <boolean name="SHOW_SECONDS" value="true" />
+    <int name="ShabbatEnd" value="18" />
+    <boolean name="USE_ALARM_CLOCK" value="true" />
+    <int name="Talit" value="30" />
+    <int name="SofZmanBiurChametz" value="25" />
+    <int name="PlagHaMincha" value="15" />
+    <int name="CandleLighting" value="40" />
+    <int name="Shkia" value="90" />
+    <boolean name="SHOW_NOTIFICATIONS" value="false" />
+    <int name="Alot" value="-1" />
+    <int name="Hanetz" value="5" />
+    <int name="SofZmanShema" value="45" />
+    <int name="SofZmanAchilatChametz" value="10" />
+    <int name="MinchaGedola" value="-1" />
+    <int name="BeinHashmashot" value="-1" />
+    <int name="LatestMincha" value="55" />
+    <int name="SofZmanTefila" value="20" />
+    <int name="NightChatzot" value="120" />
+    <int name="FastEnd" value="12" />
+    <boolean name="ENABLE_NOTIFICATIONS_ON_SHABBAT" value="true" />
+    <int name="MinchaKetana" value="35" />
+</map>
