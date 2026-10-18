@@ -17,4 +17,10 @@ dependencies {
   implementation(libs.android.gradlePlugin)
   implementation(libs.moallemi.advanced.build.version.gradlePlugin)
   implementation(libs.roborazzi.gradlePlugin)
+
+  // AGP's built-in Kotlin support (what lets the app modules compile Kotlin) uses the Kotlin Gradle
+  //  plugin, and it can only reach AGP's classes if both come from this one classpath. The Kotlin
+  //  library modules apply the plugin from here too (see the zmanim.*-conventions plugins), so that
+  //  the build only ever has one copy of it.
+  implementation(libs.kotlin.gradlePlugin)
 }

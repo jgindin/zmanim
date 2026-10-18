@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins {
-  alias(libs.plugins.kotlin.multiplatform)
+  id("zmanim.kotlin-multiplatform-conventions")
   alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
