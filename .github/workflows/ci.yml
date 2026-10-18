@@ -26,3 +26,49 @@ jobs:
           path: |
             **/build/reports/tests/**
             **/build/outputs/roborazzi/**
+
+  # Runs the on-device tests (src/androidTest of :Zmanim and :ZehutYosef) on an emulator at the
+  #  API floor and ceiling. These guard window insets / ActionBar layout and real process launches,
+  #  which Robolectric cannot observe.
+  #
+  # Not a merge gate: branch protection requires only `verify`, and `continue-on-error` keeps a
+  #  flaky emulator boot or runner outage from turning the whole workflow red while this job is
+  #  new. Drop `continue-on-error` once it has proven stable.
+  emulator-smoke:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [24, 36]
+    steps:
+      - uses: actions/checkout@v4
+      # Hardware acceleration for the emulator: lets the runner user open /dev/kvm.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Run instrumented tests on an emulator
+        uses: reactivecircus/android-emulator-runner@v2.38.0
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          # google_apis: the app uses Google Play Services location APIs and the Geocoder.
+          target: google_apis
+          disable-animations: true
+          script: ./gradlew :Zmanim:connectedDebugAndroidTest :ZehutYosef:connectedBarMitzvahDebugAndroidTest :ZehutYosef:connectedSidurDebugAndroidTest
+      - name: Upload instrumented test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-reports-api-${{ matrix.api-level }}
+          path: |
+            **/build/reports/androidTests/**
+            **/build/outputs/androidTest-results/**
