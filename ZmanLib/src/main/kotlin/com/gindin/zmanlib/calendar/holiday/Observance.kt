@@ -2,9 +2,9 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday;
+package com.gindin.zmanlib.calendar.holiday
 
-import com.gindin.zmanlib.calendar.HebrewDate;
+import com.gindin.zmanlib.calendar.HebrewDate
 
 /**
  * Represents an observance of some kind in the Jewish Calendar.
@@ -12,13 +12,13 @@ import com.gindin.zmanlib.calendar.HebrewDate;
 public abstract class Observance {
 
 
-  public abstract String getName();
+  public abstract fun getName(): String
 
   /**
    * If the observance falls on the specified date, returns details about that
    *  particular instance of the observance.
    */
-  public abstract Details getDetailsFor( HebrewDate date );
+  public abstract fun getDetailsFor(date: HebrewDate): Details?
 
 
 }  // End of Observance class
