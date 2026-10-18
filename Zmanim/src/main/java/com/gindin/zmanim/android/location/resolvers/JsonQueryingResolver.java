@@ -10,19 +10,19 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import kotlinx.serialization.SerializationException;
+import kotlinx.serialization.json.JsonObject;
 
 import android.location.Address;
 import android.os.Build;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +114,7 @@ abstract class JsonQueryingResolver
    *  into a ZmanimLocation.
    */
   @Nullable
-  protected abstract Address addressFromJSON( JSONObject json );
+  protected abstract Address addressFromJSON( JsonObject json );
 
 
 
@@ -130,13 +130,9 @@ abstract class JsonQueryingResolver
       try {
         return doLocationResolution( zmanimLocation, params );
       }
-      catch ( IOException | JSONException | NumberFormatException ex ) {
+      catch ( IOException | SerializationException | NumberFormatException ex ) {
         // Try again; don't log anything because it can be overwhelming...
-        //  The JSON exceptions seem to happen pretty often, with messages like:
-        //    'End of input at character 0 of'
-        //    'Expected ':' after latLng at character 799 of ...'
-        //    'Unterminated array at character 1368 of ...'
-        //    'java.lang.NumberFormatException: Invalid int: "00"'
+        //  Parse failures (an empty or truncated response, for example) happen pretty often.
       }
       catch ( Exception e ) {
         LogUtils.logError( "resolveFromCoords", e.getMessage(), e );
@@ -160,7 +156,7 @@ abstract class JsonQueryingResolver
     Operation operation = zmanimLocation.hasCoordinates() ? Operation.ReverseGeocode : Operation.Search;
     addAdditionalParams( operation, zmanimLocation, params );
 
-    JSONObject json = makeRequest( getRequestUrl( operation ), params );
+    JsonObject json = makeRequest( getRequestUrl( operation ), params );
     if ( json == null ) {
       return null;
     }
@@ -181,7 +177,7 @@ abstract class JsonQueryingResolver
 
 
   @Nullable
-  private JSONObject makeRequest(
+  private JsonObject makeRequest(
     String                    urlString,
     List<Pair<String,String>> params
   )
@@ -207,27 +203,15 @@ abstract class JsonQueryingResolver
         throw new IOException( "Unexpected redirection." );
       }
 
-      StringBuilder response = new StringBuilder();
+      ByteArrayOutputStream response = new ByteArrayOutputStream();
       //noinspection MagicNumber
       byte[] buf = new byte[ 1024 ];
-      while ( input.read( buf ) != -1 ) {
-        response.append( new String( buf ) );
+      int count;
+      while ( ( count = input.read( buf ) ) != -1 ) {
+        response.write( buf, 0, count );
       }
 
-      Object jsonRoot = new JSONTokener( response.toString() ).nextValue();
-      if ( jsonRoot instanceof JSONArray ) {
-        if ( ((JSONArray)jsonRoot).length() == 0 ) {
-          return null;
-        }
-
-        jsonRoot = ((JSONArray)jsonRoot).getJSONObject( 0 );
-      }
-
-      if ( jsonRoot instanceof JSONObject ) {
-        return (JSONObject)jsonRoot;
-      }
-
-      return null;
+      return GeocodingResponseParser.parse( new String( response.toByteArray(), StandardCharsets.UTF_8 ) );
     }
     finally {
       if ( connection != null ) {
