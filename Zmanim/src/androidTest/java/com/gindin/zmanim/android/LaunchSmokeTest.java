@@ -58,6 +58,8 @@ public class LaunchSmokeTest {
       assertEquals( Lifecycle.State.RESUMED, scenario.getState() );
       ZmanimActivity activity = ViewWaits.activityOf( scenario );
 
+      // The cache is only proven to supply this name when the Geocoder cannot answer (an offline emulator); online
+      //  the Geocoder may return the same name, so a broken cache path can go unnoticed on CI.
       ViewWaits.until( "the saved location name in the header", () ->
         SAVED_LOCATION_NAME.contentEquals( ( (TextView)activity.findViewById( R.id.location ) ).getText() ) );
       ViewWaits.until( "a non-empty zmanim list", () -> {
