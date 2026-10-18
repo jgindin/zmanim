@@ -3,42 +3,15 @@
  */
 
 import com.gindin.buildlogic.zmanimAppVersion
+import com.gindin.buildlogic.zmanimReleaseSigning
 
 plugins {
   // build-logic's precompiled convention plugin. It applies com.android.application,
   //  org.moallemi.advanced-build-version and Roborazzi, and carries everything this module and
   //  :ZehutYosef configure identically: compileSdk/targetSdk, Java 21 compileOptions + test
-  //  toolchain, the Roborazzi/Robolectric unit-test wiring, the APK output-renaming Variant API
+  //  toolchain, the Roborazzi/Robolectric unit-test wiring, the APK/AAB output-renaming Variant API
   //  block, the shared :ZmanLib / libs/*.jar dependencies and the shared test dependencies.
   id("zmanim.android-application-conventions")
-}
-
-// Optional-apply pattern replacing the Groovy try/catch: zmanim.gradle is a never-committed,
-//  gitignored file (see .hgignore, "^Zmanim/zmanim.gradle") with the real release signing
-//  config, so it may simply not exist on a fresh checkout. Kotlin DSL's `apply(from = ...)`
-//  fails the whole script evaluation before the applied file's own contents are even parsed
-//  when the file is missing (there's no analogous runtime exception for a bare try/catch to
-//  swallow the way Groovy's dynamic `apply from:` allowed), so an explicit existence check is
-//  used for that case. The try/catch around the apply() call itself is kept (matching the
-//  original) to also tolerate the file existing but failing while it evaluates. Got this idea
-//  from Mike Penz's AboutLibraries.
-if (file("zmanim.gradle").exists()) {
-  try {
-    apply(from = "zmanim.gradle")
-  }
-  catch (ignored: Exception) {
-    println()
-    println()
-    println("    ===================================================================")
-    println("    You can't build the release version. Build a debug version instead.")
-    println("    ===================================================================")
-  }
-} else {
-  println()
-  println()
-  println("    ===================================================================")
-  println("    You can't build the release version. Build a debug version instead.")
-  println("    ===================================================================")
 }
 
 
@@ -96,19 +69,15 @@ android {
 
       /* Reminder: Use the default proguard from the SDK, and then add in our custom proguard rules. */
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), file("proguard-rules.pro"))
-
-      try {
-        // In case this dev doesn't have the signing keys, this will fail...
-        signingConfig = signingConfigs.getByName("release")
-      }
-      catch (ignored: Exception) {
-      }
     }
 
     getByName("debug") {
     }
   }
 }
+
+// Release signing (upload key) comes from gindin.signing.* Gradle properties; see Signing.kt.
+zmanimReleaseSigning(keyAlias = "android-app")
 
 dependencies {
   // The net.xpece.android support libraries only exist in jcenter for the older version that

@@ -40,6 +40,8 @@ local.properties
 # Sensitive files which are symlinked in, but NEVER committed
 ^common/jay-gindin-android-apps.keystore
 ^common/ProjectApiKey.txt
+^common/zehut-yosef-upload_cert.der
+^common/zmanim-upload_cert.der
 ^ZehutYosef/zehut-yosef.gradle
 ^Zmanim/zmanim.gradle
 

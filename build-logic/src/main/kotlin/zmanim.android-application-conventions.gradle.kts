@@ -2,7 +2,9 @@
  * Copyright (c) 2026. Jay R. Gindin
  */
 
+import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.gindin.buildlogic.CopyFileTask
 import org.gradle.api.artifacts.VersionCatalogsExtension
 
 // Convention plugin holding everything :Zmanim and :ZehutYosef configure identically.
@@ -65,14 +67,31 @@ android {
 }
 
 /**
- * Renames each build variant's output APK using AGP's Variant API: `output.outputFileName` is a
- *  settable `Property<String>`. See
- *  https://developer.android.com/build/build-variants#customize-artifact-name.
+ * Gives each build variant's APK and App Bundle a versioned file name, e.g.
+ *  `Zmanim--release-4.0.403.apk` / `.aab`.
+ *
+ * APKs are renamed in place using AGP's Variant API: `output.outputFileName` is a settable
+ *  `Property<String>`. See https://developer.android.com/build/build-variants#customize-artifact-name.
+ *
+ * AGP has no equivalent property for bundles, so `bundle<Variant>` is instead finalized by a task
+ *  that copies AGP's `<project>-<variant>.aab` to the versioned name, next to the original in
+ *  `build/outputs/bundle/<variant>/`. Reading the bundle through `SingleArtifact.BUNDLE` (rather
+ *  than a hardcoded path) also carries the dependency on AGP's packaging task.
  */
 extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVariants { variant ->
+  fun versionedName(versionName: String) = "${project.name}-${variant.flavorName}-${variant.name}-$versionName"
+
   variant.outputs.forEach { output ->
-    output.outputFileName.set("${project.name}-${variant.flavorName}-${variant.name}-${output.versionName.get()}.apk")
+    output.outputFileName.set("${versionedName(output.versionName.get())}.apk")
   }
+
+  val capitalizedName = variant.name.replaceFirstChar { it.uppercase() }
+  val versionName = variant.outputs.single().versionName
+  val copyVersionedBundle = tasks.register<CopyFileTask>("copyVersioned${capitalizedName}Bundle") {
+    source.set(variant.artifacts.get(SingleArtifact.BUNDLE))
+    destination.set(layout.buildDirectory.file(versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" }))
+  }
+  tasks.named { it == "bundle$capitalizedName" }.configureEach { finalizedBy(copyVersionedBundle) }
 }
 
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to

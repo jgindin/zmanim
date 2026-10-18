@@ -3,28 +3,11 @@
  */
 
 import com.gindin.buildlogic.zmanimAppVersion
+import com.gindin.buildlogic.zmanimReleaseSigning
 
 plugins {
   // See Zmanim/build.gradle.kts for what this convention plugin (build-logic) brings in.
   id("zmanim.android-application-conventions")
-}
-
-// Optional-apply pattern replacing the Groovy try/catch: zehut-yosef.gradle is a never-committed,
-//  gitignored file (see .hgignore, "^ZehutYosef/zehut-yosef.gradle") with the real release
-//  signing config, so it may simply not exist on a fresh checkout. Kotlin DSL's
-//  `apply(from = ...)` fails the whole script evaluation before the applied file's own contents
-//  are even parsed when the file is missing (there's no analogous runtime exception for a bare
-//  try/catch to swallow the way Groovy's dynamic `apply from:` allowed), so an explicit
-//  existence check is used for that case. The try/catch around the apply() call itself is kept
-//  (matching the original) to also tolerate the file existing but failing while it evaluates --
-//  which, empirically, is exactly what happens with the copy of this file on disk today. Got
-//  this idea from Mike Penz's AboutLibraries.
-if (file("zehut-yosef.gradle").exists()) {
-  try {
-    apply(from = "zehut-yosef.gradle")
-  }
-  catch (ignored: Exception) {
-  }
 }
 
 
@@ -47,13 +30,6 @@ android {
     getByName("release") {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-      try {
-        // In case this dev doesn't have the signing keys, this will fail...
-        signingConfig = signingConfigs.getByName("release")
-      }
-      catch (ignored: Exception) {
-      }
     }
 
     getByName("debug") {
@@ -72,6 +48,10 @@ android {
     }
   }
 }
+
+// Release signing (upload key) comes from gindin.signing.* Gradle properties; see Signing.kt.
+//  Both flavors share this key.
+zmanimReleaseSigning(keyAlias = "zehutyosef")
 
 dependencies {
 
