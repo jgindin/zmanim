@@ -2,61 +2,48 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.rabbanan;
+package com.gindin.zmanlib.calendar.holiday.rabbanan
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val PURIM_KATAN = "Purim Katan"
 
 /**
  *
  */
-@SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
-public class PurimKatan
-  extends Observance {
+@Suppress("MagicNumber", "FeatureEnvy")
+public class PurimKatan : Observance() {
 
-  private static final String                               PURIM_KATAN = "Purim Katan";
-
-
-  @Override
-  public String getName() {
-    return PURIM_KATAN;
+  override fun getName(): String {
+    return PURIM_KATAN
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) {
+    if (date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth)) {
 
-      final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-      if ( 13 == hebrewDayOfMonth ) {
-        return new Details.Erev( date, PURIM_KATAN, false );
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
+      if (13 == hebrewDayOfMonth) {
+        return Details.Erev(date, PURIM_KATAN, false)
       }
-      if ( ( 14 == hebrewDayOfMonth ) || ( 15 == hebrewDayOfMonth ) ) {
-        return new PurimKatanDetails( date );
+      if ((14 == hebrewDayOfMonth) || (15 == hebrewDayOfMonth)) {
+        return PurimKatanDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class PurimKatanDetails
-    extends Details.Yom {
+  private class PurimKatanDetails(date: HebrewDate) : Details.Yom(date, PURIM_KATAN) {
 
-    public PurimKatanDetails(
-      final HebrewDate date
-    ) {
-      super( date, PURIM_KATAN );
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
-}  // End of Purim class
+}  // End of PurimKatan class

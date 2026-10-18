@@ -2,67 +2,53 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.rabbanan;
+package com.gindin.zmanlib.calendar.holiday.rabbanan
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val PURIM = "Purim"
 
 /**
  *
  */
-@SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
-public class Purim
-  extends Observance {
+@Suppress("MagicNumber", "FeatureEnvy")
+public class Purim : Observance() {
 
-
-  private static final String                               PURIM = "Purim";
-
-
-  @Override
-  public String getName() {
-    return PURIM;
+  override fun getName(): String {
+    return PURIM
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( ( date.isHebrewLeapYear() && ( HebrewMonth.ADAR_II == date.getHebrewMonth() ) ) ||
-         ( !date.isHebrewLeapYear() && ( HebrewMonth.ADAR == date.getHebrewMonth() ) ) ) {
-
-      if ( 13 == date.getHebrewDayOfMonth() ) {
-        return new Details.Erev( date, PURIM, false );
-      }
-      if ( 14 == date.getHebrewDayOfMonth() ) {
-        return new PurimDetails( date );
-      }
-    }
-
-    return null;
-  }
-
-
-  private static class PurimDetails
-    extends Details.Yom {
-
-    public PurimDetails(
-      final HebrewDate date
+    if ((date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
+      (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
     ) {
-      super( date, PURIM );
+
+      if (13 == date.hebrewDayOfMonth) {
+        return Details.Erev(date, PURIM, false)
+      }
+      if (14 == date.hebrewDayOfMonth) {
+        return PurimDetails(date)
+      }
+    }
+
+    return null
+  }
+
+
+  private class PurimDetails(date: HebrewDate) : Details.Yom(date, PURIM) {
+
+    override fun isPurim(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isPurim() {
-      return true;
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
