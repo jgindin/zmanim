@@ -2,6 +2,9 @@
  * Copyright (c) 2026. Jay R. Gindin
  */
 
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -18,15 +21,21 @@ kotlin {
     namespace = "com.gindin.zmanutils"
     compileSdk = 36
     minSdk = 24
-    withJava()
+  }
+
+  // The event bus is keyed by java.lang.Class, which common code cannot reference, so it lives in a
+  //  source set shared by the two JVM-based targets (the plain JVM one and Android).
+  @OptIn(ExperimentalKotlinGradlePluginApi::class)
+  applyDefaultHierarchyTemplate {
+    common {
+      group("jvmCommon") {
+        withJvm()
+        withCompilations { it.platformType == KotlinPlatformType.androidJvm }
+      }
+    }
   }
 
   sourceSets {
-    androidMain {
-      // The Android target only compiles Java found next to its own (and commonMain's) Kotlin source
-      //  directories, so it is pointed at the JVM target's Java directory to build the same classes.
-      kotlin.srcDir("src/jvmMain/java")
-    }
     commonTest.dependencies {
       // kotlin-test only -- NOT a direct JUnit 5 Jupiter dependency here. Jupiter does not run on
       //  non-JVM Kotlin/Native targets, and an iOS target is planned for this module. kotlin-test

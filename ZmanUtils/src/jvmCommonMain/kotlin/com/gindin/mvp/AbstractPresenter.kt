@@ -2,37 +2,22 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.mvp;
+package com.gindin.mvp
 
-import com.gindin.eventBus.EventBus;
+import com.gindin.eventBus.EventBus
 
 /**
  * Abstract, base implementation of a Presenter.
  */
-public abstract class AbstractPresenter<V extends View>
-  implements Presenter<V> {
+public abstract class AbstractPresenter<V> protected constructor(
+  protected val view: V,
+  protected val eventBus: EventBus,
+) : Presenter<V> {
 
-  private final V                                           view;
-
-  private final EventBus                                    eventBus;
-
-
-  protected AbstractPresenter( V view, EventBus eventBus ) {
-    this.view = view;
-    this.eventBus = eventBus;
-
-    view.setPresenter( this );
+  init {
+    // The view's presenter type is only known to be some Presenter, so the registration has to be
+    //  made through a cast to the presenter type this view was written for.
+    @Suppress("UNCHECKED_CAST")
+    (view as View<Presenter<V>>).setPresenter(this)
   }
-
-
-  protected final V getView() {
-    return view;
-  }
-
-
-  protected final EventBus getEventBus() {
-    return eventBus;
-  }
-
-
-} // End of AbstractPresenter class
+}
