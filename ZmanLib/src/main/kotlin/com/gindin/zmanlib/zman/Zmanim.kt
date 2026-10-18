@@ -2,33 +2,20 @@
  * Copyright (c) 2020. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-
-import java.util.*;
+import java.util.Collections
 
 /**
  * Contains a set of related zmanim.
  */
-public abstract class Zmanim {
-
-
-  public final Type                                         type;
-
-  private final ZmanimCalculator                            zmanimCalculator;
+public abstract class Zmanim protected constructor(
+  @JvmField public val type: Type,
+  private val zmanimCalculator: ZmanimCalculator
+) {
 
   /** The individual zmanim for this set. */
-  private List<Zman>                                        allZmanim;
-
-
-  protected Zmanim(
-    final Type              type,
-    final ZmanimCalculator  zmanimCalculator
-  ) {
-
-    this.type = type;
-    this.zmanimCalculator = zmanimCalculator;
-  }
+  private var allZmanim: List<Zman>? = null
 
 
   /**
@@ -38,23 +25,23 @@ public abstract class Zmanim {
    *
    * @return the named zman, or the default zman if the specified name cannot be found.
    */
-  public Zman getByName(
-    String zmanName
-  ) {
+  public open fun getByName(
+    zmanName: String?
+  ): Zman? {
 
-    ensureZmanim();
+    val zmanim = ensureZmanim()
 
-    if ( ( zmanName == null ) || zmanName.isEmpty() )  {
-      return getDefault();
+    if (zmanName.isNullOrEmpty()) {
+      return getDefault()
     }
 
-    for ( Zman zman : allZmanim ) {
-      if ( zmanName.equals( zman.name ) ) {
-        return zman;
+    for (zman in zmanim) {
+      if (zmanName == zman.name) {
+        return zman
       }
     }
 
-    return getDefault();
+    return getDefault()
   }
 
 
@@ -63,41 +50,42 @@ public abstract class Zmanim {
    *
    * @return As currently implemented, returns the first non-advanced zman in the group.
    */
-  public Zman getDefault() {
+  public open fun getDefault(): Zman? {
 
-    ensureZmanim();
-
-    for ( Zman zman : allZmanim ) {
-      if ( !zman.advanced ) {
-        return zman;
+    for (zman in ensureZmanim()) {
+      if (!zman.advanced) {
+        return zman
       }
     }
 
     // Should never get here.
-    return null;
+    return null
   }
 
 
-  public List<Zman> asList() {
-    ensureZmanim();
-    return allZmanim;
+  public open fun asList(): List<Zman> {
+    return ensureZmanim()
   }
 
 
   /**
    * Called at most once to create the list of zmanim represented.
    */
-  protected abstract List<Zman> buildZmanimList( ZmanimCalculator zmanimCalculator );
+  protected abstract fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman>
 
 
   /**
-   * Called when the subclass
+   * Builds the list of zmanim the first time any of them is needed.
    */
-  private void ensureZmanim() {
+  private fun ensureZmanim(): List<Zman> {
 
-    if ( allZmanim == null ) {
-      allZmanim = Collections.unmodifiableList( buildZmanimList( zmanimCalculator ) );
+    var zmanim = allZmanim
+    if (zmanim == null) {
+      zmanim = Collections.unmodifiableList(buildZmanimList(zmanimCalculator))
+      allZmanim = zmanim
     }
+
+    return zmanim
   }
 
 
@@ -106,126 +94,138 @@ public abstract class Zmanim {
    *<p>
    * Consider the explanations of the times at http://kehillatisrael.net/hcal/zmanim.html
    */
-  public enum Type {
+  public enum class Type(
+    /**
+     * Name of the set of zmanim. E.g., "Sof Zman Shema". Not called `name` because that would hide the name of
+     *  the enum constant.
+     */
+    @JvmField public val displayName: String,
 
-    Alot( "Alot Hashachar", "Dawn" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new AlotHashachar( zmanimCalculator );
+    /** Describes the set of zmanim. E.g., "Latest time to say Shema". */
+    @JvmField public val description: String
+  ) {
+
+    Alot("Alot Hashachar", "Dawn") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return AlotHashachar(zmanimCalculator)
       }
     },
-    Talit( "Talit/Tefilin", "Earliest Time to don Talit and Tefilin" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new Talit( zmanimCalculator );
+
+    Talit("Talit/Tefilin", "Earliest Time to don Talit and Tefilin") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return Talit(zmanimCalculator)
       }
     },
-    Hanetz( "Hanetz", "Sunrise" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new Hanetz( zmanimCalculator );
+
+    Hanetz("Hanetz", "Sunrise") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return Hanetz(zmanimCalculator)
       }
     },
-    SofZmanShema( "Sof Zman Shema", "Latest time to finish Shema" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new SofZmanShema( zmanimCalculator );
+
+    SofZmanShema("Sof Zman Shema", "Latest time to finish Shema") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return SofZmanShema(zmanimCalculator)
       }
     },
-    SofZmanTefila( "Sof Zman Tefila", "Latest time to finish Shacharit" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new SofZmanTefila( zmanimCalculator );
+
+    SofZmanTefila("Sof Zman Tefila", "Latest time to finish Shacharit") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return SofZmanTefila(zmanimCalculator)
       }
     },
-    SofZmanAchilatChametz( "Achilat Chametz", "Latest time to eat Chametz" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new SofZmanAchilatChametz( zmanimCalculator );
+
+    SofZmanAchilatChametz("Achilat Chametz", "Latest time to eat Chametz") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return SofZmanAchilatChametz(zmanimCalculator)
       }
     },
-    SofZmanBiurChametz( "Biur Chametz", "Latest time to dispose Chametz" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new SofZmanBiurChametz( zmanimCalculator );
+
+    SofZmanBiurChametz("Biur Chametz", "Latest time to dispose Chametz") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return SofZmanBiurChametz(zmanimCalculator)
       }
     },
-    Chatzot( "Chatzot", "Mid-day" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new Chatzot( zmanimCalculator );
+
+    Chatzot("Chatzot", "Mid-day") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return Chatzot(zmanimCalculator)
       }
     },
-    MinchaGedola( "Mincha Gedola", "Earliest time to start Mincha" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new MinchaGedola( zmanimCalculator );
+
+    MinchaGedola("Mincha Gedola", "Earliest time to start Mincha") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return MinchaGedola(zmanimCalculator)
       }
     },
-    MinchaKetana( "Mincha Ketana", "Earliest time to start Mincha (Rambam)" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new MinchaKetana( zmanimCalculator );
+
+    MinchaKetana("Mincha Ketana", "Earliest time to start Mincha (Rambam)") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return MinchaKetana(zmanimCalculator)
       }
     },
-    PlagHaMincha( "Plag HaMincha", "Earliest time to start Arvit" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new PlagHaMincha( zmanimCalculator );
+
+    PlagHaMincha("Plag HaMincha", "Earliest time to start Arvit") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return PlagHaMincha(zmanimCalculator)
       }
     },
-    CandleLighting( "Candle Lighting", "When candles should be lit" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new CandleLighting( zmanimCalculator );
+
+    CandleLighting("Candle Lighting", "When candles should be lit") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return CandleLighting(zmanimCalculator)
       }
     },
-    Shkia( "Shkia", "Sunset" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new Shkia( zmanimCalculator );
+
+    Shkia("Shkia", "Sunset") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return Shkia(zmanimCalculator)
       }
     },
-    LatestMincha( "Latest Mincha", "Latest time to finish Mincha" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new LatestMincha( zmanimCalculator );
+
+    LatestMincha("Latest Mincha", "Latest time to finish Mincha") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return LatestMincha(zmanimCalculator)
       }
     },
-    BeinHashmashot( "Bein Hashmashot", "Twilight" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new BeinHashmashot( zmanimCalculator );
+
+    BeinHashmashot("Bein Hashmashot", "Twilight") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return BeinHashmashot(zmanimCalculator)
       }
     },
-    FastEnd( "Fast Ends", "Earliest end of fast days" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new FastEnds( zmanimCalculator );
+
+    FastEnd("Fast Ends", "Earliest end of fast days") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return FastEnds(zmanimCalculator)
       }
     },
-    TzaitHacochavim( "Tzait Hacochavim", "Nightfall" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new TzaitHacochavim( zmanimCalculator );
+
+    TzaitHacochavim("Tzait Hacochavim", "Nightfall") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return TzaitHacochavim(zmanimCalculator)
       }
     },
-    ShabbatEnd( "Havdalah", "Earliest Havdalah" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new ShabbatEnds( zmanimCalculator );
+
+    ShabbatEnd("Havdalah", "Earliest Havdalah") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return ShabbatEnds(zmanimCalculator)
       }
     },
-    YomTovSheniCandleLighting( "Candle Lighting", "When candles should be lit" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new YomTovSheniCandleLighting( zmanimCalculator );
+
+    YomTovSheniCandleLighting("Candle Lighting", "When candles should be lit") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return YomTovSheniCandleLighting(zmanimCalculator)
       }
     },
-    NightChatzot( "Midnight", "Halachic Midnight" ) {
-      @Override public Zmanim get( ZmanimCalculator zmanimCalculator ) {
-        return new NightChatzot( zmanimCalculator );
+
+    NightChatzot("Midnight", "Halachic Midnight") {
+      override fun get(zmanimCalculator: ZmanimCalculator): Zmanim {
+        return NightChatzot(zmanimCalculator)
       }
     };
 
-    /** Name of the set of zmanim. E.g., "Sof Zman Shema" */
-    public final String                                       name;
-
-    /** Describes the set of zmanim. E.g., "Latest time to say Shema". */
-    public final String                                       description;
-
-
-    Type(
-      String name,
-      String description
-    ) {
-      this.name = name;
-      this.description = description;
-    }
-
-
-    public abstract Zmanim get( ZmanimCalculator zmanimCalculator );
+    public abstract fun get(zmanimCalculator: ZmanimCalculator): Zmanim
   }
 
-}  // End of Zmanim class
+}

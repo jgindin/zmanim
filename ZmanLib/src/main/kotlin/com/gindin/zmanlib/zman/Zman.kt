@@ -2,59 +2,37 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Calendar
+import java.util.Date
 
 /**
  * Describes a single time. Intended to be reused as the date changes, without having to be
  *  recreated.
  */
-public abstract class Zman {
-
-  public final String                                       name;
+public abstract class Zman internal constructor(
+  @JvmField public val name: String,
 
   /** Describes this zman. E.g., "Latest Shema according to the GR'A". */
-  public final String                                       description;
-
-  /** Advanced zmanim should not be shown unless the user has explicitly indicated they want to see them. */
-  public final boolean                                      advanced;
+  @JvmField public val description: String,
 
   /** What type of zman is this? */
-  public final Zmanim.Type                                  type;
+  @JvmField public val type: Zmanim.Type,
+
+  /** Advanced zmanim should not be shown unless the user has explicitly indicated they want to see them. */
+  @JvmField public val advanced: Boolean
+) {
 
   /** Keep the calculation cached. */
-  private Calendar                                          cachedTime;
+  private var cachedTime: Calendar? = null
 
 
-  Zman(
-    String      name,
-    String      description,
-    Zmanim.Type type
-  ) {
-    this( name, description, type, true );
-  }
-
-
-  Zman(
-    String      name,
-    String      description,
-    Zmanim.Type type,
-    boolean     advanced
-  ) {
-
-    assert name != null;
-    assert type != null;
-
-    this.name = name;
-    this.description = description;
-    this.type = type;
-    this.advanced = advanced;
-  }
+  internal constructor(
+    name: String,
+    description: String,
+    type: Zmanim.Type
+  ) : this(name, description, type, true)
 
 
   /**
@@ -65,46 +43,43 @@ public abstract class Zman {
    *  is not possible to calculate the zman time. (For example, when you're far enough North or South, there are
    *  days where the sun does not set, and so sunrise / sunset cannot be calculated.)
    */
-  @Nullable
-  public final Calendar getTime() {
+  public fun getTime(): Calendar? {
 
-    synchronized ( this ) {
-      if ( null == cachedTime ) {
-        cachedTime = calculate();
+    synchronized(this) {
+      if (null == cachedTime) {
+        cachedTime = calculate()
       }
     }
 
-    return cachedTime;
+    return cachedTime
   }
 
 
-  @Override
-  public final boolean equals( Object o ) {
-    if ( this == o ) {
-      return true;
+  final override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
     }
-    if ( o == null || getClass() != o.getClass() ) {
-      return false;
-    }
-
-    Zman zman = (Zman)o;
-
-    if ( !name.equals( zman.name ) ) {
-      return false;
-    }
-    if ( type != zman.type ) {
-      return false;
+    if (other == null || javaClass != other.javaClass) {
+      return false
     }
 
-    return true;
+    val zman = other as Zman
+
+    if (name != zman.name) {
+      return false
+    }
+    if (type != zman.type) {
+      return false
+    }
+
+    return true
   }
 
 
-  @Override
-  public final int hashCode() {
-    int result = name.hashCode();
-    result = 31 * result + type.hashCode();
-    return result;
+  final override fun hashCode(): Int {
+    var result = name.hashCode()
+    result = 31 * result + type.hashCode()
+    return result
   }
 
 
@@ -113,8 +88,7 @@ public abstract class Zman {
    *  is not possible to calculate the zman time. (For example, when you're far enough North or South, there are
    *  days where the sun does not set, and so sunrise / sunset cannot be calculated.)
    */
-  @Nullable
-  protected abstract Calendar calculate();
+  protected abstract fun calculate(): Calendar?
 
 
   /**
@@ -122,24 +96,23 @@ public abstract class Zman {
    *  and our need for Calendar-based API.
    *
    * @return a calendar representing the date & time of this zman; May be null if the zman cannot be calculated.
-   *  See detailed explanation on top of the {@link com.kosherjava.zmanim.AstronomicalCalendar} as to the particular cases when sunrise,
+   *  See detailed explanation on top of the [com.kosherjava.zmanim.AstronomicalCalendar] as to the particular cases when sunrise,
    *  sunset and twilight cannot be calculated.
    */
-  protected final Calendar toCalendar(
-    ZmanimCalculator  zmanimCalculator,
-    Date              zmanDate
-    ) {
+  protected fun toCalendar(
+    zmanimCalculator: ZmanimCalculator,
+    zmanDate: Date?
+  ): Calendar? {
 
-    if ( zmanDate == null ) {
-      return null;
+    if (zmanDate == null) {
+      return null
     }
 
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTimeZone( zmanimCalculator.getGeoLocation().getTimeZone() );
-    calendar.setTime( zmanDate );
+    val calendar = Calendar.getInstance()
+    calendar.timeZone = zmanimCalculator.geoLocation.timeZone
+    calendar.time = zmanDate
 
-    return calendar;
+    return calendar
   }
 
-
-} // End of Zman interface
+}

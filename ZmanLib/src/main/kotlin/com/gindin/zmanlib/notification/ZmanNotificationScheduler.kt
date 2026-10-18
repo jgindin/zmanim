@@ -106,16 +106,16 @@ public class ZmanNotificationScheduler(
       val zmanName = zmanCallback.getPreferredZman(zmanim.type)
       val zman: Zman
       if (zmanName == null) {
-        zman = zmanim.getDefault()
+        zman = zmanim.getDefault()!!
       }
       else {
-        zman = zmanim.getByName(zmanName)
+        zman = zmanim.getByName(zmanName)!!
       }
 
       // Make sure the zman is before the current time and we haven't already notified...
       //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
       //  just missed it, we'll still add it as a candidate.
-      val zmanTime = zman.time
+      val zmanTime = zman.getTime()
       if (zmanTime != null) {
 
         val msUntilZman = zmanTime.timeInMillis - nowInMillis

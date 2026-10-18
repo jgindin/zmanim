@@ -142,7 +142,7 @@ public class ZmanimBaseTest {
       for ( Zman zman : zmanim.asList() ) {
         Calendar zmanTime = zman.getTime();
         if ( zmanTime != null ) {
-          output.append( String.format( "%20s - %-30s: %2d:%02d:%02d\n", zmanim.type.name, zman.name,
+          output.append( String.format( "%20s - %-30s: %2d:%02d:%02d\n", zmanim.type.displayName, zman.name,
             zmanTime.get( Calendar.HOUR_OF_DAY ), zmanTime.get( Calendar.MINUTE ), zmanTime.get( Calendar.SECOND ) ) );
         }
       }

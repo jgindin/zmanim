@@ -106,7 +106,7 @@ public class ZmanimSelector {
       }
     };
 
-    name.setText( type.name );
+    name.setText( type.displayName );
     description.setText( type.description );
     listView.setAdapter( listAdapter );
 

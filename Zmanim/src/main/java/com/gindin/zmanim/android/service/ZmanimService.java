@@ -380,7 +380,7 @@ public class ZmanimService
       //noinspection unchecked
       LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
         new Pair<>( "alert time", new Date( alertTime ).toString() ),
-        new Pair<>( "zman type", zman.type.name ),
+        new Pair<>( "zman type", zman.type.displayName ),
         new Pair<>( "zman", zman.name ),
         new Pair<>( "sched. location", location.toString() ),
         new Pair<>( "intent id", Integer.toString( intentId ) )

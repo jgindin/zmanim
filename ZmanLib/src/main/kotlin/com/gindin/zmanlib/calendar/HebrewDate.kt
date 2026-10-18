@@ -253,7 +253,7 @@ public class HebrewDate internal constructor(
       return false
     }
 
-    val zmanTime = zmanim.getDefault().time
+    val zmanTime = zmanim.getDefault()!!.getTime()
     if (zmanTime == null) {
       // If the zman doesn't have a time then the current time cannot be after the time of the zman.
       return false

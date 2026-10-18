@@ -186,13 +186,13 @@ public class DisplayNotificationService
     Intent openZmanim = new Intent( context, ZmanimActivity.class );
 
     ZmanFormatter zmanFormatter = new ZmanFormatter( () -> zmanCallback.formatTimeWithSeconds() );
-    String notificationText = context.getString( R.string.notification, zmanType.name, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
+    String notificationText = context.getString( R.string.notification, zmanType.displayName, zmanFormatter.formatZmanTime( zmanType, zmanTime ) );
 
     // Keep this...it's very useful at times...
     if ( BuildConfig.DEBUG ) {
 
       LogUtils.logError( "DisplayNotificationService::handleNotificationAction", "handling", null,
-        new Pair<>( "zman type", zmanType.name ),
+        new Pair<>( "zman type", zmanType.displayName ),
         new Pair<>( "zman time", new Date( zmanTime.getTimeInMillis() ).toString() ),
         new Pair<>( "alert time", new Date( alertAt.getTimeInMillis() ).toString() ),
         new Pair<>( "should notify", Boolean.toString( shouldNotify ) ),

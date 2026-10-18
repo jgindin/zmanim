@@ -63,10 +63,10 @@ public class ZmanimSelectionPrefsManager
     if ( lastKnownCodeVersion <= 92 ) {
 
       // We added a separate Zman for when Shabbat ends. So, copy that over to the new ShabbatEnd zman.
-      final String oldTzait = prefs.getString( Zmanim.Type.TzaitHacochavim.name, "" );
+      final String oldTzait = prefs.getString( Zmanim.Type.TzaitHacochavim.displayName, "" );
 
       final SharedPreferences.Editor editor = prefs.edit();
-      editor.putString( Zmanim.Type.ShabbatEnd.name, oldTzait );
+      editor.putString( Zmanim.Type.ShabbatEnd.displayName, oldTzait );
 
       editor.apply();
     }
@@ -77,19 +77,19 @@ public class ZmanimSelectionPrefsManager
 
       // There used to be separate zmanim for SBH and EB for Tzait and when Shabbat ends, but now the two
       //  synagogues are the same.
-      String previousSetting = prefs.getString( Zmanim.Type.TzaitHacochavim.name, "" );
+      String previousSetting = prefs.getString( Zmanim.Type.TzaitHacochavim.displayName, "" );
       if ( previousSetting.startsWith( "Seattle" ) ) {
         editor = prefs.edit();
-        editor.putString( Zmanim.Type.TzaitHacochavim.name, "Seattle Sephardic" );
+        editor.putString( Zmanim.Type.TzaitHacochavim.displayName, "Seattle Sephardic" );
       }
 
-      previousSetting = prefs.getString( Zmanim.Type.ShabbatEnd.name, "" );
+      previousSetting = prefs.getString( Zmanim.Type.ShabbatEnd.displayName, "" );
       if ( previousSetting.startsWith( "Seattle" ) ) {
         if ( editor == null ) {
           editor = prefs.edit();
         }
 
-        editor.putString( Zmanim.Type.ShabbatEnd.name, "Seattle Sephardic" );
+        editor.putString( Zmanim.Type.ShabbatEnd.displayName, "Seattle Sephardic" );
       }
 
 

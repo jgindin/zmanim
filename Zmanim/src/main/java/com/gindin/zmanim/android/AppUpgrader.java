@@ -103,8 +103,8 @@ class AppUpgrader {
       if ( useElevation ) {
         final SharedPreferences zmanPrefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.ZMANIM_SELECTION.name(), Context.MODE_PRIVATE );
         final SharedPreferences.Editor editor = zmanPrefs.edit();
-        editor.putString( Zmanim.Type.Hanetz.name , Hanetz.ZMAN_WITH_ELEVATION );
-        editor.putString( Zmanim.Type.Shkia.name, Shkia.ZMAN_WITH_ELEVATION );
+        editor.putString( Zmanim.Type.Hanetz.displayName , Hanetz.ZMAN_WITH_ELEVATION );
+        editor.putString( Zmanim.Type.Shkia.displayName, Shkia.ZMAN_WITH_ELEVATION );
 
         editor.apply();
       }
