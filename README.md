@@ -52,3 +52,7 @@ I've also recently switched to using [YouTrack](https://www.jetbrains.com/youtra
 
 ### Developers ###
 Mostly just me, jgindin. I am responsible for everything, good & bad. Feature requests are welcome, though my time is somewhat limited... However, my son (agindin) has also been lending a hand as he can.
+
+### License ###
+
+Zmanim for Android is licensed under the [GNU Lesser General Public License, version 2.1](LICENSE).

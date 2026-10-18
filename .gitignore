@@ -1,0 +1,73 @@
+# Build output
+build/
+ijcompile/
+.gradle/
+.gradletasknamecache
+hg.number
+
+# Editor and IDE files
+*.swp
+*~
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/jsLibraryMappings.xml
+.idea/uiDesigner.xml
+.idea/copyright/profiles_settings.xml
+.idea/findbugs-idea.xml
+.idea/shelf/
+.idea/modules
+.idea/issues.xml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/gradle.xml
+.idea/libraries
+.idea/mongoSettings.xml
+.idea/caches/
+.idea/deviceManager.xml
+.idea/deploymentTargetSelector.xml
+.idea/deploymentTargetDropDown.xml
+.idea__OLD/
+/out/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Generated source directories
+/Zmanim/gen/
+/Zmanim/bin/
+/ZmanUtils/gen/
+/ZmanUtils/bin/
+/ZmanLib/gen/
+/ZmanLib/bin/
+
+# Files generated during the build
+Zmanim/src/main/assets/com/gindin/zmanim/android/about.html
+
+# Local-only files
+local.properties
+.superpowers/
+*.hprof
+*.orig
+var/
+
+# Signing material: never committed (see build-logic Signing.kt)
+*.keystore
+*.jks
+*.p12
+common/ProjectApiKey.txt
+common/zehut-yosef-upload_cert.der
+common/zmanim-upload_cert.der
+ZehutYosef/zehut-yosef.gradle
+Zmanim/zmanim.gradle
+
+# Leftovers from the Mercurial era
+.hg/
+.hg.backup/
+.hgtags
