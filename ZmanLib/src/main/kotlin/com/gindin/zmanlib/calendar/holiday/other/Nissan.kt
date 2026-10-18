@@ -1,52 +1,41 @@
-package com.gindin.zmanlib.calendar.holiday.other;
+package com.gindin.zmanlib.calendar.holiday.other
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
 
 /**
  * We don't say tachanun for the entire month of Nissan.
  */
-public class Nissan
-  extends Observance {
+public class Nissan : Observance() {
 
-  @Override
-  public String getName() {
-    return "Nissan";
+  override fun getName(): String {
+    return "Nissan"
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    int hebrewMonth = date.getHebrewMonth();
-    if ( HebrewMonth.NISSAN == hebrewMonth ) {
+    val hebrewMonth = date.hebrewMonth
+    if (HebrewMonth.NISSAN == hebrewMonth) {
 
-        return new NissanDetails( date );
+      return NissanDetails(date)
     }
 
-    return null;
+    return null
   }
 
 
 
-  private static final class NissanDetails
-    extends Details.Yom {
+  private class NissanDetails(date: HebrewDate) :
+    // There is no real description for this day.
+    Details.Yom(date, "") {
 
-    NissanDetails(
-      HebrewDate  date
-    ) {
-      // There is no real description for this day.
-      super( date, "" );
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
 
-} // End of Sivan class
+} // End of Nissan class

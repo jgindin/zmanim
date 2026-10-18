@@ -1,53 +1,42 @@
-package com.gindin.zmanlib.calendar.holiday.other;
+package com.gindin.zmanlib.calendar.holiday.other
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
 
 /**
  * We don't say tachanun on the 1st thru 12th of Sivan.
  */
-public class Sivan
-  extends Observance {
+public class Sivan : Observance() {
 
-  @Override
-  public String getName() {
-    return "First 12 days of Sivan";
+  override fun getName(): String {
+    return "First 12 days of Sivan"
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    int hebrewMonth = date.getHebrewMonth();
-    if ( HebrewMonth.SIVAN == hebrewMonth ) {
+    val hebrewMonth = date.hebrewMonth
+    if (HebrewMonth.SIVAN == hebrewMonth) {
 
-      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-      if ( hebrewDayOfMonth <= 12 ) {
-        return new SivanDetails( date );
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
+      if (hebrewDayOfMonth <= 12) {
+        return SivanDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
 
-  private static final class SivanDetails
-    extends Details.Yom {
+  private class SivanDetails(date: HebrewDate) :
+    // There is no real description for this day.
+    Details.Yom(date, "") {
 
-    SivanDetails(
-      HebrewDate  date
-    ) {
-      // There is no real description for this day.
-      super( date, "" );
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
