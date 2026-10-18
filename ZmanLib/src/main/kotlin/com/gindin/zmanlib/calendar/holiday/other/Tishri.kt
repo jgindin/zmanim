@@ -1,55 +1,44 @@
-package com.gindin.zmanlib.calendar.holiday.other;
+package com.gindin.zmanlib.calendar.holiday.other
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
 
 /**
  * We don't say tachanun from Erev Yom Kippur until the end of the month.
  */
-public class Tishri
-  extends Observance {
+public class Tishri : Observance() {
 
-  @Override
-  public String getName() {
-    return "Tishri";
+  override fun getName(): String {
+    return "Tishri"
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    int hebrewMonth = date.getHebrewMonth();
-    if ( HebrewMonth.TISHREI == hebrewMonth ) {
+    val hebrewMonth = date.hebrewMonth
+    if (HebrewMonth.TISHREI == hebrewMonth) {
 
-      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-      if ( hebrewDayOfMonth >= 11 ) {
-        return new TishriDetails( date );
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
+      if (hebrewDayOfMonth >= 11) {
+        return TishriDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
 
-  private static final class TishriDetails
-    extends Details.Yom {
+  private class TishriDetails(date: HebrewDate) :
+    // There is no real description for this day.
+    Details.Yom(date, "") {
 
-    TishriDetails(
-      HebrewDate  date
-    ) {
-      // There is no real description for this day.
-      super( date, "" );
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
 
-} // End of Sivan class
+} // End of Tishri class
