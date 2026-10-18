@@ -22,8 +22,11 @@ googleMaterial = "1.0.0"
 playServicesLocation = "21.0.1"
 
 robolectric = "4.15.1"
-androidxTestCore = "1.6.1"
-androidxTestExtJunit = "1.2.1"
+androidxTestCore = "1.7.0"
+androidxTestExtJunit = "1.3.0"
+androidxTestRunner = "1.7.0"
+androidxTestRules = "1.7.0"
+androidxTestEspresso = "3.7.0"
 androidxComposeUiTest = "1.12.1"
 
 mikepenzIconicsCore = "2.5.10"
@@ -61,6 +64,9 @@ roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", versi
 roborazzi-junit-rule = { group = "io.github.takahirom.roborazzi", name = "roborazzi-junit-rule", version.ref = "roborazzi" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
 androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test", version.ref = "androidxComposeUiTest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "androidxComposeUiTest" }
 
@@ -78,6 +84,11 @@ mikepenz-aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries", ver
 #  applies everything under one configuration) and the two androidx-compose-ui-test* entries (they
 #  each need transitive = false, which a bundle member can't carry).
 roborazzi = ["robolectric", "roborazzi", "roborazzi-junit-rule", "androidx-test-core", "androidx-test-ext-junit"]
+
+# On-device (androidTest) stack shared by :Zmanim and :ZehutYosef. Kept apart from the Roborazzi
+#  bundle because the two run in different places: that one under Robolectric on the JVM, this one
+#  as an instrumentation APK on an emulator or device.
+instrumented = ["androidx-test-core", "androidx-test-ext-junit", "androidx-test-runner", "androidx-test-rules", "androidx-test-espresso-core"]
 
 # Zmanim's own UI/location dependency stack (Zmanim/build.gradle.kts) -- all six are plain
 #  implementation with no per-dependency config, and (unlike the Roborazzi bundle above) this one

@@ -40,6 +40,15 @@ android {
     versionName = appVersion.name
   }
 
+  // The on-device tests start from the same synthetic saved state of the released app that the
+  //  Robolectric tests use, so the committed fixture directory doubles as an androidTest asset root
+  //  (readable by the test APK as assets/zmanim-v409/...) instead of being copied.
+  sourceSets {
+    getByName("androidTest") {
+      assets.srcDir("src/test/resources/upgrade")
+    }
+  }
+
   // `copy` is a `Project` member, not something `defaultConfig {}` exposes, so this has to be a
   //  direct sibling of `defaultConfig` rather than nested inside it. Runs at project-
   //  configuration time, filling the version placeholder into the about-screen template.

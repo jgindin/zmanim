@@ -39,6 +39,9 @@ android {
 
   defaultConfig {
     targetSdk = 36
+
+    // Runs the JUnit 4 tests under each app's src/androidTest on an emulator or device.
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildFeatures.buildConfig = true
@@ -127,6 +130,10 @@ dependencies {
   //  single [bundles] entry in gradle/libs.versions.toml since these five are always pulled in
   //  together as plain testImplementation, with no per-dependency configuration.
   testImplementation(libs.findBundle("roborazzi").get())
+
+  // On-device tests (see each app's src/androidTest). Layout and window-inset behavior, and real
+  //  process launches, can only be observed on a real Android framework, not under Robolectric.
+  androidTestImplementation(libs.findBundle("instrumented").get())
 
   // Not used by these apps (no Jetpack Compose here) -- Roborazzi's single facade class exposes
   //  both View- and Compose-based captureRoboImage() overloads, so javac needs these Compose
