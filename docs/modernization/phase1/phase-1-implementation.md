@@ -571,6 +571,8 @@ hg commit -m "Migrate ZmanUtils to Kotlin Multiplatform and ZmanLib to idiomatic
 
 ### Task 8: Migrate Version Control from `hg` to `jj`, and Move Hosting to GitHub
 
+> **Completed 2026-10-17, with these decisions differing from the steps below:** the license stays **LGPL-2.1** (`LICENSE` now holds the full text; `LICENSE.md` is gone) rather than moving to Apache-2.0. The Mercurial `zmanim-v4` bookmark became the git/jj branch **`main`**; `zmanim-v5` and `shachrit` were kept as branches, and the other bookmarks plus the two old heads (`ant-based-build`, `v3.4`) were dropped. The two old history hits (ACRA and Flurry keys) were deliberately not scrubbed. All of Jay's commits were re-authored to `jay.gindin+github@gmail.com`. The steps below are the original plan, kept as a record.
+
 **Files:**
 - Create: `.gitignore`
 - Create: `LICENSE` (Apache License 2.0) — **and see the relicensing note below; this is not a green-field choice**
@@ -737,7 +739,7 @@ name: CI
 
 on:
   push:
-    branches: [zmanim-v4]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -814,7 +816,7 @@ This is the automated counterpart to the "state of the art" goal — without it,
 **The `--field` nested-array encoding below is known to be fragile against this exact endpoint** — GitHub's branch-protection API has documented cases of rejecting `--field required_status_checks[contexts][]=...`-style calls with a 422 ("No subschema in `anyOf` matched") due to JSON-schema ambiguity between array and object encodings, and the API has also been shifting from the legacy `contexts: [...]` array toward `checks: [{context, app_id}]`. Use `--input` with an explicit JSON payload instead of `--field`, and confirm the current field names against `gh api --help` / GitHub's REST API docs at execution time rather than trusting this verbatim, since this is exactly the kind of CLI/API surface that drifts between when a plan is written and when it's run:
 
 ```bash
-gh api repos/jgindin/zmanim/branches/zmanim-v4/protection \
+gh api repos/jgindin/zmanim/branches/main/protection \
   --method PUT \
   --input - <<'EOF'
 {
@@ -822,17 +824,19 @@ gh api repos/jgindin/zmanim/branches/zmanim-v4/protection \
     "strict": true,
     "contexts": ["verify"]
   },
-  "enforce_admins": true,
-  "required_pull_request_reviews": null,
+  "enforce_admins": false,
+  "required_pull_request_reviews": {"required_approving_review_count": 0},
   "restrictions": null
 }
 EOF
 ```
 If this still 422s, check whether the installed `gh`/API version wants `checks: [{"context": "verify"}]` in place of `contexts: ["verify"]` and adjust accordingly — don't spend more than one retry guessing before checking the docs.
 
-This makes the `verify` job (tests, static analysis, wrapper validation, Roborazzi) a hard requirement before anything merges to `zmanim-v4`, rather than a check that's easy to ignore. `enforce_admins: true` means this applies even to you/agents pushing directly — if that turns out too strict for a solo-maintained repo where you sometimes want to push straight to the branch, drop it, but keep the status-check requirement itself; it's the actual safety net Task 9 exists to build. Adjust `contexts`/`checks` if the `emulator-smoke` matrix job should also gate merges once it's stable — it's left out initially since a flaky emulator matrix blocking every merge is worse than not gating on it yet.
+This makes work on `main` strictly branch-then-PR: nothing can be pushed straight to `main`, and a PR can only be merged once `verify` is green and the branch is up to date with `main`. `required_approving_review_count: 0` requires a PR without requiring a reviewer, which suits a solo-maintained repo. `enforce_admins: false` (decided 2026-10-17) keeps an emergency override for the owner, e.g. pushing a fix directly when CI itself is what's broken; normal merges still go through the check. Adjust `contexts`/`checks` if the `emulator-smoke` matrix job should also gate merges once it's stable -- it's left out initially since a flaky emulator matrix blocking every merge is worse than not gating on it yet.
 
-- [ ] **Step 6: Verify the workflow runs green on the current `zmanim-v4` branch**
+Day-to-day with `jj`: `jj bookmark create <name> -r @-`, `jj git push --bookmark <name>`, `gh pr create --fill`, merge on GitHub once green, then `jj landed <name>` (a user-level alias in `~/.config/jj/config.toml`) to fetch, abandon the branch's superseded local commits and delete the bookmark.
+
+- [ ] **Step 6: Verify the workflow runs green on the current `main` branch**
 
 Push a trivial commit (or open a draft PR) and confirm all jobs complete successfully on GitHub Actions.
 Expected: green checks on `verify` and `emulator-smoke`, and the branch protection rule visible in the repo's Settings → Branches.
