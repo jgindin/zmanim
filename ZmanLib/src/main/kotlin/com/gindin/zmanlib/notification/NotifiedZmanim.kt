@@ -1,198 +1,195 @@
-package com.gindin.zmanlib.notification;
+package com.gindin.zmanlib.notification
 
-import com.gindin.zmanlib.zman.Zmanim;
+import com.gindin.zmanlib.zman.Zmanim
+import java.io.File
+import java.io.FileFilter
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
+import java.util.Calendar
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.*;
-import java.util.*;
+/** Name of the file created to store the notified zmanim. */
+private const val NOTIFIED_ZMANIM_FILE_EXTENSION = "notifiedZmanim"
 
 /**
  * Keeps track of which zmanim we've already notified the user about for a given day.
  */
-public final class NotifiedZmanim
-  implements Serializable {
+public class NotifiedZmanim : Serializable {
 
-  public static class Manager {
+  public class Manager {
 
-    /** Name of the file created to store the notified zmanim. */
-    private static final String                             NOTIFIED_ZMANIM_FILE_EXTENSION = "notifiedZmanim";
+    private val notified: MutableList<NotifiedZmanim> = ArrayList()
 
-
-    private final List<NotifiedZmanim>                      notified = new ArrayList<>();
-
-    private File                                            filesDir;
+    private var filesDir: File? = null
 
 
-    public void init( File filesDir ) {
+    public fun init(filesDir: File) {
 
-      this.filesDir = filesDir;
-      final File[] files = filesDir.listFiles( new FileFilter() {
-        @Override
-        public boolean accept( File pathname ) {
-          return pathname.getName().endsWith( NOTIFIED_ZMANIM_FILE_EXTENSION );
-        }
-      } );
+      this.filesDir = filesDir
+      val files = filesDir.listFiles(FileFilter { pathname ->
+        pathname.name.endsWith(NOTIFIED_ZMANIM_FILE_EXTENSION)
+      })
 
 
-      if ( ( files == null ) || files.length == 0 ) {
-        return;
+      if ((files == null) || files.isEmpty()) {
+        return
       }
 
       // Clean up old files. Or read it in if it's not too old.
-      Calendar oldestToKeep = Calendar.getInstance();
-      oldestToKeep.add( Calendar.DATE, -3 );
-      final long mills = oldestToKeep.getTimeInMillis();
+      val oldestToKeep = Calendar.getInstance()
+      oldestToKeep.add(Calendar.DATE, -3)
+      val mills = oldestToKeep.timeInMillis
 
-      for ( File file : files ) {
-        if ( file.lastModified() < mills ) {
-          //noinspection ResultOfMethodCallIgnored
-          file.delete();
+      for (file in files) {
+        if (file.lastModified() < mills) {
+          file.delete()
         }
         else {
-          restore( file );
+          restore(file)
         }
       }
     }
 
 
-    @NotNull
-    public NotifiedZmanim get( Calendar forDate ) {
+    public fun get(forDate: Calendar): NotifiedZmanim {
 
-      NotifiedZmanim newNotifiedZmanim;
-      
-      synchronized ( notified ) {
-        for ( NotifiedZmanim notifiedZmanim : notified ) {
-          if ( notifiedZmanim.isForDate( forDate ) ) {
-            return notifiedZmanim;
+      val newNotifiedZmanim: NotifiedZmanim
+
+      synchronized(notified) {
+        for (notifiedZmanim in notified) {
+          if (notifiedZmanim.isForDate(forDate)) {
+            return notifiedZmanim
           }
         }
 
-        newNotifiedZmanim = new NotifiedZmanim( forDate );
-        notified.add( newNotifiedZmanim );
+        newNotifiedZmanim = NotifiedZmanim(forDate)
+        notified.add(newNotifiedZmanim)
       }
 
-      return newNotifiedZmanim;
+      return newNotifiedZmanim
     }
 
 
-    public void save( NotifiedZmanim notifiedZmanim ) {
+    public fun save(notifiedZmanim: NotifiedZmanim) {
 
-      String fileName = notifiedZmanim.year + "_" + notifiedZmanim.month + "_" + notifiedZmanim.date + "." + NOTIFIED_ZMANIM_FILE_EXTENSION;
-      File storedData = new File( filesDir, fileName );
+      val fileName = notifiedZmanim.year.toString() + "_" + notifiedZmanim.month + "_" + notifiedZmanim.date +
+        "." + NOTIFIED_ZMANIM_FILE_EXTENSION
+      val storedData = File(filesDir, fileName)
       try {
-        ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( storedData, false ) );
-        oos.writeObject( notifiedZmanim );
-        oos.flush();
-        oos.close();
+        val oos = ObjectOutputStream(FileOutputStream(storedData, false))
+        oos.writeObject(notifiedZmanim)
+        oos.flush()
+        oos.close()
 
       }
-      catch ( Exception e ) {
+      catch (e: Exception) {
         // Urgh. Can't save... We're going to lose our state...
-        //e.printStackTrace();
       }
     }
 
 
-    private void restore( File storedData ) {
+    private fun restore(storedData: File) {
 
-      NotifiedZmanim restored;
+      var restored: NotifiedZmanim
 
-      if ( !storedData.canRead() ) {
-        restored = new NotifiedZmanim();
+      if (!storedData.canRead()) {
+        restored = NotifiedZmanim()
       }
       else {
-        ObjectInputStream ois = null;
+        var ois: ObjectInputStream? = null
         try {
-          ois = new ObjectInputStream( new FileInputStream( storedData ) );
-          restored = (NotifiedZmanim)ois.readObject();
+          ois = ObjectInputStream(FileInputStream(storedData))
+          restored = ois.readObject() as NotifiedZmanim
 
-          ois.close();
+          ois.close()
         }
-        catch ( Throwable e ) {
-          if ( ois != null ) {
+        catch (e: Throwable) {
+          if (ois != null) {
             try {
-              ois.close();
+              ois.close()
             }
-            catch ( Throwable e1 ) {
+            catch (e1: Throwable) {
               // Oh well, we tried...
             }
           }
-          restored = new NotifiedZmanim();
+          restored = NotifiedZmanim()
         }
       }
 
-      synchronized ( notified ) {
-        notified.add( restored );
+      synchronized(notified) {
+        notified.add(restored)
       }
     }
 
   }
 
 
-  public static final Manager                               manager = new Manager();
-
-
-  private static final long                                 serialVersionUID = 8982487060417217170L;
-
   /** The date this applies to. */
-  private final int                                         year;
-  private final int                                         month;
-  private final int                                         date;
+  private val year: Int
+  private val month: Int
+  private val date: Int
 
   /** Which of the zmanim types have already been notified? */
-  private final Set<Zmanim.Type>                            notifiedTypes = new HashSet<>();
+  private val notifiedTypes: MutableSet<Zmanim.Type> = HashSet()
 
 
-  public NotifiedZmanim(
-    final Calendar day
-  ) {
+  public constructor(day: Calendar) {
 
-    this.year = day.get( Calendar.YEAR );
-    this.month = day.get( Calendar.MONTH );
-    this.date = day.get( Calendar.DATE );
+    this.year = day.get(Calendar.YEAR)
+    this.month = day.get(Calendar.MONTH)
+    this.date = day.get(Calendar.DATE)
   }
 
 
-  private NotifiedZmanim() {
+  private constructor() {
 
-    final Calendar day = Calendar.getInstance();
-    this.year = day.get( Calendar.YEAR );
-    this.month = day.get( Calendar.MONTH );
-    this.date = day.get( Calendar.DATE );
+    val day = Calendar.getInstance()
+    this.year = day.get(Calendar.YEAR)
+    this.month = day.get(Calendar.MONTH)
+    this.date = day.get(Calendar.DATE)
   }
 
 
-  boolean isForDate( final Calendar other ) {
+  private fun isForDate(other: Calendar): Boolean {
 
-    int otherYear = other.get( Calendar.YEAR );
-    if ( year != otherYear ) {
-      return false;
+    val otherYear = other.get(Calendar.YEAR)
+    if (year != otherYear) {
+      return false
     }
 
-    int otherMonth = other.get( Calendar.MONTH );
-    if ( month != otherMonth ) {
-      return false;
+    val otherMonth = other.get(Calendar.MONTH)
+    if (month != otherMonth) {
+      return false
     }
 
-    int otherDate = other.get( Calendar.DATE );
-    return date == otherDate;
+    val otherDate = other.get(Calendar.DATE)
+    return date == otherDate
   }
 
 
   /**
    * Once the user has been notified about the specified type, then this method is invoked to note that notification.
    */
-  public void notified(
-    final Zmanim.Type type
-  ) {
+  public fun notified(type: Zmanim.Type) {
 
-    notifiedTypes.add( type );
+    notifiedTypes.add(type)
   }
 
 
-  public boolean contains( final Zmanim.Type type ) {
-    return notifiedTypes.contains( type );
+  public fun contains(type: Zmanim.Type): Boolean {
+    return notifiedTypes.contains(type)
+  }
+
+
+  public companion object {
+
+    @JvmField
+    public val manager: Manager = Manager()
+
+
+    private const val serialVersionUID: Long = 8982487060417217170L
   }
 
 }

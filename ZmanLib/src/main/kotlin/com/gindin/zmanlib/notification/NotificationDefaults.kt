@@ -2,45 +2,40 @@
  * Copyright (c) 2019. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.notification;
+package com.gindin.zmanlib.notification
 
-import com.gindin.zmanlib.zman.Zmanim;
+import com.gindin.zmanlib.zman.Zmanim
 
 /**
  * Provides the out-of-the-box notification defaults.
  */
-public final class NotificationDefaults {
+public class NotificationDefaults {
 
-  public int getDefaultZmanAlertTime( final Zmanim.Type type ) {
+  public fun getDefaultZmanAlertTime(type: Zmanim.Type): Int {
 
-    switch ( type ) {
-      case Alot:
-      case Hanetz:
-      case Chatzot:
-      case MinchaGedola:
-      case MinchaKetana:
-      case BeinHashmashot:
-      case TzaitHacochavim:
-      case ShabbatEnd:
-      case NightChatzot:
-        return ZmanNotificationScheduler.NO_ALERT;
+    return when (type) {
+      Zmanim.Type.Alot,
+      Zmanim.Type.Hanetz,
+      Zmanim.Type.Chatzot,
+      Zmanim.Type.MinchaGedola,
+      Zmanim.Type.MinchaKetana,
+      Zmanim.Type.BeinHashmashot,
+      Zmanim.Type.TzaitHacochavim,
+      Zmanim.Type.ShabbatEnd,
+      Zmanim.Type.NightChatzot -> ZmanNotificationScheduler.NO_ALERT
 
-      case Talit:
-      case SofZmanShema:
-      case SofZmanTefila:
-      case SofZmanAchilatChametz:
-      case SofZmanBiurChametz:
-      case PlagHaMincha:
-      case CandleLighting:
-      case Shkia:
-      case LatestMincha:
-      case FastEnd:
-      case YomTovSheniCandleLighting:
-        return ZmanNotificationScheduler.FIFTEEN_MINUTES;
+      Zmanim.Type.Talit,
+      Zmanim.Type.SofZmanShema,
+      Zmanim.Type.SofZmanTefila,
+      Zmanim.Type.SofZmanAchilatChametz,
+      Zmanim.Type.SofZmanBiurChametz,
+      Zmanim.Type.PlagHaMincha,
+      Zmanim.Type.CandleLighting,
+      Zmanim.Type.Shkia,
+      Zmanim.Type.LatestMincha,
+      Zmanim.Type.FastEnd,
+      Zmanim.Type.YomTovSheniCandleLighting -> ZmanNotificationScheduler.FIFTEEN_MINUTES
     }
-
-    assert false;
-    return ZmanNotificationScheduler.NO_ALERT;
   }
 
 }
