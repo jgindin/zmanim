@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -43,7 +45,10 @@ import java.util.TimeZone;
 @Config( sdk = 33 )
 public class UT_UpgradePrefsBasedZmanCallback {
 
-  /** How many minutes ahead of each zman the released app's user asked to be alerted. */
+  /**
+   * How many minutes ahead of each zman the released app's user asked to be alerted. The second night candle
+   *  lighting is not on the preferences screen, so nothing is stored for it and it reads the default of -1.
+   */
   private static final Map<Zmanim.Type, Integer>            ALERT_MINUTES = new EnumMap<>( Zmanim.Type.class );
 
   /**
@@ -53,7 +58,7 @@ public class UT_UpgradePrefsBasedZmanCallback {
   private static final Map<Zmanim.Type, String>             SELECTED_ZMAN = new EnumMap<>( Zmanim.Type.class );
 
   static {
-    ALERT_MINUTES.put( Zmanim.Type.Alot, -1 );
+    ALERT_MINUTES.put( Zmanim.Type.Alot, 50 );
     ALERT_MINUTES.put( Zmanim.Type.Talit, 30 );
     ALERT_MINUTES.put( Zmanim.Type.Hanetz, 5 );
     ALERT_MINUTES.put( Zmanim.Type.SofZmanShema, 45 );
@@ -61,12 +66,12 @@ public class UT_UpgradePrefsBasedZmanCallback {
     ALERT_MINUTES.put( Zmanim.Type.SofZmanAchilatChametz, 10 );
     ALERT_MINUTES.put( Zmanim.Type.SofZmanBiurChametz, 25 );
     ALERT_MINUTES.put( Zmanim.Type.Chatzot, 60 );
-    ALERT_MINUTES.put( Zmanim.Type.MinchaGedola, -1 );
+    ALERT_MINUTES.put( Zmanim.Type.MinchaGedola, 3 );
     ALERT_MINUTES.put( Zmanim.Type.MinchaKetana, 35 );
     ALERT_MINUTES.put( Zmanim.Type.PlagHaMincha, 15 );
     ALERT_MINUTES.put( Zmanim.Type.CandleLighting, 40 );
     ALERT_MINUTES.put( Zmanim.Type.Shkia, 90 );
-    ALERT_MINUTES.put( Zmanim.Type.BeinHashmashot, -1 );
+    ALERT_MINUTES.put( Zmanim.Type.BeinHashmashot, 8 );
     ALERT_MINUTES.put( Zmanim.Type.LatestMincha, 55 );
     ALERT_MINUTES.put( Zmanim.Type.FastEnd, 12 );
     ALERT_MINUTES.put( Zmanim.Type.TzaitHacochavim, 7 );
@@ -101,9 +106,15 @@ public class UT_UpgradePrefsBasedZmanCallback {
 
   private PrefsBasedZmanCallback                            callback;
 
+  private Locale                                            savedLocale;
+
 
   @Before
   public void startOverStateWrittenByReleasedApp() throws IOException {
+
+    // Calendars are created for the default locale; make sure they are Gregorian.
+    savedLocale = Locale.getDefault();
+    Locale.setDefault( Locale.US );
 
     context = ApplicationProvider.getApplicationContext();
     UpgradeFixtures.install( context );
@@ -114,6 +125,12 @@ public class UT_UpgradePrefsBasedZmanCallback {
         // Not exercised: only the reading of saved state is under test.
       }
     };
+  }
+
+
+  @After
+  public void restoreLocale() {
+    Locale.setDefault( savedLocale );
   }
 
 

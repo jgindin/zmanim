@@ -6,7 +6,9 @@ package com.gindin.zmanlib.upgrade;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.DataInputStream;
@@ -14,6 +16,7 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -25,6 +28,23 @@ import java.util.TimeZone;
 public class UT_UpgradeSavedLocations {
 
   private static final double                               PRECISION = 1e-9;
+
+  private Locale                                            savedLocale;
+
+
+  @BeforeEach
+  public void pinLocale() {
+
+    // The name of a location without one is formatted with the default locale's number formatting.
+    savedLocale = Locale.getDefault();
+    Locale.setDefault( Locale.US );
+  }
+
+
+  @AfterEach
+  public void restoreLocale() {
+    Locale.setDefault( savedLocale );
+  }
 
 
   @Test
@@ -84,11 +104,11 @@ public class UT_UpgradeSavedLocations {
     Assertions.assertEquals( "", albany.originalUserName );
     Assertions.assertTrue( albany.isResolved() );
 
-    ZmanimLocation lakePlacid = byName.get( "Lake Placid, New York" );
-    Assertions.assertEquals( 44.2795, lakePlacid.getLatitude(), PRECISION );
-    Assertions.assertEquals( -73.9799, lakePlacid.getLongitude(), PRECISION );
-    Assertions.assertEquals( 570.0, lakePlacid.getElevation(), PRECISION );
-    Assertions.assertEquals( "Lake Placid, NY", lakePlacid.originalUserName );
+    ZmanimLocation saratogaSprings = byName.get( "Saratoga Springs, New York" );
+    Assertions.assertEquals( 43.0831, saratogaSprings.getLatitude(), PRECISION );
+    Assertions.assertEquals( -73.7846, saratogaSprings.getLongitude(), PRECISION );
+    Assertions.assertEquals( 94.0, saratogaSprings.getElevation(), PRECISION );
+    Assertions.assertEquals( "Saratoga Springs, NY", saratogaSprings.originalUserName );
 
     ZmanimLocation jerusalem = byName.get( "Jerusalem, Israel" );
     Assertions.assertEquals( 31.7683, jerusalem.getLatitude(), PRECISION );

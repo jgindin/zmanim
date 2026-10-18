@@ -11,12 +11,12 @@
     <int name="CandleLighting" value="40" />
     <int name="Shkia" value="90" />
     <boolean name="SHOW_NOTIFICATIONS" value="false" />
-    <int name="Alot" value="-1" />
+    <int name="Alot" value="50" />
     <int name="Hanetz" value="5" />
     <int name="SofZmanShema" value="45" />
     <int name="SofZmanAchilatChametz" value="10" />
-    <int name="MinchaGedola" value="-1" />
-    <int name="BeinHashmashot" value="-1" />
+    <int name="MinchaGedola" value="3" />
+    <int name="BeinHashmashot" value="8" />
     <int name="LatestMincha" value="55" />
     <int name="SofZmanTefila" value="20" />
     <int name="NightChatzot" value="120" />

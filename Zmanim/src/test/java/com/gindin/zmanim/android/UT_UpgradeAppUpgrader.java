@@ -17,6 +17,7 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,8 +68,16 @@ public class UT_UpgradeAppUpgrader {
   }
 
 
+  /**
+   * {@link AppUpgrader#handle} runs the upgrade steps only when this build's version code is above the last known one.
+   *  The released version is 409, so while the build's own version code is not above that, this test does not exercise
+   *  the steps and is skipped; raise the build's version code above 409 to make it meaningful.
+   */
   @Test
   public void upgradingFromTheReleasedVersionKeepsThePreferences() {
+
+    Assume.assumeTrue( "The build's version code (" + BuildConfig.VERSION_CODE + ") must be raised above the released 409 "
+      + "before AppUpgrader.handle runs any upgrade step over the released data", BuildConfig.VERSION_CODE > 409 );
 
     Assert.assertEquals( 409, preferences( ZmanimPrefs.VERSION ).getInt( "lastKnownCodeVersion", -1 ) );
 

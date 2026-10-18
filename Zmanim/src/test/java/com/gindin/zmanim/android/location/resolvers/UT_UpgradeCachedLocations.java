@@ -61,7 +61,7 @@ public class UT_UpgradeCachedLocations {
     Assert.assertEquals( 4, resolver.locationCache.size() );
     Assert.assertEquals( 4, byName.size() );
     Assert.assertEquals( "", byName.get( "Albany, New York" ).originalUserName );
-    Assert.assertEquals( "Lake Placid, NY", byName.get( "Lake Placid, New York" ).originalUserName );
+    Assert.assertEquals( "Saratoga Springs, NY", byName.get( "Saratoga Springs, New York" ).originalUserName );
     Assert.assertEquals( "", byName.get( "Jerusalem, Israel" ).originalUserName );
     Assert.assertEquals( "", byName.get( "New York, New York" ).originalUserName );
   }
@@ -90,16 +90,16 @@ public class UT_UpgradeCachedLocations {
   public void cachedEntryAnswersALookupByTheNameTheUserTyped() {
 
     ZmanimLocation typed = new ZmanimLocation.Builder()
-      .locationName( "Lake Placid, NY" )
-      .userName( "Lake Placid, NY" )
+      .locationName( "Saratoga Springs, NY" )
+      .userName( "Saratoga Springs, NY" )
       .build();
 
     ZmanimLocation resolved = resolver.resolveFromName( typed );
 
     Assert.assertNotNull( resolved );
-    Assert.assertEquals( "Lake Placid, New York", resolved.getLocationName() );
-    Assert.assertEquals( 44.2795, resolved.getLatitude(), 1e-9 );
-    Assert.assertEquals( -73.9799, resolved.getLongitude(), 1e-9 );
+    Assert.assertEquals( "Saratoga Springs, New York", resolved.getLocationName() );
+    Assert.assertEquals( 43.0831, resolved.getLatitude(), 1e-9 );
+    Assert.assertEquals( -73.7846, resolved.getLongitude(), 1e-9 );
   }
 
 
