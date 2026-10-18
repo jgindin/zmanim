@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib;
 
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.calendar.holiday.Details;

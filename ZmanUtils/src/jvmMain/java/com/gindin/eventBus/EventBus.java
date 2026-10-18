@@ -4,7 +4,7 @@
 
 package com.gindin.eventBus;
 
-import com.gindin.util.Pair;
+import kotlin.Pair;
 
 import java.util.*;
 
@@ -194,7 +194,7 @@ public final class EventBus {
 
     for ( Pair<EventHandler, Boolean> pair : copy ) {
       //noinspection AutoUnboxing
-      actuallyAddHandler( pair.first, pair.second );
+      actuallyAddHandler( pair.getFirst(), pair.getSecond() );
     }
   }
 

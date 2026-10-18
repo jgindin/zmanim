@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.service;
 
 import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanim.android.BuildConfig;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;

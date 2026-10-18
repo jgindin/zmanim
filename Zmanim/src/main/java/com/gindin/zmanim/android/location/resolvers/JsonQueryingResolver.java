@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import androidx.annotation.NonNull;
@@ -193,7 +193,7 @@ abstract class JsonQueryingResolver
       queryParams.append( ( index == 0 ) ? "?" : "&");
 
       Pair<String,String> param = params.get( index );
-      queryParams.append( param.first ).append( "=" ).append( param.second );
+      queryParams.append( param.getFirst() ).append( "=" ).append( param.getSecond() );
     }
 
     URL url = new URL( urlString + queryParams.toString() );

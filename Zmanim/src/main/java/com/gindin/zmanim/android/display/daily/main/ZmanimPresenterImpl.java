@@ -7,7 +7,7 @@ package com.gindin.zmanim.android.display.daily.main;
 import com.gindin.eventBus.EventBus;
 import com.gindin.mvp.AbstractPresenter;
 import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
@@ -228,7 +228,7 @@ class ZmanimPresenterImpl<V extends ZmanimView>
     protected void onProgressUpdate( final Pair<Zman, String>... values ) {
       super.onProgressUpdate( values );
       for ( Pair<Zman, String> value : values ) {
-        getView().displayTimeForZman( value.first, value.second );
+        getView().displayTimeForZman( value.getFirst(), value.getSecond() );
       }
     }
   }

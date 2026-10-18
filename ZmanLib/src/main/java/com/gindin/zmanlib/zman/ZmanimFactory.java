@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.zman;
 
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.kosherjava.zmanim.util.GeoLocation;
 

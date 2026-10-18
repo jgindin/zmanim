@@ -1,5 +1,6 @@
 [versions]
 agp = "9.4.0"
+kotlin = "2.4.20"
 moallemiAdvancedBuildVersion = "1.5.0"
 roborazzi = "1.74.0"
 foojayResolverConvention = "0.10.0"
@@ -11,6 +12,8 @@ junit = "4.13.2"
 junitJupiter = "5.11.4"
 junitPlatform = "1.11.4"
 hamcrest = "2.2"
+kotlinxSerializationJson = "1.11.0"
+kotlinxDatetime = "0.8.0"
 
 androidxConstraintlayout = "1.1.3"
 androidxLegacySupportV4 = "1.0.0"
@@ -42,6 +45,9 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junitJupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junitPlatform" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
 
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintlayout" }
@@ -82,6 +88,11 @@ zmanim-ui = ["androidx-constraintlayout", "androidx-legacy-support-v4", "android
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 moallemi-advanced-build-version = { id = "org.moallemi.advanced-build-version", version.ref = "moallemiAdvancedBuildVersion" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 foojay-resolver-convention = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojayResolverConvention" }
