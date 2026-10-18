@@ -2,59 +2,47 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.minor;
+package com.gindin.zmanlib.calendar.holiday.minor
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val TU_BAV = "Tu B'Av"
 
 /**
  *
  */
-public class TuBAv
-  extends Observance {
+public class TuBAv : Observance() {
 
-  private static final String                               TU_BAV = "Tu B'Av";
-
-  @Override
-  public String getName() {
-    return TU_BAV;
+  override fun getName(): String {
+    return TU_BAV
   }
 
 
-  @SuppressWarnings( "MagicNumber" )
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  @Suppress("MagicNumber")
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( date.getHebrewMonth() == HebrewMonth.AV ) {
-      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-      if ( 14 == hebrewDayOfMonth ) {
-        return new Details.Erev( date, TU_BAV, false );
+    if (date.hebrewMonth == HebrewMonth.AV) {
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
+      if (14 == hebrewDayOfMonth) {
+        return Details.Erev(date, TU_BAV, false)
       }
 
-      if ( 15 == hebrewDayOfMonth ) {
-        return new TuBAvDetails( date );
+      if (15 == hebrewDayOfMonth) {
+        return TuBAvDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class TuBAvDetails
-    extends Details.Yom {
+  private class TuBAvDetails(date: HebrewDate) : Details.Yom(date, TU_BAV) {
 
-    public TuBAvDetails(
-      final HebrewDate date
-    ) {
-      super( date, TU_BAV );
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
 
   }
