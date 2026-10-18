@@ -11,6 +11,14 @@
 //  block. Adding them here too would make Gradle refuse to apply them ("plugin is already on the
 //  classpath with an unknown version").
 
+// The Kotlin plugins are applied by more than one subproject (:ZmanUtils, :ZmanLib). Declaring them
+//  once here, unapplied, puts a single copy on the shared classpath; applying them per subproject
+//  with the `plugins {}` DSL instead makes Gradle load the Kotlin Gradle plugin once per subproject.
+plugins {
+  alias(libs.plugins.kotlin.multiplatform) apply false
+  alias(libs.plugins.kotlin.jvm) apply false
+}
+
 allprojects {
   repositories {
     mavenCentral()
