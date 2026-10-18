@@ -2,99 +2,117 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Calendar
 
-/**
- *
- */
-class CandleLighting
-  extends Zmanim {
+private const val DEFAULT_ZMAN_NAME = "18 Minutes"
 
-  private static final String                               DEFAULT_ZMAN_NAME = "18 Minutes";
+internal class CandleLighting(
+  zmanimCalculator: ZmanimCalculator
+) : Zmanim(Zmanim.Type.CandleLighting, zmanimCalculator) {
 
-
-  CandleLighting(
-    final ZmanimCalculator zmanimCalculator
-  ) {
-
-    super( Type.CandleLighting, zmanimCalculator );
+  override fun getDefault(): Zman? {
+    return getByName(DEFAULT_ZMAN_NAME)
   }
 
 
-  @Override
-  public Zman getDefault() {
-    return getByName( DEFAULT_ZMAN_NAME );
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
+
+    val zmanim = ArrayList<Zman>()
+
+    zmanim.add(
+      object : Zman(
+        DEFAULT_ZMAN_NAME,
+        "Standard Candle lighting",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting())
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "15 Minutes",
+        "London",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(15))
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "20 Minutes",
+        "Raanana",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(20))
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "21 Minutes",
+        "Tel Aviv",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(21))
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "22 Minutes",
+        "Ashdod",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(22))
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "30 Minutes",
+        "Tzefat, Teveria, Haifa",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(30))
+        }
+      }
+    )
+
+    zmanim.add(
+      object : Zman(
+        "40 Minutes",
+        "Jerusalem, Petach Tikvah",
+        Zmanim.Type.CandleLighting,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(40))
+        }
+      }
+    )
+
+    return zmanim
   }
 
-
-  @SuppressWarnings( { "FeatureEnvy", "MagicNumber" } )
-  @Override
-  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
-
-    List<Zman>  zmanim = new ArrayList<Zman>();
-
-    zmanim.add(
-      new Zman( DEFAULT_ZMAN_NAME, "Standard Candle lighting", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting() );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "15 Minutes", "London", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 15 ) );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "20 Minutes", "Raanana", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 20 ) );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "21 Minutes", "Tel Aviv", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 21 ) );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "22 Minutes", "Ashdod", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 22 ) );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "30 Minutes", "Tzefat, Teveria, Haifa", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 30 ) );
-        }
-      }
-    );
-
-    zmanim.add(
-      new Zman( "40 Minutes", "Jerusalem, Petach Tikvah", Zmanim.Type.CandleLighting, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getCandleLighting( 40 ) );
-        }
-      }
-    );
-
-
-    return zmanim;
-  }
-
-}  // End of CandleLighting class
+}

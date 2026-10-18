@@ -2,46 +2,45 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.zman;
+package com.gindin.zmanlib.zman
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Calendar
 
-/**
- *
- */
-class NightChatzot
-  extends Zmanim {
+internal class NightChatzot(
+  zmanimCalculator: ZmanimCalculator
+) : Zmanim(Zmanim.Type.NightChatzot, zmanimCalculator) {
 
-  public NightChatzot( ZmanimCalculator zmanimCalculator ) {
-    super( Type.NightChatzot, zmanimCalculator );
-  }
+  override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
-
-  @Override
-  protected List<Zman> buildZmanimList( final ZmanimCalculator zmanimCalculator ) {
-
-    List<Zman>  zmanim = new ArrayList<Zman>();
+    val zmanim = ArrayList<Zman>()
 
     zmanim.add(
-      new Zman( "Mid-night", "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.", Zmanim.Type.NightChatzot, false ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getSolarMidnight() );
+      object : Zman(
+        "Mid-night",
+        "GR'A, based on the day for Jewish halachic times starts at sunrise and ends at sunset.",
+        Zmanim.Type.NightChatzot,
+        false
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSolarMidnight())
         }
       }
-    );
+    )
 
     zmanim.add(
-      new Zman( "Fixed Local Mid-Night", "R. Moshe Feinstein and Aruch Ha-Shulchan, based on chatzot being fixed at solar noon.", Type.NightChatzot, true ) {
-        @Override protected Calendar calculate() {
-          return toCalendar( zmanimCalculator, zmanimCalculator.getFixedLocalNightChatzos() );
+      object : Zman(
+        "Fixed Local Mid-Night",
+        "R. Moshe Feinstein and Aruch Ha-Shulchan, based on chatzot being fixed at solar noon.",
+        Zmanim.Type.NightChatzot,
+        true
+      ) {
+        override fun calculate(): Calendar? {
+          return toCalendar(zmanimCalculator, zmanimCalculator.getFixedLocalNightChatzos())
         }
       }
-    );
+    )
 
-    return zmanim;
+    return zmanim
   }
 
-
-}  // End of NightChatzot class
+}
