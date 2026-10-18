@@ -1,0 +1,115 @@
+/*
+ * Copyright (c) 2026. Jay R. Gindin
+ */
+
+package com.gindin.zmanim.android;
+
+import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
+import com.gindin.zmanim.android.prefs.PersonalPrefsManager;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
+import com.gindin.zmanim.android.prefs.ZmanimSelectionPrefsManager;
+import com.gindin.zmanim.android.upgrade.UpgradeFixtures;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.test.core.app.ApplicationProvider;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Starting the new build over the data of the released build (version code 409) must leave the user's saved
+ *  preferences as they were and record the new version.
+ */
+@RunWith( RobolectricTestRunner.class )
+@Config( sdk = 33 )
+public class UT_UpgradeAppUpgrader {
+
+  private ZmanimActivity                                    activity;
+
+  private Map<String, Map<String, ?>>                       before;
+
+  private boolean                                           wipeCacheOnStartBefore;
+
+
+  @Before
+  public void installPrefsWrittenByReleasedApp() throws IOException {
+
+    Context context = ApplicationProvider.getApplicationContext();
+    UpgradeFixtures.install( context );
+
+    activity = Robolectric.buildActivity( ZmanimActivity.class ).get();
+
+    wipeCacheOnStartBefore = LocationToAddressConverter.wipeCacheOnStart;
+
+    before = new HashMap<>();
+    for ( ZmanimPrefs prefs : new ZmanimPrefs[] { ZmanimPrefs.PERSONAL, ZmanimPrefs.ZMANIM_SELECTION, ZmanimPrefs.LOCATION_MANAGEMENT } ) {
+      before.put( prefs.name(), new HashMap<>( preferences( prefs ).getAll() ) );
+    }
+  }
+
+
+  @After
+  public void restoreProcessWideState() {
+    LocationToAddressConverter.wipeCacheOnStart = wipeCacheOnStartBefore;
+  }
+
+
+  @Test
+  public void upgradingFromTheReleasedVersionKeepsThePreferences() {
+
+    Assert.assertEquals( 409, preferences( ZmanimPrefs.VERSION ).getInt( "lastKnownCodeVersion", -1 ) );
+
+    AppUpgrader.handle( activity, new PersonalPrefsManager( activity ), new ZmanimSelectionPrefsManager( activity ) );
+
+    assertPreferencesUnchanged();
+    Assert.assertEquals( BuildConfig.VERSION_CODE, preferences( ZmanimPrefs.VERSION ).getInt( "lastKnownCodeVersion", -1 ) );
+  }
+
+
+  /**
+   * {@link AppUpgrader#handle} only runs the upgrade steps when this build's version code is above the last known
+   *  one, so these call the steps with a version code that is above it for certain.
+   */
+  @Test
+  public void everyUpgradeStepFromTheReleasedVersionLeavesThePreferencesAlone() throws Exception {
+
+    int laterVersionCode = 10_000;
+
+    Assert.assertEquals( -1, new PersonalPrefsManager( activity ).onHandleUpgrade( laterVersionCode, 409 ) );
+    Assert.assertEquals( -1, new ZmanimSelectionPrefsManager( activity ).onHandleUpgrade( laterVersionCode, 409 ) );
+
+    Method upgradeElevationPref = AppUpgrader.class.getDeclaredMethod( "upgradeElevationPref", ZmanimActivity.class, int.class );
+    upgradeElevationPref.setAccessible( true );
+    upgradeElevationPref.invoke( null, activity, 409 );
+
+    assertPreferencesUnchanged();
+    Assert.assertFalse( LocationToAddressConverter.wipeCacheOnStart );
+  }
+
+
+  private void assertPreferencesUnchanged() {
+
+    for ( Map.Entry<String, Map<String, ?>> entry : before.entrySet() ) {
+      Assert.assertEquals( entry.getKey(), entry.getValue(), preferences( ZmanimPrefs.valueOf( entry.getKey() ) ).getAll() );
+    }
+  }
+
+
+  private SharedPreferences preferences( ZmanimPrefs prefs ) {
+    return activity.getSharedPreferences( prefs.name(), Context.MODE_PRIVATE );
+  }
+
+}
