@@ -2,10 +2,10 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.formatters;
+package com.gindin.zmanlib.calendar.formatters
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.location.ZmanimLocation;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.location.ZmanimLocation
 
 /**
  * Knows how to provide various formats of a HebrewDate.
@@ -14,17 +14,7 @@ import com.gindin.zmanlib.location.ZmanimLocation;
  */
 public abstract class HebrewDateFormatter {
 
-  private static final String[]                           HEBREW_MONTH_NAMES = {
-    "Nissan",     "Iyar",     "Sivan",    "Tammuz",   "Av",       "Elul",
-    "Tishrei",    "Cheshvan", "Kislev",   "Tevet",    "Shevat",   "Adar", "Adar II"
-  };
-
-
-  private static HebrewDateFormatter                        SHORT_FORMATTER;
-  private static HebrewDateFormatter                        LONG_FORMATTER;
-
-
-  public enum Style {
+  public enum class Style {
     DEFAULT,
     SHORT,
     MEDIUM,
@@ -32,64 +22,40 @@ public abstract class HebrewDateFormatter {
   }
 
 
-  public static HebrewDateFormatter getInstance( Style formatterStyle ) {
-
-    switch ( formatterStyle ) {
-      case SHORT:
-        if ( null == SHORT_FORMATTER ) {
-          SHORT_FORMATTER = new ShortFormatter();
-        }
-        return SHORT_FORMATTER;
-
-      case DEFAULT:
-      case MEDIUM:
-      case LONG:
-      default:
-        if ( null == LONG_FORMATTER ) {
-          LONG_FORMATTER = new LongFormatter();
-        }
-        return LONG_FORMATTER;
-    }
-
-  }
-
-  public abstract String format(
-    HebrewDate      date,
-    ZmanimLocation  location
-  );
+  public abstract fun format(
+    date: HebrewDate,
+    location: ZmanimLocation?
+  ): String
 
 
   /**
    * Formats a Hebrew date in a short fashion, which includes only the date. E.g., "1 Nissan 5772".
    */
-  static class ShortFormatter
-    extends HebrewDateFormatter {
+  private open class ShortFormatter : HebrewDateFormatter() {
 
-    @SuppressWarnings( "FeatureEnvy" )
-    @Override
-    public String format(
-      HebrewDate      date,
-      ZmanimLocation  location
-    ) {
+    override fun format(
+      date: HebrewDate,
+      location: ZmanimLocation?
+    ): String {
 
-      StringBuilder buf = new StringBuilder();
+      val buf = StringBuilder()
 
-      if ( ( location != null ) && date.isToday() && date.isAfterSunset( location ) ) {
-        //noinspection AssignmentToMethodParameter
-        date = date.tomorrow();
-        buf.append( "Or le " );
+      var dateToFormat = date
+      if ((location != null) && dateToFormat.isToday() && dateToFormat.isAfterSunset(location)) {
+        dateToFormat = dateToFormat.tomorrow()
+        buf.append("Or le ")
       }
 
       buf
-        .append( date.getHebrewDayOfMonth() )
-        .append( " " )
+        .append(dateToFormat.hebrewDayOfMonth)
+        .append(" ")
 
         // subtract one because the hebrew month is stored as a one-based value...
-        .append( HEBREW_MONTH_NAMES[ date.getHebrewMonth() - 1 ] )
-        .append( " " )
-        .append( date.getHebrewYear() );
+        .append(HEBREW_MONTH_NAMES[dateToFormat.hebrewMonth - 1])
+        .append(" ")
+        .append(dateToFormat.hebrewYear)
 
-      return buf.toString();
+      return buf.toString()
     }
 
 
@@ -100,20 +66,58 @@ public abstract class HebrewDateFormatter {
    * Builds on the format presented by the short format and adds information about the day. E.g., if it is a
    *  holiday, etc...
    */
-  static class LongFormatter
-    extends ShortFormatter {
+  private class LongFormatter : ShortFormatter() {
 
-    @Override
-    public String format(
-      HebrewDate date,
-      ZmanimLocation location
-    ) {
+    override fun format(
+      date: HebrewDate,
+      location: ZmanimLocation?
+    ): String {
 
-      String buf = super.format( date, location );
-      buf += date.getDescription();
+      var buf = super.format(date, location)
+      buf += date.getDescription()
 
-      return buf;
+      return buf
     }
   }  // End of LongFormatter class
+
+
+  public companion object {
+
+    private val HEBREW_MONTH_NAMES: Array<String> = arrayOf(
+      "Nissan", "Iyar", "Sivan", "Tammuz", "Av", "Elul",
+      "Tishrei", "Cheshvan", "Kislev", "Tevet", "Shevat", "Adar", "Adar II"
+    )
+
+
+    private var SHORT_FORMATTER: HebrewDateFormatter? = null
+    private var LONG_FORMATTER: HebrewDateFormatter? = null
+
+
+    @JvmStatic
+    public fun getInstance(formatterStyle: Style): HebrewDateFormatter {
+
+      when (formatterStyle) {
+        Style.SHORT -> {
+          var shortFormatter = SHORT_FORMATTER
+          if (null == shortFormatter) {
+            shortFormatter = ShortFormatter()
+            SHORT_FORMATTER = shortFormatter
+          }
+          return shortFormatter
+        }
+
+        Style.DEFAULT,
+        Style.MEDIUM,
+        Style.LONG -> {
+          var longFormatter = LONG_FORMATTER
+          if (null == longFormatter) {
+            longFormatter = LongFormatter()
+            LONG_FORMATTER = longFormatter
+          }
+          return longFormatter
+        }
+      }
+    }
+  }
 
 }  // End of HebrewDateFormatter class

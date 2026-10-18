@@ -2,216 +2,165 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.formatters;
+package com.gindin.zmanlib.calendar.formatters
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-
-import java.util.Calendar;
+import com.gindin.zmanlib.calendar.HebrewDate
+import java.util.Calendar
 
 /**
  * Knows how to format a HebrewDate as a secular date.
  */
 public abstract class SecularDateFormatter {
 
-  public enum Style {
+  public enum class Style {
     DEFAULT,
     SHORT,
     MEDIUM,
     LONG
   }
 
-  private static SecularDateFormatter                       FORMATTER;
 
-  private static SecularDateFormatter                       MEDIUM_FORMATTER;
-
-  private static SecularDateFormatter                       SHORT_FORMATTER;
+  public abstract fun format(date: HebrewDate): String
 
 
-  public static SecularDateFormatter getInstance( Style formatterStyle ) {
+  private class DefaultFormatter : SecularDateFormatter() {
 
-    switch ( formatterStyle ) {
-      case SHORT:
-        if ( SHORT_FORMATTER == null ) {
-          SHORT_FORMATTER = new ShortFormatter();
-        }
-        return SHORT_FORMATTER;
+    override fun format(date: HebrewDate): String {
 
-      case MEDIUM:
-        if ( MEDIUM_FORMATTER == null ) {
-          MEDIUM_FORMATTER = new MediumFormatter();
-        }
-        return MEDIUM_FORMATTER;
+      val formattedDate = StringBuilder()
+      when (date.dayOfWeek) {
+        Calendar.SUNDAY -> formattedDate.append("Sun")
 
-      case DEFAULT:
-      case LONG:
-      default:
-        if ( null == FORMATTER ) {
-          FORMATTER = new DefaultFormatter();
-        }
-        return FORMATTER;
-    }
+        Calendar.MONDAY -> formattedDate.append("Mon")
 
-  }
+        Calendar.TUESDAY -> formattedDate.append("Tue")
 
-  public abstract String format( HebrewDate date );
+        Calendar.WEDNESDAY -> formattedDate.append("Wed")
 
+        Calendar.THURSDAY -> formattedDate.append("Thur")
 
-  private static class DefaultFormatter
-    extends SecularDateFormatter {
+        Calendar.FRIDAY -> formattedDate.append("Fri")
 
-
-    @SuppressWarnings( "FeatureEnvy" )
-    @Override
-    public String format( HebrewDate date ) {
-
-      final StringBuilder formattedDate = new StringBuilder();
-      switch ( date.getDayOfWeek() ) {
-        case Calendar.SUNDAY:
-          formattedDate.append( "Sun" );
-          break;
-
-        case Calendar.MONDAY:
-          formattedDate.append( "Mon" );
-          break;
-
-        case Calendar.TUESDAY:
-          formattedDate.append( "Tue" );
-          break;
-
-        case Calendar.WEDNESDAY:
-          formattedDate.append( "Wed" );
-          break;
-
-        case Calendar.THURSDAY:
-          formattedDate.append( "Thur" );
-          break;
-
-        case Calendar.FRIDAY:
-          formattedDate.append( "Fri" );
-          break;
-
-        case Calendar.SATURDAY:
-          formattedDate.append( "Shabbat" );
-          break;
-
+        Calendar.SATURDAY -> formattedDate.append("Shabbat")
       }
 
-      formattedDate.append( ", " );
+      formattedDate.append(", ")
 
-      switch ( date.getGregorianMonth() ) {
-        case Calendar.JANUARY:
-          formattedDate.append( "Jan " );
-          break;
+      when (date.gregorianMonth) {
+        Calendar.JANUARY -> formattedDate.append("Jan ")
 
-        case Calendar.FEBRUARY:
-          formattedDate.append( "Feb " );
-          break;
+        Calendar.FEBRUARY -> formattedDate.append("Feb ")
 
-        case Calendar.MARCH:
-          formattedDate.append( "Mar " );
-          break;
+        Calendar.MARCH -> formattedDate.append("Mar ")
 
-        case Calendar.APRIL:
-          formattedDate.append( "Apr " );
-          break;
+        Calendar.APRIL -> formattedDate.append("Apr ")
 
-        case Calendar.MAY:
-          formattedDate.append( "May " );
-          break;
+        Calendar.MAY -> formattedDate.append("May ")
 
-        case Calendar.JUNE:
-          formattedDate.append( "Jun " );
-          break;
+        Calendar.JUNE -> formattedDate.append("Jun ")
 
-        case Calendar.JULY:
-          formattedDate.append( "Jul " );
-          break;
+        Calendar.JULY -> formattedDate.append("Jul ")
 
-        case Calendar.AUGUST:
-          formattedDate.append( "Aug " );
-          break;
+        Calendar.AUGUST -> formattedDate.append("Aug ")
 
-        case Calendar.SEPTEMBER:
-          formattedDate.append( "Sep " );
-          break;
+        Calendar.SEPTEMBER -> formattedDate.append("Sep ")
 
-        case Calendar.OCTOBER:
-          formattedDate.append( "Oct " );
-          break;
+        Calendar.OCTOBER -> formattedDate.append("Oct ")
 
-        case Calendar.NOVEMBER:
-          formattedDate.append( "Nov " );
-          break;
+        Calendar.NOVEMBER -> formattedDate.append("Nov ")
 
-        case Calendar.DECEMBER:
-          formattedDate.append( "Dec " );
-          break;
+        Calendar.DECEMBER -> formattedDate.append("Dec ")
       }
 
-      formattedDate.append( date.getGregorianDayOfMonth() ).append( ", " ).append( date.getGregorianYear() );
+      formattedDate.append(date.gregorianDayOfMonth).append(", ").append(date.gregorianYear)
 
-      return formattedDate.toString();
+      return formattedDate.toString()
     }
   }
 
 
-  private static class ShortFormatter
-    extends SecularDateFormatter {
+  private open class ShortFormatter : SecularDateFormatter() {
 
-    @SuppressWarnings( { "FeatureEnvy", "AutoBoxing" } )
-    @Override
-    public String format( HebrewDate date ) {
+    override fun format(date: HebrewDate): String {
 
-      return String.format( "%2s/%2s/%2s", date.getGregorianMonth() + 1, date.getGregorianDayOfMonth(),
-        date.getGregorianYear() );
+      return String.format(
+        "%2s/%2s/%2s", date.gregorianMonth + 1, date.gregorianDayOfMonth,
+        date.gregorianYear
+      )
     }
   }
 
 
-  private static class MediumFormatter
-    extends ShortFormatter {
+  private class MediumFormatter : ShortFormatter() {
 
-    @SuppressWarnings( { "FeatureEnvy", "AutoBoxing" } )
-    @Override
-    public String format( HebrewDate date ) {
+    override fun format(date: HebrewDate): String {
 
-      final StringBuilder formattedDate = new StringBuilder( super.format( date ) );
+      val formattedDate = StringBuilder(super.format(date))
 
-      switch ( date.getDayOfWeek() ) {
-        case Calendar.SUNDAY:
-          formattedDate.append( " S" );
-          break;
+      when (date.dayOfWeek) {
+        Calendar.SUNDAY -> formattedDate.append(" S")
 
-        case Calendar.MONDAY:
-          formattedDate.append( " M" );
-          break;
+        Calendar.MONDAY -> formattedDate.append(" M")
 
-        case Calendar.TUESDAY:
-          formattedDate.append( " T" );
-          break;
+        Calendar.TUESDAY -> formattedDate.append(" T")
 
-        case Calendar.WEDNESDAY:
-          formattedDate.append( " W" );
-          break;
+        Calendar.WEDNESDAY -> formattedDate.append(" W")
 
-        case Calendar.THURSDAY:
-          formattedDate.append( " R" );
-          break;
+        Calendar.THURSDAY -> formattedDate.append(" R")
 
-        case Calendar.FRIDAY:
-          formattedDate.append( " F" );
-          break;
+        Calendar.FRIDAY -> formattedDate.append(" F")
 
-        case Calendar.SATURDAY:
-          formattedDate.append( " B" );
-          break;
-
+        Calendar.SATURDAY -> formattedDate.append(" B")
       }
 
-      return formattedDate.toString();
+      return formattedDate.toString()
     }
 
   }
 
+
+  public companion object {
+
+    private var FORMATTER: SecularDateFormatter? = null
+
+    private var MEDIUM_FORMATTER: SecularDateFormatter? = null
+
+    private var SHORT_FORMATTER: SecularDateFormatter? = null
+
+
+    @JvmStatic
+    public fun getInstance(formatterStyle: Style): SecularDateFormatter {
+
+      when (formatterStyle) {
+        Style.SHORT -> {
+          var shortFormatter = SHORT_FORMATTER
+          if (shortFormatter == null) {
+            shortFormatter = ShortFormatter()
+            SHORT_FORMATTER = shortFormatter
+          }
+          return shortFormatter
+        }
+
+        Style.MEDIUM -> {
+          var mediumFormatter = MEDIUM_FORMATTER
+          if (mediumFormatter == null) {
+            mediumFormatter = MediumFormatter()
+            MEDIUM_FORMATTER = mediumFormatter
+          }
+          return mediumFormatter
+        }
+
+        Style.DEFAULT,
+        Style.LONG -> {
+          var defaultFormatter = FORMATTER
+          if (null == defaultFormatter) {
+            defaultFormatter = DefaultFormatter()
+            FORMATTER = defaultFormatter
+          }
+          return defaultFormatter
+        }
+      }
+    }
+  }
 
 }  // End of SecularDateFormatter class
