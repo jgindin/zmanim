@@ -2,77 +2,61 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.rabbanan;
+package com.gindin.zmanlib.calendar.holiday.rabbanan
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val CHANUKAH = "Chanukah"
 
 /**
  *
  */
-@SuppressWarnings( { "MagicNumber", "FeatureEnvy" } )
-public class Chanukah
-  extends Observance {
+@Suppress("MagicNumber", "FeatureEnvy")
+public class Chanukah : Observance() {
 
-
-  private static final String                               CHANUKAH = "Chanukah";
-
-
-  @Override
-  public String getName() {
-    return CHANUKAH;
+  override fun getName(): String {
+    return CHANUKAH
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    if ( HebrewMonth.KISLEV == date.getHebrewMonth() ) {
-      if ( 24 == hebrewDayOfMonth ) {
-        return new Details.Erev( date, CHANUKAH, false );
+    if (HebrewMonth.KISLEV == date.hebrewMonth) {
+      if (24 == hebrewDayOfMonth) {
+        return Details.Erev(date, CHANUKAH, false)
+      } else if (hebrewDayOfMonth >= 25) {
+        return ChanukahDetails(date, (hebrewDayOfMonth + 1) - 25)
       }
-      else if ( hebrewDayOfMonth >= 25 ) {
-        return new ChanukahDetails( date, ( hebrewDayOfMonth + 1 ) - 25 );
-      }
-    }
-    else if ( HebrewMonth.TEVET == date.getHebrewMonth() ) {
-      if ( date.isKislevShort() ) {
-        if ( hebrewDayOfMonth <= 3 ) {
-          return new ChanukahDetails( date, hebrewDayOfMonth + 5 );
+    } else if (HebrewMonth.TEVET == date.hebrewMonth) {
+      if (date.isKislevShort()) {
+        if (hebrewDayOfMonth <= 3) {
+          return ChanukahDetails(date, hebrewDayOfMonth + 5)
         }
-      }
-      else {
-        if ( hebrewDayOfMonth <= 2 ) {
-          return new ChanukahDetails( date, hebrewDayOfMonth + 6 );
+      } else {
+        if (hebrewDayOfMonth <= 2) {
+          return ChanukahDetails(date, hebrewDayOfMonth + 6)
         }
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class ChanukahDetails
-    extends Details.Yom {
+  private class ChanukahDetails(date: HebrewDate, day: Int) : Details.Yom(date, "$CHANUKAH $day") {
 
-    private ChanukahDetails( HebrewDate date, int day ) {
-      super( date, CHANUKAH + " " + day );
+    override fun isChanukah(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isChanukah() {
-      return true;
-    }
-
-
-    @Override
-    public boolean sayTachanun() {
-      return false;
+    override fun sayTachanun(): Boolean {
+      return false
     }
   }
 
