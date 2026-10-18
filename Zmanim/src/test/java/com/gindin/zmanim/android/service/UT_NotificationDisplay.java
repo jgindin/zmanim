@@ -370,7 +370,7 @@ public class UT_NotificationDisplay extends NotificationTestBase {
 
   private static String withPlainSpaces( String text ) {
     // Newer JDKs separate the time from AM/PM with a narrow no-break space.
-    return text.replace( ' ', ' ' );
+    return text.replace( '\u202f', ' ' );
   }
 
 
