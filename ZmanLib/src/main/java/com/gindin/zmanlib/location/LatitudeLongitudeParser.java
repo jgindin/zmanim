@@ -4,7 +4,7 @@
 
 package com.gindin.zmanlib.location;
 
-import com.gindin.util.Pair;
+import kotlin.Pair;
 
 /**
  * Used to parse a string into a latitude or a longitude.
@@ -300,7 +300,7 @@ public class LatitudeLongitudeParser {
 //    }
 //
     final Pair<Direction, String> extracted = extractDirection( value, defaultDirection );
-    value = extracted.second;
+    value = extracted.getSecond();
 
     // Clean up the input....
     value = value.replace( '.', ' ' );
@@ -339,7 +339,7 @@ public class LatitudeLongitudeParser {
 //      holder.setDegrees( Double.parseDouble( latitudeComponents[0] + "." + latitudeComponents[1] ) );
 //    }
 
-    return new LatitudeLongitudeParser( extracted.first, degrees, minutes, seconds, maxDegrees );
+    return new LatitudeLongitudeParser( extracted.getFirst(), degrees, minutes, seconds, maxDegrees );
   }
 
 

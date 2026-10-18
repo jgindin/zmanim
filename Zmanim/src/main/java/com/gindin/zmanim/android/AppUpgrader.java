@@ -5,7 +5,7 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.util.LogUtils;
-import com.gindin.util.Pair;
+import kotlin.Pair;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.*;
 import com.gindin.zmanlib.zman.Hanetz;

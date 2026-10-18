@@ -6,6 +6,8 @@ package com.gindin.util;
 
 import com.gindin.zmanim.android.BuildConfig;
 
+import kotlin.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -114,7 +116,7 @@ public class LogUtils {
       if ( moreInfo != null ) {
         StringBuilder extra = new StringBuilder( "\n" );
         for ( Pair<String, String> info : moreInfo ) {
-          extra.append( info.first ).append( ": " ).append( info.second ).append( "\n" );
+          extra.append( info.getFirst() ).append( ": " ).append( info.getSecond() ).append( "\n" );
         }
 
         message += extra.toString();
