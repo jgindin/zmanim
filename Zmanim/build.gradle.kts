@@ -94,5 +94,5 @@ dependencies {
 
   implementation(libs.bundles.zmanim.ui)
 
-  testImplementation(libs.org.json)
+  implementation(libs.kotlinx.serialization.json)
 }

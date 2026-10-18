@@ -111,7 +111,7 @@ public class DisplayNotificationService
       }
       catch ( Exception e ) {
         // Something happened and we can't translate it back...
-        LogUtils.logError( "DisplayNotificationService::onHandleWork", "JSONException", e );
+        LogUtils.logError( "DisplayNotificationService::onHandleWork", "Unreadable location", e );
       }
     }
   }
