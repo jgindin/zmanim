@@ -2,157 +2,102 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.yomtov;
+package com.gindin.zmanlib.calendar.holiday.yomtov
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val SUKKOT = "Sukkot"
+private const val HOSHANA_RABBA = "Hoshana Rabba"
+private const val SHMINI_ATZERET = "Shmini Atzeret"
+private const val SIMCHAT_TORAH = "Simchat Torah"
 
 /**
  *
  */
-@SuppressWarnings( "MagicNumber" )
-public class Sukkot
-  extends Observance {
+@Suppress("MagicNumber")
+public class Sukkot : Observance() {
 
-  private static final String                               SUKKOT = "Sukkot";
-  private static final String                               HOSHANA_RABBA = "Hoshana Rabba";
-  private static final String                               SHMINI_ATZERET = "Shmini Atzeret";
-  private static final String                               SIMCHAT_TORAH = "Simchat Torah";
-
-
-
-  @Override
-  public String getName() {
-    return SUKKOT;
+  override fun getName(): String {
+    return SUKKOT
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
-      final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    if (HebrewMonth.TISHREI == date.hebrewMonth) {
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-      switch ( hebrewDayOfMonth ) {
-        case 14:
-          return new Details.ErevYomTov( date, SUKKOT );
+      when (hebrewDayOfMonth) {
+        14 -> return Details.ErevYomTov(date, SUKKOT)
 
-        case 15:
-          return new SukkotYomTovDetails( date, true );
+        15 -> return SukkotYomTovDetails(date, true)
 
-        case 16:
-          return new SukkotYomTovDetails( date, false );
+        16 -> return SukkotYomTovDetails(date, false)
 
-        case 17:
-        case 18:
-        case 19:
-        case 20:
-          return new SukkotCholHaModeDetails( date, hebrewDayOfMonth - 14 );
+        17, 18, 19, 20 -> return SukkotCholHaModeDetails(date, hebrewDayOfMonth - 14)
 
-        case 21:
-          return new HoshanaRabbaDetails( date );
+        21 -> return HoshanaRabbaDetails(date)
 
-        case 22:
-          return new ShminiAtzeretDetails( date );
+        22 -> return ShminiAtzeretDetails(date)
 
-        case 23:
-          return new SimchatTorahDetails( date );
+        23 -> return SimchatTorahDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class SukkotYomTovDetails
-    extends Details.YomTovDetails {
+  private class SukkotYomTovDetails(
+    date: HebrewDate,
+    lightCandles: Boolean
+  ) : Details.YomTovDetails(date, SUKKOT, lightCandles) {
 
-    SukkotYomTovDetails(
-      final HebrewDate  date,
-      final boolean     lightCandles
-    ) {
-      super( date, SUKKOT, lightCandles );
-    }
-
-
-    @Override
-    public boolean isSukkot() {
-      return true;
+    override fun isSukkot(): Boolean {
+      return true
     }
   }
 
 
-  private static class SukkotCholHaModeDetails
-    extends Details.CholHaMoedDetails {
+  private class SukkotCholHaModeDetails(
+    date: HebrewDate,
+    dayOfChag: Int
+  ) : Details.CholHaMoedDetails(date, dayOfChag, SUKKOT, false) {
 
-    SukkotCholHaModeDetails(
-      final HebrewDate  date,
-      final int         dayOfChag
-    ) {
-      super( date, dayOfChag, SUKKOT, false );
-    }
-
-
-    @Override
-    public boolean isSukkot() {
-      return true;
+    override fun isSukkot(): Boolean {
+      return true
     }
   }
 
 
-  private static class HoshanaRabbaDetails
-    extends Details.ErevYomTov {
+  private class HoshanaRabbaDetails(date: HebrewDate) : Details.ErevYomTov(date, HOSHANA_RABBA) {
 
-    HoshanaRabbaDetails( HebrewDate date ) {
-      super( date, HOSHANA_RABBA );
+    override fun isSukkot(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isSukkot() {
-      return true;
-    }
-
-
-    @Override
-    public String getDescription() {
-      return SUKKOT + " 7 (" + HOSHANA_RABBA + ")";
+    override fun getDescription(): String {
+      return "$SUKKOT 7 ($HOSHANA_RABBA)"
     }
   }
 
 
-  private static class ShminiAtzeretDetails
-    extends Details.YomTovDetails {
+  private class ShminiAtzeretDetails(date: HebrewDate) : Details.YomTovDetails(date, SHMINI_ATZERET, true) {
 
-    public ShminiAtzeretDetails(
-      final HebrewDate date
-    ) {
-      super( date, SHMINI_ATZERET, true );
-    }
-
-
-    @Override
-    public boolean isShminiAtzeret() {
-      return true;
+    override fun isShminiAtzeret(): Boolean {
+      return true
     }
   }
 
 
-  private static class SimchatTorahDetails
-    extends Details.YomTovDetails {
+  private class SimchatTorahDetails(date: HebrewDate) : Details.YomTovDetails(date, SIMCHAT_TORAH, false) {
 
-    SimchatTorahDetails(
-      final HebrewDate date
-    ) {
-      super( date, SIMCHAT_TORAH, false );
-    }
-
-
-    @Override
-    public boolean isSimchatTorah() {
-      return true;
+    override fun isSimchatTorah(): Boolean {
+      return true
     }
   }
 

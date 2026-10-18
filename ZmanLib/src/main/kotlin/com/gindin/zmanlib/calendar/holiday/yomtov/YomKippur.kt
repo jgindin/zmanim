@@ -2,98 +2,80 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.yomtov;
+package com.gindin.zmanlib.calendar.holiday.yomtov
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val NAME = "Yom Kippur"
 
 /**
  *
  */
-public class YomKippur
-  extends Observance {
+public class YomKippur : Observance() {
 
-  private static final String                               NAME = "Yom Kippur";
-
-
-  @Override
-  public String getName() {
-    return NAME;
+  override fun getName(): String {
+    return NAME
   }
 
 
-  @SuppressWarnings( "FeatureEnvy" )
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  @Suppress("FeatureEnvy")
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( HebrewMonth.TISHREI == date.getHebrewMonth() ) {
-      if ( 9 == date.getHebrewDayOfMonth() ) {
-        return new Details.Erev( date, NAME ) {
-          @Override
-          public boolean sayTachanun() {
-            return false;
+    if (HebrewMonth.TISHREI == date.hebrewMonth) {
+      if (9 == date.hebrewDayOfMonth) {
+        return object : Details.Erev(date, NAME) {
+          override fun sayTachanun(): Boolean {
+            return false
           }
-        };
+        }
       }
 
-      if ( 10 == date.getHebrewDayOfMonth() ) {
-        return new YomKippurDetails( date );
+      if (10 == date.hebrewDayOfMonth) {
+        return YomKippurDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class YomKippurDetails
-    extends Details {
+  private class YomKippurDetails(date: HebrewDate) : Details(date) {
 
-    private YomKippurDetails( HebrewDate date ) {
-      super( date );
+    override fun isErev(): Boolean {
+      return false
     }
 
 
-    @Override
-    public boolean isErev() {
-      return false;
+    override fun isYomTov(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isYomTov() {
-      return true;
+    override fun isYomKippur(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean isYomKippur() {
-      return true;
+    override fun lightCandles(): Boolean {
+      return false
     }
 
 
-    @Override
-    public boolean lightCandles() {
-      return false;
+    override fun sayHavdalah(): Boolean {
+      return true
     }
 
 
-    @Override
-    public boolean sayHavdalah() {
-      return true;
+    override fun sayTachanun(): Boolean {
+      return false
     }
 
 
-    @Override
-    public boolean sayTachanun() {
-      return false;
-    }
-
-
-    @Override
-    public String getDescription() {
-      return NAME;
+    override fun getDescription(): String {
+      return NAME
     }
   }
 

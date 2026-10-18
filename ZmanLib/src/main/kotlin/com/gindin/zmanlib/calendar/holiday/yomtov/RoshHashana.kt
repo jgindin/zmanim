@@ -2,71 +2,56 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.yomtov;
+package com.gindin.zmanlib.calendar.holiday.yomtov
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val ROSH_HASHANA = "Rosh Hashana"
 
 /**
  *
  */
-@SuppressWarnings( "MagicNumber" )
-public class RoshHashana
-  extends Observance {
+@Suppress("MagicNumber")
+public class RoshHashana : Observance() {
 
-  private static final String ROSH_HASHANA = "Rosh Hashana";
-
-
-
-  @Override
-  public String getName() {
-    return ROSH_HASHANA;
+  override fun getName(): String {
+    return ROSH_HASHANA
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    final int hebrewMonth = date.getHebrewMonth();
-    final int hebrewDayOfMonth = date.getHebrewDayOfMonth();
+    val hebrewMonth = date.hebrewMonth
+    val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    if ( ( HebrewMonth.ELUL == hebrewMonth ) && ( 29 == hebrewDayOfMonth ) ) {
-      return new Details.Erev( date, ROSH_HASHANA ) {
-        @Override
-        public boolean sayTachanun() {
-          return false;
+    if ((HebrewMonth.ELUL == hebrewMonth) && (29 == hebrewDayOfMonth)) {
+      return object : Details.Erev(date, ROSH_HASHANA) {
+        override fun sayTachanun(): Boolean {
+          return false
         }
-      };
-    }
-    else if ( HebrewMonth.TISHREI == hebrewMonth ) {
-      if ( 1 == hebrewDayOfMonth ) {
-        return new RoshHashanaYomDetails( date, true );
       }
-      else if ( 2 == hebrewDayOfMonth ) {
-        return new RoshHashanaYomDetails( date, false );
+    } else if (HebrewMonth.TISHREI == hebrewMonth) {
+      if (1 == hebrewDayOfMonth) {
+        return RoshHashanaYomDetails(date, true)
+      } else if (2 == hebrewDayOfMonth) {
+        return RoshHashanaYomDetails(date, false)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static final class RoshHashanaYomDetails
-    extends Details.YomTovDetails {
+  private class RoshHashanaYomDetails(
+    date: HebrewDate,
+    lightCandles: Boolean
+  ) : Details.YomTovDetails(date, ROSH_HASHANA, lightCandles) {
 
-    private RoshHashanaYomDetails(
-      HebrewDate date,
-      boolean lightCandles
-    ) {
-      super( date, ROSH_HASHANA, lightCandles );
-    }
-
-
-    @Override
-    public boolean isRoshHashana() {
-      return true;
+    override fun isRoshHashana(): Boolean {
+      return true
     }
   }
 

@@ -2,63 +2,54 @@
  * Copyright (c) 2014. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.yomtov;
+package com.gindin.zmanlib.calendar.holiday.yomtov
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+
+private const val SHAVUOT = "Shavuot"
 
 /**
  *
  */
-public class Shavuot
-  extends Observance {
+public class Shavuot : Observance() {
 
-  private static final String                               SHAVUOT = "Shavuot";
-
-  @Override
-  public String getName() {
-    return SHAVUOT;
+  override fun getName(): String {
+    return SHAVUOT
   }
 
 
-  @Override
-  public Details getDetailsFor( HebrewDate date ) {
+  @Suppress("MagicNumber")
+  override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ( HebrewMonth.SIVAN == date.getHebrewMonth() ) {
-      int hebrewDayOfMonth = date.getHebrewDayOfMonth();
-      if ( 5 == hebrewDayOfMonth ) {
-        return new Details.ErevYomTov( date, SHAVUOT );
+    if (HebrewMonth.SIVAN == date.hebrewMonth) {
+      val hebrewDayOfMonth = date.hebrewDayOfMonth
+      if (5 == hebrewDayOfMonth) {
+        return Details.ErevYomTov(date, SHAVUOT)
       }
 
-      if ( 6 == hebrewDayOfMonth ) {
-        return new ShavuotDetails( date, true );
+      if (6 == hebrewDayOfMonth) {
+        return ShavuotDetails(date, true)
       }
 
-      if ( 7 == hebrewDayOfMonth ) {
-        return new ShavuotDetails( date, false );
+      if (7 == hebrewDayOfMonth) {
+        return ShavuotDetails(date, false)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  private static class ShavuotDetails
-    extends Details.YomTovDetails {
+  private class ShavuotDetails(
+    date: HebrewDate,
+    lightCandles: Boolean
+  ) : Details.YomTovDetails(date, SHAVUOT, lightCandles) {
 
-    public ShavuotDetails(
-      final HebrewDate date,
-      final boolean lightCandles
-    ) {
-      super( date, SHAVUOT, lightCandles );
-    }
-
-
-    @Override
-    public boolean isShavuot() {
-      return true;
+    override fun isShavuot(): Boolean {
+      return true
     }
   }
 
