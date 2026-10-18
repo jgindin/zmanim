@@ -2,36 +2,24 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.taaniyot;
+package com.gindin.zmanlib.calendar.holiday.taaniyot
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
 
 /**
  *
  */
-@SuppressWarnings( "MagicNumber" )
-public class TaanitBechorot
-  extends Taanit {
+@Suppress("MagicNumber")
+public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
 
-  private static final String                               BECHOROT = TAANIT + "Bechorot";
-
-
-
-  public TaanitBechorot() {
-    super( HebrewMonth.NISSAN, 14 );
+  override fun getName(): String {
+    return BECHOROT
   }
 
 
-  @Override
-  public String getName() {
-    return BECHOROT;
-  }
-
-
-  @Override
-  protected boolean canFallOnFriday( HebrewDate date ) {
+  override fun canFallOnFriday(date: HebrewDate): Boolean {
 
     // This one is complicated. In a year when Pesach starts Friday night, then this fast WILL
     //  be observed on Friday (the 14th of Nisan). However, if Pesach starts Saturday night, then
@@ -44,54 +32,54 @@ public class TaanitBechorot
     //  the normal date of the fast, we'll return false. What this really means is that if the
     //  base class' checkWednesday or checkThursday were ever to be called, they would NOT work
     //  correctly.
-    return date.getHebrewDayOfMonth() == 14;
+    return date.hebrewDayOfMonth == 14
   }
 
 
-  @Override
-  protected Details checkWednesday( HebrewDate date ) {
+  override fun checkWednesday(date: HebrewDate): Details? {
 
-    if ( date.getHebrewDayOfMonth() == 11 ) {
-      return createErevDetails( date );
+    if (date.hebrewDayOfMonth == 11) {
+      return createErevDetails(date)
     }
 
     // DO NOT CALL SUPER. See note in canFallOnFriday.
-    return null;
+    return null
   }
 
 
-  @Override
-  protected Details checkThursday( HebrewDate date ) {
+  override fun checkThursday(date: HebrewDate): Details? {
 
-    if ( date.getHebrewDayOfMonth() == 12 ) {
-      return createYomDetails( date );
+    if (date.hebrewDayOfMonth == 12) {
+      return createYomDetails(date)
     }
 
-    if ( date.getHebrewDayOfMonth() == 13 ) {
-      return createErevDetails( date );
+    if (date.hebrewDayOfMonth == 13) {
+      return createErevDetails(date)
     }
 
     // DO NOT CALL SUPER. See note in canFallOnFriday.
-    return null;
+    return null
   }
 
 
-  @Override
-  protected Details createErevDetails( HebrewDate date ) {
-    return new ErevTaanitDetails( date, BECHOROT );
+  override fun createErevDetails(date: HebrewDate): Details {
+    return ErevTaanitDetails(date, BECHOROT)
   }
 
 
-  @Override
-  protected Details createYomDetails( HebrewDate date ) {
-    return new TaanitDetails( date, BECHOROT );
+  override fun createYomDetails(date: HebrewDate): Details {
+    return TaanitDetails(date, BECHOROT)
   }
 
 
-  @Override
-  protected boolean canPushToSunday() {
-    return false;
+  override fun canPushToSunday(): Boolean {
+    return false
   }
 
+
+  private companion object {
+
+    private const val BECHOROT: String = TAANIT + "Bechorot"
+  }
 
 }  // End of TaanitBechorot class

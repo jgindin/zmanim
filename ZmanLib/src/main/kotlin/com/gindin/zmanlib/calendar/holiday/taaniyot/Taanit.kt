@@ -2,18 +2,16 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.taaniyot;
+package com.gindin.zmanlib.calendar.holiday.taaniyot
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-import com.gindin.zmanlib.calendar.holiday.Observance;
-import com.gindin.zmanlib.zman.Zmanim;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+import com.gindin.zmanlib.calendar.holiday.Observance
+import com.gindin.zmanlib.zman.Zmanim
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Collections
 
 /**
  * Fast days:
@@ -29,255 +27,228 @@ import java.util.List;
  *<p>
  * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
  */
-public abstract class Taanit
-  extends Observance {
-
-  protected static final String                             TAANIT = "Ta'anit ";
-
+public abstract class Taanit protected constructor(
   /** Which month does the fast fall in? */
   @HebrewMonth.Constant
-  private final int                                         monthOfFast;
+  private val monthOfFast: Int,
 
   /** Absent any reason to postpone the fast, what day of the month does it fall on? */
-  protected final int                                       normalDayOfFast;
-
-
-  protected Taanit(
-    @HebrewMonth.Constant
-    int   monthOfFast,
-    int   normalDayOfFast
-  ) {
-    this.monthOfFast = monthOfFast;
-    this.normalDayOfFast = normalDayOfFast;
-  }
-
+  @JvmField
+  protected val normalDayOfFast: Int
+) : Observance() {
 
   /** Can the fast take place on a Friday? */
-  protected abstract boolean canFallOnFriday( HebrewDate date );
+  protected abstract fun canFallOnFriday(date: HebrewDate): Boolean
 
-  protected abstract Details createErevDetails( HebrewDate date );
+  protected abstract fun createErevDetails(date: HebrewDate): Details
 
-  protected abstract Details createYomDetails( HebrewDate date );
+  protected abstract fun createYomDetails(date: HebrewDate): Details
 
 
   /**
    * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets
    *  pulled back instead.
    */
-  protected boolean canPushToSunday() {
-    return true;
+  protected open fun canPushToSunday(): Boolean {
+    return true
   }
 
   /**
    * Allows the subclass to change the month of the fast based on the specified date.
    */
   @HebrewMonth.Constant
-  protected int getAdjustedMonthOfFast( HebrewDate date ) {
-    return monthOfFast;
+  protected open fun getAdjustedMonthOfFast(date: HebrewDate): Int {
+    return monthOfFast
   }
 
 
-  @SuppressWarnings( "FeatureEnvy" )
-  @Override
-  public final Details getDetailsFor( HebrewDate date ) {
+  @Suppress("FeatureEnvy")
+  final override fun getDetailsFor(date: HebrewDate): Details? {
 
     @HebrewMonth.Constant
-    int actualMonthOfFast = getAdjustedMonthOfFast( date );
+    val actualMonthOfFast = getAdjustedMonthOfFast(date)
 
-    if ( actualMonthOfFast != date.getHebrewMonth() ) {
-      return null;
+    if (actualMonthOfFast != date.hebrewMonth) {
+      return null
     }
 
-    final int dayOfWeek = date.getDayOfWeek();
-    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
+    val dayOfWeek = date.dayOfWeek
+    val jewishDayOfMonth = date.hebrewDayOfMonth
 
-    if ( Calendar.WEDNESDAY == dayOfWeek ) {
-      Details details = checkWednesday( date );
-      if ( null != details ) {
-        return details;
+    if (Calendar.WEDNESDAY == dayOfWeek) {
+      val details = checkWednesday(date)
+      if (null != details) {
+        return details
       }
     }
 
-    if ( Calendar.THURSDAY == dayOfWeek ) {
-      Details details = checkThursday( date );
-      if ( null != details ) {
-        return details;
+    if (Calendar.THURSDAY == dayOfWeek) {
+      val details = checkThursday(date)
+      if (null != details) {
+        return details
       }
     }
 
-    if ( Calendar.FRIDAY == dayOfWeek ) {
+    if (Calendar.FRIDAY == dayOfWeek) {
 
-      if ( canFallOnFriday( date ) ) {
-        if ( normalDayOfFast == jewishDayOfMonth ) {
-          return createYomDetails( date );
+      if (canFallOnFriday(date)) {
+        if (normalDayOfFast == jewishDayOfMonth) {
+          return createYomDetails(date)
         }
-      }
-      else {
+      } else {
         // If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be
         //  Erev, because we never have a Ta'anit on Shabbat (well, except Yom Kippur, but that's
         //  a whole separate case)...
-        return null;
+        return null
       }
     }
 
-    if ( Calendar.SATURDAY == dayOfWeek ) {
-      if ( canPushToSunday() ) {
-        if ( normalDayOfFast == jewishDayOfMonth ) {
-          return createErevDetails( date );
+    if (Calendar.SATURDAY == dayOfWeek) {
+      if (canPushToSunday()) {
+        if (normalDayOfFast == jewishDayOfMonth) {
+          return createErevDetails(date)
         }
-      }
-      else {
+      } else {
         // If we can't push it, then today is nothing.
-        return null;
+        return null
       }
     }
 
-    if ( Calendar.SUNDAY == dayOfWeek ) {
-      if ( ( ( normalDayOfFast + 1 ) == jewishDayOfMonth ) && canPushToSunday() ) {
-        return createYomDetails( date );
+    if (Calendar.SUNDAY == dayOfWeek) {
+      if (((normalDayOfFast + 1) == jewishDayOfMonth) && canPushToSunday()) {
+        return createYomDetails(date)
       }
     }
 
 
     // We've handled all the special cases above...
-    if ( normalDayOfFast == jewishDayOfMonth ) {
-      return createYomDetails( date );
+    if (normalDayOfFast == jewishDayOfMonth) {
+      return createYomDetails(date)
     }
 
-    if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-      return createErevDetails( date );
+    if ((normalDayOfFast - 1) == jewishDayOfMonth) {
+      return createErevDetails(date)
     }
 
 
-    return null;
+    return null
   }
 
 
-  protected Details checkWednesday(
-    HebrewDate date
+  protected open fun checkWednesday(
+    date: HebrewDate
+  ): Details? {
+
+    val jewishDayOfMonth = date.hebrewDayOfMonth
+
+    if (canFallOnFriday(date)) {
+      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
+        return createErevDetails(date)
+      }
+    } else {
+      if ((normalDayOfFast - 2) == jewishDayOfMonth) {
+        return createErevDetails(date)
+      }
+    }
+
+    return null
+  }
+
+
+  protected open fun checkThursday(
+    date: HebrewDate
+  ): Details? {
+
+    val jewishDayOfMonth = date.hebrewDayOfMonth
+
+    if (canFallOnFriday(date)) {
+      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
+        return createErevDetails(date)
+      }
+    } else {
+      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
+        return createYomDetails(date)
+      }
+    }
+
+    return null
+  }
+
+
+  public companion object {
+
+    protected const val TAANIT: String = "Ta'anit "
+  }
+
+
+  protected open class ErevTaanitDetails internal constructor(
+    date: HebrewDate,
+    name: String
+  ) : Details.Erev(
+    date,
+    name,
+    // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
+    //  Details class)
+    false
   ) {
 
-    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-
-    if ( canFallOnFriday( date ) ) {
-      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-        return createErevDetails( date );
-      }
-    }
-    else {
-      if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
-        return createErevDetails( date );
-      }
-    }
-
-    return null;
-  }
-
-
-  protected Details checkThursday(
-    HebrewDate date
-  ) {
-
-    final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-
-    if ( canFallOnFriday( date ) ) {
-      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-        return createErevDetails( date );
-      }
-    }
-    else {
-      if ( ( normalDayOfFast - 1 ) == jewishDayOfMonth ) {
-        return createYomDetails( date );
-      }
-    }
-
-    return null;
-  }
-
-
-  protected static class ErevTaanitDetails
-    extends Details.Erev {
-
-    ErevTaanitDetails(
-      HebrewDate  date,
-      String      name
-    ) {
-
-      // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
-      //  Details class)
-      super( date, name, false );
-    }
-
-
-    @Override
-    public boolean sayHavdalah() {
+    override fun sayHavdalah(): Boolean {
 
       // We can have a fast day that falls on Sunday, in which case we would say Havdalah on erev of the fast...
-      return isShabbat();
+      return isShabbat()
     }
   }
 
 
-  protected static class TaanitDetails
-    extends Details.Yom {
+  protected open class TaanitDetails internal constructor(
+    date: HebrewDate,
+    name: String
+  ) : Details.Yom(date, name) {
 
-
-    TaanitDetails(
-      HebrewDate  date,
-      String      name
-    ) {
-      super( date, name );
-    }
-
-
-    @Override
-    public boolean lightCandles() {
+    override fun lightCandles(): Boolean {
 
       // At least one fast can fall on Erev Shabbat...
-      return isErevShabbat();
+      return isErevShabbat()
     }
 
 
-    @Override
-    public boolean sayHavdalah() {
+    override fun sayHavdalah(): Boolean {
       // No fast requires havdalah.
-      return false;
+      return false
     }
 
 
-    @Override
-    public boolean isTaanit() {
-      return true;
+    override fun isTaanit(): Boolean {
+      return true
     }
 
 
-    @Override
-    public List<Zmanim.Type> getZmanim() {
+    override fun getZmanim(): List<Zmanim.Type> {
 
-      List<Zmanim.Type> zmanim = new ArrayList<>();
-      zmanim.add( Zmanim.Type.Alot );
-      zmanim.add( Zmanim.Type.Talit );
-      zmanim.add( Zmanim.Type.Hanetz );
-      zmanim.add( Zmanim.Type.SofZmanShema );
-      zmanim.add( Zmanim.Type.SofZmanTefila );
-      zmanim.add( Zmanim.Type.Chatzot );
-      zmanim.add( Zmanim.Type.MinchaGedola );
-      zmanim.add( Zmanim.Type.MinchaKetana );
-      zmanim.add( Zmanim.Type.PlagHaMincha );
+      val zmanim = ArrayList<Zmanim.Type>()
+      zmanim.add(Zmanim.Type.Alot)
+      zmanim.add(Zmanim.Type.Talit)
+      zmanim.add(Zmanim.Type.Hanetz)
+      zmanim.add(Zmanim.Type.SofZmanShema)
+      zmanim.add(Zmanim.Type.SofZmanTefila)
+      zmanim.add(Zmanim.Type.Chatzot)
+      zmanim.add(Zmanim.Type.MinchaGedola)
+      zmanim.add(Zmanim.Type.MinchaKetana)
+      zmanim.add(Zmanim.Type.PlagHaMincha)
 
       // Asara B'Tevet can fall on a Friday...
-      if ( lightCandles() ) {
-        zmanim.add( Zmanim.Type.CandleLighting );
+      if (lightCandles()) {
+        zmanim.add(Zmanim.Type.CandleLighting)
       }
 
-      zmanim.add( Zmanim.Type.Shkia );
-      zmanim.add( Zmanim.Type.LatestMincha );
-      zmanim.add( Zmanim.Type.BeinHashmashot );
-      zmanim.add( Zmanim.Type.FastEnd );
-      zmanim.add( Zmanim.Type.TzaitHacochavim );
-      zmanim.add( Zmanim.Type.NightChatzot );
+      zmanim.add(Zmanim.Type.Shkia)
+      zmanim.add(Zmanim.Type.LatestMincha)
+      zmanim.add(Zmanim.Type.BeinHashmashot)
+      zmanim.add(Zmanim.Type.FastEnd)
+      zmanim.add(Zmanim.Type.TzaitHacochavim)
+      zmanim.add(Zmanim.Type.NightChatzot)
 
-      return Collections.unmodifiableList( zmanim );
+      return Collections.unmodifiableList(zmanim)
     }
   }
 

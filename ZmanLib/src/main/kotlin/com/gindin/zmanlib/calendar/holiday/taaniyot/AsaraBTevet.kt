@@ -2,48 +2,36 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.taaniyot;
+package com.gindin.zmanlib.calendar.holiday.taaniyot
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
+
+private const val ASARA_BTEVET = "Asara B'Tevet"
 
 /**
  *
  */
-public class AsaraBTevet
-  extends Taanit {
+public class AsaraBTevet : Taanit(HebrewMonth.TEVET, 10) {
 
-  private static final String                               ASARA_BTEVET = "Asara B'Tevet";
-
-
-
-  public AsaraBTevet() {
-    super( HebrewMonth.TEVET, 10 );
+  override fun getName(): String {
+    return ASARA_BTEVET
   }
 
 
-  @Override
-  public String getName() {
-    return ASARA_BTEVET;
+  override fun canFallOnFriday(date: HebrewDate): Boolean {
+    return true
   }
 
 
-  @Override
-  protected boolean canFallOnFriday( HebrewDate date ) {
-    return true;
+  override fun createErevDetails(date: HebrewDate): Details {
+    return ErevTaanitDetails(date, ASARA_BTEVET)
   }
 
 
-  @Override
-  protected Details createErevDetails( HebrewDate date ) {
-    return new ErevTaanitDetails( date, ASARA_BTEVET );
-  }
-
-
-  @Override
-  protected Details createYomDetails( HebrewDate date ) {
-    return new TaanitDetails( date, ASARA_BTEVET );
+  override fun createYomDetails(date: HebrewDate): Details {
+    return TaanitDetails(date, ASARA_BTEVET)
   }
 
 }  // End of AsaraBTevet class

@@ -2,109 +2,95 @@
  * Copyright (c) 2021. Jay R. Gindin
  */
 
-package com.gindin.zmanlib.calendar.holiday.taaniyot;
+package com.gindin.zmanlib.calendar.holiday.taaniyot
 
-import com.gindin.zmanlib.calendar.HebrewDate;
-import com.gindin.zmanlib.calendar.HebrewMonth;
-import com.gindin.zmanlib.calendar.holiday.Details;
-
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.HebrewMonth
+import com.gindin.zmanlib.calendar.holiday.Details
 
 /**
  * The Fast is observed on the 13th day of the Hebrew month of Adar. If the date of the Fast of Esther falls on
  *  Shabbat (Saturday), the fast is instead observed on the preceding Thursday.
  *    -- http://en.wikipedia.org/wiki/Fast_of_Esther
  */
-@SuppressWarnings( "MagicNumber" )
-public class TaanitEsther
-  extends Taanit {
+@Suppress("MagicNumber")
+public class TaanitEsther : Taanit(HebrewMonth.ADAR, 13) {
 
-  private static final String                               ESTHER = TAANIT + "Esther";
-
-
-
-  public TaanitEsther() {
-    super( HebrewMonth.ADAR, 13 );
+  override fun getName(): String {
+    return ESTHER
   }
 
 
-  @Override
-  public String getName() {
-    return ESTHER;
+  override fun canFallOnFriday(date: HebrewDate): Boolean {
+    return false
   }
 
 
-  @Override
-  protected boolean canFallOnFriday( HebrewDate date ) {
-    return false;
+  override fun canPushToSunday(): Boolean {
+    return false
   }
 
 
-  @Override
-  protected boolean canPushToSunday() {
-    return false;
-  }
-
-
-  @Override
-  protected int getAdjustedMonthOfFast( HebrewDate date ) {
-    if ( date.isHebrewLeapYear() ) {
-      return HebrewMonth.ADAR_II;
+  override fun getAdjustedMonthOfFast(date: HebrewDate): Int {
+    if (date.isHebrewLeapYear()) {
+      return HebrewMonth.ADAR_II
     }
 
-    return HebrewMonth.ADAR;
+    return HebrewMonth.ADAR
   }
 
 
-  @Override
-  protected Details checkWednesday(
-    HebrewDate date
-  ) {
+  override fun checkWednesday(
+    date: HebrewDate
+  ): Details? {
 
-    Details details = super.checkWednesday( date );
+    val details = super.checkWednesday(date)
 
-    if ( null == details ) {
+    if (null == details) {
 
-      final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-      if ( ( normalDayOfFast - 3 ) == jewishDayOfMonth ) {
+      val jewishDayOfMonth = date.hebrewDayOfMonth
+      if ((normalDayOfFast - 3) == jewishDayOfMonth) {
         // Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-        return createErevDetails( date );
+        return createErevDetails(date)
       }
 
     }
 
-    return null;
+    return null
   }
 
 
-  @Override
-  protected Details checkThursday(
-    HebrewDate date
-  ) {
+  override fun checkThursday(
+    date: HebrewDate
+  ): Details? {
 
-    Details details = super.checkThursday( date );
-    if ( null == details ) {
+    val details = super.checkThursday(date)
+    if (null == details) {
 
-      final int jewishDayOfMonth = date.getHebrewDayOfMonth();
-      if ( ( normalDayOfFast - 2 ) == jewishDayOfMonth ) {
+      val jewishDayOfMonth = date.hebrewDayOfMonth
+      if ((normalDayOfFast - 2) == jewishDayOfMonth) {
         // Only the Ta'anit Esther will fall into this case, of getting pushed back from Shabbat to Thursday...
-        return createYomDetails( date );
+        return createYomDetails(date)
       }
     }
 
-    return null;
+    return null
   }
 
 
-  @Override
-  protected Details createErevDetails( HebrewDate date ) {
-    return new ErevTaanitDetails( date, ESTHER );
+  override fun createErevDetails(date: HebrewDate): Details {
+    return ErevTaanitDetails(date, ESTHER)
   }
 
 
-  @Override
-  protected Details createYomDetails( HebrewDate date ) {
-    return new TaanitDetails( date, ESTHER );
+  override fun createYomDetails(date: HebrewDate): Details {
+    return TaanitDetails(date, ESTHER)
   }
 
+
+  private companion object {
+
+    private const val ESTHER: String = TAANIT + "Esther"
+  }
 
 }  // End of TaanitEsther class
