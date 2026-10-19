@@ -101,7 +101,7 @@ public class WindowInsetsLayoutTest {
 
 
   @Test
-  public void personalPreferencesFirstRowStartsBelowTheActionBar() throws Exception {
+  public void personalPreferencesListStartsBelowTheActionBar() throws Exception {
 
     try ( ActivityScenario<PersonalPreferences> scenario = ActivityScenario.launch( PersonalPreferences.class ) ) {
 
@@ -127,11 +127,13 @@ public class WindowInsetsLayoutTest {
             + statusBarBottom + ")",
           ViewWaits.topOnScreen( actionBar ) >= statusBarBottom );
 
+        // The list's own top edge is what bounds the visible rows. The first row may start above it: on a small screen
+        //  the list opens scrolled so a focused text field stays in view, which clips the row at the list's edge
+        //  instead of hiding it under the ActionBar.
         RecyclerView rows = ViewWaits.firstRecyclerView( activity.findViewById( android.R.id.content ) );
-        View firstRow = rows.getChildAt( 0 );
-        assertTrue( "First preference row (top " + ViewWaits.topOnScreen( firstRow ) + ") starts under the ActionBar (bottom "
+        assertTrue( "Preference list (top " + ViewWaits.topOnScreen( rows ) + ") starts under the ActionBar (bottom "
             + actionBarBottom + ")",
-          ViewWaits.topOnScreen( firstRow ) >= actionBarBottom );
+          ViewWaits.topOnScreen( rows ) >= actionBarBottom );
 
         return null;
       } );
