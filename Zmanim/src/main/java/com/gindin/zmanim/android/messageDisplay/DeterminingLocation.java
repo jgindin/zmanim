@@ -58,7 +58,14 @@ public class DeterminingLocation
           // If the timer is null then we got dismissed.
           if ( delayTimer != null ) {
             delayTimer.cancel();
-            activity.runOnUiThread( DeterminingLocation.super::show );
+            activity.runOnUiThread( () -> {
+
+              // The activity can go away during the delay, and showing a dialog on it throws a BadTokenException.
+              // Dismissal is checked again here because it can happen after the timer fires but before this runs.
+              if ( delayTimer != null && !activity.isFinishing() && !activity.isDestroyed() ) {
+                DeterminingLocation.super.show();
+              }
+            } );
           }
         }
       },
