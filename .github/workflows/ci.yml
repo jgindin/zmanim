@@ -36,6 +36,8 @@ jobs:
   #  new. Drop `continue-on-error` once it has proven stable.
   emulator-smoke:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     continue-on-error: true
     timeout-minutes: 45
     strategy:
