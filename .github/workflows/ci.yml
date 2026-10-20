@@ -15,7 +15,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       # Also validates the Gradle wrapper's checksum, and caches Gradle state between runs.
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
       - name: Upload test and Roborazzi reports on failure
@@ -56,7 +56,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Run instrumented tests on an emulator
         uses: reactivecircus/android-emulator-runner@v2.38.0
         with:
