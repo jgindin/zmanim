@@ -64,20 +64,8 @@ android {
 
   buildTypes {
     getByName("release") {
-
       isMinifyEnabled = false
-
-      /*
-       * Library-specific proguard files.
-       * See https://github.com/krschultz/android-proguard-snippets.
-       */
-      proguardFile("proguard-google-play-services.pro")
-      proguardFile("proguard-support-design.pro")
-      proguardFile("proguard-support-v7-appcompat.pro")
-      proguardFile("proguard-project.pro")
-
-      /* Reminder: Use the default proguard from the SDK, and then add in our custom proguard rules. */
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), file("proguard-rules.pro"))
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
 
     getByName("debug") {
