@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AboutLibraries looks its entries up by name at runtime (Resources.getIdentifier), which the resource shrinker
+     cannot see. Keeping these strings explicitly means About works with either shrinker mode. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+  tools:keep="@string/library_*,@string/define_*,@string/license_*"
+  tools:shrinkMode="safe" />
