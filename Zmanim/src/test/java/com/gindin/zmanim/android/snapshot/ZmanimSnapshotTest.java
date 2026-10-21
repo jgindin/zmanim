@@ -12,6 +12,7 @@ import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
+import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -74,6 +76,16 @@ public class ZmanimSnapshotTest {
   private static final int     FIXED_YEAR = 2026;
   private static final int     FIXED_MONTH = Calendar.SEPTEMBER;
   private static final int     FIXED_DAY_OF_MONTH = 7;
+
+
+  /**
+   * Launching the main activity over a fresh install runs the app's upgrade steps, which leave this process-wide flag
+   *  set. Clear it so that tests running later in the same JVM that start the converter see a loaded cache.
+   */
+  @After
+  public void clearProcessWideUpgradeFlag() {
+    LocationToAddressConverter.wipeCacheOnStart = false;
+  }
 
 
   @Test

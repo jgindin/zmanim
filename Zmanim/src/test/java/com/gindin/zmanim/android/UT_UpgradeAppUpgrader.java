@@ -42,8 +42,6 @@ public class UT_UpgradeAppUpgrader {
 
   private Map<String, Map<String, ?>>                       before;
 
-  private boolean                                           wipeCacheOnStartBefore;
-
 
   @Before
   public void installPrefsWrittenByReleasedApp() throws IOException {
@@ -53,7 +51,9 @@ public class UT_UpgradeAppUpgrader {
 
     activity = Robolectric.buildActivity( ZmanimActivity.class ).get();
 
-    wipeCacheOnStartBefore = LocationToAddressConverter.wipeCacheOnStart;
+    // The flag is process-wide, so an earlier test in this JVM that ran the upgrade steps over a fresh install (as
+    //  launching the main activity does) leaves it set. Start from the state of a process that has not upgraded.
+    LocationToAddressConverter.wipeCacheOnStart = false;
 
     before = new HashMap<>();
     for ( ZmanimPrefs prefs : new ZmanimPrefs[] { ZmanimPrefs.PERSONAL, ZmanimPrefs.ZMANIM_SELECTION, ZmanimPrefs.LOCATION_MANAGEMENT } ) {
@@ -64,7 +64,8 @@ public class UT_UpgradeAppUpgrader {
 
   @After
   public void restoreProcessWideState() {
-    LocationToAddressConverter.wipeCacheOnStart = wipeCacheOnStartBefore;
+    // The upgrade steps set the flag; later tests in this JVM expect the cache to be loaded, not wiped.
+    LocationToAddressConverter.wipeCacheOnStart = false;
   }
 
 

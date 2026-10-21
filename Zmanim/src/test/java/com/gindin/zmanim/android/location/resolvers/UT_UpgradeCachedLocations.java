@@ -41,6 +41,11 @@ public class UT_UpgradeCachedLocations {
     Context context = ApplicationProvider.getApplicationContext();
     UpgradeFixtures.install( context );
 
+    // The flag is process-wide and is left set by any earlier test in this JVM that ran the app's upgrade steps over
+    //  a fresh install (launching the main activity does); starting the service with it set would wipe the cache
+    //  instead of loading the fixture.
+    LocationToAddressConverter.wipeCacheOnStart = false;
+
     // Starting the service is what loads the cache, through its own file access.
     LocationToAddressConverter converter = Robolectric.setupService( LocationToAddressConverter.class );
 
