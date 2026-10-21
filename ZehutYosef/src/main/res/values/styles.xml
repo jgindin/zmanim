@@ -14,6 +14,15 @@
   <style name="EliPurple.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+    <item name="toolbarStyle">@style/EliPurple.NoActionBar.Toolbar</item>
+    <!-- The Toolbar is colored with colorPrimary, which is dark in both flavors, but a Light theme would give its
+         navigation icon a dark tint. -->
+    <item name="colorControlNormal">@android:color/white</item>
+  </style>
+
+  <!-- Without this the Toolbar title takes the Light theme's dark text color and is unreadable on colorPrimary. -->
+  <style name="EliPurple.NoActionBar.Toolbar" parent="Widget.AppCompat.Toolbar">
+    <item name="titleTextColor">@android:color/white</item>
   </style>
 
 </resources>
