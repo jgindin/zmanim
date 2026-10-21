@@ -43,7 +43,7 @@ class About {
       .withAboutAppName( context.getString( R.string.app_name ) )
       .withAboutDescription( description )
       .withAboutVersionShownCode( false )
-      .withActivityTheme( R.style.EliPurple )
+      .withActivityTheme( R.style.EliPurple_NoActionBar )
       .withActivityTitle( context.getString( R.string.action_about_title ) )
       .withLibraryComparator( libraryComparator );
 
