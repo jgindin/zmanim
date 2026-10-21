@@ -9,4 +9,11 @@
     <!-- Default theme properties for Zehut Yosef; overridden in barMitzvah flavor -->
   </style>
 
+  <!-- AboutLibraries' LibsActivity installs its own Toolbar as the action bar, which fails if the theme also supplies a
+       window action bar. Derives from whichever EliPurple the flavor resolves, so the colors stay the same. -->
+  <style name="EliPurple.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
 </resources>
