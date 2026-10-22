@@ -381,6 +381,11 @@ public class ZmanimActivity
    */
   private void requestNotificationPermissionIfNeeded() {
 
+    // A location can arrive after the activity started going away; showing a dialog then throws BadTokenException.
+    if ( isFinishing() || isDestroyed() ) {
+      return;
+    }
+
     if ( locationPermissionFlowActive ) {
       return;
     }
