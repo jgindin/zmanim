@@ -35,12 +35,13 @@ public class LaunchSmokeTest {
   static final String                                       SAVED_LOCATION_NAME = "Albany, New York";
 
   @Rule
-  public final GrantPermissionRule                          permissions = AppState.grantRuntimePermissions();
+  public final GrantPermissionRule                          permissions = AppState.grantLocationPermissions();
 
 
   @Before
   public void saveStaticLocation() throws Exception {
     AppState.installStaticLocation();
+    AppState.markNotificationQuestionAnswered();
   }
 
 

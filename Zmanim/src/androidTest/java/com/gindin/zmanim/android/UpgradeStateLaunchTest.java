@@ -44,12 +44,13 @@ public class UpgradeStateLaunchTest {
   private static final int                                  SAVED_BY_VERSION = 409;
 
   @Rule
-  public final GrantPermissionRule                          permissions = AppState.grantRuntimePermissions();
+  public final GrantPermissionRule                          permissions = AppState.grantLocationPermissions();
 
 
   @Before
   public void installReleasedState() throws Exception {
     AppState.installUpgradeState();
+    AppState.markNotificationQuestionAnswered();
   }
 
 
