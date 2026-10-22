@@ -5,9 +5,11 @@
 package com.gindin.zmanim.android.prefs;
 
 import com.gindin.util.EdgeToEdgeUtil;
+import com.gindin.zmanim.android.NotificationPermission;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.service.DisplayNotificationService;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,7 +33,10 @@ public class PersonalPreferences
     SHOW_NOTIFICATIONS,
     ENABLE_NOTIFICATIONS_ON_SHABBAT,
     USE_ALARM_CLOCK,
-    NOTIFICATION_TONE
+    NOTIFICATION_TONE,
+
+    /** Not a stored value: a row that only appears while the system blocks the notifications the user wants. */
+    NOTIFICATIONS_BLOCKED
   }
 
 
@@ -76,6 +81,19 @@ public class PersonalPreferences
 
         final Preference preference = findPreference( Prefs.NOTIFICATION_TONE.name() );
         preference.setIntent( intent );
+
+        final Preference blocked = findPreference( Prefs.NOTIFICATIONS_BLOCKED.name() );
+        blocked.setIntent( NotificationPermission.appNotificationSettings( getContext() ) );
+
+        findPreference( Prefs.SHOW_NOTIFICATIONS.name() ).setOnPreferenceChangeListener( ( pref, newValue ) -> {
+
+          final boolean showNotifications = Boolean.TRUE.equals( newValue );
+          updateBlockedNotice( showNotifications );
+          if ( showNotifications && NotificationPermission.isBlocked( getContext() ) ) {
+            explainBlockedNotifications();
+          }
+          return true;
+        } );
       }
       else {
 
@@ -98,6 +116,40 @@ public class PersonalPreferences
         }
       }
 
+    }
+
+
+    @Override
+    public void onResume() {
+      super.onResume();
+
+      // Coming back from the system settings lands here, so the notice reflects whatever the user just chose there.
+      updateBlockedNotice(
+        getPreferenceManager().getSharedPreferences().getBoolean( Prefs.SHOW_NOTIFICATIONS.name(), true )
+      );
+    }
+
+
+    /** Shows the row that leads to the system settings only while the user wants notifications that are blocked. */
+    private void updateBlockedNotice( boolean showNotifications ) {
+
+      final Preference blocked = findPreference( Prefs.NOTIFICATIONS_BLOCKED.name() );
+      if ( blocked != null ) {
+        blocked.setVisible( showNotifications && NotificationPermission.isBlocked( getContext() ) );
+      }
+    }
+
+
+    private void explainBlockedNotifications() {
+
+      new AlertDialog.Builder( getContext() )
+        .setTitle( R.string.notifications_blocked_pref_title )
+        .setMessage( R.string.notifications_blocked_message )
+        .setPositiveButton( R.string.open_settings,
+          ( dialog, which ) -> startActivity( NotificationPermission.appNotificationSettings( getContext() ) )
+        )
+        .setNegativeButton( R.string.no_thanks, null )
+        .show();
     }
 
   }
