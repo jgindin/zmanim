@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:HebrewCalendar.kt:HebrewCalendar$(moladParts &gt;= 19440) // Dechiya of Molad Zaken - molad is &gt;= midday (18 hours * 1080 chalakim) || (((moladDay % 7) == 2) // start Dechiya of GaTRaD - Ga = is a Tuesday &amp;&amp; (moladParts &gt;= 9924) // TRaD = 9 hours, 204 parts or later (9 * 1080 + 204) &amp;&amp; !isHebrewLeapYear(year)) // of a non-leap year - end Dechiya of GaTRaD || (((moladDay % 7) == 1) // start Dechiya of BeTuTaKFoT - Be = is on a Monday &amp;&amp; (moladParts &gt;= 16789) // TRaD = 15 hours, 589 parts or later (15 * 1080 + 589) &amp;&amp; (isHebrewLeapYear(year - 1)))</ID>
+    <ID>ComplexCondition:HebrewCalendar.kt:HebrewCalendar$(month == HebrewMonth.IYAR) || (month == HebrewMonth.TAMMUZ) || (month == HebrewMonth.ELUL) || ((month == HebrewMonth.CHESHVAN) &amp;&amp; !(isCheshvanLong(year))) || ((month == HebrewMonth.KISLEV) &amp;&amp; isKislevShort(year)) || (month == HebrewMonth.TEVET) || ((month == HebrewMonth.ADAR) &amp;&amp; !(isHebrewLeapYear(year))) || (month == HebrewMonth.ADAR_II)</ID>
+    <ID>ComplexCondition:HebrewCalendar.kt:HebrewCalendar$(year &lt; EARLIEST_VALID_HEBREW_YEAR) || (year == EARLIEST_VALID_HEBREW_YEAR &amp;&amp; (month &gt;= HebrewMonth.TISHREI &amp;&amp; month &lt; HebrewMonth.TEVET)) || (year == EARLIEST_VALID_HEBREW_YEAR &amp;&amp; month == HebrewMonth.TEVET &amp;&amp; dayOfMonth &lt; 18)</ID>
+    <ID>ComplexCondition:Purim.kt:Purim$(date.isHebrewLeapYear() &amp;&amp; (HebrewMonth.ADAR_II == date.hebrewMonth)) || (!date.isHebrewLeapYear() &amp;&amp; (HebrewMonth.ADAR == date.hebrewMonth))</ID>
+    <ID>ComplexCondition:ShushanPurim.kt:ShushanPurim$(date.isHebrewLeapYear() &amp;&amp; (HebrewMonth.ADAR_II == date.hebrewMonth)) || (!date.isHebrewLeapYear() &amp;&amp; (HebrewMonth.ADAR == date.hebrewMonth))</ID>
+    <ID>CyclomaticComplexMethod:HebrewCalendar.kt:HebrewCalendar$private fun validateJewishDate</ID>
+    <ID>CyclomaticComplexMethod:LatitudeLongitudeParser.kt:LatitudeLongitudeParser.Companion$private fun extractDirection: Pair&lt;Direction, String&gt;</ID>
+    <ID>CyclomaticComplexMethod:RoshChodesh.kt:RoshChodesh$@Suppress("MagicNumber", "FeatureEnvy") override fun getDetailsFor: Details?</ID>
+    <ID>CyclomaticComplexMethod:SecularDateFormatter.kt:SecularDateFormatter.DefaultFormatter$override fun format: String</ID>
+    <ID>CyclomaticComplexMethod:Taanit.kt:Taanit$@Suppress("FeatureEnvy") final override fun getDetailsFor: Details?</ID>
+    <ID>CyclomaticComplexMethod:YomHaAtzmaut.kt:YomHaAtzmaut$override fun getDetailsFor: Details?</ID>
+    <ID>CyclomaticComplexMethod:YomHaShoah.kt:YomHaShoah$override fun getDetailsFor: Details?</ID>
+    <ID>CyclomaticComplexMethod:YomHaZikaron.kt:YomHaZikaron$override fun getDetailsFor: Details?</ID>
+    <ID>CyclomaticComplexMethod:ZmanCallback.kt:ZmanCallback$public fun actuallyNotifyReasoning: String</ID>
+    <ID>EmptyFunctionBlock:ZmanCallback.kt:ZmanCallback.Adapter${ }</ID>
+    <ID>FunctionOnlyReturningConstant:ZmanimCalculator.kt:ZmanimCalculator$public fun getNightChatzos6HoursAfterTzait: Date?</ID>
+    <ID>LongMethod:AlotHashachar.kt:AlotHashachar$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:CandleLighting.kt:CandleLighting$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:MinchaGedola.kt:MinchaGedola$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:MinchaKetana.kt:MinchaKetana$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:PlagHaMincha.kt:PlagHaMincha$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:RoshChodesh.kt:RoshChodesh$@Suppress("MagicNumber", "FeatureEnvy") override fun getDetailsFor: Details?</ID>
+    <ID>LongMethod:SofZmanAchilatChametz.kt:SofZmanAchilatChametz$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:SofZmanShema.kt:SofZmanShema$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:SofZmanTefila.kt:SofZmanTefila$override fun buildZmanimList: List&lt;Zman&gt;</ID>
+    <ID>LongMethod:TzaitHacochavim.kt:TzaitHacochavim.Companion$@JvmStatic protected fun buildStandardTzaitZmanim: MutableList&lt;Zman&gt;</ID>
+    <ID>MagicNumber:AsaraBTevet.kt:AsaraBTevet$10</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$15</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$20</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$21</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$22</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$30</ID>
+    <ID>MagicNumber:CandleLighting.kt:CandleLighting.&lt;no name provided&gt;$40</ID>
+    <ID>MagicNumber:FastEnds.kt:FastEnds.&lt;no name provided&gt;$30</ID>
+    <ID>MagicNumber:HebrewDate.kt:HebrewDate$100</ID>
+    <ID>MagicNumber:HebrewDate.kt:HebrewDate$4</ID>
+    <ID>MagicNumber:HebrewDate.kt:HebrewDate$400</ID>
+    <ID>MagicNumber:HebrewDate.kt:HebrewDate$6</ID>
+    <ID>MagicNumber:NotifiedZmanim.kt:NotifiedZmanim.Manager$3</ID>
+    <ID>MagicNumber:Sivan.kt:Sivan$12</ID>
+    <ID>MagicNumber:TishaBAv.kt:TishaBAv$9</ID>
+    <ID>MagicNumber:Tishri.kt:Tishri$11</ID>
+    <ID>MagicNumber:TzaitHacochavim.kt:TzaitHacochavim.Companion.&lt;no name provided&gt;$3.5</ID>
+    <ID>MagicNumber:TzaitHacochavim.kt:TzaitHacochavim.Companion.&lt;no name provided&gt;$6.5</ID>
+    <ID>MagicNumber:TzomGedaliah.kt:TzomGedaliah$3</ID>
+    <ID>MagicNumber:YomHaAtzmaut.kt:YomHaAtzmaut$3</ID>
+    <ID>MagicNumber:YomHaAtzmaut.kt:YomHaAtzmaut$4</ID>
+    <ID>MagicNumber:YomHaAtzmaut.kt:YomHaAtzmaut$5</ID>
+    <ID>MagicNumber:YomHaAtzmaut.kt:YomHaAtzmaut$6</ID>
+    <ID>MagicNumber:YomHaZikaron.kt:YomHaZikaron$3</ID>
+    <ID>MagicNumber:YomHaZikaron.kt:YomHaZikaron$4</ID>
+    <ID>MagicNumber:YomHaZikaron.kt:YomHaZikaron$5</ID>
+    <ID>MagicNumber:YomKippur.kt:YomKippur$10</ID>
+    <ID>MagicNumber:YomKippur.kt:YomKippur$9</ID>
+    <ID>MagicNumber:ZmanimCalculator.kt:ZmanimCalculator$16.01</ID>
+    <ID>MagicNumber:ZmanimCalculator.kt:ZmanimCalculator$3.8</ID>
+    <ID>MagicNumber:ZmanimLocation.kt:ZmanimLocation$1000</ID>
+    <ID>MagicNumber:ZmanimLocation.kt:ZmanimLocation$5</ID>
+    <ID>ProtectedMemberInFinalClass:Pesach.kt:Pesach$ErevPesachDetails : ErevYomTov</ID>
+    <ID>ProtectedMemberInFinalClass:Pesach.kt:Pesach$PesachCholHaMoedDetails : CholHaMoedDetails</ID>
+    <ID>ProtectedMemberInFinalClass:Pesach.kt:Pesach$PesachYomTovDetails : YomTovDetails</ID>
+    <ID>ReturnCount:Chanukah.kt:Chanukah$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:HebrewCalendar.kt:HebrewCalendar$@JvmStatic public fun getYearType: HebrewYearType</ID>
+    <ID>ReturnCount:HebrewDate.kt:HebrewDate$override fun compareTo: Int</ID>
+    <ID>ReturnCount:LagBOmer.kt:LagBOmer$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:LatitudeLongitudeParser.kt:LatitudeLongitudeParser.Companion$private fun extractDirection: Pair&lt;Direction, String&gt;</ID>
+    <ID>ReturnCount:Omer.kt:Omer$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:Pesach.kt:Pesach$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:PesachSheni.kt:PesachSheni$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:Purim.kt:Purim$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:PurimKatan.kt:PurimKatan$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:RoshChodesh.kt:RoshChodesh$@Suppress("MagicNumber", "FeatureEnvy") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:RoshHashana.kt:RoshHashana$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:SecularDateFormatter.kt:SecularDateFormatter.Companion$@JvmStatic public fun getInstance: SecularDateFormatter</ID>
+    <ID>ReturnCount:Shavuot.kt:Shavuot$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:Sukkot.kt:Sukkot$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:Taanit.kt:Taanit$@Suppress("FeatureEnvy") final override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:Taanit.kt:Taanit$protected open fun checkThursday: Details?</ID>
+    <ID>ReturnCount:Taanit.kt:Taanit$protected open fun checkWednesday: Details?</ID>
+    <ID>ReturnCount:TuBAv.kt:TuBAv$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:TuBShvat.kt:TuBShvat$@Suppress("MagicNumber") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:YomHaAtzmaut.kt:YomHaAtzmaut$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:YomHaShoah.kt:YomHaShoah$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:YomHaZikaron.kt:YomHaZikaron$override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:YomKippur.kt:YomKippur$@Suppress("FeatureEnvy") override fun getDetailsFor: Details?</ID>
+    <ID>ReturnCount:ZmanCallback.kt:ZmanCallback$public fun actuallyNotifyReasoning: String</ID>
+    <ID>ReturnCount:ZmanCallback.kt:ZmanCallback$public fun shouldActuallyNotify: Boolean</ID>
+    <ID>SwallowedException:NotifiedZmanim.kt:NotifiedZmanim.Manager$e1: Throwable</ID>
+    <ID>SwallowedException:NotifiedZmanim.kt:NotifiedZmanim.Manager$e: Exception</ID>
+    <ID>SwallowedException:NotifiedZmanim.kt:NotifiedZmanim.Manager$e: Throwable</ID>
+    <ID>ThrowsCount:HebrewCalendar.kt:HebrewCalendar$private fun validateJewishDate</ID>
+    <ID>TooGenericExceptionCaught:NotifiedZmanim.kt:NotifiedZmanim.Manager$e1: Throwable</ID>
+    <ID>TooGenericExceptionCaught:NotifiedZmanim.kt:NotifiedZmanim.Manager$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:NotifiedZmanim.kt:NotifiedZmanim.Manager$e: Throwable</ID>
+    <ID>TooManyFunctions:Details.kt:Details</ID>
+    <ID>TooManyFunctions:Details.kt:Details$CompositeDetails : Details</ID>
+    <ID>TooManyFunctions:HebrewCalendar.kt:HebrewCalendar</ID>
+    <ID>TooManyFunctions:HebrewDate.kt:HebrewDate : Comparable</ID>
+    <ID>TooManyFunctions:LatitudeLongitudeParser.kt:LatitudeLongitudeParser$Companion</ID>
+    <ID>TooManyFunctions:ZmanCallback.kt:ZmanCallback</ID>
+    <ID>TooManyFunctions:ZmanimLocation.kt:ZmanimLocation$Builder</ID>
+  </CurrentIssues>
+</SmellBaseline>
