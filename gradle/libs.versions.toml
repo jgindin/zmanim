@@ -15,7 +15,6 @@ kotlinxSerializationJson = "1.11.0"
 kotlinxDatetime = "0.8.0"
 
 androidxConstraintlayout = "1.1.3"
-androidxLegacySupportV4 = "1.0.0"
 androidxAppcompat = "1.6.1"
 androidxPreference = "1.2.1"
 googleMaterial = "1.0.0"
@@ -53,7 +52,6 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
 
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintlayout" }
-androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "androidxLegacySupportV4" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
@@ -94,7 +92,7 @@ instrumented = ["androidx-test-core", "androidx-test-ext-junit", "androidx-test-
 #  implementation with no per-dependency config, and (unlike the Roborazzi bundle above) this one
 #  is module-specific rather than shared with :ZehutYosef, so it stays out of the convention
 #  plugin and is applied directly in Zmanim/build.gradle.kts instead.
-zmanim-ui = ["androidx-constraintlayout", "androidx-legacy-support-v4", "androidx-appcompat", "androidx-preference", "google-material", "play-services-location"]
+zmanim-ui = ["androidx-constraintlayout", "androidx-appcompat", "androidx-preference", "google-material", "play-services-location"]
 
 [plugins]
 # There is deliberately no org.jetbrains.kotlin.android alias: AGP's built-in Kotlin support
