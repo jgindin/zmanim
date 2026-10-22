@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/test/kotlin/com/gindin/zmanim/android/location/resolvers/UT_GeocodingResponseParser.kt">
+        <error line="17" column="7" source="standard:class-naming" />
+    </file>
+</baseline>
