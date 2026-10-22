@@ -11,6 +11,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
   id("org.jlleitschuh.gradle.ktlint")
+  id("dev.detekt")
 }
 
 // Version-catalog accessors are not generated inside precompiled script plugins - see
@@ -25,4 +26,17 @@ configure<KtlintExtension> {
   // Findings that exist in the code as it was converted are recorded in a baseline next to the
   //  module, so the check starts clean and fails only on findings introduced afterwards.
   baseline.set(layout.projectDirectory.file("config/ktlint/baseline.xml"))
+}
+
+detekt {
+  // Only overrides of the defaults are kept, so the file lists exactly where this repo departs
+  //  from detekt's own opinion, each with its reason.
+  config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+  buildUponDefaultConfig = true
+
+  // detekt's default source is src/main/kotlin and src/test/kotlin, which silently skips a
+  //  multiplatform module's src/commonMain, src/jvmTest and the like. Taking every Kotlin
+  //  directory under src/ gives all modules the same coverage, whatever their layout.
+  source.setFrom(fileTree("src") { include("**/kotlin/**/*.kt") })
+  baseline.set(layout.projectDirectory.file("config/detekt/baseline.xml"))
 }
