@@ -16,6 +16,11 @@ jobs:
           java-version: '21'
       # Also validates the Gradle wrapper's checksum, and caches Gradle state between runs.
       - uses: gradle/actions/setup-gradle@v6
+      # Before the tests so that a style or static-analysis finding fails the job in seconds.
+      #  Findings already in the code are recorded in each module's config/ktlint and
+      #  config/detekt baseline.xml; only new ones fail.
+      - name: Check Kotlin style and static analysis
+        run: ./gradlew ktlintCheck detekt
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
       - name: Upload test and Roborazzi reports on failure
