@@ -151,4 +151,13 @@
 
   <string name="why_we_need_location_title">Access Your Location</string>
   <string name="why_we_need_location_background_title">Access Your Location in the Background</string>
+
+  <string name="notification_permission_title">Allow Notifications</string>
+  <string name="notification_permission_explanation">Zmanim can remind you shortly before the zmanim you choose, such as candle lighting. To do that, Android needs your permission to show notifications.\n\nYou can change which zmanim alert you, or turn the alerts off, in Preferences.</string>
+  <string name="turn_on_notifications">Turn on</string>
+  <string name="notification_permission_denied">Zmanim won\'t show notifications. You can allow them later from Preferences.</string>
+  <string name="notifications_blocked_pref_title">Notifications are blocked</string>
+  <string name="notifications_blocked_pref_summary">Android is not showing notifications from Zmanim. Tap to allow them in the system settings.</string>
+  <string name="notifications_blocked_message">Android is blocking notifications from Zmanim, so no alerts will appear. Open the system settings to allow them?</string>
+  <string name="open_settings">Open Settings</string>
 </resources>

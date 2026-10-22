@@ -7,6 +7,7 @@
 <PreferenceScreen
   xmlns:tools="http://schemas.android.com/tools"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orderingFromXml="true"
   android:title="@string/personal_prefs"
 >
@@ -38,6 +39,18 @@
       android:summary="@string/show_notifications_pref_summary"
       android:defaultValue="true"
       android:disableDependentsState="false"
+      />
+
+    <!--
+      Only shown while the user wants notifications but the system is blocking them (see PersonalPreferences). Tapping
+      it opens the system settings for this app's notifications.
+    -->
+    <androidx.preference.Preference
+      android:key="NOTIFICATIONS_BLOCKED"
+      android:title="@string/notifications_blocked_pref_title"
+      android:summary="@string/notifications_blocked_pref_summary"
+      android:persistent="false"
+      app:isPreferenceVisible="false"
       />
 
     <androidx.preference.Preference

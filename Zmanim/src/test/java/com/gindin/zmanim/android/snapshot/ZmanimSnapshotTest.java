@@ -8,6 +8,7 @@ import com.github.takahirom.roborazzi.RoborazziContextKt;
 import com.github.takahirom.roborazzi.RoborazziKt;
 import com.github.takahirom.roborazzi.RoborazziOptions;
 
+import com.gindin.zmanim.android.NotificationPermission;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
@@ -19,14 +20,17 @@ import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.content.Context;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -76,6 +80,17 @@ public class ZmanimSnapshotTest {
   private static final int     FIXED_YEAR = 2026;
   private static final int     FIXED_MONTH = Calendar.SEPTEMBER;
   private static final int     FIXED_DAY_OF_MONTH = 7;
+
+
+  /**
+   * Robolectric starts from a fresh install without the notification permission, so the main screen would explain why
+   *  it wants that permission as soon as a location arrives. The snapshots are of the screens themselves, so record
+   *  that the question was already answered.
+   */
+  @Before
+  public void answerTheNotificationPermissionQuestion() {
+    NotificationPermission.markAsked( ApplicationProvider.<Context>getApplicationContext() );
+  }
 
 
   /**

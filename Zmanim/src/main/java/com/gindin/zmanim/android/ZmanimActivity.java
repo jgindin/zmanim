@@ -44,6 +44,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -77,6 +78,12 @@ public class ZmanimActivity
 
   private static final boolean                              NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
 
+  /**
+   * Request code for the notification permission. The location permission requests use the ordinals of
+   *  {@link LocationError.Code}, so this sits well clear of them.
+   */
+  static final int                                          NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
+
   private final List<Presenter<?>>                          loadedPresenters = new ArrayList<>();
 
   /** What date is currently being viewed? */
@@ -108,6 +115,15 @@ public class ZmanimActivity
   private ZmanimLocation                                    lastKnownLocation;
 
   private Snackbar                                          snackbar;
+
+  /**
+   * True while the user is being asked about location access (an explanation or the system prompt is on screen).
+   *  The notification permission waits until this is over, so that the user is never shown two requests at once.
+   */
+  private boolean                                           locationPermissionFlowActive;
+
+  /** Explains why the app wants to post notifications, before the system asks for the permission. */
+  private AlertDialog                                       notificationPermissionDialog;
 
 
   //  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -267,6 +283,9 @@ public class ZmanimActivity
     eventBus.removeHandler( rawLocationAcquiredHandler );
 
     determiningLocationDialog.dismiss();
+    if ( notificationPermissionDialog != null ) {
+      notificationPermissionDialog.dismiss();
+    }
 
     for ( Presenter<?> presenter : loadedPresenters ) {
       presenter.destroy();
@@ -348,6 +367,50 @@ public class ZmanimActivity
     if ( null != error ) {
       handleLocationError( error );
     }
+    else {
+      // A location arrived without any error, so nothing about location is waiting on the user.
+      requestNotificationPermissionIfNeeded();
+    }
+  }
+
+
+  /**
+   * On Android 13 and later, explains why the app wants to post notifications and then asks for the permission, once.
+   *  Nothing happens when the permission is not needed, is already granted, the user turned notifications off, or the
+   *  user was asked before.
+   */
+  private void requestNotificationPermissionIfNeeded() {
+
+    if ( locationPermissionFlowActive ) {
+      return;
+    }
+
+    if ( ( notificationPermissionDialog != null ) && notificationPermissionDialog.isShowing() ) {
+      return;
+    }
+
+    if ( !NotificationPermission.shouldAsk( this ) ) {
+      return;
+    }
+
+    // Not cancelable, so that the only ways out are the two answers, and both are remembered.
+    notificationPermissionDialog = new AlertDialog.Builder( this )
+      .setTitle( R.string.notification_permission_title )
+      .setMessage( R.string.notification_permission_explanation )
+      .setCancelable( false )
+      .setPositiveButton( R.string.turn_on_notifications, ( dialog, which ) -> {
+        NotificationPermission.markAsked( ZmanimActivity.this );
+        ActivityCompat.requestPermissions( ZmanimActivity.this,
+          new String[] { Manifest.permission.POST_NOTIFICATIONS },
+          NOTIFICATION_PERMISSION_REQUEST_CODE
+        );
+      } )
+      .setNegativeButton( R.string.no_thanks,
+        ( dialog, which ) -> NotificationPermission.markAsked( ZmanimActivity.this )
+      )
+      .create();
+
+    notificationPermissionDialog.show();
   }
 
 
@@ -380,6 +443,7 @@ public class ZmanimActivity
       case NO_PERMISSIONS:
         // See onRequestPermissionsResult()
 
+        locationPermissionFlowActive = true;
         displayer = new ExplainWhyWeNeedLocationDialog( this,
           ( dialog, which ) -> {
             if ( which == DialogInterface.BUTTON_POSITIVE ) {
@@ -389,6 +453,7 @@ public class ZmanimActivity
               );
             }
             else {
+              locationPermissionFlowActive = false;
               eventBus.fire( new EditLocationPrefsEvent() );
             }
           }
@@ -403,6 +468,7 @@ public class ZmanimActivity
       case NO_BACKGROUND_PERMISSIONS:
         if ( NEED_TO_REQUEST_BACKGROUND_LOCATION_PERMISSION ) {
 
+          locationPermissionFlowActive = true;
           displayer = new ExplainWhyWeNeedLocationDialog( this,
             ( dialog, which ) -> {
 
@@ -413,6 +479,7 @@ public class ZmanimActivity
                 );
               }
               else {
+                locationPermissionFlowActive = false;
                 eventBus.fire( new EditLocationPrefsEvent() );
               }
             }
@@ -472,7 +539,16 @@ public class ZmanimActivity
   ) {
     super.onRequestPermissionsResult( requestCode, permissions, grantResults );
 
-    if ( requestCode == LocationError.Code.NO_PERMISSIONS.ordinal() ) {
+    if ( requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE ) {
+
+      if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
+        showErrorMessage( R.string.notification_permission_denied, R.string.action_dismiss, v -> {} );
+      }
+    }
+    else if ( requestCode == LocationError.Code.NO_PERMISSIONS.ordinal() ) {
+
+      // Asking for background access below starts the flow again.
+      locationPermissionFlowActive = false;
 
       if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
         handleNoLocationPermissions();
@@ -493,6 +569,8 @@ public class ZmanimActivity
 
     }
     else if ( requestCode == LocationError.Code.NO_BACKGROUND_PERMISSIONS.ordinal() ) {
+
+      locationPermissionFlowActive = false;
 
       //  So, if we were granted permission, we don't have to do anything here... We'll get an onResume() which will do
       //  the refresh...
