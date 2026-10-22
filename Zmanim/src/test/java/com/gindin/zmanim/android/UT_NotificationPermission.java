@@ -193,6 +193,42 @@ public class UT_NotificationPermission {
 
 
   @Test
+  public void notAskedWhileTheActivityIsFinishing() {
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+
+        activity.finish();
+        assertTrue( activity.isFinishing() );
+
+        fireLocation();
+
+        assertNull( "No dialog may be shown on an activity that is going away", shownNotificationExplanation() );
+      } );
+    }
+  }
+
+
+  @Test
+  public void destroyingTheActivityDismissesTheExplanation() {
+
+    AlertDialog[] explanation = new AlertDialog[ 1 ];
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+        fireLocation();
+        explanation[ 0 ] = shownNotificationExplanation();
+      } );
+    }
+
+    assertNotNull( explanation[ 0 ] );
+    assertFalse( "A destroyed activity must not leave its dialog's window behind", explanation[ 0 ].isShowing() );
+  }
+
+
+  @Test
   public void notAskedWhenAlreadyGranted() {
 
     Shadows.shadowOf( (Application)context() ).grantPermissions( Manifest.permission.POST_NOTIFICATIONS );
