@@ -93,4 +93,7 @@ dependencies {
   implementation(libs.bundles.zmanim.ui)
 
   implementation(libs.kotlinx.serialization.json)
+
+  // Drives the system notification permission prompt, which belongs to another app, from the on-device tests.
+  androidTestImplementation(libs.androidx.test.uiautomator)
 }

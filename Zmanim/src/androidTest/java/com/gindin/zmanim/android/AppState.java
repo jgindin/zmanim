@@ -76,10 +76,16 @@ final class AppState {
 
 
   /**
-   * Grants everything the app asks for at runtime, so that no permission dialog can sit in front of the activity
-   *  under test. Permissions that do not exist on the running API level are left out; granting an unknown one fails.
+   * Grants the location permissions, so that no location prompt can sit in front of the activity under test.
+   *  Permissions that do not exist on the running API level are left out; granting an unknown one fails.
+   *<p/>
+   *
+   * The notification permission is deliberately not granted: revoking a runtime permission kills the app's process,
+   *  which is also the process the tests run in, so once any test granted it, {@link NotificationPermissionPromptTest}
+   *  could no longer start from a fresh install's state. Tests that are not about that permission keep its explanation
+   *  out of the way with {@link #markNotificationQuestionAnswered()} instead.
    */
-  static GrantPermissionRule grantRuntimePermissions() {
+  static GrantPermissionRule grantLocationPermissions() {
 
     List<String> permissions = new ArrayList<>();
     permissions.add( Manifest.permission.ACCESS_FINE_LOCATION );
@@ -87,11 +93,16 @@ final class AppState {
     if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ) {
       permissions.add( Manifest.permission.ACCESS_BACKGROUND_LOCATION );
     }
-    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ) {
-      permissions.add( Manifest.permission.POST_NOTIFICATIONS );
-    }
 
     return GrantPermissionRule.grant( permissions.toArray( new String[ 0 ] ) );
+  }
+
+
+  /** Records that the user already answered the notification permission explanation, so it does not appear. */
+  static void markNotificationQuestionAnswered() {
+    edit( ZmanimPrefs.PERSONAL )
+      .putBoolean( NotificationPermission.ASKED_KEY, true )
+      .commit();
   }
 
 

@@ -41,12 +41,13 @@ import static org.junit.Assert.assertTrue;
 public class WindowInsetsLayoutTest {
 
   @Rule
-  public final GrantPermissionRule                          permissions = AppState.grantRuntimePermissions();
+  public final GrantPermissionRule                          permissions = AppState.grantLocationPermissions();
 
 
   @Before
   public void saveStaticLocation() throws Exception {
     AppState.installStaticLocation();
+    AppState.markNotificationQuestionAnswered();
   }
 
 
