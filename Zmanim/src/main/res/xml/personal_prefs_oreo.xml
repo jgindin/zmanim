@@ -53,6 +53,18 @@
       app:isPreferenceVisible="false"
       />
 
+    <!--
+      Only shown while the user wants notifications but the system lets the app set only inexact alarms, so alerts may
+      be late (see PersonalPreferences). Tapping it opens the system page that allows exact alarms.
+    -->
+    <androidx.preference.Preference
+      android:key="EXACT_ALARMS_DENIED"
+      android:title="@string/exact_alarms_denied_pref_title"
+      android:summary="@string/exact_alarms_denied_pref_summary"
+      android:persistent="false"
+      app:isPreferenceVisible="false"
+      />
+
     <androidx.preference.Preference
       android:key="NOTIFICATION_TONE"
       android:title="@string/select_notification_tone"

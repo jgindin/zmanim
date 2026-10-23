@@ -8,6 +8,7 @@ import com.github.takahirom.roborazzi.RoborazziContextKt;
 import com.github.takahirom.roborazzi.RoborazziKt;
 import com.github.takahirom.roborazzi.RoborazziOptions;
 
+import com.gindin.zmanim.android.ExactAlarmPermission;
 import com.gindin.zmanim.android.NotificationPermission;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.ZmanimActivity;
@@ -36,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlarmManager;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -83,13 +85,16 @@ public class ZmanimSnapshotTest {
 
 
   /**
-   * Robolectric starts from a fresh install without the notification permission, so the main screen would explain why
-   *  it wants that permission as soon as a location arrives. The snapshots are of the screens themselves, so record
-   *  that the question was already answered.
+   * Robolectric starts from a fresh install without the notification permission and without exact alarms, so the main
+   *  screen would explain why it wants each as soon as a location arrives, and the preferences would show the row for
+   *  alerts that may be late. The snapshots are of the screens themselves, so record that both questions were already
+   *  answered and let the app set exact alarms.
    */
   @Before
-  public void answerTheNotificationPermissionQuestion() {
+  public void answerThePermissionQuestions() {
     NotificationPermission.markAsked( ApplicationProvider.<Context>getApplicationContext() );
+    ExactAlarmPermission.markAsked( ApplicationProvider.<Context>getApplicationContext() );
+    ShadowAlarmManager.setCanScheduleExactAlarms( true );
   }
 
 

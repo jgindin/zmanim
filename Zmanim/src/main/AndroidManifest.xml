@@ -71,7 +71,9 @@
 
 
     <!--
-      Register the receiver for the BOOT_COMPLETED notification.
+      Register the receiver for the BOOT_COMPLETED notification, and for the user allowing exact alarms (Android 12+),
+      after which the queued inexact alarms are replaced by exact ones. The system sends that broadcast to this
+      package explicitly, so a manifest receiver gets it.
     -->
     <receiver
       android:name=".service.ZmanimReceiver"
@@ -81,6 +83,7 @@
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.TIME_SET" />
         <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+        <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
       </intent-filter>
     </receiver>
 

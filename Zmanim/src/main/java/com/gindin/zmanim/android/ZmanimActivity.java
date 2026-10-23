@@ -47,6 +47,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -124,6 +125,22 @@ public class ZmanimActivity
 
   /** Explains why the app wants to post notifications, before the system asks for the permission. */
   private AlertDialog                                       notificationPermissionDialog;
+
+  /**
+   * True while the system notification permission prompt is on screen. The exact alarm question waits for its answer,
+   *  so that the user is never shown two requests at once.
+   */
+  private boolean                                           notificationPermissionRequestActive;
+
+  /** Explains why the alerts need exact alarms, before sending the user to the system page that allows them. */
+  private AlertDialog                                       exactAlarmPermissionDialog;
+
+  /**
+   * Whether exact alarms were allowed when this activity was last resumed, or null before the first resume. When they
+   *  become allowed while the user is away (on the system page, typically), the alerts are scheduled again.
+   */
+  @Nullable
+  private Boolean                                           exactAlarmsAllowedWhenLastResumed;
 
 
   //  See the lifecycle: http://developer.android.com/reference/android/app/Activity.html
@@ -259,7 +276,26 @@ public class ZmanimActivity
     final boolean isUsingElevation = locationPrefs.getBoolean( LocationProviders.USE_ELEVATION.name(), false );
     ZmanimFactory.useElevation( isUsingElevation );
 
+    rescheduleAlertsIfExactAlarmsBecameAllowed();
+
     refresh( ( lastKnownLocation == null ) || lastKnownLocation.isInvalid );
+  }
+
+
+  /**
+   * Alerts queued while exact alarms were not allowed were set as inexact alarms. When the user allows exact alarms
+   *  (typically on the system page this activity sent them to) and comes back, schedule the alerts again so that the
+   *  queued ones are replaced by exact alarms right away instead of at the next periodic check.
+   *  {@link com.gindin.zmanim.android.service.ZmanimReceiver} does the same when the system announces the change,
+   *  which it does not do on every Android version or when the access is granted through battery optimization.
+   */
+  private void rescheduleAlertsIfExactAlarmsBecameAllowed() {
+
+    final boolean exactAlarmsAllowed = !ExactAlarmPermission.isDenied( this );
+    if ( Boolean.FALSE.equals( exactAlarmsAllowedWhenLastResumed ) && exactAlarmsAllowed ) {
+      ExactAlarmPermission.rescheduleAlerts( this );
+    }
+    exactAlarmsAllowedWhenLastResumed = exactAlarmsAllowed;
   }
 
 
@@ -285,6 +321,9 @@ public class ZmanimActivity
     determiningLocationDialog.dismiss();
     if ( notificationPermissionDialog != null ) {
       notificationPermissionDialog.dismiss();
+    }
+    if ( exactAlarmPermissionDialog != null ) {
+      exactAlarmPermissionDialog.dismiss();
     }
 
     for ( Presenter<?> presenter : loadedPresenters ) {
@@ -370,6 +409,7 @@ public class ZmanimActivity
     else {
       // A location arrived without any error, so nothing about location is waiting on the user.
       requestNotificationPermissionIfNeeded();
+      requestExactAlarmPermissionIfNeeded();
     }
   }
 
@@ -405,17 +445,83 @@ public class ZmanimActivity
       .setCancelable( false )
       .setPositiveButton( R.string.turn_on_notifications, ( dialog, which ) -> {
         NotificationPermission.markAsked( ZmanimActivity.this );
+        notificationPermissionRequestActive = true;
         ActivityCompat.requestPermissions( ZmanimActivity.this,
           new String[] { Manifest.permission.POST_NOTIFICATIONS },
           NOTIFICATION_PERMISSION_REQUEST_CODE
         );
       } )
-      .setNegativeButton( R.string.no_thanks,
-        ( dialog, which ) -> NotificationPermission.markAsked( ZmanimActivity.this )
-      )
+      .setNegativeButton( R.string.no_thanks, ( dialog, which ) -> {
+        NotificationPermission.markAsked( ZmanimActivity.this );
+
+        // The dialog only goes away after this returns, and the next question waits for it to be gone.
+        dialog.dismiss();
+        requestExactAlarmPermissionIfNeeded();
+      } )
       .create();
 
     notificationPermissionDialog.show();
+  }
+
+
+  /**
+   * On Android 12 and later, explains why the alerts need exact alarms and then opens the system page that allows
+   *  them, once. Asked only after the location and notification permission questions are settled, so that the user
+   *  sees one request at a time. Nothing happens when exact alarms are already allowed (granted, or the app is exempt
+   *  from battery optimization), the user turned notifications off, or the user was asked before.
+   */
+  private void requestExactAlarmPermissionIfNeeded() {
+
+    // A location can arrive after the activity started going away; showing a dialog then throws BadTokenException.
+    if ( isFinishing() || isDestroyed() ) {
+      return;
+    }
+
+    if ( locationPermissionFlowActive || notificationPermissionRequestActive ) {
+      return;
+    }
+
+    // The notification question comes first (rebuildUI() asks it just before this), and this one follows its answer.
+    if ( ( notificationPermissionDialog != null ) && notificationPermissionDialog.isShowing() ) {
+      return;
+    }
+
+    if ( ( exactAlarmPermissionDialog != null ) && exactAlarmPermissionDialog.isShowing() ) {
+      return;
+    }
+
+    if ( !ExactAlarmPermission.shouldAsk( this ) ) {
+      return;
+    }
+
+    // Not cancelable, so that the only ways out are the two answers, and both are remembered.
+    exactAlarmPermissionDialog = new AlertDialog.Builder( this )
+      .setTitle( R.string.exact_alarm_permission_title )
+      .setMessage( R.string.exact_alarm_permission_explanation )
+      .setCancelable( false )
+      .setPositiveButton( R.string.open_settings, ( dialog, which ) -> {
+        ExactAlarmPermission.markAsked( ZmanimActivity.this );
+        openExactAlarmSettings();
+      } )
+      .setNegativeButton( R.string.no_thanks,
+        ( dialog, which ) -> ExactAlarmPermission.markAsked( ZmanimActivity.this )
+      )
+      .create();
+
+    exactAlarmPermissionDialog.show();
+  }
+
+
+  /** Opens the system page for exact alarms; onResume() reschedules the alerts if the user allows them there. */
+  private void openExactAlarmSettings() {
+
+    try {
+      startActivity( ExactAlarmPermission.exactAlarmSettings( this ) );
+    }
+    catch ( ActivityNotFoundException e ) {
+      // Some builds of Android leave the page out. The alerts still arrive, only possibly late.
+      LogUtils.logError( "ZmanimActivity::openExactAlarmSettings", "no exact alarm settings page", e );
+    }
   }
 
 
@@ -546,9 +652,13 @@ public class ZmanimActivity
 
     if ( requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE ) {
 
+      notificationPermissionRequestActive = false;
+
       if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
         showErrorMessage( R.string.notification_permission_denied, R.string.action_dismiss, v -> {} );
       }
+
+      requestExactAlarmPermissionIfNeeded();
     }
     else if ( requestCode == LocationError.Code.NO_PERMISSIONS.ordinal() ) {
 

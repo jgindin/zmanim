@@ -32,12 +32,14 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowAlarmManager;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowDialog;
 
@@ -57,6 +59,17 @@ import static org.junit.Assert.assertTrue;
 @RunWith( RobolectricTestRunner.class )
 @Config( sdk = 33 )
 public class UT_NotificationPermission {
+
+  /**
+   * The shadow alarm manager refuses exact alarms by default, which would put the exact alarm explanation on screen
+   *  as soon as the notification question is settled. That question has its own tests (UT_ExactAlarmPermission);
+   *  here exact alarms are allowed so that only the notification question can appear.
+   */
+  @Before
+  public void allowExactAlarms() {
+    ShadowAlarmManager.setCanScheduleExactAlarms( true );
+  }
+
 
   /**
    * Launching the main activity over a fresh install runs the app's upgrade steps, which leave this process-wide flag

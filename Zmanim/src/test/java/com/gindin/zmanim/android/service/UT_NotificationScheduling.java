@@ -265,6 +265,31 @@ public class UT_NotificationScheduling extends NotificationTestBase {
   }
 
 
+  /**
+   * What the app relies on once the user allows exact alarms: scheduling the same zman again replaces the inexact
+   *  alarm queued while they were denied, rather than adding an exact one beside it.
+   */
+  @Test
+  public void schedulingAgainOnceExactAlarmsAreAllowedReplacesTheInexactAlarm() throws Exception {
+
+    ShadowAlarmManager.setCanScheduleExactAlarms( false );
+    scheduleOneAlarm( false );
+
+    ShadowAlarmManager.ScheduledAlarm inexact = onlyAlarm();
+    Assert.assertFalse( inexact.allowWhileIdle );
+    Assert.assertEquals( "inexact", ShadowAlarmManager.WINDOW_HEURISTIC, inexact.getWindowLengthMs() );
+
+    ShadowAlarmManager.setCanScheduleExactAlarms( true );
+    scheduleAlarmsAsOf( ALBANY, timeIs( NEW_YORK_ZONE, YEAR, MONTH, DAY, 12, 0 ) );
+
+    ShadowAlarmManager.ScheduledAlarm exact = onlyAlarm();
+    Assert.assertTrue( "setExactAndAllowWhileIdle", exact.allowWhileIdle );
+    Assert.assertEquals( "exact", 0L, exact.getWindowLengthMs() );
+    Assert.assertEquals( "the same alert", inexact.getTriggerAtMs(), exact.getTriggerAtMs() );
+    Assert.assertEquals( "the same pending intent", inexact.operation, exact.operation );
+  }
+
+
   @Test
   public void theNotificationChannelIsCreatedWhenTheServiceStarts() {
 

@@ -5,6 +5,7 @@
 package com.gindin.zmanim.android.prefs;
 
 import com.gindin.util.EdgeToEdgeUtil;
+import com.gindin.zmanim.android.ExactAlarmPermission;
 import com.gindin.zmanim.android.NotificationPermission;
 import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.service.DisplayNotificationService;
@@ -36,7 +37,13 @@ public class PersonalPreferences
     NOTIFICATION_TONE,
 
     /** Not a stored value: a row that only appears while the system blocks the notifications the user wants. */
-    NOTIFICATIONS_BLOCKED
+    NOTIFICATIONS_BLOCKED,
+
+    /**
+     * Not a stored value: a row that only appears while the user wants notifications but the system lets the app set
+     *  only inexact alarms, so the alerts may be late.
+     */
+    EXACT_ALARMS_DENIED
   }
 
 
@@ -85,12 +92,21 @@ public class PersonalPreferences
         final Preference blocked = findPreference( Prefs.NOTIFICATIONS_BLOCKED.name() );
         blocked.setIntent( NotificationPermission.appNotificationSettings( getContext() ) );
 
+        final Preference exactAlarmsDenied = findPreference( Prefs.EXACT_ALARMS_DENIED.name() );
+        exactAlarmsDenied.setIntent( ExactAlarmPermission.exactAlarmSettings( getContext() ) );
+
         findPreference( Prefs.SHOW_NOTIFICATIONS.name() ).setOnPreferenceChangeListener( ( pref, newValue ) -> {
 
           final boolean showNotifications = Boolean.TRUE.equals( newValue );
           updateBlockedNotice( showNotifications );
+
+          // One explanation at a time: blocked notifications matter more than late ones, and the row for the other
+          //  stays visible.
           if ( showNotifications && NotificationPermission.isBlocked( getContext() ) ) {
             explainBlockedNotifications();
+          }
+          else if ( showNotifications && ExactAlarmPermission.isDenied( getContext() ) ) {
+            explainDeniedExactAlarms();
           }
           return true;
         } );
@@ -130,12 +146,20 @@ public class PersonalPreferences
     }
 
 
-    /** Shows the row that leads to the system settings only while the user wants notifications that are blocked. */
+    /**
+     * Shows the rows that lead to the system settings only while the user wants notifications that are blocked, or
+     *  that can only be alerted about with inexact (possibly late) alarms.
+     */
     private void updateBlockedNotice( boolean showNotifications ) {
 
       final Preference blocked = findPreference( Prefs.NOTIFICATIONS_BLOCKED.name() );
       if ( blocked != null ) {
         blocked.setVisible( showNotifications && NotificationPermission.isBlocked( getContext() ) );
+      }
+
+      final Preference exactAlarmsDenied = findPreference( Prefs.EXACT_ALARMS_DENIED.name() );
+      if ( exactAlarmsDenied != null ) {
+        exactAlarmsDenied.setVisible( showNotifications && ExactAlarmPermission.isDenied( getContext() ) );
       }
     }
 
@@ -147,6 +171,19 @@ public class PersonalPreferences
         .setMessage( R.string.notifications_blocked_message )
         .setPositiveButton( R.string.open_settings,
           ( dialog, which ) -> startActivity( NotificationPermission.appNotificationSettings( getContext() ) )
+        )
+        .setNegativeButton( R.string.no_thanks, null )
+        .show();
+    }
+
+
+    private void explainDeniedExactAlarms() {
+
+      new AlertDialog.Builder( getContext() )
+        .setTitle( R.string.exact_alarms_denied_pref_title )
+        .setMessage( R.string.exact_alarms_denied_message )
+        .setPositiveButton( R.string.open_settings,
+          ( dialog, which ) -> startActivity( ExactAlarmPermission.exactAlarmSettings( getContext() ) )
         )
         .setNegativeButton( R.string.no_thanks, null )
         .show();
