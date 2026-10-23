@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.os.SystemClock;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
@@ -20,6 +22,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
+import androidx.test.uiautomator.StaleObjectException;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
@@ -60,10 +63,15 @@ import static org.junit.Assert.assertTrue;
 @RunWith( AndroidJUnit4.class )
 public class NotificationPermissionPromptTest {
 
+  private static final String                               TAG = "NotificationPromptTest";
+
   private static final long                                 DIALOG_TIMEOUT_MS = 15_000;
 
   /** How long a dialog that must not appear is given to appear anyway, once the screen has its location. */
   private static final long                                 ABSENCE_TIMEOUT_MS = 4_000;
+
+  /** How long a clicked dialog button is given to go away before the click is taken as dropped and repeated. */
+  private static final long                                 ANSWER_TIMEOUT_MS = 3_000;
 
   /** The Allow and Don't allow buttons of the system permission prompt, whichever permission controller ships. */
   private static final BySelector                           SYSTEM_ALLOW = By.res( Pattern.compile( ".*:id/permission_allow_button" ) );
@@ -111,7 +119,7 @@ public class NotificationPermissionPromptTest {
     startAsAFreshInstall();
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
 
-      click( EXPLANATION_DECLINE, "the explanation's No thanks button" );
+      answer( EXPLANATION_DECLINE, "the explanation's No thanks button" );
 
       assertFalse( "Declining must not lead to the system prompt",
         device.wait( Until.hasObject( ANY_SYSTEM_BUTTON ), ABSENCE_TIMEOUT_MS ) );
@@ -124,8 +132,8 @@ public class NotificationPermissionPromptTest {
     startAsAFreshInstall();
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
 
-      click( EXPLANATION_ACCEPT, "the explanation's Turn on button" );
-      click( SYSTEM_DENY, "the system prompt's Don't allow button" );
+      answer( EXPLANATION_ACCEPT, "the explanation's Turn on button" );
+      answer( SYSTEM_DENY, "the system prompt's Don't allow button" );
 
       assertNotNull( "Refusing should say how to turn notifications on later",
         device.wait( Until.findObject( By.text( targetContext().getString( R.string.notification_permission_denied ) ) ),
@@ -138,8 +146,8 @@ public class NotificationPermissionPromptTest {
     startAsAFreshInstall();
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
 
-      click( EXPLANATION_ACCEPT, "the explanation's Turn on button" );
-      click( SYSTEM_ALLOW, "the system prompt's Allow button" );
+      answer( EXPLANATION_ACCEPT, "the explanation's Turn on button" );
+      answer( SYSTEM_ALLOW, "the system prompt's Allow button" );
 
       assertTrue( "Allowing must grant the permission",
         device.wait( ignored -> isNotificationPermissionGranted(), DIALOG_TIMEOUT_MS ) );
@@ -198,6 +206,47 @@ public class NotificationPermissionPromptTest {
     UiObject2 button = device.wait( Until.findObject( selector ), DIALOG_TIMEOUT_MS );
     assertNotNull( "Never saw " + what, button );
     button.click();
+  }
+
+
+  /**
+   * Clicks a dialog's button and waits for the button to go away, clicking again while it stays.
+   *<p/>
+   *
+   * A dialog that has just opened shows up in UI Automator's view of the screen before its window accepts input, and
+   *  the system drops a tap that arrives in that gap (logcat: "Not sending touch gesture to ... ActivityRecordInputSink
+   *  ... NO_INPUT_CHANNEL"). The dialog then simply stays up, and nothing the test waits for afterwards happens. That
+   *  gap is wide on a slow emulator, which is where a single click was seen to be lost.
+   */
+  private void answer(
+    BySelector  selector,
+    String      what
+  ) {
+
+    long deadline = SystemClock.uptimeMillis() + DIALOG_TIMEOUT_MS;
+    UiObject2 button = device.wait( Until.findObject( selector ), DIALOG_TIMEOUT_MS );
+    assertNotNull( "Never saw " + what, button );
+
+    for ( int clicks = 1; ; clicks++ ) {
+      try {
+        button.click();
+      }
+      catch ( StaleObjectException ignored ) {
+        // The button went away between being found and being clicked; the wait below sees that it is gone.
+      }
+
+      if ( device.wait( Until.gone( selector ), ANSWER_TIMEOUT_MS ) ) {
+        return;
+      }
+
+      button = device.findObject( selector );
+      if ( button == null ) {
+        return;
+      }
+
+      assertTrue( what + " stayed on screen after " + clicks + " clicks", SystemClock.uptimeMillis() < deadline );
+      Log.w( TAG, what + " is still on screen after " + clicks + " click(s); clicking it again" );
+    }
   }
 
 
