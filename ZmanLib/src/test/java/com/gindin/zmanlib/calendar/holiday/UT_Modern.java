@@ -69,7 +69,7 @@ public class UT_Modern
         "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" +
         " 4/30/2008 W | Erev Yom HaShoah / Omer 10                    | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
         " 5/ 1/2008 R | Yom HaShoah / Omer 11                         | true  | false | false        | false | false   | false   | false    | false  | false | false  |\n" +
-        " 5/ 2/2008 F | Yom HaShoah / Omer 12                         | true  | true  | true         | true  | false   | false   | false    | false  | false | false  |\n" +
+        " 5/ 2/2008 F | Omer 12                                       | true  | true  | true         | true  | false   | false   | false    | false  | false | false  |\n" +
         " 5/ 3/2008 B | Shabbat / Omer 13                             | true  | false | false        | false | true    | false   | true     | false  | false | false  |\n" +
         " 5/ 6/2008 T | Rosh Chodesh Iyar (2) / Erev Yom HaZikaron / Omer 16 | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
         " 5/ 7/2008 W | Yom HaZikaron / Erev Yom HaAtzmaut / Omer 17  | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
@@ -196,7 +196,7 @@ public class UT_Modern
         "-------------|-----------------------------------------------|-------|-------|--------------|-------|---------|---------|----------|--------|-------|--------|\n" +
         " 4/ 7/2021 W | Erev Yom HaShoah / Omer 10                    | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
         " 4/ 8/2021 R | Yom HaShoah / Omer 11                         | true  | false | false        | false | false   | false   | false    | false  | false | false  |\n" +
-        " 4/ 9/2021 F | Yom HaShoah / Omer 12                         | true  | true  | true         | true  | false   | false   | false    | false  | false | false  |\n" +
+        " 4/ 9/2021 F | Omer 12                                       | true  | true  | true         | true  | false   | false   | false    | false  | false | false  |\n" +
         " 4/10/2021 B | Shabbat / Omer 13                             | true  | false | false        | false | true    | false   | true     | false  | false | false  |\n" +
         " 4/13/2021 T | Rosh Chodesh Iyar (2) / Erev Yom HaZikaron / Omer 16 | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
         " 4/14/2021 W | Yom HaZikaron / Erev Yom HaAtzmaut / Omer 17  | true  | true  | false        | false | false   | false   | false    | false  | false | false  |\n" +
