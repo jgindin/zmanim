@@ -13,6 +13,13 @@ import com.gindin.zmanlib.zman.ZmanimList
 import java.util.Calendar
 import java.util.Date
 
+private const val LEAP_YEAR_INTERVAL = 4
+private const val CENTURY = 100
+private const val LEAP_CENTURY_INTERVAL = 400
+
+/** The Jewish day starts at sunset, so a molad this many hours after sunset is already after midnight. */
+private const val HOURS_BETWEEN_SUNSET_AND_MIDNIGHT = 6
+
 /** A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created. */
 @Suppress("UnusedDeclaration", "ClassWithTooManyFields", "ClassWithTooManyMethods")
 public class HebrewDate
@@ -168,19 +175,8 @@ internal constructor(
     // But, if it is divisible by 100, it is NOT a leap year.
     // But....if ti is divisible by 400, then it IS a leap year.
 
-    if (gregorianYear % 4 != 0) {
-      return false
-    }
-
-    if (gregorianYear % 400 == 0) {
-      return true
-    }
-
-    if (gregorianYear % 100 == 0) {
-      return false
-    }
-
-    return true
+    return (gregorianYear % LEAP_YEAR_INTERVAL == 0) &&
+      ((gregorianYear % CENTURY != 0) || (gregorianYear % LEAP_CENTURY_INTERVAL == 0))
   }
 
   /**
@@ -229,27 +225,14 @@ internal constructor(
     location: ZmanimLocation?,
   ): Boolean {
 
-    if (location == null) {
+    if (location == null || 0 != HebrewCalendar.getForDate(currentTime).compareTo(this)) {
       return false
     }
 
-    val currentDate = HebrewCalendar.getForDate(currentTime)
-    if (0 != currentDate.compareTo(this)) {
-      return false
-    }
+    val zmanTime = getZmanim(location).findType(type)?.let { it.getDefault()!!.getTime() }
 
-    val zmanim = getZmanim(location).findType(type)
-    if (zmanim == null) {
-      return false
-    }
-
-    val zmanTime = zmanim.getDefault()!!.getTime()
-    if (zmanTime == null) {
-      // If the zman doesn't have a time then the current time cannot be after the time of the zman.
-      return false
-    }
-
-    return currentTime.time.after(zmanTime.time)
+    // If the zman doesn't have a time then the current time cannot be after the time of the zman.
+    return zmanTime != null && currentTime.time.after(zmanTime.time)
   }
 
   /**
@@ -341,7 +324,7 @@ internal constructor(
 
     var moladDate = HebrewCalendar.getForMolad(HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth))
 
-    if (moladDate.moladHours >= 6) {
+    if (moladDate.moladHours >= HOURS_BETWEEN_SUNSET_AND_MIDNIGHT) {
       moladDate = moladDate.tomorrow()
     }
 
@@ -388,25 +371,13 @@ internal constructor(
     // We use gregorian because with the Hebrew months, because Nisan is the first month, it gets more complex.
     //  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN < ADAR...
 
-    if (gregorianYear < other.gregorianYear) {
-      return -1
-    } else if (gregorianYear > other.gregorianYear) {
-      return 1
-    }
-
-    if (gregorianMonth < other.gregorianMonth) {
-      return -1
-    } else if (gregorianMonth > other.gregorianMonth) {
-      return 1
-    }
-
-    if (gregorianDayOfMonth < other.gregorianDayOfMonth) {
-      return -1
-    } else if (gregorianDayOfMonth > other.gregorianDayOfMonth) {
-      return 1
-    }
-
-    return 0
+    return compareValuesBy(
+      this,
+      other,
+      { it.gregorianYear },
+      { it.gregorianMonth },
+      { it.gregorianDayOfMonth },
+    )
   }
 
   override fun equals(other: Any?): Boolean {

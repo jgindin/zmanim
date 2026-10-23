@@ -6,6 +6,8 @@ package com.gindin.zmanlib.zman
 
 import java.util.Calendar
 
+private const val SEATTLE_SEPHARDIC_MINUTES_AFTER_SHKIA = 30
+
 /** Used for allowing the user to see when a full-day fast ends. */
 internal class FastEnds(zmanimCalculator: ZmanimCalculator) : TzaitHacochavim(Zmanim.Type.FastEnd, zmanimCalculator) {
 
@@ -21,7 +23,7 @@ internal class FastEnds(zmanimCalculator: ZmanimCalculator) : TzaitHacochavim(Zm
           Zmanim.Type.FastEnd,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getEndOfFast(30))
+          return toCalendar(zmanimCalculator, zmanimCalculator.getEndOfFast(SEATTLE_SEPHARDIC_MINUTES_AFTER_SHKIA))
         }
       }
     )

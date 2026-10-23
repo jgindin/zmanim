@@ -775,20 +775,20 @@ public object HebrewCalendar {
     month: Int,
     year: Int,
   ): Int {
-    if (
-      (month == HebrewMonth.IYAR) ||
-        (month == HebrewMonth.TAMMUZ) ||
-        (month == HebrewMonth.ELUL) ||
-        ((month == HebrewMonth.CHESHVAN) && !(isCheshvanLong(year))) ||
-        ((month == HebrewMonth.KISLEV) && isKislevShort(year)) ||
-        (month == HebrewMonth.TEVET) ||
-        ((month == HebrewMonth.ADAR) && !(isHebrewLeapYear(year))) ||
-        (month == HebrewMonth.ADAR_II)
-    ) {
-      return HebrewMonth.SHORT_MONTH_LENGTH
-    } else {
-      return HebrewMonth.LONG_MONTH_LENGTH
-    }
+    val isShortMonth =
+      when (month) {
+        HebrewMonth.IYAR,
+        HebrewMonth.TAMMUZ,
+        HebrewMonth.ELUL,
+        HebrewMonth.TEVET,
+        HebrewMonth.ADAR_II -> true
+        HebrewMonth.CHESHVAN -> !isCheshvanLong(year)
+        HebrewMonth.KISLEV -> isKislevShort(year)
+        HebrewMonth.ADAR -> !isHebrewLeapYear(year)
+        else -> false
+      }
+
+    return if (isShortMonth) HebrewMonth.SHORT_MONTH_LENGTH else HebrewMonth.LONG_MONTH_LENGTH
   }
 
   /**
@@ -838,12 +838,10 @@ public object HebrewCalendar {
     val cheshvanLong = isCheshvanLong(year)
     val kislevShort = isKislevShort(year)
 
-    if (cheshvanLong && !kislevShort) {
-      return HebrewYearType.SHALEM
-    } else if (!cheshvanLong && kislevShort) {
-      return HebrewYearType.HASER
-    } else {
-      return HebrewYearType.QESIDRAH
+    return when {
+      cheshvanLong && !kislevShort -> HebrewYearType.SHALEM
+      !cheshvanLong && kislevShort -> HebrewYearType.HASER
+      else -> HebrewYearType.QESIDRAH
     }
   }
 
@@ -868,26 +866,26 @@ public object HebrewCalendar {
     moladParts: Int,
   ): Int {
     var roshHashanaDay = moladDay // if no dechiyos
+
     // delay Rosh Hashana for the dechiyos of the Molad - new moon 1 - Molad Zaken, 2- GaTRaD 3- BeTuTaKFoT
-    if (
-      (moladParts >= 19440) // Dechiya of Molad Zaken - molad is >= midday (18 hours * 1080 chalakim)
-      || (((moladDay % 7) == 2) // start Dechiya of GaTRaD - Ga = is a Tuesday
-        && (moladParts >= 9924) // TRaD = 9 hours, 204 parts or later (9 * 1080 + 204)
-          && !isHebrewLeapYear(year)) // of a non-leap year - end Dechiya of GaTRaD
-        || (((moladDay % 7) == 1) // start Dechiya of BeTuTaKFoT - Be = is on a Monday
-        && (moladParts >= 16789) // TRaD = 15 hours, 589 parts or later (15 * 1080 + 589)
-          && (isHebrewLeapYear(year - 1)))
-    ) { // in a year following a leap year - end Dechiya of BeTuTaKFoT
+    // Dechiya of Molad Zaken - molad is >= midday (18 hours * 1080 chalakim)
+    val moladZaken = moladParts >= 19440
+    // Dechiya of GaTRaD - Ga = is a Tuesday, TRaD = 9 hours, 204 parts or later (9 * 1080 + 204), of a non-leap year
+    val gatrad = ((moladDay % 7) == 2) && (moladParts >= 9924) && !isHebrewLeapYear(year)
+    // Dechiya of BeTuTaKFoT - Be = is on a Monday, TaKFoT = 15 hours, 589 parts or later (15 * 1080 + 589), in a year
+    //  following a leap year
+    val betutakfot = ((moladDay % 7) == 1) && (moladParts >= 16789) && isHebrewLeapYear(year - 1)
+
+    if (moladZaken || gatrad || betutakfot) {
       roshHashanaDay += 1 // Then postpone Rosh HaShanah one day
     }
-    // start 4th Dechiya - Lo ADU Rosh - Rosh Hashana can't occur on A- sunday, D- Wednesday, U - Friday
-    if (
-      ((roshHashanaDay % 7) == 0) // If Rosh HaShanah would occur on Sunday,
-      || ((roshHashanaDay % 7) == 3) // or Wednesday,
-        || ((roshHashanaDay % 7) == 5)
-    ) { // or Friday - end 4th Dechiya - Lo ADU Rosh
+
+    // 4th Dechiya - Lo ADU Rosh - Rosh Hashana can't occur on A- sunday, D- Wednesday, U - Friday
+    val dayOfWeek = roshHashanaDay % 7
+    if (dayOfWeek == 0 || dayOfWeek == 3 || dayOfWeek == 5) {
       roshHashanaDay = roshHashanaDay + 1 // Then postpone it one (more) day
     }
+
     return roshHashanaDay
   }
 
@@ -937,50 +935,27 @@ public object HebrewCalendar {
     minutes: Int,
     chalakim: Int,
   ) {
-    if (month < HebrewMonth.NISSAN || month > getLastMonthOfJewishYear(year)) {
-      throw IllegalArgumentException(
-        "The Jewish month has to be between 1 and 12 (or 13 on a leap year). " +
-          month +
-          " is invalid for the year " +
-          year +
-          "."
-      )
+    require(month >= HebrewMonth.NISSAN && month <= getLastMonthOfJewishYear(year)) {
+      "The Jewish month has to be between 1 and 12 (or 13 on a leap year). $month is invalid for the year $year."
     }
-    if (dayOfMonth < 1 || dayOfMonth > 30) {
-      throw IllegalArgumentException("The Jewish day of month can't be < 1 or > 30.  " + dayOfMonth + " is invalid.")
-    }
+    require(dayOfMonth in 1..30) { "The Jewish day of month can't be < 1 or > 30.  $dayOfMonth is invalid." }
+
     // reject dates prior to 18 Teves, 3761 (1/1/1 AD). This restriction can be relaxed if the date coding is
     // changed/corrected
-    if (
+    val beforeEarliestDate =
       (year < EARLIEST_VALID_HEBREW_YEAR) ||
         (year == EARLIEST_VALID_HEBREW_YEAR && (month >= HebrewMonth.TISHREI && month < HebrewMonth.TEVET)) ||
         (year == EARLIEST_VALID_HEBREW_YEAR && month == HebrewMonth.TEVET && dayOfMonth < 18)
-    ) {
-      throw IllegalArgumentException(
-        "A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian) can't be set. " +
-          year +
-          ", " +
-          month +
-          ", " +
-          dayOfMonth +
-          " is invalid."
-      )
-    }
-    if (hours < 0 || hours > 23) {
-      throw IllegalArgumentException("Hours < 0 > 23 can't be set. " + hours + " is invalid.")
+    require(!beforeEarliestDate) {
+      "A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian) can't be set. $year, $month, $dayOfMonth is invalid."
     }
 
-    if (minutes < 0 || minutes > 59) {
-      throw IllegalArgumentException("Minutes < 0 > 59 can't be set. " + minutes + " is invalid.")
-    }
-
-    if (chalakim < 0 || chalakim > 17) {
-      throw IllegalArgumentException(
-        "Chalakim/parts < 0 > 17 can't be set. " +
-          chalakim +
-          " is invalid. For larger numbers such as 793 (TaShTzaG) break the chalakim into minutes " +
-          "(18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG)"
-      )
+    require(hours in 0..23) { "Hours < 0 > 23 can't be set. $hours is invalid." }
+    require(minutes in 0..59) { "Minutes < 0 > 59 can't be set. $minutes is invalid." }
+    require(chalakim in 0..17) {
+      "Chalakim/parts < 0 > 17 can't be set. $chalakim is invalid. For larger numbers such as 793 (TaShTzaG) break " +
+        "the chalakim into minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of " +
+        "793 (TaShTzaG)"
     }
   }
 }

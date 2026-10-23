@@ -7,6 +7,44 @@ package com.gindin.zmanlib.calendar.formatters
 import com.gindin.zmanlib.calendar.HebrewDate
 import java.util.Calendar
 
+private val DAY_NAMES =
+  mapOf(
+    Calendar.SUNDAY to "Sun",
+    Calendar.MONDAY to "Mon",
+    Calendar.TUESDAY to "Tue",
+    Calendar.WEDNESDAY to "Wed",
+    Calendar.THURSDAY to "Thur",
+    Calendar.FRIDAY to "Fri",
+    Calendar.SATURDAY to "Shabbat",
+  )
+
+private val MONTH_NAMES =
+  mapOf(
+    Calendar.JANUARY to "Jan ",
+    Calendar.FEBRUARY to "Feb ",
+    Calendar.MARCH to "Mar ",
+    Calendar.APRIL to "Apr ",
+    Calendar.MAY to "May ",
+    Calendar.JUNE to "Jun ",
+    Calendar.JULY to "Jul ",
+    Calendar.AUGUST to "Aug ",
+    Calendar.SEPTEMBER to "Sep ",
+    Calendar.OCTOBER to "Oct ",
+    Calendar.NOVEMBER to "Nov ",
+    Calendar.DECEMBER to "Dec ",
+  )
+
+private val DAY_INITIALS =
+  mapOf(
+    Calendar.SUNDAY to " S",
+    Calendar.MONDAY to " M",
+    Calendar.TUESDAY to " T",
+    Calendar.WEDNESDAY to " W",
+    Calendar.THURSDAY to " R",
+    Calendar.FRIDAY to " F",
+    Calendar.SATURDAY to " B",
+  )
+
 /** Knows how to format a HebrewDate as a secular date. */
 public abstract class SecularDateFormatter {
 
@@ -24,49 +62,11 @@ public abstract class SecularDateFormatter {
     override fun format(date: HebrewDate): String {
 
       val formattedDate = StringBuilder()
-      when (date.dayOfWeek) {
-        Calendar.SUNDAY -> formattedDate.append("Sun")
-
-        Calendar.MONDAY -> formattedDate.append("Mon")
-
-        Calendar.TUESDAY -> formattedDate.append("Tue")
-
-        Calendar.WEDNESDAY -> formattedDate.append("Wed")
-
-        Calendar.THURSDAY -> formattedDate.append("Thur")
-
-        Calendar.FRIDAY -> formattedDate.append("Fri")
-
-        Calendar.SATURDAY -> formattedDate.append("Shabbat")
-      }
+      DAY_NAMES[date.dayOfWeek]?.let { formattedDate.append(it) }
 
       formattedDate.append(", ")
 
-      when (date.gregorianMonth) {
-        Calendar.JANUARY -> formattedDate.append("Jan ")
-
-        Calendar.FEBRUARY -> formattedDate.append("Feb ")
-
-        Calendar.MARCH -> formattedDate.append("Mar ")
-
-        Calendar.APRIL -> formattedDate.append("Apr ")
-
-        Calendar.MAY -> formattedDate.append("May ")
-
-        Calendar.JUNE -> formattedDate.append("Jun ")
-
-        Calendar.JULY -> formattedDate.append("Jul ")
-
-        Calendar.AUGUST -> formattedDate.append("Aug ")
-
-        Calendar.SEPTEMBER -> formattedDate.append("Sep ")
-
-        Calendar.OCTOBER -> formattedDate.append("Oct ")
-
-        Calendar.NOVEMBER -> formattedDate.append("Nov ")
-
-        Calendar.DECEMBER -> formattedDate.append("Dec ")
-      }
+      MONTH_NAMES[date.gregorianMonth]?.let { formattedDate.append(it) }
 
       formattedDate.append(date.gregorianDayOfMonth).append(", ").append(date.gregorianYear)
 
@@ -93,21 +93,7 @@ public abstract class SecularDateFormatter {
 
       val formattedDate = StringBuilder(super.format(date))
 
-      when (date.dayOfWeek) {
-        Calendar.SUNDAY -> formattedDate.append(" S")
-
-        Calendar.MONDAY -> formattedDate.append(" M")
-
-        Calendar.TUESDAY -> formattedDate.append(" T")
-
-        Calendar.WEDNESDAY -> formattedDate.append(" W")
-
-        Calendar.THURSDAY -> formattedDate.append(" R")
-
-        Calendar.FRIDAY -> formattedDate.append(" F")
-
-        Calendar.SATURDAY -> formattedDate.append(" B")
-      }
+      DAY_INITIALS[date.dayOfWeek]?.let { formattedDate.append(it) }
 
       return formattedDate.toString()
     }
@@ -124,34 +110,11 @@ public abstract class SecularDateFormatter {
     @JvmStatic
     public fun getInstance(formatterStyle: Style): SecularDateFormatter {
 
-      when (formatterStyle) {
-        Style.SHORT -> {
-          var shortFormatter = SHORT_FORMATTER
-          if (shortFormatter == null) {
-            shortFormatter = ShortFormatter()
-            SHORT_FORMATTER = shortFormatter
-          }
-          return shortFormatter
-        }
-
-        Style.MEDIUM -> {
-          var mediumFormatter = MEDIUM_FORMATTER
-          if (mediumFormatter == null) {
-            mediumFormatter = MediumFormatter()
-            MEDIUM_FORMATTER = mediumFormatter
-          }
-          return mediumFormatter
-        }
-
+      return when (formatterStyle) {
+        Style.SHORT -> SHORT_FORMATTER ?: ShortFormatter().also { SHORT_FORMATTER = it }
+        Style.MEDIUM -> MEDIUM_FORMATTER ?: MediumFormatter().also { MEDIUM_FORMATTER = it }
         Style.DEFAULT,
-        Style.LONG -> {
-          var defaultFormatter = FORMATTER
-          if (null == defaultFormatter) {
-            defaultFormatter = DefaultFormatter()
-            FORMATTER = defaultFormatter
-          }
-          return defaultFormatter
-        }
+        Style.LONG -> FORMATTER ?: DefaultFormatter().also { FORMATTER = it }
       }
     }
   }

@@ -8,6 +8,8 @@ import com.kosherjava.zmanim.AstronomicalCalendar
 import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "8.5 deg"
+private const val TZAIT_3_POINT_5_DEGREES = 3.5
+private const val TZAIT_6_POINT_5_DEGREES = 6.5
 
 internal open class TzaitHacochavim(
   type: Zmanim.Type,
@@ -91,7 +93,9 @@ internal open class TzaitHacochavim(
           override fun calculate(): Calendar? {
             return toCalendar(
               zmanimCalculator,
-              zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 3.5),
+              zmanimCalculator.getSunsetOffsetByDegrees(
+                AstronomicalCalendar.GEOMETRIC_ZENITH + TZAIT_3_POINT_5_DEGREES
+              ),
             )
           }
         }
@@ -122,7 +126,9 @@ internal open class TzaitHacochavim(
           override fun calculate(): Calendar? {
             return toCalendar(
               zmanimCalculator,
-              zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 6.5),
+              zmanimCalculator.getSunsetOffsetByDegrees(
+                AstronomicalCalendar.GEOMETRIC_ZENITH + TZAIT_6_POINT_5_DEGREES
+              ),
             )
           }
         }

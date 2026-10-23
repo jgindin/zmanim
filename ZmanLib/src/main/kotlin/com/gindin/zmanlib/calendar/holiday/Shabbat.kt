@@ -18,15 +18,11 @@ public class Shabbat : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (Calendar.FRIDAY == date.dayOfWeek) {
-      return ErevShabbatDetails(date)
+    return when (date.dayOfWeek) {
+      Calendar.FRIDAY -> ErevShabbatDetails(date)
+      Calendar.SATURDAY -> ShabbatDetails(date)
+      else -> null
     }
-
-    if (Calendar.SATURDAY == date.dayOfWeek) {
-      return ShabbatDetails(date)
-    }
-
-    return null
   }
 
   private class ShabbatDetails(date: HebrewDate) : Details.Yom(date, SHABBAT) {

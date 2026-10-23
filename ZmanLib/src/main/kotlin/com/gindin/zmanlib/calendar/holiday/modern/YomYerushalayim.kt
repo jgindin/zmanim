@@ -32,18 +32,15 @@ public class YomYerushalayim : Observance() {
       return null
     }
 
-    if (27 == date.hebrewDayOfMonth) {
-      return Details.Erev(date, NAME, false)
-    }
-
-    if (28 == date.hebrewDayOfMonth) {
-      return object : Details.Yom(date, NAME) {
-        override fun sayTachanun(): Boolean {
-          return false
+    return when (date.hebrewDayOfMonth) {
+      27 -> Details.Erev(date, NAME, false)
+      28 ->
+        object : Details.Yom(date, NAME) {
+          override fun sayTachanun(): Boolean {
+            return false
+          }
         }
-      }
+      else -> null
     }
-
-    return null
   }
 } // End of YomYerushalayim class
