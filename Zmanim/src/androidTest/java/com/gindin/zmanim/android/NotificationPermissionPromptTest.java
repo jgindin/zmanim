@@ -5,8 +5,10 @@
 package com.gindin.zmanim.android;
 
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.UiAutomation;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -47,6 +49,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * On Android 13 and later, a fresh install with location access already granted explains why it wants to post
  *  notifications, asks the system only if the user agrees, and never asks again on a later launch, whatever the answer.
+ *  Once notifications are allowed, and only then, it explains why its alerts need exact alarms and opens the system
+ *  page that allows them if the user agrees, again only once.
  *<p/>
  *
  * The system permission prompt belongs to another app, so it is driven through UI Automator.
@@ -59,6 +63,12 @@ import static org.junit.Assert.assertTrue;
  *  kill the process) so that the system prompt may appear again. The permission must not be granted when the test
  *  starts, which holds after Gradle installs the app because no other test grants it (see
  *  {@link AppState#grantLocationPermissions()}).
+ *<p/>
+ *
+ * The exact alarm question is part of this test because it only comes up once notifications are allowed, and only
+ *  this test may grant that permission. The test never allows exact alarms either: taking them away again also stops
+ *  the app's process. They must be denied when the test starts, which holds after Gradle installs the app on Android
+ *  14 or later (a fresh install is not granted them, and emulators do not exempt the app from battery optimization).
  */
 @RunWith( AndroidJUnit4.class )
 public class NotificationPermissionPromptTest {
@@ -72,6 +82,12 @@ public class NotificationPermissionPromptTest {
 
   /** How long a clicked dialog button is given to go away before the click is taken as dropped and repeated. */
   private static final long                                 ANSWER_TIMEOUT_MS = 3_000;
+
+  /** How long the system settings app is given to come up; another app starting is slow on a CI emulator. */
+  private static final long                                 SETTINGS_TIMEOUT_MS = 30_000;
+
+  /** The system settings app, in the foreground. */
+  private static final BySelector                           SYSTEM_SETTINGS = By.pkg( Pattern.compile( ".*settings.*" ) ).depth( 0 );
 
   /** The Allow and Don't allow buttons of the system permission prompt, whichever permission controller ships. */
   private static final BySelector                           SYSTEM_ALLOW = By.res( Pattern.compile( ".*:id/permission_allow_button" ) );
@@ -90,6 +106,11 @@ public class NotificationPermissionPromptTest {
 
   private BySelector                                        explanation;
 
+  private BySelector                                        exactAlarmExplanation;
+
+  /** Either explanation. */
+  private BySelector                                        anyExplanation;
+
 
   @Before
   public void setUp() {
@@ -100,9 +121,17 @@ public class NotificationPermissionPromptTest {
 
     device = UiDevice.getInstance( InstrumentationRegistry.getInstrumentation() );
     explanation = By.text( targetContext().getString( R.string.notification_permission_title ) );
+    exactAlarmExplanation = By.text( targetContext().getString( R.string.exact_alarm_permission_title ) );
+    anyExplanation = By.text( Pattern.compile(
+      Pattern.quote( targetContext().getString( R.string.notification_permission_title ) ) + "|"
+        + Pattern.quote( targetContext().getString( R.string.exact_alarm_permission_title ) ) ) );
 
     assertFalse( "The notification permission is already granted, and the test cannot revoke it from inside the app's "
       + "process; reinstall the app (Gradle's connected test tasks do) and run again", isNotificationPermissionGranted() );
+    assertFalse( "Exact alarms are already allowed, and the test cannot deny them from inside the app's process; run "
+        + "`adb shell cmd appops set " + targetContext().getPackageName() + " SCHEDULE_EXACT_ALARM deny` before the "
+        + "tests start (or reinstall the app on Android 14 or later) and run again",
+      exactAlarmsAllowed() );
   }
 
 
@@ -142,7 +171,8 @@ public class NotificationPermissionPromptTest {
     }
     assertNotAskedOnRelaunch();
 
-    // Accepting the explanation, then allowing: the permission is granted.
+    // Accepting the explanation, then allowing: the permission is granted, and the exact alarm question follows.
+    //  Declining that one opens nothing.
     startAsAFreshInstall();
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
 
@@ -151,6 +181,35 @@ public class NotificationPermissionPromptTest {
 
       assertTrue( "Allowing must grant the permission",
         device.wait( ignored -> isNotificationPermissionGranted(), DIALOG_TIMEOUT_MS ) );
+
+      assertNotNull( "With notifications allowed, the exact alarm question should follow",
+        device.wait( Until.findObject( exactAlarmExplanation ), DIALOG_TIMEOUT_MS ) );
+      answer( EXPLANATION_DECLINE, "the exact alarm explanation's No thanks button" );
+
+      assertFalse( "Declining must not open the system page",
+        device.wait( Until.hasObject( SYSTEM_SETTINGS ), ABSENCE_TIMEOUT_MS ) );
+      assertTrue( exactAlarmAnswerRecorded() );
+    }
+    assertNotAskedOnRelaunch();
+    assertPreferencesLeadToTheExactAlarmPage();
+
+    // Notifications stay allowed. From fresh saved state, the exact alarm question comes up on its own, and
+    //  accepting it opens the system page for alarms and reminders.
+    AppState.installStaticLocation();
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      assertNotNull( "The exact alarm question should come up",
+        device.wait( Until.findObject( exactAlarmExplanation ), DIALOG_TIMEOUT_MS ) );
+      answer( EXPLANATION_ACCEPT, "the exact alarm explanation's Open Settings button" );
+
+      assertTrue( "Accepting should open the system page for exact alarms",
+        device.wait( Until.hasObject( SYSTEM_SETTINGS ), SETTINGS_TIMEOUT_MS ) );
+      assertNotNull( "The system page should be the one for alarms and reminders",
+        device.wait( Until.findObject( By.text( Pattern.compile( "(?i).*alarms.*reminders.*" ) ) ), SETTINGS_TIMEOUT_MS ) );
+      assertTrue( exactAlarmAnswerRecorded() );
+
+      device.pressBack();
+      assertFalse( exactAlarmsAllowed() );
     }
     assertNotAskedOnRelaunch();
   }
@@ -163,15 +222,15 @@ public class NotificationPermissionPromptTest {
   private static void startAsAFreshInstall() throws IOException {
 
     AppState.installStaticLocation();
-
-    // The exact alarm question follows the notification one, and has a test of its own.
-    AppState.markExactAlarmQuestionAnswered();
     shell( "pm clear-permission-flags " + targetContext().getPackageName() + " "
       + Manifest.permission.POST_NOTIFICATIONS + " user-set user-fixed" );
   }
 
 
-  /** Launches again, lets the screen settle on its location, and checks that neither prompt shows up. */
+  /**
+   * Launches again, lets the screen settle on its location, and checks that no prompt shows up: neither the
+   *  notification question nor the exact alarm one, which never follows declined or refused notifications.
+   */
   private void assertNotAskedOnRelaunch() throws Exception {
 
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
@@ -180,7 +239,7 @@ public class NotificationPermissionPromptTest {
       ViewWaits.until( "the saved location name in the header", () ->
         LaunchSmokeTest.SAVED_LOCATION_NAME.contentEquals( ( (TextView)activity.findViewById( R.id.location ) ).getText() ) );
 
-      assertFalse( "Asked again on a later launch", device.wait( Until.hasObject( explanation ), ABSENCE_TIMEOUT_MS ) );
+      assertFalse( "Asked again on a later launch", device.wait( Until.hasObject( anyExplanation ), ABSENCE_TIMEOUT_MS ) );
       assertFalse( device.hasObject( ANY_SYSTEM_BUTTON ) );
     }
   }
@@ -196,6 +255,20 @@ public class NotificationPermissionPromptTest {
 
       assertTrue( "The row should open the system settings",
         device.wait( Until.hasObject( By.pkg( Pattern.compile( ".*settings.*" ) ).depth( 0 ) ), DIALOG_TIMEOUT_MS ) );
+      device.pressBack();
+    }
+  }
+
+
+  /** With notifications allowed but exact alarms denied, the preferences show a row that opens the system page. */
+  private void assertPreferencesLeadToTheExactAlarmPage() {
+
+    try ( ActivityScenario<PersonalPreferences> scenario = ActivityScenario.launch( PersonalPreferences.class ) ) {
+
+      answer( By.text( targetContext().getString( R.string.exact_alarms_denied_pref_title ) ),
+        "the preferences' late alerts row" );
+
+      assertTrue( "The row should open the system page", device.wait( Until.hasObject( SYSTEM_SETTINGS ), SETTINGS_TIMEOUT_MS ) );
       device.pressBack();
     }
   }
@@ -250,6 +323,17 @@ public class NotificationPermissionPromptTest {
       assertTrue( what + " stayed on screen after " + clicks + " clicks", SystemClock.uptimeMillis() < deadline );
       Log.w( TAG, what + " is still on screen after " + clicks + " click(s); clicking it again" );
     }
+  }
+
+
+  private static boolean exactAlarmAnswerRecorded() {
+    return targetContext().getSharedPreferences( ZmanimPrefs.PERSONAL.name(), Context.MODE_PRIVATE )
+      .getBoolean( ExactAlarmPermission.ASKED_KEY, false );
+  }
+
+
+  private static boolean exactAlarmsAllowed() {
+    return targetContext().getSystemService( AlarmManager.class ).canScheduleExactAlarms();
   }
 
 
