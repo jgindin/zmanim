@@ -1,0 +1,23 @@
+# Overrides of detekt's default rule set only (buildUponDefaultConfig is on); each one says why.
+
+naming:
+  ClassNaming:
+    # Unit-test classes are named UT_<ClassUnderTest>, which this repo uses throughout its tests.
+    classPattern: '[A-Z][a-zA-Z0-9]*|UT_[A-Za-z0-9_]+'
+
+style:
+  MaxLineLength:
+    # ktlint's max-line-length enforces the 120 columns set in .editorconfig; running both would
+    #  report every long line twice, and detekt also counts KDoc and string literals that ktlint
+    #  deliberately leaves alone.
+    active: false
+  ForbiddenComment:
+    # TODO comments are how follow-up work is tracked here, so only the markers that must not
+    #  reach a release are forbidden.
+    comments:
+      - 'FIXME:'
+      - 'STOPSHIP:'
+  ReturnCount:
+    # Guard clauses at the top of a function are the intended use of early return; the converted
+    #  code also has many multi-way lookups that return from each branch.
+    excludeGuardClauses: true

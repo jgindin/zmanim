@@ -28,6 +28,8 @@ plugins {
   // Roborazzi: records/verifies golden PNG screenshots rendered by Robolectric, used as a visual
   //  regression safety net for these apps' screens. See each app's src/test/.../snapshot package.
   id("io.github.takahirom.roborazzi")
+
+  id("zmanim.static-analysis-conventions")
 }
 
 // Version-catalog accessors (`libs.junit`, ...) are not generated inside precompiled script
