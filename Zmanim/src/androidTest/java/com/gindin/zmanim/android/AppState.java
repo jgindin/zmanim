@@ -108,8 +108,9 @@ final class AppState {
 
   /**
    * Records that the user already answered the exact alarm explanation, so it does not appear. Emulators do not
-   *  exempt the app from battery optimization, so from Android 14 on a fresh install has no exact alarms and the
-   *  explanation would otherwise come up once the notification question is settled.
+   *  exempt the app from battery optimization, so from Android 14 on a fresh install has no exact alarms, and the
+   *  explanation would come up whenever notifications are allowed (on Android 12, for instance, where they need no
+   *  permission).
    */
   static void markExactAlarmQuestionAnswered() {
     edit( ZmanimPrefs.PERSONAL )
