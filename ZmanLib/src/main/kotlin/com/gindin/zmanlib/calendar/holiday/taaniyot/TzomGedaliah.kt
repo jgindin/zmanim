@@ -10,29 +10,22 @@ import com.gindin.zmanlib.calendar.holiday.Details
 
 private const val TZOM_GEDALIAH = "Tzom Gedaliah"
 
-/**
- *
- */
+/**  */
 public class TzomGedaliah : Taanit(HebrewMonth.TISHREI, 3) {
 
   override fun getName(): String {
     return TZOM_GEDALIAH
   }
 
-
   override fun canFallOnFriday(date: HebrewDate): Boolean {
     return false
   }
-
 
   override fun createErevDetails(date: HebrewDate): Details {
     return ErevTaanitDetails(date, TZOM_GEDALIAH)
   }
 
-
   override fun createYomDetails(date: HebrewDate): Details {
     return TaanitDetails(date, TZOM_GEDALIAH)
   }
-
-
-}  // End of TzomGedaliah class
+} // End of TzomGedaliah class

@@ -11,9 +11,7 @@ import com.gindin.zmanlib.location.ZmanimLocation
 import com.gindin.zmanlib.zman.Zman
 import java.util.Calendar
 
-/**
- * Utilities for working with zmanim.
- */
+/** Utilities for working with zmanim. */
 public class ZmanNotificationScheduler(
   /** Whom to notify of the appropriate next action(s) */
   private val zmanCallback: ZmanCallback
@@ -21,7 +19,8 @@ public class ZmanNotificationScheduler(
 
   /**
    * Based on the location and current time, figure out which zman is the next for which the user wants a notification.
-   *<p/>
+   *
+   * <p/>
    *
    * Because of the work done in this method, it is assumed that it will NOT be invoked on the main thread.
    *
@@ -30,7 +29,7 @@ public class ZmanNotificationScheduler(
    */
   public fun run(
     location: ZmanimLocation,
-    now: Calendar
+    now: Calendar,
   ) {
 
     var hebrewDate = HebrewCalendar.getForDate(now)
@@ -76,17 +75,16 @@ public class ZmanNotificationScheduler(
     }
   }
 
-
   /**
    * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
    *
-   * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of
-   *  time (in ms) until the zman occurs.
+   * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of time (in ms) until the
+   *   zman occurs.
    */
   private fun findTheRestOfTheDaysZmanim(
     location: ZmanimLocation,
     now: Calendar,
-    hebrewDate: HebrewDate
+    hebrewDate: HebrewDate,
   ): List<ZmanNotification> {
 
     // Basic idea here...
@@ -107,8 +105,7 @@ public class ZmanNotificationScheduler(
       val zman: Zman
       if (zmanName == null) {
         zman = zmanim.getDefault()!!
-      }
-      else {
+      } else {
         zman = zmanim.getByName(zmanName)!!
       }
 
@@ -133,16 +130,12 @@ public class ZmanNotificationScheduler(
     return candidates
   }
 
-
   /**
    * Figure out the milliseconds until an alert for the specified zman should be raised.
    *
-   * @return the number of milliseconds until the alert, or Long.MIN_VALUE if not alert should be
-   *  scheduled.
+   * @return the number of milliseconds until the alert, or Long.MIN_VALUE if not alert should be scheduled.
    */
-  private fun computeAlertTime(
-    zmanNotification: ZmanNotification
-  ): Long {
+  private fun computeAlertTime(zmanNotification: ZmanNotification): Long {
 
     val minutesToAlertBefore = zmanCallback.howManyMinutesToAlertBefore(zmanNotification.zman.type)
     if (minutesToAlertBefore >= 0) {
@@ -152,8 +145,7 @@ public class ZmanNotificationScheduler(
 
       if (msToAlertBefore > zmanNotification.msUntilZman) {
         msToZmanNotification = 0
-      }
-      else {
+      } else {
         msToZmanNotification = zmanNotification.msUntilZman - msToAlertBefore
       }
 
@@ -162,7 +154,6 @@ public class ZmanNotificationScheduler(
 
     return Long.MIN_VALUE
   }
-
 
   public companion object {
 
@@ -181,5 +172,4 @@ public class ZmanNotificationScheduler(
     /** If we wake up within a short time of needing to alert anyways, just do it. */
     private const val DEFAULT_ALERT_FUDGE_FACTOR = 30 * 1000
   }
-
 } // End of ZmanNotificationScheduler class

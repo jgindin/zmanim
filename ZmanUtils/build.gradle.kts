@@ -54,9 +54,7 @@ kotlin {
   }
 }
 
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
-}
+tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 // Kotlin Multiplatform names its test tasks per target (jvmTest, ...) and registers no plain
 //  `test` task, so a project-wide `./gradlew test` would silently skip this module. This lifecycle

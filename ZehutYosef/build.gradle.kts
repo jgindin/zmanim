@@ -11,7 +11,6 @@ plugins {
   id("zmanim.android-application-conventions")
 }
 
-
 // Feeds this module's major/minor into the advanced-build-version plugin (applied by the
 //  convention plugin) and reads back the computed code/name. The version code auto-increments
 //  through ZehutYosef/version.properties exactly as before.
@@ -27,27 +26,21 @@ android {
   }
 
   buildTypes {
-
     getByName("release") {
       isMinifyEnabled = true
       isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
 
-    getByName("debug") {
-    }
+    getByName("debug") {}
   }
 
   flavorDimensions.add("sidur")
 
   productFlavors {
-    create("barMitzvah") {
-      applicationId = "com.gindin.barmitzvah"
-    }
+    create("barMitzvah") { applicationId = "com.gindin.barmitzvah" }
 
-    create("sidur") {
-      applicationId = "com.gindin.zehutyosef"
-    }
+    create("sidur") { applicationId = "com.gindin.zehutyosef" }
   }
 }
 
@@ -60,7 +53,6 @@ zmanimReleaseSigning(keyAlias = "zehutyosef")
 zmanimReleaseCheckBuildType()
 
 dependencies {
-
   extra["supportLibsVersion"] = "25.4.0"
   implementation(libs.androidx.appcompat)
 
@@ -75,7 +67,5 @@ dependencies {
   implementation("${libs.mikepenz.materialdrawer.get()}@aar")
 
   /* https://github.com/mikepenz/AboutLibraries */
-  implementation("${libs.mikepenz.aboutlibraries.get()}@aar") {
-    isTransitive = true
-  }
+  implementation("${libs.mikepenz.aboutlibraries.get()}@aar") { isTransitive = true }
 }

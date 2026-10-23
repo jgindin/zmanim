@@ -14,21 +14,22 @@ import org.intellij.lang.annotations.MagicConstant
 public interface HebrewMonth {
 
   @MagicConstant(
-    intValues = [
-      HebrewMonth.NISSAN.toLong(),
-      HebrewMonth.IYAR.toLong(),
-      HebrewMonth.SIVAN.toLong(),
-      HebrewMonth.TAMMUZ.toLong(),
-      HebrewMonth.AV.toLong(),
-      HebrewMonth.ELUL.toLong(),
-      HebrewMonth.TISHREI.toLong(),
-      HebrewMonth.CHESHVAN.toLong(),
-      HebrewMonth.KISLEV.toLong(),
-      HebrewMonth.TEVET.toLong(),
-      HebrewMonth.SHEVAT.toLong(),
-      HebrewMonth.ADAR.toLong(),
-      HebrewMonth.ADAR_II.toLong()
-    ]
+    intValues =
+      [
+        HebrewMonth.NISSAN.toLong(),
+        HebrewMonth.IYAR.toLong(),
+        HebrewMonth.SIVAN.toLong(),
+        HebrewMonth.TAMMUZ.toLong(),
+        HebrewMonth.AV.toLong(),
+        HebrewMonth.ELUL.toLong(),
+        HebrewMonth.TISHREI.toLong(),
+        HebrewMonth.CHESHVAN.toLong(),
+        HebrewMonth.KISLEV.toLong(),
+        HebrewMonth.TEVET.toLong(),
+        HebrewMonth.SHEVAT.toLong(),
+        HebrewMonth.ADAR.toLong(),
+        HebrewMonth.ADAR_II.toLong(),
+      ]
   )
   @Retention(AnnotationRetention.BINARY)
   public annotation class Constant
@@ -37,25 +38,29 @@ public interface HebrewMonth {
 
     /**
      * Value of the month field indicating Nissan, the first numeric month of the year in the Jewish calendar. With the
-     * year starting at [TISHREI], it would actually be the 7th (or 8th in a [leap year][HebrewDate.isHebrewLeapYear]) month of the year.
+     * year starting at [TISHREI], it would actually be the 7th (or 8th in a [leap year][HebrewDate.isHebrewLeapYear])
+     * month of the year.
      */
     public const val NISSAN: Int = 1
 
     /**
      * Value of the month field indicating Iyar, the second numeric month of the year in the Jewish calendar. With the
-     * year starting at [TISHREI], it would actually be the 8th (or 9th in a [leap year][HebrewDate.isHebrewLeapYear]) month of the year.
+     * year starting at [TISHREI], it would actually be the 8th (or 9th in a [leap year][HebrewDate.isHebrewLeapYear])
+     * month of the year.
      */
     public const val IYAR: Int = 2
 
     /**
      * Value of the month field indicating Sivan, the third numeric month of the year in the Jewish calendar. With the
-     * year starting at [TISHREI], it would actually be the 9th (or 10th in a [leap year][HebrewDate.isHebrewLeapYear]) month of the year.
+     * year starting at [TISHREI], it would actually be the 9th (or 10th in a [leap year][HebrewDate.isHebrewLeapYear])
+     * month of the year.
      */
     public const val SIVAN: Int = 3
 
     /**
      * Value of the month field indicating Tammuz, the fourth numeric month of the year in the Jewish calendar. With the
-     * year starting at [TISHREI], it would actually be the 10th (or 11th in a [leap year][HebrewDate.isHebrewLeapYear]) month of the year.
+     * year starting at [TISHREI], it would actually be the 10th (or 11th in a [leap year][HebrewDate.isHebrewLeapYear])
+     * month of the year.
      */
     public const val TAMMUZ: Int = 4
 
@@ -68,7 +73,8 @@ public interface HebrewMonth {
 
     /**
      * Value of the month field indicating Elul, the sixth numeric month of the year in the Jewish calendar. With the
-     * year starting at [TISHREI], it would actually be the 12th (or 13th in a [leap year][HebrewDate.isHebrewLeapYear]) month of the year.
+     * year starting at [TISHREI], it would actually be the 12th (or 13th in a [leap year][HebrewDate.isHebrewLeapYear])
+     * month of the year.
      */
     public const val ELUL: Int = 6
 
@@ -104,19 +110,18 @@ public interface HebrewMonth {
 
     /**
      * Value of the month field indicating Adar (or Adar I in a [leap year][HebrewDate.isHebrewLeapYear]), the twelfth
-     * numeric month of the year in the Jewish calendar. With the year starting at [TISHREI], it would actually
-     * be the 6th month of the year.
+     * numeric month of the year in the Jewish calendar. With the year starting at [TISHREI], it would actually be the
+     * 6th month of the year.
      */
     public const val ADAR: Int = 12
 
     /**
      * Value of the month field indicating Adar II, the leap (intercalary or embolismic) thirteenth (Undecimber) numeric
-     * month of the year added in Jewish [leap year][HebrewDate.isHebrewLeapYear]). The leap years are years 3, 6, 8, 11,
-     * 14, 17 and 19 of a 19 year cycle. With the year starting at [TISHREI], it would actually be the 7th month
-     * of the year.
+     * month of the year added in Jewish [leap year][HebrewDate.isHebrewLeapYear]). The leap years are years 3, 6, 8,
+     * 11, 14, 17 and 19 of a 19 year cycle. With the year starting at [TISHREI], it would actually be the 7th month of
+     * the year.
      */
     public const val ADAR_II: Int = 13
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -125,5 +130,4 @@ public interface HebrewMonth {
     public const val SHORT_MONTH_LENGTH: Int = 29
     public const val LONG_MONTH_LENGTH: Int = 30
   }
-
-}  // End of HebrewMonth interface
+} // End of HebrewMonth interface

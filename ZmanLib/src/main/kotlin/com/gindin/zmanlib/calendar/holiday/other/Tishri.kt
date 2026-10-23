@@ -5,15 +5,12 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
-/**
- * We don't say tachanun from Erev Yom Kippur until the end of the month.
- */
+/** We don't say tachanun from Erev Yom Kippur until the end of the month. */
 public class Tishri : Observance() {
 
   override fun getName(): String {
     return "Tishri"
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -29,8 +26,6 @@ public class Tishri : Observance() {
     return null
   }
 
-
-
   private class TishriDetails(date: HebrewDate) :
     // There is no real description for this day.
     Details.Yom(date, "") {
@@ -39,6 +34,4 @@ public class Tishri : Observance() {
       return false
     }
   }
-
-
 } // End of Tishri class

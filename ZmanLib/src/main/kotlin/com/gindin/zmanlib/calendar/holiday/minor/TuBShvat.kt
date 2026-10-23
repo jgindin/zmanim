@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val TU_B_SHVAT = "Tu B'Shvat"
 
-/**
- *
- */
+/**  */
 public class TuBShvat : Observance() {
 
   override fun getName(): String {
     return TU_B_SHVAT
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -41,6 +38,4 @@ public class TuBShvat : Observance() {
 
     return null
   }
-
-
-}  // End of TuBShvat class
+} // End of TuBShvat class

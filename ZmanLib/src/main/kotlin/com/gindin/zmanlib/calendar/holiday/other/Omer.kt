@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val OMER = "Omer"
 
-/**
- *
- */
+/**  */
 public class Omer : Observance() {
 
   override fun getName(): String {
     return OMER
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -42,12 +39,10 @@ public class Omer : Observance() {
     return null
   }
 
-
   private class OmerDetails(date: HebrewDate, dayOfOmer: Int) : Details.Yom(date, "$OMER $dayOfOmer") {
 
     override fun isOmer(): Boolean {
       return true
     }
   }
-
-}  // End of Omer class
+} // End of Omer class

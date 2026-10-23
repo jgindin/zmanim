@@ -15,26 +15,26 @@ import java.util.Collections
 
 /**
  * Fast days:
- *  - Gedaliah
- *  - 10 Tevet
- *  - Esther
- *  - 14 Nissan (Bechorot -- firstborn)
- *  - 17 Tammuz
- *  - Tisha B'Av
+ * - Gedaliah
+ * - 10 Tevet
+ * - Esther
+ * - 14 Nissan (Bechorot -- firstborn)
+ * - 17 Tammuz
+ * - Tisha B'Av
  *
- * These fast days may move around on the calendar such that, none of them can fall on Shabbat,
- *  and none, except 10 Tevet, can fall on Friday.
- *<p>
+ * These fast days may move around on the calendar such that, none of them can fall on Shabbat, and none, except 10
+ * Tevet, can fall on Friday.
+ *
+ * <p>
  * Note: The fact that these fast days push off to Sunday is from http://www.jewishgen.org/infofiles/m_calint.htm
  */
-public abstract class Taanit protected constructor(
+public abstract class Taanit
+protected constructor(
   /** Which month does the fast fall in? */
-  @HebrewMonth.Constant
-  private val monthOfFast: Int,
+  @HebrewMonth.Constant private val monthOfFast: Int,
 
   /** Absent any reason to postpone the fast, what day of the month does it fall on? */
-  @JvmField
-  protected val normalDayOfFast: Int
+  @JvmField protected val normalDayOfFast: Int,
 ) : Observance() {
 
   /** Can the fast take place on a Friday? */
@@ -44,29 +44,24 @@ public abstract class Taanit protected constructor(
 
   protected abstract fun createYomDetails(date: HebrewDate): Details
 
-
   /**
-   * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets
-   *  pulled back instead.
+   * Can the fast be pushed back to Sunday if it were to fall on Shabbat? Usually yes, but Ta'anit Esther gets pulled
+   * back instead.
    */
   protected open fun canPushToSunday(): Boolean {
     return true
   }
 
-  /**
-   * Allows the subclass to change the month of the fast based on the specified date.
-   */
+  /** Allows the subclass to change the month of the fast based on the specified date. */
   @HebrewMonth.Constant
   protected open fun getAdjustedMonthOfFast(date: HebrewDate): Int {
     return monthOfFast
   }
 
-
   @Suppress("FeatureEnvy")
   final override fun getDetailsFor(date: HebrewDate): Details? {
 
-    @HebrewMonth.Constant
-    val actualMonthOfFast = getAdjustedMonthOfFast(date)
+    @HebrewMonth.Constant val actualMonthOfFast = getAdjustedMonthOfFast(date)
 
     if (actualMonthOfFast != date.hebrewMonth) {
       return null
@@ -120,7 +115,6 @@ public abstract class Taanit protected constructor(
       }
     }
 
-
     // We've handled all the special cases above...
     if (normalDayOfFast == jewishDayOfMonth) {
       return createYomDetails(date)
@@ -130,14 +124,10 @@ public abstract class Taanit protected constructor(
       return createErevDetails(date)
     }
 
-
     return null
   }
 
-
-  protected open fun checkWednesday(
-    date: HebrewDate
-  ): Details? {
+  protected open fun checkWednesday(date: HebrewDate): Details? {
 
     val jewishDayOfMonth = date.hebrewDayOfMonth
 
@@ -154,10 +144,7 @@ public abstract class Taanit protected constructor(
     return null
   }
 
-
-  protected open fun checkThursday(
-    date: HebrewDate
-  ): Details? {
+  protected open fun checkThursday(date: HebrewDate): Details? {
 
     val jewishDayOfMonth = date.hebrewDayOfMonth
 
@@ -174,23 +161,23 @@ public abstract class Taanit protected constructor(
     return null
   }
 
-
   public companion object {
 
     protected const val TAANIT: String = "Ta'anit "
   }
 
-
-  protected open class ErevTaanitDetails internal constructor(
+  protected open class ErevTaanitDetails
+  internal constructor(
     date: HebrewDate,
-    name: String
-  ) : Details.Erev(
-    date,
-    name,
-    // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
-    //  Details class)
-    false
-  ) {
+    name: String,
+  ) :
+    Details.Erev(
+      date,
+      name,
+      // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a separate
+      //  Details class)
+      false,
+    ) {
 
     override fun sayHavdalah(): Boolean {
 
@@ -199,10 +186,10 @@ public abstract class Taanit protected constructor(
     }
   }
 
-
-  protected open class TaanitDetails internal constructor(
+  protected open class TaanitDetails
+  internal constructor(
     date: HebrewDate,
-    name: String
+    name: String,
   ) : Details.Yom(date, name) {
 
     override fun lightCandles(): Boolean {
@@ -211,17 +198,14 @@ public abstract class Taanit protected constructor(
       return isErevShabbat()
     }
 
-
     override fun sayHavdalah(): Boolean {
       // No fast requires havdalah.
       return false
     }
 
-
     override fun isTaanit(): Boolean {
       return true
     }
-
 
     override fun getZmanim(): List<Zmanim.Type> {
 
@@ -251,5 +235,4 @@ public abstract class Taanit protected constructor(
       return Collections.unmodifiableList(zmanim)
     }
   }
-
-}  // End of Taanit class
+} // End of Taanit class

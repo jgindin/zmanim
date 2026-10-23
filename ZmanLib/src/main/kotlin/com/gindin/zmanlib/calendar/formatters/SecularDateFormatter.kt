@@ -7,21 +7,17 @@ package com.gindin.zmanlib.calendar.formatters
 import com.gindin.zmanlib.calendar.HebrewDate
 import java.util.Calendar
 
-/**
- * Knows how to format a HebrewDate as a secular date.
- */
+/** Knows how to format a HebrewDate as a secular date. */
 public abstract class SecularDateFormatter {
 
   public enum class Style {
     DEFAULT,
     SHORT,
     MEDIUM,
-    LONG
+    LONG,
   }
 
-
   public abstract fun format(date: HebrewDate): String
-
 
   private class DefaultFormatter : SecularDateFormatter() {
 
@@ -78,18 +74,18 @@ public abstract class SecularDateFormatter {
     }
   }
 
-
   private open class ShortFormatter : SecularDateFormatter() {
 
     override fun format(date: HebrewDate): String {
 
       return String.format(
-        "%2s/%2s/%2s", date.gregorianMonth + 1, date.gregorianDayOfMonth,
-        date.gregorianYear
+        "%2s/%2s/%2s",
+        date.gregorianMonth + 1,
+        date.gregorianDayOfMonth,
+        date.gregorianYear,
       )
     }
   }
-
 
   private class MediumFormatter : ShortFormatter() {
 
@@ -115,9 +111,7 @@ public abstract class SecularDateFormatter {
 
       return formattedDate.toString()
     }
-
   }
-
 
   public companion object {
 
@@ -126,7 +120,6 @@ public abstract class SecularDateFormatter {
     private var MEDIUM_FORMATTER: SecularDateFormatter? = null
 
     private var SHORT_FORMATTER: SecularDateFormatter? = null
-
 
     @JvmStatic
     public fun getInstance(formatterStyle: Style): SecularDateFormatter {
@@ -162,5 +155,4 @@ public abstract class SecularDateFormatter {
       }
     }
   }
-
-}  // End of SecularDateFormatter class
+} // End of SecularDateFormatter class

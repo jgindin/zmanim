@@ -5,15 +5,12 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
-/**
- * We don't say tachanun on the 1st thru 12th of Sivan.
- */
+/** We don't say tachanun on the 1st thru 12th of Sivan. */
 public class Sivan : Observance() {
 
   override fun getName(): String {
     return "First 12 days of Sivan"
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -29,8 +26,6 @@ public class Sivan : Observance() {
     return null
   }
 
-
-
   private class SivanDetails(date: HebrewDate) :
     // There is no real description for this day.
     Details.Yom(date, "") {
@@ -39,6 +34,4 @@ public class Sivan : Observance() {
       return false
     }
   }
-
-
 } // End of Sivan class

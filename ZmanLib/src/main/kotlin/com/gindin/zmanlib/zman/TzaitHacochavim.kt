@@ -11,34 +11,29 @@ private const val DEFAULT_ZMAN_NAME = "8.5 deg"
 
 internal open class TzaitHacochavim(
   type: Zmanim.Type,
-  zmanimCalculator: ZmanimCalculator
+  zmanimCalculator: ZmanimCalculator,
 ) : Zmanim(type, zmanimCalculator) {
 
-  constructor(
-    zmanimCalculator: ZmanimCalculator
-  ) : this(Zmanim.Type.TzaitHacochavim, zmanimCalculator)
-
+  constructor(zmanimCalculator: ZmanimCalculator) : this(Zmanim.Type.TzaitHacochavim, zmanimCalculator)
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
     return mergeZmanimLists(
       buildStandardTzaitZmanim(Zmanim.Type.TzaitHacochavim, zmanimCalculator, true),
-      buildExtraTzaitZmanim(Zmanim.Type.TzaitHacochavim, zmanimCalculator)
+      buildExtraTzaitZmanim(Zmanim.Type.TzaitHacochavim, zmanimCalculator),
     )
   }
-
 
   protected companion object {
 
     @JvmStatic
     protected fun mergeZmanimLists(
       firstList: MutableList<Zman>,
-      secondList: List<Zman>?
+      secondList: List<Zman>?,
     ): MutableList<Zman> {
 
       if (null != secondList) {
@@ -48,22 +43,22 @@ internal open class TzaitHacochavim(
       return firstList
     }
 
-
     @JvmStatic
     protected fun buildStandardTzaitZmanim(
       zmanType: Zmanim.Type,
       zmanimCalculator: ZmanimCalculator,
-      includeBaalHaTanya: Boolean
+      includeBaalHaTanya: Boolean,
     ): MutableList<Zman> {
 
       val zmanim = ArrayList<Zman>()
 
       zmanim.add(
-        object : Zman(
-          "MG'A 120 Minutes",
-          "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "MG'A 120 Minutes",
+            "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120())
           }
@@ -71,11 +66,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "GR'A 120 Minutes Zmaniyot",
-          "120 minutes zmaniyot after sea level sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "GR'A 120 Minutes Zmaniyot",
+            "120 minutes zmaniyot after sea level sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120Zmanis())
           }
@@ -83,24 +79,29 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "3.5 deg",
-          "When the sun is 3.5 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "3.5 deg",
+            "When the sun is 3.5 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 3.5))
+            return toCalendar(
+              zmanimCalculator,
+              zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 3.5),
+            )
           }
         }
       )
 
       if (includeBaalHaTanya) {
         zmanim.add(
-          object : Zman(
-            "Baal HaTanya",
-            "Based on the sun's position at 6 degrees below the western horizon.",
-            zmanType
-          ) {
+          object :
+            Zman(
+              "Baal HaTanya",
+              "Based on the sun's position at 6 degrees below the western horizon.",
+              zmanType,
+            ) {
             override fun calculate(): Calendar? {
               return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisBaalHatanya())
             }
@@ -109,24 +110,29 @@ internal open class TzaitHacochavim(
       }
 
       zmanim.add(
-        object : Zman(
-          "6.5 deg",
-          "When the sun is 6.5 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "6.5 deg",
+            "When the sun is 6.5 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 6.5))
+            return toCalendar(
+              zmanimCalculator,
+              zmanimCalculator.getSunsetOffsetByDegrees(AstronomicalCalendar.GEOMETRIC_ZENITH + 6.5),
+            )
           }
         }
       )
 
       zmanim.add(
-        object : Zman(
-          DEFAULT_ZMAN_NAME,
-          "When the sun is 8.5 degrees below the western geometric horizon after sunset.",
-          zmanType,
-          false
-        ) {
+        object :
+          Zman(
+            DEFAULT_ZMAN_NAME,
+            "When the sun is 8.5 degrees below the western geometric horizon after sunset.",
+            zmanType,
+            false,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais())
           }
@@ -134,11 +140,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "16.1 deg",
-          "When the sun is 16.1 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "16.1 deg",
+            "When the sun is 16.1 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais16Point1Degrees())
           }
@@ -146,11 +153,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "18 deg",
-          "When the sun is 18 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "18 deg",
+            "When the sun is 18 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais18Degrees())
           }
@@ -158,11 +166,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "19.8 deg",
-          "When the sun is 19.8 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "19.8 deg",
+            "When the sun is 19.8 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais19Point8Degrees())
           }
@@ -170,11 +179,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "26 deg",
-          "When the sun is 26 degrees below the western geometric horizon after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "26 deg",
+            "When the sun is 26 degrees below the western geometric horizon after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais26Degrees())
           }
@@ -182,11 +192,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Chavas Yair and Divray Malkiel",
-          "Based on the time to walk 4 Mil at 15 minutes/Mil.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Chavas Yair and Divray Malkiel",
+            "Based on the time to walk 4 Mil at 15 minutes/Mil.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais60())
           }
@@ -194,11 +205,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Rambam / Rabainu Tam",
-          "Based on the time to walk 4 Mil at 18 minutes/Mil.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Rambam / Rabainu Tam",
+            "Based on the time to walk 4 Mil at 18 minutes/Mil.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais72())
           }
@@ -206,11 +218,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "72 Minutes Zmaniyot",
-          "Calculated as 72 minutes zmaniyot, or 1/10th of the day after sea level sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "72 Minutes Zmaniyot",
+            "Calculated as 72 minutes zmaniyot, or 1/10th of the day after sea level sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais72Zmanis())
           }
@@ -218,11 +231,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "MG'A 90 Minutes",
-          "Based on the time to walk 5 Mil at 18 minutes/Mil.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "MG'A 90 Minutes",
+            "Based on the time to walk 5 Mil at 18 minutes/Mil.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais90())
           }
@@ -230,11 +244,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "GR'A 90 Minutes Zmaniyot",
-          "90 minutes zmaniyot after sea level sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "GR'A 90 Minutes Zmaniyot",
+            "90 minutes zmaniyot after sea level sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais90Zmanis())
           }
@@ -242,11 +257,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "96 Minutes",
-          "96 minutes after sea level sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "96 Minutes",
+            "96 minutes after sea level sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais96())
           }
@@ -254,11 +270,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "GR'A 96 Minutes Zmaniyot",
-          "96 minutes zmaniyot after sea level sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "GR'A 96 Minutes Zmaniyot",
+            "96 minutes zmaniyot after sea level sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais96Zmanis())
           }
@@ -266,11 +283,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Chacham Yosef Harari-Raful",
-          "Usually calculated as 40 minutes after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Chacham Yosef Harari-Raful",
+            "Usually calculated as 40 minutes after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisAteretTorah())
           }
@@ -278,11 +296,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 3.65 deg",
-          "Based on the sun's position at 3.65 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 3.65 deg",
+            "Based on the sun's position at 3.65 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim3Point65Degrees())
           }
@@ -290,11 +309,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 4.37 deg",
-          "Based on the sun's position at 4.37 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 4.37 deg",
+            "Based on the sun's position at 4.37 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point37Degrees())
           }
@@ -302,11 +322,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 4.61 deg",
-          "Based on the sun's position at 4.61 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 4.61 deg",
+            "Based on the sun's position at 4.61 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point61Degrees())
           }
@@ -314,11 +335,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 4.8 deg",
-          "Based on the sun's position at 4.8 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 4.8 deg",
+            "Based on the sun's position at 4.8 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point8Degrees())
           }
@@ -326,11 +348,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 5.88 deg",
-          "Based on the sun's position at 5.88 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 5.88 deg",
+            "Based on the sun's position at 5.88 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim5Point88Degrees())
           }
@@ -338,11 +361,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 5.95 deg",
-          "Based on the sun's position at 5.95 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 5.95 deg",
+            "Based on the sun's position at 5.95 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim5Point95Degrees())
           }
@@ -350,11 +374,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 7.083 deg",
-          "Based on the sun's position at 7.083 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 7.083 deg",
+            "Based on the sun's position at 7.083 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim7Point083Degrees())
           }
@@ -362,11 +387,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Geonim 8.5 deg",
-          "Based on the sun's position at 8.5 degrees below the western horizon.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Geonim 8.5 deg",
+            "Based on the sun's position at 8.5 degrees below the western horizon.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim8Point5Degrees())
           }
@@ -374,11 +400,12 @@ internal open class TzaitHacochavim(
       )
 
       zmanim.add(
-        object : Zman(
-          "Rabbi Moshe Feinstein",
-          "For use in the New York area: Fixed 50 minutes after sunset.",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Rabbi Moshe Feinstein",
+            "For use in the New York area: Fixed 50 minutes after sunset.",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaitRavMoshe())
           }
@@ -388,21 +415,21 @@ internal open class TzaitHacochavim(
       return zmanim
     }
 
-
     @JvmStatic
     protected fun buildExtraTzaitZmanim(
       zmanType: Zmanim.Type,
-      zmanimCalculator: ZmanimCalculator
+      zmanimCalculator: ZmanimCalculator,
     ): List<Zman> {
 
       val zmanim = ArrayList<Zman>()
 
       zmanim.add(
-        object : Zman(
-          "Seattle Sephardic",
-          "Based on the Seattle Sephardic community's tradition (45 minutes).",
-          zmanType
-        ) {
+        object :
+          Zman(
+            "Seattle Sephardic",
+            "Based on the Seattle Sephardic community's tradition (45 minutes).",
+            zmanType,
+          ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaitSeattleSephardic())
           }
@@ -411,7 +438,5 @@ internal open class TzaitHacochavim(
 
       return zmanim
     }
-
   }
-
 }

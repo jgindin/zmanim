@@ -8,16 +8,13 @@ import com.gindin.zmanlib.calendar.HebrewDate
 import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber")
 public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
 
   override fun getName(): String {
     return BECHOROT
   }
-
 
   override fun canFallOnFriday(date: HebrewDate): Boolean {
 
@@ -35,7 +32,6 @@ public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
     return date.hebrewDayOfMonth == 14
   }
 
-
   override fun checkWednesday(date: HebrewDate): Details? {
 
     if (date.hebrewDayOfMonth == 11) {
@@ -45,7 +41,6 @@ public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
     // DO NOT CALL SUPER. See note in canFallOnFriday.
     return null
   }
-
 
   override fun checkThursday(date: HebrewDate): Details? {
 
@@ -61,25 +56,20 @@ public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
     return null
   }
 
-
   override fun createErevDetails(date: HebrewDate): Details {
     return ErevTaanitDetails(date, BECHOROT)
   }
-
 
   override fun createYomDetails(date: HebrewDate): Details {
     return TaanitDetails(date, BECHOROT)
   }
 
-
   override fun canPushToSunday(): Boolean {
     return false
   }
-
 
   private companion object {
 
     private const val BECHOROT: String = TAANIT + "Bechorot"
   }
-
-}  // End of TaanitBechorot class
+} // End of TaanitBechorot class

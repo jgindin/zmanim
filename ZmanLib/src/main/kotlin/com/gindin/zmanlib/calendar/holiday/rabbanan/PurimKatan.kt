@@ -11,16 +11,13 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val PURIM_KATAN = "Purim Katan"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber", "FeatureEnvy")
 public class PurimKatan : Observance() {
 
   override fun getName(): String {
     return PURIM_KATAN
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -38,12 +35,10 @@ public class PurimKatan : Observance() {
     return null
   }
 
-
   private class PurimKatanDetails(date: HebrewDate) : Details.Yom(date, PURIM_KATAN) {
 
     override fun sayTachanun(): Boolean {
       return false
     }
   }
-
-}  // End of PurimKatan class
+} // End of PurimKatan class

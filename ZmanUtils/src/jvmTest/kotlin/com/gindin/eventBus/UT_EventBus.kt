@@ -23,11 +23,12 @@ class UT_EventBus {
   fun simpleTest() {
     var receivedEvent = false
 
-    val handler = object : Event1.Handler() {
-      override fun onEvent1() {
-        receivedEvent = true
+    val handler =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          receivedEvent = true
+        }
       }
-    }
     eventBus.addHandler(handler)
 
     eventBus.fire(Event1())
@@ -40,26 +41,29 @@ class UT_EventBus {
   fun nestedEvents() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
-        eventBus.fire(Event2())
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+          eventBus.fire(Event2())
+        }
       }
-    }
     eventBus.addHandler(handler1)
 
-    val handler2 = object : Event2.Handler() {
-      override fun onEvent2() {
-        handlersInOrder.add(this)
+    val handler2 =
+      object : Event2.Handler() {
+        override fun onEvent2() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler2)
 
-    val handler3 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler3 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler3)
 
     eventBus.fire(Event1())
@@ -71,27 +75,30 @@ class UT_EventBus {
   fun addHandlerDuringEventHandling() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler2 = object : Event2.Handler() {
-      override fun onEvent2() {
-        handlersInOrder.add(this)
+    val handler2 =
+      object : Event2.Handler() {
+        override fun onEvent2() {
+          handlersInOrder.add(this)
+        }
       }
-    }
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
-        eventBus.addHandler(handler2)
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+          eventBus.addHandler(handler2)
 
-        eventBus.fire(Event2())
+          eventBus.fire(Event2())
+        }
       }
-    }
     eventBus.addHandler(handler1)
 
-    val handler3 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler3 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler3)
 
     eventBus.fire(Event1())
@@ -103,29 +110,32 @@ class UT_EventBus {
   fun removeHandlerUponReceiptOfEvent() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
 
-        eventBus.removeHandler(this)
+          eventBus.removeHandler(this)
 
-        eventBus.fire(Event2())
+          eventBus.fire(Event2())
+        }
       }
-    }
     eventBus.addHandler(handler1)
 
-    val handler2 = object : Event2.Handler() {
-      override fun onEvent2() {
-        handlersInOrder.add(this)
+    val handler2 =
+      object : Event2.Handler() {
+        override fun onEvent2() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler2)
 
-    val handler3 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler3 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler3)
 
     eventBus.fire(Event1())
@@ -137,29 +147,32 @@ class UT_EventBus {
   fun addHandlerDuringPostponedEvent() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler3 = object : Event3.Handler() {
-      override fun onEvent3() {
-        handlersInOrder.add(this)
+    val handler3 =
+      object : Event3.Handler() {
+        override fun onEvent3() {
+          handlersInOrder.add(this)
+        }
       }
-    }
 
-    val handler2 = object : Event2.Handler() {
-      override fun onEvent2() {
-        handlersInOrder.add(this)
-        eventBus.addHandler(handler3)
+    val handler2 =
+      object : Event2.Handler() {
+        override fun onEvent2() {
+          handlersInOrder.add(this)
+          eventBus.addHandler(handler3)
 
-        eventBus.fire(Event3())
+          eventBus.fire(Event3())
+        }
       }
-    }
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
-        eventBus.addHandler(handler2)
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+          eventBus.addHandler(handler2)
 
-        eventBus.fire(Event2())
+          eventBus.fire(Event2())
+        }
       }
-    }
     eventBus.addHandler(handler1)
 
     eventBus.fire(Event1())
@@ -174,23 +187,25 @@ class UT_EventBus {
   fun removeHandlerDuringPostponedEvent() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler2 = object : Event2.Handler() {
-      override fun onEvent2() {
-        handlersInOrder.add(this)
+    val handler2 =
+      object : Event2.Handler() {
+        override fun onEvent2() {
+          handlersInOrder.add(this)
 
-        eventBus.fire(Event3())
+          eventBus.fire(Event3())
+        }
       }
-    }
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
 
-        eventBus.removeHandler(this)
+          eventBus.removeHandler(this)
 
-        eventBus.fire(Event2())
+          eventBus.fire(Event2())
+        }
       }
-    }
 
     eventBus.addHandler(handler1)
     eventBus.addHandler(handler2)
@@ -206,20 +221,22 @@ class UT_EventBus {
   fun addHandlerWithCatchup() {
     val handlersInOrder = mutableListOf<EventHandler<*>>()
 
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler1)
 
     eventBus.fire(Event1())
 
-    val handler2 = object : Event1.Handler() {
-      override fun onEvent1() {
-        handlersInOrder.add(this)
+    val handler2 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          handlersInOrder.add(this)
+        }
       }
-    }
     eventBus.addHandler(handler2, true)
 
     assertEquals(handler1, handlersInOrder[0])
@@ -234,11 +251,12 @@ class UT_EventBus {
 
     //  2. add a handler w/ catchup and ensure it does not get any event.
     var received: Boolean? = null
-    val handler = object : UncachableEvent.Handler() {
-      override fun onUncachableEvent() {
-        received = true
+    val handler =
+      object : UncachableEvent.Handler() {
+        override fun onUncachableEvent() {
+          received = true
+        }
       }
-    }
     eventBus.addHandler(handler, true)
     assertNull(received)
   }
@@ -251,11 +269,12 @@ class UT_EventBus {
 
     //  2. add handler for e1 w/ catchup to ensure it was cached
     var received: Boolean? = null
-    val handler1 = object : Event1.Handler() {
-      override fun onEvent1() {
-        received = true
+    val handler1 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          received = true
+        }
       }
-    }
     eventBus.addHandler(handler1, true)
     assertEquals(true, received)
 
@@ -264,11 +283,12 @@ class UT_EventBus {
 
     //  4. add handler for e1 w/ catchup and ensure it does not get any catch up event
     received = null
-    val handler2 = object : Event1.Handler() {
-      override fun onEvent1() {
-        received = true
+    val handler2 =
+      object : Event1.Handler() {
+        override fun onEvent1() {
+          received = true
+        }
       }
-    }
     eventBus.addHandler(handler2, true)
     assertNull(received)
   }

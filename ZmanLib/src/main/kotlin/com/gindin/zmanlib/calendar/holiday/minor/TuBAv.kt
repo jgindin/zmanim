@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val TU_BAV = "Tu B'Av"
 
-/**
- *
- */
+/**  */
 public class TuBAv : Observance() {
 
   override fun getName(): String {
     return TU_BAV
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -38,14 +35,10 @@ public class TuBAv : Observance() {
     return null
   }
 
-
   private class TuBAvDetails(date: HebrewDate) : Details.Yom(date, TU_BAV) {
 
     override fun sayTachanun(): Boolean {
       return false
     }
-
   }
-
-
-}  // End of TuBAv class
+} // End of TuBAv class

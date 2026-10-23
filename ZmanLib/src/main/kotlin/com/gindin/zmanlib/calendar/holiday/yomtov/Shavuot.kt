@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val SHAVUOT = "Shavuot"
 
-/**
- *
- */
+/**  */
 public class Shavuot : Observance() {
 
   override fun getName(): String {
     return SHAVUOT
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -42,15 +39,13 @@ public class Shavuot : Observance() {
     return null
   }
 
-
   private class ShavuotDetails(
     date: HebrewDate,
-    lightCandles: Boolean
+    lightCandles: Boolean,
   ) : Details.YomTovDetails(date, SHAVUOT, lightCandles) {
 
     override fun isShavuot(): Boolean {
       return true
     }
   }
-
-}  // End of Shavuot class
+} // End of Shavuot class

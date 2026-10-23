@@ -6,9 +6,7 @@ package com.gindin.zmanlib.notification
 
 import com.gindin.zmanlib.zman.Zmanim
 
-/**
- * Provides the out-of-the-box notification defaults.
- */
+/** Provides the out-of-the-box notification defaults. */
 public class NotificationDefaults {
 
   public fun getDefaultZmanAlertTime(type: Zmanim.Type): Int {
@@ -37,5 +35,4 @@ public class NotificationDefaults {
       Zmanim.Type.YomTovSheniCandleLighting -> ZmanNotificationScheduler.FIFTEEN_MINUTES
     }
   }
-
 }

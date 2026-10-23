@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val NAME = "Lag B'Omer"
 
-/**
- *
- */
+/**  */
 public class LagBOmer : Observance() {
 
   override fun getName(): String {
     return NAME
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -39,5 +36,4 @@ public class LagBOmer : Observance() {
 
     return null
   }
-
-}  // End of LagBOmer class
+} // End of LagBOmer class

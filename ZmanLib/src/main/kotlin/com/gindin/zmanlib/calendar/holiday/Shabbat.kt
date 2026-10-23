@@ -9,15 +9,12 @@ import java.util.Calendar
 
 private const val SHABBAT = "Shabbat"
 
-/**
- * Represents Shabbat.
- */
+/** Represents Shabbat. */
 public class Shabbat : Observance() {
 
   override fun getName(): String {
     return SHABBAT
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -32,7 +29,6 @@ public class Shabbat : Observance() {
     return null
   }
 
-
   private class ShabbatDetails(date: HebrewDate) : Details.Yom(date, SHABBAT) {
 
     override fun lightCandles(): Boolean {
@@ -44,7 +40,6 @@ public class Shabbat : Observance() {
     }
   }
 
-
   private class ErevShabbatDetails(date: HebrewDate) : Details.Erev(date, SHABBAT, true) {
 
     override fun getDescription(): String {
@@ -52,5 +47,4 @@ public class Shabbat : Observance() {
       return ""
     }
   }
-
-}  // End of Shabbat class
+} // End of Shabbat class

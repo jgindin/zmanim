@@ -13,16 +13,13 @@ import java.util.ArrayList
 
 private const val PESACH = "Pesach"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber")
 public class Pesach : Observance() {
 
   override fun getName(): String {
     return PESACH
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -40,7 +37,10 @@ public class Pesach : Observance() {
 
       16 -> return PesachYomTovDetails(date, false)
 
-      17, 18, 19, 20 -> return PesachCholHaMoedDetails(date, hebrewDayOfMonth - 14)
+      17,
+      18,
+      19,
+      20 -> return PesachCholHaMoedDetails(date, hebrewDayOfMonth - 14)
 
       21 -> return PesachYomTovDetails(date, true)
 
@@ -50,15 +50,11 @@ public class Pesach : Observance() {
     return null
   }
 
-
-  protected open class ErevPesachDetails internal constructor(
-    date: HebrewDate
-  ) : Details.ErevYomTov(date, PESACH) {
+  protected open class ErevPesachDetails internal constructor(date: HebrewDate) : Details.ErevYomTov(date, PESACH) {
 
     override fun isPesach(): Boolean {
       return true
     }
-
 
     override fun getZmanim(): List<Zmanim.Type> {
 
@@ -94,10 +90,10 @@ public class Pesach : Observance() {
     }
   }
 
-
-  protected open class PesachYomTovDetails internal constructor(
+  protected open class PesachYomTovDetails
+  internal constructor(
     date: HebrewDate,
-    lightCandles: Boolean
+    lightCandles: Boolean,
   ) : Details.YomTovDetails(date, PESACH, lightCandles) {
 
     override fun isPesach(): Boolean {
@@ -105,15 +101,14 @@ public class Pesach : Observance() {
     }
   }
 
-
-  protected open class PesachCholHaMoedDetails internal constructor(
+  protected open class PesachCholHaMoedDetails
+  internal constructor(
     date: HebrewDate,
-    dayOfChag: Int
+    dayOfChag: Int,
   ) : Details.CholHaMoedDetails(date, dayOfChag, PESACH, 6 == dayOfChag) {
 
     override fun isPesach(): Boolean {
       return true
     }
   }
-
-}  // End of Pesach class
+} // End of Pesach class
