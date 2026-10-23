@@ -23,25 +23,26 @@ public class Chanukah : Observance() {
 
     val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    if (HebrewMonth.KISLEV == date.hebrewMonth) {
-      if (24 == hebrewDayOfMonth) {
-        return Details.Erev(date, CHANUKAH, false)
-      } else if (hebrewDayOfMonth >= 25) {
-        return ChanukahDetails(date, (hebrewDayOfMonth + 1) - 25)
-      }
-    } else if (HebrewMonth.TEVET == date.hebrewMonth) {
-      if (date.isKislevShort()) {
-        if (hebrewDayOfMonth <= 3) {
-          return ChanukahDetails(date, hebrewDayOfMonth + 5)
-        }
-      } else {
-        if (hebrewDayOfMonth <= 2) {
-          return ChanukahDetails(date, hebrewDayOfMonth + 6)
-        }
-      }
-    }
+    // Chanukah starts on 25 Kislev, so it has run for 5 or 6 days when Tevet begins (Kislev has 29 or 30 days),
+    //  and it ends on 3 or 2 Tevet.
+    val lastNightsOfKislev = if (date.isKislevShort()) 5 else 6
+    val lastDayOfChanukahInTevet = if (date.isKislevShort()) 3 else 2
 
-    return null
+    return when (date.hebrewMonth) {
+      HebrewMonth.KISLEV ->
+        when {
+          24 == hebrewDayOfMonth -> Details.Erev(date, CHANUKAH, false)
+          hebrewDayOfMonth >= 25 -> ChanukahDetails(date, (hebrewDayOfMonth + 1) - 25)
+          else -> null
+        }
+      HebrewMonth.TEVET ->
+        if (hebrewDayOfMonth <= lastDayOfChanukahInTevet) {
+          ChanukahDetails(date, hebrewDayOfMonth + lastNightsOfKislev)
+        } else {
+          null
+        }
+      else -> null
+    }
   }
 
   private class ChanukahDetails(date: HebrewDate, day: Int) : Details.Yom(date, "$CHANUKAH $day") {

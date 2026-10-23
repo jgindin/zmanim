@@ -5,7 +5,6 @@
 package com.gindin.zmanlib.calendar.holiday.rabbanan
 
 import com.gindin.zmanlib.calendar.HebrewDate
-import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
@@ -21,20 +20,14 @@ public class ShushanPurim : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (
-      (date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
-        (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
-    ) {
-
-      if (15 == date.hebrewDayOfMonth) {
-        return object : Details.Yom(date, SHUSHAN_PURIM) {
-          override fun sayTachanun(): Boolean {
-            return false
-          }
-        }
-      }
+    if (!date.isInPurimMonth() || 15 != date.hebrewDayOfMonth) {
+      return null
     }
 
-    return null
+    return object : Details.Yom(date, SHUSHAN_PURIM) {
+      override fun sayTachanun(): Boolean {
+        return false
+      }
+    }
   }
 } // End of ShushanPurim class

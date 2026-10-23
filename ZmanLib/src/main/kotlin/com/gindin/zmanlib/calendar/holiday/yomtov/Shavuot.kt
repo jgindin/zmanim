@@ -21,22 +21,16 @@ public class Shavuot : Observance() {
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.SIVAN == date.hebrewMonth) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (5 == hebrewDayOfMonth) {
-        return Details.ErevYomTov(date, SHAVUOT)
-      }
-
-      if (6 == hebrewDayOfMonth) {
-        return ShavuotDetails(date, true)
-      }
-
-      if (7 == hebrewDayOfMonth) {
-        return ShavuotDetails(date, false)
-      }
+    if (HebrewMonth.SIVAN != date.hebrewMonth) {
+      return null
     }
 
-    return null
+    return when (date.hebrewDayOfMonth) {
+      5 -> Details.ErevYomTov(date, SHAVUOT)
+      6 -> ShavuotDetails(date, true)
+      7 -> ShavuotDetails(date, false)
+      else -> null
+    }
   }
 
   private class ShavuotDetails(

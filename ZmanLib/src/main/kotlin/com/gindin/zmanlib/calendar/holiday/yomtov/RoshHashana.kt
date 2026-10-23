@@ -24,21 +24,17 @@ public class RoshHashana : Observance() {
     val hebrewMonth = date.hebrewMonth
     val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    if ((HebrewMonth.ELUL == hebrewMonth) && (29 == hebrewDayOfMonth)) {
-      return object : Details.Erev(date, ROSH_HASHANA) {
-        override fun sayTachanun(): Boolean {
-          return false
+    return when {
+      (HebrewMonth.ELUL == hebrewMonth) && (29 == hebrewDayOfMonth) ->
+        object : Details.Erev(date, ROSH_HASHANA) {
+          override fun sayTachanun(): Boolean {
+            return false
+          }
         }
-      }
-    } else if (HebrewMonth.TISHREI == hebrewMonth) {
-      if (1 == hebrewDayOfMonth) {
-        return RoshHashanaYomDetails(date, true)
-      } else if (2 == hebrewDayOfMonth) {
-        return RoshHashanaYomDetails(date, false)
-      }
+      (HebrewMonth.TISHREI == hebrewMonth) && (1 == hebrewDayOfMonth) -> RoshHashanaYomDetails(date, true)
+      (HebrewMonth.TISHREI == hebrewMonth) && (2 == hebrewDayOfMonth) -> RoshHashanaYomDetails(date, false)
+      else -> null
     }
-
-    return null
   }
 
   private class RoshHashanaYomDetails(

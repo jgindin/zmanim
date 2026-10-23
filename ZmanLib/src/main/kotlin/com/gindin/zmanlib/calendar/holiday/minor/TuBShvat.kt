@@ -21,21 +21,19 @@ public class TuBShvat : Observance() {
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (date.hebrewMonth == HebrewMonth.SHEVAT) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (14 == hebrewDayOfMonth) {
-        return Details.Erev(date, TU_B_SHVAT, false)
-      }
+    if (date.hebrewMonth != HebrewMonth.SHEVAT) {
+      return null
+    }
 
-      if (15 == hebrewDayOfMonth) {
-        return object : Details.Yom(date, TU_B_SHVAT) {
+    return when (date.hebrewDayOfMonth) {
+      14 -> Details.Erev(date, TU_B_SHVAT, false)
+      15 ->
+        object : Details.Yom(date, TU_B_SHVAT) {
           override fun sayTachanun(): Boolean {
             return false
           }
         }
-      }
+      else -> null
     }
-
-    return null
   }
 } // End of TuBShvat class

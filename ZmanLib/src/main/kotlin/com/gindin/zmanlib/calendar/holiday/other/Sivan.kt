@@ -5,6 +5,8 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
+private const val LAST_DAY = 12
+
 /** We don't say tachanun on the 1st thru 12th of Sivan. */
 public class Sivan : Observance() {
 
@@ -18,7 +20,7 @@ public class Sivan : Observance() {
     if (HebrewMonth.SIVAN == hebrewMonth) {
 
       val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (hebrewDayOfMonth <= 12) {
+      if (hebrewDayOfMonth <= LAST_DAY) {
         return SivanDetails(date)
       }
     }

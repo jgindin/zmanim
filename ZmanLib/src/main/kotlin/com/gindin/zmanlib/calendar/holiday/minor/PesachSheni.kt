@@ -21,22 +21,19 @@ public class PesachSheni : Observance() {
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.IYAR == date.hebrewMonth) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
+    if (HebrewMonth.IYAR != date.hebrewMonth) {
+      return null
+    }
 
-      if (13 == hebrewDayOfMonth) {
-        return Details.Erev(date, PESACH_SHENI, false)
-      }
-
-      if (14 == hebrewDayOfMonth) {
-        return object : Details.Yom(date, PESACH_SHENI) {
+    return when (date.hebrewDayOfMonth) {
+      13 -> Details.Erev(date, PESACH_SHENI, false)
+      14 ->
+        object : Details.Yom(date, PESACH_SHENI) {
           override fun sayTachanun(): Boolean {
             return false
           }
         }
-      }
+      else -> null
     }
-
-    return null
   }
 } // End of PesachSheni class

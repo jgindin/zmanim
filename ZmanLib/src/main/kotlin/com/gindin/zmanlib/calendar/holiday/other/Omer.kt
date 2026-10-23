@@ -24,19 +24,16 @@ public class Omer : Observance() {
     val hebrewMonth = date.hebrewMonth
     val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    if (HebrewMonth.NISSAN == hebrewMonth) {
-      if (hebrewDayOfMonth >= 16) {
-        return OmerDetails(date, hebrewDayOfMonth - 15)
+    val dayOfOmer =
+      when {
+        HebrewMonth.NISSAN == hebrewMonth && hebrewDayOfMonth >= 16 -> hebrewDayOfMonth - 15
+        HebrewMonth.IYAR == hebrewMonth -> 15 + hebrewDayOfMonth
+        HebrewMonth.SIVAN == hebrewMonth && hebrewDayOfMonth < 6 ->
+          15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth
+        else -> return null
       }
-    } else if (HebrewMonth.IYAR == hebrewMonth) {
-      return OmerDetails(date, 15 + hebrewDayOfMonth)
-    } else if (HebrewMonth.SIVAN == hebrewMonth) {
-      if (hebrewDayOfMonth < 6) {
-        return OmerDetails(date, 15 + HebrewMonth.SHORT_MONTH_LENGTH + hebrewDayOfMonth)
-      }
-    }
 
-    return null
+    return OmerDetails(date, dayOfOmer)
   }
 
   private class OmerDetails(date: HebrewDate, dayOfOmer: Int) : Details.Yom(date, "$OMER $dayOfOmer") {

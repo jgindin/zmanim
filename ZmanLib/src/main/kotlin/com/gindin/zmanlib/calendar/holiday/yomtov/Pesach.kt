@@ -30,27 +30,21 @@ public class Pesach : Observance() {
     }
 
     val hebrewDayOfMonth = date.hebrewDayOfMonth
-    when (hebrewDayOfMonth) {
-      14 -> return ErevPesachDetails(date)
-
-      15 -> return PesachYomTovDetails(date, true)
-
-      16 -> return PesachYomTovDetails(date, false)
-
+    return when (hebrewDayOfMonth) {
+      14 -> ErevPesachDetails(date)
+      15 -> PesachYomTovDetails(date, true)
+      16 -> PesachYomTovDetails(date, false)
       17,
       18,
       19,
-      20 -> return PesachCholHaMoedDetails(date, hebrewDayOfMonth - 14)
-
-      21 -> return PesachYomTovDetails(date, true)
-
-      22 -> return PesachYomTovDetails(date, false)
+      20 -> PesachCholHaMoedDetails(date, hebrewDayOfMonth - 14)
+      21 -> PesachYomTovDetails(date, true)
+      22 -> PesachYomTovDetails(date, false)
+      else -> null
     }
-
-    return null
   }
 
-  protected open class ErevPesachDetails internal constructor(date: HebrewDate) : Details.ErevYomTov(date, PESACH) {
+  private open class ErevPesachDetails internal constructor(date: HebrewDate) : Details.ErevYomTov(date, PESACH) {
 
     override fun isPesach(): Boolean {
       return true
@@ -90,7 +84,7 @@ public class Pesach : Observance() {
     }
   }
 
-  protected open class PesachYomTovDetails
+  private open class PesachYomTovDetails
   internal constructor(
     date: HebrewDate,
     lightCandles: Boolean,
@@ -101,7 +95,7 @@ public class Pesach : Observance() {
     }
   }
 
-  protected open class PesachCholHaMoedDetails
+  private open class PesachCholHaMoedDetails
   internal constructor(
     date: HebrewDate,
     dayOfChag: Int,

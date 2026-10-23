@@ -21,19 +21,19 @@ public class LagBOmer : Observance() {
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.IYAR == date.hebrewMonth) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (17 == hebrewDayOfMonth) {
-        return Details.Erev(date, NAME, false)
-      } else if (18 == hebrewDayOfMonth) {
-        return object : Details.Yom(date, NAME) {
+    if (HebrewMonth.IYAR != date.hebrewMonth) {
+      return null
+    }
+
+    return when (date.hebrewDayOfMonth) {
+      17 -> Details.Erev(date, NAME, false)
+      18 ->
+        object : Details.Yom(date, NAME) {
           override fun sayTachanun(): Boolean {
             return false
           }
         }
-      }
+      else -> null
     }
-
-    return null
   }
 } // End of LagBOmer class

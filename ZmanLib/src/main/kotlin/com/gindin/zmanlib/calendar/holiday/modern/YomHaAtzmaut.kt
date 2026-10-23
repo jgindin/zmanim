@@ -12,6 +12,12 @@ import java.util.Calendar
 
 private const val NAME = "Yom HaAtzmaut"
 
+private const val IYAR_2 = 2
+private const val IYAR_3 = 3
+private const val IYAR_4 = 4
+private const val IYAR_5 = 5
+private const val IYAR_6 = 6
+
 /**
  * Yom Ha'atzmaut is nominally celebrated on the 5th day of Iyar (ה' באייר) in the Hebrew calendar, the anniversary of
  * the day in which Israel independence was proclaimed, when David Ben Gurion publicly read the Israeli Declaration of
@@ -40,78 +46,59 @@ public class YomHaAtzmaut : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.IYAR != date.hebrewMonth) {
+    if (HebrewMonth.IYAR != date.hebrewMonth || isMovedElsewhere(date)) {
       return null
     }
 
-    // In order to prevent Yom HaZikaron or Yom HaAtzmaut from falling on or immediately after Shabbat,
-    //  if the 5th of Iyar falls on:
-    //    Friday:   Moved back to the 4th
-    //    Shabbat:  Moved back to the 3rd
-    //    Monday:   Moved forward to the 6th
-    // See http://en.wikipedia.org/wiki/Yom_Ha-Atzma%27ut
+    return getDetailsForShiftedDay(date) ?: getDetailsForRegularDay(date)
+  }
+
+  /**
+   * In order to prevent Yom HaZikaron or Yom HaAtzmaut from falling on or immediately after Shabbat, if the 5th of Iyar
+   * falls on:
+   * - Friday: Moved back to the 4th
+   * - Shabbat: Moved back to the 3rd
+   * - Monday: Moved forward to the 6th
+   *
+   * See http://en.wikipedia.org/wiki/Yom_Ha-Atzma%27ut
+   *
+   * Those are the days on which the regular observance does not fall out any more, because it was moved to another day.
+   */
+  private fun isMovedElsewhere(date: HebrewDate): Boolean {
     val jewishDayOfMonth = date.hebrewDayOfMonth
 
-    // A Sunday also gets Monday's treatment of the 5th.
-    when (date.dayOfWeek) {
-      Calendar.SUNDAY -> {
-        if (4 == jewishDayOfMonth) {
-          // This is a case where we're pushing it forward...
-          return null
-        }
-
-        if (5 == jewishDayOfMonth) {
-          return createErevDetails(date)
-        }
-      }
-
-      Calendar.MONDAY -> {
-        if (5 == jewishDayOfMonth) {
-          return createErevDetails(date)
-        }
-      }
-
-      Calendar.TUESDAY -> {
-        if (6 == jewishDayOfMonth) {
-          return createYomDetails(date)
-        }
-      }
-
-      Calendar.WEDNESDAY -> {
-        if ((2 == jewishDayOfMonth) || (3 == jewishDayOfMonth)) {
-          return createErevDetails(date)
-        }
-      }
-
-      Calendar.THURSDAY -> {
-        if ((3 == jewishDayOfMonth) || (4 == jewishDayOfMonth)) {
-          return createYomDetails(date)
-        }
-      }
-
-      Calendar.FRIDAY -> {
-        if ((4 == jewishDayOfMonth) || (5 == jewishDayOfMonth)) {
-          // In this case, we pushed it back to the Thursday the 4th...
-          return null
-        }
-      }
-
-      Calendar.SATURDAY -> {
-        if (5 == jewishDayOfMonth) {
-          // In this case, we pushed it back to the Thursday the 3rd...
-          return null
-        }
-      }
+    return when (date.dayOfWeek) {
+      // A Sunday also gets Monday's treatment of the 5th, so the 4th is a case where we're pushing it forward...
+      Calendar.SUNDAY -> IYAR_4 == jewishDayOfMonth
+      // In this case, we pushed it back to the Thursday the 4th (or, for the 5th, to the Thursday the 3rd)...
+      Calendar.FRIDAY -> (IYAR_4 == jewishDayOfMonth) || (IYAR_5 == jewishDayOfMonth)
+      Calendar.SATURDAY -> IYAR_5 == jewishDayOfMonth
+      else -> false
     }
+  }
 
-    // We've handled the special cases, so if we get here, we're dealing with a regular year...
-    if (4 == jewishDayOfMonth) {
-      return createErevDetails(date)
-    } else if (5 == jewishDayOfMonth) {
-      return createYomDetails(date)
+  private fun getDetailsForShiftedDay(date: HebrewDate): Details? {
+    val jewishDayOfMonth = date.hebrewDayOfMonth
+
+    return when (date.dayOfWeek) {
+      Calendar.SUNDAY,
+      Calendar.MONDAY -> if (IYAR_5 == jewishDayOfMonth) createErevDetails(date) else null
+      Calendar.TUESDAY -> if (IYAR_6 == jewishDayOfMonth) createYomDetails(date) else null
+      Calendar.WEDNESDAY ->
+        if ((IYAR_2 == jewishDayOfMonth) || (IYAR_3 == jewishDayOfMonth)) createErevDetails(date) else null
+      Calendar.THURSDAY ->
+        if ((IYAR_3 == jewishDayOfMonth) || (IYAR_4 == jewishDayOfMonth)) createYomDetails(date) else null
+      else -> null
     }
+  }
 
-    return null
+  /** The "regular" year. */
+  private fun getDetailsForRegularDay(date: HebrewDate): Details? {
+    return when (date.hebrewDayOfMonth) {
+      IYAR_4 -> createErevDetails(date)
+      IYAR_5 -> createYomDetails(date)
+      else -> null
+    }
   }
 
   private fun createErevDetails(date: HebrewDate): Details {

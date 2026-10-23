@@ -1,23 +1,26 @@
 # Overrides of detekt's default rule set only (buildUponDefaultConfig is on); each one says why.
 
+complexity:
+  TooManyFunctions:
+    # The classes it flags (HebrewCalendar, HebrewDate, Details, ZmanCallback, ...) are the public Java-visible API of
+    #  this library, ported member for member from the Java it replaces; splitting them to satisfy a function count
+    #  would change that API. Their size is the API's size.
+    active: false
+
 naming:
   ClassNaming:
     # Unit-test classes are named UT_<ClassUnderTest>, which this repo uses throughout its tests.
     classPattern: '[A-Z][a-zA-Z0-9]*|UT_[A-Za-z0-9_]+'
 
 style:
-  MaxLineLength:
-    # ktlint's max-line-length enforces the 120 columns set in .editorconfig; running both would
-    #  report every long line twice, and detekt also counts KDoc and string literals that ktlint
-    #  deliberately leaves alone.
-    active: false
   ForbiddenComment:
     # TODO comments are how follow-up work is tracked here, so only the markers that must not
     #  reach a release are forbidden.
     comments:
       - 'FIXME:'
       - 'STOPSHIP:'
-  ReturnCount:
-    # Guard clauses at the top of a function are the intended use of early return; the converted
-    #  code also has many multi-way lookups that return from each branch.
-    excludeGuardClauses: true
+  MaxLineLength:
+    # ktfmt owns line wrapping and keeps to the 120 columns configured for it; what it cannot wrap are the long
+    #  user-visible description string literals in the zman definitions, and splitting a sentence over several
+    #  concatenated literals only to satisfy this rule would make the text harder to find and edit.
+    active: false

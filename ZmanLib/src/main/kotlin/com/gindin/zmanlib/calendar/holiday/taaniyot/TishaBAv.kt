@@ -9,9 +9,10 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 
 private const val TISHA_B_AV = "Tisha B'Av"
+private const val DAY_OF_FAST = 9
 
 /**  */
-public class TishaBAv : Taanit(HebrewMonth.AV, 9) {
+public class TishaBAv : Taanit(HebrewMonth.AV, DAY_OF_FAST) {
 
   override fun getName(): String {
     return TISHA_B_AV
