@@ -24,30 +24,24 @@ public class Sukkot : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.TISHREI == date.hebrewMonth) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-
-      when (hebrewDayOfMonth) {
-        14 -> return Details.ErevYomTov(date, SUKKOT)
-
-        15 -> return SukkotYomTovDetails(date, true)
-
-        16 -> return SukkotYomTovDetails(date, false)
-
-        17,
-        18,
-        19,
-        20 -> return SukkotCholHaModeDetails(date, hebrewDayOfMonth - 14)
-
-        21 -> return HoshanaRabbaDetails(date)
-
-        22 -> return ShminiAtzeretDetails(date)
-
-        23 -> return SimchatTorahDetails(date)
-      }
+    if (HebrewMonth.TISHREI != date.hebrewMonth) {
+      return null
     }
 
-    return null
+    val hebrewDayOfMonth = date.hebrewDayOfMonth
+    return when (hebrewDayOfMonth) {
+      14 -> Details.ErevYomTov(date, SUKKOT)
+      15 -> SukkotYomTovDetails(date, true)
+      16 -> SukkotYomTovDetails(date, false)
+      17,
+      18,
+      19,
+      20 -> SukkotCholHaModeDetails(date, hebrewDayOfMonth - 14)
+      21 -> HoshanaRabbaDetails(date)
+      22 -> ShminiAtzeretDetails(date)
+      23 -> SimchatTorahDetails(date)
+      else -> null
+    }
   }
 
   private class SukkotYomTovDetails(

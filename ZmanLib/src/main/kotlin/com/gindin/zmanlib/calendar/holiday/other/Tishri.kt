@@ -5,6 +5,8 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
+private const val FIRST_DAY = 11
+
 /** We don't say tachanun from Erev Yom Kippur until the end of the month. */
 public class Tishri : Observance() {
 
@@ -18,7 +20,7 @@ public class Tishri : Observance() {
     if (HebrewMonth.TISHREI == hebrewMonth) {
 
       val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (hebrewDayOfMonth >= 11) {
+      if (hebrewDayOfMonth >= FIRST_DAY) {
         return TishriDetails(date)
       }
     }

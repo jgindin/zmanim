@@ -58,107 +58,71 @@ protected constructor(
     return monthOfFast
   }
 
-  @Suppress("FeatureEnvy")
   final override fun getDetailsFor(date: HebrewDate): Details? {
 
     @HebrewMonth.Constant val actualMonthOfFast = getAdjustedMonthOfFast(date)
 
-    if (actualMonthOfFast != date.hebrewMonth) {
+    if (actualMonthOfFast != date.hebrewMonth || isNotAFastDay(date)) {
       return null
     }
 
-    val dayOfWeek = date.dayOfWeek
+    return getDetailsForSpecialWeekday(date) ?: getDetailsForRegularDay(date)
+  }
+
+  /**
+   * On a day of the week where this fast can never take place, neither it nor its erev can either.
+   *
+   * If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be Erev, because we never have
+   * a Ta'anit on Shabbat (well, except Yom Kippur, but that's a whole separate case). And if we can't push the fast to
+   * Sunday, then Shabbat is nothing.
+   */
+  private fun isNotAFastDay(date: HebrewDate): Boolean {
+    return when (date.dayOfWeek) {
+      Calendar.FRIDAY -> !canFallOnFriday(date)
+      Calendar.SATURDAY -> !canPushToSunday()
+      else -> false
+    }
+  }
+
+  /** The days of the week on which the fast may have been moved, or its erev affected, by the day of the week. */
+  private fun getDetailsForSpecialWeekday(date: HebrewDate): Details? {
+
     val jewishDayOfMonth = date.hebrewDayOfMonth
 
-    if (Calendar.WEDNESDAY == dayOfWeek) {
-      val details = checkWednesday(date)
-      if (null != details) {
-        return details
-      }
+    return when (date.dayOfWeek) {
+      Calendar.WEDNESDAY -> checkWednesday(date)
+      Calendar.THURSDAY -> checkThursday(date)
+      Calendar.FRIDAY -> if (normalDayOfFast == jewishDayOfMonth) createYomDetails(date) else null
+      Calendar.SATURDAY -> if (normalDayOfFast == jewishDayOfMonth) createErevDetails(date) else null
+      Calendar.SUNDAY ->
+        if (((normalDayOfFast + 1) == jewishDayOfMonth) && canPushToSunday()) createYomDetails(date) else null
+      else -> null
     }
+  }
 
-    if (Calendar.THURSDAY == dayOfWeek) {
-      val details = checkThursday(date)
-      if (null != details) {
-        return details
-      }
+  private fun getDetailsForRegularDay(date: HebrewDate): Details? {
+    return when (date.hebrewDayOfMonth) {
+      normalDayOfFast -> createYomDetails(date)
+      normalDayOfFast - 1 -> createErevDetails(date)
+      else -> null
     }
-
-    if (Calendar.FRIDAY == dayOfWeek) {
-
-      if (canFallOnFriday(date)) {
-        if (normalDayOfFast == jewishDayOfMonth) {
-          return createYomDetails(date)
-        }
-      } else {
-        // If we can't fall on Friday, then for sure this cannot be the Yom, but it also cannot be
-        //  Erev, because we never have a Ta'anit on Shabbat (well, except Yom Kippur, but that's
-        //  a whole separate case)...
-        return null
-      }
-    }
-
-    if (Calendar.SATURDAY == dayOfWeek) {
-      if (canPushToSunday()) {
-        if (normalDayOfFast == jewishDayOfMonth) {
-          return createErevDetails(date)
-        }
-      } else {
-        // If we can't push it, then today is nothing.
-        return null
-      }
-    }
-
-    if (Calendar.SUNDAY == dayOfWeek) {
-      if (((normalDayOfFast + 1) == jewishDayOfMonth) && canPushToSunday()) {
-        return createYomDetails(date)
-      }
-    }
-
-    // We've handled all the special cases above...
-    if (normalDayOfFast == jewishDayOfMonth) {
-      return createYomDetails(date)
-    }
-
-    if ((normalDayOfFast - 1) == jewishDayOfMonth) {
-      return createErevDetails(date)
-    }
-
-    return null
   }
 
   protected open fun checkWednesday(date: HebrewDate): Details? {
 
-    val jewishDayOfMonth = date.hebrewDayOfMonth
+    // When the fast can't fall on Friday, its erev has to be a day earlier.
+    val daysBeforeFast = if (canFallOnFriday(date)) 1 else 2
 
-    if (canFallOnFriday(date)) {
-      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
-        return createErevDetails(date)
-      }
-    } else {
-      if ((normalDayOfFast - 2) == jewishDayOfMonth) {
-        return createErevDetails(date)
-      }
-    }
-
-    return null
+    return if ((normalDayOfFast - daysBeforeFast) == date.hebrewDayOfMonth) createErevDetails(date) else null
   }
 
   protected open fun checkThursday(date: HebrewDate): Details? {
 
-    val jewishDayOfMonth = date.hebrewDayOfMonth
-
-    if (canFallOnFriday(date)) {
-      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
-        return createErevDetails(date)
-      }
-    } else {
-      if ((normalDayOfFast - 1) == jewishDayOfMonth) {
-        return createYomDetails(date)
-      }
+    if ((normalDayOfFast - 1) != date.hebrewDayOfMonth) {
+      return null
     }
 
-    return null
+    return if (canFallOnFriday(date)) createErevDetails(date) else createYomDetails(date)
   }
 
   public companion object {

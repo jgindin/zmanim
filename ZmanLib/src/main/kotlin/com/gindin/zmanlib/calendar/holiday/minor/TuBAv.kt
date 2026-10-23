@@ -21,18 +21,15 @@ public class TuBAv : Observance() {
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (date.hebrewMonth == HebrewMonth.AV) {
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (14 == hebrewDayOfMonth) {
-        return Details.Erev(date, TU_BAV, false)
-      }
-
-      if (15 == hebrewDayOfMonth) {
-        return TuBAvDetails(date)
-      }
+    if (date.hebrewMonth != HebrewMonth.AV) {
+      return null
     }
 
-    return null
+    return when (date.hebrewDayOfMonth) {
+      14 -> Details.Erev(date, TU_BAV, false)
+      15 -> TuBAvDetails(date)
+      else -> null
+    }
   }
 
   private class TuBAvDetails(date: HebrewDate) : Details.Yom(date, TU_BAV) {

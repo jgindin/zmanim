@@ -11,6 +11,11 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val PURIM = "Purim"
 
+/** Purim (and Shushan Purim) fall in Adar, or in Adar II of a leap year. */
+internal fun HebrewDate.isInPurimMonth(): Boolean {
+  return hebrewMonth == if (isHebrewLeapYear()) HebrewMonth.ADAR_II else HebrewMonth.ADAR
+}
+
 /**  */
 @Suppress("MagicNumber", "FeatureEnvy")
 public class Purim : Observance() {
@@ -21,20 +26,15 @@ public class Purim : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (
-      (date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
-        (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
-    ) {
-
-      if (13 == date.hebrewDayOfMonth) {
-        return Details.Erev(date, PURIM, false)
-      }
-      if (14 == date.hebrewDayOfMonth) {
-        return PurimDetails(date)
-      }
+    if (!date.isInPurimMonth()) {
+      return null
     }
 
-    return null
+    return when (date.hebrewDayOfMonth) {
+      13 -> Details.Erev(date, PURIM, false)
+      14 -> PurimDetails(date)
+      else -> null
+    }
   }
 
   private class PurimDetails(date: HebrewDate) : Details.Yom(date, PURIM) {

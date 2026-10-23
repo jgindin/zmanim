@@ -21,18 +21,16 @@ public class PurimKatan : Observance() {
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth)) {
-
-      val hebrewDayOfMonth = date.hebrewDayOfMonth
-      if (13 == hebrewDayOfMonth) {
-        return Details.Erev(date, PURIM_KATAN, false)
-      }
-      if ((14 == hebrewDayOfMonth) || (15 == hebrewDayOfMonth)) {
-        return PurimKatanDetails(date)
-      }
+    if (!date.isHebrewLeapYear() || (HebrewMonth.ADAR != date.hebrewMonth)) {
+      return null
     }
 
-    return null
+    return when (date.hebrewDayOfMonth) {
+      13 -> Details.Erev(date, PURIM_KATAN, false)
+      14,
+      15 -> PurimKatanDetails(date)
+      else -> null
+    }
   }
 
   private class PurimKatanDetails(date: HebrewDate) : Details.Yom(date, PURIM_KATAN) {

@@ -43,6 +43,9 @@ internal open class TzaitHacochavim(
       return firstList
     }
 
+    // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+    //  scatter the table, so the length rule does not apply.
+    @Suppress("LongMethod")
     @JvmStatic
     protected fun buildStandardTzaitZmanim(
       zmanType: Zmanim.Type,

@@ -11,6 +11,10 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val NAME = "Yom Kippur"
 
+/** Yom Kippur is on the 10th of Tishrei. */
+private const val DAY_OF_MONTH = 10
+private const val EREV_DAY_OF_MONTH = DAY_OF_MONTH - 1
+
 /**  */
 public class YomKippur : Observance() {
 
@@ -21,21 +25,20 @@ public class YomKippur : Observance() {
   @Suppress("FeatureEnvy")
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if (HebrewMonth.TISHREI == date.hebrewMonth) {
-      if (9 == date.hebrewDayOfMonth) {
-        return object : Details.Erev(date, NAME) {
+    if (HebrewMonth.TISHREI != date.hebrewMonth) {
+      return null
+    }
+
+    return when (date.hebrewDayOfMonth) {
+      EREV_DAY_OF_MONTH ->
+        object : Details.Erev(date, NAME) {
           override fun sayTachanun(): Boolean {
             return false
           }
         }
-      }
-
-      if (10 == date.hebrewDayOfMonth) {
-        return YomKippurDetails(date)
-      }
+      DAY_OF_MONTH -> YomKippurDetails(date)
+      else -> null
     }
-
-    return null
   }
 
   private class YomKippurDetails(date: HebrewDate) : Details(date) {
