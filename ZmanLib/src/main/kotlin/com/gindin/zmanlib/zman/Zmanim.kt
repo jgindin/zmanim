@@ -26,17 +26,9 @@ protected constructor(
 
     val zmanim = ensureZmanim()
 
-    if (zmanName.isNullOrEmpty()) {
-      return getDefault()
-    }
+    val found = if (zmanName.isNullOrEmpty()) null else zmanim.firstOrNull { zmanName == it.name }
 
-    for (zman in zmanim) {
-      if (zmanName == zman.name) {
-        return zman
-      }
-    }
-
-    return getDefault()
+    return found ?: getDefault()
   }
 
   /**

@@ -316,29 +316,28 @@ protected constructor(
       defaultDirection: Direction,
     ): Pair<Direction, String> {
 
-      var test = value[0]
-      if (('S' == test) || ('s' == test)) {
-        return Pair(Direction.SOUTH, value.substring(1))
-      } else if (('W' == test) || ('w' == test)) {
-        return Pair(Direction.WEST, value.substring(1))
-      } else if (('N' == test) || ('n' == test)) {
-        return Pair(Direction.NORTH, value.substring(1))
-      } else if (('E' == test) || ('e' == test)) {
-        return Pair(Direction.EAST, value.substring(1))
-      }
+      val leading = toDirection(value[0])
+      val trailing = toDirection(value[value.length - 1])
 
-      test = value[value.length - 1]
-      if (('S' == test) || ('s' == test)) {
-        return Pair(Direction.SOUTH, value.substring(0, value.length - 1))
-      } else if (('W' == test) || ('w' == test)) {
-        return Pair(Direction.WEST, value.substring(0, value.length - 1))
-      } else if (('N' == test) || ('n' == test)) {
-        return Pair(Direction.NORTH, value.substring(0, value.length - 1))
-      } else if (('E' == test) || ('e' == test)) {
-        return Pair(Direction.EAST, value.substring(0, value.length - 1))
+      return when {
+        leading != null -> Pair(leading, value.substring(1))
+        trailing != null -> Pair(trailing, value.substring(0, value.length - 1))
+        else -> Pair(defaultDirection, value)
       }
+    }
 
-      return Pair(defaultDirection, value)
+    private fun toDirection(letter: Char): Direction? {
+      return when (letter) {
+        'S',
+        's' -> Direction.SOUTH
+        'W',
+        'w' -> Direction.WEST
+        'N',
+        'n' -> Direction.NORTH
+        'E',
+        'e' -> Direction.EAST
+        else -> null
+      }
     }
   }
 }

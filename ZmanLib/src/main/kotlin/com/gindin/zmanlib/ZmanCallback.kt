@@ -5,6 +5,8 @@
 package com.gindin.zmanlib
 
 import com.gindin.zmanlib.calendar.HebrewCalendar
+import com.gindin.zmanlib.calendar.HebrewDate
+import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.location.ZmanimLocation
 import com.gindin.zmanlib.notification.ZmanNotificationScheduler
 import com.gindin.zmanlib.zman.Zman
@@ -46,94 +48,95 @@ public abstract class ZmanCallback {
     location: ZmanimLocation,
     now: Calendar,
   ): Boolean {
-
-    if (!shouldShowAnyNotifications()) {
-      return false
-    }
-
-    if (shouldNotifyOnShabbat()) {
-      return true
-    }
-
-    now.timeZone = location.timeZone
-    val today = HebrewCalendar.getForDate(now)
-
-    val todayDetails = today.getDetails()
-    val tomorrow = today.tomorrow()
-    val tomorrowDetails = tomorrow.getDetails()
-
-    // If today is erev Shabbat, and it's after candle lighting, then don't notify...
-    val todayIsAfterCandleLighting = today.isAfter(now, Zmanim.Type.CandleLighting, location)
-    if (tomorrowDetails.isShabbat() && todayIsAfterCandleLighting) {
-      return false
-    }
-
-    // If today is erev Yom Tov, and it's after candle lighting, then don't notify...
-    if (tomorrowDetails.isYomTov() && todayIsAfterCandleLighting) {
-      return false
-    }
-
-    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
-    val todayIsAfterShabbatEnd = today.isAfter(now, Zmanim.Type.ShabbatEnd, location)
-    if (todayDetails.isShabbat() && todayIsAfterShabbatEnd && !tomorrowDetails.isYomTov()) {
-      return true
-    }
-
-    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
-    if (todayDetails.isYomTov() && todayIsAfterShabbatEnd && !tomorrowDetails.isYomTov()) {
-      return true
-    }
-
-    return !todayDetails.isShabbat() && !todayDetails.isYomTov()
+    return decide(location, now).notify
   }
 
   public fun actuallyNotifyReasoning(
     location: ZmanimLocation,
     now: Calendar,
   ): String {
+    return decide(location, now).reason
+  }
 
-    if (!shouldShowAnyNotifications()) {
-      return "NO: Notifications are disabled"
+  private fun decide(
+    location: ZmanimLocation,
+    now: Calendar,
+  ): Decision {
+    return when {
+      !shouldShowAnyNotifications() -> Decision.DISABLED
+      shouldNotifyOnShabbat() -> Decision.EVEN_ON_SHABBAT
+      else -> decideForToday(location, now)
     }
+  }
 
-    if (shouldNotifyOnShabbat()) {
-      return "YES: Notifying even Shabbat"
-    }
+  private fun decideForToday(
+    location: ZmanimLocation,
+    now: Calendar,
+  ): Decision {
 
     now.timeZone = location.timeZone
     val today = HebrewCalendar.getForDate(now)
 
     val todayDetails = today.getDetails()
-    val tomorrow = today.tomorrow()
-    val tomorrowDetails = tomorrow.getDetails()
+    val tomorrowDetails = today.tomorrow().getDetails()
 
-    // If today is erev Shabbat, and it's after candle lighting, then don't notify...
-    val todayIsAfterCandleLighting = today.isAfter(now, Zmanim.Type.CandleLighting, location)
-    if (tomorrowDetails.isShabbat() && todayIsAfterCandleLighting) {
-      return "NO: It's erev Shabbat and after candle lighting."
+    return decideForErev(today, tomorrowDetails, now, location)
+      ?: decideForAfterShabbatOrYomTov(today, todayDetails, tomorrowDetails, now, location)
+      ?: if (!todayDetails.isShabbat() && !todayDetails.isYomTov()) Decision.NOTHING_TODAY
+      else Decision.SHABBAT_OR_YOM_TOV
+  }
+
+  /** If today is erev Shabbat or erev Yom Tov, and it's after candle lighting, then don't notify... */
+  private fun decideForErev(
+    today: HebrewDate,
+    tomorrowDetails: Details,
+    now: Calendar,
+    location: ZmanimLocation,
+  ): Decision? {
+
+    if (!today.isAfter(now, Zmanim.Type.CandleLighting, location)) {
+      return null
     }
 
-    // If today is erev Yom Tov, and it's after candle lighting, then don't notify...
-    if (tomorrowDetails.isYomTov() && todayIsAfterCandleLighting) {
-      return "NO: It's erev Yom Tov and after candle lighting."
+    return when {
+      tomorrowDetails.isShabbat() -> Decision.EREV_SHABBAT
+      tomorrowDetails.isYomTov() -> Decision.EREV_YOM_TOV
+      else -> null
+    }
+  }
+
+  /** If today is Shabbat or Yom Tov, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead... */
+  private fun decideForAfterShabbatOrYomTov(
+    today: HebrewDate,
+    todayDetails: Details,
+    tomorrowDetails: Details,
+    now: Calendar,
+    location: ZmanimLocation,
+  ): Decision? {
+
+    if (tomorrowDetails.isYomTov() || !today.isAfter(now, Zmanim.Type.ShabbatEnd, location)) {
+      return null
     }
 
-    // If today is Shabbat, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead...
-    val todayIsAfterShabbatEnd = today.isAfter(now, Zmanim.Type.ShabbatEnd, location)
-    if (todayDetails.isShabbat() && todayIsAfterShabbatEnd && !tomorrowDetails.isYomTov()) {
-      return "YES: Shabbat is over, and there's nothing tomorrow."
+    return when {
+      todayDetails.isShabbat() -> Decision.SHABBAT_OVER
+      todayDetails.isYomTov() -> Decision.YOM_TOV_OVER
+      else -> null
     }
+  }
 
-    // If today is YomTov, it's after sunset, and tomorrow's not a Yom Tov, then go ahead...
-    if (todayDetails.isYomTov() && todayIsAfterShabbatEnd && !tomorrowDetails.isYomTov()) {
-      return "YES: Yom Tov is over, and there's nothing tomorrow."
-    }
-
-    if (!todayDetails.isShabbat() && !todayDetails.isYomTov()) {
-      return "YES: There's nothing today."
-    }
-
-    return "NO: It must be Shabbat or a Yom Tov"
+  private enum class Decision(
+    val notify: Boolean,
+    val reason: String,
+  ) {
+    DISABLED(false, "NO: Notifications are disabled"),
+    EVEN_ON_SHABBAT(true, "YES: Notifying even Shabbat"),
+    EREV_SHABBAT(false, "NO: It's erev Shabbat and after candle lighting."),
+    EREV_YOM_TOV(false, "NO: It's erev Yom Tov and after candle lighting."),
+    SHABBAT_OVER(true, "YES: Shabbat is over, and there's nothing tomorrow."),
+    YOM_TOV_OVER(true, "YES: Yom Tov is over, and there's nothing tomorrow."),
+    NOTHING_TODAY(true, "YES: There's nothing today."),
+    SHABBAT_OR_YOM_TOV(false, "NO: It must be Shabbat or a Yom Tov"),
   }
 
   /**
@@ -213,13 +216,17 @@ public abstract class ZmanCallback {
     override fun completed(
       now: Calendar,
       type: Zmanim.Type,
-    ) {}
+    ) {
+      // Nothing to remember.
+    }
 
     override fun scheduleAlert(
       zman: Zman,
       location: ZmanimLocation,
       alertAt: Calendar,
-    ) {}
+    ) {
+      // Nothing to schedule.
+    }
 
     override fun formatTimeWithSeconds(): Boolean {
       return false

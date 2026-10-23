@@ -51,6 +51,12 @@ private const val MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT = 45
 
 private const val MINUTES_AFTER_SUNSET_RAV_MOSHE = 50
 
+/** How far below the horizon the sun is at alot, for the opinion of 16.01 degrees. */
+private const val ALOS_DEGREES_BELOW_HORIZON = 16.01
+
+/** How far below the horizon the sun is at tzais, for the Geonim's opinion of 3.8 degrees. */
+private const val TZAIS_GEONIM_DEGREES_BELOW_HORIZON = 3.8
+
 /** Minutes in an hour. */
 private const val MINUTES_PER_HOUR = 60
 
@@ -89,8 +95,8 @@ public class ZmanimCalculator(
    */
   public fun getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees(): Date? {
     return getSofZmanShma(
-      getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + 16.01),
-      getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + 3.8),
+      getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + ALOS_DEGREES_BELOW_HORIZON),
+      getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_DEGREES_BELOW_HORIZON),
     )
   }
 
@@ -187,6 +193,8 @@ public class ZmanimCalculator(
     return Date(midnight)
   }
 
+  // Part of the library's public API, which is why this placeholder stays even though it cannot be implemented yet.
+  @Suppress("FunctionOnlyReturningConstant")
   public fun getNightChatzos6HoursAfterTzait(): Date? {
     // todo: it seems the only way to calculate this is to know how the user has defined Tzeit!
     return null

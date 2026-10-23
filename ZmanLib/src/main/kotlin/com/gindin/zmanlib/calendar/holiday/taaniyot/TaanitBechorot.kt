@@ -44,16 +44,12 @@ public class TaanitBechorot : Taanit(HebrewMonth.NISSAN, 14) {
 
   override fun checkThursday(date: HebrewDate): Details? {
 
-    if (date.hebrewDayOfMonth == 12) {
-      return createYomDetails(date)
-    }
-
-    if (date.hebrewDayOfMonth == 13) {
-      return createErevDetails(date)
-    }
-
     // DO NOT CALL SUPER. See note in canFallOnFriday.
-    return null
+    return when (date.hebrewDayOfMonth) {
+      12 -> createYomDetails(date)
+      13 -> createErevDetails(date)
+      else -> null
+    }
   }
 
   override fun createErevDetails(date: HebrewDate): Details {

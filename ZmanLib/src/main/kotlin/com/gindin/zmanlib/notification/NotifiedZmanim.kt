@@ -13,6 +13,8 @@ import java.util.Calendar
 /** Name of the file created to store the notified zmanim. */
 private const val NOTIFIED_ZMANIM_FILE_EXTENSION = "notifiedZmanim"
 
+private const val DAYS_TO_KEEP_STATE = 3
+
 /** Keeps track of which zmanim we've already notified the user about for a given day. */
 public class NotifiedZmanim : Serializable {
 
@@ -33,7 +35,7 @@ public class NotifiedZmanim : Serializable {
 
       // Clean up old files. Or read it in if it's not too old.
       val oldestToKeep = Calendar.getInstance()
-      oldestToKeep.add(Calendar.DATE, -3)
+      oldestToKeep.add(Calendar.DATE, -DAYS_TO_KEEP_STATE)
       val mills = oldestToKeep.timeInMillis
 
       for (file in files) {
@@ -63,6 +65,9 @@ public class NotifiedZmanim : Serializable {
       return newNotifiedZmanim
     }
 
+    // Saving is best effort: failing to write only loses the record of what the user was already told, which is not
+    //  worth interrupting a notification for, so any failure is dropped.
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     public fun save(notifiedZmanim: NotifiedZmanim) {
 
       val fileName =
@@ -86,30 +91,21 @@ public class NotifiedZmanim : Serializable {
 
     private fun restore(storedData: File) {
 
-      var restored: NotifiedZmanim
-
-      if (!storedData.canRead()) {
-        restored = NotifiedZmanim()
-      } else {
-        var ois: ObjectInputStream? = null
-        try {
-          ois = ObjectInputStream(FileInputStream(storedData))
-          restored = ois.readObject() as NotifiedZmanim
-
-          ois.close()
-        } catch (e: Throwable) {
-          if (ois != null) {
-            try {
-              ois.close()
-            } catch (e1: Throwable) {
-              // Oh well, we tried...
-            }
-          }
-          restored = NotifiedZmanim()
-        }
-      }
+      val restored = if (storedData.canRead()) read(storedData) else NotifiedZmanim()
 
       synchronized(notified) { notified.add(restored) }
+    }
+
+    // A file written by another version of this app, or a damaged one, can fail to deserialize in many ways (including
+    //  linkage errors), and the record is only a hint about what the user was already told, so anything unreadable
+    //  is replaced by an empty record.
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun read(storedData: File): NotifiedZmanim {
+      return try {
+        ObjectInputStream(FileInputStream(storedData)).use { it.readObject() as NotifiedZmanim }
+      } catch (e: Throwable) {
+        NotifiedZmanim()
+      }
     }
   }
 
@@ -138,18 +134,7 @@ public class NotifiedZmanim : Serializable {
 
   private fun isForDate(other: Calendar): Boolean {
 
-    val otherYear = other.get(Calendar.YEAR)
-    if (year != otherYear) {
-      return false
-    }
-
-    val otherMonth = other.get(Calendar.MONTH)
-    if (month != otherMonth) {
-      return false
-    }
-
-    val otherDate = other.get(Calendar.DATE)
-    return date == otherDate
+    return year == other.get(Calendar.YEAR) && month == other.get(Calendar.MONTH) && date == other.get(Calendar.DATE)
   }
 
   /**

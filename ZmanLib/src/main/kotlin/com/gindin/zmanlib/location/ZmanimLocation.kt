@@ -15,6 +15,13 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+/** Moving less than this far does not change the zmanim enough to be worth recalculating them. */
+private const val SIGNIFICANT_DISTANCE_METERS = 1000
+
+private const val SIGNIFICANT_ELEVATION_CHANGE_METERS = 5
+
+private const val DISPLAYED_COORDINATE_DECIMALS = 5
+
 /**
  * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the zmanim app.
  */
@@ -192,28 +199,15 @@ public class ZmanimLocation : GeoLocation {
 
   public fun isSignificantChangeFrom(previousLocation: ZmanimLocation?): Boolean {
 
-    if (previousLocation == null) {
-      return true
-    }
-
-    // Less than 1km? Don't bother...
-    // I suppose you could run into an issue if that 1km puts you in a different time zone
-    //  or something like that...
-    if (getGeodesicDistance(previousLocation) >= 1000) {
-      return true
-    }
-
-    // So, we're within 1km, but Has the elevation changed?
-    if (Math.abs(elevation - previousLocation.elevation) > 5) {
-      return true
-    }
-
-    // It's also possible the user has switched to (or from) a custom time zone...
-    if (timeZone != previousLocation.timeZone) {
-      return true
-    }
-
-    return false
+    return previousLocation == null ||
+      // Less than 1km? Don't bother...
+      // I suppose you could run into an issue if that 1km puts you in a different time zone
+      //  or something like that...
+      getGeodesicDistance(previousLocation) >= SIGNIFICANT_DISTANCE_METERS ||
+      // So, we're within 1km, but Has the elevation changed?
+      Math.abs(elevation - previousLocation.elevation) > SIGNIFICANT_ELEVATION_CHANGE_METERS ||
+      // It's also possible the user has switched to (or from) a custom time zone...
+      timeZone != previousLocation.timeZone
   }
 
   override fun toString(): String {
@@ -222,8 +216,8 @@ public class ZmanimLocation : GeoLocation {
 
     val sb = StringBuilder()
     sb.append("Location Name:\t").append(getLocationName())
-    sb.append("\nLatitude:\t").append(getLatitudeString(latitude, 5)).append(" deg")
-    sb.append("\nLongitude:\t").append(getLongitudeString(longitude, 5)).append(" deg")
+    sb.append("\nLatitude:\t").append(getLatitudeString(latitude, DISPLAYED_COORDINATE_DECIMALS)).append(" deg")
+    sb.append("\nLongitude:\t").append(getLongitudeString(longitude, DISPLAYED_COORDINATE_DECIMALS)).append(" deg")
     sb.append("\nElevation:\t").append(elevation).append(" Meters")
     sb.append("\nTZ Name:\t").append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
     sb.append("\nTZ GMT Offset:\t").append(timeZone.rawOffset / millisInHour)
