@@ -4,6 +4,14 @@
 
 plugins {
   `kotlin-dsl`
+  alias(libs.plugins.ktfmt)
+}
+
+// Same layout as the modules get from zmanim.static-analysis-conventions, which cannot be applied
+//  to the build that defines it.
+ktfmt {
+  googleStyle()
+  maxWidth.set(120)
 }
 
 // NOTE: repositories for this build are declared centrally in settings.gradle.kts'
@@ -17,6 +25,8 @@ dependencies {
   implementation(libs.android.gradlePlugin)
   implementation(libs.moallemi.advanced.build.version.gradlePlugin)
   implementation(libs.roborazzi.gradlePlugin)
+  implementation(libs.ktfmt.gradlePlugin)
+  implementation(libs.detekt.gradlePlugin)
 
   // AGP's built-in Kotlin support (what lets the app modules compile Kotlin) uses the Kotlin Gradle
   //  plugin, and it can only reach AGP's classes if both come from this one classpath. The Kotlin

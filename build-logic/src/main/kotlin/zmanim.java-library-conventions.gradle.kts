@@ -10,6 +10,7 @@
 plugins {
   id("java-library")
   id("org.jetbrains.kotlin.jvm")
+  id("zmanim.static-analysis-conventions")
 }
 
 java {
