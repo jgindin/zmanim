@@ -34,7 +34,12 @@ public class ZmanimReceiver
 
     String action = intent.getAction();
 
-    ZmanimService.enqueueWork( context, ZmanimService.Actions.SCHEDULE_ALARM, !SCHEDULE_ALARM.equals( action ) );
+    // The periodic check and the user allowing exact alarms leave the location as it was, so a cached one will do.
+    //  Booting or a change of the clock calls for a fresh one.
+    final boolean force = !SCHEDULE_ALARM.equals( action )
+      && !AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED.equals( action );
+
+    ZmanimService.enqueueWork( context, ZmanimService.Actions.SCHEDULE_ALARM, force );
 
     scheduleRepeatingChecks( context );
 

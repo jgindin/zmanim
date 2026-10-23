@@ -160,4 +160,10 @@
   <string name="notifications_blocked_pref_summary">Android is not showing notifications from Zmanim. Tap to allow them in the system settings.</string>
   <string name="notifications_blocked_message">Android is blocking notifications from Zmanim, so no alerts will appear. Open the system settings to allow them?</string>
   <string name="open_settings">Open Settings</string>
+
+  <string name="exact_alarm_permission_title">Alert on Time</string>
+  <string name="exact_alarm_permission_explanation">Zmanim alerts you a few minutes before the zmanim you choose, such as candle lighting, so each alert has to arrive on time. Unless you allow Zmanim to set alarms and reminders, Android may deliver alerts several minutes late, or later still while the phone is idle.\n\nOn the next screen, turn on Allow setting alarms and reminders. You can also do this later from Preferences.</string>
+  <string name="exact_alarms_denied_pref_title">Alerts may arrive late</string>
+  <string name="exact_alarms_denied_pref_summary">Android is not letting Zmanim set alarms and reminders, so alerts may be several minutes late. Tap to allow them in the system settings.</string>
+  <string name="exact_alarms_denied_message">Android is not letting Zmanim set alarms and reminders, so alerts may arrive several minutes late. Open the system settings to allow them?</string>
 </resources>
