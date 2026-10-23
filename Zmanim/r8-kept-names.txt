@@ -1,0 +1,48 @@
+# Names the :Zmanim release build must keep, checked against R8's output by `./gradlew :Zmanim:checkR8KeptNames`
+#  (the format is described in build-logic's R8KeptNamesCheckTask). Each group below guards one rule in
+#  proguard-rules.pro; the comment above a group is printed when one of its checks fails.
+
+# proguard-rules.pro: "-keepnames class com.gindin.zmanlib.notification.NotifiedZmanim" and the
+#  -keepclassmembers rule under it. The .notifiedZmanim files in filesDir are Java-serialized NotifiedZmanim objects;
+#  ObjectInputStream finds the class by this name and matches serialVersionUID and every field by name, so a rename
+#  makes every saved file unreadable and the user is notified again about zmanim they already saw.
+class com.gindin.zmanlib.notification.NotifiedZmanim
+member com.gindin.zmanlib.notification.NotifiedZmanim: long serialVersionUID
+member com.gindin.zmanlib.notification.NotifiedZmanim: int year
+member com.gindin.zmanlib.notification.NotifiedZmanim: int month
+member com.gindin.zmanlib.notification.NotifiedZmanim: int date
+member com.gindin.zmanlib.notification.NotifiedZmanim: java.util.Set notifiedTypes
+
+# proguard-rules.pro: "-keepnames class com.gindin.zmanlib.zman.Zmanim$Type" and the -keepclassmembers enum rule
+#  under it. The serialized NotifiedZmanim set holds Zmanim.Type constants, which ObjectInputStream restores by the
+#  enum's class name and then by constant name through values(); valueOf() turns Intent extras back into constants.
+#  The constants with bodies are subclasses (Zmanim$Type$Alot, ...) that R8 may rename freely: the stream records
+#  the declaring enum class, never those.
+class com.gindin.zmanlib.zman.Zmanim$Type
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type[] values()
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type valueOf(java.lang.String)
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type Alot
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type Talit
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type Hanetz
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type SofZmanShema
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type SofZmanTefila
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type SofZmanAchilatChametz
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type SofZmanBiurChametz
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type Chatzot
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type MinchaGedola
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type MinchaKetana
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type PlagHaMincha
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type CandleLighting
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type Shkia
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type LatestMincha
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type BeinHashmashot
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type FastEnd
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type TzaitHacochavim
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type ShabbatEnd
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type YomTovSheniCandleLighting
+member com.gindin.zmanlib.zman.Zmanim$Type: com.gindin.zmanlib.zman.Zmanim$Type NightChatzot
+
+# proguard-rules.pro: the -keepclassmembers rule for com.google.android.gms.common.api.ApiException. LocationError
+#  reads this field with getDeclaredField("mStatus"); renamed, the lookup returns null and the location-settings
+#  resolution is lost.
+member com.google.android.gms.common.api.ApiException: com.google.android.gms.common.api.Status mStatus
