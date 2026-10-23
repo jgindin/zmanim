@@ -163,6 +163,9 @@ public class NotificationPermissionPromptTest {
   private static void startAsAFreshInstall() throws IOException {
 
     AppState.installStaticLocation();
+
+    // The exact alarm question follows the notification one, and has a test of its own.
+    AppState.markExactAlarmQuestionAnswered();
     shell( "pm clear-permission-flags " + targetContext().getPackageName() + " "
       + Manifest.permission.POST_NOTIFICATIONS + " user-set user-fixed" );
   }

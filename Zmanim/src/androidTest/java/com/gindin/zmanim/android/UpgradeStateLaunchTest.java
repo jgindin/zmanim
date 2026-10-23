@@ -51,6 +51,7 @@ public class UpgradeStateLaunchTest {
   public void installReleasedState() throws Exception {
     AppState.installUpgradeState();
     AppState.markNotificationQuestionAnswered();
+    AppState.markExactAlarmQuestionAnswered();
   }
 
 

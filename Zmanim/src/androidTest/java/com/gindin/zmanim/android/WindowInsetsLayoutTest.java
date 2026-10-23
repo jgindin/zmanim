@@ -48,6 +48,7 @@ public class WindowInsetsLayoutTest {
   public void saveStaticLocation() throws Exception {
     AppState.installStaticLocation();
     AppState.markNotificationQuestionAnswered();
+    AppState.markExactAlarmQuestionAnswered();
   }
 
 
