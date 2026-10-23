@@ -1,0 +1,14 @@
+# Names the :ZehutYosef release builds (both flavors) must keep, checked against R8's output by
+#  `./gradlew :ZehutYosef:checkR8KeptNames` (the format is described in build-logic's R8KeptNamesCheckTask). Each
+#  group below guards one rule; the comment above a group is printed when one of its checks fails.
+
+# proguard-rules.pro: "-keepclassmembers class * extends android.app.Fragment { public <init>(); }". The framework
+#  recreates a restored platform Fragment by loading its class by name and calling this constructor.
+member com.gindin.zehutyosef.settings.Settings$SettingFragment: Settings$SettingFragment()
+
+# src/main/res/raw/keep.xml: tools:keep="@string/library_*,@string/define_*,@string/license_*". AboutLibraries
+#  looks these strings up by name (Resources.getIdentifier), which the resource shrinker cannot see; a removed one
+#  drops its library from the About screen or loses its license text.
+resourcesKept string:library_
+resourcesKept string:define_
+resourcesKept string:license_

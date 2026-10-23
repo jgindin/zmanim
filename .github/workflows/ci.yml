@@ -18,6 +18,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
+      # Runs R8 on the release variants and fails if it renamed or removed a name that a keep rule exists to
+      #  preserve (each app's r8-kept-names.txt lists them). Neither R8 nor this check needs the upload key, so it
+      #  works on CI, where no signing properties are set.
+      - name: Check that the release builds keep the names their R8 rules protect
+        run: ./gradlew checkR8KeptNames
       - name: Upload test and Roborazzi reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
