@@ -3,6 +3,7 @@
  */
 
 import com.gindin.buildlogic.zmanimAppVersion
+import com.gindin.buildlogic.zmanimReleaseCheckBuildType
 import com.gindin.buildlogic.zmanimReleaseSigning
 
 plugins {
@@ -76,6 +77,10 @@ android {
 
 // Release signing (upload key) comes from gindin.signing.* Gradle properties; see Signing.kt.
 zmanimReleaseSigning(keyAlias = "android-app")
+
+// The release build signed with the debug key, for running the on-device tests against R8-minified code; see
+//  ReleaseCheck.kt. It copies the release build type as configured above, so it has to come after it.
+zmanimReleaseCheckBuildType()
 
 dependencies {
   // The net.xpece.android support libraries only exist in jcenter for the older version that
