@@ -10,4 +10,5 @@
 
 plugins {
   id("org.jetbrains.kotlin.multiplatform")
+  id("zmanim.static-analysis-conventions")
 }

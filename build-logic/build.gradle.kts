@@ -17,6 +17,8 @@ dependencies {
   implementation(libs.android.gradlePlugin)
   implementation(libs.moallemi.advanced.build.version.gradlePlugin)
   implementation(libs.roborazzi.gradlePlugin)
+  implementation(libs.ktlint.gradlePlugin)
+  implementation(libs.detekt.gradlePlugin)
 
   // AGP's built-in Kotlin support (what lets the app modules compile Kotlin) uses the Kotlin Gradle
   //  plugin, and it can only reach AGP's classes if both come from this one classpath. The Kotlin

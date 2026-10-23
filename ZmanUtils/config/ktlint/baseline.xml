@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/jvmTest/kotlin/com/gindin/eventBus/UT_EventBus.kt">
+        <error line="13" column="7" source="standard:class-naming" />
+    </file>
+</baseline>

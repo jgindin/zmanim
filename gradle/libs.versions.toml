@@ -3,6 +3,9 @@ agp = "9.4.1"
 kotlin = "2.4.20"
 moallemiAdvancedBuildVersion = "1.5.0"
 roborazzi = "1.74.0"
+ktlintGradle = "14.2.0"
+ktlint = "1.8.0"
+detekt = "2.0.0-alpha.6"
 foojayResolverConvention = "0.10.0"
 
 kosherjavaZmanim = "2.5.0"
@@ -39,6 +42,8 @@ mikepenzAboutlibraries = "5.6.2"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 moallemi-advanced-build-version-gradlePlugin = { group = "org.moallemi.gradle.advanced-build-version", name = "gradle-plugin", version.ref = "moallemiAdvancedBuildVersion" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlintGradle" }
+detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 roborazzi-gradlePlugin = { group = "io.github.takahirom.roborazzi", name = "roborazzi-gradle-plugin", version.ref = "roborazzi" }
 
 kosherjava-zmanim = { group = "com.kosherjava", name = "zmanim", version.ref = "kosherjavaZmanim" }

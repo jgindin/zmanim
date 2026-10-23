@@ -1,0 +1,48 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 2
+max_line_length = 120
+# intellij_idea is the IntelliJ/Android Studio default Kotlin formatting, which the hand-written
+#  Kotlin here follows; the stricter ktlint_official style would flag most of the converted code.
+ktlint_code_style = intellij_idea
+
+# Rules switched off because they contradict the layout used throughout the existing Kotlin (a
+#  faithful port of the Java it replaced, in the style of the surrounding Java) and would
+#  otherwise produce thousands of baselined findings that say nothing about new code.
+
+# Declarations are written without trailing commas.
+ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+
+# Blocks and class bodies are routinely opened or closed with a blank line, and sections are
+#  separated by two blank lines, as a visual grouping device.
+ktlint_standard_no-consecutive-blank-lines = disabled
+ktlint_standard_no-empty-first-line-in-method-block = disabled
+ktlint_standard_no-empty-first-line-in-class-body = disabled
+ktlint_standard_no-blank-line-before-rbrace = disabled
+ktlint_standard_no-blank-line-in-list = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+
+# `else` and `catch` start their own line, as in the Java sources.
+ktlint_standard_keyword-spacing = disabled
+ktlint_standard_try-catch-finally-spacing = disabled
+
+# Aligned columns (e.g. consecutive declarations) use extra spaces on purpose.
+ktlint_standard_no-multi-spaces = disabled
+
+# Block bodies that return one expression, and one-line signatures, are kept as written so that
+#  the converted functions still read like the Java they came from.
+ktlint_standard_function-expression-body = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_argument-list-wrapping = disabled
