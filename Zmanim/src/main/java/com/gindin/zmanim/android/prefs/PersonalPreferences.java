@@ -106,6 +106,7 @@ public class PersonalPreferences
             explainBlockedNotifications();
           }
           else if ( showNotifications && ExactAlarmPermission.isDenied( getContext() ) ) {
+            // Notifications are not blocked here, so this is the one problem left.
             explainDeniedExactAlarms();
           }
           return true;
@@ -148,7 +149,7 @@ public class PersonalPreferences
 
     /**
      * Shows the rows that lead to the system settings only while the user wants notifications that are blocked, or
-     *  that can only be alerted about with inexact (possibly late) alarms.
+     *  that are allowed but can only be alerted about with inexact (possibly late) alarms.
      */
     private void updateBlockedNotice( boolean showNotifications ) {
 
@@ -159,7 +160,9 @@ public class PersonalPreferences
 
       final Preference exactAlarmsDenied = findPreference( Prefs.EXACT_ALARMS_DENIED.name() );
       if ( exactAlarmsDenied != null ) {
-        exactAlarmsDenied.setVisible( showNotifications && ExactAlarmPermission.isDenied( getContext() ) );
+        // While notifications are blocked, the row above says so; late alerts only matter once they can appear.
+        exactAlarmsDenied.setVisible( showNotifications && !NotificationPermission.isBlocked( getContext() )
+          && ExactAlarmPermission.isDenied( getContext() ) );
       }
     }
 

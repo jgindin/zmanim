@@ -101,15 +101,58 @@ public class UT_ExactAlarmPermission {
 
 
   @Test
-  public void decisionNeedsAndroid12AWishForNotificationsNoExactAlarmsAndNoEarlierAnswer() {
+  public void decisionNeedsAndroid12AWishForNotificationsThatAreNotBlockedNoExactAlarmsAndNoEarlierAnswer() {
 
-    assertTrue( ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, false, false ) );
-    assertTrue( ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.BAKLAVA, true, false, false ) );
+    assertTrue( ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, false, false, false ) );
+    assertTrue( ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.BAKLAVA, true, false, false, false ) );
 
-    assertFalse( "below Android 12", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.R, true, false, false ) );
-    assertFalse( "notifications turned off", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, false, false, false ) );
-    assertFalse( "exact alarms allowed", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, true, false ) );
-    assertFalse( "already asked", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, false, true ) );
+    assertFalse( "below Android 12", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.R, true, false, false, false ) );
+    assertFalse( "notifications turned off",
+      ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, false, false, false, false ) );
+    assertFalse( "notifications blocked", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, true, false, false ) );
+    assertFalse( "exact alarms allowed", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, false, true, false ) );
+    assertFalse( "already asked", ExactAlarmPermission.shouldAsk( Build.VERSION_CODES.S, true, false, false, true ) );
+  }
+
+
+  @Test
+  public void notAskedWhileTheSystemBlocksNotifications() {
+
+    blockNotifications();
+
+    assertFalse( ExactAlarmPermission.shouldAsk( context() ) );
+  }
+
+
+  @Test
+  public void askedOnceNotificationsAreAllowedAfterBeingBlocked() {
+
+    settleTheNotificationQuestion();
+    blockNotifications();
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+        fireLocation();
+        assertNull( "Blocked notifications cannot be late", shownExactAlarmExplanation() );
+      } );
+    }
+
+    // The user allows notifications, from the preferences' row for instance, and comes back.
+    allowNotifications();
+    ShadowDialog.reset();
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+        fireLocation();
+        AlertDialog explanation = shownExactAlarmExplanation();
+        assertNotNull( "Asked once notifications can appear", explanation );
+        click( explanation, DialogInterface.BUTTON_NEGATIVE );
+      } );
+    }
+
+    assertNotAskedOnRelaunch();
   }
 
 
@@ -261,21 +304,40 @@ public class UT_ExactAlarmPermission {
   }
 
 
+  /** Shown alone even if the system reported notifications as allowed before the permission is granted. */
   @Test
-  public void followsTheNotificationQuestionOnceItIsDeclined() {
+  public void neverShownBesideTheNotificationQuestion() {
 
     try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
 
       scenario.onActivity( activity -> {
 
         fireLocation();
-        AlertDialog notificationExplanation = shownDialogWithMessage( R.string.notification_permission_explanation );
-        assertNotNull( "The notification question comes first", notificationExplanation );
+        assertNotNull( "The notification question comes first",
+          shownDialogWithMessage( R.string.notification_permission_explanation ) );
         assertNull( "Never two questions at once", shownExactAlarmExplanation() );
+      } );
+    }
+  }
 
-        click( notificationExplanation, DialogInterface.BUTTON_NEGATIVE );
 
-        assertNotNull( "The exact alarm question follows the notification one", shownExactAlarmExplanation() );
+  @Test
+  public void notAskedAfterTheNotificationQuestionIsDeclined() {
+
+    // A fresh install on Android 13 and later: notifications are blocked until the permission is granted.
+    blockNotifications();
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+
+        fireLocation();
+        click( shownDialogWithMessage( R.string.notification_permission_explanation ), DialogInterface.BUTTON_NEGATIVE );
+
+        assertNull( "No second permission question once notifications are declined", shownExactAlarmExplanation() );
+
+        fireLocation();
+        assertNull( shownExactAlarmExplanation() );
       } );
     }
   }
@@ -288,6 +350,7 @@ public class UT_ExactAlarmPermission {
 
       scenario.onActivity( activity -> {
 
+        blockNotifications();
         fireLocation();
         click( shownDialogWithMessage( R.string.notification_permission_explanation ), DialogInterface.BUTTON_POSITIVE );
         assertNotNull( "The system notification prompt is up", Shadows.shadowOf( activity ).getLastRequestedPermission() );
@@ -297,6 +360,7 @@ public class UT_ExactAlarmPermission {
         assertNull( "The exact alarm question must wait for the system prompt", shownExactAlarmExplanation() );
 
         Shadows.shadowOf( (Application)context() ).grantPermissions( Manifest.permission.POST_NOTIFICATIONS );
+        allowNotifications();
         activity.onRequestPermissionsResult( ZmanimActivity.NOTIFICATION_PERMISSION_REQUEST_CODE,
           new String[] { Manifest.permission.POST_NOTIFICATIONS },
           new int[] { PackageManager.PERMISSION_GRANTED }
@@ -304,6 +368,29 @@ public class UT_ExactAlarmPermission {
         idle();
 
         assertNotNull( "The exact alarm question follows the system prompt", shownExactAlarmExplanation() );
+      } );
+    }
+  }
+
+
+  @Test
+  public void notAskedWhenTheSystemNotificationPromptIsRefused() {
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> {
+
+        blockNotifications();
+        fireLocation();
+        click( shownDialogWithMessage( R.string.notification_permission_explanation ), DialogInterface.BUTTON_POSITIVE );
+
+        activity.onRequestPermissionsResult( ZmanimActivity.NOTIFICATION_PERMISSION_REQUEST_CODE,
+          new String[] { Manifest.permission.POST_NOTIFICATIONS },
+          new int[] { PackageManager.PERMISSION_DENIED }
+        );
+        idle();
+
+        assertNull( "No second permission question once notifications are refused", shownExactAlarmExplanation() );
       } );
     }
   }
@@ -480,7 +567,7 @@ public class UT_ExactAlarmPermission {
   public void turningNotificationsOnWhileTheyAreBlockedExplainsOnlyTheBlocking() {
 
     personalPrefs().edit().putBoolean( PersonalPreferences.Prefs.SHOW_NOTIFICATIONS.name(), false ).commit();
-    Shadows.shadowOf( context().getSystemService( NotificationManager.class ) ).setNotificationsEnabled( false );
+    blockNotifications();
 
     try ( ActivityScenario<PersonalPreferences> scenario = ActivityScenario.launch( PersonalPreferences.class ) ) {
 
@@ -492,7 +579,8 @@ public class UT_ExactAlarmPermission {
         assertEquals( "One explanation at a time", 1, ShadowDialog.getShownDialogs().size() );
         assertEquals( context().getString( R.string.notifications_blocked_message ),
           Shadows.shadowOf( (AlertDialog)ShadowDialog.getLatestDialog() ).getMessage().toString() );
-        assertTrue( "Both rows stay visible",
+        assertTrue( preference( activity, PersonalPreferences.Prefs.NOTIFICATIONS_BLOCKED ).isVisible() );
+        assertFalse( "Late alerts only matter once notifications can appear",
           preference( activity, PersonalPreferences.Prefs.EXACT_ALARMS_DENIED ).isVisible() );
       } );
     }
@@ -536,6 +624,16 @@ public class UT_ExactAlarmPermission {
     List<JobInfo> pending = jobs.getAllPendingJobs();
     assertEquals( 1, pending.size() );
     assertEquals( ZmanimService.class.getName(), pending.get( 0 ).getService().getClassName() );
+  }
+
+
+  private static void blockNotifications() {
+    Shadows.shadowOf( context().getSystemService( NotificationManager.class ) ).setNotificationsEnabled( false );
+  }
+
+
+  private static void allowNotifications() {
+    Shadows.shadowOf( context().getSystemService( NotificationManager.class ) ).setNotificationsEnabled( true );
   }
 
 

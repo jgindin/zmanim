@@ -126,12 +126,6 @@ public class ZmanimActivity
   /** Explains why the app wants to post notifications, before the system asks for the permission. */
   private AlertDialog                                       notificationPermissionDialog;
 
-  /**
-   * True while the system notification permission prompt is on screen. The exact alarm question waits for its answer,
-   *  so that the user is never shown two requests at once.
-   */
-  private boolean                                           notificationPermissionRequestActive;
-
   /** Explains why the alerts need exact alarms, before sending the user to the system page that allows them. */
   private AlertDialog                                       exactAlarmPermissionDialog;
 
@@ -445,19 +439,14 @@ public class ZmanimActivity
       .setCancelable( false )
       .setPositiveButton( R.string.turn_on_notifications, ( dialog, which ) -> {
         NotificationPermission.markAsked( ZmanimActivity.this );
-        notificationPermissionRequestActive = true;
         ActivityCompat.requestPermissions( ZmanimActivity.this,
           new String[] { Manifest.permission.POST_NOTIFICATIONS },
           NOTIFICATION_PERMISSION_REQUEST_CODE
         );
       } )
-      .setNegativeButton( R.string.no_thanks, ( dialog, which ) -> {
-        NotificationPermission.markAsked( ZmanimActivity.this );
-
-        // The dialog only goes away after this returns, and the next question waits for it to be gone.
-        dialog.dismiss();
-        requestExactAlarmPermissionIfNeeded();
-      } )
+      .setNegativeButton( R.string.no_thanks,
+        ( dialog, which ) -> NotificationPermission.markAsked( ZmanimActivity.this )
+      )
       .create();
 
     notificationPermissionDialog.show();
@@ -468,7 +457,8 @@ public class ZmanimActivity
    * On Android 12 and later, explains why the alerts need exact alarms and then opens the system page that allows
    *  them, once. Asked only after the location and notification permission questions are settled, so that the user
    *  sees one request at a time. Nothing happens when exact alarms are already allowed (granted, or the app is exempt
-   *  from battery optimization), the user turned notifications off, or the user was asked before.
+   *  from battery optimization), the user turned notifications off, the system blocks them, or the user was asked
+   *  before.
    */
   private void requestExactAlarmPermissionIfNeeded() {
 
@@ -477,7 +467,9 @@ public class ZmanimActivity
       return;
     }
 
-    if ( locationPermissionFlowActive || notificationPermissionRequestActive ) {
+    // The system notification prompt needs no check of its own: while it is up, notifications are blocked, and
+    //  ExactAlarmPermission.shouldAsk() waits for them to be allowed.
+    if ( locationPermissionFlowActive ) {
       return;
     }
 
@@ -652,12 +644,11 @@ public class ZmanimActivity
 
     if ( requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE ) {
 
-      notificationPermissionRequestActive = false;
-
       if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
         showErrorMessage( R.string.notification_permission_denied, R.string.action_dismiss, v -> {} );
       }
 
+      // Asked only if the user allowed notifications: blocked ones cannot arrive late.
       requestExactAlarmPermissionIfNeeded();
     }
     else if ( requestCode == LocationError.Code.NO_PERMISSIONS.ordinal() ) {

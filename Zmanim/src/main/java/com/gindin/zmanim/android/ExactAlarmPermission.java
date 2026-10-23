@@ -32,7 +32,8 @@ import androidx.annotation.VisibleForTesting;
  *<p/>
  *
  * {@link AlarmManager#canScheduleExactAlarms()} is also true while the app is exempt from battery optimization, so
- *  such users are never asked.
+ *  such users are never asked. Nor is anyone whose notifications the system blocks: no alert can appear, early or
+ *  late, and the user has just been asked about notifications. Once notifications are allowed, the question comes up.
  */
 public final class ExactAlarmPermission {
 
@@ -62,30 +63,37 @@ public final class ExactAlarmPermission {
 
   /**
    * True when the app should explain why its alerts need exact alarms and offer the system page that allows them: the
-   *  platform restricts exact alarms, the user wants notifications, exact alarms are not allowed, and the user was
-   *  never asked.
+   *  platform restricts exact alarms, the user wants notifications, the system does not block them, exact alarms are
+   *  not allowed, and the user was never asked.
    */
   static boolean shouldAsk(
     int     sdkInt,
     boolean wantsNotifications,
+    boolean notificationsBlocked,
     boolean exactAlarmsAllowed,
     boolean alreadyAsked
   ) {
-    return ( sdkInt >= Build.VERSION_CODES.S ) && wantsNotifications && !exactAlarmsAllowed && !alreadyAsked;
+    return ( sdkInt >= Build.VERSION_CODES.S ) && wantsNotifications && !notificationsBlocked && !exactAlarmsAllowed
+      && !alreadyAsked;
   }
 
 
-  /** Applies {@link #shouldAsk(int, boolean, boolean, boolean)} to the running device and the saved preferences. */
+  /**
+   * Applies {@link #shouldAsk(int, boolean, boolean, boolean, boolean)} to the running device and the saved
+   *  preferences.
+   */
   public static boolean shouldAsk( Context context ) {
 
     final SharedPreferences prefs = personalPrefs( context );
     return shouldAsk(
       Build.VERSION.SDK_INT,
       wantsNotifications( context ),
+      NotificationPermission.isBlocked( context ),
       !isDenied( context ),
       prefs.getBoolean( ASKED_KEY, false )
     );
   }
+
 
 
   /** Records that the user has answered, so that they are not asked again. */
