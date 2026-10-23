@@ -16,6 +16,10 @@ jobs:
           java-version: '21'
       # Also validates the Gradle wrapper's checksum, and caches Gradle state between runs.
       - uses: gradle/actions/setup-gradle@v6
+      # Before the tests so that a formatting or static-analysis finding fails the job in seconds. Run
+      #  ./gradlew ktfmtFormat to fix the formatting locally.
+      - name: Check Kotlin formatting and static analysis
+        run: ./gradlew ktfmtCheck detekt
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
       # Runs R8 on the release variants and fails if it renamed or removed a name that a keep rule exists to
