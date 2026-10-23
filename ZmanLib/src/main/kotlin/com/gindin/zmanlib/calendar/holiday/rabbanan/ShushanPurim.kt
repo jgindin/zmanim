@@ -11,9 +11,7 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val SHUSHAN_PURIM = "Shushan Purim"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber", "FeatureEnvy")
 public class ShushanPurim : Observance() {
 
@@ -21,11 +19,11 @@ public class ShushanPurim : Observance() {
     return SHUSHAN_PURIM
   }
 
-
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ((date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
-      (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
+    if (
+      (date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
+        (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
     ) {
 
       if (15 == date.hebrewDayOfMonth) {
@@ -39,5 +37,4 @@ public class ShushanPurim : Observance() {
 
     return null
   }
-
-}  // End of ShushanPurim class
+} // End of ShushanPurim class

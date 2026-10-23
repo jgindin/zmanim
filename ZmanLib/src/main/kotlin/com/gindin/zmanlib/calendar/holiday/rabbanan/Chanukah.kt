@@ -11,16 +11,13 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val CHANUKAH = "Chanukah"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber", "FeatureEnvy")
 public class Chanukah : Observance() {
 
   override fun getName(): String {
     return CHANUKAH
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -47,18 +44,14 @@ public class Chanukah : Observance() {
     return null
   }
 
-
   private class ChanukahDetails(date: HebrewDate, day: Int) : Details.Yom(date, "$CHANUKAH $day") {
 
     override fun isChanukah(): Boolean {
       return true
     }
 
-
     override fun sayTachanun(): Boolean {
       return false
     }
   }
-
-
-}  // End of Chanukah class
+} // End of Chanukah class

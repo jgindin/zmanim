@@ -12,16 +12,13 @@ import java.util.Calendar
 
 private const val NAME = "Yom HaShoah"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber")
 public class YomHaShoah : Observance() {
 
   override fun getName(): String {
     return NAME
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -47,8 +44,7 @@ public class YomHaShoah : Observance() {
         }
       }
 
-      Calendar.TUESDAY -> {
-      }
+      Calendar.TUESDAY -> {}
 
       Calendar.WEDNESDAY -> {
         if (25 == jewishDayOfMonth) {
@@ -62,14 +58,14 @@ public class YomHaShoah : Observance() {
         }
       }
 
-      Calendar.FRIDAY, Calendar.SATURDAY -> {
+      Calendar.FRIDAY,
+      Calendar.SATURDAY -> {
         if (26 == jewishDayOfMonth) {
           // This is where we push it forward.
           return null
         }
       }
     }
-
 
     // We've handled the special cases, so if we get here, we're just looking for the "regular" year...
     if (26 == jewishDayOfMonth) {
@@ -80,6 +76,4 @@ public class YomHaShoah : Observance() {
 
     return null
   }
-
-
-}  // End of YomHaShoah class
+} // End of YomHaShoah class

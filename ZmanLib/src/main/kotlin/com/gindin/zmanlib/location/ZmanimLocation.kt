@@ -16,8 +16,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 /**
- * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the
- *  zmanim app.
+ * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the zmanim app.
  */
 public class ZmanimLocation : GeoLocation {
 
@@ -50,7 +49,6 @@ public class ZmanimLocation : GeoLocation {
     /** Only used when the user gives us a name and we have to go find out where it is. */
     internal var userName: String? = null
 
-
     public fun fromProvider(providerName: String?): Builder {
       this.providerName = providerName
       return this
@@ -59,8 +57,7 @@ public class ZmanimLocation : GeoLocation {
     public fun locationName(locationName: String?): Builder {
       if (locationName == null) {
         this.locationName = UNKNOWN_LOCATION
-      }
-      else {
+      } else {
         this.locationName = locationName
       }
       return this
@@ -76,15 +73,11 @@ public class ZmanimLocation : GeoLocation {
       return this
     }
 
-
-    /**
-     * @param timeZone if null, the default time zone will be used.
-     */
+    /** @param timeZone if null, the default time zone will be used. */
     public fun inTimeZone(timeZone: TimeZone?): Builder {
       if (timeZone != null) {
         this.timeZone = timeZone
-      }
-      else {
+      } else {
         this.timeZone = TimeZone.getDefault()
       }
       return this
@@ -103,8 +96,7 @@ public class ZmanimLocation : GeoLocation {
     public fun atElevation(elevation: Double): Builder {
       if ((elevation < 0) || elevation.isInfinite() || elevation.isNaN()) {
         this.elevation = 0.0
-      }
-      else {
+      } else {
         this.elevation = elevation
       }
 
@@ -114,8 +106,7 @@ public class ZmanimLocation : GeoLocation {
     public fun withAccuracy(accuracy: Float): Builder {
       if (accuracy >= 0) {
         this.accuracy = accuracy
-      }
-      else {
+      } else {
         this.accuracy = -1f
       }
 
@@ -123,8 +114,7 @@ public class ZmanimLocation : GeoLocation {
     }
 
     public fun from(source: ZmanimLocation): Builder {
-      return this
-        .fromProvider(source.providerName)
+      return this.fromProvider(source.providerName)
         .locationName(source.getLocationName())
         .userName(source.originalUserName)
         .at(source.locationTime)
@@ -135,7 +125,6 @@ public class ZmanimLocation : GeoLocation {
         .withAccuracy(source.accuracy)
     }
 
-
     public fun invalidLocation(): ZmanimLocation {
       return INVALID_LOCATION
     }
@@ -145,37 +134,28 @@ public class ZmanimLocation : GeoLocation {
     }
   }
 
-
   /** Who provided this location to us? E.g., 'network', 'gps'. */
-  @JvmField
-  public val providerName: String?
+  @JvmField public val providerName: String?
 
   /** When was this location determined? */
-  @JvmField
-  public val locationTime: Long
+  @JvmField public val locationTime: Long
 
   /** How accurate do we believe this location to be? */
-  @JvmField
-  public val accuracy: Float
+  @JvmField public val accuracy: Float
 
   /**
    * True indicates this is a known invalid location; false simply means we believe it to be valid, but cannot be
-   *  completely sure.
+   * completely sure.
    */
-  @JvmField
-  public val isInvalid: Boolean
+  @JvmField public val isInvalid: Boolean
 
   /**
-   * When the user gives us just a name of a location, and we have to go track it down, holding on to that name
-   *  allows us to recognize when we're seeing the same location again.
+   * When the user gives us just a name of a location, and we have to go track it down, holding on to that name allows
+   * us to recognize when we're seeing the same location again.
    */
-  @JvmField
-  public val originalUserName: String?
+  @JvmField public val originalUserName: String?
 
-
-  private constructor(
-    builder: Builder
-  ) : super() {
+  private constructor(builder: Builder) : super() {
 
     this.isInvalid = false
 
@@ -190,10 +170,7 @@ public class ZmanimLocation : GeoLocation {
     setTimeZone(builder.timeZone)
   }
 
-
-  /**
-   * Only used when we need to build an invalid location.
-   */
+  /** Only used when we need to build an invalid location. */
   private constructor() : super() {
 
     this.isInvalid = true
@@ -204,7 +181,6 @@ public class ZmanimLocation : GeoLocation {
     this.accuracy = -1f
   }
 
-
   override fun getLocationName(): String {
     var name: String? = super.getLocationName()
     if ((name == null) || name == UNKNOWN_LOCATION || name.trim { it <= ' ' }.isEmpty()) {
@@ -213,7 +189,6 @@ public class ZmanimLocation : GeoLocation {
 
     return name
   }
-
 
   public fun isSignificantChangeFrom(previousLocation: ZmanimLocation?): Boolean {
 
@@ -241,7 +216,6 @@ public class ZmanimLocation : GeoLocation {
     return false
   }
 
-
   override fun toString(): String {
 
     val millisInHour = 60 * 60 * 1000
@@ -263,26 +237,20 @@ public class ZmanimLocation : GeoLocation {
     return sb.toString()
   }
 
-
   public fun hasName(): Boolean {
 
     // Make sure to NOT compare against our overridden getLocationName!
     return UNKNOWN_LOCATION != super.getLocationName()
   }
 
-
   public fun hasCoordinates(): Boolean {
     return (latitude != 0.0) && (longitude != 0.0)
   }
 
-
-  /**
-   * Check if this is a resolved location, meaning that we know both the coordinates AND the name.
-   */
+  /** Check if this is a resolved location, meaning that we know both the coordinates AND the name. */
   public fun isResolved(): Boolean {
     return hasCoordinates() && hasName()
   }
-
 
   public fun toShortString(): String {
 
@@ -297,9 +265,9 @@ public class ZmanimLocation : GeoLocation {
     return sb.toString()
   }
 
-
   /**
-   * Writes this zmanim location to the specified output. Does NOT close the stream or perform any other operation to the stream.
+   * Writes this zmanim location to the specified output. Does NOT close the stream or perform any other operation to
+   * the stream.
    *
    * @throws IOException if there is any error writing to the stream.
    */
@@ -312,24 +280,19 @@ public class ZmanimLocation : GeoLocation {
     dataOutputStream.writeUTF(json)
   }
 
-
   public companion object {
 
-    /**
-     * Whenever we need an invalid location, this one instance will do.
-     */
+    /** Whenever we need an invalid location, this one instance will do. */
     private val INVALID_LOCATION: ZmanimLocation = ZmanimLocation()
-
 
     /** When the location name is unknown, use this, and an appropriate substitution will be made. */
     public const val UNKNOWN_LOCATION: String = " _unk_ "
 
     private const val ZMANIM_PROVIDER = "Zmanim"
 
-
     /**
      * Loads a zmanim location from the specified input, assuming the stream is correctly positioned. Does NOT close the
-     *  stream or perform any other operations to the stream.
+     * stream or perform any other operations to the stream.
      *
      * @throws IOException If there is any error interacting with the stream.
      * @throws kotlinx.serialization.SerializationException If the stored location text is not a valid location.
@@ -344,21 +307,17 @@ public class ZmanimLocation : GeoLocation {
       return ZmanLocationJSON.fromJSON(json)
     }
 
-
     private fun getLatitudeString(latitude: Double, precision: Int): String {
       return String.format("%." + precision + "f", latitude)
     }
 
-
     private fun getLongitudeString(longitude: Double, precision: Int): String {
       return String.format("%." + precision + "f", longitude)
     }
-
 
     @JvmStatic
     public fun toLatLongString(latitude: Double, longitude: Double): String {
       return getLatitudeString(latitude, 1) + " lat; " + getLongitudeString(longitude, 1) + " long"
     }
   }
-
-}  // End of ZmanimLocation class
+} // End of ZmanimLocation class

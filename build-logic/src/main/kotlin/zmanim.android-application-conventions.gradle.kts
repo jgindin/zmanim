@@ -65,38 +65,36 @@ android {
       //  Robolectric falls back to drawing a debug view-hierarchy diagram instead of real pixels,
       //  and every Roborazzi capture comes out as a diagram of colored boxes/property dumps, not
       //  a screenshot.
-      all {
-        it.systemProperty("robolectric.graphicsMode", "NATIVE")
-      }
+      all { it.systemProperty("robolectric.graphicsMode", "NATIVE") }
     }
   }
 }
 
 /**
- * Gives each build variant's APK and App Bundle a versioned file name, e.g.
- *  `Zmanim--release-4.0.403.apk` / `.aab`.
+ * Gives each build variant's APK and App Bundle a versioned file name, e.g. `Zmanim--release-4.0.403.apk` / `.aab`.
  *
- * APKs are renamed in place using AGP's Variant API: `output.outputFileName` is a settable
- *  `Property<String>`. See https://developer.android.com/build/build-variants#customize-artifact-name.
+ * APKs are renamed in place using AGP's Variant API: `output.outputFileName` is a settable `Property<String>`. See
+ * https://developer.android.com/build/build-variants#customize-artifact-name.
  *
- * AGP has no equivalent property for bundles, so `bundle<Variant>` is instead finalized by a task
- *  that copies AGP's `<project>-<variant>.aab` to the versioned name, next to the original in
- *  `build/outputs/bundle/<variant>/`. Reading the bundle through `SingleArtifact.BUNDLE` (rather
- *  than a hardcoded path) also carries the dependency on AGP's packaging task.
+ * AGP has no equivalent property for bundles, so `bundle<Variant>` is instead finalized by a task that copies AGP's
+ * `<project>-<variant>.aab` to the versioned name, next to the original in `build/outputs/bundle/<variant>/`. Reading
+ * the bundle through `SingleArtifact.BUNDLE` (rather than a hardcoded path) also carries the dependency on AGP's
+ * packaging task.
  */
 extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVariants { variant ->
   fun versionedName(versionName: String) = "${project.name}-${variant.flavorName}-${variant.name}-$versionName"
 
-  variant.outputs.forEach { output ->
-    output.outputFileName.set("${versionedName(output.versionName.get())}.apk")
-  }
+  variant.outputs.forEach { output -> output.outputFileName.set("${versionedName(output.versionName.get())}.apk") }
 
   val capitalizedName = variant.name.replaceFirstChar { it.uppercase() }
   val versionName = variant.outputs.single().versionName
-  val copyVersionedBundle = tasks.register<CopyFileTask>("copyVersioned${capitalizedName}Bundle") {
-    source.set(variant.artifacts.get(SingleArtifact.BUNDLE))
-    destination.set(layout.buildDirectory.file(versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" }))
-  }
+  val copyVersionedBundle =
+    tasks.register<CopyFileTask>("copyVersioned${capitalizedName}Bundle") {
+      source.set(variant.artifacts.get(SingleArtifact.BUNDLE))
+      destination.set(
+        layout.buildDirectory.file(versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" })
+      )
+    }
   tasks.named { it == "bundle$capitalizedName" }.configureEach { finalizedBy(copyVersionedBundle) }
 }
 
@@ -138,7 +136,8 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
 
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to
 //  JDK 21, matching the JDK 21 toolchains of :ZmanLib (zmanim.java-library-conventions) and
-//  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared above. `compileOptions {}` only controls
+//  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared above. `compileOptions
+// {}` only controls
 //  javac's bytecode target -- absent an explicit toolchain, the Test task instead runs on whatever
 //  JDK the Gradle daemon itself happens to be launched with, which is NOT pinned and can silently
 //  vary machine to machine. This matters here specifically because JDK 20+'s CLDR locale data
@@ -148,11 +147,7 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
 //  strings had hardcoded a plain ASCII space). AGP applies JavaBasePlugin internally
 //  rather than via a `plugins {}` block, so the bare `java {}` accessor isn't generated even here;
 //  `configure<JavaPluginExtension> {}` is the equivalent typed form that is always resolvable.
-configure<JavaPluginExtension> {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
+configure<JavaPluginExtension> { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
 dependencies {
   // Local jars dropped into each app's libs/ directory.
@@ -188,6 +183,4 @@ dependencies {
 //  JUnit 4 since Robolectric has no official JUnit 5 support) keep running unmodified via the
 //  vintage engine under the same JUnit Platform runner used by :ZmanUtils/:ZmanLib's
 //  Jupiter-native tests.
-tasks.withType<Test> {
-  useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }

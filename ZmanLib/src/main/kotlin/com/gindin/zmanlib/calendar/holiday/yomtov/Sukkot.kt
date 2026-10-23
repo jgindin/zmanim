@@ -14,16 +14,13 @@ private const val HOSHANA_RABBA = "Hoshana Rabba"
 private const val SHMINI_ATZERET = "Shmini Atzeret"
 private const val SIMCHAT_TORAH = "Simchat Torah"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber")
 public class Sukkot : Observance() {
 
   override fun getName(): String {
     return SUKKOT
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -37,7 +34,10 @@ public class Sukkot : Observance() {
 
         16 -> return SukkotYomTovDetails(date, false)
 
-        17, 18, 19, 20 -> return SukkotCholHaModeDetails(date, hebrewDayOfMonth - 14)
+        17,
+        18,
+        19,
+        20 -> return SukkotCholHaModeDetails(date, hebrewDayOfMonth - 14)
 
         21 -> return HoshanaRabbaDetails(date)
 
@@ -50,10 +50,9 @@ public class Sukkot : Observance() {
     return null
   }
 
-
   private class SukkotYomTovDetails(
     date: HebrewDate,
-    lightCandles: Boolean
+    lightCandles: Boolean,
   ) : Details.YomTovDetails(date, SUKKOT, lightCandles) {
 
     override fun isSukkot(): Boolean {
@@ -61,10 +60,9 @@ public class Sukkot : Observance() {
     }
   }
 
-
   private class SukkotCholHaModeDetails(
     date: HebrewDate,
-    dayOfChag: Int
+    dayOfChag: Int,
   ) : Details.CholHaMoedDetails(date, dayOfChag, SUKKOT, false) {
 
     override fun isSukkot(): Boolean {
@@ -72,19 +70,16 @@ public class Sukkot : Observance() {
     }
   }
 
-
   private class HoshanaRabbaDetails(date: HebrewDate) : Details.ErevYomTov(date, HOSHANA_RABBA) {
 
     override fun isSukkot(): Boolean {
       return true
     }
 
-
     override fun getDescription(): String {
       return "$SUKKOT 7 ($HOSHANA_RABBA)"
     }
   }
-
 
   private class ShminiAtzeretDetails(date: HebrewDate) : Details.YomTovDetails(date, SHMINI_ATZERET, true) {
 
@@ -93,12 +88,10 @@ public class Sukkot : Observance() {
     }
   }
 
-
   private class SimchatTorahDetails(date: HebrewDate) : Details.YomTovDetails(date, SIMCHAT_TORAH, false) {
 
     override fun isSimchatTorah(): Boolean {
       return true
     }
   }
-
-}  // End of Sukkot class
+} // End of Sukkot class

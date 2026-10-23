@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val NAME = "Yom Kippur"
 
-/**
- *
- */
+/**  */
 public class YomKippur : Observance() {
 
   override fun getName(): String {
     return NAME
   }
-
 
   @Suppress("FeatureEnvy")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -41,42 +38,34 @@ public class YomKippur : Observance() {
     return null
   }
 
-
   private class YomKippurDetails(date: HebrewDate) : Details(date) {
 
     override fun isErev(): Boolean {
       return false
     }
 
-
     override fun isYomTov(): Boolean {
       return true
     }
-
 
     override fun isYomKippur(): Boolean {
       return true
     }
 
-
     override fun lightCandles(): Boolean {
       return false
     }
-
 
     override fun sayHavdalah(): Boolean {
       return true
     }
 
-
     override fun sayTachanun(): Boolean {
       return false
     }
-
 
     override fun getDescription(): String {
       return NAME
     }
   }
-
-}  // End of YomKippur class
+} // End of YomKippur class

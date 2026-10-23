@@ -11,15 +11,12 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val PESACH_SHENI = "Pesach Sheni"
 
-/**
- *
- */
+/**  */
 public class PesachSheni : Observance() {
 
   override fun getName(): String {
     return PESACH_SHENI
   }
-
 
   @Suppress("MagicNumber")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -42,5 +39,4 @@ public class PesachSheni : Observance() {
 
     return null
   }
-
-}  // End of PesachSheni class
+} // End of PesachSheni class

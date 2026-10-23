@@ -10,15 +10,12 @@ import com.gindin.zmanlib.calendar.HebrewYearType
 
 private const val ROSH_CHODESH = "Rosh Chodesh"
 
-/**
- *
- */
+/**  */
 public class RoshChodesh : Observance() {
 
   override fun getName(): String {
     return ROSH_CHODESH
   }
-
 
   @Suppress("MagicNumber", "FeatureEnvy")
   override fun getDetailsFor(date: HebrewDate): Details? {
@@ -114,7 +111,7 @@ public class RoshChodesh : Observance() {
         if (1 == hebrewDayOfMonth) {
           return RoshChodeshDetails(
             date,
-            "Kislev" + (if (date.getYearType() == HebrewYearType.SHALEM) " (2)" else "")
+            "Kislev" + (if (date.getYearType() == HebrewYearType.SHALEM) " (2)" else ""),
           )
         }
         if (29 == hebrewDayOfMonth) {
@@ -133,7 +130,7 @@ public class RoshChodesh : Observance() {
           val yearType = date.getYearType()
           return RoshChodeshDetails(
             date,
-            "Tevet" + (if (HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType) " (2)" else "")
+            "Tevet" + (if (HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType) " (2)" else ""),
           )
         }
         if (29 == hebrewDayOfMonth) {
@@ -180,10 +177,8 @@ public class RoshChodesh : Observance() {
     return null
   }
 
-
   private class ErevRoshChodeshDetails(date: HebrewDate, month: String) :
     Details.Erev(date, "$ROSH_CHODESH $month", false)
-
 
   private class RoshChodeshDetails(date: HebrewDate, month: String) : Details.Yom(date, "$ROSH_CHODESH $month") {
 
@@ -191,10 +186,8 @@ public class RoshChodesh : Observance() {
       return true
     }
 
-
     override fun sayTachanun(): Boolean {
       return false
     }
   }
-
-}  // End of RoshChodesh class
+} // End of RoshChodesh class

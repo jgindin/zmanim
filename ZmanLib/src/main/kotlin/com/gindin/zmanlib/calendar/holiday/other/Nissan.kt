@@ -5,15 +5,12 @@ import com.gindin.zmanlib.calendar.HebrewMonth
 import com.gindin.zmanlib.calendar.holiday.Details
 import com.gindin.zmanlib.calendar.holiday.Observance
 
-/**
- * We don't say tachanun for the entire month of Nissan.
- */
+/** We don't say tachanun for the entire month of Nissan. */
 public class Nissan : Observance() {
 
   override fun getName(): String {
     return "Nissan"
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -26,8 +23,6 @@ public class Nissan : Observance() {
     return null
   }
 
-
-
   private class NissanDetails(date: HebrewDate) :
     // There is no real description for this day.
     Details.Yom(date, "") {
@@ -36,6 +31,4 @@ public class Nissan : Observance() {
       return false
     }
   }
-
-
 } // End of Nissan class

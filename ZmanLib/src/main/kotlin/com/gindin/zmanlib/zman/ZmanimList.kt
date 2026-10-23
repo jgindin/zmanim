@@ -4,15 +4,10 @@
 
 package com.gindin.zmanlib.zman
 
-/**
- * Encapsulate a list of Zmanim.
- */
-public class ZmanimList private constructor(
-  private val list: MutableList<Zmanim>
-) : MutableList<Zmanim> by list {
+/** Encapsulate a list of Zmanim. */
+public class ZmanimList private constructor(private val list: MutableList<Zmanim>) : MutableList<Zmanim> by list {
 
   public constructor() : this(ArrayList())
-
 
   public fun findType(type: Zmanim.Type): Zmanim? {
     for (z in list) {
@@ -24,14 +19,11 @@ public class ZmanimList private constructor(
     return null
   }
 
-
   override fun equals(other: Any?): Boolean {
     return list == other
   }
 
-
   override fun hashCode(): Int {
     return list.hashCode()
   }
-
 }

@@ -11,9 +11,7 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 
 private const val PURIM = "Purim"
 
-/**
- *
- */
+/**  */
 @Suppress("MagicNumber", "FeatureEnvy")
 public class Purim : Observance() {
 
@@ -21,11 +19,11 @@ public class Purim : Observance() {
     return PURIM
   }
 
-
   override fun getDetailsFor(date: HebrewDate): Details? {
 
-    if ((date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
-      (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
+    if (
+      (date.isHebrewLeapYear() && (HebrewMonth.ADAR_II == date.hebrewMonth)) ||
+        (!date.isHebrewLeapYear() && (HebrewMonth.ADAR == date.hebrewMonth))
     ) {
 
       if (13 == date.hebrewDayOfMonth) {
@@ -39,17 +37,14 @@ public class Purim : Observance() {
     return null
   }
 
-
   private class PurimDetails(date: HebrewDate) : Details.Yom(date, PURIM) {
 
     override fun isPurim(): Boolean {
       return true
     }
 
-
     override fun sayTachanun(): Boolean {
       return false
     }
   }
-
-}  // End of Purim class
+} // End of Purim class

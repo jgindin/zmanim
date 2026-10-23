@@ -13,25 +13,23 @@ import java.util.Calendar
 private const val NAME = "Yom HaAtzmaut"
 
 /**
- * Yom Ha'atzmaut is nominally celebrated on the 5th day of Iyar (ה' באייר) in the Hebrew calendar, the anniversary
- *  of the day in which Israel independence was proclaimed, when David Ben Gurion publicly read the Israeli Declaration
- *  of Independence. The corresponding Gregorian date was May 14, 1948.
+ * Yom Ha'atzmaut is nominally celebrated on the 5th day of Iyar (ה' באייר) in the Hebrew calendar, the anniversary of
+ * the day in which Israel independence was proclaimed, when David Ben Gurion publicly read the Israeli Declaration of
+ * Independence. The corresponding Gregorian date was May 14, 1948.
  *
- * If the 5th of Iyar falls on a Friday or Saturday, the celebrations are moved up to the preceding Thursday.
- *  This rule has been effective since 1951.
+ * If the 5th of Iyar falls on a Friday or Saturday, the celebrations are moved up to the preceding Thursday. This rule
+ * has been effective since 1951.
  *
- * If the 5th of Iyar is on a Monday, the festival is postponed to Tuesday. This rule has been effective since 2004,
- *  in order to avoid having Yom Hazikaron or Yom Ha'atzmaut on (or following) a Shabbat.
+ * If the 5th of Iyar is on a Monday, the festival is postponed to Tuesday. This rule has been effective since 2004, in
+ * order to avoid having Yom Hazikaron or Yom Ha'atzmaut on (or following) a Shabbat.
  *
  * Since the only other day of the week that the 5th of Iyar can fall on is a Wednesday, it is actually now relatively
- *  rare for the festival to be observed on the 5th Iyar itself.
- *    -- http://en.wikipedia.org/wiki/Yom_Ha%27atzmaut
+ * rare for the festival to be observed on the 5th Iyar itself. -- http://en.wikipedia.org/wiki/Yom_Ha%27atzmaut
  *
  * This means that if Yom HaAtzmaut falls on:
- *  - Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd (2012)
- *  - Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2001, 2005, 2008)
- *  - Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2004, 2007, 2010, 2011)
- *
+ * - Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd (2012)
+ * - Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2001, 2005, 2008)
+ * - Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2004, 2007, 2010, 2011)
  */
 @Suppress("FeatureEnvy")
 public class YomHaAtzmaut : Observance() {
@@ -39,7 +37,6 @@ public class YomHaAtzmaut : Observance() {
   override fun getName(): String {
     return NAME
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -117,11 +114,9 @@ public class YomHaAtzmaut : Observance() {
     return null
   }
 
-
   private fun createErevDetails(date: HebrewDate): Details {
     return Details.Erev(date, NAME, false)
   }
-
 
   private fun createYomDetails(date: HebrewDate): Details {
     return object : Details.Yom(date, NAME) {
@@ -130,5 +125,4 @@ public class YomHaAtzmaut : Observance() {
       }
     }
   }
-
-}  // End of YomHaAtzmaut class
+} // End of YomHaAtzmaut class

@@ -13,14 +13,10 @@ import java.util.HashSet
 
 private const val CHOL_HA_MOED = "Chol HaMoed "
 
-/**
- * Contains details about a given Observance.
- */
+/** Contains details about a given Observance. */
 public abstract class Details(private val date: HebrewDate) {
 
-  /**
-   * @return A list of the types of zmanim this day has, ordered by the sequence in which they will occur.
-   */
+  /** @return A list of the types of zmanim this day has, ordered by the sequence in which they will occur. */
   public open fun getZmanim(): List<Zmanim.Type> {
 
     val regularCandles: Boolean
@@ -67,31 +63,25 @@ public abstract class Details(private val date: HebrewDate) {
     return Collections.unmodifiableList(zmanim)
   }
 
-
   public open fun isErevYomTovSheni(): Boolean {
 
     return (isPesach() || isShavuot() || isRoshHashana() || isSukkot() || isShminiAtzeret()) &&
-      lightCandles() && !isErev() && !isCholHaMoed()
+      lightCandles() &&
+      !isErev() &&
+      !isCholHaMoed()
   }
 
-
-  /**
-   * Is this actually erev of the observance? If so, today is NOT actually the observance.
-   */
+  /** Is this actually erev of the observance? If so, today is NOT actually the observance. */
   public abstract fun isErev(): Boolean
 
   /**
-   * Does one light candles tonight for this observance? This could be the first night
-   *  of the observance, or in some cases the second or subsequent evenings too.
+   * Does one light candles tonight for this observance? This could be the first night of the observance, or in some
+   * cases the second or subsequent evenings too.
    */
   public abstract fun lightCandles(): Boolean
 
-  /**
-   * Does one say havdalah tonight at the end of this observance? Not all observances end
-   *  with havdalah.
-   */
+  /** Does one say havdalah tonight at the end of this observance? Not all observances end with havdalah. */
   public abstract fun sayHavdalah(): Boolean
-
 
   public open fun isRoshChodesh(): Boolean {
     return false
@@ -145,59 +135,54 @@ public abstract class Details(private val date: HebrewDate) {
     return false
   }
 
-
   /**
    * Zehut Yosef has the following regarding when tachanun are not said:
    *
-   *
    * Every day, Tahanunim are recited during Shaharit and Minha, with the following exceptions:
    * <ol>
-   *  <li>Shabbat
-   *  <li>Rosh Hodesh
-   *  <li>Moed (all the days of Pesah, Shavuot and Sukkot)
-   *  <li>The whole month of Nisan
-   *  <li>Yom Aatsmaut (5 Iyar)
-   *  <li>Pesah Sheni (14 Iyar)
-   *  <li>Lag LaOmer (18 Iyar)
-   *  <li>Yom Yerushalayim (28 Iyar)
-   *  <li>From 1-12 of Sivan
-   *  <li>9 Av
-   *  <li>15 Av
-   *  <li>Erev Rosh Ashanah
-   *  <li>From Erev Kippur until the end of Tishri
-   *  <li>Hanukkah
-   *  <li>15 Shevat
-   *  <li>14 and 15 of Adar Rishon
-   *  <li>Purim and the day after (Shushan Purim).
+   * <li>Shabbat
+   * <li>Rosh Hodesh
+   * <li>Moed (all the days of Pesah, Shavuot and Sukkot)
+   * <li>The whole month of Nisan
+   * <li>Yom Aatsmaut (5 Iyar)
+   * <li>Pesah Sheni (14 Iyar)
+   * <li>Lag LaOmer (18 Iyar)
+   * <li>Yom Yerushalayim (28 Iyar)
+   * <li>From 1-12 of Sivan
+   * <li>9 Av
+   * <li>15 Av
+   * <li>Erev Rosh Ashanah
+   * <li>From Erev Kippur until the end of Tishri
+   * <li>Hanukkah
+   * <li>15 Shevat
+   * <li>14 and 15 of Adar Rishon
+   * <li>Purim and the day after (Shushan Purim).
    * </ol>
    *
-   * On all the days shown above, Tahanunim are not recited on Minha of the prior day,
-   *  with the exception of Erev Rosh Ashanah and Erev Yom Kippur.
-   *<p/>
+   * On all the days shown above, Tahanunim are not recited on Minha of the prior day, with the exception of Erev Rosh
+   * Ashanah and Erev Yom Kippur.
    *
-   * Also, Tahanunim are not recited (during Shaharit only) when there is a Hatan (bridegroom)
-   *  in the synagogue or when there is a Berit Milah in the synagogue and the Avi Aben
-   *  (father of the baby), or the Mo’el, or the Sandak (godfather) are praying with the minyan;
-   *  or on the actual day of a Bar Mitsvah.
-   *<p/>
+   * <p/>
    *
-   *  Tahanunim are not recited in a House of Mourning.
+   * Also, Tahanunim are not recited (during Shaharit only) when there is a Hatan (bridegroom) in the synagogue or when
+   * there is a Berit Milah in the synagogue and the Avi Aben (father of the baby), or the Mo’el, or the Sandak
+   * (godfather) are praying with the minyan; or on the actual day of a Bar Mitsvah.
+   *
+   * <p/>
+   *
+   * Tahanunim are not recited in a House of Mourning.
    */
   public open fun sayTachanun(): Boolean {
     return !isShabbat()
   }
 
-
   /**
-   * A complete description of today's observance. Could be something simple like,
-   *  "Yom Kippur" or something more complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
+   * A complete description of today's observance. Could be something simple like, "Yom Kippur" or something more
+   * complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
    */
   public abstract fun getDescription(): String
 
-
-  /**
-   * A non-null Details may still not be anything interesting.
-   */
+  /** A non-null Details may still not be anything interesting. */
   public open fun isAnything(): Boolean {
     // If someone wants to create a 'nothing' details, they'll have to override this.
     return true
@@ -207,13 +192,11 @@ public abstract class Details(private val date: HebrewDate) {
     return CompositeDetails(date, this, otherDetails)
   }
 
-
   protected fun isErevShabbat(): Boolean {
 
     val shabbatDetails = Holidays.SHABBAT.getDetailsFor(date)
     return null != shabbatDetails && shabbatDetails.isErev()
   }
-
 
   public open fun isShabbat(): Boolean {
 
@@ -221,42 +204,36 @@ public abstract class Details(private val date: HebrewDate) {
     return null != shabbatDetails && !shabbatDetails.isErev()
   }
 
-
-  /**
-   * Is this a day of the omer?
-   */
+  /** Is this a day of the omer? */
   protected open fun isOmer(): Boolean {
     return false
   }
 
-
   protected fun getTodaysDate(): HebrewDate {
     return date
   }
-
 
   public companion object {
 
     protected const val EREV: String = "Erev "
   }
 
-
-  public open class Erev @JvmOverloads constructor(
+  public open class Erev
+  @JvmOverloads
+  constructor(
     date: HebrewDate,
     private val name: String,
-    private val candles: Boolean = true
+    private val candles: Boolean = true,
   ) : Details(date) {
 
     override fun isErev(): Boolean {
       return true
     }
 
-
     override fun lightCandles(): Boolean {
       // No candle lighting if we're coming straight out of Shabbat...
       return (candles && !isShabbat()) || isErevShabbat()
     }
-
 
     override fun sayHavdalah(): Boolean {
 
@@ -264,46 +241,40 @@ public abstract class Details(private val date: HebrewDate) {
       return isShabbat()
     }
 
-
     override fun getDescription(): String {
       return EREV + name
     }
   }
 
-
-  /**
-   * Intended for simple details about a day.
-   */
+  /** Intended for simple details about a day. */
   public open class Yom(
     date: HebrewDate,
-    @JvmField protected val name: String
+    @JvmField protected val name: String,
   ) : Details(date) {
 
     override fun isErev(): Boolean {
       return false
     }
 
-
     override fun lightCandles(): Boolean {
       return isErevShabbat()
     }
 
-
     override fun sayHavdalah(): Boolean {
       return isShabbat()
     }
-
 
     override fun getDescription(): String {
       return name
     }
   }
 
-
-  public open class ErevYomTov @JvmOverloads constructor(
+  public open class ErevYomTov
+  @JvmOverloads
+  constructor(
     date: HebrewDate,
     name: String,
-    candles: Boolean = true
+    candles: Boolean = true,
   ) : Erev(date, name, candles) {
 
     override fun sayHavdalah(): Boolean {
@@ -312,22 +283,19 @@ public abstract class Details(private val date: HebrewDate) {
     }
   }
 
-
   public open class YomTovDetails(
     date: HebrewDate,
     @JvmField protected val name: String,
-    private val lightCandles: Boolean
+    private val lightCandles: Boolean,
   ) : Details(date) {
 
     override fun isErev(): Boolean {
       return false
     }
 
-
     override fun isYomTov(): Boolean {
       return true
     }
-
 
     override fun lightCandles(): Boolean {
 
@@ -335,18 +303,15 @@ public abstract class Details(private val date: HebrewDate) {
       return (lightCandles || isErevShabbat())
     }
 
-
     override fun sayHavdalah(): Boolean {
 
       // If we want to say havdalah for this yom tov, but it's erev Shabbat, then we don't say havdalah.
       return (!lightCandles && !isErevShabbat())
     }
 
-
     override fun sayTachanun(): Boolean {
       return false
     }
-
 
     override fun getDescription(): String {
       return name
@@ -358,63 +323,54 @@ public abstract class Details(private val date: HebrewDate) {
     /** This is the day of the chag, NOT the day of chol hamoed. */
     private val dayOfChag: Int,
     private val name: String,
-    private val lightCandles: Boolean
+    private val lightCandles: Boolean,
   ) : Details(date) {
 
     override fun isErev(): Boolean {
       return false
     }
 
-
     override fun lightCandles(): Boolean {
       return lightCandles || isErevShabbat()
     }
-
 
     override fun sayHavdalah(): Boolean {
       return isShabbat()
     }
 
-
     override fun getDescription(): String {
       return CHOL_HA_MOED + name + " " + dayOfChag
     }
 
-
     override fun isCholHaMoed(): Boolean {
       return true
     }
-
 
     override fun sayTachanun(): Boolean {
       return false
     }
   }
 
-
   private class CompositeDetails(
     date: HebrewDate,
     details: Details,
-    otherDetails: Details
+    otherDetails: Details,
   ) : Details(date) {
 
     /** The details of the dates that are composed into this. */
     private val composedDates: MutableList<Details> = ArrayList()
 
     /**
-     * There are cases where the only way to determine something about today is by looking at tomorrow.
-     *  E.g., should we say havdalah? Well, if today is Shabbat, then yes. Unless it's the first day
-     *    of Pesach or Sukkot, that is...
-     *  This field will be filledin lazily if it's needed.
+     * There are cases where the only way to determine something about today is by looking at tomorrow. E.g., should we
+     * say havdalah? Well, if today is Shabbat, then yes. Unless it's the first day of Pesach or Sukkot, that is... This
+     * field will be filledin lazily if it's needed.
      */
     private var tomorrowsDetails: Details? = null
-
 
     init {
       composeWith(details)
       composeWith(otherDetails)
     }
-
 
     override fun isErev(): Boolean {
       for (composedDate in composedDates) {
@@ -426,7 +382,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isYomTov(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isYomTov()) {
@@ -437,7 +392,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isCholHaMoed(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isCholHaMoed()) {
@@ -447,7 +401,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun lightCandles(): Boolean {
 
@@ -462,7 +415,6 @@ public abstract class Details(private val date: HebrewDate) {
       // No candle lighting if we're coming straight out of Shabbat...
       return light && !isShabbat()
     }
-
 
     override fun sayHavdalah(): Boolean {
 
@@ -486,7 +438,6 @@ public abstract class Details(private val date: HebrewDate) {
       return (havdalah && !isErevShabbat() && !tomorrow.isYomTov())
     }
 
-
     override fun isRoshChodesh(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isRoshChodesh()) {
@@ -496,7 +447,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isShabbat(): Boolean {
       for (composedDate in composedDates) {
@@ -508,7 +458,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isTaanit(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isTaanit()) {
@@ -518,7 +467,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isPesach(): Boolean {
       for (composedDate in composedDates) {
@@ -530,7 +478,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isSukkot(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isSukkot()) {
@@ -540,7 +487,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isShminiAtzeret(): Boolean {
       for (composedDate in composedDates) {
@@ -552,7 +498,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isSimchatTorah(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isSimchatTorah()) {
@@ -562,7 +507,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isShavuot(): Boolean {
       for (composedDate in composedDates) {
@@ -574,7 +518,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isPurim(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isPurim()) {
@@ -584,7 +527,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isChanukah(): Boolean {
       for (composedDate in composedDates) {
@@ -596,7 +538,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun isRoshHashana(): Boolean {
       for (composedDate in composedDates) {
         if (composedDate.isRoshHashana()) {
@@ -606,7 +547,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun isYomKippur(): Boolean {
       for (composedDate in composedDates) {
@@ -618,7 +558,6 @@ public abstract class Details(private val date: HebrewDate) {
       return false
     }
 
-
     override fun sayTachanun(): Boolean {
       for (composedDate in composedDates) {
         if (!composedDate.sayTachanun()) {
@@ -628,7 +567,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return true
     }
-
 
     override fun getDescription(): String {
       val sb = StringBuilder()
@@ -647,12 +585,10 @@ public abstract class Details(private val date: HebrewDate) {
       return sb.toString()
     }
 
-
     override fun composeWith(otherDetails: Details): Details {
       composedDates.add(otherDetails)
       return this
     }
-
 
     override fun isAnything(): Boolean {
       for (composedDate in composedDates) {
@@ -663,7 +599,6 @@ public abstract class Details(private val date: HebrewDate) {
 
       return false
     }
-
 
     override fun getZmanim(): List<Zmanim.Type> {
 
@@ -685,20 +620,17 @@ public abstract class Details(private val date: HebrewDate) {
       return todaysZmanim
     }
 
-
     private companion object {
 
       /**
-       * This comparator is used to arrange the dates which are composed into this one date.
-       *  The way CompositeDetails is used, we can assert the following.
-       *  Every Details represented in this composite:
-       *    <ul>
-       *      <li>is for the SAME date
-       *      <li>represents *something*, whether it be Erev or actual Yom.
-       *    </ul>
+       * This comparator is used to arrange the dates which are composed into this one date. The way CompositeDetails is
+       * used, we can assert the following. Every Details represented in this composite:
+       * <ul>
+       * <li>is for the SAME date
+       * <li>represents *something*, whether it be Erev or actual Yom.
+       * </ul>
        */
       private val COMPARATOR: Comparator<Details> = Comparator { lhs, rhs ->
-
         if (!lhs.isAnything() && !rhs.isAnything()) {
           // Both are nothing... This should not happen.
           return@Comparator 0
@@ -740,7 +672,5 @@ public abstract class Details(private val date: HebrewDate) {
         0
       }
     }
-
   } // End of CompositeDetails class
-
 } // End of Details class

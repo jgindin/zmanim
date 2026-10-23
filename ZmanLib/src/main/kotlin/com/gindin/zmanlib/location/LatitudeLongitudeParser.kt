@@ -6,42 +6,40 @@ package com.gindin.zmanlib.location
 
 /**
  * Used to parse a string into a latitude or a longitude.
+ *
  * <p>
+ *
  * <p>
  * Supported formats are:
  * <ul>
- *   <li> DDD MM['] [SS["]] -- Assumed North
- *   <li> [N|S] DDD MM['] [SS["]]
- *   <li> DDD.MM[N|S]
+ * <li> DDD MM['] [SS["]] -- Assumed North
+ * <li> [N|S] DDD MM['] [SS["]]
+ * <li> DDD.MM[N|S]
  * </ul>
  */
-public open class LatitudeLongitudeParser protected constructor(
+public open class LatitudeLongitudeParser
+protected constructor(
   direction: Direction,
   degrees: Int,
   minutes: Int,
   seconds: Double,
-  maxDegrees: Int
+  maxDegrees: Int,
 ) {
 
   public enum class Direction(internal val abbreviation: String) {
     NORTH("N"),
     SOUTH("S"),
     EAST("E"),
-    WEST("W")
+    WEST("W"),
   }
 
-  @JvmField
-  public val direction: Direction
+  @JvmField public val direction: Direction
 
-  @JvmField
-  public val minutes: Int
+  @JvmField public val minutes: Int
 
-  @JvmField
-  public val degrees: Int
+  @JvmField public val degrees: Int
 
-  @JvmField
-  public val seconds: Double
-
+  @JvmField public val seconds: Double
 
   init {
 
@@ -51,8 +49,7 @@ public open class LatitudeLongitudeParser protected constructor(
     if (adjustedDegrees < 0) {
       if (Direction.NORTH == adjustedDirection) {
         adjustedDirection = Direction.SOUTH
-      }
-      else if (Direction.EAST == adjustedDirection) {
+      } else if (Direction.EAST == adjustedDirection) {
         adjustedDirection = Direction.WEST
       }
 
@@ -66,30 +63,25 @@ public open class LatitudeLongitudeParser protected constructor(
     // If the value is still too large, then just choose zero.
     if (adjustedDegrees > maxDegrees) {
       this.degrees = 0
-    }
-    else {
+    } else {
       this.degrees = adjustedDegrees
     }
   }
-
 
   public fun toFullString(withMarkers: Boolean): String {
     return direction.abbreviation + " " + formattedDMS(withMarkers)
   }
 
-
   public fun toSimpleString(withMarkers: Boolean): String {
     val str: String
     if ((Direction.SOUTH == direction) || (Direction.WEST == direction)) {
       str = direction.abbreviation + " "
-    }
-    else {
+    } else {
       str = ""
     }
 
     return str + formattedDMS(withMarkers)
   }
-
 
   private fun formattedDMS(withMarkers: Boolean): String {
 
@@ -111,7 +103,6 @@ public open class LatitudeLongitudeParser protected constructor(
     return str.toString()
   }
 
-
   public companion object {
 
     private const val MAX_LATITUDE = 90
@@ -121,24 +112,22 @@ public open class LatitudeLongitudeParser protected constructor(
     private const val MINUTES_PER_DEGREE = 60
     private const val SECONDS_PER_MINUTE = 60
 
-
     @JvmStatic
     public fun latitude(
       direction: Direction,
       degrees: Int,
       minutes: Int,
-      seconds: Int
+      seconds: Int,
     ): LatitudeLongitudeParser {
       return LatitudeLongitudeParser(direction, degrees, minutes, seconds.toDouble(), MAX_LATITUDE)
     }
-
 
     @JvmStatic
     public fun latitude(
       direction: Direction,
       degreesText: String,
       minutesText: String?,
-      secondsText: String
+      secondsText: String,
     ): LatitudeLongitudeParser {
       return parse(direction, degreesText, minutesText, secondsText, MAX_LATITUDE)
     }
@@ -147,7 +136,6 @@ public open class LatitudeLongitudeParser protected constructor(
     public fun latitude(value: String): LatitudeLongitudeParser {
       return parse(value, Direction.NORTH, MAX_LATITUDE)
     }
-
 
     @JvmStatic
     public fun latitudeValue(value: String): Double {
@@ -162,34 +150,30 @@ public open class LatitudeLongitudeParser protected constructor(
       return latitude
     }
 
-
     @JvmStatic
     public fun longitude(
       direction: Direction,
       degrees: Int,
       minutes: Int,
-      seconds: Int
+      seconds: Int,
     ): LatitudeLongitudeParser {
       return LatitudeLongitudeParser(direction, degrees, minutes, seconds.toDouble(), MAX_LONGITUDE)
     }
-
 
     @JvmStatic
     public fun longitude(
       direction: Direction,
       degreesText: String,
       minutesText: String?,
-      secondsText: String
+      secondsText: String,
     ): LatitudeLongitudeParser {
       return parse(direction, degreesText, minutesText, secondsText, MAX_LONGITUDE)
     }
-
 
     @JvmStatic
     public fun longitude(value: String): LatitudeLongitudeParser {
       return parse(value, Direction.EAST, MAX_LONGITUDE)
     }
-
 
     @JvmStatic
     public fun longitudeValue(value: String): Double {
@@ -204,13 +188,12 @@ public open class LatitudeLongitudeParser protected constructor(
       return longitude
     }
 
-
     private fun parse(
       direction: Direction,
       degreesText: String,
       minutesText: String?,
       secondsText: String,
-      maxDegrees: Int
+      maxDegrees: Int,
     ): LatitudeLongitudeParser {
 
       var parseMinutes = true
@@ -221,8 +204,7 @@ public open class LatitudeLongitudeParser protected constructor(
 
       try {
         degrees = degreesText.toInt()
-      }
-      catch (e: NumberFormatException) {
+      } catch (e: NumberFormatException) {
         // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
         try {
           val degreesDouble = degreesText.toDouble()
@@ -237,8 +219,7 @@ public open class LatitudeLongitudeParser protected constructor(
           seconds = ((doubleMinutes - minutes) * SECONDS_PER_MINUTE)
 
           parseMinutes = false
-        }
-        catch (e1: NumberFormatException) {
+        } catch (e1: NumberFormatException) {
           // Nope... just give up.
           degrees = 0
           minutes = 0
@@ -250,15 +231,13 @@ public open class LatitudeLongitudeParser protected constructor(
 
         try {
           minutes = minutesText?.toInt() ?: 0
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
           minutes = 0
         }
 
         try {
           seconds = secondsText.toDouble()
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
           seconds = 0.0
         }
       }
@@ -266,21 +245,22 @@ public open class LatitudeLongitudeParser protected constructor(
       return LatitudeLongitudeParser(direction, degrees, minutes, seconds, maxDegrees)
     }
 
-
     /**
-     * Attempts to parse the specified string representing a latitude or longitude into a double containing the
-     * decimal representation.
+     * Attempts to parse the specified string representing a latitude or longitude into a double containing the decimal
+     * representation.
      */
     private fun parseAsDouble(
       value: String,
       defaultDirection: Direction,
-      maxDegress: Int
+      maxDegress: Int,
     ): Double {
 
       val parsed = parse(value, defaultDirection, maxDegress)
 
-      // See http://stackoverflow.com/questions/6945008/converting-value-longitude-valuesdmscompass-direction-format-to-correspondi
-      var convertedDegrees = parsed.degrees + (((parsed.seconds / SECONDS_PER_MINUTE)) + parsed.minutes) / MINUTES_PER_DEGREE.toDouble()
+      // See
+      // http://stackoverflow.com/questions/6945008/converting-value-longitude-valuesdmscompass-direction-format-to-correspondi
+      var convertedDegrees =
+        parsed.degrees + (((parsed.seconds / SECONDS_PER_MINUTE)) + parsed.minutes) / MINUTES_PER_DEGREE.toDouble()
 
       if ((Direction.SOUTH == parsed.direction) || (Direction.WEST == parsed.direction)) {
         convertedDegrees = -1 * convertedDegrees
@@ -289,11 +269,10 @@ public open class LatitudeLongitudeParser protected constructor(
       return convertedDegrees
     }
 
-
     private fun parse(
       value: String,
       defaultDirection: Direction,
-      maxDegrees: Int
+      maxDegrees: Int,
     ): LatitudeLongitudeParser {
 
       // Make sure there's no extra whitespace...
@@ -308,7 +287,6 @@ public open class LatitudeLongitudeParser protected constructor(
       remaining = remaining.replace('"', ' ')
       remaining = remaining.javaTrim()
 
-
       val latitudeComponents = remaining.split(" ")
       if (latitudeComponents.isEmpty()) {
         throw IllegalArgumentException("Can't parse value: $remaining")
@@ -319,62 +297,51 @@ public open class LatitudeLongitudeParser protected constructor(
       val minutes: Int
       if (latitudeComponents.size > 1) {
         minutes = latitudeComponents[1].javaTrim().toInt()
-      }
-      else {
+      } else {
         minutes = 0
       }
 
       val seconds: Int
       if (latitudeComponents.size > 2) {
         seconds = latitudeComponents[2].javaTrim().toInt()
-      }
-      else {
+      } else {
         seconds = 0
       }
 
       return LatitudeLongitudeParser(extracted.first, degrees, minutes, seconds.toDouble(), maxDegrees)
     }
 
-
     private fun extractDirection(
       value: String,
-      defaultDirection: Direction
+      defaultDirection: Direction,
     ): Pair<Direction, String> {
 
       var test = value[0]
       if (('S' == test) || ('s' == test)) {
         return Pair(Direction.SOUTH, value.substring(1))
-      }
-      else if (('W' == test) || ('w' == test)) {
+      } else if (('W' == test) || ('w' == test)) {
         return Pair(Direction.WEST, value.substring(1))
-      }
-      else if (('N' == test) || ('n' == test)) {
+      } else if (('N' == test) || ('n' == test)) {
         return Pair(Direction.NORTH, value.substring(1))
-      }
-      else if (('E' == test) || ('e' == test)) {
+      } else if (('E' == test) || ('e' == test)) {
         return Pair(Direction.EAST, value.substring(1))
       }
 
       test = value[value.length - 1]
       if (('S' == test) || ('s' == test)) {
         return Pair(Direction.SOUTH, value.substring(0, value.length - 1))
-      }
-      else if (('W' == test) || ('w' == test)) {
+      } else if (('W' == test) || ('w' == test)) {
         return Pair(Direction.WEST, value.substring(0, value.length - 1))
-      }
-      else if (('N' == test) || ('n' == test)) {
+      } else if (('N' == test) || ('n' == test)) {
         return Pair(Direction.NORTH, value.substring(0, value.length - 1))
-      }
-      else if (('E' == test) || ('e' == test)) {
+      } else if (('E' == test) || ('e' == test)) {
         return Pair(Direction.EAST, value.substring(0, value.length - 1))
       }
 
       return Pair(defaultDirection, value)
     }
   }
-
 }
-
 
 /** Trims the way java.lang.String.trim() does (every character up to and including the space). */
 private fun String.javaTrim(): String = trim { it <= ' ' }

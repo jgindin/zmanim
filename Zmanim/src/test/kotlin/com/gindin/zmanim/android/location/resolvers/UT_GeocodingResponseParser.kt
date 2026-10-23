@@ -16,7 +16,8 @@ import org.junit.jupiter.api.Test
 
 class UT_GeocodingResponseParser {
 
-  private val reverseGeocode = """
+  private val reverseGeocode =
+    """
     {
       "place_id": 240109189,
       "lat": "47.6038321",
@@ -29,15 +30,17 @@ class UT_GeocodingResponseParser {
       },
       "boundingbox": ["47.4919119", "47.7341388", "-122.4596959", "-122.2244331"]
     }
-  """.trimIndent()
+    """
+      .trimIndent()
 
-  private val searchResults = """
+  private val searchResults =
+    """
     [
       {"lat": "31.7788242", "lon": "35.2257626", "display_name": "Jerusalem, Israel"},
       {"lat": "39.0", "lon": "-91.0", "display_name": "Jerusalem, Missouri"}
     ]
-  """.trimIndent()
-
+    """
+      .trimIndent()
 
   @Test
   fun anObjectIsReturnedAsIs() {
@@ -49,7 +52,6 @@ class UT_GeocodingResponseParser {
     assertEquals("Seattle", result["address"]!!.jsonObject["city"]!!.jsonPrimitive.content)
   }
 
-
   @Test
   fun anArrayYieldsItsFirstObject() {
 
@@ -58,14 +60,12 @@ class UT_GeocodingResponseParser {
     assertEquals("Jerusalem, Israel", result!!["display_name"]!!.jsonPrimitive.content)
   }
 
-
   @Test
   fun anEmptyArrayMeansNoMatch() {
 
     assertNull(GeocodingResponseParser.parse("[]"))
     assertNull(GeocodingResponseParser.parse("  [ ]  "))
   }
-
 
   @Test
   fun aResponseThatIsNeitherObjectNorArrayMeansNoMatch() {
@@ -76,13 +76,11 @@ class UT_GeocodingResponseParser {
     assertNull(GeocodingResponseParser.parse("\"no results\""))
   }
 
-
   @Test
   fun anEmptyObjectIsStillAnObject() {
 
     assertEquals(JsonObject(emptyMap()), GeocodingResponseParser.parse("{}"))
   }
-
 
   @Test
   fun unquotedValuesAreAccepted() {
@@ -93,14 +91,12 @@ class UT_GeocodingResponseParser {
     assertEquals("1.5", result["lat"]!!.jsonPrimitive.content)
   }
 
-
   @Test
   fun anEmptyResponseFailsToParse() {
 
     assertThrows(SerializationException::class.java) { GeocodingResponseParser.parse("") }
     assertThrows(SerializationException::class.java) { GeocodingResponseParser.parse("   ") }
   }
-
 
   @Test
   fun aTruncatedResponseFailsToParse() {
@@ -113,7 +109,6 @@ class UT_GeocodingResponseParser {
     }
   }
 
-
   @Test
   fun anHtmlErrorPageFailsToParse() {
 
@@ -122,7 +117,6 @@ class UT_GeocodingResponseParser {
     }
   }
 
-
   @Test
   fun anArrayWhoseFirstElementIsNotAnObjectFailsToParse() {
 
@@ -130,5 +124,4 @@ class UT_GeocodingResponseParser {
     assertThrows(SerializationException::class.java) { GeocodingResponseParser.parse("[null]") }
     assertThrows(SerializationException::class.java) { GeocodingResponseParser.parse("[[{}]]") }
   }
-
 }

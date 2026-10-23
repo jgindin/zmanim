@@ -13,9 +13,7 @@ import java.util.Calendar
 /** Name of the file created to store the notified zmanim. */
 private const val NOTIFIED_ZMANIM_FILE_EXTENSION = "notifiedZmanim"
 
-/**
- * Keeps track of which zmanim we've already notified the user about for a given day.
- */
+/** Keeps track of which zmanim we've already notified the user about for a given day. */
 public class NotifiedZmanim : Serializable {
 
   public class Manager {
@@ -24,14 +22,10 @@ public class NotifiedZmanim : Serializable {
 
     private var filesDir: File? = null
 
-
     public fun init(filesDir: File) {
 
       this.filesDir = filesDir
-      val files = filesDir.listFiles(FileFilter { pathname ->
-        pathname.name.endsWith(NOTIFIED_ZMANIM_FILE_EXTENSION)
-      })
-
+      val files = filesDir.listFiles(FileFilter { pathname -> pathname.name.endsWith(NOTIFIED_ZMANIM_FILE_EXTENSION) })
 
       if ((files == null) || files.isEmpty()) {
         return
@@ -45,13 +39,11 @@ public class NotifiedZmanim : Serializable {
       for (file in files) {
         if (file.lastModified() < mills) {
           file.delete()
-        }
-        else {
+        } else {
           restore(file)
         }
       }
     }
-
 
     public fun get(forDate: Calendar): NotifiedZmanim {
 
@@ -71,24 +63,26 @@ public class NotifiedZmanim : Serializable {
       return newNotifiedZmanim
     }
 
-
     public fun save(notifiedZmanim: NotifiedZmanim) {
 
-      val fileName = notifiedZmanim.year.toString() + "_" + notifiedZmanim.month + "_" + notifiedZmanim.date +
-        "." + NOTIFIED_ZMANIM_FILE_EXTENSION
+      val fileName =
+        notifiedZmanim.year.toString() +
+          "_" +
+          notifiedZmanim.month +
+          "_" +
+          notifiedZmanim.date +
+          "." +
+          NOTIFIED_ZMANIM_FILE_EXTENSION
       val storedData = File(filesDir, fileName)
       try {
         val oos = ObjectOutputStream(FileOutputStream(storedData, false))
         oos.writeObject(notifiedZmanim)
         oos.flush()
         oos.close()
-
-      }
-      catch (e: Exception) {
+      } catch (e: Exception) {
         // Urgh. Can't save... We're going to lose our state...
       }
     }
-
 
     private fun restore(storedData: File) {
 
@@ -96,21 +90,18 @@ public class NotifiedZmanim : Serializable {
 
       if (!storedData.canRead()) {
         restored = NotifiedZmanim()
-      }
-      else {
+      } else {
         var ois: ObjectInputStream? = null
         try {
           ois = ObjectInputStream(FileInputStream(storedData))
           restored = ois.readObject() as NotifiedZmanim
 
           ois.close()
-        }
-        catch (e: Throwable) {
+        } catch (e: Throwable) {
           if (ois != null) {
             try {
               ois.close()
-            }
-            catch (e1: Throwable) {
+            } catch (e1: Throwable) {
               // Oh well, we tried...
             }
           }
@@ -118,13 +109,9 @@ public class NotifiedZmanim : Serializable {
         }
       }
 
-      synchronized(notified) {
-        notified.add(restored)
-      }
+      synchronized(notified) { notified.add(restored) }
     }
-
   }
-
 
   /** The date this applies to. */
   private val year: Int
@@ -134,14 +121,12 @@ public class NotifiedZmanim : Serializable {
   /** Which of the zmanim types have already been notified? */
   private val notifiedTypes: MutableSet<Zmanim.Type> = HashSet()
 
-
   public constructor(day: Calendar) {
 
     this.year = day.get(Calendar.YEAR)
     this.month = day.get(Calendar.MONTH)
     this.date = day.get(Calendar.DATE)
   }
-
 
   private constructor() {
 
@@ -150,7 +135,6 @@ public class NotifiedZmanim : Serializable {
     this.month = day.get(Calendar.MONTH)
     this.date = day.get(Calendar.DATE)
   }
-
 
   private fun isForDate(other: Calendar): Boolean {
 
@@ -168,7 +152,6 @@ public class NotifiedZmanim : Serializable {
     return date == otherDate
   }
 
-
   /**
    * Once the user has been notified about the specified type, then this method is invoked to note that notification.
    */
@@ -177,19 +160,14 @@ public class NotifiedZmanim : Serializable {
     notifiedTypes.add(type)
   }
 
-
   public fun contains(type: Zmanim.Type): Boolean {
     return notifiedTypes.contains(type)
   }
 
-
   public companion object {
 
-    @JvmField
-    public val manager: Manager = Manager()
-
+    @JvmField public val manager: Manager = Manager()
 
     private const val serialVersionUID: Long = 8982487060417217170L
   }
-
 }

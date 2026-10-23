@@ -15,12 +15,10 @@ plugins {
   id("zmanim.android-application-conventions")
 }
 
-
 // Feeds this module's major/minor into the advanced-build-version plugin (applied by the
 //  convention plugin) and reads back the computed code/name. The version code auto-increments
 //  through Zmanim/version.properties exactly as before.
 val appVersion = zmanimAppVersion(major = 4, minor = 0)
-
 
 android {
   namespace = "com.gindin.zmanim.android"
@@ -44,11 +42,7 @@ android {
   // The on-device tests start from the same synthetic saved state of the released app that the
   //  Robolectric tests use, so the committed fixture directory doubles as an androidTest asset root
   //  (readable by the test APK as assets/zmanim-v409/...) instead of being copied.
-  sourceSets {
-    getByName("androidTest") {
-      assets.srcDir("src/test/resources/upgrade")
-    }
-  }
+  sourceSets { getByName("androidTest") { assets.srcDir("src/test/resources/upgrade") } }
 
   // `copy` is a `Project` member, not something `defaultConfig {}` exposes, so this has to be a
   //  direct sibling of `defaultConfig` rather than nested inside it. Runs at project-
@@ -70,8 +64,7 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
 
-    getByName("debug") {
-    }
+    getByName("debug") {}
   }
 }
 

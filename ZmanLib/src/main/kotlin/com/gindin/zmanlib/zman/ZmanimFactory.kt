@@ -7,12 +7,11 @@ package com.gindin.zmanlib.zman
 import com.gindin.zmanlib.calendar.HebrewDate
 import com.kosherjava.zmanim.util.GeoLocation
 
-/**
- * Handle creation of zmanim.
- */
-public class ZmanimFactory private constructor(
+/** Handle creation of zmanim. */
+public class ZmanimFactory
+private constructor(
   location: GeoLocation,
-  date: HebrewDate
+  date: HebrewDate,
 ) {
 
   /** Cache so that we don't create the zmanim instances more than once. */
@@ -25,7 +24,6 @@ public class ZmanimFactory private constructor(
 
   private var usingElevation: Boolean = false
 
-
   private fun usingElevation(useElevation: Boolean) {
 
     if (usingElevation != useElevation) {
@@ -36,13 +34,9 @@ public class ZmanimFactory private constructor(
     }
   }
 
-
-  private fun get(
-    type: Zmanim.Type
-  ): Zmanim {
+  private fun get(type: Zmanim.Type): Zmanim {
 
     synchronized(typeToZmanimMap) {
-
       var zmanim = typeToZmanimMap[type]
       if (null != zmanim) {
         return zmanim
@@ -54,7 +48,6 @@ public class ZmanimFactory private constructor(
     }
   }
 
-
   public companion object {
 
     private val locationToFactory: MutableMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory> = HashMap()
@@ -65,7 +58,7 @@ public class ZmanimFactory private constructor(
     public fun get(
       location: GeoLocation,
       date: HebrewDate,
-      type: Zmanim.Type
+      type: Zmanim.Type,
     ): Zmanim {
 
       val key = Pair(location, date)
@@ -80,7 +73,6 @@ public class ZmanimFactory private constructor(
       return factory.get(type)
     }
 
-
     @JvmStatic
     public fun useElevation(use: Boolean) {
       useElevation = use
@@ -88,7 +80,5 @@ public class ZmanimFactory private constructor(
         factory.usingElevation(use)
       }
     }
-
   }
-
 }

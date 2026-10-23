@@ -2,9 +2,7 @@
  * Copyright (c) 2026. Jay R. Gindin
  */
 
-plugins {
-  id("zmanim.java-library-conventions")
-}
+plugins { id("zmanim.java-library-conventions") }
 
 kotlin {
   explicitApi()
@@ -33,9 +31,7 @@ dependencies {
   testImplementation(libs.hamcrest)
 }
 
-tasks.withType<Test> {
-  useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
 sourceSets {
   create("utils") {

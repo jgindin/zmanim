@@ -14,16 +14,18 @@ private const val NAME = "Yom HaZikaron"
 
 /**
  * Yom Hazikaron is observed on the 4th day of the month of Iyar of the Hebrew calendar, always one day before Israel
- *  Independence Day on the 5th day of Iyar, the anniversary of the Proclamation of the State of Israel in 1948.
- *  Both holidays are observed one or two days earlier (the 3rd and 4th, or the 2nd and 3rd, of Iyar) when the 5th
- *  occurs on a Friday or Saturday, the Shabbat. Similarly, both days are moved one day later when Yom Hazikaron
- *  falls on Sunday.
- *    -- http://en.wikipedia.org/wiki/Yom_Hazikaron
+ * Independence Day on the 5th day of Iyar, the anniversary of the Proclamation of the State of Israel in 1948. Both
+ * holidays are observed one or two days earlier (the 3rd and 4th, or the 2nd and 3rd, of Iyar) when the 5th occurs on a
+ * Friday or Saturday, the Shabbat. Similarly, both days are moved one day later when Yom Hazikaron falls on Sunday. --
+ * http://en.wikipedia.org/wiki/Yom_Hazikaron
  *
  * This means:
- *  - If Yom HaAtzmaut falls on Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the 3rd
- *  - If Yom HaAtzmaut falls on Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the 2nd (2008)
- *  - If Yom HaAtzmaut falls on Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th (2011)
+ * - If Yom HaAtzmaut falls on Friday, it gets pushed back to Thursday the 4th, and Yom HaZikaron goes to Wednesday the
+ *   3rd
+ * - If Yom HaAtzmaut falls on Shabbat, it gets pushed back to Thursday the 3rd, and Yom HaZikaron goes to Wednesday the
+ *   2nd (2008)
+ * - If Yom HaAtzmaut falls on Monday, it gets pushed out to Tuesday the 6th, and Yom HaZikaron goes to Monday the 5th
+ *   (2011)
  */
 @Suppress("FeatureEnvy")
 public class YomHaZikaron : Observance() {
@@ -31,7 +33,6 @@ public class YomHaZikaron : Observance() {
   override fun getName(): String {
     return NAME
   }
-
 
   override fun getDetailsFor(date: HebrewDate): Details? {
 
@@ -101,7 +102,6 @@ public class YomHaZikaron : Observance() {
       }
     }
 
-
     // We've handled the special cases, so if we get here, we're just looking for the "regular" year...
     if (3 == jewishDayOfMonth) {
       return createErevDetails(date)
@@ -112,11 +112,9 @@ public class YomHaZikaron : Observance() {
     return null
   }
 
-
   private fun createErevDetails(date: HebrewDate): Details {
     return Details.Erev(date, NAME, false)
   }
-
 
   private fun createYomDetails(date: HebrewDate): Details {
     return object : Details.Yom(date, NAME) {
@@ -125,5 +123,4 @@ public class YomHaZikaron : Observance() {
       }
     }
   }
-
-}  // End of YomHaZikaron class
+} // End of YomHaZikaron class

@@ -34,14 +34,11 @@ import com.gindin.zmanlib.calendar.holiday.yomtov.Sukkot
 import com.gindin.zmanlib.calendar.holiday.yomtov.YomKippur
 import java.util.Arrays
 
-/**
- * Serves as the central location for declaring all the Jewish Holidays.
- */
+/** Serves as the central location for declaring all the Jewish Holidays. */
 @Suppress("OverlyCoupledClass")
 public object Holidays {
 
-  @JvmField
-  public val SHABBAT: Shabbat = Shabbat()
+  @JvmField public val SHABBAT: Shabbat = Shabbat()
 
   // Yom Tov
   private val PESACH = Pesach()
@@ -77,8 +74,7 @@ public object Holidays {
   private val YOM_YERUSHALAYIM = YomYerushalayim()
 
   /** Handles all of the Rosh Chodeshim. */
-  @JvmField
-  public val ROSH_CHODESH: RoshChodesh = RoshChodesh()
+  @JvmField public val ROSH_CHODESH: RoshChodesh = RoshChodesh()
 
   /** Handles all of the Omer. */
   private val OMER = Omer()
@@ -92,43 +88,56 @@ public object Holidays {
   /** Handles that we don't say tachanun from Erev Kippur until the end of the month. */
   private val TISHRI = Tishri()
 
-
-  /**
-   * Sets of the holidays.
-   */
+  /** Sets of the holidays. */
   @JvmField
-  public val MAJOR_HOLIDAYS: List<Observance> = Arrays.asList(
-    ROSH_HASHANA,       YOM_KIPPUR,         SUKKOT,
-    CHANUKAH,           PURIM,              PESACH,
-    SHAVUOT
-  )
-
-
-  @JvmField
-  public val MINOR_HOLIDAYS: List<Observance> = Arrays.asList(
-    TU_B_SHVAT,         PURIM_KATAN,        SHUSHAN_PURIM,
-    PESACH_SHENI,       LAG_B_OMER,         TU_B_AV
-  )
-
+  public val MAJOR_HOLIDAYS: List<Observance> =
+    Arrays.asList(
+      ROSH_HASHANA,
+      YOM_KIPPUR,
+      SUKKOT,
+      CHANUKAH,
+      PURIM,
+      PESACH,
+      SHAVUOT,
+    )
 
   @JvmField
-  public val FAST_DAYS: List<Taanit> = Arrays.asList(
-    TZOM_GEDALIAH,      ASARA_B_TEVET,      TAANIT_ESTHER,
-    TAANIT_BECHOROT,    TAANIT_17_TAMUZ,    TISHA_B_AV
-  )
-
-
-  @JvmField
-  public val MODERN_HOLIDAYS: List<Observance> = Arrays.asList(
-    YOM_HA_SHOAH,       YOM_HA_ZIKARON,     YOM_HA_ATZMAUT,
-    YOM_YERUSHALAYIM
-  )
-
+  public val MINOR_HOLIDAYS: List<Observance> =
+    Arrays.asList(
+      TU_B_SHVAT,
+      PURIM_KATAN,
+      SHUSHAN_PURIM,
+      PESACH_SHENI,
+      LAG_B_OMER,
+      TU_B_AV,
+    )
 
   @JvmField
-  public val OTHER: List<Observance> = Arrays.asList(
-    OMER,               SIVAN,              NISSAN,
-    TISHRI
-  )
+  public val FAST_DAYS: List<Taanit> =
+    Arrays.asList(
+      TZOM_GEDALIAH,
+      ASARA_B_TEVET,
+      TAANIT_ESTHER,
+      TAANIT_BECHOROT,
+      TAANIT_17_TAMUZ,
+      TISHA_B_AV,
+    )
 
-}  // End of Holidays class
+  @JvmField
+  public val MODERN_HOLIDAYS: List<Observance> =
+    Arrays.asList(
+      YOM_HA_SHOAH,
+      YOM_HA_ZIKARON,
+      YOM_HA_ATZMAUT,
+      YOM_YERUSHALAYIM,
+    )
+
+  @JvmField
+  public val OTHER: List<Observance> =
+    Arrays.asList(
+      OMER,
+      SIVAN,
+      NISSAN,
+      TISHRI,
+    )
+} // End of Holidays class

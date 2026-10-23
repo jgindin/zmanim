@@ -14,11 +14,7 @@ dependencyResolutionManagement {
   //  the same `libs.*` accessors every other module in this repo already uses, so the AGP /
   //  advanced-build-version / Roborazzi versions that the convention plugins compile and run
   //  against stay centralized in gradle/libs.versions.toml rather than being hardcoded here.
-  versionCatalogs {
-    create("libs") {
-      from(files("../gradle/libs.versions.toml"))
-    }
-  }
+  versionCatalogs { create("libs") { from(files("../gradle/libs.versions.toml")) } }
 }
 
 rootProject.name = "build-logic"

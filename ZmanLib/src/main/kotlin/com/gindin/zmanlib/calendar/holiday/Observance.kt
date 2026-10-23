@@ -6,19 +6,13 @@ package com.gindin.zmanlib.calendar.holiday
 
 import com.gindin.zmanlib.calendar.HebrewDate
 
-/**
- * Represents an observance of some kind in the Jewish Calendar.
- */
+/** Represents an observance of some kind in the Jewish Calendar. */
 public abstract class Observance {
-
 
   public abstract fun getName(): String
 
   /**
-   * If the observance falls on the specified date, returns details about that
-   *  particular instance of the observance.
+   * If the observance falls on the specified date, returns details about that particular instance of the observance.
    */
   public abstract fun getDetailsFor(date: HebrewDate): Details?
-
-
-}  // End of Observance class
+} // End of Observance class

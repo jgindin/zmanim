@@ -5,14 +5,12 @@
 package com.gindin.mvp
 
 /**
- * Represents the UI widgets with which the user is interacting. Delegates everything to the Presenter, where
- *  all the decisions are made. The view is intended to be as dumb as possible, simply taking commands from the
- *  Presenter and rendering the data.
+ * Represents the UI widgets with which the user is interacting. Delegates everything to the Presenter, where all the
+ * decisions are made. The view is intended to be as dumb as possible, simply taking commands from the Presenter and
+ * rendering the data.
  */
 public interface View<P> {
 
-  /**
-   * Notify the view of its presenter. Using a setter (instead of a ctor param) makes it part of the contract.
-   */
+  /** Notify the view of its presenter. Using a setter (instead of a ctor param) makes it part of the contract. */
   public fun setPresenter(presenter: P)
 }
