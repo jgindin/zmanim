@@ -10,6 +10,8 @@ import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.os.Build;
+import android.os.SystemClock;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
@@ -18,6 +20,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
+import androidx.test.uiautomator.StaleObjectException;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
@@ -49,8 +52,13 @@ import static org.junit.Assert.assertTrue;
 @RunWith( AndroidJUnit4.class )
 public class ExactAlarmPromptTest {
 
+  private static final String                               TAG = "ExactAlarmPromptTest";
+
   /** Generous, because emulators on CI machines are much slower than local ones; the waits end as soon as it shows. */
   private static final long                                 DIALOG_TIMEOUT_MS = 30_000;
+
+  /** How long a clicked button is given to go away before the click is taken as dropped and repeated. */
+  private static final long                                 ANSWER_TIMEOUT_MS = 3_000;
 
   /** How long a dialog or page that must not appear is given to appear anyway, once the screen has settled. */
   private static final long                                 ABSENCE_TIMEOUT_MS = 4_000;
@@ -101,7 +109,7 @@ public class ExactAlarmPromptTest {
 
       assertNotNull( "The explanation should appear once the location is in",
         device.wait( Until.findObject( explanation ), DIALOG_TIMEOUT_MS ) );
-      click( EXPLANATION_ACCEPT, "the explanation's Open Settings button" );
+      answer( EXPLANATION_ACCEPT, "the explanation's Open Settings button" );
 
       assertTrue( "Accepting should open the system page for exact alarms",
         device.wait( Until.hasObject( SYSTEM_SETTINGS ), DIALOG_TIMEOUT_MS ) );
@@ -124,7 +132,7 @@ public class ExactAlarmPromptTest {
 
       assertNotNull( "The explanation should appear once the location is in",
         device.wait( Until.findObject( explanation ), DIALOG_TIMEOUT_MS ) );
-      click( EXPLANATION_DECLINE, "the explanation's No thanks button" );
+      answer( EXPLANATION_DECLINE, "the explanation's No thanks button" );
 
       assertFalse( "Declining must not open the system page",
         device.wait( Until.hasObject( SYSTEM_SETTINGS ), ABSENCE_TIMEOUT_MS ) );
@@ -161,7 +169,7 @@ public class ExactAlarmPromptTest {
 
     try ( ActivityScenario<PersonalPreferences> scenario = ActivityScenario.launch( PersonalPreferences.class ) ) {
 
-      click( By.text( targetContext().getString( R.string.exact_alarms_denied_pref_title ) ),
+      answer( By.text( targetContext().getString( R.string.exact_alarms_denied_pref_title ) ),
         "the preferences' late alerts row" );
 
       assertTrue( "The row should open the system page",
@@ -171,14 +179,44 @@ public class ExactAlarmPromptTest {
   }
 
 
-  private void click(
+  /**
+   * Clicks a button (or row) and waits for it to go away, clicking again while it stays.
+   *<p/>
+   *
+   * A window that has just opened shows up in UI Automator's view of the screen before it accepts input, and the
+   *  system drops a tap that arrives in that gap (logcat: "Not sending touch gesture to ... ActivityRecordInputSink
+   *  ... NO_INPUT_CHANNEL"). The dialog then simply stays up, and nothing the test waits for afterwards happens. That
+   *  gap is wide on a slow emulator.
+   */
+  private void answer(
     BySelector  selector,
     String      what
   ) {
 
+    long deadline = SystemClock.uptimeMillis() + DIALOG_TIMEOUT_MS;
     UiObject2 button = device.wait( Until.findObject( selector ), DIALOG_TIMEOUT_MS );
     assertNotNull( "Never saw " + what, button );
-    button.click();
+
+    for ( int clicks = 1; ; clicks++ ) {
+      try {
+        button.click();
+      }
+      catch ( StaleObjectException ignored ) {
+        // The button went away between being found and being clicked; the wait below sees that it is gone.
+      }
+
+      if ( device.wait( Until.gone( selector ), ANSWER_TIMEOUT_MS ) ) {
+        return;
+      }
+
+      button = device.findObject( selector );
+      if ( button == null ) {
+        return;
+      }
+
+      assertTrue( what + " stayed on screen after " + clicks + " clicks", SystemClock.uptimeMillis() < deadline );
+      Log.w( TAG, what + " is still on screen after " + clicks + " click(s); clicking it again" );
+    }
   }
 
 
