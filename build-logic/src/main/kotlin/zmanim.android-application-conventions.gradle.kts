@@ -5,6 +5,7 @@
 import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.gindin.buildlogic.CopyFileTask
+import com.gindin.buildlogic.R8KeptNamesCheckTask
 import org.gradle.api.artifacts.VersionCatalogsExtension
 
 // Convention plugin holding everything :Zmanim and :ZehutYosef configure identically.
@@ -95,6 +96,42 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVarian
     destination.set(layout.buildDirectory.file(versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" }))
   }
   tasks.named { it == "bundle$capitalizedName" }.configureEach { finalizedBy(copyVersionedBundle) }
+}
+
+/**
+ * Checks each release variant's R8 output against the names listed in the module's `r8-kept-names.txt`, which sits
+ *  next to the proguard-rules.pro whose rules it guards (see [R8KeptNamesCheckTask] for the format). The per-variant
+ *  tasks read R8's mapping through `SingleArtifact.OBFUSCATION_MAPPING_FILE`, which also makes them run the minified
+ *  build first; `checkR8KeptNames` runs all of a module's. seeds.txt and resources.txt are not published as artifacts
+ *  of their own, but R8 writes them next to the mapping, so they are found from it.
+ */
+val r8KeptNames = layout.projectDirectory.file("r8-kept-names.txt")
+val checkR8KeptNames = tasks.register("checkR8KeptNames") {
+  group = "verification"
+  description = "Checks that R8 kept every name listed in r8-kept-names.txt in each release variant."
+}
+extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { androidComponents ->
+  androidComponents.onVariants(androidComponents.selector().withBuildType("release")) { variant ->
+    if (!r8KeptNames.asFile.exists()) {
+      return@onVariants
+    }
+
+    val capitalizedName = variant.name.replaceFirstChar { it.uppercase() }
+    val mapping = variant.artifacts.get(SingleArtifact.OBFUSCATION_MAPPING_FILE)
+    fun besideMapping(name: String) = mapping.map { RegularFile { it.asFile.resolveSibling(name) } }
+
+    val check = tasks.register<R8KeptNamesCheckTask>("check${capitalizedName}R8KeptNames") {
+      group = "verification"
+      description = "Checks that R8 kept every name listed in r8-kept-names.txt in the ${variant.name} build."
+      variantName.set(variant.name)
+      expectations.set(r8KeptNames)
+      mappingFile.set(mapping)
+      seedsFile.set(besideMapping("seeds.txt"))
+      resourcesLog.set(besideMapping("resources.txt"))
+      report.set(layout.buildDirectory.file("reports/r8KeptNames/${variant.name}.txt"))
+    }
+    checkR8KeptNames.configure { dependsOn(check) }
+  }
 }
 
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to

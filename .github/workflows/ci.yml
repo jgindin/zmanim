@@ -18,6 +18,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
+      # Runs R8 on the release variants and fails if it renamed or removed a name that a keep rule exists to
+      #  preserve (each app's r8-kept-names.txt lists them). Neither R8 nor this check needs the upload key, so it
+      #  works on CI, where no signing properties are set.
+      - name: Check that the release builds keep the names their R8 rules protect
+        run: ./gradlew checkR8KeptNames
       - name: Upload test and Roborazzi reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
@@ -74,3 +79,61 @@ jobs:
           path: |
             **/build/reports/androidTests/**
             **/build/outputs/androidTest-results/**
+
+  # Runs the same on-device tests against the R8-minified releaseCheck build type (release code and keep rules,
+  #  debug signature, since CI has no upload key), so a keep rule that the app needs at runtime but the JVM and debug
+  #  tests cannot see (Java serialization of NotifiedZmanim, Zmanim.Type by name, reflection) fails a test here.
+  #  checkR8KeptNames in `verify` guards the same names statically; this job checks the app actually works with them.
+  #
+  # Not a merge gate, for the same reasons as emulator-smoke. One API level is enough: what it guards depends on R8's
+  #  output, not on the platform version.
+  emulator-minified:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    continue-on-error: true
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      # Hardware acceleration for the emulator: lets the runner user open /dev/kvm.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Run instrumented tests against the minified build on an emulator
+        uses: reactivecircus/android-emulator-runner@v2.38.0
+        with:
+          api-level: 36
+          arch: x86_64
+          # google_apis: the app uses Google Play Services location APIs and the Geocoder.
+          target: google_apis
+          disable-animations: true
+          script: ./gradlew -Pzmanim.testBuildType=releaseCheck :Zmanim:connectedReleaseCheckAndroidTest :ZehutYosef:connectedBarMitzvahReleaseCheckAndroidTest :ZehutYosef:connectedSidurReleaseCheckAndroidTest
+      # When R8 strips something the test runner itself needs from the app, the instrumentation crashes before the
+      #  first test and the connected task still succeeds, with an empty result. Treat that as the failure it is.
+      - name: Fail if a test APK ran no tests
+        run: |
+          results=$(find . -path '*/build/outputs/androidTest-results/connected/*' -name 'TEST-*.xml' | wc -l)
+          if [ "$results" -eq 0 ]; then
+            echo "::error::No instrumented test results were written"
+            exit 1
+          fi
+          if find . -path '*/build/outputs/androidTest-results/connected/*' -name 'TEST-*.xml' -print0 | xargs -0 grep -l '<testsuites tests="0"'; then
+            echo "::error::A test APK ran no tests; the instrumentation most likely crashed on a class R8 removed from the app"
+            exit 1
+          fi
+      - name: Upload instrumented test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: emulator-minified-reports
+          path: |
+            **/build/reports/androidTests/**
+            **/build/outputs/androidTest-results/**
+            **/build/outputs/mapping/**
