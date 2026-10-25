@@ -1,0 +1,15 @@
+# Commits that only reformat code, so that `git blame` can skip them and show who last changed the
+# logic. GitHub's blame view reads this file automatically. Locally, run once:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# The ids are the ones on main (the pull request was merged with "Rebase and merge", which rewrites
+# commit ids, so the ids from before the merge do not exist).
+
+# Format all Kotlin sources and build scripts with ktfmt (120 columns)
+9d390ec44b87ac7e0f66baae921ef4807ccee048
+# Format the files added since the formatting pass
+f5db5bb48e3c223f61d22f631e692cbcb7b8b60e
+# Reflow all Kotlin to 100 columns
+97e4548d58c77f3d52df97be820a0fb58c2d1c39
+# Rewrap the line comments that ktfmt split at 100 columns (comments only)
+24c1d9a406981d0c1c1018140ba740e2b6311b17
