@@ -20,7 +20,8 @@ style:
       - 'FIXME:'
       - 'STOPSHIP:'
   MaxLineLength:
-    # ktfmt owns line wrapping and keeps to the 120 columns configured for it; what it cannot wrap are the long
-    #  user-visible description string literals in the zman definitions, and splitting a sentence over several
-    #  concatenated literals only to satisfy this rule would make the text harder to find and edit.
+    # ktfmt owns line wrapping and keeps to the 100 columns configured for it; what it cannot wrap
+    #  are the long user-visible description string literals in the zman definitions, and
+    #  splitting a sentence over several concatenated literals only to satisfy this rule would make
+    #  the text harder to find and edit.
     active: false

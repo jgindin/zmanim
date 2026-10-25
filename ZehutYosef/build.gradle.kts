@@ -48,8 +48,10 @@ android {
 //  Both flavors share this key.
 zmanimReleaseSigning(keyAlias = "zehutyosef")
 
-// The release build signed with the debug key, for running the on-device tests against R8-minified code; see
-//  ReleaseCheck.kt. It copies the release build type as configured above, so it has to come after it.
+// The release build signed with the debug key, for running the on-device tests against R8-minified
+// code; see
+//  ReleaseCheck.kt. It copies the release build type as configured above, so it has to come after
+// it.
 zmanimReleaseCheckBuildType()
 
 dependencies {

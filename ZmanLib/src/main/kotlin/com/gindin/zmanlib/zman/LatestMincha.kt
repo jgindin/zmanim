@@ -8,7 +8,8 @@ import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "Hacham Ovadia Yosef"
 
-internal class LatestMincha(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.LatestMincha, zmanimCalculator) {
+internal class LatestMincha(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.LatestMincha, zmanimCalculator) {
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)

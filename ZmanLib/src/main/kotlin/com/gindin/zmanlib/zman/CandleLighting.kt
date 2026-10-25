@@ -22,7 +22,8 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
+  // it would only
   //  scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
@@ -52,7 +53,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(LONDON_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(LONDON_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )
@@ -66,7 +70,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(RAANANA_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(RAANANA_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )
@@ -80,7 +87,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(TEL_AVIV_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(TEL_AVIV_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )
@@ -94,7 +104,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(ASHDOD_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(ASHDOD_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )
@@ -108,7 +121,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(NORTHERN_ISRAEL_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(NORTHERN_ISRAEL_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )
@@ -122,7 +138,10 @@ internal class CandleLighting(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getCandleLighting(JERUSALEM_MINUTES_BEFORE_SHKIA))
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getCandleLighting(JERUSALEM_MINUTES_BEFORE_SHKIA),
+          )
         }
       }
     )

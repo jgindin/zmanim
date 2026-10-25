@@ -8,7 +8,8 @@ import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "10.2 deg"
 
-internal class Talit(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.Talit, zmanimCalculator) {
+internal class Talit(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.Talit, zmanimCalculator) {
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)

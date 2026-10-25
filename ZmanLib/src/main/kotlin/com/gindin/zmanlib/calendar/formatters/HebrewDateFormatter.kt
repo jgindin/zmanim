@@ -26,7 +26,9 @@ public abstract class HebrewDateFormatter {
     location: ZmanimLocation?,
   ): String
 
-  /** Formats a Hebrew date in a short fashion, which includes only the date. E.g., "1 Nissan 5772". */
+  /**
+   * Formats a Hebrew date in a short fashion, which includes only the date. E.g., "1 Nissan 5772".
+   */
   private open class ShortFormatter : HebrewDateFormatter() {
 
     override fun format(
@@ -56,8 +58,8 @@ public abstract class HebrewDateFormatter {
   } // End of ShortFormatter class
 
   /**
-   * Builds on the format presented by the short format and adds information about the day. E.g., if it is a holiday,
-   * etc...
+   * Builds on the format presented by the short format and adds information about the day. E.g., if
+   * it is a holiday, etc...
    */
   private class LongFormatter : ShortFormatter() {
 

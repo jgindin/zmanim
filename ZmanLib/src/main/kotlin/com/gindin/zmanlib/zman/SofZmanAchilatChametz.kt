@@ -16,7 +16,8 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
+  // it would only
   //  scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
@@ -98,7 +99,10 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanAchilasChametzMGA16Point1Degrees())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanAchilasChametzMGA16Point1Degrees(),
+          )
         }
       }
     )
@@ -124,7 +128,10 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
           Zmanim.Type.SofZmanAchilatChametz,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanAchilasChametzMGA72Minutes())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanAchilasChametzMGA72Minutes(),
+          )
         }
       }
     )
@@ -189,7 +196,10 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
           Zmanim.Type.SofZmanAchilatChametz,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanAchilasChametzBaalHatanya())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanAchilasChametzBaalHatanya(),
+          )
         }
       }
     )

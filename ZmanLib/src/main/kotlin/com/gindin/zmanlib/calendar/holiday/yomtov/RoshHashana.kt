@@ -31,8 +31,10 @@ public class RoshHashana : Observance() {
             return false
           }
         }
-      (HebrewMonth.TISHREI == hebrewMonth) && (1 == hebrewDayOfMonth) -> RoshHashanaYomDetails(date, true)
-      (HebrewMonth.TISHREI == hebrewMonth) && (2 == hebrewDayOfMonth) -> RoshHashanaYomDetails(date, false)
+      (HebrewMonth.TISHREI == hebrewMonth) && (1 == hebrewDayOfMonth) ->
+        RoshHashanaYomDetails(date, true)
+      (HebrewMonth.TISHREI == hebrewMonth) && (2 == hebrewDayOfMonth) ->
+        RoshHashanaYomDetails(date, false)
       else -> null
     }
   }

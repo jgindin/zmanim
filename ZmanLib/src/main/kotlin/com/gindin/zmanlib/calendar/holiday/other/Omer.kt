@@ -36,7 +36,8 @@ public class Omer : Observance() {
     return OmerDetails(date, dayOfOmer)
   }
 
-  private class OmerDetails(date: HebrewDate, dayOfOmer: Int) : Details.Yom(date, "$OMER $dayOfOmer") {
+  private class OmerDetails(date: HebrewDate, dayOfOmer: Int) :
+    Details.Yom(date, "$OMER $dayOfOmer") {
 
     override fun isOmer(): Boolean {
       return true

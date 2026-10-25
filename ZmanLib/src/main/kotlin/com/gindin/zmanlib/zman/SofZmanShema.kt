@@ -8,13 +8,15 @@ import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "MG'A 16.1 deg"
 
-internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.SofZmanShema, zmanimCalculator) {
+internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.SofZmanShema, zmanimCalculator) {
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
+  // it would only
   //  scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
@@ -216,7 +218,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees(),
+          )
         }
       }
     )
@@ -243,7 +248,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA18DegreesToFixedLocalChatzos())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaMGA18DegreesToFixedLocalChatzos(),
+          )
         }
       }
     )
@@ -257,7 +265,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA16Point1DegreesToFixedLocalChatzos())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaMGA16Point1DegreesToFixedLocalChatzos(),
+          )
         }
       }
     )
@@ -271,7 +282,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA90MinutesToFixedLocalChatzos())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaMGA90MinutesToFixedLocalChatzos(),
+          )
         }
       }
     )
@@ -285,7 +299,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA72MinutesToFixedLocalChatzos())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaMGA72MinutesToFixedLocalChatzos(),
+          )
         }
       }
     )
@@ -299,7 +316,10 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaGRASunriseToFixedLocalChatzos())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanShmaGRASunriseToFixedLocalChatzos(),
+          )
         }
       }
     )

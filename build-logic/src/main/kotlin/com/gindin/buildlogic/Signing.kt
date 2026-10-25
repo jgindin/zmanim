@@ -8,11 +8,12 @@ import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Project
 
 /**
- * Wires this module's `release` build type to the upload key in the shared `jay-gindin-android-apps` keystore, reading
- * everything secret from Gradle properties instead of from a file in the repository.
+ * Wires this module's `release` build type to the upload key in the shared
+ * `jay-gindin-android-apps` keystore, reading everything secret from Gradle properties instead of
+ * from a file in the repository.
  *
- * The properties are expected in `~/.gradle/gradle.properties` (or, on CI, as `ORG_GRADLE_PROJECT_<name>` environment
- * variables):
+ * The properties are expected in `~/.gradle/gradle.properties` (or, on CI, as
+ * `ORG_GRADLE_PROJECT_<name>` environment variables):
  * ```
  * gindin.signing.storeFile=/absolute/path/to/jay-gindin-android-apps.keystore
  * gindin.signing.storePassword=...
@@ -21,11 +22,11 @@ import org.gradle.api.Project
  *
  * The key alias isn't secret and differs per app, so it's passed in by the module instead.
  *
- * Since enrolling in Play App Signing, this key is only the *upload* key: Google re-signs what's installed on devices
- * with the app signing key it holds.
+ * Since enrolling in Play App Signing, this key is only the *upload* key: Google re-signs what's
+ * installed on devices with the app signing key it holds.
  *
- * If any property is missing (e.g. a fresh checkout on another machine), the release build type is simply left
- * unsigned, so debug builds and tests still work.
+ * If any property is missing (e.g. a fresh checkout on another machine), the release build type is
+ * simply left unsigned, so debug builds and tests still work.
  */
 fun Project.zmanimReleaseSigning(keyAlias: String) {
   val storeFile = providers.gradleProperty("gindin.signing.storeFile").orNull

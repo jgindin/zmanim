@@ -53,7 +53,10 @@ public class SofZmanBiurChametz internal constructor(zmanimCalculator: ZmanimCal
           Zmanim.Type.SofZmanBiurChametz,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getSofZmanBiurChametzMGA16Point1Degrees(),
+          )
         }
       }
     )

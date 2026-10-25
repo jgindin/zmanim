@@ -17,10 +17,16 @@ private const val LEAP_YEAR_INTERVAL = 4
 private const val CENTURY = 100
 private const val LEAP_CENTURY_INTERVAL = 400
 
-/** The Jewish day starts at sunset, so a molad this many hours after sunset is already after midnight. */
+/**
+ * The Jewish day starts at sunset, so a molad this many hours after sunset is already after
+ * midnight.
+ */
 private const val HOURS_BETWEEN_SUNSET_AND_MIDNIGHT = 6
 
-/** A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is immutable once created. */
+/**
+ * A HebrewDate represents a specific date obtained from a HebrewCalendar. Each instance is
+ * immutable once created.
+ */
 @Suppress("UnusedDeclaration", "ClassWithTooManyFields", "ClassWithTooManyMethods")
 public class HebrewDate
 internal constructor(
@@ -28,8 +34,8 @@ internal constructor(
   public val hebrewYear: Int,
 
   /**
-   * The Hebrew month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to 13 for Adar
-   * II
+   * The Hebrew month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and
+   * goes to 13 for Adar II
    */
   @param:HebrewMonth.Constant @get:HebrewMonth.Constant public val hebrewMonth: Int,
 
@@ -40,15 +46,18 @@ internal constructor(
   public val gregorianYear: Int,
 
   /**
-   * The Gregorian month, in a format compatible with java.util.Calendar's definition of month zero being January,
-   * through to month 11 being December. Can be directly compared to the months as defined in java.util.Calendar.
+   * The Gregorian month, in a format compatible with java.util.Calendar's definition of month zero
+   * being January, through to month 11 being December. Can be directly compared to the months as
+   * defined in java.util.Calendar.
    */
   @param:CalendarMonth @get:CalendarMonth public val gregorianMonth: Int,
 
   /** The day of the Gregorian month */
   public val gregorianDayOfMonth: Int,
 
-  /** The day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc... */
+  /**
+   * The day of the week as a number between 1-7. Strictly compatible with Calendar.SUNDAY, etc...
+   */
   @param:CalendarDay @get:CalendarDay public val dayOfWeek: Int,
 
   /** Internal representation of the date. */
@@ -56,21 +65,21 @@ internal constructor(
   moladHours: Int,
 
   /**
-   * The molad minutes. Only a HebrewDate created via the getMolad() method will have this field set. Other HebrewDates
-   * will have this field set to 0.
+   * The molad minutes. Only a HebrewDate created via the getMolad() method will have this field
+   * set. Other HebrewDates will have this field set to 0.
    */
   public val moladMinutes: Int,
 
   /**
-   * The molad chalakim/parts. Only a HebrewDate created via the getMolad() method will have this field set. Other
-   * HebrewDates will have this field set to 0.
+   * The molad chalakim/parts. Only a HebrewDate created via the getMolad() method will have this
+   * field set. Other HebrewDates will have this field set to 0.
    */
   public val moladChalakim: Int,
 ) : Comparable<HebrewDate> {
 
   /**
-   * The molad hours. Only a HebrewDate created via the getMolad() method will have this field set. Other HeberwDates
-   * will have this field set to 0.
+   * The molad hours. Only a HebrewDate created via the getMolad() method will have this field set.
+   * Other HeberwDates will have this field set to 0.
    */
   public var moladHours: Int = moladHours
     private set
@@ -182,7 +191,8 @@ internal constructor(
   /**
    * Returns this object's date as a java.util.Date object.
    *
-   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
+   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is
+   * invoked.
    *
    * @return The `Date`
    */
@@ -195,7 +205,8 @@ internal constructor(
   /**
    * Get a calendar which matches the Gregorian date represented by this Hebrew date.
    *
-   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
+   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is
+   * invoked.
    */
   public fun getCalendar(): Calendar {
     val cal = Calendar.getInstance()
@@ -211,12 +222,13 @@ internal constructor(
   }
 
   /**
-   * Check if the specified time, given the specified location, is after the time of the specified zman.
+   * Check if the specified time, given the specified location, is after the time of the specified
+   * zman.
    *
    * @param currentTime The time to check against.
    * @param type The zman we're checking.
-   * @param location Where in the world to check. Should not be null, but in case it is, this method assumes that we are
-   *   NOT after the zman.
+   * @param location Where in the world to check. Should not be null, but in case it is, this method
+   *   assumes that we are NOT after the zman.
    * @return true if this HebrewDate represents a time after the zman for the current day.
    */
   public fun isAfter(
@@ -238,8 +250,8 @@ internal constructor(
   /**
    * Check if the current SYSTEM time, given the specified location, is after sunset.
    *
-   * @param location Where in the world to check. Should not be null, but in case it is, this method assumes that we are
-   *   NOT after sunset.
+   * @param location Where in the world to check. Should not be null, but in case it is, this method
+   *   assumes that we are NOT after sunset.
    * @return true if this HebrewDate represents a time after sunset for the current day.
    */
   public fun isAfterSunset(location: ZmanimLocation?): Boolean {
@@ -250,7 +262,8 @@ internal constructor(
   /**
    * Updates the specified calendar to match the Gregorian date represented by this Hebrew date.
    *
-   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is invoked.
+   * <b>Note</b>: The hour, minute, etc... will be set according to the time at which this method is
+   * invoked.
    */
   public fun syncCalendar(calendar: Calendar) {
 
@@ -259,8 +272,8 @@ internal constructor(
   }
 
   /**
-   * Returns if the year the calendar is set to is a Hebrew leap year. Years 3, 6, 8, 11, 14, 17 and 19 in the 19 year
-   * cycle are leap years.
+   * Returns if the year the calendar is set to is a Hebrew leap year. Years 3, 6, 8, 11, 14, 17 and
+   * 19 in the 19 year cycle are leap years.
    *
    * @return true if it is a leap year
    */
@@ -279,7 +292,10 @@ internal constructor(
     return HebrewCalendar.getElapsedDays(hebrewYear + 1) - HebrewCalendar.getElapsedDays(hebrewYear)
   }
 
-  /** @return true if Cheshvan is long (29 or 30 days) for the current year that the calendar is set to */
+  /**
+   * @return true if Cheshvan is long (29 or 30 days) for the current year that the calendar is set
+   *   to
+   */
   public fun isCheshvanLong(): Boolean {
     return HebrewCalendar.isCheshvanLong(hebrewYear)
   }
@@ -290,12 +306,14 @@ internal constructor(
   }
 
   /**
-   * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It will return
-   * [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days, [HebrewYearType.QESIDRAH] if Cheshvan is 29 days
-   * and Kislev is 30 days and [HebrewYearType.HASER] if both are 29 days.
+   * Returns the Cheshvan and Kislev kviah (whether a Hebrew year is short, regular or long). It
+   * will return [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days,
+   * [HebrewYearType.QESIDRAH] if Cheshvan is 29 days and Kislev is 30 days and
+   * [HebrewYearType.HASER] if both are 29 days.
    *
-   * @return [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days, [HebrewYearType.QESIDRAH] if Cheshvan is
-   *   29 days and Kislev is 30 days and [HebrewYearType.HASER] if both are 29 days.
+   * @return [HebrewYearType.SHALEM] if both Cheshvan and Kislev are 30 days,
+   *   [HebrewYearType.QESIDRAH] if Cheshvan is 29 days and Kislev is 30 days and
+   *   [HebrewYearType.HASER] if both are 29 days.
    * @see isCheshvanLong
    * @see isKislevShort
    */
@@ -313,30 +331,34 @@ internal constructor(
   // Molad info
 
   /**
-   * Returns the molad for the year and month of the specified HebrewDate. Returns a HebrewDate set to the date of the
-   * molad with the molad fields properly set.
+   * Returns the molad for the year and month of the specified HebrewDate. Returns a HebrewDate set
+   * to the date of the molad with the molad fields properly set.
    *
-   * In the current implementation, it sets the molad time based on a midnight date rollover. This means that Rosh
-   * Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29 Adar I / March 5, 2011 12:00 AM and 7
-   * chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
+   * In the current implementation, it sets the molad time based on a midnight date rollover. This
+   * means that Rosh Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29
+   * Adar I / March 5, 2011 12:00 AM and 7 chalakim, will have the following values: hours: 0,
+   * minutes: 0, Chalakim: 7.
    */
   public fun getMolad(): HebrewDate {
 
-    var moladDate = HebrewCalendar.getForMolad(HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth))
+    var moladDate =
+      HebrewCalendar.getForMolad(HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth))
 
     if (moladDate.moladHours >= HOURS_BETWEEN_SUNSET_AND_MIDNIGHT) {
       moladDate = moladDate.tomorrow()
     }
 
-    moladDate.moladHours = (moladDate.moladHours + HebrewCalendar.CHALAKIM_PER_MINUTE) % HebrewCalendar.HOURS_PER_DAY
+    moladDate.moladHours =
+      (moladDate.moladHours + HebrewCalendar.CHALAKIM_PER_MINUTE) % HebrewCalendar.HOURS_PER_DAY
     return moladDate
   }
 
   /**
-   * Returns the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu to the year and
-   * month passed in.
+   * Returns the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad
+   * Tohu to the year and month passed in.
    *
-   * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
+   * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad
+   *   Tohu
    */
   public fun getChalakimSinceMoladTohu(): Long {
     return HebrewCalendar.getChalakimSinceMoladTohu(hebrewYear, hebrewMonth)
@@ -368,8 +390,10 @@ internal constructor(
 
   override fun compareTo(other: HebrewDate): Int {
 
-    // We use gregorian because with the Hebrew months, because Nisan is the first month, it gets more complex.
-    //  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN < ADAR...
+    // We use gregorian because with the Hebrew months, because Nisan is the first month, it gets
+    // more complex.
+    //  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN <
+    // ADAR...
 
     return compareValuesBy(
       this,

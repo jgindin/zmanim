@@ -205,14 +205,17 @@ protected constructor(
       try {
         degrees = degreesText.toInt()
       } catch (e: NumberFormatException) {
-        // Maybe the user doesn't have separate minutes & degrees, so they just entered something like "47.5461"?
+        // Maybe the user doesn't have separate minutes & degrees, so they just entered something
+        // like "47.5461"?
         try {
           val degreesDouble = degreesText.toDouble()
 
-          // Casting the double to an int will give us the degrees, by just lopping off the part after the decimal.
+          // Casting the double to an int will give us the degrees, by just lopping off the part
+          // after the decimal.
           degrees = degreesDouble.toInt()
 
-          // Now, convert the decimal portion to the minutes. http://geography.about.com/library/howto/htdegrees.htm
+          // Now, convert the decimal portion to the minutes.
+          // http://geography.about.com/library/howto/htdegrees.htm
           val doubleMinutes = Math.abs(((degreesDouble - degrees) * MINUTES_PER_DEGREE))
           minutes = doubleMinutes.toInt()
 
@@ -246,8 +249,8 @@ protected constructor(
     }
 
     /**
-     * Attempts to parse the specified string representing a latitude or longitude into a double containing the decimal
-     * representation.
+     * Attempts to parse the specified string representing a latitude or longitude into a double
+     * containing the decimal representation.
      */
     private fun parseAsDouble(
       value: String,
@@ -260,7 +263,8 @@ protected constructor(
       // See
       // http://stackoverflow.com/questions/6945008/converting-value-longitude-valuesdmscompass-direction-format-to-correspondi
       var convertedDegrees =
-        parsed.degrees + (((parsed.seconds / SECONDS_PER_MINUTE)) + parsed.minutes) / MINUTES_PER_DEGREE.toDouble()
+        parsed.degrees +
+          (((parsed.seconds / SECONDS_PER_MINUTE)) + parsed.minutes) / MINUTES_PER_DEGREE.toDouble()
 
       if ((Direction.SOUTH == parsed.direction) || (Direction.WEST == parsed.direction)) {
         convertedDegrees = -1 * convertedDegrees
@@ -308,7 +312,13 @@ protected constructor(
         seconds = 0
       }
 
-      return LatitudeLongitudeParser(extracted.first, degrees, minutes, seconds.toDouble(), maxDegrees)
+      return LatitudeLongitudeParser(
+        extracted.first,
+        degrees,
+        minutes,
+        seconds.toDouble(),
+        maxDegrees,
+      )
     }
 
     private fun extractDirection(

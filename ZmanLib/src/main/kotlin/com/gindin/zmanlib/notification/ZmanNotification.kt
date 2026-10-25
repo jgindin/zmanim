@@ -10,6 +10,14 @@ internal constructor(
 ) {
 
   override fun toString(): String {
-    return "ZmanNotification{" + "zman=" + zman.type + ", msUntilZman=" + msUntilZman + " (" + msUntilZman + ")" + '}'
+    return "ZmanNotification{" +
+      "zman=" +
+      zman.type +
+      ", msUntilZman=" +
+      msUntilZman +
+      " (" +
+      msUntilZman +
+      ")" +
+      '}'
   }
 }

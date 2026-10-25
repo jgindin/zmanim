@@ -18,11 +18,13 @@ public class ZmanNotificationScheduler(
 ) {
 
   /**
-   * Based on the location and current time, figure out which zman is the next for which the user wants a notification.
+   * Based on the location and current time, figure out which zman is the next for which the user
+   * wants a notification.
    *
    * <p/>
    *
-   * Because of the work done in this method, it is assumed that it will NOT be invoked on the main thread.
+   * Because of the work done in this method, it is assumed that it will NOT be invoked on the main
+   * thread.
    *
    * @param location Where are we?
    * @param now What time is it?
@@ -65,7 +67,8 @@ public class ZmanNotificationScheduler(
       val alertTime = computeAlertTime(zmanNotification)
 
       if (alertTime >= 0) {
-        // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up overwriting the time
+        // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up
+        // overwriting the time
         //  each iteration through the loop...
         val alertAt = Calendar.getInstance()
         alertAt.timeZone = now.timeZone
@@ -78,8 +81,8 @@ public class ZmanNotificationScheduler(
   /**
    * Find all the rest of the zmanim for the day represented by 'now' which are after 'now'.
    *
-   * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of time (in ms) until the
-   *   zman occurs.
+   * @return For each remaining zman, the ZmanNotification.msUntilZman represents the amount of time
+   *   (in ms) until the zman occurs.
    */
   private fun findTheRestOfTheDaysZmanim(
     location: ZmanimLocation,
@@ -96,7 +99,8 @@ public class ZmanNotificationScheduler(
     //    - Are after the current time;
     val candidates = ArrayList<ZmanNotification>()
 
-    // Note that we're going to pretend that the current time is just a bit earlier than it actually is. This will
+    // Note that we're going to pretend that the current time is just a bit earlier than it actually
+    // is. This will
     //  compensate in case Android got a bit sloppy and woke us up just a smidge late...
     val nowInMillis = now.timeInMillis - DEFAULT_ALERT_FUDGE_FACTOR
 
@@ -110,7 +114,8 @@ public class ZmanNotificationScheduler(
       }
 
       // Make sure the zman is before the current time and we haven't already notified...
-      //  Note that we move the zman time forward by a fudge factor so that if we would have otherwise
+      //  Note that we move the zman time forward by a fudge factor so that if we would have
+      // otherwise
       //  just missed it, we'll still add it as a candidate.
       val zmanTime = zman.getTime()
       if (zmanTime != null) {
@@ -120,7 +125,8 @@ public class ZmanNotificationScheduler(
         val notYetNotified = !zmanCallback.hasBeenNotified(zmanTime, zman.type)
 
         if (isZmanAfterNow && notYetNotified) {
-          // Note that the time until the zman we calculated above was based on our fudging the current
+          // Note that the time until the zman we calculated above was based on our fudging the
+          // current
           //  time. So now, we have to undo that fudge.
           candidates.add(ZmanNotification(zman, msUntilZman - DEFAULT_ALERT_FUDGE_FACTOR))
         }
@@ -133,7 +139,8 @@ public class ZmanNotificationScheduler(
   /**
    * Figure out the milliseconds until an alert for the specified zman should be raised.
    *
-   * @return the number of milliseconds until the alert, or Long.MIN_VALUE if not alert should be scheduled.
+   * @return the number of milliseconds until the alert, or Long.MIN_VALUE if not alert should be
+   *   scheduled.
    */
   private fun computeAlertTime(zmanNotification: ZmanNotification): Long {
 

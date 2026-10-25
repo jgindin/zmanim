@@ -16,9 +16,10 @@ import kotlinx.serialization.json.doubleOrNull
 /**
  * Handles the translation of a ZmanimLocation to/from JSON.
  *
- * The text is persisted on users' devices (see [ZmanimLocation.save]), so its shape is a compatibility contract: the
- * keys below, numbers without a fractional part written as integers, and two-space indentation. Reading is lenient
- * about how a value is spelled (numbers may be quoted, strings may be bare numbers) and ignores keys it does not know.
+ * The text is persisted on users' devices (see [ZmanimLocation.save]), so its shape is a
+ * compatibility contract: the keys below, numbers without a fractional part written as integers,
+ * and two-space indentation. Reading is lenient about how a value is spelled (numbers may be
+ * quoted, strings may be bare numbers) and ignores keys it does not know.
  */
 public object ZmanLocationJSON {
 
@@ -43,7 +44,8 @@ public object ZmanLocationJSON {
   @JvmStatic
   public fun toJSON(location: ZmanimLocation): String {
 
-    // A LinkedHashMap keeps the keys in the order they are put, which is the order they are written.
+    // A LinkedHashMap keeps the keys in the order they are put, which is the order they are
+    // written.
     val fields = LinkedHashMap<String, JsonElement>()
     fields[LATITUDE] = number(location.latitude)
     fields[LONGITUDE] = number(location.longitude)
@@ -64,14 +66,15 @@ public object ZmanLocationJSON {
   }
 
   /**
-   * @throws SerializationException if the text is not a JSON object, or a required value is missing or has the wrong
-   *   type.
+   * @throws SerializationException if the text is not a JSON object, or a required value is missing
+   *   or has the wrong type.
    */
   @JvmStatic
   public fun fromJSON(json: String): ZmanimLocation {
 
     val root =
-      reader.parseToJsonElement(json) as? JsonObject ?: throw SerializationException("A location must be a JSON object")
+      reader.parseToJsonElement(json) as? JsonObject
+        ?: throw SerializationException("A location must be a JSON object")
 
     val latitude = root.requireDouble(LATITUDE)
     val longitude = root.requireDouble(LONGITUDE)
@@ -99,8 +102,8 @@ public object ZmanLocationJSON {
   }
 
   /**
-   * A whole number is written without a fractional part ("754", not "754.0"), matching how the location has always been
-   * persisted.
+   * A whole number is written without a fractional part ("754", not "754.0"), matching how the
+   * location has always been persisted.
    */
   private fun number(value: Double): JsonPrimitive {
 

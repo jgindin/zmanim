@@ -7,7 +7,8 @@ package com.gindin.zmanlib.zman
 import java.util.Calendar
 
 /** See http://dinonline.org/2015/01/17/parshas-bo-the-halachic-time-of-chatzos/ */
-internal class Chatzot(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.Chatzot, zmanimCalculator) {
+internal class Chatzot(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.Chatzot, zmanimCalculator) {
 
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 

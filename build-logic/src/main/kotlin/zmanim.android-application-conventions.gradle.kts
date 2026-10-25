@@ -71,20 +71,25 @@ android {
 }
 
 /**
- * Gives each build variant's APK and App Bundle a versioned file name, e.g. `Zmanim--release-4.0.403.apk` / `.aab`.
+ * Gives each build variant's APK and App Bundle a versioned file name, e.g.
+ * `Zmanim--release-4.0.403.apk` / `.aab`.
  *
- * APKs are renamed in place using AGP's Variant API: `output.outputFileName` is a settable `Property<String>`. See
+ * APKs are renamed in place using AGP's Variant API: `output.outputFileName` is a settable
+ * `Property<String>`. See
  * https://developer.android.com/build/build-variants#customize-artifact-name.
  *
- * AGP has no equivalent property for bundles, so `bundle<Variant>` is instead finalized by a task that copies AGP's
- * `<project>-<variant>.aab` to the versioned name, next to the original in `build/outputs/bundle/<variant>/`. Reading
- * the bundle through `SingleArtifact.BUNDLE` (rather than a hardcoded path) also carries the dependency on AGP's
- * packaging task.
+ * AGP has no equivalent property for bundles, so `bundle<Variant>` is instead finalized by a task
+ * that copies AGP's `<project>-<variant>.aab` to the versioned name, next to the original in
+ * `build/outputs/bundle/<variant>/`. Reading the bundle through `SingleArtifact.BUNDLE` (rather
+ * than a hardcoded path) also carries the dependency on AGP's packaging task.
  */
 extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVariants { variant ->
-  fun versionedName(versionName: String) = "${project.name}-${variant.flavorName}-${variant.name}-$versionName"
+  fun versionedName(versionName: String) =
+    "${project.name}-${variant.flavorName}-${variant.name}-$versionName"
 
-  variant.outputs.forEach { output -> output.outputFileName.set("${versionedName(output.versionName.get())}.apk") }
+  variant.outputs.forEach { output ->
+    output.outputFileName.set("${versionedName(output.versionName.get())}.apk")
+  }
 
   val capitalizedName = variant.name.replaceFirstChar { it.uppercase() }
   val versionName = variant.outputs.single().versionName
@@ -92,24 +97,28 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVarian
     tasks.register<CopyFileTask>("copyVersioned${capitalizedName}Bundle") {
       source.set(variant.artifacts.get(SingleArtifact.BUNDLE))
       destination.set(
-        layout.buildDirectory.file(versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" })
+        layout.buildDirectory.file(
+          versionName.map { "outputs/bundle/${variant.name}/${versionedName(it)}.aab" }
+        )
       )
     }
   tasks.named { it == "bundle$capitalizedName" }.configureEach { finalizedBy(copyVersionedBundle) }
 }
 
 /**
- * Checks each release variant's R8 output against the names listed in the module's `r8-kept-names.txt`, which sits next
- * to the proguard-rules.pro whose rules it guards (see [R8KeptNamesCheckTask] for the format). The per-variant tasks
- * read R8's mapping through `SingleArtifact.OBFUSCATION_MAPPING_FILE`, which also makes them run the minified build
- * first; `checkR8KeptNames` runs all of a module's. seeds.txt and resources.txt are not published as artifacts of their
- * own, but R8 writes them next to the mapping, so they are found from it.
+ * Checks each release variant's R8 output against the names listed in the module's
+ * `r8-kept-names.txt`, which sits next to the proguard-rules.pro whose rules it guards (see
+ * [R8KeptNamesCheckTask] for the format). The per-variant tasks read R8's mapping through
+ * `SingleArtifact.OBFUSCATION_MAPPING_FILE`, which also makes them run the minified build first;
+ * `checkR8KeptNames` runs all of a module's. seeds.txt and resources.txt are not published as
+ * artifacts of their own, but R8 writes them next to the mapping, so they are found from it.
  */
 val r8KeptNames = layout.projectDirectory.file("r8-kept-names.txt")
 val checkR8KeptNames =
   tasks.register("checkR8KeptNames") {
     group = "verification"
-    description = "Checks that R8 kept every name listed in r8-kept-names.txt in each release variant."
+    description =
+      "Checks that R8 kept every name listed in r8-kept-names.txt in each release variant."
   }
 
 extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { androidComponents ->
@@ -125,7 +134,8 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
     val check =
       tasks.register<R8KeptNamesCheckTask>("check${capitalizedName}R8KeptNames") {
         group = "verification"
-        description = "Checks that R8 kept every name listed in r8-kept-names.txt in the ${variant.name} build."
+        description =
+          "Checks that R8 kept every name listed in r8-kept-names.txt in the ${variant.name} build."
         variantName.set(variant.name)
         expectations.set(r8KeptNames)
         mappingFile.set(mapping)
@@ -139,7 +149,8 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
 
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to
 //  JDK 21, matching the JDK 21 toolchains of :ZmanLib (zmanim.java-library-conventions) and
-//  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared above. `compileOptions
+//  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared
+// above. `compileOptions
 // {}` only controls
 //  javac's bytecode target -- absent an explicit toolchain, the Test task instead runs on whatever
 //  JDK the Gradle daemon itself happens to be launched with, which is NOT pinned and can silently
@@ -179,7 +190,9 @@ dependencies {
   //  pulling their real transitive graphs (a much newer Kotlin/AndroidX/coroutines stack) fights
   //  this project's existing dependency locking/consistent resolution.
   testCompileOnly(libs.findLibrary("androidx-compose-ui-test").get()) { isTransitive = false }
-  testCompileOnly(libs.findLibrary("androidx-compose-ui-test-junit4").get()) { isTransitive = false }
+  testCompileOnly(libs.findLibrary("androidx-compose-ui-test-junit4").get()) {
+    isTransitive = false
+  }
 }
 
 // JUnit4-style tests in these modules (including the Roborazzi snapshot tests, which stay on

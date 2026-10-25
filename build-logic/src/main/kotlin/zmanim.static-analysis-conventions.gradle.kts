@@ -19,10 +19,10 @@ plugins {
 }
 
 configure<KtfmtExtension> {
-  // Google style is ktfmt's 2-space layout, which is what this code base is written in; the
-  //  default 100 columns is widened to the 120 the code base already keeps to.
+  // Google style is ktfmt's 2-space layout, which is what this code base is written in, with
+  //  its default of 100 columns made explicit so the width is stated where it is configured.
   googleStyle()
-  maxWidth.set(120)
+  maxWidth.set(100)
 }
 
 detekt {
