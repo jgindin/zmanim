@@ -98,15 +98,15 @@ abstract class R8KeptNamesCheckTask : DefaultTask() {
 
     val className = target.substringBefore(':')
     val member = target.substringAfter(": ")
-    if (target !in seeds) {
-      return "no keep rule kept this member: it is not in seeds.txt, so R8 was free to remove or rename it"
+    return when {
+      target !in seeds -> "no keep rule kept this member: it is not in seeds.txt, so R8 was free to remove or rename it"
+      // A constructor is printed as `SimpleName(args)`, with no return type, and can never be renamed.
+      !member.contains(' ') -> null
+      else -> checkMemberName(className, member, mapping)
     }
+  }
 
-    // A constructor is printed as `SimpleName(args)`, with no return type, and can never be renamed.
-    if (!member.contains(' ')) {
-      return null
-    }
-
+  private fun checkMemberName(className: String, member: String, mapping: Mapping): String? {
     val signature = memberSignature(member)
     val originalName = signature.substringAfter(' ').substringBefore('(')
     val renamedTo =
@@ -120,7 +120,8 @@ abstract class R8KeptNamesCheckTask : DefaultTask() {
 
   private fun checkResources(target: String, removed: List<String>): String? {
     val lost = removed.filter { it.startsWith(target) }
-    return if (lost.isEmpty()) null else "the resource shrinker removed ${lost.size}: ${lost.take(10).joinToString()}"
+    return if (lost.isEmpty()) null
+    else "the resource shrinker removed ${lost.size}: ${lost.take(MAX_LISTED_RESOURCES).joinToString()}"
   }
 
   /** The `type:name` of every resource listed in the shrinker log's "Unused resources are:" section. */
@@ -220,6 +221,9 @@ abstract class R8KeptNamesCheckTask : DefaultTask() {
     }
   }
 }
+
+/** How many removed resources a failure message names, so that a prefix matching hundreds stays readable. */
+private const val MAX_LISTED_RESOURCES = 10
 
 /** Strips the line-number ranges R8 puts around a method in `mapping.txt` (`1:3:void foo():12:14`). */
 private fun memberSignature(member: String): String =
