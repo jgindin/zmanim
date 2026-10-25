@@ -146,8 +146,7 @@ protected constructor(
       date,
       name,
       // Can never have a fast that falls on Shabbat (except Yom Kippur, but that's handled by a
-      // separate
-      //  Details class)
+      //  separate Details class)
       false,
     ) {
 

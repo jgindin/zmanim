@@ -435,9 +435,8 @@ public abstract class Details(private val date: HebrewDate) {
         }
       }
 
-      // If we want to say havdalah, but it's erev Shabbat, then we don't say havdalah.
-      // Also, if tomorrow is something (e.g., 2nd day of Pesach or Sukkot), then we also don't want
-      // to say
+      // If we want to say havdalah, but it's erev Shabbat, then we don't say havdalah. Also, if
+      //  tomorrow is something (e.g., 2nd day of Pesach or Sukkot), then we also don't want to say
       //  havdalah.
       var tomorrow = tomorrowsDetails
       if (tomorrow == null) {

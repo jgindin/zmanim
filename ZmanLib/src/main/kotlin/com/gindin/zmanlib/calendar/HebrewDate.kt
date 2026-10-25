@@ -391,9 +391,8 @@ internal constructor(
   override fun compareTo(other: HebrewDate): Int {
 
     // We use gregorian because with the Hebrew months, because Nisan is the first month, it gets
-    // more complex.
-    //  E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth definitions, NISAN <
-    // ADAR...
+    //  more complex. E.g., Nisan 1, 5772 is AFTER Adar 29, 5772, but in the HebrewMonth
+    //  definitions, NISAN < ADAR...
 
     return compareValuesBy(
       this,

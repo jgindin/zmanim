@@ -150,17 +150,16 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
 // Pin the JVM used to actually RUN these modules' Test tasks (Robolectric/Roborazzi included) to
 //  JDK 21, matching the JDK 21 toolchains of :ZmanLib (zmanim.java-library-conventions) and
 //  :ZmanUtils (its own build script) and the sourceCompatibility/targetCompatibility declared
-// above. `compileOptions
-// {}` only controls
-//  javac's bytecode target -- absent an explicit toolchain, the Test task instead runs on whatever
-//  JDK the Gradle daemon itself happens to be launched with, which is NOT pinned and can silently
-//  vary machine to machine. This matters here specifically because JDK 20+'s CLDR locale data
-//  formats the AM/PM designator with U+202F (narrow no-break space) instead of a plain ASCII
-//  space, which changes what Roborazzi's Robolectric-rendered golden screenshots look like (the
-//  same underlying JDK/CLDR difference also required a test-fixture fix in :ZmanLib, where golden
-//  strings had hardcoded a plain ASCII space). AGP applies JavaBasePlugin internally
-//  rather than via a `plugins {}` block, so the bare `java {}` accessor isn't generated even here;
-//  `configure<JavaPluginExtension> {}` is the equivalent typed form that is always resolvable.
+//  above. `compileOptions {}` only controls javac's bytecode target -- absent an explicit
+//  toolchain, the Test task instead runs on whatever JDK the Gradle daemon itself happens to be
+//  launched with, which is NOT pinned and can silently vary machine to machine. This matters here
+//  specifically because JDK 20+'s CLDR locale data formats the AM/PM designator with U+202F (narrow
+//  no-break space) instead of a plain ASCII space, which changes what Roborazzi's
+//  Robolectric-rendered golden screenshots look like (the same underlying JDK/CLDR difference also
+//  required a test-fixture fix in :ZmanLib, where golden strings had hardcoded a plain ASCII
+//  space). AGP applies JavaBasePlugin internally rather than via a `plugins {}` block, so the bare
+//  `java {}` accessor isn't generated even here; `configure<JavaPluginExtension> {}` is the
+//  equivalent typed form that is always resolvable.
 configure<JavaPluginExtension> { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
 dependencies {
