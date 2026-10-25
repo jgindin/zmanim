@@ -5,13 +5,20 @@
 plugins {
   `kotlin-dsl`
   alias(libs.plugins.ktfmt)
+  alias(libs.plugins.detekt)
 }
 
-// Same layout as the modules get from zmanim.static-analysis-conventions, which cannot be applied
-//  to the build that defines it.
+// Same formatter and detekt setup as the modules get from zmanim.static-analysis-conventions, which
+//  cannot be applied to the build that defines it.
 ktfmt {
   googleStyle()
   maxWidth.set(120)
+}
+
+detekt {
+  // build-logic is its own build, so the shared config is reached relative to it.
+  config.setFrom(file("../config/detekt/detekt.yml"))
+  buildUponDefaultConfig = true
 }
 
 // NOTE: repositories for this build are declared centrally in settings.gradle.kts'

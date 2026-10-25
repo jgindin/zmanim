@@ -104,6 +104,7 @@ zmanim-ui = ["androidx-constraintlayout", "androidx-appcompat", "androidx-prefer
 
 [plugins]
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmtGradle" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 # There is deliberately no org.jetbrains.kotlin.android alias: AGP's built-in Kotlin support
 #  provides Kotlin for the app modules, and applying that plugin on top of it breaks the build.
 android-application = { id = "com.android.application", version.ref = "agp" }
