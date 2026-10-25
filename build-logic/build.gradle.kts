@@ -12,7 +12,7 @@ plugins {
 //  cannot be applied to the build that defines it.
 ktfmt {
   googleStyle()
-  maxWidth.set(120)
+  maxWidth.set(100)
 }
 
 detekt {

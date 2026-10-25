@@ -47,7 +47,8 @@ kotlin {
       implementation(libs.junit.jupiter)
       // No JUnit 4 tests remain in this module (fully migrated to Jupiter) -- the vintage engine is
       //  deliberately omitted here (unlike :Zmanim/:ZehutYosef, which still have real JUnit 4 test
-      //  files) to avoid pulling junit:junit 4.13.2 (and its hamcrest-core 1.3) onto the test runtime
+      //  files) to avoid pulling junit:junit 4.13.2 (and its hamcrest-core 1.3) onto the test
+      // runtime
       //  classpath for no purpose.
       runtimeOnly(libs.junit.platform.launcher)
     }

@@ -16,7 +16,10 @@ private const val CHOL_HA_MOED = "Chol HaMoed "
 /** Contains details about a given Observance. */
 public abstract class Details(private val date: HebrewDate) {
 
-  /** @return A list of the types of zmanim this day has, ordered by the sequence in which they will occur. */
+  /**
+   * @return A list of the types of zmanim this day has, ordered by the sequence in which they will
+   *   occur.
+   */
   public open fun getZmanim(): List<Zmanim.Type> {
 
     val regularCandles: Boolean
@@ -75,12 +78,15 @@ public abstract class Details(private val date: HebrewDate) {
   public abstract fun isErev(): Boolean
 
   /**
-   * Does one light candles tonight for this observance? This could be the first night of the observance, or in some
-   * cases the second or subsequent evenings too.
+   * Does one light candles tonight for this observance? This could be the first night of the
+   * observance, or in some cases the second or subsequent evenings too.
    */
   public abstract fun lightCandles(): Boolean
 
-  /** Does one say havdalah tonight at the end of this observance? Not all observances end with havdalah. */
+  /**
+   * Does one say havdalah tonight at the end of this observance? Not all observances end with
+   * havdalah.
+   */
   public abstract fun sayHavdalah(): Boolean
 
   public open fun isRoshChodesh(): Boolean {
@@ -159,14 +165,15 @@ public abstract class Details(private val date: HebrewDate) {
    * <li>Purim and the day after (Shushan Purim).
    * </ol>
    *
-   * On all the days shown above, Tahanunim are not recited on Minha of the prior day, with the exception of Erev Rosh
-   * Ashanah and Erev Yom Kippur.
+   * On all the days shown above, Tahanunim are not recited on Minha of the prior day, with the
+   * exception of Erev Rosh Ashanah and Erev Yom Kippur.
    *
    * <p/>
    *
-   * Also, Tahanunim are not recited (during Shaharit only) when there is a Hatan (bridegroom) in the synagogue or when
-   * there is a Berit Milah in the synagogue and the Avi Aben (father of the baby), or the Mo’el, or the Sandak
-   * (godfather) are praying with the minyan; or on the actual day of a Bar Mitsvah.
+   * Also, Tahanunim are not recited (during Shaharit only) when there is a Hatan (bridegroom) in
+   * the synagogue or when there is a Berit Milah in the synagogue and the Avi Aben (father of the
+   * baby), or the Mo’el, or the Sandak (godfather) are praying with the minyan; or on the actual
+   * day of a Bar Mitsvah.
    *
    * <p/>
    *
@@ -177,8 +184,8 @@ public abstract class Details(private val date: HebrewDate) {
   }
 
   /**
-   * A complete description of today's observance. Could be something simple like, "Yom Kippur" or something more
-   * complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
+   * A complete description of today's observance. Could be something simple like, "Yom Kippur" or
+   * something more complex like "Pesach 4 Chol HaMoed / 3rd Day of the Omer"
    */
   public abstract fun getDescription(): String
 
@@ -299,13 +306,15 @@ public abstract class Details(private val date: HebrewDate) {
 
     override fun lightCandles(): Boolean {
 
-      // If we don't want to light candles for this yom tov, but it's erev Shabbat, then we DO light candles.
+      // If we don't want to light candles for this yom tov, but it's erev Shabbat, then we DO light
+      // candles.
       return (lightCandles || isErevShabbat())
     }
 
     override fun sayHavdalah(): Boolean {
 
-      // If we want to say havdalah for this yom tov, but it's erev Shabbat, then we don't say havdalah.
+      // If we want to say havdalah for this yom tov, but it's erev Shabbat, then we don't say
+      // havdalah.
       return (!lightCandles && !isErevShabbat())
     }
 
@@ -361,9 +370,9 @@ public abstract class Details(private val date: HebrewDate) {
     private val composedDates: MutableList<Details> = ArrayList()
 
     /**
-     * There are cases where the only way to determine something about today is by looking at tomorrow. E.g., should we
-     * say havdalah? Well, if today is Shabbat, then yes. Unless it's the first day of Pesach or Sukkot, that is... This
-     * field will be filledin lazily if it's needed.
+     * There are cases where the only way to determine something about today is by looking at
+     * tomorrow. E.g., should we say havdalah? Well, if today is Shabbat, then yes. Unless it's the
+     * first day of Pesach or Sukkot, that is... This field will be filledin lazily if it's needed.
      */
     private var tomorrowsDetails: Details? = null
 
@@ -427,7 +436,8 @@ public abstract class Details(private val date: HebrewDate) {
       }
 
       // If we want to say havdalah, but it's erev Shabbat, then we don't say havdalah.
-      // Also, if tomorrow is something (e.g., 2nd day of Pesach or Sukkot), then we also don't want to say
+      // Also, if tomorrow is something (e.g., 2nd day of Pesach or Sukkot), then we also don't want
+      // to say
       //  havdalah.
       var tomorrow = tomorrowsDetails
       if (tomorrow == null) {
@@ -608,7 +618,8 @@ public abstract class Details(private val date: HebrewDate) {
         combined.addAll(details.getZmanim())
       }
 
-      // NOTE: If one contains Havdalah, but another is Erev Shabbat OR a Yom Tov, then take out the havdalah.
+      // NOTE: If one contains Havdalah, but another is Erev Shabbat OR a Yom Tov, then take out the
+      // havdalah.
       if (!sayHavdalah()) {
         combined.remove(Zmanim.Type.ShabbatEnd)
       }
@@ -623,8 +634,9 @@ public abstract class Details(private val date: HebrewDate) {
     private companion object {
 
       /**
-       * This comparator is used to arrange the dates which are composed into this one date. The way CompositeDetails is
-       * used, we can assert the following. Every Details represented in this composite:
+       * This comparator is used to arrange the dates which are composed into this one date. The way
+       * CompositeDetails is used, we can assert the following. Every Details represented in this
+       * composite:
        * <ul>
        * <li>is for the SAME date
        * <li>represents *something*, whether it be Erev or actual Yom.

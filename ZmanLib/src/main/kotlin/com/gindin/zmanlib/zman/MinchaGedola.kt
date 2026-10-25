@@ -8,13 +8,15 @@ import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "GR'A"
 
-internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.MinchaGedola, zmanimCalculator) {
+internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.MinchaGedola, zmanimCalculator) {
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
+  // it would only
   //  scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
@@ -122,7 +124,10 @@ internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.
           Zmanim.Type.MinchaGedola,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30(),
+          )
         }
       }
     )

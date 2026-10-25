@@ -5,12 +5,12 @@
 package com.gindin.eventBus
 
 /**
- * The normal event handler has just one single method, something like onFoo(), which will be invoked when the
- * corresponding event is fired on the event bus.
+ * The normal event handler has just one single method, something like onFoo(), which will be
+ * invoked when the corresponding event is fired on the event bus.
  *
- * NOTE: Handlers MUST not assume that they are being invoked on any given thread. If a handler needs to execute on a
- * particular thread, it must take care to do so. E.g., if it must execute on the UI thread, then code similar to the
- * following must be used:
+ * NOTE: Handlers MUST not assume that they are being invoked on any given thread. If a handler
+ * needs to execute on a particular thread, it must take care to do so. E.g., if it must execute on
+ * the UI thread, then code similar to the following must be used:
  *  ```
  *  activity.runOnUiThread {
  *    doWhatYouNeedToDo()

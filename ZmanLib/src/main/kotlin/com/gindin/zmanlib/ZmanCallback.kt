@@ -17,17 +17,18 @@ import java.util.Calendar
 public abstract class ZmanCallback {
 
   /**
-   * Used in conjunction with #findNextZman to allow control over which of the various zmanim for the given type is
-   * preferred by the user.
+   * Used in conjunction with #findNextZman to allow control over which of the various zmanim for
+   * the given type is preferred by the user.
    *
-   * @return For the given type, what is the name of the zman the user prefers to use? May be null to indicate the
-   *   default is to be used. E.g,. for the Zmanim.Type.ShabbatEnd the user may prefer "Seattle Sephardic".
+   * @return For the given type, what is the name of the zman the user prefers to use? May be null
+   *   to indicate the default is to be used. E.g,. for the Zmanim.Type.ShabbatEnd the user may
+   *   prefer "Seattle Sephardic".
    */
   public abstract fun getPreferredZman(type: Zmanim.Type): String?
 
   /**
-   * @return For the given type, how far in advance (in minutes) does the user want to be notified? May be less than
-   *   zero to indicate no notification.
+   * @return For the given type, how far in advance (in minutes) does the user want to be notified?
+   *   May be less than zero to indicate no notification.
    */
   public abstract fun howManyMinutesToAlertBefore(type: Zmanim.Type): Int
 
@@ -38,8 +39,8 @@ public abstract class ZmanCallback {
   public abstract fun shouldNotifyOnShabbat(): Boolean
 
   /**
-   * @return a handle to the tone to be used when notifying of an upcoming zman. Use null to indicate the default tone
-   *   should be used.
+   * @return a handle to the tone to be used when notifying of an upcoming zman. Use null to
+   *   indicate the default tone should be used.
    */
   public abstract fun getNotificationTone(): String?
 
@@ -86,7 +87,9 @@ public abstract class ZmanCallback {
       else Decision.SHABBAT_OR_YOM_TOV
   }
 
-  /** If today is erev Shabbat or erev Yom Tov, and it's after candle lighting, then don't notify... */
+  /**
+   * If today is erev Shabbat or erev Yom Tov, and it's after candle lighting, then don't notify...
+   */
   private fun decideForErev(
     today: HebrewDate,
     tomorrowDetails: Details,
@@ -105,7 +108,10 @@ public abstract class ZmanCallback {
     }
   }
 
-  /** If today is Shabbat or Yom Tov, but it's after sunset, AND tomorrow's not a Yom Tov, then go ahead... */
+  /**
+   * If today is Shabbat or Yom Tov, but it's after sunset, AND tomorrow's not a Yom Tov, then go
+   * ahead...
+   */
   private fun decideForAfterShabbatOrYomTov(
     today: HebrewDate,
     todayDetails: Details,
@@ -171,8 +177,8 @@ public abstract class ZmanCallback {
   )
 
   /**
-   * @return true if the user wants to see the zman times formatted with seconds. If false, an appropriate rounding
-   *   algorithm will be used.
+   * @return true if the user wants to see the zman times formatted with seconds. If false, an
+   *   appropriate rounding algorithm will be used.
    */
   public abstract fun formatTimeWithSeconds(): Boolean
 

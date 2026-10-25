@@ -5,27 +5,31 @@
 package com.gindin.zmanlib.calendar
 
 /**
- * In the Hebrew calendar, the six single year lengths give rise to the terms haser, qesidrah, and shalem.
+ * In the Hebrew calendar, the six single year lengths give rise to the terms haser, qesidrah, and
+ * shalem.
  *
- * Haser is the term applied to Hebrew years that are is either 353 or 383 days long. Such year lengths are accommodated
- * by removing the 30th day of the month of Kislev. In English, the term haser is very often translated either as
- * deficient or imperfect. The Hebrew letter het is used to denote either one of these year lengths.
+ * Haser is the term applied to Hebrew years that are is either 353 or 383 days long. Such year
+ * lengths are accommodated by removing the 30th day of the month of Kislev. In English, the term
+ * haser is very often translated either as deficient or imperfect. The Hebrew letter het is used to
+ * denote either one of these year lengths.
  *
- * Qesidrah is the term applied to Hebrew years that are is either 354 or 384 days long. Such year lengths are
- * accommodated by keeping all of their month's lengths intact. In English, the term qesidrah is very often translated
- * either as regular or intermediate. The Hebrew letter chof is used to denote either one of these year lengths.
+ * Qesidrah is the term applied to Hebrew years that are is either 354 or 384 days long. Such year
+ * lengths are accommodated by keeping all of their month's lengths intact. In English, the term
+ * qesidrah is very often translated either as regular or intermediate. The Hebrew letter chof is
+ * used to denote either one of these year lengths.
  *
- * Shalem is the term applied to Hebrew years that are is either 355 or 385 days long. Such year lengths are
- * accommodated by adding a 30th day to the month of Heshvan. In English, the term shalem is very often translated
- * either as abundant or perfect. The Hebrew letter shiyyen is used to denote either one of these year lengths.
+ * Shalem is the term applied to Hebrew years that are is either 355 or 385 days long. Such year
+ * lengths are accommodated by adding a 30th day to the month of Heshvan. In English, the term
+ * shalem is very often translated either as abundant or perfect. The Hebrew letter shiyyen is used
+ * to denote either one of these year lengths.
  *
  * <p>
- * (Taken from http://www.geocities.com/Athens/1584/, which is unfortunately no longer available except via the Way Back
- * Machine.)
+ * (Taken from http://www.geocities.com/Athens/1584/, which is unfortunately no longer available
+ * except via the Way Back Machine.)
  *
  * <p>
- * Putting this together, we get the following table: Month Gregorian Equivalent Haser Length Qesidrah Length Shalem
- * Length
+ * Putting this together, we get the following table: Month Gregorian Equivalent Haser Length
+ * Qesidrah Length Shalem Length
  * ======= ==================== ============= ================ =============
  * 1. Nissan March-April 30 days 30 days 30 days
  * 2. Iyar April-May 29 days 29 days 29 days
@@ -52,7 +56,9 @@ public enum class HebrewYearType {
   /** A short year where both [HebrewMonth.CHESHVAN] and [HebrewMonth.KISLEV] are 29 days. */
   HASER,
 
-  /** An ordered year where [HebrewMonth.CHESHVAN] is 29 days and [HebrewMonth.KISLEV] is 30 days. */
+  /**
+   * An ordered year where [HebrewMonth.CHESHVAN] is 29 days and [HebrewMonth.KISLEV] is 30 days.
+   */
   QESIDRAH,
 
   /** A long year where both [HebrewMonth.CHESHVAN] and [HebrewMonth.KISLEV] are 30 days. */

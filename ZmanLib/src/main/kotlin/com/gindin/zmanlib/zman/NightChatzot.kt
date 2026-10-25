@@ -6,7 +6,8 @@ package com.gindin.zmanlib.zman
 
 import java.util.Calendar
 
-internal class NightChatzot(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.NightChatzot, zmanimCalculator) {
+internal class NightChatzot(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.NightChatzot, zmanimCalculator) {
 
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 

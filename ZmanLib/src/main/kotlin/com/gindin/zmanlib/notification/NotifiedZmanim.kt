@@ -27,7 +27,10 @@ public class NotifiedZmanim : Serializable {
     public fun init(filesDir: File) {
 
       this.filesDir = filesDir
-      val files = filesDir.listFiles(FileFilter { pathname -> pathname.name.endsWith(NOTIFIED_ZMANIM_FILE_EXTENSION) })
+      val files =
+        filesDir.listFiles(
+          FileFilter { pathname -> pathname.name.endsWith(NOTIFIED_ZMANIM_FILE_EXTENSION) }
+        )
 
       if ((files == null) || files.isEmpty()) {
         return
@@ -65,7 +68,8 @@ public class NotifiedZmanim : Serializable {
       return newNotifiedZmanim
     }
 
-    // Saving is best effort: failing to write only loses the record of what the user was already told, which is not
+    // Saving is best effort: failing to write only loses the record of what the user was already
+    // told, which is not
     //  worth interrupting a notification for, so any failure is dropped.
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     public fun save(notifiedZmanim: NotifiedZmanim) {
@@ -96,8 +100,10 @@ public class NotifiedZmanim : Serializable {
       synchronized(notified) { notified.add(restored) }
     }
 
-    // A file written by another version of this app, or a damaged one, can fail to deserialize in many ways (including
-    //  linkage errors), and the record is only a hint about what the user was already told, so anything unreadable
+    // A file written by another version of this app, or a damaged one, can fail to deserialize in
+    // many ways (including
+    //  linkage errors), and the record is only a hint about what the user was already told, so
+    // anything unreadable
     //  is replaced by an empty record.
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun read(storedData: File): NotifiedZmanim {
@@ -134,11 +140,14 @@ public class NotifiedZmanim : Serializable {
 
   private fun isForDate(other: Calendar): Boolean {
 
-    return year == other.get(Calendar.YEAR) && month == other.get(Calendar.MONTH) && date == other.get(Calendar.DATE)
+    return year == other.get(Calendar.YEAR) &&
+      month == other.get(Calendar.MONTH) &&
+      date == other.get(Calendar.DATE)
   }
 
   /**
-   * Once the user has been notified about the specified type, then this method is invoked to note that notification.
+   * Once the user has been notified about the specified type, then this method is invoked to note
+   * that notification.
    */
   public fun notified(type: Zmanim.Type) {
 

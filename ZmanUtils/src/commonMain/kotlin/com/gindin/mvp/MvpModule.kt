@@ -5,7 +5,8 @@
 package com.gindin.mvp
 
 /**
- * Intended to be the external mechanism by which a Presenter, with its associated View, are created.
+ * Intended to be the external mechanism by which a Presenter, with its associated View, are
+ * created.
  *
  * Temporary until I get Guice / Dagger / whatever-DI implemented.
  */

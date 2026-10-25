@@ -30,8 +30,8 @@ public class YomHaShoah : Observance() {
   }
 
   /**
-   * http://www.hebcal.com/holidays/yom-hashoah says: "It is held on the 27th of Nisan (April/May), unless the 27th
-   * would be adjacent to Shabbat, in which case the date is shifted by a day."
+   * http://www.hebcal.com/holidays/yom-hashoah says: "It is held on the 27th of Nisan (April/May),
+   * unless the 27th would be adjacent to Shabbat, in which case the date is shifted by a day."
    *
    * On a Friday or Saturday the 26th is where we push it forward.
    */

@@ -44,7 +44,8 @@ public class Pesach : Observance() {
     }
   }
 
-  private open class ErevPesachDetails internal constructor(date: HebrewDate) : Details.ErevYomTov(date, PESACH) {
+  private open class ErevPesachDetails internal constructor(date: HebrewDate) :
+    Details.ErevYomTov(date, PESACH) {
 
     override fun isPesach(): Boolean {
       return true

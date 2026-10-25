@@ -10,7 +10,10 @@ import com.gindin.zmanlib.calendar.HebrewYearType
 
 private const val ROSH_CHODESH = "Rosh Chodesh"
 
-/** The 29th is the day before the next month's Rosh Chodesh begins, in a short month and a long one alike. */
+/**
+ * The 29th is the day before the next month's Rosh Chodesh begins, in a short month and a long one
+ * alike.
+ */
 private const val EREV_DAY = HebrewMonth.SHORT_MONTH_LENGTH
 
 /** The 30th of a long month is already the first day of the next month's Rosh Chodesh. */
@@ -27,8 +30,10 @@ public class RoshChodesh : Observance() {
     return detailsOfMonth[date.hebrewMonth]?.invoke(date, date.hebrewDayOfMonth)
   }
 
-  // Each month knows which of its days begin or precede the Rosh Chodesh of this or the next month. A 30-day month's
-  //  30th day is the first day of the next month's Rosh Chodesh, and the 1st of the month is its second day.
+  // Each month knows which of its days begin or precede the Rosh Chodesh of this or the next month.
+  // A 30-day month's
+  //  30th day is the first day of the next month's Rosh Chodesh, and the 1st of the month is its
+  // second day.
   private val detailsOfMonth: Map<Int, (HebrewDate, Int) -> Details?> =
     mapOf(
       HebrewMonth.NISSAN to ::getNissanDetails,
@@ -120,7 +125,11 @@ public class RoshChodesh : Observance() {
 
   private fun getKislevDetails(date: HebrewDate, dayOfMonth: Int): Details? {
     return when (dayOfMonth) {
-      1 -> RoshChodeshDetails(date, "Kislev" + (if (date.getYearType() == HebrewYearType.SHALEM) " (2)" else ""))
+      1 ->
+        RoshChodeshDetails(
+          date,
+          "Kislev" + (if (date.getYearType() == HebrewYearType.SHALEM) " (2)" else ""),
+        )
       EREV_DAY -> ErevRoshChodeshDetails(date, "Tevet")
       LAST_DAY -> {
         assert(!date.isKislevShort())
@@ -138,7 +147,9 @@ public class RoshChodesh : Observance() {
         val yearType = date.getYearType()
         RoshChodeshDetails(
           date,
-          "Tevet" + (if (HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType) " (2)" else ""),
+          "Tevet" +
+            (if (HebrewYearType.SHALEM == yearType || HebrewYearType.QESIDRAH == yearType) " (2)"
+            else ""),
         )
       }
       EREV_DAY -> ErevRoshChodeshDetails(date, "Shevat")
@@ -179,7 +190,8 @@ public class RoshChodesh : Observance() {
   private class ErevRoshChodeshDetails(date: HebrewDate, month: String) :
     Details.Erev(date, "$ROSH_CHODESH $month", false)
 
-  private class RoshChodeshDetails(date: HebrewDate, month: String) : Details.Yom(date, "$ROSH_CHODESH $month") {
+  private class RoshChodeshDetails(date: HebrewDate, month: String) :
+    Details.Yom(date, "$ROSH_CHODESH $month") {
 
     override fun isRoshChodesh(): Boolean {
       return true

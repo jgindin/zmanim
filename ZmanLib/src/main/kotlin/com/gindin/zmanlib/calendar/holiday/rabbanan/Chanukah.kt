@@ -23,7 +23,8 @@ public class Chanukah : Observance() {
 
     val hebrewDayOfMonth = date.hebrewDayOfMonth
 
-    // Chanukah starts on 25 Kislev, so it has run for 5 or 6 days when Tevet begins (Kislev has 29 or 30 days),
+    // Chanukah starts on 25 Kislev, so it has run for 5 or 6 days when Tevet begins (Kislev has 29
+    // or 30 days),
     //  and it ends on 3 or 2 Tevet.
     val lastNightsOfKislev = if (date.isKislevShort()) 5 else 6
     val lastDayOfChanukahInTevet = if (date.isKislevShort()) 3 else 2

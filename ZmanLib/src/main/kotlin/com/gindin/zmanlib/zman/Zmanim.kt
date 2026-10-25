@@ -68,15 +68,16 @@ protected constructor(
   }
 
   /**
-   * Used for easier, programmatic access to the zmanim. Use these to get the actual zmanim for each zman.
+   * Used for easier, programmatic access to the zmanim. Use these to get the actual zmanim for each
+   * zman.
    *
    * <p>
    * Consider the explanations of the times at http://kehillatisrael.net/hcal/zmanim.html
    */
   public enum class Type(
     /**
-     * Name of the set of zmanim. E.g., "Sof Zman Shema". Not called `name` because that would hide the name of the enum
-     * constant.
+     * Name of the set of zmanim. E.g., "Sof Zman Shema". Not called `name` because that would hide
+     * the name of the enum constant.
      */
     @JvmField public val displayName: String,
 

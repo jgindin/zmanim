@@ -50,7 +50,8 @@ private constructor(
 
   public companion object {
 
-    private val locationToFactory: MutableMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory> = HashMap()
+    private val locationToFactory: MutableMap<Pair<GeoLocation, HebrewDate>, ZmanimFactory> =
+      HashMap()
 
     private var useElevation: Boolean = false
 

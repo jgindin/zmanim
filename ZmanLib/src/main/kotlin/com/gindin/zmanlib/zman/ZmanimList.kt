@@ -5,7 +5,8 @@
 package com.gindin.zmanlib.zman
 
 /** Encapsulate a list of Zmanim. */
-public class ZmanimList private constructor(private val list: MutableList<Zmanim>) : MutableList<Zmanim> by list {
+public class ZmanimList private constructor(private val list: MutableList<Zmanim>) :
+  MutableList<Zmanim> by list {
 
   public constructor() : this(ArrayList())
 

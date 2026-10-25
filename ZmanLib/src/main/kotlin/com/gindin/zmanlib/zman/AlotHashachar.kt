@@ -8,13 +8,15 @@ import java.util.Calendar
 
 private const val DEFAULT_ZMAN_NAME = "16.1 deg"
 
-internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) : Zmanim(Zmanim.Type.Alot, zmanimCalculator) {
+internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
+  Zmanim(Zmanim.Type.Alot, zmanimCalculator) {
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
-  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+  // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
+  // it would only
   //  scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {

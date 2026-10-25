@@ -12,8 +12,8 @@ import com.gindin.zmanlib.calendar.holiday.Observance
 private const val PURIM = "Purim"
 
 /**
- * Purim (and Shushan Purim) fall in Adar, or in Adar II of a leap year. Hidden from Java, since an internal top-level
- * function is otherwise compiled to a public static method.
+ * Purim (and Shushan Purim) fall in Adar, or in Adar II of a leap year. Hidden from Java, since an
+ * internal top-level function is otherwise compiled to a public static method.
  */
 @JvmSynthetic
 internal fun HebrewDate.isInPurimMonth(): Boolean {

@@ -16,7 +16,9 @@ internal open class TzaitHacochavim(
   zmanimCalculator: ZmanimCalculator,
 ) : Zmanim(type, zmanimCalculator) {
 
-  constructor(zmanimCalculator: ZmanimCalculator) : this(Zmanim.Type.TzaitHacochavim, zmanimCalculator)
+  constructor(
+    zmanimCalculator: ZmanimCalculator
+  ) : this(Zmanim.Type.TzaitHacochavim, zmanimCalculator)
 
   override fun getDefault(): Zman? {
     return getByName(DEFAULT_ZMAN_NAME)
@@ -45,7 +47,8 @@ internal open class TzaitHacochavim(
       return firstList
     }
 
-    // A flat table of independent zman definitions, one per opinion, with no control flow: splitting it would only
+    // A flat table of independent zman definitions, one per opinion, with no control flow:
+    // splitting it would only
     //  scatter the table, so the length rule does not apply.
     @Suppress("LongMethod")
     @JvmStatic

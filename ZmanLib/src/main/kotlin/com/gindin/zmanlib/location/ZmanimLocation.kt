@@ -23,7 +23,8 @@ private const val SIGNIFICANT_ELEVATION_CHANGE_METERS = 5
 private const val DISPLAYED_COORDINATE_DECIMALS = 5
 
 /**
- * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used by the zmanim app.
+ * Extension to the GeoLocation used by the zmanim calculations that adds some additional info used
+ * by the zmanim app.
  */
 public class ZmanimLocation : GeoLocation {
 
@@ -151,14 +152,14 @@ public class ZmanimLocation : GeoLocation {
   @JvmField public val accuracy: Float
 
   /**
-   * True indicates this is a known invalid location; false simply means we believe it to be valid, but cannot be
-   * completely sure.
+   * True indicates this is a known invalid location; false simply means we believe it to be valid,
+   * but cannot be completely sure.
    */
   @JvmField public val isInvalid: Boolean
 
   /**
-   * When the user gives us just a name of a location, and we have to go track it down, holding on to that name allows
-   * us to recognize when we're seeing the same location again.
+   * When the user gives us just a name of a location, and we have to go track it down, holding on
+   * to that name allows us to recognize when we're seeing the same location again.
    */
   @JvmField public val originalUserName: String?
 
@@ -216,16 +217,25 @@ public class ZmanimLocation : GeoLocation {
 
     val sb = StringBuilder()
     sb.append("Location Name:\t").append(getLocationName())
-    sb.append("\nLatitude:\t").append(getLatitudeString(latitude, DISPLAYED_COORDINATE_DECIMALS)).append(" deg")
-    sb.append("\nLongitude:\t").append(getLongitudeString(longitude, DISPLAYED_COORDINATE_DECIMALS)).append(" deg")
+    sb
+      .append("\nLatitude:\t")
+      .append(getLatitudeString(latitude, DISPLAYED_COORDINATE_DECIMALS))
+      .append(" deg")
+    sb
+      .append("\nLongitude:\t")
+      .append(getLongitudeString(longitude, DISPLAYED_COORDINATE_DECIMALS))
+      .append(" deg")
     sb.append("\nElevation:\t").append(elevation).append(" Meters")
-    sb.append("\nTZ Name:\t").append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
+    sb
+      .append("\nTZ Name:\t")
+      .append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
     sb.append("\nTZ GMT Offset:\t").append(timeZone.rawOffset / millisInHour)
     sb.append("\nTZ DST Offset:\t").append(timeZone.dstSavings / millisInHour)
     sb.append("\nProvider:\t").append(providerName)
     sb.append("\nAccuracy:\t").append(accuracy)
 
-    val sdf = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    val sdf =
+      DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
     sb.append("\nFix:\t").append(sdf.format(Date(locationTime)))
 
     return sb.toString()
@@ -241,7 +251,9 @@ public class ZmanimLocation : GeoLocation {
     return (latitude != 0.0) && (longitude != 0.0)
   }
 
-  /** Check if this is a resolved location, meaning that we know both the coordinates AND the name. */
+  /**
+   * Check if this is a resolved location, meaning that we know both the coordinates AND the name.
+   */
   public fun isResolved(): Boolean {
     return hasCoordinates() && hasName()
   }
@@ -253,15 +265,16 @@ public class ZmanimLocation : GeoLocation {
     sb.append(";L: ").append(toLatLongString(latitude, longitude))
     sb.append(";TZ: ").append(timeZone.getDisplayName(false, TimeZone.SHORT, Locale.getDefault()))
 
-    val sdf = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    val sdf =
+      DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
     sb.append(";Fix: ").append(sdf.format(Date(locationTime)))
 
     return sb.toString()
   }
 
   /**
-   * Writes this zmanim location to the specified output. Does NOT close the stream or perform any other operation to
-   * the stream.
+   * Writes this zmanim location to the specified output. Does NOT close the stream or perform any
+   * other operation to the stream.
    *
    * @throws IOException if there is any error writing to the stream.
    */
@@ -279,17 +292,20 @@ public class ZmanimLocation : GeoLocation {
     /** Whenever we need an invalid location, this one instance will do. */
     private val INVALID_LOCATION: ZmanimLocation = ZmanimLocation()
 
-    /** When the location name is unknown, use this, and an appropriate substitution will be made. */
+    /**
+     * When the location name is unknown, use this, and an appropriate substitution will be made.
+     */
     public const val UNKNOWN_LOCATION: String = " _unk_ "
 
     private const val ZMANIM_PROVIDER = "Zmanim"
 
     /**
-     * Loads a zmanim location from the specified input, assuming the stream is correctly positioned. Does NOT close the
-     * stream or perform any other operations to the stream.
+     * Loads a zmanim location from the specified input, assuming the stream is correctly
+     * positioned. Does NOT close the stream or perform any other operations to the stream.
      *
      * @throws IOException If there is any error interacting with the stream.
-     * @throws kotlinx.serialization.SerializationException If the stored location text is not a valid location.
+     * @throws kotlinx.serialization.SerializationException If the stored location text is not a
+     *   valid location.
      */
     @JvmStatic
     @Throws(IOException::class)

@@ -75,14 +75,16 @@ public class Sukkot : Observance() {
     }
   }
 
-  private class ShminiAtzeretDetails(date: HebrewDate) : Details.YomTovDetails(date, SHMINI_ATZERET, true) {
+  private class ShminiAtzeretDetails(date: HebrewDate) :
+    Details.YomTovDetails(date, SHMINI_ATZERET, true) {
 
     override fun isShminiAtzeret(): Boolean {
       return true
     }
   }
 
-  private class SimchatTorahDetails(date: HebrewDate) : Details.YomTovDetails(date, SIMCHAT_TORAH, false) {
+  private class SimchatTorahDetails(date: HebrewDate) :
+    Details.YomTovDetails(date, SIMCHAT_TORAH, false) {
 
     override fun isSimchatTorah(): Boolean {
       return true
