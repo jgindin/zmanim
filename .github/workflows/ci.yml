@@ -75,6 +75,11 @@ jobs:
           target: google_apis
           disable-animations: true
           script: ./gradlew :Zmanim:connectedDebugAndroidTest :ZehutYosef:connectedBarMitzvahDebugAndroidTest :ZehutYosef:connectedSidurDebugAndroidTest
+      # A connected task finishes successfully, with no results, when an APK fails to install, and with an empty result
+      #  when the instrumentation crashes before its first test (for instance on a class R8 removed from the app).
+      #  Requiring tests to have run in Zmanim and in each ZehutYosef flavor treats both as the failures they are.
+      - name: Fail if a module ran no instrumented tests
+        run: python3 .github/scripts/check-instrumented-results.py
       - name: Upload instrumented test reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
@@ -119,19 +124,11 @@ jobs:
           target: google_apis
           disable-animations: true
           script: ./gradlew -Pzmanim.testBuildType=releaseCheck :Zmanim:connectedReleaseCheckAndroidTest :ZehutYosef:connectedBarMitzvahReleaseCheckAndroidTest :ZehutYosef:connectedSidurReleaseCheckAndroidTest
-      # When R8 strips something the test runner itself needs from the app, the instrumentation crashes before the
-      #  first test and the connected task still succeeds, with an empty result. Treat that as the failure it is.
-      - name: Fail if a test APK ran no tests
-        run: |
-          results=$(find . -path '*/build/outputs/androidTest-results/connected/*' -name 'TEST-*.xml' | wc -l)
-          if [ "$results" -eq 0 ]; then
-            echo "::error::No instrumented test results were written"
-            exit 1
-          fi
-          if find . -path '*/build/outputs/androidTest-results/connected/*' -name 'TEST-*.xml' -print0 | xargs -0 grep -l '<testsuites tests="0"'; then
-            echo "::error::A test APK ran no tests; the instrumentation most likely crashed on a class R8 removed from the app"
-            exit 1
-          fi
+      # A connected task finishes successfully, with no results, when an APK fails to install, and with an empty result
+      #  when the instrumentation crashes before its first test (for instance on a class R8 removed from the app).
+      #  Requiring tests to have run in Zmanim and in each ZehutYosef flavor treats both as the failures they are.
+      - name: Fail if a module ran no instrumented tests
+        run: python3 .github/scripts/check-instrumented-results.py
       - name: Upload instrumented test reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
