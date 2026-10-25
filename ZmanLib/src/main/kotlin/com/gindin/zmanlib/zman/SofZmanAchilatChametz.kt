@@ -17,8 +17,7 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
   }
 
   // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
-  // it would only
-  //  scatter the table, so the length rule does not apply.
+  //  it would only scatter the table, so the length rule does not apply.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 

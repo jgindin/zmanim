@@ -69,8 +69,7 @@ public class NotifiedZmanim : Serializable {
     }
 
     // Saving is best effort: failing to write only loses the record of what the user was already
-    // told, which is not
-    //  worth interrupting a notification for, so any failure is dropped.
+    //  told, which is not worth interrupting a notification for, so any failure is dropped.
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     public fun save(notifiedZmanim: NotifiedZmanim) {
 
@@ -101,10 +100,8 @@ public class NotifiedZmanim : Serializable {
     }
 
     // A file written by another version of this app, or a damaged one, can fail to deserialize in
-    // many ways (including
-    //  linkage errors), and the record is only a hint about what the user was already told, so
-    // anything unreadable
-    //  is replaced by an empty record.
+    //  many ways (including linkage errors), and the record is only a hint about what the user was
+    //  already told, so anything unreadable is replaced by an empty record.
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun read(storedData: File): NotifiedZmanim {
       return try {

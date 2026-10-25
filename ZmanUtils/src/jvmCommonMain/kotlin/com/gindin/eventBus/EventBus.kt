@@ -163,9 +163,8 @@ public class EventBus {
   }
 
   // The postponed collections hold handlers whose event types were erased when they were queued;
-  // the
-  //  bus only ever pairs a handler with the event type it reports, so re-establishing the type is
-  // safe.
+  //  the bus only ever pairs a handler with the event type it reports, so re-establishing the type
+  //  is safe.
   @Suppress("UNCHECKED_CAST")
   private fun actuallyAddHandler(handler: EventHandler<*>, withCatchup: Boolean) {
     val eventType = handler.associatedType as Class<Event<EventHandler<*>>>

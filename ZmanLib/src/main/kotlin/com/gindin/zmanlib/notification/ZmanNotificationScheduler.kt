@@ -68,8 +68,7 @@ public class ZmanNotificationScheduler(
 
       if (alertTime >= 0) {
         // NOTE: We have to use a new calendar instance each time, otherwise we'd wind up
-        // overwriting the time
-        //  each iteration through the loop...
+        //  overwriting the time each iteration through the loop...
         val alertAt = Calendar.getInstance()
         alertAt.timeZone = now.timeZone
         alertAt.timeInMillis = timeInMillis + alertTime
@@ -100,8 +99,8 @@ public class ZmanNotificationScheduler(
     val candidates = ArrayList<ZmanNotification>()
 
     // Note that we're going to pretend that the current time is just a bit earlier than it actually
-    // is. This will
-    //  compensate in case Android got a bit sloppy and woke us up just a smidge late...
+    //  is. This will compensate in case Android got a bit sloppy and woke us up just a smidge
+    //  late...
     val nowInMillis = now.timeInMillis - DEFAULT_ALERT_FUDGE_FACTOR
 
     for (zmanim in daysZmanim) {
@@ -113,10 +112,9 @@ public class ZmanNotificationScheduler(
         zman = zmanim.getByName(zmanName)!!
       }
 
-      // Make sure the zman is before the current time and we haven't already notified...
-      //  Note that we move the zman time forward by a fudge factor so that if we would have
-      // otherwise
-      //  just missed it, we'll still add it as a candidate.
+      // Make sure the zman is before the current time and we haven't already notified... Note that
+      //  we move the zman time forward by a fudge factor so that if we would have otherwise just
+      //  missed it, we'll still add it as a candidate.
       val zmanTime = zman.getTime()
       if (zmanTime != null) {
 
@@ -126,8 +124,7 @@ public class ZmanNotificationScheduler(
 
         if (isZmanAfterNow && notYetNotified) {
           // Note that the time until the zman we calculated above was based on our fudging the
-          // current
-          //  time. So now, we have to undo that fudge.
+          //  current time. So now, we have to undo that fudge.
           candidates.add(ZmanNotification(zman, msUntilZman - DEFAULT_ALERT_FUDGE_FACTOR))
         }
       }

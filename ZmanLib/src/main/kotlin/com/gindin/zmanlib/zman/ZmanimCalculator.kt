@@ -123,8 +123,7 @@ public class ZmanimCalculator(
    */
   public fun getLatestMinchaOvadiaYosef(): Date? {
     // First, we have to figure out how long a shaot zmaniot minute is. The returned temporal hour
-    // is represented by
-    //  the number of milliseconds in that "hour".
+    //  is represented by the number of milliseconds in that "hour".
     val shaotZmaniotHour: Long = getTemporalHour()
     val shaotZmaniotMinute: Long = shaotZmaniotHour / MINUTES_PER_HOUR
 

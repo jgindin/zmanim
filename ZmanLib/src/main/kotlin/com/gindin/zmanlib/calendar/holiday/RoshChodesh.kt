@@ -31,9 +31,8 @@ public class RoshChodesh : Observance() {
   }
 
   // Each month knows which of its days begin or precede the Rosh Chodesh of this or the next month.
-  // A 30-day month's
-  //  30th day is the first day of the next month's Rosh Chodesh, and the 1st of the month is its
-  // second day.
+  //  A 30-day month's 30th day is the first day of the next month's Rosh Chodesh, and the 1st of
+  //  the month is its second day.
   private val detailsOfMonth: Map<Int, (HebrewDate, Int) -> Details?> =
     mapOf(
       HebrewMonth.NISSAN to ::getNissanDetails,

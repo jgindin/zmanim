@@ -917,8 +917,7 @@ public object HebrewCalendar {
     // of a non-leap year
     val gatrad = ((moladDay % 7) == 2) && (moladParts >= 9924) && !isHebrewLeapYear(year)
     // Dechiya of BeTuTaKFoT - Be = is on a Monday, TaKFoT = 15 hours, 589 parts or later (15 * 1080
-    // + 589), in a year
-    //  following a leap year
+    //  + 589), in a year following a leap year
     val betutakfot = ((moladDay % 7) == 1) && (moladParts >= 16789) && isHebrewLeapYear(year - 1)
 
     if (moladZaken || gatrad || betutakfot) {

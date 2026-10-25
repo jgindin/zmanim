@@ -36,8 +36,7 @@ public class ZmanFormatter(private val options: Options) {
     }
 
     // This can return null in case the zman just doesn't apply. E.g., there are places where the
-    // Sun never
-    //  actually gets low enough to be able to calculate Alot @ 26degrees.
+    //  Sun never actually gets low enough to be able to calculate Alot @ 26degrees.
     var time: Calendar = zmanTime ?: return "N/A"
 
     if (null != zmanRounder) {
