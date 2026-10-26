@@ -150,6 +150,10 @@ Conventions and hard-won rules:
   a content commit so history follows the files, and squashing flattens that. `main` is protected:
   a PR is required (no approvals needed) and the `verify` check must pass on an up-to-date branch.
   (Repository settings still allow squash and merge commits; do not use them.)
+- **One purpose per commit and PR.** A conversion, rename or formatting commit contains only that;
+  new code, new APIs and unrelated cleanups go in their own commit or PR (or are raised first and
+  deferred). Before committing, check the diff against the commit message: anything the message does
+  not account for comes out.
 - Typical flow:
   ```bash
   jj new main                              # start from the current main
