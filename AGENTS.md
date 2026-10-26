@@ -149,7 +149,7 @@ Conventions and hard-won rules:
   create merge commits: the Java-to-Kotlin conversions are stored as a rename-only commit followed by
   a content commit so history follows the files, and squashing flattens that. `main` is protected:
   a PR is required (no approvals needed) and the `verify` check must pass on an up-to-date branch.
-  (Repository settings still allow squash and merge commits; do not use them.)
+  The repository settings allow only "Rebase and merge", and merged branches are deleted automatically.
 - **One purpose per commit and PR.** A conversion, rename or formatting commit contains only that;
   new code, new APIs and unrelated cleanups go in their own commit or PR (or are raised first and
   deferred). Before committing, check the diff against the commit message: anything the message does
