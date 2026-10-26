@@ -2,7 +2,7 @@
 agp = "9.4.1"
 kotlin = "2.4.21"
 moallemiAdvancedBuildVersion = "1.5.0"
-roborazzi = "1.74.0"
+roborazzi = "1.77.0"
 # Each ktfmt Gradle plugin release bundles one ktfmt engine version (0.27.0 bundles ktfmt 0.64), so
 #  upgrading the plugin is also what upgrades the formatter.
 ktfmtGradle = "0.27.0"
