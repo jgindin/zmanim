@@ -4,6 +4,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # 1.6.0 (the newest on the Gradle plugin portal) refuses to apply to a project without the
+      #  Android plugin, which breaks accessor generation for the convention plugins in build-logic.
+      #  Later releases are not published to the portal.
+      - dependency-name: "org.moallemi.gradle.advanced-build-version:gradle-plugin"
   - package-ecosystem: github-actions
     directory: /
     schedule:
