@@ -1,11 +1,11 @@
 # Phase 2: Modern Location Architecture & Offline Resilience Implementation Plan
 
-> **For agentic workers:** execute task by task, one PR per task, merged with "Rebase and merge" (see `AGENTS.md`). Each task's final verification step is a hard gate: if it fails, stop and fix before the next task. Steps use checkbox (`- [ ]`) syntax. **One purpose per commit and PR**: data generation, interfaces, adapters and wiring never share a change. Do not start Task 2 until the decisions in Task 0 are answered.
+> **For agentic workers:** execute task by task, one PR per task, merged with "Rebase and merge" (see `AGENTS.md`). Each task's final verification step is a hard gate: if it fails, stop and fix before the next task. Steps use checkbox (`- [ ]`) syntax. **One purpose per commit and PR**: data generation, interfaces, adapters and wiring never share a change. Task 0 is done (answers recorded in the design, Section 8); the design still needs the maintainer's final approval before Task 2.
 
 **Design:** `phase-2-design.md` (status Draft until the maintainer approves it).
 **Goal:** Location and place resolution that works offline, as a `Flow`, with a trustworthy elevation, without changing any screen.
 **Architecture:** Pure-Kotlin interfaces and decision logic in `:ZmanLib`; Android adapters in `:Zmanim`; an event-bus bridge keeps the current screens working until Phase 4a.
-**Tech additions:** `kotlinx-coroutines-core` (and `-android`, `-play-services` or the Task-await bridge for `Task`), `kotlinx-serialization-json` (already in the catalog from Phase 1 if used there; otherwise added here), an HTTP client (`HttpURLConnection` from the JDK unless Task 4 finds a reason for OkHttp).
+**Tech additions:** `kotlinx-coroutines-core` (and `-android`, `-play-services` or the Task-await bridge for `Task`). No HTTP client and no database (decisions D1 and D4).
 
 ## Global constraints
 
@@ -17,13 +17,9 @@
 
 ---
 
-### Task 0: Resolve the open decisions (REQUIRES A HUMAN)
+### Task 0: Resolve the open decisions (done 2026-10-28)
 
-**Files:** edit `phase-2-design.md` Section 8 only.
-
-- [ ] **Step 1:** Maintainer answers D1 to D6 in the design document (approach, offline data source and any community list, approximate location, network lookup and its disclosure, elevation datum, background location).
-- [ ] **Step 2:** Change the design's status to "Approved" and note the answers in a revision-history line. If D1 is not B, rewrite Tasks 3 to 5 before continuing.
-- [ ] **Step 3:** Commit: `jj commit -m "Record the Phase 2 design decisions"`.
+D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items from them: approve the final design document; review the list of places tagged `PS` that Task 3 prints and say which belong in `place-overrides.tsv`.
 
 ---
 
@@ -61,6 +57,8 @@
 
 - [ ] **Step 1: Confirm the data terms (REQUIRES A HUMAN sign-off).** Read the current GeoNames readme and the file's columns (license version, elevation and DEM columns). Record the exact text of the attribution required. If D2 chose additional community data, record its license too.
 - [ ] **Step 2:** Write the generator: download pinned files by URL and checksum, filter, convert to a compact binary or TSV format with a version header, and write it to the assets directory. The output file is checked in (so builds do not need the network) together with its README: source, date, license, how to regenerate.
+- [ ] **Step 2b: Country names (D2).** Add `place-overrides.tsv` (GeoNames id, country code, display country) owned by the maintainer, applied by the generator. The generator prints every source record whose country is `PS` for review (**REQUIRES A HUMAN** to choose which are overridden to Israel) and fails if an overridden record would still display "Palestine" or "Palestinian Territory". Add a test that Jerusalem, Tel Aviv, Haifa, Be'er Sheva and Eilat are "Israel" in the generated asset.
+- [ ] **Step 2c: Elevation columns (D5).** Inspect the real file: how many records have `elevation`, how many have `dem`, whether any use the "no data" sentinel. Record the counts in the README and make the loader prefer `elevation`, then `dem`, then unknown.
 - [ ] **Step 3:** Implement `InMemoryPlaceIndex` (load once, nearest by great-circle distance with a longitude-wrapped bounding pre-filter, name lookup with Unicode-normalized, case-insensitive prefix and exact match). Tests with a small synthetic file: nearest across the antimeridian and near the poles, ties, empty index, malformed asset (fails safe).
 - [ ] **Step 4:** Add the attribution to the About screen data without changing layout (no golden change). Check the asset size against the 3 MB budget; if over, filter harder and document why.
 - [ ] **Step 5: Verify** gates and release APK size. Commit in two PRs if the generator and the loader are reviewed separately.
@@ -69,13 +67,12 @@
 
 ### Task 4: Geocoder adapters and cache
 
-**Files:** Kotlin in `Zmanim/src/main/java/com/gindin/zmanim/android/location/resolvers/` (new `.kt` files): `SystemGeocoder.kt`, `HttpGeocoder.kt`, `FileGeocodeCache.kt`; tests in `Zmanim/src/test/`.
+**Files:** Kotlin in `Zmanim/src/main/java/com/gindin/zmanim/android/location/resolvers/` (new `.kt` files): `SystemGeocoder.kt`, `FileGeocodeCache.kt`; tests in `Zmanim/src/test/`.
 
 - [ ] **Step 1: `SystemGeocoder`.** On API 33+, wrap `Geocoder.getFromLocation(..., GeocodeListener)` with `suspendCancellableCoroutine`; on API 24 to 32, call the blocking overload on `Dispatchers.IO`; `Geocoder.isPresent()` false means "not available", not an error. Tests with Robolectric's shadow geocoder for both branches.
-- [ ] **Step 2: `HttpGeocoder`** (only if D4 allows an online lookup). Nominatim `reverse` and `search` endpoints, JSON via `kotlinx.serialization`, identifying `User-Agent` carrying the app id/version and a contact, 1 request per second enforced by a shared limiter, connect and read timeouts of a few seconds, base URL configurable, HTTPS only, no retry storms (one retry with backoff at most). Tests against a local fake server (`MockWebServer`) for success, 429, 403, timeout, malformed body, and rate limiting.
-- [ ] **Step 3: `FileGeocodeCache`.** Reads the legacy `CachedLocations` format on first run, writes the versioned format afterwards, atomic write (temp file then rename), same match rule as today. Tests: the existing v409 fixture loads; a round trip; a truncated file is discarded safely; legacy then new format.
-- [ ] **Step 4:** Compose the production chain in one factory (cache, system, offline index, HTTP) with the timeouts from the design. Do not wire it into the app yet.
-- [ ] **Step 5: Verify** gates; add every class reached by name to `Zmanim/r8-kept-names.txt` with its rule if any. Commit per adapter.
+- [ ] **Step 2: `FileGeocodeCache`.** Reads the legacy `CachedLocations` format on first run, writes the versioned format afterwards, atomic write (temp file then rename), same match rule as today. Tests: the existing v409 fixture loads; a round trip; a truncated file is discarded safely; legacy then new format.
+- [ ] **Step 3:** Compose the production chain in one factory (cache, system, offline index) with the timeouts from the design. Do not wire it into the app yet.
+- [ ] **Step 4: Verify** gates; add every class reached by name to `Zmanim/r8-kept-names.txt` with its rule if any. Commit per adapter.
 
 ---
 
@@ -96,7 +93,8 @@
 
 - [ ] **Step 1:** Implement `LocationSource` over `FusedLocationProviderClient` with `callbackFlow`: emit a recent last-known location first, then the one-shot high-accuracy request, handle the settings-resolution failure by emitting `Unavailable(servicesOff, resolution)`, cancel updates when the collector goes away. Permission handling per D3.
 - [ ] **Step 2:** Tests with a fake client: recent last-known, stale last-known, null last-known, settings failure, collector cancellation removes updates, approximate-only grant.
-- [ ] **Step 3: Verify** gates. Commit.
+- [ ] **Step 3: Approximate-location warning (D3).** Find how the app shows a non-blocking message today (`messageDisplay/MessageDisplayer`) and use it to tell the user that an approximate-only grant can move times by a few seconds. Shown only in that case, and not again for the same grant once dismissed (store the flag in the personal preferences like the other "asked" flags). Add a Robolectric test for the message, and a new snapshot golden for that state only if the message is visible in the screen; no existing golden may change.
+- [ ] **Step 4: Verify** gates. Commit.
 
 ---
 
@@ -106,7 +104,7 @@
 
 - [ ] **Step 1:** Replace `DynamicLocationAcquirer`, `StaticLocationAcquirer` and `LatitudeLongitudeLocationAcquirer` internals with calls into `LocationSource` and the production resolver chain. The events and the `LocationError` codes the screens see do not change.
 - [ ] **Step 2:** Replace the resolver chain inside `LocationToAddressConverter` with the new one and stop using the blocking `Geocoder` path. Remove `JsonQueryingResolver` and the other unused resolver classes in a separate commit.
-- [ ] **Step 3: Audit background location (D6).** Find every place a location is requested while the app is not in the foreground (the `PendingIntent` receiver, `ZmanimService`). If none needs `ACCESS_BACKGROUND_LOCATION`, remove it; if one does, keep it and record the use for the Play declaration.
+- [ ] **Step 3: Background location (D6: required).** Keep `ACCESS_BACKGROUND_LOCATION`. Write down each background path that needs the location (the periodic alarm check via `ZmanimReceiver` and `ZmanNotificationScheduler`, the `PendingIntent` receiver) in the PR so the Play Console declaration can be checked against it, and add a test that these paths still obtain a location under an approximate-only grant (fake client).
 - [ ] **Step 4:** Existing upgrade and snapshot tests pass unchanged; `verifyRoborazziDebug` shows no golden change.
 - [ ] **Step 5: Verify** gates. Commit in small steps.
 
@@ -125,7 +123,7 @@
 
 ### Task 9: Disclosure, docs, and close-out
 
-- [ ] **Step 1 (REQUIRES A HUMAN):** Update the privacy policy and the Play Data Safety form for any new data sharing (coordinates to a geocoding provider), and the background-location declaration if it changed. Do this before the release containing Task 4 or 7 ships.
+- [ ] **Step 1 (REQUIRES A HUMAN):** Confirm no disclosure change is needed (no new third party or data collected; the background-location declaration is unchanged). If Task 7 turned out to change what is collected, update the privacy policy and Data Safety form before release.
 - [ ] **Step 2:** Update `AGENTS.md` (new location layering, the dataset and how to regenerate it, the emulator offline test) and the roadmap's Phase 2 status. Mark this plan's checkboxes.
 - [ ] **Step 3:** Record the maintainer's measurements: APK size delta, cold-start time on a real device before and after, and an offline test on the phone. Add them to the PR.
 - [ ] **Step 4:** Commit: `jj commit -m "Document the Phase 2 location architecture and close out the phase"`.
