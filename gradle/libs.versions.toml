@@ -9,7 +9,7 @@ ktfmtGradle = "0.27.0"
 detekt = "2.0.0-alpha.6"
 foojayResolverConvention = "0.10.0"
 
-kosherjavaZmanim = "2.5.0"
+kosherjavaZmanim = "3.0.0"
 jetbrainsAnnotations = "24.0.1"
 junit = "4.13.2"
 # JUnit 6 versions the Platform (launcher), Jupiter and Vintage in lockstep, so one ref serves all three.
