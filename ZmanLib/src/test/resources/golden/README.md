@@ -61,5 +61,8 @@ current code.
   elevation-adjusted sunrise by about half a second more. The zmanim based on sunrise and sunset moved with them,
   by up to about 3.3 seconds for the zmanim calculated as a fraction of the day. Zmanim based on the sun's depth
   below the horizon did not move, and no zman gained or lost a time. The table was regenerated from the new code.
+- "Geonim 4.37 deg" and "Geonim 4.61 deg" became the library's "Geonim 4.42 deg" and "Geonim 4.66 deg"
+  (2026-11-02), which KosherJava 3 says replace them. Only those columns changed, in every type that offers them:
+  the times are 14 to 24 seconds later, and in Tromso up to about 100 seconds later. No zman gained or lost a time.
 
 The table now comes from the library's default radii, and was last regenerated on 2026-11-02.

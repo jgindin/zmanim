@@ -154,8 +154,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:50:58\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:40:40\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:54:58\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:34:52\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:36:18\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:35:10\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:36:36\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:37:27\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:44:21\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:51:07\n" +
@@ -295,8 +295,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:46:36\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:38:41\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:50:36\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:28:21\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:29:38\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:28:37\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:29:55\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:30:40\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:36:48\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:51\n" +
@@ -436,8 +436,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:42:57\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:38:26\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:46:57\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:19:35\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:20:43\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:19:49\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:20:58\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:21:38\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:27:06\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:32:28\n" +
@@ -588,8 +588,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:42:07\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:29:39\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:46:07\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:26:14\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:27:41\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:26:32\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:28:00\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:28:51\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:35:48\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:42:38\n" +
@@ -732,8 +732,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:40:24\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:27:31\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:44:24\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:24:34\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:26:02\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:24:52\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:26:20\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:27:11\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:34:09\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:41:00\n" +
@@ -757,8 +757,8 @@ public class UT_ZmanimWithElevation
         "            Havdalah - 96 Minutes                    : 19:40:24\n" +
         "            Havdalah - GR'A 96 Minutes Zmaniyot      : 19:27:31\n" +
         "            Havdalah - Chacham Yosef Harari-Raful    : 18:44:24\n" +
-        "            Havdalah - Geonim 4.37 deg               : 18:24:34\n" +
-        "            Havdalah - Geonim 4.61 deg               : 18:26:02\n" +
+        "            Havdalah - Geonim 4.42 deg               : 18:24:52\n" +
+        "            Havdalah - Geonim 4.66 deg               : 18:26:20\n" +
         "            Havdalah - Geonim 4.8 deg                : 18:27:11\n" +
         "            Havdalah - Geonim 5.95 deg               : 18:34:09\n" +
         "            Havdalah - Geonim 7.083 deg              : 18:41:00\n" +
@@ -901,8 +901,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 21:20:27\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:28:59\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:24:27\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 20:04:22\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 20:05:50\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 20:04:41\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 20:06:09\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:07:00\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:14:04\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:21:04\n" +
@@ -926,8 +926,8 @@ public class UT_ZmanimWithElevation
         "     Candle Lighting - 96 Minutes                    : 21:20:27\n" +
         "     Candle Lighting - GR'A 96 Minutes Zmaniyot      : 21:28:59\n" +
         "     Candle Lighting - Chacham Yosef Harari-Raful    : 20:24:27\n" +
-        "     Candle Lighting - Geonim 4.37 deg               : 20:04:22\n" +
-        "     Candle Lighting - Geonim 4.61 deg               : 20:05:50\n" +
+        "     Candle Lighting - Geonim 4.42 deg               : 20:04:41\n" +
+        "     Candle Lighting - Geonim 4.66 deg               : 20:06:09\n" +
         "     Candle Lighting - Geonim 4.8 deg                : 20:07:00\n" +
         "     Candle Lighting - Geonim 5.95 deg               : 20:14:04\n" +
         "     Candle Lighting - Geonim 7.083 deg              : 20:21:04\n" +
@@ -1093,8 +1093,8 @@ public class UT_ZmanimWithElevation
         "           Fast Ends - 96 Minutes                    : 21:34:57\n" +
         "           Fast Ends - GR'A 96 Minutes Zmaniyot      : 21:48:04\n" +
         "           Fast Ends - Chacham Yosef Harari-Raful    : 20:38:57\n" +
-        "           Fast Ends - Geonim 4.37 deg               : 20:19:25\n" +
-        "           Fast Ends - Geonim 4.61 deg               : 20:20:55\n" +
+        "           Fast Ends - Geonim 4.42 deg               : 20:19:44\n" +
+        "           Fast Ends - Geonim 4.66 deg               : 20:21:14\n" +
         "           Fast Ends - Geonim 4.8 deg                : 20:22:07\n" +
         "           Fast Ends - Geonim 5.95 deg               : 20:29:25\n" +
         "           Fast Ends - Geonim 7.083 deg              : 20:36:41\n" +
@@ -1119,8 +1119,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 21:34:57\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:48:04\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:38:57\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 20:19:25\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 20:20:55\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 20:19:44\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 20:21:14\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:22:07\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:29:25\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:36:41\n" +
@@ -1284,8 +1284,8 @@ public class UT_ZmanimWithElevation
         "           Fast Ends - 96 Minutes                    : 21:09:52\n" +
         "           Fast Ends - GR'A 96 Minutes Zmaniyot      : 21:14:59\n" +
         "           Fast Ends - Chacham Yosef Harari-Raful    : 20:13:52\n" +
-        "           Fast Ends - Geonim 4.37 deg               : 19:53:32\n" +
-        "           Fast Ends - Geonim 4.61 deg               : 19:54:59\n" +
+        "           Fast Ends - Geonim 4.42 deg               : 19:53:50\n" +
+        "           Fast Ends - Geonim 4.66 deg               : 19:55:17\n" +
         "           Fast Ends - Geonim 4.8 deg                : 19:56:07\n" +
         "           Fast Ends - Geonim 5.95 deg               : 20:03:04\n" +
         "           Fast Ends - Geonim 7.083 deg              : 20:09:56\n" +
@@ -1310,8 +1310,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 21:09:52\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:14:59\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:13:52\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 19:53:32\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 19:54:59\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 19:53:50\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 19:55:17\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 19:56:07\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:03:04\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:09:56\n" +
@@ -1450,8 +1450,8 @@ public class UT_ZmanimWithElevation
         "           Fast Ends - 96 Minutes                    : 18:06:13\n" +
         "           Fast Ends - GR'A 96 Minutes Zmaniyot      : 17:38:53\n" +
         "           Fast Ends - Chacham Yosef Harari-Raful    : 17:10:13\n" +
-        "           Fast Ends - Geonim 4.37 deg               : 16:53:08\n" +
-        "           Fast Ends - Geonim 4.61 deg               : 16:54:46\n" +
+        "           Fast Ends - Geonim 4.42 deg               : 16:53:28\n" +
+        "           Fast Ends - Geonim 4.66 deg               : 16:55:06\n" +
         "           Fast Ends - Geonim 4.8 deg                : 16:56:03\n" +
         "           Fast Ends - Geonim 5.95 deg               : 17:03:49\n" +
         "           Fast Ends - Geonim 7.083 deg              : 17:11:22\n" +
@@ -1476,8 +1476,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 18:06:13\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 17:38:53\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 17:10:13\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 16:53:08\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 16:54:46\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 16:53:28\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 16:55:06\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 16:56:03\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 17:03:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 17:11:22\n" +
@@ -1632,8 +1632,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:38:04\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:26:01\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:42:04\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:22:00\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:23:20\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:22:17\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:23:37\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:24\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:06\n" +
@@ -1789,8 +1789,8 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - 96 Minutes                    : 19:40:35\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:29:11\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 18:44:35\n" +
-        "    Tzait Hacochavim - Geonim 4.37 deg               : 18:22:00\n" +
-        "    Tzait Hacochavim - Geonim 4.61 deg               : 18:23:20\n" +
+        "    Tzait Hacochavim - Geonim 4.42 deg               : 18:22:17\n" +
+        "    Tzait Hacochavim - Geonim 4.66 deg               : 18:23:37\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:24:24\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:30:49\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 18:37:06\n" +
@@ -1928,8 +1928,8 @@ public class UT_ZmanimWithElevation
       "    Tzait Hacochavim - 96 Minutes                    : 18:16:14\n" +
       "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 18:03:57\n" +
       "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 17:20:14\n" +
-      "    Tzait Hacochavim - Geonim 4.37 deg               : 16:53:45\n" +
-      "    Tzait Hacochavim - Geonim 4.61 deg               : 16:54:58\n" +
+      "    Tzait Hacochavim - Geonim 4.42 deg               : 16:54:00\n" +
+      "    Tzait Hacochavim - Geonim 4.66 deg               : 16:55:13\n" +
       "    Tzait Hacochavim - Geonim 4.8 deg                : 16:55:56\n" +
       "    Tzait Hacochavim - Geonim 5.95 deg               : 17:01:44\n" +
       "    Tzait Hacochavim - Geonim 7.083 deg              : 17:07:26\n" +

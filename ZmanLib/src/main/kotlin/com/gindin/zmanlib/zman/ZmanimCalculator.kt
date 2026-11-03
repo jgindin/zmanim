@@ -60,12 +60,6 @@ private const val ALOS_DEGREES_BELOW_HORIZON = 16.01
 /** How far below the horizon the sun is at tzais, for the Geonim's opinion of 3.8 degrees. */
 private const val TZAIS_GEONIM_DEGREES_BELOW_HORIZON = 3.8
 
-/** How far below the horizon the sun is at tzais, for the Geonim's opinion of 4.37 degrees. */
-private const val TZAIS_GEONIM_4_POINT_37_DEGREES = 4.37
-
-/** How far below the horizon the sun is at tzais, for the Geonim's opinion of 4.61 degrees. */
-private const val TZAIS_GEONIM_4_POINT_61_DEGREES = 4.61
-
 /** Minutes in an hour. */
 private const val MINUTES_PER_HOUR = 60
 
@@ -150,24 +144,6 @@ public class ZmanimCalculator(
       getSeaLevelSunset(),
       Duration.ofMinutes(MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL.toLong()),
     )
-  }
-
-  /**
-   * KosherJava 3 replaced this zman with 4.42 degrees, so it is calculated here to keep its time.
-   *
-   * @return the time, or null where the sun does not reach that far below the horizon.
-   */
-  public fun getTzaitGeonim4Point37Degrees(): Instant? {
-    return getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_4_POINT_37_DEGREES)
-  }
-
-  /**
-   * KosherJava 3 replaced this zman with 4.66 degrees, so it is calculated here to keep its time.
-   *
-   * @return the time, or null where the sun does not reach that far below the horizon.
-   */
-  public fun getTzaitGeonim4Point61Degrees(): Instant? {
-    return getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_4_POINT_61_DEGREES)
   }
 
   public fun getTzaitSeattleSephardic(): Instant? {
