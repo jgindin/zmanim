@@ -95,7 +95,6 @@ public class ZmanimCalculator(
    *   the horizon for this calculation, a null will be returned. See detailed explanation on top of
    *   the [com.kosherjava.zmanim.AstronomicalCalendar] documentation.
    * @see getAlos16Point1Degrees
-   * @see getTzaisGeonim3Point65Degrees
    */
   public fun getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees(): Date? {
     return getSofZmanShma(

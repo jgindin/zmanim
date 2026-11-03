@@ -24,7 +24,7 @@ current code.
 
 ## Contents
 
-- One row per place, elevation setting and date; 84 rows, 239 zman columns. Values are exact.
+- One row per place, elevation setting and date; 84 rows, 230 zman columns. Values are exact.
 - Places: New York (America/New_York), Jerusalem (Asia/Jerusalem), Seattle (America/Los_Angeles),
   Sydney (Australia/Sydney), Tromso (Europe/Oslo; several zmanim have no time around the solstices),
   Denver (America/Denver, 1609 m; rows with elevation both ignored and applied). Coordinates and elevations are
@@ -38,3 +38,8 @@ current code.
   them, then `listed`: the types `HebrewDate.getZmanim` returns for that date and place.
 - A zman cell is the number of milliseconds from 00:00 UTC of the row's date to the zman (negative for a
   zman before that instant), or `-` where the library returns no time.
+
+## Changes since it was produced
+
+- The columns of "Geonim 3.65 deg", "Geonim 5.88 deg" and "Baal HaTanya Lechumra 30 Minutes" were removed when
+  those zmanim were dropped from the app, because KosherJava 3 no longer offers them. No other cell changed.

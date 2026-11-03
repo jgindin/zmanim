@@ -309,19 +309,6 @@ internal open class TzaitHacochavim(
       zmanim.add(
         object :
           Zman(
-            "Geonim 3.65 deg",
-            "Based on the sun's position at 3.65 degrees below the western horizon.",
-            zmanType,
-          ) {
-          override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim3Point65Degrees())
-          }
-        }
-      )
-
-      zmanim.add(
-        object :
-          Zman(
             "Geonim 4.37 deg",
             "Based on the sun's position at 4.37 degrees below the western horizon.",
             zmanType,
@@ -354,19 +341,6 @@ internal open class TzaitHacochavim(
           ) {
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point8Degrees())
-          }
-        }
-      )
-
-      zmanim.add(
-        object :
-          Zman(
-            "Geonim 5.88 deg",
-            "Based on the sun's position at 5.88 degrees below the western horizon.",
-            zmanType,
-          ) {
-          override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim5Point88Degrees())
           }
         }
       )
