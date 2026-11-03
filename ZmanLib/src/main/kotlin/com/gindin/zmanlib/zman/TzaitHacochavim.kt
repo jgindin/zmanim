@@ -67,7 +67,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120Minutes())
           }
         }
       )
@@ -145,7 +145,7 @@ internal open class TzaitHacochavim(
             false,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim8Point5Degrees())
           }
         }
       )
@@ -210,7 +210,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais60())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais60Minutes())
           }
         }
       )
@@ -223,7 +223,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais72())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais72Minutes())
           }
         }
       )
@@ -249,7 +249,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais90())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais90Minutes())
           }
         }
       )
@@ -275,7 +275,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais96())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzais96Minutes())
           }
         }
       )

@@ -57,7 +57,7 @@ internal class SofZmanTefila(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.SofZmanTefila,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilahAteretTorah())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaAteretTorah())
         }
       }
     )
@@ -70,7 +70,7 @@ internal class SofZmanTefila(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.SofZmanTefila,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaMGA())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaMGA72Minutes())
         }
       }
     )

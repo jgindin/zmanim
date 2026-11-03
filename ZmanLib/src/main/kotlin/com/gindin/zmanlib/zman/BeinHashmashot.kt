@@ -27,7 +27,10 @@ internal class BeinHashmashot(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.BeinHashmashot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getBainHasmashosRT13Point24Degrees())
+          return toCalendar(
+            zmanimCalculator,
+            zmanimCalculator.getBainHashmashosRT13Point24Degrees(),
+          )
         }
       }
     )
@@ -40,7 +43,7 @@ internal class BeinHashmashot(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.BeinHashmashot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getBainHasmashosRT58Point5Minutes())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getBainHashmashosRT58Point5Minutes())
         }
       }
     )
@@ -55,7 +58,7 @@ internal class BeinHashmashot(zmanimCalculator: ZmanimCalculator) :
         override fun calculate(): Calendar? {
           return toCalendar(
             zmanimCalculator,
-            zmanimCalculator.getBainHasmashosRT13Point5MinutesBefore7Point083Degrees(),
+            zmanimCalculator.getBainHashmashosRT13Point5MinutesBefore7Point083Degrees(),
           )
         }
       }
@@ -69,7 +72,7 @@ internal class BeinHashmashot(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.BeinHashmashot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getBainHasmashosRT2Stars())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getBainHashmashosRT2Stars())
         }
       }
     )

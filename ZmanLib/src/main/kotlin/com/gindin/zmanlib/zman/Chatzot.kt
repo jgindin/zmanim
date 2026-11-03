@@ -23,7 +23,7 @@ internal class Chatzot(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getChatzos())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getChatzosHayom())
         }
       }
     )
@@ -37,7 +37,7 @@ internal class Chatzot(zmanimCalculator: ZmanimCalculator) :
           true,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getFixedLocalChatzos())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getFixedLocalChatzosHayom())
         }
       }
     )

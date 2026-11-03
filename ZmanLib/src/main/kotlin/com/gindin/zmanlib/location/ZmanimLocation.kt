@@ -163,6 +163,16 @@ public class ZmanimLocation : GeoLocation {
    */
   @JvmField public val originalUserName: String?
 
+  /**
+   * The time zone of this location. The zmanim library works with the equivalent ZoneId; the app
+   * and its saved data work with this, which keeps the id the time zone was created with.
+   */
+  public var timeZone: TimeZone = TimeZone.getTimeZone(zoneId)
+    set(value) {
+      field = value
+      setZoneId(value.toZoneId())
+    }
+
   private constructor(builder: Builder) : super() {
 
     this.isInvalid = false
@@ -175,7 +185,7 @@ public class ZmanimLocation : GeoLocation {
     setLatitude(builder.latitude)
     setLongitude(builder.longitude)
     setElevation(builder.elevation)
-    setTimeZone(builder.timeZone)
+    this.timeZone = builder.timeZone
   }
 
   /** Only used when we need to build an invalid location. */

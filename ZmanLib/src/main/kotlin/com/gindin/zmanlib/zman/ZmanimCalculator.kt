@@ -5,10 +5,12 @@
 package com.gindin.zmanlib.zman
 
 import com.gindin.zmanlib.calendar.HebrewDate
-import com.kosherjava.zmanim.ComplexZmanimCalendar
+import com.kosherjava.zmanim.ComprehensiveZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.NOAACalculator
-import java.util.Date
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
 
 /**
  * How many minutes after sunset can you still start mincha?
@@ -68,24 +70,32 @@ private const val TZAIS_GEONIM_4_POINT_61_DEGREES = 4.61
 /** Minutes in an hour. */
 private const val MINUTES_PER_HOUR = 60
 
-/**
- * How many milliseconds in a minute?
- *
- * <p>
- * Have to copy this since it is package-local in the base class.
- */
-private const val MINUTE_MILLIS = 60000L
+/** The Earth radius used for elevation adjustments, in kilometers. */
+private const val EARTH_RADIUS_KM = 6356.9
+
+/** Hours from the fixed local chatzot of the day to the middle of the night. */
+private const val HOURS_FROM_CHATZOT_TO_NIGHT_CHATZOT = 12L
 
 /** Used to calculate all of our zmanim. */
 public class ZmanimCalculator(
   location: GeoLocation,
   date: HebrewDate,
-) : ComplexZmanimCalendar(location) {
+) : ComprehensiveZmanimCalendar(location) {
 
   init {
-    date.syncCalendar(getCalendar())
+    // java.util.Calendar months start at 0, LocalDate's at 1.
+    setLocalDate(
+      LocalDate.of(date.gregorianYear, date.gregorianMonth + 1, date.gregorianDayOfMonth)
+    )
 
-    setAstronomicalCalculator(NOAACalculator())
+    // The library's defaults are the sun's apparent radius for the date and the mean radius of the
+    // Earth. A fixed solar radius and this Earth radius keep the times this app has always shown.
+    setAstronomicalCalculator(
+      NOAACalculator().apply {
+        setUseApparentSolarRadius(false)
+        setEarthRadius(EARTH_RADIUS_KM)
+      }
+    )
   }
 
   /**
@@ -95,14 +105,14 @@ public class ZmanimCalculator(
    * to reach this time. <b>Note: </b> Based on this calculation <em>chatzos</em> will not be at
    * midday.
    *
-   * @return the <code>Date</code> of the latest <em>zman krias shema</em> based on this day. If the
-   *   calculation can't be computed such as northern and southern locations even south of the
-   *   Arctic Circle and north of the Antarctic Circle where the sun may not reach low enough below
-   *   the horizon for this calculation, a null will be returned. See detailed explanation on top of
-   *   the [com.kosherjava.zmanim.AstronomicalCalendar] documentation.
+   * @return the time of the latest <em>zman krias shema</em> based on this day. If the calculation
+   *   can't be computed such as northern and southern locations even south of the Arctic Circle and
+   *   north of the Antarctic Circle where the sun may not reach low enough below the horizon for
+   *   this calculation, a null will be returned. See detailed explanation on top of the
+   *   [com.kosherjava.zmanim.AstronomicalCalendar] documentation.
    * @see getAlos16Point1Degrees
    */
-  public fun getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees(): Date? {
+  public fun getSofZmanShmaAlos16Point01ToTzaisGeonim3Point8Degrees(): Instant? {
     return getSofZmanShma(
       getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + ALOS_DEGREES_BELOW_HORIZON),
       getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_DEGREES_BELOW_HORIZON),
@@ -113,9 +123,9 @@ public class ZmanimCalculator(
    * Method to return the latest time for mincha based on Daily Halacha's representation of the
    * Mishna Berura's ruling, that mincha must be FINISHED by sunset.
    *
-   * @return the <code>Date</code> representing the time.
+   * @return the time representing the time.
    */
-  public fun getLatestMinchaMishnaBerura(): Date? {
+  public fun getLatestMinchaMishnaBerura(): Instant? {
     return getSeaLevelSunset()
   }
 
@@ -124,18 +134,20 @@ public class ZmanimCalculator(
    * Ovadia Yosef's ruling that mincha can be prayed so long as you are beginning NO LATER THAN 13.5
    * shaot zmaniot minutes after sunset.
    *
-   * @return the <code>Date</code> representing the time.
+   * @return the time representing the time.
    */
-  public fun getLatestMinchaOvadiaYosef(): Date? {
+  public fun getLatestMinchaOvadiaYosef(): Instant? {
     // First, we have to figure out how long a shaot zmaniot minute is. The returned temporal hour
     //  is represented by the number of milliseconds in that "hour".
-    val shaotZmaniotHour: Long = getTemporalHour()
+    val shaotZmaniotHour: Long = getTemporalHour()?.toMillis() ?: return null
     val shaotZmaniotMinute: Long = shaotZmaniotHour / MINUTES_PER_HOUR
 
     return getTimeOffset(
       getSeaLevelSunset(),
-      (MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF * shaotZmaniotMinute) +
-        (shaotZmaniotMinute / 2),
+      Duration.ofMillis(
+        (MINUTES_AFTER_SUNSET_FOR_MINCHA_OVADIA_YOSEF * shaotZmaniotMinute) +
+          (shaotZmaniotMinute / 2)
+      ),
     )
   }
 
@@ -144,12 +156,12 @@ public class ZmanimCalculator(
    * Ben Sion Abba Shaul's ruling, that mincha can be prayed so long as you FINISH NO LATER THAN 26
    * minutes after sunset.
    *
-   * @return the <code>Date</code> representing the time.
+   * @return the time representing the time.
    */
-  public fun getLatestMinchaBenSion(): Date? {
+  public fun getLatestMinchaBenSion(): Instant? {
     return getTimeOffset(
       getSeaLevelSunset(),
-      MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL * MINUTE_MILLIS,
+      Duration.ofMinutes(MINUTES_AFTER_SUNSET_FOR_MINCHA_BEN_SION_ABBA_SHAUL.toLong()),
     )
   }
 
@@ -158,7 +170,7 @@ public class ZmanimCalculator(
    *
    * @return the time, or null where the sun does not reach that far below the horizon.
    */
-  public fun getTzaitGeonim4Point37Degrees(): Date? {
+  public fun getTzaitGeonim4Point37Degrees(): Instant? {
     return getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_4_POINT_37_DEGREES)
   }
 
@@ -167,14 +179,14 @@ public class ZmanimCalculator(
    *
    * @return the time, or null where the sun does not reach that far below the horizon.
    */
-  public fun getTzaitGeonim4Point61Degrees(): Date? {
+  public fun getTzaitGeonim4Point61Degrees(): Instant? {
     return getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + TZAIS_GEONIM_4_POINT_61_DEGREES)
   }
 
-  public fun getTzaitSeattleSephardic(): Date? {
+  public fun getTzaitSeattleSephardic(): Instant? {
     return getTimeOffset(
       getSeaLevelSunset(),
-      MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT * MINUTE_MILLIS,
+      Duration.ofMinutes(MINUTES_AFTER_SUNSET_FOR_SEATTLE_SEPHARDIC_TZAIT.toLong()),
     )
   }
 
@@ -184,27 +196,30 @@ public class ZmanimCalculator(
    *
    * TODO: We should simply allow users to create their own times rather than coding all of these...
    */
-  public fun getTzaitRavMoshe(): Date? {
-    return getTimeOffset(getSeaLevelSunset(), MINUTES_AFTER_SUNSET_RAV_MOSHE * MINUTE_MILLIS)
+  public fun getTzaitRavMoshe(): Instant? {
+    return getTimeOffset(
+      getSeaLevelSunset(),
+      Duration.ofMinutes(MINUTES_AFTER_SUNSET_RAV_MOSHE.toLong()),
+    )
   }
 
   /**
    * This method returns the time of <em>plag hamincha</em> based on the opinion that the day starts
    * at <em>[alos 16.1&deg;][getAlos16Point1Degrees]</em> and ends at <em>[tzais
-   * 8.5&deg;][getTzais]</em>.
+   * 8.5&deg;][getTzaisGeonim8Point5Degrees]</em>.
    *
-   * @return the <code>Date</code> of the time of <em>plag hamincha</em>. If the calculation can't
-   *   be computed such as northern and southern locations even south of the Arctic Circle and north
-   *   of the Antarctic Circle where the sun may not reach low enough below the horizon for this
+   * @return the time of the time of <em>plag hamincha</em>. If the calculation can't be computed
+   *   such as northern and southern locations even south of the Arctic Circle and north of the
+   *   Antarctic Circle where the sun may not reach low enough below the horizon for this
    *   calculation, a null will be returned. See detailed explanation on top of the
    *   [com.kosherjava.zmanim.AstronomicalCalendar] documentation.
    */
-  public fun getPlagAlot16Point1ToTzait8Point5(): Date? {
-    return getPlagHamincha(getAlos16Point1Degrees(), getTzais())
+  public fun getPlagAlot16Point1ToTzait8Point5(): Instant? {
+    return getPlagHamincha(getAlos16Point1Degrees(), getTzaisGeonim8Point5Degrees())
   }
 
-  public fun getEndOfFast(minutesAfterShkia: Int): Date? {
-    return getTimeOffset(getSeaLevelSunset(), minutesAfterShkia * MINUTE_MILLIS)
+  public fun getEndOfFast(minutesAfterShkia: Int): Instant? {
+    return getTimeOffset(getSeaLevelSunset(), Duration.ofMinutes(minutesAfterShkia.toLong()))
   }
 
   /**
@@ -212,29 +227,26 @@ public class ZmanimCalculator(
    * lighting in the base class because that won't be thread safe.
    *
    * @param minutesBeforeShkia How many minutes prior to Shkia should candle lighting be calculated?
-   * @return the <code>Date</code> representing candle lighting.
+   * @return the time representing candle lighting.
    */
-  public fun getCandleLighting(minutesBeforeShkia: Int): Date? {
-    return getTimeOffset(getSeaLevelSunset(), -minutesBeforeShkia * MINUTE_MILLIS)
+  public fun getCandleLighting(minutesBeforeShkia: Int): Instant? {
+    return getTimeOffset(getSeaLevelSunset(), Duration.ofMinutes(-minutesBeforeShkia.toLong()))
   }
 
   /**
    * Calculates the middle of the night as a 12 hours after the fixed local chatzot.
    *
-   * @return the Date representing the local middle of the night.
-   * @see getFixedLocalChatzos
+   * @return the time representing the local middle of the night.
+   * @see getFixedLocalChatzosHayom
    */
-  public fun getFixedLocalNightChatzos(): Date {
-    val localFixedChatzot = getFixedLocalChatzos()
-    val midnight = localFixedChatzot.time + (12 * MINUTES_PER_HOUR * MINUTE_MILLIS)
-
-    return Date(midnight)
+  public fun getFixedLocalNightChatzos(): Instant? {
+    return getFixedLocalChatzosHayom()?.plus(Duration.ofHours(HOURS_FROM_CHATZOT_TO_NIGHT_CHATZOT))
   }
 
   // Part of the library's public API, which is why this placeholder stays even though it cannot be
   // implemented yet.
   @Suppress("FunctionOnlyReturningConstant")
-  public fun getNightChatzos6HoursAfterTzait(): Date? {
+  public fun getNightChatzos6HoursAfterTzait(): Instant? {
     // todo: it seems the only way to calculate this is to know how the user has defined Tzeit!
     return null
   }

@@ -4,8 +4,9 @@
 
 package com.gindin.zmanlib.zman
 
+import java.time.Instant
 import java.util.Calendar
-import java.util.Date
+import java.util.TimeZone
 
 /**
  * Describes a single time. Intended to be reused as the date changes, without having to be
@@ -92,8 +93,8 @@ internal constructor(
   protected abstract fun calculate(): Calendar?
 
   /**
-   * This method is the most convenient way to bridge the Date-based world of the KosherJava API and
-   * our need for Calendar-based API.
+   * This method is the most convenient way to bridge the Instant-based world of the KosherJava API
+   * and our need for Calendar-based API.
    *
    * @return a calendar representing the date & time of this zman; May be null if the zman cannot be
    *   calculated. See detailed explanation on top of the
@@ -102,16 +103,16 @@ internal constructor(
    */
   protected fun toCalendar(
     zmanimCalculator: ZmanimCalculator,
-    zmanDate: Date?,
+    zmanTime: Instant?,
   ): Calendar? {
 
-    if (zmanDate == null) {
+    if (zmanTime == null) {
       return null
     }
 
     val calendar = Calendar.getInstance()
-    calendar.timeZone = zmanimCalculator.geoLocation.timeZone
-    calendar.time = zmanDate
+    calendar.timeZone = TimeZone.getTimeZone(zmanimCalculator.getGeoLocation().zoneId)
+    calendar.timeInMillis = zmanTime.toEpochMilli()
 
     return calendar
   }

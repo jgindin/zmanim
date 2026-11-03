@@ -31,7 +31,7 @@ internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaGedola())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaGedolaGRA())
         }
       }
     )
@@ -71,7 +71,7 @@ internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.MinchaGedola,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaGedolaGreaterThan30())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaGedolaGRAGreaterThan30())
         }
       }
     )
