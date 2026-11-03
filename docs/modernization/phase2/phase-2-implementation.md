@@ -23,9 +23,11 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ---
 
-### Task 0A: Upgrade KosherJava from 2.5.0 to 3.0.0 (prerequisite, not location work)
+### Task 0A: Upgrade KosherJava from 2.5.0 to 3.1.0 (prerequisite, not location work)
 
 **Why here:** this is a library upgrade with no connection to location. It runs before Task 1 only so that the changes expected to alter the zman golden table land alone, before the location work and its "no golden change" gate. It is its own PR (more than one, per the steps below); no location change shares a commit with it. It can move out of Phase 2 unchanged.
+
+**The target is 3.1.0, in two steps.** 3.1.0 was released on 2026-11-02 and adds to the 3.0.0 API without removing any public method of the calendar, `GeoLocation` or calculator classes, but it changes polar-day results (below) and no switch keeps the old ones. So the port is done and proved against 3.0.0, where every kept golden cell must be unchanged, and the bump to 3.1.0 is its own commit (Step 5a), so each golden change has one cause. On 2026-11-02 Maven Central did not have 3.1.0 yet; the port does not need it, Step 5a does.
 
 **What 3.0.0 changes for us** (found by comparing the 3.0.0 source and release notes with every KosherJava member `:ZmanLib` calls; this is a rewrite of the API, not a set of renames):
 
@@ -35,13 +37,16 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 - **Renamed and the time changes** (the library says the old values were too early): `getTzaisGeonim4Point37Degrees` becomes `...4Point42Degrees`, and `getTzaisGeonim4Point61Degrees` becomes `...4Point66Degrees`. Decision (2026-11-01): this task keeps the old times by computing 4.37 and 4.61 degrees in `ZmanimCalculator` with `getSunsetOffsetByDegrees`; Task 0B switches to the library's methods and deletes the custom ones.
 - **Defaults that change times without changing a name:** sunrise and sunset now use the sun's apparent radius for the date by default (`AstronomicalCalculator.useApparentSolarRadius`), which moves every sunrise and sunset by about a second or two. The `getSofZman*Chametz*` zmanim return null on any day but Erev Pesach. Decision (2026-11-01): this task sets `useApparentSolarRadius` to false so the times stay those of 2.5.0; Task 0B turns it on.
 
+**What 3.1.0 adds on top:** zmanim that used to return an invalid time on very short polar days return null (`getMinchaGedola30Minutes`, `getSofZmanShma3HoursBeforeChatzos`, `getSofZmanTfila2HoursBeforeChatzos`, `getFixedLocalChatzosHayom` and the half-day zmanim based on it, the Ateret Torah and Ahavat Shalom mincha ketana and plag zmanim, and the Yereim bain hashmashos zmanim), `getMinchaGedolaGreaterThan30` and `getMinchaGedolaAhavatShalom` fall back to the regular mincha gedola in the same case, and `NOAACalculator` reports events it used to miss when the sun only just reaches them. Calculators now cache sunrise, sunset, noon and midnight (keyed on every input, cleared by the setters). `GeoLocation` gains optional horizon elevations, which this task does not use.
+
 - [ ] **Step 1: Survey.** On a branch, set the version and compile. Confirm the table above against the compiler, and whether desugaring is needed (an `Instant` call on API 24 to 25 fails at run time without it; `emulator-smoke (24)` exercises that). Check whether the Chametz zmanim returning null outside Erev Pesach changes any golden cell or any screen; if it does, stop and ask the maintainer. Write the findings in the PR.
 - [ ] **Step 2:** The decisions above are made (drop the three removed zmanim; keep the old 4.37 and 4.61 times; solar radius off). Check how the saved zman selection and notified-zman upgrade tests (`UT_UpgradeZmanimTypeNames`, `UT_UpgradeNotifiedZmanim`) treat a type that no longer exists, and add a test if they do not already cover it.
 - [ ] **Step 3:** Port `ZmanimCalculator`, `toCalendar` and the `Zman` implementations to the new API with no behavior change: keep the public `Zmanim.Type`/`Zman` surface, keep returning `Calendar`/`Date` to callers, and keep the saved location JSON format.
 - [ ] **Step 4:** Remove the dropped zmanim, add the custom 4.37 and 4.61 degree calculations, and turn the apparent solar radius off, each in its own commit.
 - [ ] **Step 4a: Tell the users who had a removed zman.** Saved selections are stored per zman type as the zman's name (`PrefsBasedZmanCallback` reads `ZMANIM_SELECTION` by `type.displayName`), so the dropped zmanim are recognized by name: "Geonim 3.65 deg", "Geonim 5.88 deg" and "Baal HaTanya Lechumra 30 Minutes". In `AppUpgrader.handle` (`Zmanim/src/main/java/com/gindin/zmanim/android/AppUpgrader.java`), when `lastKnownCodeVersion` is below the version code of the release that ships this task, check the selection prefs (and the alert/notified-zman settings, which `UT_UpgradeNotifiedZmanim` covers) for any of those names; if one is found, add a note id to the `showUpgradeNotes` call naming the zman(s) removed and what the app shows instead. Users who never selected them see nothing. First find out what the app shows today for a saved name it no longer recognizes, make that fallback explicit and tested (the same setting the type would have by default), and word the message to match. Add the string to `values/strings.xml` the way `upgrade_from_279` is, with English placeholders in any translated `values-*` folders like the other upgrade notes. Tests: a Robolectric test of `AppUpgrader` with a saved removed name (message shown, setting falls back), with a kept name (no message), and with a fresh install (no message).
 - [ ] **Step 5: Golden table.** `UT_ZmanimGoldenTable` must pass with every kept column unchanged to the millisecond. A cell that differs is explained in the PR; the table is never re-recorded to make it pass. Removing zmanim removes only their columns (the header test will say exactly which); note it in `golden/README.md`. No other cell may change.
-- [ ] **Step 6: Verify** the Phase gates (the golden table may lose only the columns of the removed zmanim; nothing else may change), plus `emulator-smoke (24)` for the `java.time` question. Close Dependabot PR #40 as superseded. Commit: `jj commit -m "Upgrade KosherJava to 3.0.0"` (port, removals, and each decision in separate commits).
+- [ ] **Step 5a: Bump to 3.1.0 in its own commit.** If Maven Central still does not have it, stop and ask the maintainer whether to wait or to land the port on 3.0.0 and bump in a follow-up PR. After the bump, regenerate only the cells that differ and review them: every change must be in a polar row (Tromso) and match a 3.1.0 change listed above, and a zman that loses its time must show as "no time" on the screen rather than crash. Anything else stops the task. Record the changed cells in the PR and in `golden/README.md`.
+- [ ] **Step 6: Verify** the Phase gates (the golden table may change only as Steps 5 and 5a allow), plus `emulator-smoke (24)` for the `java.time` question. Dependabot PR #40 is already closed; close any PR it opens for 3.1.0 as superseded. Commit: `jj commit -m "Upgrade KosherJava to 3.1.0"` (port, removals, each decision, and the bump in separate commits).
 
 ---
 
@@ -167,7 +172,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 | Task | Depends on | Size |
 |---|---|---|
 | 0 Decisions | none | maintainer time |
-| 0A KosherJava 3.0.0 | none | 4 to 6 days, plus the Step 2 decisions |
+| 0A KosherJava 3.1.0 | none | 4 to 6 days, plus the Step 2 decisions |
 | 0B New library defaults | 0A | 1 to 2 days |
 | 1 Pin behavior | 0A, 0B (ordering only) | 1 to 2 days |
 | 2 Domain interfaces | 0, 1 | 1 to 2 days |
