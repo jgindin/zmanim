@@ -59,7 +59,9 @@ class AppUpgrader {
           privacyPolicy = R.string.added_privacy_policy;
         }
 
-        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy );
+        int droppedZmanim = zmanimSelectionPrefsManager.removeDroppedZmanim();
+
+        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy, droppedZmanim );
 
       }
       catch ( Throwable e ) {
