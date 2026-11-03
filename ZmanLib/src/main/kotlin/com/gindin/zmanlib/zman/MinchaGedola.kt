@@ -118,22 +118,6 @@ internal class MinchaGedola(zmanimCalculator: ZmanimCalculator) :
     zmanim.add(
       object :
         Zman(
-          "Baal HaTanya Lechumra 30 Minutes",
-          "Based on Baal HaTanya's sunrise and sunset calculations, except in the winter when 1/2 shaah zmanit is less than 30 minutes.",
-          Zmanim.Type.MinchaGedola,
-        ) {
-        override fun calculate(): Calendar? {
-          return toCalendar(
-            zmanimCalculator,
-            zmanimCalculator.getMinchaGedolaBaalHatanyaGreaterThan30(),
-          )
-        }
-      }
-    )
-
-    zmanim.add(
-      object :
-        Zman(
           "Rabbi Yaakov Moshe Hillel",
           "Calculated as half a shaah zmanit after chatzot with shaot zmaniyot calculated based on a day starting 72 minutes befoe sunrise" +
             "and ending 13.5 minutes after sunset",

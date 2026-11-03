@@ -87,7 +87,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:28:02\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:13:35\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:22:24\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:25:09\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:27:02\n" +
         "       Mincha Ketana - GR'A                          : 16:06:16\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:59:12\n" +
@@ -144,11 +143,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 19:59:07\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:50:42\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 19:03:07\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 18:40:03\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 18:44:21\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 18:45:47\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:46:55\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 18:53:21\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:53:46\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 19:00:30\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 19:08:55\n" +
@@ -171,11 +168,9 @@ public class UT_YomTovCandleLighting
         "     Candle Lighting - 96 Minutes                    : 19:59:07\n" +
         "     Candle Lighting - GR'A 96 Minutes Zmaniyot      : 19:50:42\n" +
         "     Candle Lighting - Chacham Yosef Harari-Raful    : 19:03:07\n" +
-        "     Candle Lighting - Geonim 3.65 deg               : 18:40:03\n" +
         "     Candle Lighting - Geonim 4.37 deg               : 18:44:21\n" +
         "     Candle Lighting - Geonim 4.61 deg               : 18:45:47\n" +
         "     Candle Lighting - Geonim 4.8 deg                : 18:46:55\n" +
-        "     Candle Lighting - Geonim 5.88 deg               : 18:53:21\n" +
         "     Candle Lighting - Geonim 5.95 deg               : 18:53:46\n" +
         "     Candle Lighting - Geonim 7.083 deg              : 19:00:30\n" +
         "     Candle Lighting - Geonim 8.5 deg                : 19:08:55\n" +
@@ -276,7 +271,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:51:44\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:32:21\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:46:07\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:46:07\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:50:04\n" +
         "       Mincha Ketana - GR'A                          : 16:56:55\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 17:52:11\n" +
@@ -340,11 +334,9 @@ public class UT_YomTovCandleLighting
         "           Fast Ends - 96 Minutes                    : 21:12:15\n" +
         "           Fast Ends - GR'A 96 Minutes Zmaniyot      : 21:18:13\n" +
         "           Fast Ends - Chacham Yosef Harari-Raful    : 20:16:15\n" +
-        "           Fast Ends - Geonim 3.65 deg               : 19:53:09\n" +
         "           Fast Ends - Geonim 4.37 deg               : 19:57:29\n" +
         "           Fast Ends - Geonim 4.61 deg               : 19:58:56\n" +
         "           Fast Ends - Geonim 4.8 deg                : 20:00:05\n" +
-        "           Fast Ends - Geonim 5.88 deg               : 20:06:38\n" +
         "           Fast Ends - Geonim 5.95 deg               : 20:07:04\n" +
         "           Fast Ends - Geonim 7.083 deg              : 20:13:59\n" +
         "           Fast Ends - Geonim 8.5 deg                : 20:22:41\n" +
@@ -368,11 +360,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 21:12:15\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:18:13\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:16:15\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 19:53:09\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 19:57:29\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 19:58:56\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:00:05\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 20:06:38\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:07:04\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:13:59\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:22:41\n" +
@@ -456,7 +446,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:51:35\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:32:02\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:45:57\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:45:57\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:49:55\n" +
         "       Mincha Ketana - GR'A                          : 16:57:37\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 17:53:04\n" +
@@ -513,11 +502,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 21:13:40\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:20:05\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:17:40\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 19:54:35\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 19:58:56\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 20:00:24\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:01:33\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 20:08:07\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:08:32\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:15:28\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:24:11\n" +
@@ -540,11 +527,9 @@ public class UT_YomTovCandleLighting
         "     Candle Lighting - 96 Minutes                    : 21:13:40\n" +
         "     Candle Lighting - GR'A 96 Minutes Zmaniyot      : 21:20:05\n" +
         "     Candle Lighting - Chacham Yosef Harari-Raful    : 20:17:40\n" +
-        "     Candle Lighting - Geonim 3.65 deg               : 19:54:35\n" +
         "     Candle Lighting - Geonim 4.37 deg               : 19:58:56\n" +
         "     Candle Lighting - Geonim 4.61 deg               : 20:00:24\n" +
         "     Candle Lighting - Geonim 4.8 deg                : 20:01:33\n" +
-        "     Candle Lighting - Geonim 5.88 deg               : 20:08:07\n" +
         "     Candle Lighting - Geonim 5.95 deg               : 20:08:32\n" +
         "     Candle Lighting - Geonim 7.083 deg              : 20:15:28\n" +
         "     Candle Lighting - Geonim 8.5 deg                : 20:24:11\n" +
@@ -627,7 +612,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:50:05\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:28:52\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:44:28\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:44:28\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:48:35\n" +
         "       Mincha Ketana - GR'A                          : 17:05:13\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 18:03:03\n" +
@@ -684,11 +668,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 21:28:50\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 21:40:06\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 20:32:50\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 20:10:09\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 20:14:38\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 20:16:07\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 20:17:19\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 20:24:05\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 20:24:31\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 20:31:41\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:40:45\n" +
@@ -711,11 +693,9 @@ public class UT_YomTovCandleLighting
         "            Havdalah - 96 Minutes                    : 21:28:50\n" +
         "            Havdalah - GR'A 96 Minutes Zmaniyot      : 21:40:06\n" +
         "            Havdalah - Chacham Yosef Harari-Raful    : 20:32:50\n" +
-        "            Havdalah - Geonim 3.65 deg               : 20:10:09\n" +
         "            Havdalah - Geonim 4.37 deg               : 20:14:38\n" +
         "            Havdalah - Geonim 4.61 deg               : 20:16:07\n" +
         "            Havdalah - Geonim 4.8 deg                : 20:17:19\n" +
-        "            Havdalah - Geonim 5.88 deg               : 20:24:05\n" +
         "            Havdalah - Geonim 5.95 deg               : 20:24:31\n" +
         "            Havdalah - Geonim 7.083 deg              : 20:31:41\n" +
         "            Havdalah - Geonim 8.5 deg                : 20:40:45\n" +
@@ -800,7 +780,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:28:13\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:13:42\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:22:36\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:25:17\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:27:14\n" +
         "       Mincha Ketana - GR'A                          : 16:06:53\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:59:49\n" +
@@ -864,11 +843,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 20:00:06\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 19:51:55\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 19:04:06\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 18:41:01\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 18:45:19\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 18:46:45\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 18:47:53\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 18:54:18\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 18:54:43\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 19:01:27\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 19:09:52\n" +
@@ -951,7 +928,6 @@ public class UT_YomTovCandleLighting
         "       Mincha Gedola - MG'A 72 Minutes               : 13:35:46\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:18:34\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:30:08\n" +
-        "       Mincha Gedola - Baal HaTanya Lechumra 30 Minutes: 13:30:29\n" +
         "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:34:53\n" +
         "       Mincha Ketana - GR'A                          : 16:29:01\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 17:22:16\n" +
@@ -1015,11 +991,9 @@ public class UT_YomTovCandleLighting
         "    Tzait Hacochavim - 96 Minutes                    : 20:34:24\n" +
         "    Tzait Hacochavim - GR'A 96 Minutes Zmaniyot      : 20:34:00\n" +
         "    Tzait Hacochavim - Chacham Yosef Harari-Raful    : 19:38:24\n" +
-        "    Tzait Hacochavim - Geonim 3.65 deg               : 19:15:04\n" +
         "    Tzait Hacochavim - Geonim 4.37 deg               : 19:19:20\n" +
         "    Tzait Hacochavim - Geonim 4.61 deg               : 19:20:45\n" +
         "    Tzait Hacochavim - Geonim 4.8 deg                : 19:21:53\n" +
-        "    Tzait Hacochavim - Geonim 5.88 deg               : 19:28:17\n" +
         "    Tzait Hacochavim - Geonim 5.95 deg               : 19:28:42\n" +
         "    Tzait Hacochavim - Geonim 7.083 deg              : 19:35:26\n" +
         "    Tzait Hacochavim - Geonim 8.5 deg                : 19:43:52\n" +
