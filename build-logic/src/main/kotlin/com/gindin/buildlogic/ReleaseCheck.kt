@@ -7,6 +7,7 @@ package com.gindin.buildlogic
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.HostTestBuilder
+import com.android.build.gradle.internal.tasks.L8DexDesugarLibTask
 import org.gradle.api.Project
 
 /** The build type that runs the on-device tests against R8-minified code. */
@@ -39,6 +40,13 @@ private const val TEST_BUILD_TYPE_PROPERTY = "zmanim.testBuildType"
  *
  * The JVM unit tests are not built for this build type: they never see R8's output, so they would
  * only repeat what the debug and release unit tests already run.
+ *
+ * The desugared java.time library (core library desugaring) is neither shrunk nor renamed in this
+ * build type. Both the app and the test APK (androidx.test uses java.time) carry their own copy of
+ * it, and AGP shrinks and renames each copy on its own, so the same `j$` name can mean different
+ * classes in the two APKs. They load into one class loader with the test APK first, and the app
+ * then crashes with a VerifyError. Kept whole and unrenamed, the two copies are identical, as they
+ * are in debug builds. The release build still shrinks its copy; only that step goes untested.
  */
 fun Project.zmanimReleaseCheckBuildType() {
 
@@ -58,5 +66,13 @@ fun Project.zmanimReleaseCheckBuildType() {
     androidComponents.selector().withBuildType(RELEASE_CHECK_BUILD_TYPE)
   ) { variant ->
     variant.hostTests[HostTestBuilder.UNIT_TEST_TYPE]?.enable = false
+  }
+
+  // AGP has no public setting for this, so it reaches the (internal) L8 task directly. Its names
+  // are l8DexDesugarLib<Variant> and l8DexDesugarLib<Variant>AndroidTest.
+  tasks.withType(L8DexDesugarLibTask::class.java).configureEach {
+    if (name.contains(RELEASE_CHECK_BUILD_TYPE.replaceFirstChar { it.uppercase() })) {
+      keepRulesConfigurations.addAll("-dontshrink", "-dontobfuscate", "-dontoptimize")
+    }
   }
 }
