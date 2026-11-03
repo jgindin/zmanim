@@ -55,3 +55,11 @@ current code.
   - Rabbi Yaakov Moshe Hillel's mincha gedola gained or lost a time in 4 cells in Tromso.
 
   The port keeps a fixed solar radius and the old Earth radius, so sea-level sunrise and sunset did not move.
+- The calculator then took the library's default radii (2026-11-02): the sun's apparent radius for the date
+  instead of a fixed one, and an Earth radius of 6371.0088 km instead of 6356.9 km. Sunrise and sunset moved by up
+  to about 2.5 seconds either way (the sun's apparent size changes over the year), and Denver's
+  elevation-adjusted sunrise by about half a second more. The zmanim based on sunrise and sunset moved with them,
+  by up to about 3.3 seconds for the zmanim calculated as a fraction of the day. Zmanim based on the sun's depth
+  below the horizon did not move, and no zman gained or lost a time. The table was regenerated from the new code.
+
+The table now comes from the library's default radii, and was last regenerated on 2026-11-02.

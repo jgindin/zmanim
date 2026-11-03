@@ -7,7 +7,6 @@ package com.gindin.zmanlib.zman
 import com.gindin.zmanlib.calendar.HebrewDate
 import com.kosherjava.zmanim.ComprehensiveZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
-import com.kosherjava.zmanim.util.NOAACalculator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -70,9 +69,6 @@ private const val TZAIS_GEONIM_4_POINT_61_DEGREES = 4.61
 /** Minutes in an hour. */
 private const val MINUTES_PER_HOUR = 60
 
-/** The Earth radius used for elevation adjustments, in kilometers. */
-private const val EARTH_RADIUS_KM = 6356.9
-
 /** Hours from the fixed local chatzot of the day to the middle of the night. */
 private const val HOURS_FROM_CHATZOT_TO_NIGHT_CHATZOT = 12L
 
@@ -86,15 +82,6 @@ public class ZmanimCalculator(
     // java.util.Calendar months start at 0, LocalDate's at 1.
     setLocalDate(
       LocalDate.of(date.gregorianYear, date.gregorianMonth + 1, date.gregorianDayOfMonth)
-    )
-
-    // The library's defaults are the sun's apparent radius for the date and the mean radius of the
-    // Earth. A fixed solar radius and this Earth radius keep the times this app has always shown.
-    setAstronomicalCalculator(
-      NOAACalculator().apply {
-        setUseApparentSolarRadius(false)
-        setEarthRadius(EARTH_RADIUS_KM)
-      }
     )
   }
 
