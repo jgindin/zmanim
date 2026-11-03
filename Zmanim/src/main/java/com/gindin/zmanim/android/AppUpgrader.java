@@ -60,8 +60,10 @@ class AppUpgrader {
         }
 
         int droppedZmanim = zmanimSelectionPrefsManager.removeDroppedZmanim();
+        int renamedZmanim = zmanimSelectionPrefsManager.renameZmanim();
 
-        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy, droppedZmanim );
+        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy, droppedZmanim,
+          renamedZmanim );
 
       }
       catch ( Throwable e ) {
