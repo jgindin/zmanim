@@ -35,6 +35,7 @@
   <string name="help_header">Zmanim Help</string>
 
   <string name="dropped_zmanim">The zmanim Geonim 3.65 deg, Geonim 5.88 deg and Baal HaTanya Lechumra 30 Minutes are no longer available. You had selected at least one of them, so the default zman is shown in its place. You can choose another one in the settings.</string>
+  <string name="renamed_zmanim">The zmanim Geonim 4.37 deg and Geonim 4.61 deg are now Geonim 4.42 deg and Geonim 4.66 deg, which the calculation library uses in their place because the old times were too early. Your selection was kept under the new name; the time is usually less than half a minute later.</string>
   <string name="added_privacy_policy">Added a new privacy policy. (See the application menu.)</string>
   <string name="privacy">Privacy Policy</string>
 

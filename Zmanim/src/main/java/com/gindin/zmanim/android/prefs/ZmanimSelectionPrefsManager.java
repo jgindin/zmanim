@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.StringRes;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,13 @@ public class ZmanimSelectionPrefsManager
     "Geonim 5.88 deg",
     "Baal HaTanya Lechumra 30 Minutes"
   ) );
+
+  /** Zmanim that the app offers under a new name, because KosherJava 3 replaced them: old name to new name. */
+  private static final Map<String,String>                   RENAMED_ZMANIM = new HashMap<>();
+  static {
+    RENAMED_ZMANIM.put( "Geonim 4.37 deg", "Geonim 4.42 deg" );
+    RENAMED_ZMANIM.put( "Geonim 4.61 deg", "Geonim 4.66 deg" );
+  }
 
 
   public ZmanimSelectionPrefsManager(
@@ -137,6 +145,34 @@ public class ZmanimSelectionPrefsManager
 
     editor.apply();
     return R.string.dropped_zmanim;
+  }
+
+
+  /**
+   * Moves every selection of a zman the app now offers under a new name to that name, so that the user keeps it.
+   *
+   * @return the note telling the user about it, or -1 if the user had not selected any of those zmanim.
+   */
+  public @StringRes int renameZmanim() {
+
+    SharedPreferences.Editor editor = null;
+    for ( Map.Entry<String, ?> entry : prefs.getAll().entrySet() ) {
+      String newName = RENAMED_ZMANIM.get( entry.getValue() );
+      if ( newName != null ) {
+        if ( editor == null ) {
+          editor = prefs.edit();
+        }
+
+        editor.putString( entry.getKey(), newName );
+      }
+    }
+
+    if ( editor == null ) {
+      return -1;
+    }
+
+    editor.apply();
+    return R.string.renamed_zmanim;
   }
 
 
