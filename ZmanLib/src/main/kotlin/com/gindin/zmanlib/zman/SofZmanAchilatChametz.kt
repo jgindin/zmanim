@@ -58,7 +58,7 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
           Zmanim.Type.SofZmanAchilatChametz,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilahAteretTorah())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaAteretTorah())
         }
       }
     )
@@ -71,7 +71,7 @@ public class SofZmanAchilatChametz internal constructor(zmanimCalculator: Zmanim
           Zmanim.Type.SofZmanAchilatChametz,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaMGA())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanTfilaMGA72Minutes())
         }
       }
     )

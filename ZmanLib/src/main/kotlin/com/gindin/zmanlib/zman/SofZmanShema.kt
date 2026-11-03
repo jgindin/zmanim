@@ -58,7 +58,7 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) :
         override fun calculate(): Calendar? {
           return toCalendar(
             zmanimCalculator,
-            zmanimCalculator.getSofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees(),
+            zmanimCalculator.getSofZmanShmaAlos16Point1DegreesToTzaisGeonim7Point083Degrees(),
           )
         }
       }
@@ -99,7 +99,7 @@ internal class SofZmanShema(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.SofZmanShema,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getSofZmanShmaMGA72Minutes())
         }
       }
     )

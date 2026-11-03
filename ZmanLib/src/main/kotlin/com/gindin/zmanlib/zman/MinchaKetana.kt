@@ -31,7 +31,7 @@ internal class MinchaKetana(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaKetana())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getMinchaKetanaGRA())
         }
       }
     )

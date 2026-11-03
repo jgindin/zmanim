@@ -52,6 +52,9 @@ android {
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+
+    // KosherJava uses java.time, which Android only has from API 26.
+    isCoreLibraryDesugaringEnabled = true
   }
 
   testOptions {
@@ -163,6 +166,8 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
 configure<JavaPluginExtension> { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
 dependencies {
+  add("coreLibraryDesugaring", libs.findLibrary("desugar-jdk-libs").get())
+
   // Local jars dropped into each app's libs/ directory.
   implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 

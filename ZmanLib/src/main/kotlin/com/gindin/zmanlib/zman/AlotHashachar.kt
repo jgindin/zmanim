@@ -30,7 +30,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.Alot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos120())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos120Minutes())
         }
       }
     )
@@ -123,7 +123,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.Alot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos60())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos60Minutes())
         }
       }
     )
@@ -137,7 +137,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos72())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos72Minutes())
         }
       }
     )
@@ -163,7 +163,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.Alot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos90())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos90Minutes())
         }
       }
     )
@@ -189,7 +189,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.Alot,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos96())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getAlos96Minutes())
         }
       }
     )

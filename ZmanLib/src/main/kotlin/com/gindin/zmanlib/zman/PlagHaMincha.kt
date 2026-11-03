@@ -31,7 +31,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           false,
         ) {
         override fun calculate(): Calendar? {
-          return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha())
+          return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHaminchaGRA())
         }
       }
     )
@@ -253,7 +253,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
         override fun calculate(): Calendar? {
           return toCalendar(
             zmanimCalculator,
-            zmanimCalculator.getPlagAlos16Point1ToTzaisGeonim7Point083Degrees(),
+            zmanimCalculator.getPlagAlos16Point1DegreesToTzaisGeonim7Point083Degrees(),
           )
         }
       }
