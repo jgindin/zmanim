@@ -43,3 +43,15 @@ current code.
 
 - The columns of "Geonim 3.65 deg", "Geonim 5.88 deg" and "Baal HaTanya Lechumra 30 Minutes" were removed when
   those zmanim were dropped from the app, because KosherJava 3 no longer offers them. No other cell changed.
+- The move to KosherJava 3.0.0 changed these cells, and the table was regenerated from the new code. The maintainer
+  accepted each change (2026-11-02):
+  - Chatzot moved by up to about 15 seconds because the library's solar noon calculation changed. This reaches the
+    zmanim based on it: night chatzot, 3 and 2 hours before chatzot, mincha gedola 30 minutes, lechumra 30 minutes
+    and Rabbi Yaakov Moshe Hillel.
+  - Alot 60 minutes and the zmanim based on it, and the Rav Moshe Feinstein half-day zmanim, moved by up to about 6
+    minutes in Denver with elevation off, because they now honor the elevation setting.
+  - The zmanim calculated as a fraction of the day moved by up to 12 milliseconds, from rounding.
+  - The Chametz zmanim have no time except on Erev Pesach, which is the only day the app lists them.
+  - Rabbi Yaakov Moshe Hillel's mincha gedola gained or lost a time in 4 cells in Tromso.
+
+  The port keeps a fixed solar radius and the old Earth radius, so sea-level sunrise and sunset did not move.

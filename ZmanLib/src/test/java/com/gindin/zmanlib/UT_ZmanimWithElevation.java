@@ -54,7 +54,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  6:29:43\n" +
         "              Hanetz - Sunrise                       :  7:33:46\n" +
         "              Hanetz - Sunrise (with elevation)      :  7:32:14\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:54:03\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:57\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:05:33\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:14:35\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:34:42\n" +
@@ -75,7 +75,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:35:39\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:44:39\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:20:39\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:54:03\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:57\n" +
         "     Sof Zman Tefila - GR'A                          : 11:06:28\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:36:57\n" +
         "     Sof Zman Tefila - MG'A                          : 10:42:28\n" +
@@ -89,16 +89,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:37:54\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 11:05:27\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 11:16:47\n" +
-        "             Chatzot - Mid-Day                       : 12:54:03\n" +
+        "             Chatzot - Mid-Day                       : 12:53:57\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:20:22\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:27:46\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:24:03\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 13:24:03\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:23:57\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 13:23:57\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:26:22\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:12:35\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:20:37\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:25:14\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:25:09\n" +
         "       Mincha Ketana - GR'A                          : 16:01:03\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:53:19\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 16:43:03\n" +
@@ -162,7 +162,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:59:34\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 19:03:25\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:58:25\n" +
-        "            Midnight - Mid-night                     :  0:53:58\n" +
+        "            Midnight - Mid-night                     :  0:53:52\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 19 );
@@ -195,7 +195,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  6:14:18\n" +
         "              Hanetz - Sunrise                       :  7:11:22\n" +
         "              Hanetz - Sunrise (with elevation)      :  7:10:04\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:40:43\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:40:38\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:55:07\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:03:11\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:15:40\n" +
@@ -216,7 +216,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:17:53\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:26:53\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:02:53\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:40:43\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:40:38\n" +
         "     Sof Zman Tefila - GR'A                          : 10:50:15\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:19:33\n" +
         "     Sof Zman Tefila - MG'A                          : 10:26:15\n" +
@@ -230,16 +230,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:20:53\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 10:49:20\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 11:00:30\n" +
-        "             Chatzot - Mid-Day                       : 12:40:43\n" +
+        "             Chatzot - Mid-Day                       : 12:40:38\n" +
         "             Chatzot - Fixed Local Mid-Day           : 12:55:42\n" +
         "       Mincha Gedola - GR'A                          : 13:07:51\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:14:29\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:10:43\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 13:10:43\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:10:38\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 13:10:38\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:13:51\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 12:59:15\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:08:05\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:12:10\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:12:05\n" +
         "       Mincha Ketana - GR'A                          : 15:53:00\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:39:39\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 16:35:00\n" +
@@ -303,7 +303,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:50:23\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:59:18\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:54:18\n" +
-        "            Midnight - Mid-night                     :  0:40:38\n" +
+        "            Midnight - Mid-night                     :  0:40:32\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:55:42\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 19 );
@@ -336,7 +336,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  5:54:16\n" +
         "              Hanetz - Sunrise                       :  6:44:59\n" +
         "              Hanetz - Sunrise (with elevation)      :  6:40:43\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:24:08\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:24:03\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:41:10\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:47:33\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:50:48\n" +
@@ -357,7 +357,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  8:54:53\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:03:53\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day:  9:39:53\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:24:08\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:24:03\n" +
         "     Sof Zman Tefila - GR'A                          : 10:29:27\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:57:02\n" +
         "     Sof Zman Tefila - MG'A                          : 10:05:27\n" +
@@ -371,16 +371,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      :  9:58:57\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 10:29:41\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 10:39:37\n" +
-        "             Chatzot - Mid-Day                       : 12:24:08\n" +
+        "             Chatzot - Mid-Day                       : 12:24:03\n" +
         "             Chatzot - Fixed Local Mid-Day           : 12:39:04\n" +
         "       Mincha Gedola - GR'A                          : 12:52:25\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 12:58:04\n" +
-        "       Mincha Gedola - 30 Minutes                    : 12:54:08\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 12:54:08\n" +
+        "       Mincha Gedola - 30 Minutes                    : 12:54:03\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 12:54:03\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 12:58:25\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 12:42:38\n" +
         "       Mincha Gedola - Baal HaTanya                  : 12:52:22\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 12:55:58\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 12:55:52\n" +
         "       Mincha Ketana - GR'A                          : 15:43:59\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:23:41\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 16:25:59\n" +
@@ -444,7 +444,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:39:11\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:52:41\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:47:41\n" +
-        "            Midnight - Mid-night                     :  0:24:03\n" +
+        "            Midnight - Mid-night                     :  0:23:57\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:39:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2014, Calendar.OCTOBER, 19 );
@@ -481,7 +481,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  6:36:35\n" +
         "              Hanetz - Sunrise                       :  7:41:08\n" +
         "              Hanetz - Sunrise (with elevation)      :  7:39:35\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:15\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:11\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:08:28\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:17:36\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:39:13\n" +
@@ -502,7 +502,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:39:19\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:48:19\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:24:19\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:15\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:11\n" +
         "     Sof Zman Tefila - GR'A                          : 11:08:25\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:39:59\n" +
         "     Sof Zman Tefila - MG'A                          : 10:44:25\n" +
@@ -516,16 +516,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:40:35\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 11:07:24\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 11:19:14\n" +
-        "             Chatzot - Mid-Day                       : 12:53:15\n" +
+        "             Chatzot - Mid-Day                       : 12:53:11\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:18:57\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:26:24\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:23:15\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 13:23:15\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:23:11\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 13:23:11\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:24:57\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:11:54\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:19:12\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:23:48\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:23:44\n" +
         "       Mincha Ketana - GR'A                          : 15:55:35\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:48:10\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 16:37:35\n" +
@@ -596,7 +596,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 18:51:08\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 18:54:33\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 18:49:33\n" +
-        "            Midnight - Mid-night                     :  0:53:12\n" +
+        "            Midnight - Mid-night                     :  0:53:08\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
   }
@@ -632,7 +632,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  6:37:57\n" +
         "              Hanetz - Sunrise                       :  7:42:37\n" +
         "              Hanetz - Sunrise (with elevation)      :  7:41:04\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:08\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:53:04\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  9:09:04\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:18:13\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:40:09\n" +
@@ -653,7 +653,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:40:04\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:49:04\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:25:04\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:08\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:53:04\n" +
         "     Sof Zman Tefila - GR'A                          : 11:08:50\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:40:37\n" +
         "     Sof Zman Tefila - MG'A                          : 10:44:50\n" +
@@ -667,16 +667,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:41:08\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 11:07:49\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 11:19:44\n" +
-        "             Chatzot - Mid-Day                       : 12:53:08\n" +
+        "             Chatzot - Mid-Day                       : 12:53:04\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:18:42\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:26:10\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:23:08\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 13:23:08\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:23:04\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 13:23:04\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:24:42\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:11:48\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:18:57\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:23:32\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:23:29\n" +
         "       Mincha Ketana - GR'A                          : 15:54:32\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 16:47:11\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 16:36:32\n" +
@@ -765,7 +765,7 @@ public class UT_ZmanimWithElevation
         "            Havdalah - Geonim 8.5 deg                : 18:49:30\n" +
         "            Havdalah - Rabbi Moshe Feinstein         : 18:52:50\n" +
         "            Havdalah - Seattle Sephardic             : 18:47:50\n" +
-        "            Midnight - Mid-night                     :  0:53:04\n" +
+        "            Midnight - Mid-night                     :  0:53:01\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
   }
@@ -801,7 +801,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  5:36:22\n" +
         "              Hanetz - Sunrise                       :  6:42:01\n" +
         "              Hanetz - Sunrise (with elevation)      :  6:40:31\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:12:10\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:12:01\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:45:52\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:55:02\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:07:42\n" +
@@ -822,7 +822,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:09:47\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:18:47\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day:  9:54:47\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:12:10\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:12:01\n" +
         "     Sof Zman Tefila - GR'A                          : 11:01:50\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:22:54\n" +
         "     Sof Zman Tefila - MG'A                          : 10:37:50\n" +
@@ -836,16 +836,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:26:59\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 11:00:50\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 10:59:33\n" +
-        "             Chatzot - Mid-Day                       : 13:12:10\n" +
+        "             Chatzot - Mid-Day                       : 13:12:01\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:45:09\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:53:15\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:42:10\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:42:01\n" +
         "       Mincha Gedola - Lechumra 30 Minutes           : 13:45:09\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:51:09\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:30:53\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:45:24\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:49:25\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:49:16\n" +
         "       Mincha Ketana - GR'A                          : 17:01:08\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 17:56:25\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 17:43:08\n" +
@@ -866,7 +866,7 @@ public class UT_ZmanimWithElevation
         "       Plag HaMincha - MG'A 90 Minutes               : 19:34:03\n" +
         "       Plag HaMincha - MG'A 90 Minutes Zmaniyot      : 19:40:22\n" +
         "       Plag HaMincha - MG'A 96 Minutes               : 19:38:48\n" +
-        "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 19:45:32\n" +
+        "       Plag HaMincha - MG'A 96 Minutes Zmaniyot      : 19:45:33\n" +
         "       Plag HaMincha - Chacham Yosef Harari-Raful    : 18:50:28\n" +
         "       Plag HaMincha - R. Moshe Feinstein's Rabbenu Tam: 18:53:41\n" +
         "       Plag HaMincha - 16.1 deg - 7.083 deg          : 18:45:47\n" +
@@ -933,7 +933,7 @@ public class UT_ZmanimWithElevation
         "     Candle Lighting - Geonim 7.083 deg              : 20:21:04\n" +
         "     Candle Lighting - Geonim 8.5 deg                : 20:29:53\n" +
         "     Candle Lighting - Rabbi Moshe Feinstein         : 20:32:56\n" +
-        "            Midnight - Mid-night                     :  1:12:01\n" +
+        "            Midnight - Mid-night                     :  1:11:53\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
   }
@@ -969,7 +969,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  5:14:03\n" +
         "              Hanetz - Sunrise                       :  6:22:03\n" +
         "              Hanetz - Sunrise (with elevation)      :  6:20:31\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:09:23\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:09:16\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:31:21\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:40:46\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:53:45\n" +
@@ -990,7 +990,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  8:59:47\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:08:47\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day:  9:44:47\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:09:23\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:09:16\n" +
         "     Sof Zman Tefila - GR'A                          : 10:53:20\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:12:06\n" +
         "     Sof Zman Tefila - MG'A                          : 10:29:20\n" +
@@ -1004,7 +1004,7 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:16:57\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 10:52:19\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 10:52:53\n" +
-        "     Achilat Chametz - 2 Hours before Chatzot        : 11:09:23\n" +
+        "     Achilat Chametz - 2 Hours before Chatzot        : 11:09:16\n" +
         "     Achilat Chametz - GR'A                          : 10:53:20\n" +
         "     Achilat Chametz - Chacham Yosef Harari-Raful    : 10:12:06\n" +
         "     Achilat Chametz - MG'A                          : 10:29:20\n" +
@@ -1021,16 +1021,16 @@ public class UT_ZmanimWithElevation
         "        Biur Chametz - MG'A 72 Minutes               : 11:49:32\n" +
         "        Biur Chametz - MG'A 16.1 deg                 : 11:45:22\n" +
         "        Biur Chametz - Baal HaTanya                  : 12:01:02\n" +
-        "             Chatzot - Mid-Day                       : 13:09:23\n" +
+        "             Chatzot - Mid-Day                       : 13:09:16\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:43:50\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:52:21\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:39:23\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:39:16\n" +
         "       Mincha Gedola - Lechumra 30 Minutes           : 13:43:50\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:49:50\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:28:00\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:44:06\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:48:16\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:48:09\n" +
         "       Mincha Ketana - GR'A                          : 17:08:27\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 18:06:17\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 17:50:27\n" +
@@ -1127,7 +1127,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:45:51\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:47:25\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:42:25\n" +
-        "            Midnight - Mid-night                     :  1:09:16\n" +
+        "            Midnight - Mid-night                     :  1:09:09\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
   }
@@ -1167,7 +1167,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  5:52:32\n" +
         "              Hanetz - Sunrise                       :  6:56:59\n" +
         "              Hanetz - Sunrise (with elevation)      :  6:55:29\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:14:23\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        : 10:14:14\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:56:07\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:05:08\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:18:12\n" +
@@ -1188,9 +1188,9 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:17:17\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:26:17\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:02:17\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:14:23\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 11:14:14\n" +
         "     Sof Zman Tefila - GR'A                          : 11:08:17\n" +
-        "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:31:03\n" +
+        "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:31:04\n" +
         "     Sof Zman Tefila - MG'A                          : 10:44:17\n" +
         "     Sof Zman Tefila - MG'A 120 Minutes              : 10:28:17\n" +
         "     Sof Zman Tefila - MG'A 16.1 deg                 : 10:37:45\n" +
@@ -1202,9 +1202,9 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:34:35\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 11:07:18\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 11:04:32\n" +
-        "     Achilat Chametz - 2 Hours before Chatzot        : 11:14:23\n" +
+        "     Achilat Chametz - 2 Hours before Chatzot        : 11:14:14\n" +
         "     Achilat Chametz - GR'A                          : 11:08:17\n" +
-        "     Achilat Chametz - Chacham Yosef Harari-Raful    : 10:31:03\n" +
+        "     Achilat Chametz - Chacham Yosef Harari-Raful    : 10:31:04\n" +
         "     Achilat Chametz - MG'A                          : 10:44:17\n" +
         "     Achilat Chametz - MG'A 120 Minutes              : 10:28:17\n" +
         "     Achilat Chametz - MG'A 16.1 deg                 : 10:37:45\n" +
@@ -1219,16 +1219,16 @@ public class UT_ZmanimWithElevation
         "        Biur Chametz - MG'A 72 Minutes               : 11:59:29\n" +
         "        Biur Chametz - MG'A 16.1 deg                 : 11:56:19\n" +
         "        Biur Chametz - Baal HaTanya                  : 12:10:59\n" +
-        "             Chatzot - Mid-Day                       : 13:14:23\n" +
+        "             Chatzot - Mid-Day                       : 13:14:14\n" +
         "             Chatzot - Fixed Local Mid-Day           : 13:09:04\n" +
         "       Mincha Gedola - GR'A                          : 13:46:17\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 13:54:09\n" +
-        "       Mincha Gedola - 30 Minutes                    : 13:44:23\n" +
+        "       Mincha Gedola - 30 Minutes                    : 13:44:14\n" +
         "       Mincha Gedola - Lechumra 30 Minutes           : 13:46:17\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 13:52:17\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 13:33:11\n" +
         "       Mincha Gedola - Baal HaTanya                  : 13:46:32\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:50:28\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 13:50:19\n" +
         "       Mincha Ketana - GR'A                          : 16:55:52\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 17:49:50\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 17:37:52\n" +
@@ -1318,7 +1318,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 20:18:34\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 20:22:22\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 20:17:22\n" +
-        "            Midnight - Mid-night                     :  1:14:14\n" +
+        "            Midnight - Mid-night                     :  1:14:05\n" +
         "            Midnight - Fixed Local Mid-Night         :  1:09:04\n"
     );
   }
@@ -1350,7 +1350,7 @@ public class UT_ZmanimWithElevation
         "       Talit/Tefilin - 11.5 deg                      :  6:45:26\n" +
         "              Hanetz - Sunrise                       :  7:57:05\n" +
         "              Hanetz - Sunrise (with elevation)      :  7:55:17\n" +
-        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:12:25\n" +
+        "      Sof Zman Shema - 3 Hours before Chatzot        :  9:12:39\n" +
         "      Sof Zman Shema - 16.1 deg to Sunset            :  8:49:58\n" +
         "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  9:00:16\n" +
         "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  9:35:24\n" +
@@ -1371,7 +1371,7 @@ public class UT_ZmanimWithElevation
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  9:17:11\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  9:26:11\n" +
         "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day: 10:02:11\n" +
-        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:12:25\n" +
+        "     Sof Zman Tefila - 2 Hours before Chatzot        : 10:12:39\n" +
         "     Sof Zman Tefila - GR'A                          : 10:46:55\n" +
         "     Sof Zman Tefila - Chacham Yosef Harari-Raful    : 10:25:56\n" +
         "     Sof Zman Tefila - MG'A                          : 10:22:55\n" +
@@ -1385,16 +1385,16 @@ public class UT_ZmanimWithElevation
         "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      : 10:24:02\n" +
         "     Sof Zman Tefila - Baal HaTanya                  : 10:45:45\n" +
         "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day: 10:44:28\n" +
-        "             Chatzot - Mid-Day                       : 12:12:25\n" +
+        "             Chatzot - Mid-Day                       : 12:12:39\n" +
         "             Chatzot - Fixed Local Mid-Day           : 12:09:04\n" +
         "       Mincha Gedola - GR'A                          : 12:34:12\n" +
         "       Mincha Gedola - MG'A 16.1 deg                 : 12:42:26\n" +
-        "       Mincha Gedola - 30 Minutes                    : 12:42:25\n" +
-        "       Mincha Gedola - Lechumra 30 Minutes           : 12:42:25\n" +
+        "       Mincha Gedola - 30 Minutes                    : 12:42:39\n" +
+        "       Mincha Gedola - Lechumra 30 Minutes           : 12:42:39\n" +
         "       Mincha Gedola - MG'A 72 Minutes               : 12:40:12\n" +
         "       Mincha Gedola - Chacham Yosef Harari-Raful    : 12:32:16\n" +
         "       Mincha Gedola - Baal HaTanya                  : 12:34:30\n" +
-        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 12:42:25\n" +
+        "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 12:42:39\n" +
         "       Mincha Ketana - GR'A                          : 14:42:55\n" +
         "       Mincha Ketana - MG'A 16.1 deg                 : 15:40:31\n" +
         "       Mincha Ketana - MG'A 72 Minutes               : 15:24:55\n" +
@@ -1484,7 +1484,7 @@ public class UT_ZmanimWithElevation
         "    Tzait Hacochavim - Geonim 8.5 deg                : 17:20:42\n" +
         "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:18:24\n" +
         "    Tzait Hacochavim - Seattle Sephardic             : 17:13:24\n" +
-        "            Midnight - Mid-night                     :  0:12:39\n" +
+        "            Midnight - Mid-night                     :  0:12:53\n" +
         "            Midnight - Fixed Local Mid-Night         :  0:09:04\n"
     );
   }
@@ -1828,7 +1828,7 @@ public class UT_ZmanimWithElevation
       "       Talit/Tefilin - 11.5 deg                      :  5:23:07\n" +
       "              Hanetz - Sunrise                       :  6:16:55\n" +
       "              Hanetz - Sunrise (with elevation)      :  6:12:20\n" +
-      "      Sof Zman Shema - 3 Hours before Chatzot        :  8:26:14\n" +
+      "      Sof Zman Shema - 3 Hours before Chatzot        :  8:26:23\n" +
       "      Sof Zman Shema - 16.1 deg to Sunset            :  7:55:28\n" +
       "      Sof Zman Shema - 16.1 deg to tzait 7.083 deg   :  8:02:17\n" +
       "      Sof Zman Shema - Chacham Yosef Harari-Raful    :  8:12:13\n" +
@@ -1849,7 +1849,7 @@ public class UT_ZmanimWithElevation
       "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 90 minutes half day:  8:10:42\n" +
       "      Sof Zman Shema -  Rav Moshe Feinstein - MG'A 72 minutes half day:  8:19:42\n" +
       "      Sof Zman Shema -  Rav Moshe Feinstein - GR'A half day:  8:55:42\n" +
-      "     Sof Zman Tefila - 2 Hours before Chatzot        :  9:26:14\n" +
+      "     Sof Zman Tefila - 2 Hours before Chatzot        :  9:26:23\n" +
       "     Sof Zman Tefila - GR'A                          :  9:41:38\n" +
       "     Sof Zman Tefila - Chacham Yosef Harari-Raful    :  9:13:06\n" +
       "     Sof Zman Tefila - MG'A                          :  9:17:38\n" +
@@ -1863,16 +1863,16 @@ public class UT_ZmanimWithElevation
       "     Sof Zman Tefila - MG'A 96 Minutes Zmaniyot      :  9:13:43\n" +
       "     Sof Zman Tefila - Baal HaTanya                  :  9:41:52\n" +
       "     Sof Zman Tefila -  Rav Moshe Feinstein - GR'A half day:  9:50:09\n" +
-      "             Chatzot - Mid-Day                       : 11:26:14\n" +
+      "             Chatzot - Mid-Day                       : 11:26:23\n" +
       "             Chatzot - Fixed Local Mid-Day           : 11:39:04\n" +
       "       Mincha Gedola - GR'A                          : 11:52:26\n" +
       "       Mincha Gedola - MG'A 16.1 deg                 : 11:58:25\n" +
-      "       Mincha Gedola - 30 Minutes                    : 11:56:14\n" +
-      "       Mincha Gedola - Lechumra 30 Minutes           : 11:56:14\n" +
+      "       Mincha Gedola - 30 Minutes                    : 11:56:23\n" +
+      "       Mincha Gedola - Lechumra 30 Minutes           : 11:56:23\n" +
       "       Mincha Gedola - MG'A 72 Minutes               : 11:58:26\n" +
       "       Mincha Gedola - Chacham Yosef Harari-Raful    : 11:45:20\n" +
       "       Mincha Gedola - Baal HaTanya                  : 11:52:23\n" +
-      "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 11:56:14\n" +
+      "       Mincha Gedola - Rabbi Yaakov Moshe Hillel     : 11:56:23\n" +
       "       Mincha Ketana - GR'A                          : 14:29:25\n" +
       "       Mincha Ketana - MG'A 16.1 deg                 : 15:11:17\n" +
       "       Mincha Ketana - MG'A 72 Minutes               : 15:11:25\n" +
@@ -1889,7 +1889,7 @@ public class UT_ZmanimWithElevation
       "       Plag HaMincha - MG'A 26 deg                   : 17:09:24\n" +
       "       Plag HaMincha - MG'A 60 Minutes               : 16:22:19\n" +
       "       Plag HaMincha - MG'A 72 Minutes               : 16:31:49\n" +
-      "       Plag HaMincha - MG'A 72 Minutes Zmaniyot      : 16:24:31\n" +
+      "       Plag HaMincha - MG'A 72 Minutes Zmaniyot      : 16:24:32\n" +
       "       Plag HaMincha - MG'A 90 Minutes               : 16:46:04\n" +
       "       Plag HaMincha - MG'A 90 Minutes Zmaniyot      : 16:36:57\n" +
       "       Plag HaMincha - MG'A 96 Minutes               : 16:50:49\n" +
@@ -1936,7 +1936,7 @@ public class UT_ZmanimWithElevation
       "    Tzait Hacochavim - Geonim 8.5 deg                : 17:14:32\n" +
       "    Tzait Hacochavim - Rabbi Moshe Feinstein         : 17:25:38\n" +
       "    Tzait Hacochavim - Seattle Sephardic             : 17:20:38\n" +
-      "            Midnight - Mid-night                     : 23:26:24\n" +
+      "            Midnight - Mid-night                     : 23:26:33\n" +
       "            Midnight - Fixed Local Mid-Night         : 23:39:04\n";
 
     HebrewDate date = HebrewCalendar.getForDate( 2017, Calendar.NOVEMBER, 26 );
