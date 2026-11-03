@@ -314,7 +314,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point37Degrees())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaitGeonim4Point37Degrees())
           }
         }
       )
@@ -327,7 +327,7 @@ internal open class TzaitHacochavim(
             zmanType,
           ) {
           override fun calculate(): Calendar? {
-            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point61Degrees())
+            return toCalendar(zmanimCalculator, zmanimCalculator.getTzaitGeonim4Point61Degrees())
           }
         }
       )
