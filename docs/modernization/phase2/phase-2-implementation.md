@@ -151,7 +151,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 - [ ] **Step 1:** Replace `DynamicLocationAcquirer`, `StaticLocationAcquirer` and `LatitudeLongitudeLocationAcquirer` internals with calls into `LocationSource` and the production resolver chain. The events and the `LocationError` codes the screens see do not change.
 - [ ] **Step 2:** Replace the resolver chain inside `LocationToAddressConverter` with the new one and stop using the blocking `Geocoder` path. Remove `JsonQueryingResolver` and the other unused resolver classes in a separate commit.
-- [ ] **Step 3: Background location (D6: required).** Keep `ACCESS_BACKGROUND_LOCATION`. Write down each background path that needs the location (the periodic alarm check via `ZmanimReceiver` and `ZmanNotificationScheduler`, the `PendingIntent` receiver) in the PR so the Play Console declaration can be checked against it, and add a test that these paths still obtain a location under an approximate-only grant (fake client).
+- [ ] **Step 3: Background location (D6: required).** Keep `ACCESS_BACKGROUND_LOCATION`. Write down each background path that needs the location (the periodic alarm check via `ZmanimReceiver` and `ZmanNotificationScheduler`, the `PendingIntent` receiver) in the PR so the Play Console declaration can be checked against it, and add a test that these paths still obtain a location under an approximate-only grant (fake client). Keep `ACCESS_FINE_LOCATION` (D7) and list in the PR where precise location is used, so the precise-location declaration can be checked against it too.
 - [ ] **Step 4:** Existing upgrade and snapshot tests pass unchanged; `verifyRoborazziDebug` shows no golden change.
 - [ ] **Step 5: Verify** gates. Commit in small steps.
 
@@ -171,6 +171,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 ### Task 9: Disclosure, docs, and close-out
 
 - [ ] **Step 1 (REQUIRES A HUMAN):** Confirm no disclosure change is needed (no new third party or data collected; the background-location declaration is unchanged). If Task 7 turned out to change what is collected, update the privacy policy and Data Safety form before release.
+- [ ] **Step 1a (REQUIRES A HUMAN, due 2027-01-27, does not wait for this phase):** File the Play Console declaration for `ACCESS_FINE_LOCATION` with the justification in D7, and confirm the background-location declaration still matches (D6). If Play rejects it, raise dropping `ACCESS_FINE_LOCATION` as a separate change.
 - [ ] **Step 2:** Update `AGENTS.md` (new location layering, the dataset and how to regenerate it, the emulator offline test) and the roadmap's Phase 2 status. Mark this plan's checkboxes.
 - [ ] **Step 3:** Record the maintainer's measurements: APK size delta, cold-start time on a real device before and after, and an offline test on the phone. Add them to the PR.
 - [ ] **Step 4:** Commit: `jj commit -m "Document the Phase 2 location architecture and close out the phase"`.
