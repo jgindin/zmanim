@@ -27,7 +27,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 **Why here:** this is a library upgrade with no connection to location. It runs before Task 1 only so that the changes expected to alter the zman golden table land alone, before the location work and its "no golden change" gate. It is its own PR (more than one, per the steps below); no location change shares a commit with it. It can move out of Phase 2 unchanged.
 
-**The target is 3.1.0, in two steps.** This task lands on 3.0.0, and Task 0C bumps to 3.1.0 (decision, 2026-11-02). 3.1.0 was released on 2026-11-02 and was not on Maven Central yet. It adds to the 3.0.0 API without removing any public method of the calendar, `GeoLocation` or calculator classes, but it changes polar-day results and no switch keeps the old ones, so each golden change keeps one cause.
+**The target is 3.1.0, in two steps.** This task lands on 3.0.0, and Task 0C bumps to 3.1.0 (decision, 2026-11-02). 3.1.0 was released on 2026-11-02 and reached Maven Central on 2026-11-03. It adds to the 3.0.0 API without removing any public method of the calendar, `GeoLocation` or calculator classes, but it changes polar-day results and no switch keeps the old ones, so each golden change keeps one cause.
 
 **What 3.0.0 changes for us** (found by comparing the 3.0.0 source and release notes with every KosherJava member `:ZmanLib` calls; this is a rewrite of the API, not a set of renames):
 
@@ -64,9 +64,9 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 **What 3.1.0 adds on top:** zmanim that used to return an invalid time on very short polar days return null (`getMinchaGedola30Minutes`, `getSofZmanShma3HoursBeforeChatzos`, `getSofZmanTfila2HoursBeforeChatzos`, `getFixedLocalChatzosHayom` and the half-day zmanim based on it, the Ateret Torah and Ahavat Shalom mincha ketana and plag zmanim, and the Yereim bain hashmashos zmanim), `getMinchaGedolaGreaterThan30` and `getMinchaGedolaAhavatShalom` fall back to the regular mincha gedola in the same case, and `NOAACalculator` reports events it used to miss when the sun only just reaches them. Calculators now cache sunrise, sunset, noon and midnight (keyed on every input, cleared by the setters). `GeoLocation` gains optional horizon elevations, which this task does not use.
 
-- [ ] **Step 1:** Set the version. Close any Dependabot PR for 3.1.0 as superseded.
-- [ ] **Step 2:** Compare the golden table with the new code. Every changed cell must be in a polar row (Tromso) and match a 3.1.0 change listed above, and a zman that loses its time must show as "no time" on the screen rather than crash. Anything else stops the task. Regenerate those cells, record them in the PR and in `golden/README.md`.
-- [ ] **Step 3: Verify** the Phase gates. Commit: `jj commit -m "Upgrade KosherJava to 3.1.0"`.
+- [x] **Step 1:** Set the version. Close any Dependabot PR for 3.1.0 as superseded.
+- [x] **Step 2:** Compare the golden table with the new code. Every changed cell must be in a polar row (Tromso) and match a 3.1.0 change listed above, and a zman that loses its time must show as "no time" on the screen rather than crash. Anything else stops the task. Regenerate those cells, record them in the PR and in `golden/README.md`.
+- [x] **Step 3: Verify** the Phase gates. Commit: `jj commit -m "Upgrade KosherJava to 3.1.0"`.
 
 ---
 
