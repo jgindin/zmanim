@@ -64,5 +64,10 @@ current code.
 - "Geonim 4.37 deg" and "Geonim 4.61 deg" became the library's "Geonim 4.42 deg" and "Geonim 4.66 deg"
   (2026-11-02), which KosherJava 3 says replace them. Only those columns changed, in every type that offers them:
   the times are 14 to 24 seconds later, and in Tromso up to about 100 seconds later. No zman gained or lost a time.
+- The move to KosherJava 3.1.0 (2026-11-04) changed three cells, all in Tromso, and no time moved:
+  - Talit 11.5 deg on 2025-04-12 and Alot Baal HaTanya on 2026-03-29 gained a time: the sun only just gets that far
+    below the horizon on those nights, and the library now finds such events.
+  - Sof Zman Shema 3 hours before Chatzot on 2026-11-07 lost its time: the library now returns no time for it on very
+    short polar days instead of an invalid one.
 
-The table now comes from the library's default radii, and was last regenerated on 2026-11-02.
+The table now comes from the library's default radii, and was last regenerated on 2026-11-04.
