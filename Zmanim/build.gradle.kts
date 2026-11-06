@@ -93,6 +93,9 @@ dependencies {
 
   implementation(libs.kotlinx.serialization.json)
 
+  // Fakes the Play Services location client and the system Geocoder in the location tests.
+  testImplementation(libs.mockito.core)
+
   // Drives the system notification permission prompt, which belongs to another app, from the
   // on-device tests.
   androidTestImplementation(libs.androidx.test.uiautomator)
