@@ -95,15 +95,24 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 2: Domain interfaces and coroutine dependency
 
+**Status (2026-11-05):** done. Calls made while building it, each within the design:
+
+- The request type is `LocationQuery(acceptRecent)`, so it does not clash with Play services' `LocationRequest` in the adapter.
+- An approximate-only grant is not an `UnavailableReason`, because D3 accepts it: `Resolving` and `Resolved` carry an `approximate` flag for the warning instead. `UnavailableReason.Failed` covers the other failures the app reports today as `CANNOT_DETERMINE_LOCATION`. `ServicesOff` carries a `SettingsResolution`, an interface the Android adapter implements around Play services' resolvable exception, so `:ZmanLib` stays free of Android.
+- `ResolverChain.fromCoordinates` returns `CoordinatesResult.Named` or `Unnamed`; `Unnamed` is the request unchanged and with no name, so it is never cached as a resolved place (the coordinates-as-name problem pinned in Task 1).
+- `ResolverChain.fromName` ends in `Failed` rather than `NotFound` when any source could not look (offline), so the user can be told "could not look it up" rather than "no such place".
+- Each source gets 10 seconds by default. A source's own cancellation counts as its failure; the caller's cancellation stops the chain.
+- Only the fake the chain's tests need (`FakePlaceResolver`) exists; the other fakes come with the tasks that use them.
+
 **Files:**
 - Modify: `gradle/libs.versions.toml` (add `kotlinx-coroutines` and `kotlinx-coroutines-test`), `ZmanLib/build.gradle.kts`
 - Create under `ZmanLib/src/main/kotlin/com/gindin/zmanlib/location/`: `LocationSource.kt`, `LocationState.kt`, `PlaceResolver.kt`, `GeocodeCache.kt`, `PlaceIndex.kt`, `ElevationPolicy.kt`
 - Create fakes under `ZmanLib/src/test/`
 
-- [ ] **Step 1:** Add the dependencies via the version catalog; keep `explicitApi()` satisfied.
-- [ ] **Step 2:** Define the types from the design (Sections 5.1 to 5.3): `LocationSource.locations(request): Flow<LocationState>`, sealed `LocationState` (`Resolving`, `Resolved`, `Unavailable(reason, lastKnown)`), `UnavailableReason` (no permission, approximate-only, services off, no Play Services, timeout), `PlaceResolver` with `suspend fun fromName` / `fromCoordinates` returning a result type that distinguishes "not found" from "failed", `GeocodeCache`, `PlaceIndex` (`nearest(lat, lon)`, `byName(text)`), `ElevationPolicy`.
-- [ ] **Step 3:** Implement `ResolverChain(resolvers)` in `:ZmanLib` with the order and failure semantics of Design 5.2 (a source that fails is skipped; the first success wins; the last resort never changes coordinates). Test it with fakes, including cancellation and per-source timeouts (`kotlinx-coroutines-test`).
-- [ ] **Step 4: Verify** gates. Commit: `jj commit -m "Add the location domain interfaces and the resolver chain"`.
+- [x] **Step 1:** Add the dependencies via the version catalog; keep `explicitApi()` satisfied.
+- [x] **Step 2:** Define the types from the design (Sections 5.1 to 5.3): `LocationSource.locations(request): Flow<LocationState>`, sealed `LocationState` (`Resolving`, `Resolved`, `Unavailable(reason, lastKnown)`), `UnavailableReason` (no permission, approximate-only, services off, no Play Services, timeout), `PlaceResolver` with `suspend fun fromName` / `fromCoordinates` returning a result type that distinguishes "not found" from "failed", `GeocodeCache`, `PlaceIndex` (`nearest(lat, lon)`, `byName(text)`), `ElevationPolicy`.
+- [x] **Step 3:** Implement `ResolverChain(resolvers)` in `:ZmanLib` with the order and failure semantics of Design 5.2 (a source that fails is skipped; the first success wins; the last resort never changes coordinates). Test it with fakes, including cancellation and per-source timeouts (`kotlinx-coroutines-test`).
+- [x] **Step 4: Verify** gates. Commit: `jj commit -m "Add the location domain interfaces and the resolver chain"`.
 
 ---
 
