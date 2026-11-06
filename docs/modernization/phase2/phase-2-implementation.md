@@ -1,8 +1,8 @@
 # Phase 2: Modern Location Architecture & Offline Resilience Implementation Plan
 
-> **For agentic workers:** execute task by task, one PR per task, merged with "Rebase and merge" (see `AGENTS.md`). Each task's final verification step is a hard gate: if it fails, stop and fix before the next task. Steps use checkbox (`- [ ]`) syntax. **One purpose per commit and PR**: data generation, interfaces, adapters and wiring never share a change. Task 0 is done (answers recorded in the design, Section 8); the design still needs the maintainer's final approval before Task 2.
+> **For agentic workers:** execute task by task, one PR per task, merged with "Rebase and merge" (see `AGENTS.md`). Each task's final verification step is a hard gate: if it fails, stop and fix before the next task. Steps use checkbox (`- [ ]`) syntax. **One purpose per commit and PR**: data generation, interfaces, adapters and wiring never share a change. Task 0 is done (answers recorded in the design, Section 8), and the maintainer approved the design on 2026-11-05.
 
-**Design:** `phase-2-design.md` (status Draft until the maintainer approves it).
+**Design:** `phase-2-design.md` (approved 2026-11-05).
 **Goal:** Location and place resolution that works offline, as a `Flow`, with a trustworthy elevation, without changing any screen.
 **Architecture:** Pure-Kotlin interfaces and decision logic in `:ZmanLib`; Android adapters in `:Zmanim`; an event-bus bridge keeps the current screens working until Phase 4a.
 **Tech additions:** `kotlinx-coroutines-core` (and `-android`, `-play-services` or the Task-await bridge for `Task`). No HTTP client and no database (decisions D1 and D4).
@@ -72,13 +72,24 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 1: Pin today's location behavior with tests
 
+**Status (2026-11-05):** done. The tests drive the real classes. A Mockito test dependency stands in for the static Play Services entry points and the final `Geocoder`, and the work sent to `ZmanimService` is read the way the screens receive it (Robolectric at API 24, where `JobIntentService` starts the service directly). Behavior pinned as `...CurrentBehavior`, to fix on purpose in later tasks:
+
+- An approximate-only grant is reported as `NO_PERMISSIONS` (Task 6, D3).
+- When the geocoder cannot name a device fix (for example offline), the fix comes back resolved under its coordinates, because a bundle round trip turns the unnamed location's coordinates into its name; that name is cached and wins over the geocoder for that area afterwards (Tasks 4 and 7).
+- A geocoded fix takes the address's coordinates instead of keeping the fix's own.
+- The elevation stored for a typed place (`PLACE_ELEVATION`) is never read; a typed place is at sea level (Task 5).
+- A hit by typed name changes the time zone of the cached entry itself; a hit by proximity cannot carry a custom time zone, because a different time zone counts as a significant change.
+- A latitude or longitude of exactly 0 counts as no coordinates, and copying an unnamed location makes its coordinates its name.
+- `addressToLocationName` never searches the last address line and keeps the space before the postal code.
+- The entered-coordinates acquirer swaps "Invalid latitude" and "Invalid longitude", and an elevation that is not a number throws.
+
 **Why first:** every later task changes code that currently has only partial coverage. Upgrade tests for `CachedLocations` and the last-known location exist (`ZmanLib/.../upgrade/UT_UpgradeSavedLocations`, `Zmanim/.../location/UT_UpgradeLastKnownLocation`), and there are tests under `Zmanim/src/test/.../location/acquirers` and `resolvers`.
 
 **Files:** tests only, under `Zmanim/src/test/java/com/gindin/zmanim/android/location/` and `ZmanLib/src/test/java/com/gindin/zmanlib/location/`.
 
-- [ ] **Step 1: Inventory.** List what the existing tests already pin (resolver order, cache match rule "same user name or within 1 km and 5 m", last-known age cutoff of 30 minutes, error codes). Write the gaps into the PR description.
-- [ ] **Step 2: Fill the gaps** with characterization tests: the resolver chain order and the `PassthroughResolver` ending; cache hit by typed name and by proximity; time-zone override honored on a cache hit; `DynamicLocationAcquirer` outcomes for no permission, no Play Services, location services off, recent last-known, stale last-known. Use fakes for `Geocoder` and the Fused client. Where behavior is clearly a bug, pin it with a test named `...CurrentBehavior` and a comment, and fix it in a later task, not here.
-- [ ] **Step 3: Verify** `./gradlew :Zmanim:testDebugUnitTest :ZmanLib:test` and the Phase gates above. Commit: `jj commit -m "Pin the current location and place-resolution behavior with tests"`.
+- [x] **Step 1: Inventory.** List what the existing tests already pin (resolver order, cache match rule "same user name or within 1 km and 5 m", last-known age cutoff of 30 minutes, error codes). Write the gaps into the PR description.
+- [x] **Step 2: Fill the gaps** with characterization tests: the resolver chain order and the `PassthroughResolver` ending; cache hit by typed name and by proximity; time-zone override honored on a cache hit; `DynamicLocationAcquirer` outcomes for no permission, no Play Services, location services off, recent last-known, stale last-known. Use fakes for `Geocoder` and the Fused client. Where behavior is clearly a bug, pin it with a test named `...CurrentBehavior` and a comment, and fix it in a later task, not here.
+- [x] **Step 3: Verify** `./gradlew :Zmanim:testDebugUnitTest :ZmanLib:test` and the Phase gates above. Commit: `jj commit -m "Pin the current location and place-resolution behavior with tests"`.
 
 ---
 
