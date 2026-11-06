@@ -1,7 +1,7 @@
 # Phase 2: Modern Location Architecture & Offline Resilience
 
 **Date:** 2026-10-28
-**Status:** Decisions D1 to D6 answered by the maintainer on 2026-10-28 (Section 8); awaiting final approval of the document. No Phase 2 code has been written. Where the text says "proposed", it is the author's call with the reason given.
+**Status:** Approved by the maintainer on 2026-11-05. Decisions D1 to D6 answered on 2026-10-28 and D7 on 2026-11-04 (Section 8). Where the text says "proposed", it is the author's call with the reason given.
 **Scope:** `:ZmanLib` (new `location` domain code), `:Zmanim` (adapters and the replacement of the current acquirer/resolver classes). `:ZehutYosef` does not use location and is untouched.
 **Depends on:** Phase 1 (complete on `main`; the human-only signing steps do not block this phase).
 **Estimated effort:** 2 to 3 weeks (the roadmap's figure; the plan in `phase-2-implementation.md` is sized to match).
