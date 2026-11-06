@@ -16,8 +16,11 @@ dependencies {
   implementation(libs.kosherjava.zmanim)
   implementation(libs.jetbrains.annotations)
   implementation(libs.kotlinx.serialization.json)
+  // The location types expose Flow, so callers need it on their compile classpath too.
+  api(libs.kotlinx.coroutines.core)
 
   testImplementation(libs.junit.jupiter)
+  testImplementation(libs.kotlinx.coroutines.test)
   // No JUnit 4 tests remain in this module (fully migrated to Jupiter) -- the vintage engine is
   //  deliberately omitted here (unlike :Zmanim/:ZehutYosef, which still have real JUnit 4 test
   //  files) to avoid pulling junit:junit 4.13.2 (and its hamcrest-core 1.3) onto the test runtime
