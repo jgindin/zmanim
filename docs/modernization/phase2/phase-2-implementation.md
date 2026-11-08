@@ -118,6 +118,21 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 3: Offline place index and its data generator
 
+**Status (2026-11-07):** in progress. The first PR has the generator, the overrides, the generated asset and the attribution. `PlaceIndexFormat.kt`, `InMemoryPlaceIndex.kt` and the test that the well-known Israeli cities are "Israel" in the asset come in the second PR. Calls made while building the first PR, each within the design:
+
+- **Terms (Step 1):** the maintainer signed off on 2026-11-07. The data is CC BY 4.0; the attribution text is in `Zmanim/places/README.md`, `NOTICE` and the About page.
+- **Generator:** the generator is the `:Zmanim:generatePlaceIndex` task (`build-logic/.../places/`). It is run by hand only, and its output is committed. "Pinned" means a SHA-256 for each file in `Zmanim/places/geonames-pins.tsv`, because GeoNames rebuilds its files daily under the same URLs. build-logic gained a test setup, and the root `test` task runs it.
+- **Data:** 34,205 places, 1.8 MB (about 0.75 MB compressed in the APK), within the 3 MB budget.
+- **Format:** UTF-8 TSV with a version line. Places are in descending order of population, so the larger of two same-named places is listed first; population itself is not stored. Region names are not included yet, because `IndexedPlace` has no field for them.
+- **Elevation (Step 2c):** the generator chooses between the GeoNames columns, not the loader: `elevation`, then `dem` (unless `-9999`), then unknown. The asset therefore carries one elevation, and the counts are in the README.
+- **Overrides (Step 2b):** the override file gained name and time-zone columns, plus the GeoNames name, which is checked. The display country always comes from the country code. The maintainer chose the list on 2026-11-07:
+  - Jerusalem's PS-coded neighborhoods are shown in Israel.
+  - Ar Ram and Al-Eizariya are shown as "Jerusalem".
+  - Ma'ale Adummim is shown in Israel, and GeoNames' "Battir" record, which is really Beitar Illit, is renamed and shown in Israel.
+  - Hebron, Nablus and Bethlehem are shown as Hevron, Shechem and Beit Lechem.
+  - Gaza and the other West Bank towns are left as GeoNames has them.
+  - Every overridden place uses `Asia/Jerusalem`, because Israel's daylight-saving dates differ from `Asia/Hebron`'s.
+
 **Files:**
 - Create: a generator under `build-logic/` or `tools/places/` (decide in the PR; prefer a Gradle task so the asset is reproducible), `Zmanim/src/main/assets/places/` (output), `ZmanLib/.../location/PlaceIndexFormat.kt`, `ZmanLib/.../location/InMemoryPlaceIndex.kt`
 - Modify: the About/open-source attribution screen's data, `LICENSES` or a `NOTICE` file
