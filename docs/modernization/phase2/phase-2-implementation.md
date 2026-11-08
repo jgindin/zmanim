@@ -118,7 +118,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 3: Offline place index and its data generator
 
-**Status (2026-11-07):** in progress. The first PR has the generator, the overrides, the generated asset and the attribution. `PlaceIndexFormat.kt`, `InMemoryPlaceIndex.kt` and the test that the well-known Israeli cities are "Israel" in the asset come in the second PR. Calls made while building the first PR, each within the design:
+**Status (2026-11-07):** done, in two PRs: the generator, the overrides, the generated asset and the attribution (#52), then `PlaceIndexFormat` and `InMemoryPlaceIndex` with their tests. Calls made while building them, each within the design:
 
 - **Terms (Step 1):** the maintainer signed off on 2026-11-07. The data is CC BY 4.0; the attribution text is in `Zmanim/places/README.md`, `NOTICE` and the About page.
 - **Generator:** the generator is the `:Zmanim:generatePlaceIndex` task (`build-logic/.../places/`). It is run by hand only, and its output is committed. "Pinned" means a SHA-256 for each file in `Zmanim/places/geonames-pins.tsv`, because GeoNames rebuilds its files daily under the same URLs. build-logic gained a test setup, and the root `test` task runs it.
@@ -132,6 +132,11 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
   - Hebron, Nablus and Bethlehem are shown as Hevron, Shechem and Beit Lechem.
   - Gaza and the other West Bank towns are left as GeoNames has them.
   - Every overridden place uses `Asia/Jerusalem`, because Israel's daylight-saving dates differ from `Asia/Hebron`'s.
+- **Loader (Step 3):** there is no bounding-box prefilter. A haversine scan over all 34,205 places takes a few milliseconds, as the design expected, and the haversine formula already handles the antimeridian and the poles correctly.
+  - **Ties:** of two places equally near, the one listed first wins, and the data lists larger places first.
+  - **Name matching:** ignores case, accents and apostrophes (GeoNames writes `‘` in names like Ma‘ale Adummim), and treats hyphens as spaces.
+  - **Malformed or unreadable data:** leaves the index empty, with the reason in `loadFailure`, and the data is not read again.
+- **Tests against the real asset (`UT_BundledPlaceIndex`):** Jerusalem, Tel Aviv, Haifa, Beersheba and Eilat are in Israel. The place nearest the Western Wall is "Old City, Jerusalem", Israel. The renamed cities keep their names and `Asia/Jerusalem`.
 
 **Files:**
 - Create: a generator under `build-logic/` or `tools/places/` (decide in the PR; prefer a Gradle task so the asset is reproducible), `Zmanim/src/main/assets/places/` (output), `ZmanLib/.../location/PlaceIndexFormat.kt`, `ZmanLib/.../location/InMemoryPlaceIndex.kt`
