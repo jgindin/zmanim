@@ -23,11 +23,11 @@ allprojects {
   }
 }
 
-// build-logic is a separate build, so the root-level format and analysis tasks below also run its own,
-//  which keeps `./gradlew ktfmtCheck`, `./gradlew ktfmtFormat` and `./gradlew detekt` a single command for
-//  the whole repo.
+// build-logic is a separate build, so the root-level format, analysis and test tasks below also run
+//  its own, which keeps `./gradlew ktfmtCheck`, `./gradlew ktfmtFormat`, `./gradlew detekt` and
+//  `./gradlew test` a single command for the whole repo.
 //  (The root and settings scripts themselves are small and are not covered: the formatter plugin
 //  cannot be applied to this project without loading a second copy of AGP, see the NOTE above.)
-for (name in listOf("ktfmtCheck", "ktfmtFormat", "detekt")) {
+for (name in listOf("ktfmtCheck", "ktfmtFormat", "detekt", "test")) {
   tasks.register(name) { dependsOn(gradle.includedBuild("build-logic").task(":$name")) }
 }

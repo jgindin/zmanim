@@ -40,4 +40,10 @@ dependencies {
   //  library modules apply the plugin from here too (see the zmanim.*-conventions plugins), so that
   //  the build only ever has one copy of it.
   implementation(libs.kotlin.gradlePlugin)
+
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.junit.jupiter)
+  testRuntimeOnly(libs.junit.platform.launcher)
 }
+
+tasks.test { useJUnitPlatform() }

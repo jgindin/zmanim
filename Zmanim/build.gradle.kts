@@ -2,6 +2,7 @@
  * Copyright (c) 2026. Jay R. Gindin
  */
 
+import com.gindin.buildlogic.places.PlaceIndexGeneratorTask
 import com.gindin.buildlogic.zmanimAppVersion
 import com.gindin.buildlogic.zmanimReleaseCheckBuildType
 import com.gindin.buildlogic.zmanimReleaseSigning
@@ -66,6 +67,18 @@ android {
 
     getByName("debug") {}
   }
+}
+
+// Regenerates the bundled place index from the pinned GeoNames files (see places/README.md). Run it
+//  by hand; the asset is committed, so no other task depends on it.
+tasks.register<PlaceIndexGeneratorTask>("generatePlaceIndex") {
+  group = "zmanim"
+  description = "Regenerates src/main/assets/places/places.tsv from the pinned GeoNames files."
+  pins.set(layout.projectDirectory.file("places/geonames-pins.tsv"))
+  overrides.set(layout.projectDirectory.file("places/place-overrides.tsv"))
+  downloads.set(layout.buildDirectory.dir("places/downloads"))
+  output.set(layout.projectDirectory.file("src/main/assets/places/places.tsv"))
+  review.set(layout.buildDirectory.file("places/ps-review.tsv"))
 }
 
 // Release signing (upload key) comes from gindin.signing.* Gradle properties; see Signing.kt.
