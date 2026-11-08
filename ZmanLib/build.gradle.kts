@@ -34,7 +34,14 @@ dependencies {
   testImplementation(libs.hamcrest)
 }
 
-tasks.withType<Test> { useJUnitPlatform() }
+tasks.withType<Test> {
+  useJUnitPlatform()
+
+  // The app bundles the place index; the tests read that same file to check its contents.
+  val placesAsset = rootProject.file("Zmanim/src/main/assets/places/places.tsv")
+  inputs.file(placesAsset).withPathSensitivity(PathSensitivity.NONE)
+  systemProperty("zmanim.placesAsset", placesAsset.absolutePath)
+}
 
 sourceSets {
   create("utils") {
