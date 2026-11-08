@@ -19,7 +19,7 @@ plugins {
   // Confirmed by build failure ("Unresolved reference 'libs'") when attempted here, and this is
   // a known, currently-open Gradle limitation - see gradle/gradle#24876 and gradle/gradle#36437.
   // The version below must be kept in sync with `foojayResolverConvention` in libs.versions.toml.
-  id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+  id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 include(":ZmanUtils")

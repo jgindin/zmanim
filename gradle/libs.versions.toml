@@ -7,7 +7,7 @@ roborazzi = "1.77.0"
 #  upgrading the plugin is also what upgrades the formatter.
 ktfmtGradle = "0.27.0"
 detekt = "2.0.0-alpha.6"
-foojayResolverConvention = "0.10.0"
+foojayResolverConvention = "1.0.0"
 
 kosherjavaZmanim = "3.1.0"
 desugarJdkLibs = "2.1.5"
