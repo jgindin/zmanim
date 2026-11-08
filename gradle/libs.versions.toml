@@ -11,7 +11,7 @@ foojayResolverConvention = "0.10.0"
 
 kosherjavaZmanim = "3.1.0"
 desugarJdkLibs = "2.1.5"
-jetbrainsAnnotations = "24.0.1"
+jetbrainsAnnotations = "26.1.0"
 junit = "4.13.2"
 # JUnit 6 versions the Platform (launcher), Jupiter and Vintage in lockstep, so one ref serves all three.
 junitJupiter = "6.1.3"
