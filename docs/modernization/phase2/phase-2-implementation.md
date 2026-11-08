@@ -154,7 +154,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 4: Geocoder adapters and cache
 
-**Status (2026-11-08):** done; nothing is wired into the app yet (Task 7). Calls made while building it, each within the design:
+**Status (2026-11-08):** done; nothing is wired into the app yet (Task 7). Calls made while building it, each within the design; the maintainer agreed on 2026-11-08 to the four that change what users see: the fix keeps its coordinates, the 25 km radius, the request's time zone, and the "place, country" name.
 
 - **Kotlin location:** the new files are in `Zmanim/src/main/kotlin/.../location/resolvers/`, next to the module's other Kotlin, not under `src/main/java`.
 - **`SystemGeocoder`:**
