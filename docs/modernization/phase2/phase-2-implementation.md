@@ -154,12 +154,40 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 4: Geocoder adapters and cache
 
+**Status (2026-11-08):** done; nothing is wired into the app yet (Task 7). Calls made while building it, each within the design:
+
+- **Kotlin location:** the new files are in `Zmanim/src/main/kotlin/.../location/resolvers/`, next to the module's other Kotlin, not under `src/main/java`.
+- **`SystemGeocoder`:**
+  - **Cancellation:** both API branches suspend without holding the caller's thread. On API 24 to 32 the blocking call runs on the IO dispatcher and a cancelled caller stops waiting for it, so the chain's time limit works even when the geocoder hangs.
+  - **No geocoder** (`Geocoder.isPresent()` false) is "not found"; an `IOException` or a listener error is "failed".
+  - **A device fix keeps its own coordinates** and takes only the name from the address. This is the behavior Task 1 pinned as `...CurrentBehavior` (the fix takes the address's coordinates); it changes for users when Task 7 wires it in.
+  - **Tests:** Mockito stands in for the final `Geocoder` in both branches, as in Task 1. Robolectric's shadow does not cover the blocking name lookup or per-call answers.
+- **`FileGeocodeCache`:**
+  - **File:** a new text file, `GeocodeCache`. Its first line has the format name, version and number of places; then one place per line in the `ZmanLocationJSON` format, compacted to one line. The count catches a file cut short at a line boundary.
+  - **Atomic write:** the file is written to `GeocodeCache.tmp` and moved over the old one with `ATOMIC_MOVE`.
+  - **Legacy file:** `CachedLocations` is read only until the new file is first written, then deleted.
+  - **Unreadable files** are discarded, as before. A failed save is kept in `lastWriteFailure`, and the next save tries again.
+  - **Match rule:** the same as today: the typed name first, then a named place within 1 km and 5 m in the same time zone. The last stored proximity match wins, where today's `HashSet` order made it arbitrary.
+  - **Time zone on a name hit:** the hit comes back as a copy in the request's time zone. The cached entry is no longer changed (pinned in Task 1).
+  - **Limit:** 25 places; storing one more drops the one stored longest ago, as today (a lookup does not refresh an entry).
+  - **Clearing:** `clear()` exists for the upgrade wipe that `LocationToAddressConverter.wipeCacheOnStart` does today.
+- **The chain's other sources** are pure Kotlin in `:ZmanLib`:
+  - `GeocodeCacheResolver` answers from the cache.
+  - `PlaceIndexResolver` answers a typed name with the best match. It names a fix after the nearest place only within 25 km (`DEFAULT_NEAR_ENOUGH_METERS`, because the data holds towns of 15,000 people or more); farther, it answers "not found", and the chain hands the fix back unnamed.
+  - The name is "place, country".
+  - Both keep the request's time zone (the user's override or the device's), as the geocoder path does today, rather than the place's.
+  - Elevation stays unknown until Task 5.
+- **Factory:** `PlaceResolution.create(context)` chains cache, system geocoder (left out when `Geocoder.isPresent()` is false) and place data, with the chain's default 10 seconds per source.
+  - The cache and the place index are one per process: two caches over one file would undo each other, and the place data is read once.
+  - Storing a found place in `cache` is left to the caller, as `LocationToAddressConverter` does today.
+- **R8:** nothing new is reached by name; the place data is an asset.
+
 **Files:** Kotlin in `Zmanim/src/main/java/com/gindin/zmanim/android/location/resolvers/` (new `.kt` files): `SystemGeocoder.kt`, `FileGeocodeCache.kt`; tests in `Zmanim/src/test/`.
 
-- [ ] **Step 1: `SystemGeocoder`.** On API 33+, wrap `Geocoder.getFromLocation(..., GeocodeListener)` with `suspendCancellableCoroutine`; on API 24 to 32, call the blocking overload on `Dispatchers.IO`; `Geocoder.isPresent()` false means "not available", not an error. Tests with Robolectric's shadow geocoder for both branches.
-- [ ] **Step 2: `FileGeocodeCache`.** Reads the legacy `CachedLocations` format on first run, writes the versioned format afterwards, atomic write (temp file then rename), same match rule as today. Tests: the existing v409 fixture loads; a round trip; a truncated file is discarded safely; legacy then new format.
-- [ ] **Step 3:** Compose the production chain in one factory (cache, system, offline index) with the timeouts from the design. Do not wire it into the app yet.
-- [ ] **Step 4: Verify** gates; add every class reached by name to `Zmanim/r8-kept-names.txt` with its rule if any. Commit per adapter.
+- [x] **Step 1: `SystemGeocoder`.** On API 33+, wrap `Geocoder.getFromLocation(..., GeocodeListener)` with `suspendCancellableCoroutine`; on API 24 to 32, call the blocking overload on `Dispatchers.IO`; `Geocoder.isPresent()` false means "not available", not an error. Tests with Robolectric's shadow geocoder for both branches.
+- [x] **Step 2: `FileGeocodeCache`.** Reads the legacy `CachedLocations` format on first run, writes the versioned format afterwards, atomic write (temp file then rename), same match rule as today. Tests: the existing v409 fixture loads; a round trip; a truncated file is discarded safely; legacy then new format.
+- [x] **Step 3:** Compose the production chain in one factory (cache, system, offline index) with the timeouts from the design. Do not wire it into the app yet.
+- [x] **Step 4: Verify** gates; add every class reached by name to `Zmanim/r8-kept-names.txt` with its rule if any. Commit per adapter.
 
 ---
 
