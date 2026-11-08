@@ -138,9 +138,8 @@
   <string name="feedback">Send Feedback…</string>
   <string name="feedback_instructions">Thank you for taking the time to send feedback about Zmanim! Please let me know any thoughts or ideas you have.</string>
   <string name="feedback_send">Send!</string>
-  <string name="feedback_email">Email (OPTIONAL):</string>
-  <string name="feedback_email_instructions">If you would like me to contact you, please add your email address.</string>
-  <string name="feedback_note">Note: Some additional data will be sent along with your feedback. None of this information is personally identifiable. This data includes your location and basic data about your device which can be used to help debug issues.</string>
+  <string name="feedback_note">Send opens your email app with a message to zmanim.apps@gmail.com. Along with what you write, it includes the app\'s version and your current location: its name, latitude, longitude, elevation and time zone, which provider supplied it, how accurate it is (when known) and when it was obtained. You can read and change the message before you send it.</string>
+  <string name="feedback_no_email_app">No email app is set up. Please email your feedback to zmanim.apps@gmail.com.</string>
 
   <string name="ZmanimServiceDescription">Schedule Zmanim notifications.</string>
   <string name="NotificationServiceDescription">Displays Zmanim notifications.</string>

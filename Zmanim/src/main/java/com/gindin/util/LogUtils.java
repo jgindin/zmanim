@@ -8,7 +8,6 @@ import com.gindin.zmanim.android.BuildConfig;
 
 import kotlin.Pair;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.util.Log;
@@ -40,16 +39,6 @@ public class LogUtils {
   ) {
 
     LogErrorTask task = new LogErrorTask( where, message, error, moreInfo );
-    task.run();
-  }
-
-
-  public static void logFeedback(
-    @NonNull String feedback
-  ) {
-
-    LogErrorTask task = new LogErrorTask( "User Feedback", feedback, new UserFeedbackException(),
-      (Pair<String, String>[])null );
     task.run();
   }
 
@@ -125,12 +114,6 @@ public class LogUtils {
       Log.e( where, "Msg: " + message, error );
 
     }
-  }
-
-
-  private static class UserFeedbackException
-    extends Exception {
-
   }
 
 }  // End of LogUtils class
