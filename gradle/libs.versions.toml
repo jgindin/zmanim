@@ -38,7 +38,7 @@ androidxTestEspresso = "3.7.0"
 androidxTestUiautomator = "2.4.0"
 androidxComposeUiTest = "1.12.1"
 
-mikepenzIconicsCore = "2.5.10"
+mikepenzIconicsCore = "5.6.0"
 mikepenzGoogleMaterialTypeface = "2.2.0.1.original"
 mikepenzFontawesomeTypeface = "4.5.0.1"
 mikepenzMaterialdrawer = "3.0.8"
