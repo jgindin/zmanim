@@ -42,6 +42,15 @@
     android:xlargeScreens="true"
   />
 
+  <!-- Since Android 11 an app sees only the other apps it declares here. Send Feedback checks for an email app
+       before offering to compose one. -->
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.SENDTO" />
+      <data android:scheme="mailto" />
+    </intent>
+  </queries>
+
   <application
     android:icon="@mipmap/ic_launcher"
     android:label="Zmanim"

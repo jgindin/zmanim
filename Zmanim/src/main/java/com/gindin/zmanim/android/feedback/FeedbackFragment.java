@@ -4,35 +4,80 @@
 
 package com.gindin.zmanim.android.feedback;
 
-import com.gindin.util.LogUtils;
 import com.gindin.zmanim.android.R;
+import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanlib.location.ZmanimLocation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
- * Dialog fragment for allowing the user to submit feedback.
+ * Dialog fragment for allowing the user to submit feedback. Sending hands the feedback, with the details listed in
+ *  the dialog's note, to the user's email app (see FeedbackEmail).
  */
 public class FeedbackFragment
   extends DialogFragment {
 
+  private static final String LOCATION_ARG = "location";
+
 
   public FeedbackFragment() {
     // Required empty public constructor
+  }
+
+
+  /**
+   * Shows the feedback dialog or, when the device has no email app to send it with, says where to write instead.
+   *
+   * @param location the location the zmanim are shown for, included in the email; null when there is none yet.
+   */
+  public static void show(
+    @NonNull  FragmentActivity  activity,
+    @Nullable ZmanimLocation    location
+  ) {
+
+    if ( !FeedbackEmail.canBeSent( activity ) ) {
+      new AlertDialog.Builder( activity )
+        .setTitle( R.string.feedback )
+        .setMessage( R.string.feedback_no_email_app )
+        .setPositiveButton( android.R.string.ok, null )
+        .show();
+      return;
+    }
+
+    newInstance( location ).show( activity.getSupportFragmentManager(), "feedback" );
+  }
+
+
+  /** @param location the location the zmanim are shown for, included in the email; null when there is none yet. */
+  @NonNull
+  public static FeedbackFragment newInstance(
+    @Nullable ZmanimLocation location
+  ) {
+
+    Bundle args = new Bundle();
+    if ( ( location != null ) && !location.isInvalid ) {
+      args.putBundle( LOCATION_ARG, ZmanLocationUtil.toBundle( location ) );
+    }
+
+    FeedbackFragment fragment = new FeedbackFragment();
+    fragment.setArguments( args );
+    return fragment;
   }
 
 
@@ -53,8 +98,7 @@ public class FeedbackFragment
       ) {
 
         final EditText feedback = (EditText)view.findViewById( R.id.feedback_input );
-        final EditText email = (EditText)view.findViewById( R.id.feedback_email );
-        handleSend( feedback.getText().toString(), email.getText().toString() );
+        handleSend( feedback.getText().toString() );
       }
     };
 
@@ -98,14 +142,22 @@ public class FeedbackFragment
 
 
   private void handleSend(
-    String feedback,
-    String emailText
+    String feedback
   ) {
 
     getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( getContext() );
-    LogUtils.logFeedback( feedback );
+    FragmentActivity activity = requireActivity();
+    Bundle locationBundle = requireArguments().getBundle( LOCATION_ARG );
+    ZmanimLocation location = ( locationBundle != null ) ? ZmanLocationUtil.fromBundle( locationBundle ) : null;
+
+    try {
+      activity.startActivity( FeedbackEmail.intent( activity, feedback, location ) );
+    }
+    catch ( ActivityNotFoundException e ) {
+      // The email app was removed, or turned off, while the dialog was open.
+      Toast.makeText( activity, R.string.feedback_no_email_app, Toast.LENGTH_LONG ).show();
+    }
   }
 
 }
