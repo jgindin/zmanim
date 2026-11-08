@@ -1,0 +1,43 @@
+name: Publish privacy policy
+
+# Publishes the app's bundled privacy policy to GitHub Pages, so the page that Google Play links to
+#  (https://info.zmanim.today/privacy.html) is the same file the app shows. The custom domain is set in
+#  the repository's Pages settings, not by a CNAME file: Pages deployments from Actions ignore one.
+on:
+  push:
+    branches: [main]
+    paths:
+      - Zmanim/src/main/assets/com/gindin/zmanim/android/privacy.html
+      - .github/workflows/privacy-policy.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; a newer push replaces a queued one but never cancels one in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}privacy.html
+    steps:
+      - uses: actions/checkout@v7
+      # Publishes only the privacy policy, not the rest of the app's assets.
+      - name: Assemble the site
+        run: |
+          mkdir site
+          cp Zmanim/src/main/assets/com/gindin/zmanim/android/privacy.html site/
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v5

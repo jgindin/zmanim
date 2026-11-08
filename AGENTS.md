@@ -194,6 +194,11 @@ Conventions and hard-won rules:
 `check-instrumented-results.py` fails when the app, or either ZehutYosef flavor, produced no results,
 ran zero tests, or had failures (a failed APK install otherwise leaves a green job).
 
+`.github/workflows/privacy-policy.yml` publishes `Zmanim/src/main/assets/com/gindin/zmanim/android/privacy.html`
+to GitHub Pages (custom domain `info.zmanim.today`, set in the repository's Pages settings) whenever that file
+changes on `main`. Google Play links to `https://info.zmanim.today/privacy.html`, so editing the bundled
+policy updates the public one too.
+
 ## Behavior worth knowing before you touch it
 
 - **Edge-to-edge**: at `targetSdk` 36 content draws under the status bar. `EdgeToEdgeUtil`
