@@ -27,6 +27,16 @@ class AppUpgrader {
 
   private static final String                               LAST_KNOWN_CODE_VERSION = "lastKnownCodeVersion";
 
+  /** No version code has been recorded yet: this is the first run after a fresh install. */
+  private static final int                                  NOT_INSTALLED_BEFORE = -1;
+
+  /**
+   * The last released version whose privacy policy said the developers never receive the user's location. Anyone
+   *  upgrading from it or earlier is told that the feedback email includes it. This must be the version code of the
+   *  last release before the one that brings back Send Feedback.
+   */
+  private static final int                                  LAST_VERSION_WITHOUT_FEEDBACK_EMAIL = 409;
+
 
   @SuppressWarnings( "MagicNumber" )
   public static void handle(
@@ -39,7 +49,7 @@ class AppUpgrader {
     int thisCodeVersion = BuildConfig.VERSION_CODE;
 
     SharedPreferences prefs = zmanimActivity.getSharedPreferences( ZmanimPrefs.VERSION.name(), Context.MODE_PRIVATE );
-    int lastKnownCodeVersion = prefs.getInt( LAST_KNOWN_CODE_VERSION, -1 );
+    int lastKnownCodeVersion = prefs.getInt( LAST_KNOWN_CODE_VERSION, NOT_INSTALLED_BEFORE );
 
     if ( thisCodeVersion > lastKnownCodeVersion ) {
       try {
@@ -59,11 +69,17 @@ class AppUpgrader {
           privacyPolicy = R.string.added_privacy_policy;
         }
 
+        // Someone installing for the first time reads the current policy, so only an upgrade is a change for them.
+        int feedbackEmailPolicy = -1;
+        if ( ( lastKnownCodeVersion != NOT_INSTALLED_BEFORE ) && ( lastKnownCodeVersion <= LAST_VERSION_WITHOUT_FEEDBACK_EMAIL ) ) {
+          feedbackEmailPolicy = R.string.privacy_policy_feedback_email;
+        }
+
         int droppedZmanim = zmanimSelectionPrefsManager.removeDroppedZmanim();
         int renamedZmanim = zmanimSelectionPrefsManager.renameZmanim();
 
-        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy, droppedZmanim,
-          renamedZmanim );
+        showUpgradeNotes( zmanimActivity, personalPrefsUpgradeId, zmanPrefsUpgradeId, locationFixes, privacyPolicy,
+          feedbackEmailPolicy, droppedZmanim, renamedZmanim );
 
       }
       catch ( Throwable e ) {

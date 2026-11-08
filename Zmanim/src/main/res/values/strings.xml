@@ -37,6 +37,7 @@
   <string name="dropped_zmanim">The zmanim Geonim 3.65 deg, Geonim 5.88 deg and Baal HaTanya Lechumra 30 Minutes are no longer available. You had selected at least one of them, so the default zman is shown in its place. You can choose another one in the settings.</string>
   <string name="renamed_zmanim">The zmanim Geonim 4.37 deg and Geonim 4.61 deg are now Geonim 4.42 deg and Geonim 4.66 deg, which the calculation library uses in their place because the old times were too early. Your selection was kept under the new name; the time is usually less than half a minute later.</string>
   <string name="added_privacy_policy">Added a new privacy policy. (See the application menu.)</string>
+  <string name="privacy_policy_feedback_email">The privacy policy has changed. Send Feedback is back in the menu. It opens your email app with a message to the developers that includes the app\'s version and your current location: its name, latitude, longitude, elevation and time zone, which provider supplied it, how accurate it is (when known) and when it was obtained. Nothing is sent unless you send that email yourself, and you can change or remove anything in it first. The policy also now describes the install statistics and crash reports Google Play shows the developers. (See Privacy Policy in the menu.)</string>
   <string name="privacy">Privacy Policy</string>
 
   <string name="refresh_menu">Refresh</string>
