@@ -1,0 +1,22 @@
+# Places whose GeoNames country, name or time zone the place index replaces. Owned by the maintainer.
+# Columns (tab-separated): GeoNames id, the name GeoNames gives it (checked, so an id that comes to
+#  mean another place fails the generator), country code, name, time zone, reason.
+# An empty field keeps GeoNames' value. Israel's clock changes on different dates from
+#  Asia/Hebron's, so places shown with Israeli names use Asia/Jerusalem.
+#
+# Jerusalem, inside the municipal boundary
+6945291	Old City	IL	Old City, Jerusalem	Asia/Jerusalem	The Old City of Jerusalem
+7303419	East Jerusalem	IL		Asia/Jerusalem	Part of Jerusalem
+281818	Shu‘fāţ	IL		Asia/Jerusalem	A Jerusalem neighborhood
+284335	Bayt Ḩanīnā	IL		Asia/Jerusalem	A Jerusalem neighborhood
+284572	‘Aţārūt	IL		Asia/Jerusalem	A Jerusalem neighborhood
+# Next to Jerusalem's boundary: shown as Jerusalem
+284890	Ar Rām wa Ḑāḩiyat al Barīd	IL	Jerusalem	Asia/Jerusalem	Borders Jerusalem; shown as Jerusalem
+285111	Al ‘Ayzarīyah	IL	Jerusalem	Asia/Jerusalem	Borders Jerusalem; shown as Jerusalem
+# Israeli cities GeoNames assigns to PS
+282993	Ma‘ale Adummim	IL		Asia/Jerusalem	An Israeli city
+284375	Battir	IL	Beitar Illit	Asia/Jerusalem	The record is Beitar Illit (its alternate names, population and coordinates)
+# The Jewish names of these cities; the country stays as GeoNames has it
+285066	Hebron		Hevron	Asia/Jerusalem	Jewish name
+282615	Nablus		Shechem	Asia/Jerusalem	Jewish name
+284315	Bethlehem		Beit Lechem	Asia/Jerusalem	Jewish name

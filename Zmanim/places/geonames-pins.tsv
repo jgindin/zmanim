@@ -1,0 +1,4 @@
+# The GeoNames files the place index is generated from, each with the SHA-256 it must have
+#  (file, sha256, url). Downloaded 2026-11-07. See README.md before changing a checksum.
+cities15000.zip	37d3b39e88167155539dc4aaf93886527c5037b6a822087e48fe530baf8436b7	https://download.geonames.org/export/dump/cities15000.zip
+countryInfo.txt	79f8f59ea01cbb40438bf1856dd6c2ff201f03f8fc72d0530b2646aaf603ef04	https://download.geonames.org/export/dump/countryInfo.txt
