@@ -19,7 +19,10 @@ public class PlaceIndexResolver(
   private val nearEnoughMeters: Double = DEFAULT_NEAR_ENOUGH_METERS,
 ) : PlaceResolver {
 
-  /** The best match for the typed name, at that place's coordinates. */
+  /**
+   * The best match for the typed name, at that place's coordinates and elevation (the data's value
+   * for the town; 0, meaning unknown, when the data has none).
+   */
   override suspend fun fromName(request: ZmanimLocation): PlaceResult {
 
     val place = index.byName(request.locationName).firstOrNull() ?: return PlaceResult.NotFound
@@ -30,6 +33,7 @@ public class PlaceIndexResolver(
         .userName(request.locationName)
         .atLatitude(place.latitude)
         .atLongitude(place.longitude)
+        .atElevation(place.elevationMeters ?: 0.0)
         .inTimeZone(request.timeZone)
         .build()
     )
