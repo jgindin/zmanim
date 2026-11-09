@@ -193,12 +193,39 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 5: Elevation policy
 
+**Status (2026-11-08):** done, in two PRs: the geoid grid's generator and data (#66), then the loader, the policy and the typed places' elevation. Nothing is wired into the app yet (Tasks 6 and 7). Calls made while building it, each within the design:
+
+- **Datum (Step 1):** the Android reference confirms the design.
+  - `Location.getAltitude()` is "in meters above the WGS84 reference ellipsoid", on every API level.
+  - `getMslAltitudeMeters()` / `hasMslAltitude()` give "the Mean Sea Level altitude", from API 34.
+  - The difference is the geoid height: +20 m in Jerusalem, +46 m in London, −33 m in New York, and −107 to +85 m worldwide.
+- **Spike (Step 2):** three ways to correct the altitude on API 24 to 33, measured against GeographicLib's 5-minute EGM2008 grid. The maintainer chose the bundled grid on 2026-11-08.
+
+  | | Error | Release APK |
+  |---|---|---|
+  | Bundled 1° grid (chosen) | 95% of points within 1.0 m, 99% within 2.3 m, worst 10.4 m; 18 test cities within 2.0 m | +84 KB |
+  | `androidx.core:core-location-altitude` 1.0.1 | 18 test cities within 0.7 m | +210 KB, pulls in Room and SQLite (against D4), raises androidx.core from 1.9 to 1.13, about 1 s on the first call |
+  | No correction (place data's elevation) | the town's value, not the user's | 0 |
+
+  GPS altitude is itself only good to 5 to 15 m, so a finer grid (0.5° is +170 to 280 KB) would not make the result better. The spike code was deleted.
+- **Data:** EGM2008 is NGA's, a US government work, listed as public domain by PROJ-data. The source and how to regenerate it are in `Zmanim/geoid/README.md`, and the credit is on the About screen and in `NOTICE`.
+- **`BundledGeoidGrid`** (`:ZmanLib`) reads the grid on first use and interpolates bilinearly. A grid that cannot be read answers "unknown" everywhere, with the reason in `loadFailure`, like the place index.
+- **`SeaLevelElevationPolicy`** uses, in Design 5.5's order:
+  1. the fix's sea-level altitude;
+  2. the ellipsoid altitude less the geoid height;
+  3. the matched place's elevation;
+  4. 0 (unknown).
+
+  NaN and infinite inputs are skipped. Below sea level is 0 and does not fall back to the place, because `ZmanimLocation.Builder` and the zmanim engine take no negative elevations. `ElevationPolicy.elevationMeters` became `suspend`, because the grid is read from an asset like the place data; nothing used it yet.
+- **Elevation not enabled:** the policy always gives the elevation; `ZmanimFactory.useElevation(false)` ignores it, as today (tested on the Shema time).
+- **Typed places:** `PlaceIndexResolver.fromName` gives the place its bundled elevation, or 0 when the data has none. A fix keeps its own elevation. Applying the policy to a fix, including the place fallback for a fix with no altitude, is up to the location source and the wiring (Tasks 6 and 7).
+
 **Files:** `ZmanLib/.../location/ElevationPolicy.kt` (implementation), a small geoid grid asset only if the spike below says it is needed.
 
-- [ ] **Step 1: Confirm the datum.** Read the current Android documentation for `Location.getAltitude()` and `getMslAltitudeMeters()` and record the result in the PR. (The design assumes the first is height above the WGS 84 ellipsoid and the second is above mean sea level, available from API 34.)
-- [ ] **Step 2: Spike (time-boxed to half a day).** For API 24 to 33, decide whether a coarse bundled geoid correction gives an elevation within a few meters in several well-known places, or whether to fall back to the place index's elevation. Write the result and the chosen approach in the PR; delete the spike code that is not kept.
-- [ ] **Step 3:** Implement the policy in the order of Design 5.5 with tests for each source, for "elevation not enabled" (value ignored by the factory as today), and for negative or NaN input (maps to unknown, as `ZmanimLocation.Builder` already does).
-- [ ] **Step 4: Verify** gates. Commit.
+- [x] **Step 1: Confirm the datum.** Read the current Android documentation for `Location.getAltitude()` and `getMslAltitudeMeters()` and record the result in this plan. (The design assumes the first is height above the WGS 84 ellipsoid and the second is above mean sea level, available from API 34.)
+- [x] **Step 2: Spike (time-boxed to half a day).** For API 24 to 33, decide whether a coarse bundled geoid correction gives an elevation within a few meters in several well-known places, or whether to fall back to the place index's elevation. Write the result and the chosen approach in this plan; delete the spike code that is not kept.
+- [x] **Step 3:** Implement the policy in the order of Design 5.5 with tests for each source, for "elevation not enabled" (value ignored by the factory as today), and for negative or NaN input (maps to unknown, as `ZmanimLocation.Builder` already does).
+- [x] **Step 4: Verify** gates. Commit.
 
 ---
 
