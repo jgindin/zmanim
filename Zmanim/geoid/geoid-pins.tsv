@@ -1,0 +1,3 @@
+# The GeographicLib geoid grid the bundled geoid grid is generated from, with the SHA-256 it must
+#  have (file, sha256, url). Downloaded 2026-11-08. See README.md before changing the checksum.
+egm2008-5.zip	408f05e0c04a9f2e17b9ea2d27123f936e9dea60128bb3411a272f8ddbe318dd	https://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download

@@ -2,6 +2,7 @@
  * Copyright (c) 2026. Jay R. Gindin
  */
 
+import com.gindin.buildlogic.geoid.GeoidGridGeneratorTask
 import com.gindin.buildlogic.places.PlaceIndexGeneratorTask
 import com.gindin.buildlogic.zmanimAppVersion
 import com.gindin.buildlogic.zmanimReleaseCheckBuildType
@@ -79,6 +80,18 @@ tasks.register<PlaceIndexGeneratorTask>("generatePlaceIndex") {
   downloads.set(layout.buildDirectory.dir("places/downloads"))
   output.set(layout.projectDirectory.file("src/main/assets/places/places.tsv"))
   review.set(layout.buildDirectory.file("places/ps-review.tsv"))
+}
+
+// Regenerates the bundled geoid grid, which corrects GPS altitudes to sea level, from the pinned
+//  EGM2008 grid (see geoid/README.md). Run it by hand; the asset is committed, so no other task
+//  depends on it.
+tasks.register<GeoidGridGeneratorTask>("generateGeoidGrid") {
+  group = "zmanim"
+  description = "Regenerates src/main/assets/geoid/geoid.bin from the pinned EGM2008 grid."
+  pins.set(layout.projectDirectory.file("geoid/geoid-pins.tsv"))
+  stepDegrees.set(1)
+  downloads.set(layout.buildDirectory.dir("geoid/downloads"))
+  output.set(layout.projectDirectory.file("src/main/assets/geoid/geoid.bin"))
 }
 
 // Release signing (upload key) comes from gindin.signing.* Gradle properties; see Signing.kt.
