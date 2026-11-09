@@ -4,3 +4,8 @@ Zmanim: Zmanim/src/main/assets/places/places.tsv
   Place data from GeoNames (geonames.org), licensed under CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Filtered and converted for this app; see
   Zmanim/places/README.md for what was changed.
+
+Zmanim: Zmanim/src/main/assets/geoid/geoid.bin
+  Geoid heights from EGM2008 by the US National Geospatial-Intelligence Agency (public domain), as
+  gridded by GeographicLib (geographiclib.sourceforge.io) and sampled every degree for this app;
+  see Zmanim/geoid/README.md.
