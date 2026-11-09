@@ -21,7 +21,7 @@ height from this grid.
 - **Downloaded:** 2026-11-08. The checksum is in `geoid-pins.tsv`.
 - **License:** public domain (a work of the US government; listed as public domain by PROJ-data,
   <https://github.com/OSGeo/PROJ-data/blob/master/us_nga/us_nga_README.txt>). No attribution is
-  required; `NOTICE` and the asset's second line name the source anyway.
+  required; the About screen, `NOTICE` and the asset's second line name the source anyway.
 
 ## What the generator changes
 
