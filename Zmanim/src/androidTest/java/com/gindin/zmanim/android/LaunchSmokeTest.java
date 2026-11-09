@@ -68,6 +68,12 @@ public class LaunchSmokeTest {
         ListView list = activity.findViewById( android.R.id.list );
         return ( list.getAdapter() != null ) && ( list.getAdapter().getCount() > 0 ) && ( list.getChildCount() > 0 );
       } );
+      // Each row's time is calculated in the background and set after the row is shown, so wait for it.
+      ViewWaits.until( "the first zman's time", () -> {
+        ListView list = activity.findViewById( android.R.id.list );
+        TextView firstZmanTime = list.getChildAt( 0 ).findViewById( R.id.zman_time );
+        return firstZmanTime.getText().length() > 0;
+      } );
 
       ViewWaits.onMainThread( () -> {
         assertTrue( "Gregorian date is empty", ( (TextView)activity.findViewById( R.id.secular_date ) ).getText().length() > 0 );
