@@ -41,6 +41,11 @@ tasks.withType<Test> {
   val placesAsset = rootProject.file("Zmanim/src/main/assets/places/places.tsv")
   inputs.file(placesAsset).withPathSensitivity(PathSensitivity.NONE)
   systemProperty("zmanim.placesAsset", placesAsset.absolutePath)
+
+  // The same for the geoid grid.
+  val geoidAsset = rootProject.file("Zmanim/src/main/assets/geoid/geoid.bin")
+  inputs.file(geoidAsset).withPathSensitivity(PathSensitivity.NONE)
+  systemProperty("zmanim.geoidAsset", geoidAsset.absolutePath)
 }
 
 sourceSets {
