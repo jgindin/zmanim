@@ -4,10 +4,8 @@
 
 package com.gindin.buildlogic.places
 
+import com.gindin.buildlogic.PinnedDownloads
 import java.io.File
-import java.net.HttpURLConnection
-import java.net.URI
-import java.security.MessageDigest
 import java.util.zip.ZipFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -25,15 +23,13 @@ import org.gradle.work.DisableCachingByDefault
  * Writes the bundled place index from GeoNames' files (see [PlaceIndexData] for the format).
  *
  * GeoNames rebuilds its files every day under the same URLs, so the pins file names each file with
- * the SHA-256 it must have. A downloaded file that does not match fails the task with the checksum
- * it does have: regenerating from newer data is a deliberate change to the pins, reviewed like any
- * other. Files already in [downloads] with the pinned checksum are not downloaded again. The output
- * is committed, so ordinary builds never run this task or touch the network.
+ * the SHA-256 it must have (see [PinnedDownloads]). The output is committed, so ordinary builds
+ * never run this task or touch the network.
  */
 @DisableCachingByDefault(because = "It downloads its inputs, and its output is committed")
 abstract class PlaceIndexGeneratorTask : DefaultTask() {
 
-  /** Lines of `file<TAB>sha256<TAB>url`; `#` starts a comment line. */
+  /** The files to download and their checksums, in [PinnedDownloads]' format. */
   @get:InputFile @get:PathSensitive(PathSensitivity.RELATIVE) abstract val pins: RegularFileProperty
 
   @get:InputFile
@@ -50,7 +46,15 @@ abstract class PlaceIndexGeneratorTask : DefaultTask() {
   @TaskAction
   fun generate() {
 
-    val files = readPins().associate { pin -> pin.file to fetch(pin) }
+    val files =
+      PinnedDownloads(
+          downloads = downloads.get().asFile,
+          logger = logger,
+          changedUpstream =
+            "GeoNames has published newer data; to regenerate from it, put the new checksum in " +
+              "the pins file.",
+        )
+        .fetchAll(pins.get().asFile)
     val result =
       try {
         buildIndex(files)
@@ -94,74 +98,9 @@ abstract class PlaceIndexGeneratorTask : DefaultTask() {
     return PlaceIndexData.build(cities, countries, overrideRows)
   }
 
-  private data class Pin(val file: String, val sha256: String, val url: String)
-
-  private fun readPins(): List<Pin> =
-    pins
-      .get()
-      .asFile
-      .readLines()
-      .filter { it.isNotBlank() && !it.startsWith("#") }
-      .map { line ->
-        val fields = line.split('\t')
-        if (fields.size != PIN_COLUMNS) {
-          throw GradleException("Pins line '$line': expected $PIN_COLUMNS tab-separated columns")
-        }
-        Pin(file = fields[0], sha256 = fields[1].lowercase(), url = fields[2])
-      }
-
-  private fun fetch(pin: Pin): File {
-    val target = downloads.get().file(pin.file).asFile
-    if (target.isFile && sha256(target) == pin.sha256) {
-      return target
-    }
-
-    target.parentFile.mkdirs()
-    val partial = File(target.parentFile, "${pin.file}.partial")
-    logger.lifecycle("Downloading ${pin.url}")
-    val connection = URI(pin.url).toURL().openConnection() as HttpURLConnection
-    connection.connectTimeout = TIMEOUT_MILLIS
-    connection.readTimeout = TIMEOUT_MILLIS
-    try {
-      if (connection.responseCode != HttpURLConnection.HTTP_OK) {
-        throw GradleException("${pin.url} answered HTTP ${connection.responseCode}")
-      }
-      connection.inputStream.use { input -> partial.outputStream().use { input.copyTo(it) } }
-    } finally {
-      connection.disconnect()
-    }
-
-    val actual = sha256(partial)
-    if (actual != pin.sha256) {
-      partial.delete()
-      throw GradleException(
-        "${pin.url} has SHA-256 $actual, but the pins expect ${pin.sha256}. GeoNames has " +
-          "published newer data; to regenerate from it, put the new checksum in the pins file."
-      )
-    }
-    partial.renameTo(target)
-    return target
-  }
-
-  private fun sha256(file: File): String {
-    val digest = MessageDigest.getInstance("SHA-256")
-    file.inputStream().use { input ->
-      val buffer = ByteArray(BUFFER_SIZE)
-      while (true) {
-        val read = input.read(buffer)
-        if (read < 0) break
-        digest.update(buffer, 0, read)
-      }
-    }
-    return digest.digest().joinToString("") { "%02x".format(it) }
-  }
-
   private companion object {
     const val CITIES_ZIP = "cities15000.zip"
     const val CITIES_ENTRY = "cities15000.txt"
     const val COUNTRY_INFO = "countryInfo.txt"
-    const val PIN_COLUMNS = 3
-    const val TIMEOUT_MILLIS = 60_000
-    const val BUFFER_SIZE = 64 * 1024
   }
 }
