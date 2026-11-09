@@ -90,7 +90,7 @@ class UT_PlaceSourceAdapters {
     private val resolver = PlaceIndexResolver(index)
 
     @Test
-    fun aTypedNameIsTheBestMatchAtItsCoordinatesInTheRequestedTimeZone() = runTest {
+    fun aTypedNameIsTheBestMatchAtItsCoordinatesAndElevationInTheRequestedTimeZone() = runTest {
       val chicago = TimeZone.getTimeZone("America/Chicago")
       val typed = ZmanimLocation.Builder().locationName("albany").inTimeZone(chicago).build()
 
@@ -100,7 +100,24 @@ class UT_PlaceSourceAdapters {
       assertEquals("albany", found.originalUserName)
       assertEquals(42.6526, found.latitude)
       assertEquals(-73.7562, found.longitude)
+      assertEquals(45.0, found.elevation)
       assertEquals(chicago, found.timeZone)
+    }
+
+    @Test
+    fun aTypedPlaceTheDataHasNoElevationForIsAtZero() = runTest {
+      val noElevation =
+        PlaceIndexResolver(
+          InMemoryPlaceIndex({
+            PlaceData.text(
+                mapOf("US" to "United States"),
+                PlaceData.place("Albany", 42.6526, -73.7562, country = "US"),
+              )
+              .byteInputStream()
+          })
+        )
+
+      assertEquals(0.0, (noElevation.fromName(typedAlbany) as PlaceResult.Found).location.elevation)
     }
 
     @Test
