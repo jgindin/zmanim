@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- The approximate-location warning's "OK" button, which is added to a Snackbar in code. -->
+  <item name="approximate_location_ok" type="id"/>
+</resources>
