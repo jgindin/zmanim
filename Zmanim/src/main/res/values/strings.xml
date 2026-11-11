@@ -168,4 +168,7 @@
   <string name="exact_alarms_denied_pref_title">Alerts may arrive late</string>
   <string name="exact_alarms_denied_pref_summary">Android is not letting Zmanim set alarms and reminders, so alerts may be several minutes late. Tap to allow them in the system settings.</string>
   <string name="exact_alarms_denied_message">Android is not letting Zmanim set alarms and reminders, so alerts may arrive several minutes late. Open the system settings to allow them?</string>
+  <string name="approximate_location_warning">Zmanim has only your approximate location, so the times may be off by a few seconds. Allow precise location for exact times.</string>
+  <string name="approximate_location_ok">OK</string>
+  <string name="approximate_location_use_precise">Use precise</string>
 </resources>
