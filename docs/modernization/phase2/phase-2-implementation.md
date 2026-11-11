@@ -231,12 +231,27 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 6: Fused location as a Flow
 
+**Status (2026-11-10):** done, in two PRs: `FusedLocationSource` with its Play services adapter (#69), then the approximate-location warning. Nothing is wired into the app yet (Task 7). Calls made while building it, each within the design:
+
+- **`FusedClient`:** a narrow interface over `FusedLocationProviderClient` and `SettingsClient`, so the tests use a fake rather than mocking Play services. `PlayServicesFusedClient` implements it with a small cancellable `Task` await, so there is no `kotlinx-coroutines-play-services` dependency.
+- **Request:** today's: one high-accuracy update, no older than a minute. A recent last fix is under 30 minutes old, also today's limit.
+- **Timeout:** a fresh fix gets 30 seconds, after which the source reports `Timeout`. Today there is no limit.
+- **A recent fix stands:** once a recent fix has been emitted, a failure to get a fresh one ends the flow without `Unavailable`.
+- **Approximate-only grant (D3):** accepted and marked `approximate`; today it counts as no permission. `PlayServicesFusedClient.grantOf` tells precise, approximate and none apart.
+- **Elevation:** each fix gets `SeaLevelElevationPolicy`'s elevation from its own altitudes. The place-elevation fallback for a fix with no altitude is left to the wiring, which knows the place (Task 7).
+- **Delivery:** fixes arrive through a `LocationCallback` on the main looper while the flow is collected. Today's background delivery to `ZmanimLocationAcquiredService` through a `PendingIntent` stays until Task 7 decides it.
+- **Warning (Step 3):** the app's non-blocking message is a Snackbar (`ZmanimActivity.showErrorMessage`, `AppUpgrader`); `MessageDisplayer` is the modal help/About/privacy dialog, so it is not used.
+  - `ApproximateLocationWarning` says: "Zmanim has only your approximate location, so the times may be off by a few seconds. Allow precise location for exact times."
+  - The maintainer chose two buttons on 2026-11-10: "OK", and "Use precise", which asks for precise location. A Snackbar has one action, so "OK" is a second button beside it, and the message may run to five lines.
+  - Either button dismisses the warning for the current approximate-only grant (`APPROXIMATE_LOCATION_WARNING_DISMISSED` in the personal preferences). A precise grant, or none, forgets the dismissal.
+  - **Shown from Task 7:** until Task 7 accepts approximate-only grants, the app still reports them as missing permission, so the maintainer chose (2026-11-10) to show the warning only from Task 7. Its snapshot golden comes with it.
+
 **Files:** `Zmanim/.../location/acquirers/FusedLocationSource.kt` (new), tests.
 
-- [ ] **Step 1:** Implement `LocationSource` over `FusedLocationProviderClient` with `callbackFlow`: emit a recent last-known location first, then the one-shot high-accuracy request, handle the settings-resolution failure by emitting `Unavailable(servicesOff, resolution)`, cancel updates when the collector goes away. Permission handling per D3.
-- [ ] **Step 2:** Tests with a fake client: recent last-known, stale last-known, null last-known, settings failure, collector cancellation removes updates, approximate-only grant.
-- [ ] **Step 3: Approximate-location warning (D3).** Find how the app shows a non-blocking message today (`messageDisplay/MessageDisplayer`) and use it to tell the user that an approximate-only grant can move times by a few seconds. Shown only in that case, and not again for the same grant once dismissed (store the flag in the personal preferences like the other "asked" flags). Add a Robolectric test for the message, and a new snapshot golden for that state only if the message is visible in the screen; no existing golden may change.
-- [ ] **Step 4: Verify** gates. Commit.
+- [x] **Step 1:** Implement `LocationSource` over `FusedLocationProviderClient` with `callbackFlow`: emit a recent last-known location first, then the one-shot high-accuracy request, handle the settings-resolution failure by emitting `Unavailable(servicesOff, resolution)`, cancel updates when the collector goes away. Permission handling per D3.
+- [x] **Step 2:** Tests with a fake client: recent last-known, stale last-known, null last-known, settings failure, collector cancellation removes updates, approximate-only grant.
+- [x] **Step 3: Approximate-location warning (D3).** Find how the app shows a non-blocking message today (`messageDisplay/MessageDisplayer`) and use it to tell the user that an approximate-only grant can move times by a few seconds. Shown only in that case, and not again for the same grant once dismissed (store the flag in the personal preferences like the other "asked" flags). Add a Robolectric test for the message, and a new snapshot golden for that state only if the message is visible in the screen; no existing golden may change.
+- [x] **Step 4: Verify** gates. Commit.
 
 ---
 
@@ -247,6 +262,7 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 - [ ] **Step 1:** Replace `DynamicLocationAcquirer`, `StaticLocationAcquirer` and `LatitudeLongitudeLocationAcquirer` internals with calls into `LocationSource` and the production resolver chain. The events and the `LocationError` codes the screens see do not change.
 - [ ] **Step 2:** Replace the resolver chain inside `LocationToAddressConverter` with the new one and stop using the blocking `Geocoder` path. Remove `JsonQueryingResolver` and the other unused resolver classes in a separate commit.
 - [ ] **Step 3: Background location (D6: required).** Keep `ACCESS_BACKGROUND_LOCATION`. Write down each background path that needs the location (the periodic alarm check via `ZmanimReceiver` and `ZmanNotificationScheduler`, the `PendingIntent` receiver) in the PR so the Play Console declaration can be checked against it, and add a test that these paths still obtain a location under an approximate-only grant (fake client). Keep `ACCESS_FINE_LOCATION` (D7) and list in the PR where precise location is used, so the precise-location declaration can be checked against it too.
+- [ ] **Step 3a: Show the approximate-location warning.** When the main screen gets an `approximate` fix, show `ApproximateLocationWarning` if `shouldShow` says so, with "Use precise" asking for precise location. Add the snapshot golden for that state; no existing golden may change.
 - [ ] **Step 3b:** Once the bundled place index names places when the system geocoder cannot, say so in the privacy policy's "Naming the place" item (`Zmanim/src/main/assets/com/gindin/zmanim/android/privacy.html`): without the geocoder, the name comes from the list of places built into the app and nothing is sent.
 - [ ] **Step 4:** Existing upgrade and snapshot tests pass unchanged; `verifyRoborazziDebug` shows no golden change.
 - [ ] **Step 5: Verify** gates. Commit in small steps.
