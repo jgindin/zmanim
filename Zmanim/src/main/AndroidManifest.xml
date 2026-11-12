@@ -97,7 +97,7 @@
     </receiver>
 
     <!--
-      Receiver used for when we obtain a location fix from the Fused Location Provider.
+      Receives a fix that a request made by the previous version of the app delivers after an upgrade.
     -->
     <receiver
       android:name=".location.acquirers.ZmanimLocationAcquiredService"

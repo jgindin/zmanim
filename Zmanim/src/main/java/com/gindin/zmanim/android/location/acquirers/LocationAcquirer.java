@@ -76,6 +76,16 @@ public abstract class LocationAcquirer {
 
 
   /**
+   * Blocks until the acquisition started by acquire() has handed over its answer. The service calls it after
+   *  starting the acquisition, so that it keeps running while the device looks for its location. Acquirers that
+   *  answer within acquire() have nothing to wait for.
+   */
+  public void awaitCompletion() {
+    // Nothing by default
+  }
+
+
+  /**
    * Called when we're to stop trying to acquire a location. If called when the provider is not actively trying to
    *  acquire the location, then it will silently do nothing.
    */

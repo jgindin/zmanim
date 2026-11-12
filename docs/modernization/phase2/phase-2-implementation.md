@@ -257,6 +257,28 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 7: Wire it into the app behind the existing contract
 
+**Status (2026-11-11):** in progress, in four PRs: the device location (this note), then naming with the new resolver chain, then removing the old resolvers, then showing the approximate-location warning. Calls made so far, each within the design:
+
+- **Device location:** `DynamicLocationAcquirer` is a thin bridge (`DeviceLocationBridge`) over `FusedLocationSource`. The screens get the same `ZmanimService` work and `LocationError` codes:
+  - no permission: `NO_PERMISSIONS`;
+  - no Play services: `NO_PLAY_SERVICES`;
+  - location turned off: `NO_LOCATION_MANAGER_SERVICE`, with the dialog to turn it on;
+  - timeout or any other failure: `CANNOT_DETERMINE_LOCATION`.
+- **Only the first answer is used:** when a recent fix is accepted and the device has one under 30 minutes old (Play services' last fix, from any app), no fresh fix is asked for, as today. Otherwise the periodic check asks for a fresh high-accuracy fix, which can turn on the GPS, also as today.
+- **Delivery (D6):** the maintainer chose on 2026-11-11 to have `ZmanimService`'s work wait for the answer (at most the source's 30 seconds for a fresh fix) instead of having Play services deliver it by broadcast. The system keeps the process alive while the work runs, and a fix can no longer arrive after the service has stopped. The wait is after the request event has been dispatched, not in its handler, because the event bus holds back every other event while one is dispatched. `ZmanimLocationAcquiredService` stays registered for one release, so that a request the previous version left pending at upgrade is not lost; nothing asks for it any more.
+- **Behavior changes users see:**
+  - an approximate-only grant gets the location, and allowing only approximate location in the system prompt no longer switches the user to entered coordinates;
+  - a fresh fix gives up after 30 seconds;
+  - a failure to read the last fix asks for a fresh one instead of reporting an error;
+  - the elevation is above sea level (Task 5), not the GPS altitude above the ellipsoid.
+- **Background paths that need the location (D6),** all through `ZmanimService`'s `SCHEDULE_ALARM` work and so through the same acquirer:
+  - `ZmanimReceiver`'s periodic check, about every 30 minutes: accepts a fix under 30 minutes old, and asks for a fresh one only when there is none;
+  - `ZmanimReceiver` on boot, a clock change or a time zone change: asks for a fresh fix;
+  - `ZmanimReceiver` when exact alarms are allowed or refused, and `ExactAlarmPermission.rescheduleAlerts` when the user comes back from allowing them: accept a recent fix.
+
+  `UT_BackgroundLocation` checks the periodic check and the fresh-fix case under an approximate-only grant.
+- **Where precise location is used (D7):** the fresh fix is a `PRIORITY_HIGH_ACCURACY` request (`FusedLocationSource.REQUEST`), which uses the GPS only under a precise grant. Only a precise fix carries an altitude, which gives the elevation-adjusted zmanim the user's own elevation.
+
 **Files:** `ZmanimLocationManager.java` and the acquirers (thinned), `LocationToAddressConverter.java` (becomes a thin entry point), an event-bus bridge in Kotlin, manifest if D6 says so.
 
 - [ ] **Step 1:** Replace `DynamicLocationAcquirer`, `StaticLocationAcquirer` and `LatitudeLongitudeLocationAcquirer` internals with calls into `LocationSource` and the production resolver chain. The events and the `LocationError` codes the screens see do not change.

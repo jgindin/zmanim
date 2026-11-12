@@ -17,6 +17,11 @@ import android.location.Location;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * Receives a fix that Play services delivers by broadcast. The app asks for fixes through {@link FusedLocationSource}
+ *  now, which does not use it; it stays so that a request made by the previous version, still pending when the app is
+ *  upgraded, is not lost.
+ */
 public class ZmanimLocationAcquiredService
   extends BroadcastReceiver {
 
