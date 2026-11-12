@@ -13,12 +13,12 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.Manifest;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Looper;
 
+import androidx.annotation.Nullable;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,7 +27,9 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -48,16 +50,20 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 
+import kotlinx.coroutines.CoroutineScopeKt;
+import kotlinx.coroutines.Dispatchers;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage.NEVER;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage.PREFER;
 
 /**
  * What {@link DynamicLocationAcquirer} hands to the rest of the app for each outcome of asking the device for its
- *  location. The Play Services entry points are static, so they are replaced for the duration of each test. Tests
- *  named {@code ...CurrentBehavior} pin behavior that looks wrong; it is kept as it is until a later change fixes it
- *  on purpose.
+ *  location, through the real {@link FusedLocationSource}. The Play Services entry points are static, so they are
+ *  replaced for the duration of each test.
  */
 @RunWith( RobolectricTestRunner.class )
 @Config( sdk = 24 )
@@ -65,6 +71,8 @@ import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.Cach
 public class UT_DynamicLocationAcquirer {
 
   private static final long                                 ONE_MINUTE = 60 * 1000;
+
+  private static final double                               SEATTLE_SEA_LEVEL_ELEVATION = 76.7;
 
   private Application                                       context;
 
@@ -82,6 +90,10 @@ public class UT_DynamicLocationAcquirer {
 
   /** The location saved by an earlier run, which comes back with every error. */
   private ZmanimLocation                                    lastKnown;
+
+  /** What a fresh-fix request delivers as soon as it starts; null delivers nothing. */
+  @Nullable
+  private Location                                          freshFix;
 
 
   @Before
@@ -117,6 +129,17 @@ public class UT_DynamicLocationAcquirer {
 
     settingsAnswer( Tasks.forResult( (LocationSettingsResponse)null ) );
 
+    freshFix = freshFixAt( 40.71, -74.01 );
+    Mockito.when( fusedClient.requestLocationUpdates( Mockito.any( LocationRequest.class ),
+        Mockito.any( LocationCallback.class ), Mockito.any( Looper.class ) ) )
+      .thenAnswer( invocation -> {
+        if ( freshFix != null ) {
+          invocation.getArgument( 1, LocationCallback.class )
+            .onLocationResult( LocationResult.create( Collections.singletonList( freshFix ) ) );
+        }
+        return Tasks.forResult( null );
+      } );
+
     ZmanimServiceRequests.drain();
   }
 
@@ -151,12 +174,33 @@ public class UT_DynamicLocationAcquirer {
   }
 
 
-  /** Runs the acquirer, and the Play Services listeners it registers (they are called on the main thread). */
+  private static Location freshFixAt( double latitude, double longitude ) {
+
+    Location fix = new Location( "fused" );
+    fix.setLatitude( latitude );
+    fix.setLongitude( longitude );
+    fix.setTime( System.currentTimeMillis() );
+    return fix;
+  }
+
+
+  /**
+   * An acquirer over the app's fused location source that starts each request on the calling thread. Mockito
+   *  replaces the static Play Services entry points on the test's thread only, and the source asks whether Play
+   *  Services are available when the request starts.
+   */
+  public static DynamicLocationAcquirer startingOnThisThread( SharedPreferences prefs, Context context ) {
+    return new DynamicLocationAcquirer( prefs, context, FusedLocationSource.create( context ),
+      CoroutineScopeKt.CoroutineScope( Dispatchers.getUnconfined() ) );
+  }
+
+
+  /** Runs the acquirer until it has handed over its answer, as the service does. */
   private DynamicLocationAcquirer acquire( CachedLocationUsage usage ) {
 
-    DynamicLocationAcquirer acquirer = new DynamicLocationAcquirer( prefs, context );
+    DynamicLocationAcquirer acquirer = startingOnThisThread( prefs, context );
     acquirer.acquire( usage );
-    Shadows.shadowOf( Looper.getMainLooper() ).idle();
+    acquirer.awaitCompletion();
     return acquirer;
   }
 
@@ -170,16 +214,26 @@ public class UT_DynamicLocationAcquirer {
 
 
   private void assertNoFreshFixRequested() {
-    Mockito.verify( fusedClient, Mockito.never() )
-      .requestLocationUpdates( Mockito.any( LocationRequest.class ), Mockito.any( PendingIntent.class ) );
+    Mockito.verify( fusedClient, Mockito.never() ).requestLocationUpdates( Mockito.any( LocationRequest.class ),
+      Mockito.any( LocationCallback.class ), Mockito.any( Looper.class ) );
   }
 
 
   private LocationRequest freshFixRequest() {
 
     ArgumentCaptor<LocationRequest> request = ArgumentCaptor.forClass( LocationRequest.class );
-    Mockito.verify( fusedClient ).requestLocationUpdates( request.capture(), Mockito.any( PendingIntent.class ) );
+    Mockito.verify( fusedClient ).requestLocationUpdates( request.capture(), Mockito.any( LocationCallback.class ),
+      Mockito.any( Looper.class ) );
     return request.getValue();
+  }
+
+
+  /** The single piece of work sent, which must be the fresh fix, unnamed. */
+  private static void assertTheFreshFixIsSent() {
+
+    ZmanimServiceRequests.Request request = onlyRequest();
+    Assert.assertEquals( "PLACE_ACQUIRED", request.action );
+    Assert.assertEquals( 40.71, request.location.getLatitude(), 1e-9 );
   }
 
 
@@ -199,16 +253,22 @@ public class UT_DynamicLocationAcquirer {
   }
 
 
-  /** An approximate-only grant (Android 12 and later let the user choose it) is treated as no permission at all. */
+  /** An approximate-only grant (Android 12 and later let the user choose it) is accepted. */
   @Test
-  public void anApproximateOnlyGrantIsTreatedAsNoPermissionCurrentBehavior() {
+  public void anApproximateOnlyGrantGetsTheLocation() {
 
     Shadows.shadowOf( context ).denyPermissions( Manifest.permission.ACCESS_FINE_LOCATION );
+    lastLocation( Tasks.forResult( fixMinutesAgo( 29 ) ) );
 
     acquire( PREFER );
 
-    Assert.assertEquals( LocationError.Code.NO_PERMISSIONS, onlyRequest().error.errorCode );
-    Mockito.verifyNoInteractions( fusedClient );
+    ZmanimServiceRequests.Request request = onlyRequest();
+    Assert.assertEquals( "PLACE_ACQUIRED", request.action );
+    Assert.assertEquals( 47.62, request.location.getLatitude(), 1e-9 );
+
+    acquire( NEVER );
+
+    assertTheFreshFixIsSent();
   }
 
 
@@ -238,8 +298,9 @@ public class UT_DynamicLocationAcquirer {
     // It has no name yet, so the service sends it on to be named.
     Assert.assertEquals( "PLACE_ACQUIRED", request.action );
     Assert.assertEquals( 47.62, request.location.getLatitude(), 1e-9 );
-    Assert.assertEquals( 56.0, request.location.getElevation(), 0.0 );
     Assert.assertEquals( "fused", request.location.providerName );
+    // The fix's altitude is above the ellipsoid, and the geoid is about 21 m below it in Seattle.
+    Assert.assertEquals( SEATTLE_SEA_LEVEL_ELEVATION, request.location.getElevation(), 0.5 );
 
     Assert.assertEquals( 47.62, ZmanLocationUtil.load( context ).getLatitude(), 1e-9 );
     assertNoFreshFixRequested();
@@ -253,9 +314,7 @@ public class UT_DynamicLocationAcquirer {
 
     acquire( PREFER );
 
-    Assert.assertTrue( ZmanimServiceRequests.drain().isEmpty() );
-    Assert.assertEquals( "Albany, New York", ZmanLocationUtil.load( context ).getLocationName() );
-    freshFixRequest();
+    assertTheFreshFixIsSent();
   }
 
 
@@ -266,8 +325,7 @@ public class UT_DynamicLocationAcquirer {
 
     acquire( PREFER );
 
-    Assert.assertTrue( ZmanimServiceRequests.drain().isEmpty() );
-    freshFixRequest();
+    assertTheFreshFixIsSent();
   }
 
 
@@ -277,7 +335,7 @@ public class UT_DynamicLocationAcquirer {
     acquire( NEVER );
 
     Mockito.verify( fusedClient, Mockito.never() ).getLastLocation();
-    freshFixRequest();
+    assertTheFreshFixIsSent();
   }
 
 
@@ -295,30 +353,30 @@ public class UT_DynamicLocationAcquirer {
 
 
   @Test
-  public void theFreshFixIsDeliveredToTheLocationReceiver() {
+  public void theFreshFixIsSavedForTheNextRun() {
 
     acquire( NEVER );
 
-    ArgumentCaptor<PendingIntent> pendingIntent = ArgumentCaptor.forClass( PendingIntent.class );
-    Mockito.verify( fusedClient ).requestLocationUpdates( Mockito.any( LocationRequest.class ), pendingIntent.capture() );
-
-    Assert.assertEquals( ZmanimLocationAcquiredService.createIntent( context ).getAction(),
-      Shadows.shadowOf( pendingIntent.getValue() ).getSavedIntent().getAction() );
-    Assert.assertTrue( Shadows.shadowOf( pendingIntent.getValue() ).isBroadcastIntent() );
+    Assert.assertEquals( 40.71, ZmanLocationUtil.load( context ).getLatitude(), 1e-9 );
   }
 
 
   @Test
-  public void cancellingStopsTheOutstandingRequest() {
+  public void cancellingStopsTheOutstandingRequestWithoutAnAnswer() {
 
-    DynamicLocationAcquirer acquirer = acquire( NEVER );
+    freshFix = null;
+    DynamicLocationAcquirer acquirer = startingOnThisThread( prefs, context );
+    acquirer.acquire( NEVER );
 
-    ArgumentCaptor<PendingIntent> pendingIntent = ArgumentCaptor.forClass( PendingIntent.class );
-    Mockito.verify( fusedClient ).requestLocationUpdates( Mockito.any( LocationRequest.class ), pendingIntent.capture() );
+    ArgumentCaptor<LocationCallback> callback = ArgumentCaptor.forClass( LocationCallback.class );
+    Mockito.verify( fusedClient, Mockito.timeout( TimeUnit.SECONDS.toMillis( 10 ) ) )
+      .requestLocationUpdates( Mockito.any( LocationRequest.class ), callback.capture(), Mockito.any( Looper.class ) );
 
     acquirer.cancel();
+    acquirer.awaitCompletion();
 
-    Mockito.verify( fusedClient ).removeLocationUpdates( pendingIntent.getValue() );
+    Mockito.verify( fusedClient ).removeLocationUpdates( callback.getValue() );
+    Assert.assertTrue( ZmanimServiceRequests.drain().isEmpty() );
   }
 
 
@@ -353,15 +411,13 @@ public class UT_DynamicLocationAcquirer {
 
 
   @Test
-  public void aFailureToReadTheLastKnownFixIsReportedAsCannotDetermineLocation() {
+  public void aFailureToReadTheLastKnownFixAsksForAFreshOne() {
 
     lastLocation( Tasks.forException( new IllegalStateException( "no last location" ) ) );
 
     acquire( PREFER );
 
-    ZmanimServiceRequests.Request request = onlyRequest();
-    Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
-    assertNoFreshFixRequested();
+    assertTheFreshFixIsSent();
   }
 
 }  // End of UT_DynamicLocationAcquirer class

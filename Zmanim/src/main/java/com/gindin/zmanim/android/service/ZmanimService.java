@@ -288,6 +288,12 @@ public class ZmanimService
     }
 
     eventBus.fire( new RequestLocationUpdateEvent( cachedLocationUsage ) );
+
+    // The work is not done until the location has been handed over: the system may stop the app's process once this
+    //  returns, and, in the background, before a fix arrives.
+    if ( locationManager != null ) {
+      locationManager.awaitAcquisition();
+    }
   }
 
 

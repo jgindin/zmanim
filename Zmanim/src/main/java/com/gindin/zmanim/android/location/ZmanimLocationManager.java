@@ -126,6 +126,19 @@ public class ZmanimLocationManager {
   }
 
 
+  /**
+   * Blocks until the current acquisition has handed over its answer. It is called after the request event has been
+   *  dispatched, not from its handler, because the event bus holds back every other event while one is dispatched.
+   */
+  public void awaitAcquisition() {
+
+    LocationAcquirer acquirer = currentAcquirer;
+    if ( acquirer != null ) {
+      acquirer.awaitCompletion();
+    }
+  }
+
+
   private void cancel() {
 
     if ( currentAcquirer != null ) {

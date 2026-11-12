@@ -657,7 +657,8 @@ public class ZmanimActivity
       // Asking for background access below starts the flow again.
       locationPermissionFlowActive = false;
 
-      if ( ( grantResults.length <= 0 ) || ( grantResults[ 0 ] != PackageManager.PERMISSION_GRANTED ) ) {
+      // Precise and approximate location are asked for together, and either will do.
+      if ( !anyGranted( grantResults ) ) {
         handleNoLocationPermissions();
         showErrorMessage( R.string.cannot_use_dynamic_location, R.string.edit_location,
           v -> eventBus.fire( new EditLocationPrefsEvent() )
@@ -691,6 +692,17 @@ public class ZmanimActivity
       }
     }
 
+  }
+
+
+  private static boolean anyGranted( int[] grantResults ) {
+
+    for ( int result : grantResults ) {
+      if ( result == PackageManager.PERMISSION_GRANTED ) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
