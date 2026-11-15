@@ -6,20 +6,16 @@ package com.gindin.zmanim.android.location.resolvers;
 
 import com.gindin.zmanlib.location.ZmanimLocation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.location.Address;
 
-import java.util.List;
-
 /**
- * Base for all resolvers that take a location and determine the name.
- *<p/>
- *
- * After resolving the location, a work item will be enqueued for the ZmanimService to handle the result.
+ * The name shown for a place the geocoder returns: the locality with its region or country, or whichever of those the
+ *  address has.
  */
-abstract class LocationResolver {
+final class AddressNames {
+
+  private AddressNames() {
+  }
 
 
   static String addressToLocationName( Address address ) {
@@ -89,47 +85,4 @@ abstract class LocationResolver {
     return locationString;
   }
 
-
-  @Nullable
-  final ZmanimLocation resolve(
-    @NonNull final ZmanimLocation          location,
-    @NonNull final List<LocationResolver>  nextResolvers
-  ) {
-
-    final ZmanimLocation zmanimLocation;
-    if ( location.hasCoordinates() ) {
-      zmanimLocation = resolveFromCoordinates( location );
-    }
-    else {
-      zmanimLocation = resolveFromName( location );
-    }
-
-    if ( ( zmanimLocation == null ) && !nextResolvers.isEmpty() ) {
-      return nextResolvers.get( 0 ).resolve( location, nextResolvers.subList( 1, nextResolvers.size() ) );
-    }
-    else {
-      return zmanimLocation;
-    }
-  }
-
-
-  /**
-   * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
-   *  specified location using the latitude and longitude, and return a new location with all possible details filled out.
-   *
-   * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
-   */
-  @Nullable
-  protected abstract ZmanimLocation resolveFromCoordinates( @NonNull ZmanimLocation zmanimLocation );
-
-  /**
-   * This method, guaranteed to be run on a background thread, must perform whatever actions necessary to resolve the
-   *  specified location using the name, and return a new location with all possible details fillled out.
-   *
-   * @return An actual ZmanimLocation that has been properly resolved, or null if resolution failed.
-   */
-  @Nullable
-  protected abstract ZmanimLocation resolveFromName( @NonNull ZmanimLocation zmanimLocation );
-
-
-} // End of LocationResolver class
+}  // End of AddressNames class

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Locale;
 
 /**
- * The name {@link LocationResolver#addressToLocationName} builds from what the geocoder returns. Tests named
+ * The name {@link AddressNames#addressToLocationName} builds from what the geocoder returns. Tests named
  *  {@code ...CurrentBehavior} pin behavior that looks wrong; it is kept as it is until a later change fixes it on
  *  purpose.
  */
@@ -37,7 +37,7 @@ public class UT_AddressToLocationName {
     address.setAdminArea( "Washington" );
     address.setCountryName( "United States" );
 
-    Assertions.assertEquals( "Seattle, Washington", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "Seattle, Washington", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -48,7 +48,7 @@ public class UT_AddressToLocationName {
     address.setLocality( "Monaco" );
     address.setCountryName( "Monaco" );
 
-    Assertions.assertEquals( "Monaco, Monaco", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "Monaco, Monaco", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -58,7 +58,7 @@ public class UT_AddressToLocationName {
     Address address = address();
     address.setLocality( "Monaco" );
 
-    Assertions.assertEquals( "Monaco", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "Monaco", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -69,7 +69,7 @@ public class UT_AddressToLocationName {
     address.setAdminArea( "New York" );
     address.setCountryName( "United States" );
 
-    Assertions.assertEquals( "New York, United States", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "New York, United States", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -79,7 +79,7 @@ public class UT_AddressToLocationName {
     Address address = address();
     address.setAdminArea( "New York" );
 
-    Assertions.assertEquals( "New York", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "New York", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -94,7 +94,7 @@ public class UT_AddressToLocationName {
     address.setPostalCode( "11226" );
     address.setCountryName( "United States" );
 
-    Assertions.assertEquals( "Brooklyn, NY ", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "Brooklyn, NY ", AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -108,7 +108,7 @@ public class UT_AddressToLocationName {
     address.setPostalCode( "11226" );
 
     Assertions.assertEquals( ZmanimLocation.toLatLongString( 40.65, -73.95 ),
-      LocationResolver.addressToLocationName( address ) );
+      AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -122,7 +122,7 @@ public class UT_AddressToLocationName {
     address.setCountryName( "United States" );
 
     Assertions.assertEquals( ZmanimLocation.toLatLongString( 40.65, -73.95 ),
-      LocationResolver.addressToLocationName( address ) );
+      AddressNames.addressToLocationName( address ) );
   }
 
 
@@ -133,20 +133,20 @@ public class UT_AddressToLocationName {
     address.setAddressLine( 0, "Somewhere" );
     address.setCountryName( "United Kingdom" );
 
-    Assertions.assertEquals( "United Kingdom", LocationResolver.addressToLocationName( address ) );
+    Assertions.assertEquals( "United Kingdom", AddressNames.addressToLocationName( address ) );
   }
 
 
   @Test
   public void theCoordinatesWhenTheAddressHasNothingElse() {
     Assertions.assertEquals( ZmanimLocation.toLatLongString( 40.65, -73.95 ),
-      LocationResolver.addressToLocationName( address() ) );
+      AddressNames.addressToLocationName( address() ) );
   }
 
 
   @Test
   public void noAddressIsAnUnknownLocation() {
-    Assertions.assertEquals( ZmanimLocation.UNKNOWN_LOCATION, LocationResolver.addressToLocationName( null ) );
+    Assertions.assertEquals( ZmanimLocation.UNKNOWN_LOCATION, AddressNames.addressToLocationName( null ) );
   }
 
 }  // End of UT_AddressToLocationName class
