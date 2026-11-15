@@ -274,6 +274,31 @@ class UT_FileGeocodeCache {
   }
 
   @Test
+  fun aPlaceNamedOnlyAfterItsCoordinatesIsNotStored() = test {
+    val cache = cache()
+
+    cache.store(namedAfterItsCoordinates(BOSTON_LATITUDE, BOSTON_LONGITUDE))
+
+    assertNull(cache.find(nearBoston()))
+    assertFalse(current.exists())
+  }
+
+  /** An earlier version cached a fix it could not name under its coordinates. */
+  @Test
+  fun aPlaceNamedOnlyAfterItsCoordinatesInTheFileIsDropped() = test {
+    cache().store(place("Boston, Massachusetts", BOSTON_LATITUDE, BOSTON_LONGITUDE))
+    val coordinates = ZmanimLocation.toLatLongString(BOSTON_LATITUDE, BOSTON_LONGITUDE)
+    current.writeText(current.readText().replace("Boston, Massachusetts", coordinates))
+
+    val reopened = cache()
+    assertNull(reopened.find(nearBoston()))
+
+    reopened.store(place("Beacon Hill, Boston", BOSTON_LATITUDE + 0.001, BOSTON_LONGITUDE))
+    assertEquals("Beacon Hill, Boston", cache().find(nearBoston())?.locationName)
+    assertEquals("1", current.readLines().first().split('\t')[2])
+  }
+
+  @Test
   fun aPlaceAlreadyAnsweredIsNotStoredAgain() = test {
     val cache = cache()
     cache.store(place("Boston, Massachusetts", BOSTON_LATITUDE, BOSTON_LONGITUDE))
@@ -331,6 +356,9 @@ class UT_FileGeocodeCache {
         .atLongitude(longitude)
         .inTimeZone(NEW_YORK)
         .build()
+
+    fun namedAfterItsCoordinates(latitude: Double, longitude: Double): ZmanimLocation =
+      place(ZmanimLocation.toLatLongString(latitude, longitude), latitude, longitude)
 
     fun typed(name: String, timeZone: TimeZone): ZmanimLocation =
       ZmanimLocation.Builder().locationName(name).inTimeZone(timeZone).build()

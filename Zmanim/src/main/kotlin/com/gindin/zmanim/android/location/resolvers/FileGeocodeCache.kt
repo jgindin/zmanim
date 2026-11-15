@@ -30,6 +30,10 @@ import kotlinx.serialization.json.Json
  * always has been: the cache only saves lookups.
  *
  * At most [MAX_ENTRIES] places are kept; storing one more drops the one stored longest ago.
+ *
+ * A place whose name is only its coordinates is not a place anyone named: it is not stored, and one
+ * that an earlier version of the app stored is dropped when the file is read, so that it does not
+ * answer for the area in place of a source that can name it.
  */
 class FileGeocodeCache(
   private val directory: File,
@@ -65,7 +69,7 @@ class FileGeocodeCache(
   /** Keeps a place that has a name and coordinates, unless a cached place already answers it. */
   override suspend fun store(location: ZmanimLocation) {
 
-    if (!location.isResolved()) {
+    if (!location.isResolved() || location.isNamedAfterItsCoordinates()) {
       return
     }
 
@@ -97,7 +101,14 @@ class FileGeocodeCache(
       ?: entries.lastOrNull { it.hasName() && !request.isSignificantChangeFrom(it) }
 
   private suspend fun loaded(): MutableList<ZmanimLocation> =
-    entries ?: withContext(dispatcher) { read() }.toMutableList().also { entries = it }
+    entries
+      ?: withContext(dispatcher) { read() }
+        .filterNot { it.isNamedAfterItsCoordinates() }
+        .toMutableList()
+        .also { entries = it }
+
+  private fun ZmanimLocation.isNamedAfterItsCoordinates(): Boolean =
+    locationName == ZmanimLocation.toLatLongString(latitude, longitude)
 
   private fun read(): List<ZmanimLocation> {
 
