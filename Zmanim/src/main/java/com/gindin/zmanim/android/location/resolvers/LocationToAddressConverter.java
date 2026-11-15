@@ -11,24 +11,17 @@ import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Geocoder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.SafeJobIntentService;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Resolves a location to its name via various resolvers.
+ * Names a location, or finds the place the user typed, through {@link PlaceResolution}'s chain: the cache, the
+ *  system geocoder, then the place data bundled with the app.
  */
 public class LocationToAddressConverter
   extends SafeJobIntentService {
-
-  private CachedLocationResolver cachedLocationResolver;
 
   /** Actions which this service can handle. */
   public enum Actions {
@@ -71,7 +64,7 @@ public class LocationToAddressConverter
 
   private static final int                                  JOB_ID = 606;
 
-  private List<LocationResolver>                            orderedResolvers;
+  private PlaceNamer                                        namer;
 
 
 
@@ -93,45 +86,18 @@ public class LocationToAddressConverter
   public void onCreate() {
     super.onCreate();
 
-    CachedLocationResolver.IOFactory ioFactory = new CachedLocationResolver.IOFactory() {
-      @Override
-      public InputStream openInput() throws FileNotFoundException {
-        return openFileInput( "CachedLocations" );
-      }
-
-
-      @Override
-      public FileOutputStream openOutput() throws FileNotFoundException {
-        return openFileOutput( "CachedLocations", Context.MODE_PRIVATE );
-      }
-
-
-      @Override
-      public void run( Runnable runnable ) {
-        // We could run this in the background. However I think that will cause issues as we're a service that will
-        //  go away once our work is done. Having some more work happen in the background seems like a recipe for
-        //  the work to not actually be able to happen...
-        runnable.run();
-      }
-    };
-
-    cachedLocationResolver = new CachedLocationResolver( ioFactory );
+    namer = new PlaceNamer( PlaceResolution.create( this ) );
     if ( wipeCacheOnStart ) {
       wipeCacheOnStart = false;
-      cachedLocationResolver.wipeCache();
+      namer.forgetCachedPlaces();
     }
-    else {
-      cachedLocationResolver.loadCache();
-    }
+  }
 
-    orderedResolvers = new ArrayList<>();
-    orderedResolvers.add( cachedLocationResolver );
 
-    if ( Geocoder.isPresent() ) {
-      orderedResolvers.add( new AndroidResolver( new Geocoder( this ) ) );
-    }
-
-    orderedResolvers.add( new PassthroughResolver() );
+  /** Names places through {@code resolution} instead of the app's own chain. */
+  @VisibleForTesting
+  void namePlacesWith( @NonNull PlaceResolution resolution ) {
+    namer = new PlaceNamer( resolution );
   }
 
 
@@ -168,9 +134,7 @@ public class LocationToAddressConverter
       ZmanimService.enqueueWork( this, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), location );
     }
     else {
-
       ZmanimService.enqueueWork( this, resolved );
-      cachedLocationResolver.cache( resolved );
     }
 
   }
@@ -179,7 +143,7 @@ public class LocationToAddressConverter
   @Nullable
   private ZmanimLocation resolve( @NonNull ZmanimLocation location ) {
 
-    return orderedResolvers.get( 0 ).resolve( location, orderedResolvers.subList( 1, orderedResolvers.size() ) );
+    return location.hasCoordinates() ? namer.placeForCoordinates( location ) : namer.placeForName( location );
   }
 
 

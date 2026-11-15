@@ -24,21 +24,17 @@ import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowGeocoder;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * What {@link LocationToAddressConverter} tells the rest of the app after looking up a location, through its real
- *  resolver chain with a Mockito geocoder in place of the system one. The work goes in the way the app sends it, with
- *  {@link LocationToAddressConverter#enqueueWork}. Tests named {@code ...CurrentBehavior} pin behavior that looks
- *  wrong; it is kept as it is until a later change fixes it on purpose.
+ * What {@link LocationToAddressConverter} tells the rest of the app after looking up a location, through the app's
+ *  chain (the cache, the geocoder, the bundled place data) with a Mockito geocoder in place of the system one. The
+ *  work goes in the way the app sends it, with {@link LocationToAddressConverter#enqueueWork}.
  */
 @RunWith( RobolectricTestRunner.class )
 @Config( sdk = 24 )
@@ -55,44 +51,34 @@ public class UT_LocationToAddressConverter {
 
 
   @Before
-  public void setup() throws Exception {
+  public void setup() {
 
     context = ApplicationProvider.getApplicationContext();
-    context.deleteFile( "CachedLocations" );
+    context.deleteFile( FileGeocodeCache.FILE_NAME );
+    context.deleteFile( FileGeocodeCache.LEGACY_FILE_NAME );
+    PlaceResolution.forgetShared();
     LocationToAddressConverter.wipeCacheOnStart = false;
 
-    converter = Robolectric.setupService( LocationToAddressConverter.class );
-
     geocoder = Mockito.mock( Geocoder.class );
-    resolvers( converter ).set( 1, new AndroidResolver( geocoder ) );
+    converter = started();
 
     ZmanimServiceRequests.drainIntents();
   }
 
 
   @After
-  public void restoreGeocoder() {
-    ShadowGeocoder.setIsPresent( true );
+  public void forgetTheSharedCache() {
+    PlaceResolution.forgetShared();
+    LocationToAddressConverter.wipeCacheOnStart = false;
   }
 
 
-  @SuppressWarnings( "unchecked" )
-  private static List<LocationResolver> resolvers( LocationToAddressConverter converter ) throws Exception {
+  /** A converter that asks {@link #geocoder} in place of the system one. */
+  private LocationToAddressConverter started() {
 
-    // The converter keeps its chain in a private field; there is no other way to see it or to put a fake geocoder in.
-    Field field = LocationToAddressConverter.class.getDeclaredField( "orderedResolvers" );
-    field.setAccessible( true );
-    return (List<LocationResolver>)field.get( converter );
-  }
-
-
-  private static List<Class<?>> classesOf( List<LocationResolver> resolvers ) {
-
-    List<Class<?>> classes = new ArrayList<>();
-    for ( LocationResolver resolver : resolvers ) {
-      classes.add( resolver.getClass() );
-    }
-    return classes;
+    LocationToAddressConverter started = Robolectric.setupService( LocationToAddressConverter.class );
+    started.namePlacesWith( PlaceResolution.create( context, geocoder ) );
+    return started;
   }
 
 
@@ -112,6 +98,11 @@ public class UT_LocationToAddressConverter {
   }
 
 
+  private ZmanimServiceRequests.Request resolvePlace( ZmanimLocation location ) {
+    return resolve( location, LocationToAddressConverter.Actions.RESOLVE_PLACE );
+  }
+
+
   private static Address albany() {
     Address address = new Address( Locale.US );
     address.setLocality( "Albany" );
@@ -122,13 +113,25 @@ public class UT_LocationToAddressConverter {
   }
 
 
-  private static ZmanimLocation deviceFix() {
+  private static ZmanimLocation fix( double latitude, double longitude ) {
     return new ZmanimLocation.Builder()
       .fromProvider( "fused" )
-      .atLatitude( 42.65 )
-      .atLongitude( -73.76 )
+      .atLatitude( latitude )
+      .atLongitude( longitude )
+      .atElevation( 30 )
       .inTimeZone( NEW_YORK )
       .build();
+  }
+
+
+  private static ZmanimLocation nearAlbany() {
+    return fix( 42.65, -73.76 );
+  }
+
+
+  /** In the North Atlantic, far from any place in the bundled data. */
+  private static ZmanimLocation atSea() {
+    return fix( 35.0, -45.0 );
   }
 
 
@@ -142,81 +145,85 @@ public class UT_LocationToAddressConverter {
 
 
   @Test
-  public void theCacheIsAskedFirstThenTheGeocoderThenNobody() throws Exception {
-
-    LocationToAddressConverter started = Robolectric.setupService( LocationToAddressConverter.class );
-
-    Assert.assertEquals(
-      List.of( CachedLocationResolver.class, AndroidResolver.class, PassthroughResolver.class ),
-      classesOf( resolvers( started ) ) );
-  }
-
-
-  @Test
-  public void withoutAGeocoderTheCacheIsAskedThenNobody() throws Exception {
-
-    ShadowGeocoder.setIsPresent( false );
-    LocationToAddressConverter started = Robolectric.setupService( LocationToAddressConverter.class );
-
-    Assert.assertEquals( List.of( CachedLocationResolver.class, PassthroughResolver.class ),
-      classesOf( resolvers( started ) ) );
-  }
-
-
-  @Test
   public void aDeviceFixIsNamedByTheGeocoderAndCached() throws IOException {
 
     Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenReturn( Collections.singletonList( albany() ) );
 
-    ZmanimServiceRequests.Request request = resolve( deviceFix(), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    ZmanimServiceRequests.Request request = resolvePlace( nearAlbany() );
 
     Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
     Assert.assertEquals( "Albany, New York", request.location.getLocationName() );
 
     // The next fix nearby is answered from the cache, without the geocoder.
     Mockito.reset( geocoder );
-    request = resolve( deviceFix(), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    request = resolvePlace( nearAlbany() );
     Assert.assertEquals( "Albany, New York", request.location.getLocationName() );
     Mockito.verifyNoInteractions( geocoder );
   }
 
 
-  /**
-   * Going through a bundle names an unnamed fix after its coordinates, so when the geocoder cannot name it the fix
-   *  comes back as resolved, under its coordinates.
-   */
+  /** The address the geocoder picks is only near the fix; the fix is where the user is. */
   @Test
-  public void aDeviceFixTheGeocoderCannotNameIsAcquiredUnderItsCoordinatesCurrentBehavior() throws IOException {
+  public void aNamedFixKeepsItsCoordinatesElevationAndTimeZone() throws IOException {
 
-    Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenThrow( new IOException( "no network" ) );
+    Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenReturn( Collections.singletonList( albany() ) );
 
-    ZmanimServiceRequests.Request request = resolve( deviceFix(), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    ZmanimLocation named = resolvePlace( nearAlbany() ).location;
 
-    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
-    Assert.assertEquals( ZmanimLocation.toLatLongString( 42.65, -73.76 ), request.location.getLocationName() );
+    Assert.assertEquals( 42.65, named.getLatitude(), 1e-9 );
+    Assert.assertEquals( -73.76, named.getLongitude(), 1e-9 );
+    Assert.assertEquals( 30, named.getElevation(), 1e-9 );
+    Assert.assertEquals( NEW_YORK, named.getTimeZone() );
   }
 
 
-  /** And that name is cached, so the place keeps it after the network comes back. */
   @Test
-  public void theCoordinatesNameStaysCachedOnceTheGeocoderWorksAgainCurrentBehavior() throws IOException {
+  public void offlineTheBundledDataNamesAFixNearATown() throws IOException {
 
     Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenThrow( new IOException( "no network" ) );
-    resolve( deviceFix(), LocationToAddressConverter.Actions.RESOLVE_PLACE );
 
+    ZmanimServiceRequests.Request request = resolvePlace( nearAlbany() );
+
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( "Albany, United States", request.location.getLocationName() );
+    Assert.assertEquals( 42.65, request.location.getLatitude(), 1e-9 );
+  }
+
+
+  /** So the zmanim can still be shown: the fix comes back under its coordinates. */
+  @Test
+  public void aFixNoSourceCanNameIsAcquiredUnderItsCoordinates() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 35.0, -45.0, 5 ) ).thenThrow( new IOException( "no network" ) );
+
+    ZmanimServiceRequests.Request request = resolvePlace( atSea() );
+
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( ZmanimLocation.toLatLongString( 35.0, -45.0 ), request.location.getLocationName() );
+    Assert.assertEquals( 35.0, request.location.getLatitude(), 1e-9 );
+  }
+
+
+  /** A fix named after its coordinates is not cached, so once the geocoder works again it names the place. */
+  @Test
+  public void aFixNamedAfterItsCoordinatesIsNamedOnceTheGeocoderWorksAgain() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 35.0, -45.0, 5 ) ).thenThrow( new IOException( "no network" ) );
+    resolvePlace( atSea() );
+
+    Address ocean = new Address( Locale.US );
+    ocean.setAdminArea( "North Atlantic Ocean" );
     Mockito.reset( geocoder );
-    Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenReturn( Collections.singletonList( albany() ) );
-    ZmanimServiceRequests.Request request = resolve( deviceFix(), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    Mockito.when( geocoder.getFromLocation( 35.0, -45.0, 5 ) ).thenReturn( Collections.singletonList( ocean ) );
 
-    Assert.assertEquals( ZmanimLocation.toLatLongString( 42.65, -73.76 ), request.location.getLocationName() );
-    Mockito.verifyNoInteractions( geocoder );
+    Assert.assertEquals( "North Atlantic Ocean", resolvePlace( atSea() ).location.getLocationName() );
   }
 
 
   @Test
   public void aLocationThatIsAlreadyResolvedIsNotLookedUpAgain() {
 
-    ZmanimLocation resolved = new ZmanimLocation.Builder().from( deviceFix() ).locationName( "Albany, New York" ).build();
+    ZmanimLocation resolved = new ZmanimLocation.Builder().from( nearAlbany() ).locationName( "Albany, New York" ).build();
 
     LocationToAddressConverter.enqueueWork( context, resolved, LocationToAddressConverter.Actions.RESOLVE_LOCATION );
     for ( Intent work : ZmanimServiceRequests.startingService( ZmanimServiceRequests.drainIntents(),
@@ -234,7 +241,7 @@ public class UT_LocationToAddressConverter {
 
     Mockito.when( geocoder.getFromLocationName( "Albany", 5 ) ).thenReturn( Collections.singletonList( albany() ) );
 
-    ZmanimServiceRequests.Request request = resolve( typed( "Albany" ), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    ZmanimServiceRequests.Request request = resolvePlace( typed( "Albany" ) );
 
     Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
     Assert.assertEquals( "Albany, New York", request.location.getLocationName() );
@@ -242,34 +249,62 @@ public class UT_LocationToAddressConverter {
     Assert.assertEquals( 42.6526, request.location.getLatitude(), 1e-9 );
 
     Mockito.reset( geocoder );
-    request = resolve( typed( "Albany" ), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    request = resolvePlace( typed( "Albany" ) );
     Assert.assertEquals( "Albany, New York", request.location.getLocationName() );
     Mockito.verifyNoInteractions( geocoder );
   }
 
 
   @Test
-  public void aTypedPlaceTheGeocoderDoesNotKnowCannotBeDetermined() throws IOException {
+  public void offlineTheBundledDataFindsATypedPlace() throws IOException {
 
-    Mockito.when( geocoder.getFromLocationName( "Nowhere", 5 ) ).thenReturn( Collections.emptyList() );
+    Mockito.when( geocoder.getFromLocationName( "Jerusalem", 5 ) ).thenThrow( new IOException( "no network" ) );
 
-    ZmanimServiceRequests.Request request = resolve( typed( "Nowhere" ), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    ZmanimServiceRequests.Request request = resolvePlace( typed( "Jerusalem" ) );
 
-    Assert.assertEquals( "LOCATION_NOT_ACQUIRED", request.action );
-    Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
-    Assert.assertEquals( "Nowhere", request.location.getLocationName() );
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( "Jerusalem, Israel", request.location.getLocationName() );
+    Assert.assertEquals( NEW_YORK, request.location.getTimeZone() );
   }
 
 
-  /** Offline, a typed place that is not in the cache cannot be found at all. */
   @Test
-  public void aTypedPlaceCannotBeDeterminedOffline() throws IOException {
+  public void aTypedPlaceNoSourceKnowsCannotBeDetermined() throws IOException {
 
-    Mockito.when( geocoder.getFromLocationName( "Albany", 5 ) ).thenThrow( new IOException( "no network" ) );
+    Mockito.when( geocoder.getFromLocationName( "Qwxzvv", 5 ) ).thenReturn( Collections.emptyList() );
 
-    ZmanimServiceRequests.Request request = resolve( typed( "Albany" ), LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    ZmanimServiceRequests.Request request = resolvePlace( typed( "Qwxzvv" ) );
+
+    Assert.assertEquals( "LOCATION_NOT_ACQUIRED", request.action );
+    Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
+    Assert.assertEquals( "Qwxzvv", request.location.getLocationName() );
+  }
+
+
+  @Test
+  public void offlineATypedPlaceTheBundledDataDoesNotKnowCannotBeDetermined() throws IOException {
+
+    Mockito.when( geocoder.getFromLocationName( "Qwxzvv", 5 ) ).thenThrow( new IOException( "no network" ) );
+
+    ZmanimServiceRequests.Request request = resolvePlace( typed( "Qwxzvv" ) );
 
     Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
+  }
+
+
+  @Test
+  public void anUpgradeThatAsksForItStartsWithAnEmptyCache() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenReturn( Collections.singletonList( albany() ) );
+    resolvePlace( nearAlbany() );
+
+    LocationToAddressConverter.wipeCacheOnStart = true;
+    converter = started();
+    Assert.assertFalse( LocationToAddressConverter.wipeCacheOnStart );
+
+    Mockito.reset( geocoder );
+    Mockito.when( geocoder.getFromLocation( 42.65, -73.76, 5 ) ).thenThrow( new IOException( "no network" ) );
+    Assert.assertEquals( "Albany, United States", resolvePlace( nearAlbany() ).location.getLocationName() );
   }
 
 }  // End of UT_LocationToAddressConverter class

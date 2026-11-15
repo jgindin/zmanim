@@ -4,71 +4,80 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
+import com.gindin.zmanim.android.location.ZmanimServiceRequests;
 import com.gindin.zmanim.android.upgrade.UpgradeFixtures;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
 import android.content.Context;
+import android.content.Intent;
+import android.location.Geocoder;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
- * The cached locations file written by the released app is loaded when {@link LocationToAddressConverter} starts,
- *  and the cached entries then answer lookups.
+ * The cached locations file written by the released app answers {@link LocationToAddressConverter}'s lookups once
+ *  the converter starts over it. The geocoder knows no place, so each answer comes from the cache or the bundled
+ *  place data, and the tests tell the two apart by name or elevation.
  */
 @RunWith( RobolectricTestRunner.class )
-@Config( sdk = 33 )
+@Config( sdk = 24 )
+@SuppressWarnings( "MagicNumber" )
 public class UT_UpgradeCachedLocations {
 
-  private CachedLocationResolver                            resolver;
+  private Context                                           context;
+
+  private LocationToAddressConverter                        converter;
 
 
   @Before
   public void startConverterOverFilesWrittenByReleasedApp() throws Exception {
 
-    Context context = ApplicationProvider.getApplicationContext();
+    context = ApplicationProvider.getApplicationContext();
     UpgradeFixtures.install( context );
+    PlaceResolution.forgetShared();
 
     // The flag is process-wide and is left set by any earlier test in this JVM that ran the app's upgrade steps over
     //  a fresh install (launching the main activity does); starting the service with it set would wipe the cache
     //  instead of loading the fixture.
     LocationToAddressConverter.wipeCacheOnStart = false;
 
-    // Starting the service is what loads the cache, through its own file access.
-    LocationToAddressConverter converter = Robolectric.setupService( LocationToAddressConverter.class );
-
-    Field field = LocationToAddressConverter.class.getDeclaredField( "cachedLocationResolver" );
-    field.setAccessible( true );
-    resolver = (CachedLocationResolver)field.get( converter );
+    converter = Robolectric.setupService( LocationToAddressConverter.class );
+    converter.namePlacesWith( PlaceResolution.create( context, Mockito.mock( Geocoder.class ) ) );
+    ZmanimServiceRequests.drainIntents();
   }
 
 
-  @Test
-  public void loadsEveryCachedLocation() {
+  @After
+  public void forgetTheSharedCache() {
+    PlaceResolution.forgetShared();
+  }
 
-    Map<String, ZmanimLocation> byName = new HashMap<>();
-    for ( ZmanimLocation location : resolver.locationCache ) {
-      byName.put( location.getLocationName(), location );
+
+  private ZmanimLocation resolved( ZmanimLocation location ) {
+
+    LocationToAddressConverter.enqueueWork( context, location, LocationToAddressConverter.Actions.RESOLVE_PLACE );
+    for ( Intent work : ZmanimServiceRequests.startingService( ZmanimServiceRequests.drainIntents(),
+      LocationToAddressConverter.class ) ) {
+      converter.onHandleWork( work );
     }
 
-    Assert.assertEquals( 4, resolver.locationCache.size() );
-    Assert.assertEquals( 4, byName.size() );
-    Assert.assertEquals( "", byName.get( "Albany, New York" ).originalUserName );
-    Assert.assertEquals( "Saratoga Springs, NY", byName.get( "Saratoga Springs, New York" ).originalUserName );
-    Assert.assertEquals( "", byName.get( "Jerusalem, Israel" ).originalUserName );
-    Assert.assertEquals( "", byName.get( "New York, New York" ).originalUserName );
+    List<ZmanimServiceRequests.Request> requests = ZmanimServiceRequests.drain();
+    Assert.assertEquals( 1, requests.size() );
+    Assert.assertEquals( "LOCATION_ACQUIRED", requests.get( 0 ).action );
+    return requests.get( 0 ).location;
   }
 
 
@@ -83,9 +92,9 @@ public class UT_UpgradeCachedLocations {
       .inTimeZone( TimeZone.getTimeZone( "America/New_York" ) )
       .build();
 
-    ZmanimLocation resolved = resolver.resolveFromCoordinates( nearAlbany );
+    ZmanimLocation resolved = resolved( nearAlbany );
 
-    Assert.assertNotNull( resolved );
+    // The bundled data would name it "Albany, United States".
     Assert.assertEquals( "Albany, New York", resolved.getLocationName() );
     Assert.assertEquals( 47.0, resolved.getElevation(), 1e-9 );
   }
@@ -99,9 +108,8 @@ public class UT_UpgradeCachedLocations {
       .userName( "Saratoga Springs, NY" )
       .build();
 
-    ZmanimLocation resolved = resolver.resolveFromName( typed );
+    ZmanimLocation resolved = resolved( typed );
 
-    Assert.assertNotNull( resolved );
     Assert.assertEquals( "Saratoga Springs, New York", resolved.getLocationName() );
     Assert.assertEquals( 43.0831, resolved.getLatitude(), 1e-9 );
     Assert.assertEquals( -73.7846, resolved.getLongitude(), 1e-9 );
@@ -118,16 +126,16 @@ public class UT_UpgradeCachedLocations {
       .inTimeZone( TimeZone.getTimeZone( "Asia/Jerusalem" ) )
       .build();
 
-    ZmanimLocation resolved = resolver.resolveFromCoordinates( nearJerusalem );
+    ZmanimLocation resolved = resolved( nearJerusalem );
 
-    Assert.assertNotNull( resolved );
+    // The bundled data would keep the fix's own elevation, 750 m.
     Assert.assertEquals( "Jerusalem, Israel", resolved.getLocationName() );
     Assert.assertEquals( 754.0, resolved.getElevation(), 1e-9 );
   }
 
 
   @Test
-  public void aLocationFarFromEveryCachedEntryIsNotAnswered() {
+  public void aLocationFarFromEveryCachedEntryIsNotAnsweredFromTheCache() {
 
     ZmanimLocation farAway = new ZmanimLocation.Builder()
       .atLatitude( 51.5072 )
@@ -135,7 +143,7 @@ public class UT_UpgradeCachedLocations {
       .inTimeZone( TimeZone.getTimeZone( "Europe/London" ) )
       .build();
 
-    Assert.assertNull( resolver.resolveFromCoordinates( farAway ) );
+    Assert.assertEquals( "London, United Kingdom", resolved( farAway ).getLocationName() );
   }
 
 }

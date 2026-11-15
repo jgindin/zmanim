@@ -51,7 +51,8 @@ class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
 
     /** With [geocoder] as the system geocoder, or none if it is null. */
     @VisibleForTesting
-    internal fun create(context: Context, geocoder: Geocoder?): PlaceResolution {
+    @JvmStatic
+    fun create(context: Context, geocoder: Geocoder?): PlaceResolution {
 
       val (cache, places) = shared(context)
       val sources = buildList {
@@ -65,7 +66,8 @@ class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
 
     /** Forgets the shared cache and place data, so each test starts from its own files. */
     @VisibleForTesting
-    internal fun forgetShared() {
+    @JvmStatic
+    fun forgetShared() {
       synchronized(this) { shared = null }
     }
   }
