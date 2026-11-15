@@ -82,6 +82,8 @@ class UT_FusedLocationSource {
   private var grant = LocationGrant.PRECISE
   private var playServices = true
   private var timeZone: TimeZone? = null
+  private var townElevation: Double? = null
+  private val townElevationAskedAt = mutableListOf<Pair<Double, Double>>()
   private val saved =
     ZmanimLocation.Builder().locationName("Saved").atLatitude(1.0).atLongitude(2.0).build()
 
@@ -94,6 +96,10 @@ class UT_FusedLocationSource {
       elevationPolicy = SeaLevelElevationPolicy { _, _ -> GEOID_HEIGHT },
       timeZone = { timeZone },
       savedLocation = { saved },
+      placeElevation = { latitude, longitude ->
+        townElevationAskedAt += latitude to longitude
+        townElevation
+      },
       now = { NOW },
       timeout = timeout,
     )
@@ -309,6 +315,24 @@ class UT_FusedLocationSource {
 
     client.fresh = fix()
     assertEquals(0.0, elevationOfFreshFix(), 0.0)
+  }
+
+  @Test
+  fun aFixWithNoAltitudeTakesTheElevationOfTheTownItIsIn() = test {
+    townElevation = 754.0
+    client.fresh = fix()
+
+    assertEquals(754.0, elevationOfFreshFix(), 0.0)
+    assertEquals(listOf(31.7683 to 35.2137), townElevationAskedAt)
+  }
+
+  @Test
+  fun aFixWithAnAltitudeDoesNotLookAtThePlaceData() = test {
+    townElevation = 754.0
+    client.fresh = fix().apply { altitude = 800.0 }
+
+    assertEquals(780.0, elevationOfFreshFix(), 0.0)
+    assertTrue(townElevationAskedAt.isEmpty())
   }
 
   @Test

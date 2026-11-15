@@ -12,6 +12,7 @@ import com.gindin.zmanlib.location.InMemoryPlaceIndex
 import com.gindin.zmanlib.location.PlaceIndex
 import com.gindin.zmanlib.location.PlaceIndexResolver
 import com.gindin.zmanlib.location.ResolverChain
+import com.gindin.zmanlib.location.ZmanimLocation
 
 /**
  * The app's place lookup: the cache, then the system geocoder (the only one that goes online, and
@@ -44,6 +45,25 @@ class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
               }
               .also { shared = it }
         }
+
+    /**
+     * The bundled data's elevation for the place nearest the coordinates, when it is near enough to
+     * name a fix after ([PlaceIndexResolver.DEFAULT_NEAR_ENOUGH_METERS]); null when it is farther
+     * or the data has no elevation for it.
+     */
+    suspend fun nearbyPlaceElevationMeters(
+      context: Context,
+      latitude: Double,
+      longitude: Double,
+    ): Double? {
+      val place = shared(context).second.nearest(latitude, longitude) ?: return null
+      val here = ZmanimLocation.Builder().atLatitude(latitude).atLongitude(longitude).build()
+      val there =
+        ZmanimLocation.Builder().atLatitude(place.latitude).atLongitude(place.longitude).build()
+      return place.elevationMeters.takeIf {
+        here.getGeodesicDistance(there) <= PlaceIndexResolver.DEFAULT_NEAR_ENOUGH_METERS
+      }
+    }
 
     @JvmStatic
     fun create(context: Context): PlaceResolution =
