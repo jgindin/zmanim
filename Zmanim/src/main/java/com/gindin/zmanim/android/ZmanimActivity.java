@@ -18,6 +18,8 @@ import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.RequestLocationUpdateEvent;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
+import com.gindin.zmanim.android.location.acquirers.PlayServicesFusedClient;
+import com.gindin.zmanim.android.messageDisplay.ApproximateLocationWarning;
 import com.gindin.zmanim.android.messageDisplay.DeterminingLocation;
 import com.gindin.zmanim.android.messageDisplay.MessageDisplayer;
 import com.gindin.zmanim.android.messageDisplay.ExplainWhyWeNeedLocationDialog;
@@ -129,6 +131,10 @@ public class ZmanimActivity
 
   /** Explains why the alerts need exact alarms, before sending the user to the system page that allows them. */
   private AlertDialog                                       exactAlarmPermissionDialog;
+
+  /** The approximate-location warning while it is on screen, so that a later location does not show it twice. */
+  @Nullable
+  private Snackbar                                          approximateLocationWarning;
 
   /**
    * Whether exact alarms were allowed when this activity was last resumed, or null before the first resume. When they
@@ -401,11 +407,62 @@ public class ZmanimActivity
     if ( null != error ) {
       handleLocationError( error );
     }
-    else {
-      // A location arrived without any error, so nothing about location is waiting on the user.
+    else if ( !showApproximateLocationWarningIfNeeded() ) {
+      // A location arrived without any error, so nothing about location is waiting on the user. While the
+      //  approximate-location warning is up, these questions wait for a later location, so the user is asked one
+      //  thing at a time.
       requestNotificationPermissionIfNeeded();
       requestExactAlarmPermissionIfNeeded();
     }
+  }
+
+
+  /**
+   * Tells the user that with approximate location only the times may be a few seconds off, with a button that asks
+   *  for precise location. It is shown for the device's location only, since a typed place or entered coordinates do
+   *  not depend on the grant, and not again for the same grant once dismissed (see {@link ApproximateLocationWarning}).
+   *
+   * @return whether the warning is on screen.
+   */
+  private boolean showApproximateLocationWarningIfNeeded() {
+
+    // A location can arrive after the activity started going away; a Snackbar needs a live window.
+    if ( isFinishing() || isDestroyed() || locationPermissionFlowActive ) {
+      return false;
+    }
+
+    if ( ( approximateLocationWarning != null ) && approximateLocationWarning.isShownOrQueued() ) {
+      return true;
+    }
+
+    ApproximateLocationWarning warning = ApproximateLocationWarning.forContext( this );
+    boolean fromDevice = getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE )
+      .getBoolean( LocationProviders.DYNAMIC_POSITION.name(), false );
+
+    // Asked first, because asking also forgets a dismissal once the grant is no longer approximate-only.
+    if ( !warning.shouldShow( PlayServicesFusedClient.grantOf( this ) ) || !fromDevice ) {
+      return false;
+    }
+
+    approximateLocationWarning = warning.show( findViewById( android.R.id.content ), () -> {
+      askForPreciseLocation();
+      return kotlin.Unit.INSTANCE;
+    } );
+    return true;
+  }
+
+
+  /**
+   * Asks for precise location. With approximate location already allowed, Android offers to change it to precise; the
+   *  answer comes back to {@link #onRequestPermissionsResult} like the first location question.
+   */
+  private void askForPreciseLocation() {
+
+    locationPermissionFlowActive = true;
+    ActivityCompat.requestPermissions( this,
+      new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },
+      LocationError.Code.NO_PERMISSIONS.ordinal()
+    );
   }
 
 

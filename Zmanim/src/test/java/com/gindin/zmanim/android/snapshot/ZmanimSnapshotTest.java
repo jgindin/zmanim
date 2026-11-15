@@ -15,12 +15,16 @@ import com.gindin.zmanim.android.ZmanimActivity;
 import com.gindin.zmanim.android.datePicker.HebrewDateChangedEvent;
 import com.gindin.zmanim.android.location.LocationAcquiredEvent;
 import com.gindin.zmanim.android.location.resolvers.LocationToAddressConverter;
+import com.gindin.zmanim.android.prefs.LocationProviders;
 import com.gindin.zmanim.android.prefs.PersonalPreferences;
+import com.gindin.zmanim.android.prefs.ZmanimPrefs;
 import com.gindin.zmanim.android.service.ZmanimService;
 import com.gindin.zmanlib.calendar.HebrewCalendar;
 import com.gindin.zmanlib.calendar.HebrewDate;
 import com.gindin.zmanlib.location.ZmanimLocation;
 
+import android.Manifest;
+import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
 import android.view.View;
@@ -122,6 +126,32 @@ public class ZmanimSnapshotTest {
 
         View root = activity.findViewById( android.R.id.content );
         capture( root, "screenshots/zmanim.png" );
+      } );
+    }
+  }
+
+
+  /** The main screen with the device's location under an approximate-only grant, which shows the warning. */
+  @Test
+  public void captureMainScreenWithApproximateLocationWarning() {
+
+    Context context = ApplicationProvider.getApplicationContext();
+    Shadows.shadowOf( (Application)context ).grantPermissions( Manifest.permission.ACCESS_COARSE_LOCATION );
+    context.getSharedPreferences( ZmanimPrefs.LOCATION_MANAGEMENT.name(), Context.MODE_PRIVATE ).edit()
+      .putBoolean( LocationProviders.DYNAMIC_POSITION.name(), true )
+      .commit();
+
+    try ( ActivityScenario<ZmanimActivity> scenario = ActivityScenario.launch( ZmanimActivity.class ) ) {
+
+      scenario.onActivity( activity -> fireFixedDateAndLocation() );
+
+      scenario.onActivity( activity -> {
+
+        ListView zmanimList = activity.findViewById( android.R.id.list );
+        waitForZmanimToRender( zmanimList );
+
+        View root = activity.findViewById( android.R.id.content );
+        capture( root, "screenshots/zmanim-approximate-location.png" );
       } );
     }
   }
