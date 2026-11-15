@@ -278,6 +278,14 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
   `UT_BackgroundLocation` checks the periodic check and the fresh-fix case under an approximate-only grant.
 - **Where precise location is used (D7):** the fresh fix is a `PRIORITY_HIGH_ACCURACY` request (`FusedLocationSource.REQUEST`), which uses the GPS only under a precise grant. Only a precise fix carries an altitude, which gives the elevation-adjusted zmanim the user's own elevation.
+- **Naming (second PR):** `LocationToAddressConverter` names places through `PlaceResolution`'s chain (cache, system geocoder, bundled place data) via `PlaceNamer`, which blocks the converter's work thread for the chain's answer (at most 10 seconds per source). A location with coordinates is named from them; one without is looked up by the name typed. Only a place a source found is cached. The old resolver classes are no longer used and are removed in the third PR.
+- **Behavior changes users see, from naming:**
+  - offline, or on a device with no geocoder, a fix within 25 km of a town in the bundled data is named after it ("Albany, United States"), and a typed place in the data is found ("Jerusalem, Israel"); the published version showed the coordinates, or could not find the typed place;
+  - a fix the geocoder names keeps its own coordinates; the published version moved it to the address's coordinates (Task 4);
+  - a fix no source can name is still shown under its coordinates, so the zmanim are shown, but it is no longer cached, so the geocoder names the place once it can. Places named after their coordinates that the published version cached are dropped when the cache is read;
+  - a typed place that no source knows, or that no source could look up, is still `CANNOT_DETERMINE_LOCATION`: the screens have no separate "could not look it up" message yet.
+- **Elevation of a fix with no altitude:** an approximate fix (and any fix without an altitude) takes the bundled data's elevation for the nearest town within 25 km, as Design 5.5 allows for approximate location (D7); the published version used 0. The place data is read only for such a fix. A typed place takes the data's elevation only when the bundled data found it; one the geocoder found still has 0.
+- **Privacy policy (Step 3b):** the "Naming the place" item says that without a geocoder, or when it cannot answer, the name comes from the list of places built into the app and nothing is sent. Merging it publishes the policy at `info.zmanim.today`.
 
 **Files:** `ZmanimLocationManager.java` and the acquirers (thinned), `LocationToAddressConverter.java` (becomes a thin entry point), an event-bus bridge in Kotlin, manifest if D6 says so.
 
