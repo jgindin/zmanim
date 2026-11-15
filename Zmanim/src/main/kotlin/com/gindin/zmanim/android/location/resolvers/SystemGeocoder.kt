@@ -50,7 +50,7 @@ class SystemGeocoder(
     ) { address ->
       ZmanimLocation.Builder()
         .from(request)
-        .locationName(LocationResolver.addressToLocationName(address))
+        .locationName(AddressNames.addressToLocationName(address))
         .build()
     }
 
@@ -64,7 +64,7 @@ class SystemGeocoder(
       },
     ) { address ->
       ZmanimLocation.Builder()
-        .locationName(LocationResolver.addressToLocationName(address))
+        .locationName(AddressNames.addressToLocationName(address))
         .userName(request.locationName)
         .atLatitude(address.latitude)
         .atLongitude(address.longitude)
