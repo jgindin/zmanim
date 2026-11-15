@@ -23,8 +23,9 @@ import kotlinx.coroutines.SupervisorKt;
 import static com.gindin.zmanim.android.location.RequestLocationUpdateEvent.CachedLocationUsage;
 
 /**
- * The device's location, from Play services' fused location provider through {@link FusedLocationSource}. Each
- *  answer is handed to the {@code ZmanimService} as before, with the same {@link LocationError} codes.
+ * The device's location, from Play services' fused location provider through {@link FusedLocationSource}.
+ *  {@link DeviceLocationBridge} hands each answer to the {@code ZmanimService}: a fix to be named, or the
+ *  {@link LocationError} code the screens show when there is none.
  */
 public class DynamicLocationAcquirer
   extends LocationAcquirer {
