@@ -9,6 +9,7 @@ import android.location.Location
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import com.gindin.zmanim.android.location.ZmanLocationUtil
+import com.gindin.zmanim.android.location.resolvers.PlaceResolution
 import com.gindin.zmanim.android.prefs.ZmanimPrefs
 import com.gindin.zmanlib.location.BundledGeoidGrid
 import com.gindin.zmanlib.location.ElevationInputs
@@ -87,8 +88,9 @@ class PlayServicesSettingsResolution(val exception: ResolvableApiException) : Se
  *
  * Every fix is a [LocationState.Resolving]: it has no name yet.
  * [LocationState.Resolving.approximate] is true when the user granted approximate location only,
- * which the app accepts. The elevation comes from [elevationPolicy], from the fix's altitudes
- * alone. Cancelling the collector stops the request.
+ * which the app accepts. The elevation comes from [elevationPolicy]: from the fix's altitudes, or,
+ * for a fix with no altitude (an approximate one has none), from [placeElevation], the elevation of
+ * the town the fix is in. Cancelling the collector stops the request.
  */
 class FusedLocationSource(
   private val client: FusedClient,
@@ -97,6 +99,9 @@ class FusedLocationSource(
   private val elevationPolicy: ElevationPolicy,
   private val timeZone: () -> TimeZone?,
   private val savedLocation: () -> ZmanimLocation?,
+  private val placeElevation: suspend (latitude: Double, longitude: Double) -> Double? = { _, _ ->
+    null
+  },
   private val now: () -> Long = System::currentTimeMillis,
   private val timeout: Duration = DEFAULT_TIMEOUT,
   private val maxRecentAge: Duration = DEFAULT_MAX_RECENT_AGE,
@@ -192,9 +197,13 @@ class FusedLocationSource(
         location.mslAltitudeMeters
       else null
     val ellipsoid = if (location.hasAltitude()) location.altitude else null
+    // The place data is looked at only when the fix has no altitude of its own.
+    val place =
+      if (msl == null && ellipsoid == null) placeElevation(location.latitude, location.longitude)
+      else null
     val elevation =
       elevationPolicy.elevationMeters(
-        ElevationInputs(location.latitude, location.longitude, msl, ellipsoid, null)
+        ElevationInputs(location.latitude, location.longitude, msl, ellipsoid, place)
       )
 
     val builder =
@@ -233,7 +242,8 @@ class FusedLocationSource(
 
     /**
      * The app's fused location source: the user's time zone override from the location preferences,
-     * and the location saved by the last run.
+     * the location saved by the last run, and the bundled place data's elevation for a fix with no
+     * altitude.
      */
     @JvmStatic
     fun create(context: Context): FusedLocationSource {
@@ -247,6 +257,9 @@ class FusedLocationSource(
         elevationPolicy = SeaLevelElevationPolicy(geoid(app)),
         timeZone = { LocationAcquirer.getTimeZoneFromPrefs(locationPrefs) },
         savedLocation = { ZmanLocationUtil.load(app) },
+        placeElevation = { latitude, longitude ->
+          PlaceResolution.nearbyPlaceElevationMeters(app, latitude, longitude)
+        },
       )
     }
 

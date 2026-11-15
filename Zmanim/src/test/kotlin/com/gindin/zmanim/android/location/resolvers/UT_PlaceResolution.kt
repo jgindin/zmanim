@@ -19,7 +19,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -108,6 +110,18 @@ class UT_PlaceResolution {
     val result = resolution.chain.fromCoordinates(fix(42.6530, -73.7562))
 
     assertEquals("Albany, New York", (result as CoordinatesResult.Named).location.locationName)
+  }
+
+  @Test
+  fun aFixNearATownTakesTheTownsElevationFromTheBundledData() = test {
+    val elevation = PlaceResolution.nearbyPlaceElevationMeters(context, 31.7767, 35.2345)
+
+    assertTrue(checkNotNull(elevation) > 500.0)
+  }
+
+  @Test
+  fun aFixFarFromAnyTownHasNoElevationFromTheBundledData() = test {
+    assertNull(PlaceResolution.nearbyPlaceElevationMeters(context, 35.0, -45.0))
   }
 
   @Test
