@@ -103,6 +103,7 @@ class FusedLocationSource(
 ) : LocationSource {
 
   /** Why the device's last fix could not be had, the last time it was asked for; null if it was. */
+  // Volatile because it is set on the coroutine that asks Play services and read on another thread.
   @Volatile
   var lastLocationFailure: Exception? = null
     private set
@@ -216,7 +217,9 @@ class FusedLocationSource(
     /** The bundled geoid grid that corrects GPS altitudes to sea level. */
     const val GEOID_ASSET: String = "geoid/geoid.bin"
 
-    // One per process: the grid is read once and kept in memory.
+    // One per process: the grid is read once and kept in memory. Volatile because the first check
+    //  reads it outside the lock: without it, another thread could see the grid before it is fully
+    //  built.
     @Volatile private var geoid: BundledGeoidGrid? = null
 
     private fun geoid(context: Context): BundledGeoidGrid =
