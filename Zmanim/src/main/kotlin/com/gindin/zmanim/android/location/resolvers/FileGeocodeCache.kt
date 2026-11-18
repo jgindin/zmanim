@@ -44,6 +44,7 @@ class FileGeocodeCache(
   private var entries: MutableList<ZmanimLocation>? = null
 
   /** Why the cache could last not be saved, or null if the last save worked. */
+  // Volatile because it is set on the dispatcher that writes the file and read on another thread.
   @Volatile
   var lastWriteFailure: IOException? = null
     private set

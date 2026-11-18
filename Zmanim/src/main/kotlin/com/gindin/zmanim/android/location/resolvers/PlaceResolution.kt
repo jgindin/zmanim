@@ -29,6 +29,8 @@ class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
 
     // One of each per process, shared by every chain: the place data is read once, and the cache
     //  keeps its entries in memory, so two caches over the same file would undo each other's work.
+    //  Volatile because the first check reads it outside the lock: without it, another thread could
+    //  see the pair before the objects in it are fully built.
     @Volatile private var shared: Pair<FileGeocodeCache, PlaceIndex>? = null
 
     private fun shared(context: Context): Pair<FileGeocodeCache, PlaceIndex> =

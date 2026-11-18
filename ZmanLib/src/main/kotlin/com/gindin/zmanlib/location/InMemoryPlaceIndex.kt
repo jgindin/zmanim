@@ -38,6 +38,7 @@ public class InMemoryPlaceIndex(
   private var places: List<SearchablePlace>? = null
 
   /** Why the data could not be read, or null if it was read (or has not been tried yet). */
+  // Volatile because it is set on the dispatcher that reads the data and read on another thread.
   @Volatile
   public var loadFailure: Exception? = null
     private set

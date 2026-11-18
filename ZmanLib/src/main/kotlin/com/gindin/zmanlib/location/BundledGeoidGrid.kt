@@ -54,6 +54,7 @@ public class BundledGeoidGrid(
   private var tried = false
 
   /** Why the grid could not be read, or null if it was read (or has not been tried yet). */
+  // Volatile because it is set on the dispatcher that reads the grid and read on another thread.
   @Volatile
   public var loadFailure: Exception? = null
     private set
