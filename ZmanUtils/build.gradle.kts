@@ -21,6 +21,14 @@ kotlin {
     namespace = "com.gindin.zmanutils"
     compileSdk = 36
     minSdk = 24
+
+    // Only NewApi: this module's code ships in both apps, so a call above minSdk crashes them on
+    //  old devices, and its JVM tests cannot notice because the desktop JVM has every java.* API.
+    //  The apps' vital lint does not look into their dependencies, so this module checks its own
+    //  code (jvmCommonMain included). Desugaring is declared, as the apps that ship this code
+    //  declare it, so that lint accepts the Java 8+ APIs it backports, such as java.time.
+    lint { checkOnly += "NewApi" }
+    enableCoreLibraryDesugaring = true
   }
 
   // The event bus is keyed by java.lang.Class, which common code cannot reference, so it lives in a
@@ -63,4 +71,13 @@ tasks.register("test") {
   group = "verification"
   description = "Runs the tests of every target in this module."
   dependsOn("allTests")
+}
+
+dependencies { "coreLibraryDesugaring"(libs.desugar.jdk.libs) }
+
+// The same name as the apps' NewApi check, so that `./gradlew checkNewApi` runs all of them.
+tasks.register("checkNewApi") {
+  group = "verification"
+  description = "Runs lint's NewApi check on the Android target."
+  dependsOn("lintAndroidMain")
 }

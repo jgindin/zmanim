@@ -41,28 +41,46 @@ class SystemGeocoder(
    * address the geocoder picks is only near them.
    */
   @Suppress("DEPRECATION") // The blocking overload: deprecated from API 33, only called before it.
-  override suspend fun fromCoordinates(request: ZmanimLocation): PlaceResult =
-    lookUp(
-      blocking = { geocoder.getFromLocation(request.latitude, request.longitude, MAX_RESULTS) },
-      listening = { listener ->
-        geocoder.getFromLocation(request.latitude, request.longitude, MAX_RESULTS, listener)
-      },
-    ) { address ->
+  override suspend fun fromCoordinates(request: ZmanimLocation): PlaceResult {
+
+    if (!isPresent()) {
+      return PlaceResult.NotFound
+    }
+
+    // The version check is written out here, around each overload, rather than once in a shared
+    //  helper, so that Android lint sees that the listener overload is only called from API 33.
+    val addresses =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        listen { geocoder.getFromLocation(request.latitude, request.longitude, MAX_RESULTS, it) }
+      } else {
+        offload { geocoder.getFromLocation(request.latitude, request.longitude, MAX_RESULTS) }
+      }
+
+    return addresses.toPlaceResult { address ->
       ZmanimLocation.Builder()
         .from(request)
         .locationName(AddressNames.addressToLocationName(address))
         .build()
     }
+  }
 
   /** The address's name and coordinates, in the request's time zone. */
   @Suppress("DEPRECATION") // The blocking overload: deprecated from API 33, only called before it.
-  override suspend fun fromName(request: ZmanimLocation): PlaceResult =
-    lookUp(
-      blocking = { geocoder.getFromLocationName(request.locationName, MAX_RESULTS) },
-      listening = { listener ->
-        geocoder.getFromLocationName(request.locationName, MAX_RESULTS, listener)
-      },
-    ) { address ->
+  override suspend fun fromName(request: ZmanimLocation): PlaceResult {
+
+    if (!isPresent()) {
+      return PlaceResult.NotFound
+    }
+
+    // Written out around each overload for lint, as in fromCoordinates.
+    val addresses =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        listen { geocoder.getFromLocationName(request.locationName, MAX_RESULTS, it) }
+      } else {
+        offload { geocoder.getFromLocationName(request.locationName, MAX_RESULTS) }
+      }
+
+    return addresses.toPlaceResult { address ->
       ZmanimLocation.Builder()
         .locationName(AddressNames.addressToLocationName(address))
         .userName(request.locationName)
@@ -71,31 +89,17 @@ class SystemGeocoder(
         .inTimeZone(request.timeZone)
         .build()
     }
+  }
 
-  private suspend fun lookUp(
-    blocking: () -> List<Address>?,
-    listening: (Geocoder.GeocodeListener) -> Unit,
-    toLocation: (Address) -> ZmanimLocation,
-  ): PlaceResult {
-
-    if (!isPresent()) {
-      return PlaceResult.NotFound
-    }
-
-    val addresses =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listen(listening)
-      } else {
-        offload(blocking)
-      }
-
-    return addresses.fold(
+  private fun Result<List<Address>?>.toPlaceResult(
+    toLocation: (Address) -> ZmanimLocation
+  ): PlaceResult =
+    fold(
       onSuccess = { found ->
         found?.firstOrNull()?.let { PlaceResult.Found(toLocation(it)) } ?: PlaceResult.NotFound
       },
       onFailure = { PlaceResult.Failed(it) },
     )
-  }
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   private suspend fun listen(start: (Geocoder.GeocodeListener) -> Unit): Result<List<Address>?> =

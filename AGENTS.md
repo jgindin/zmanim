@@ -59,7 +59,18 @@ The build needs a `local.properties` with `sdk.dir=` (not committed). The Gradle
 ./gradlew ktfmtCheck detekt     # formatting + static analysis; run before every commit
 ./gradlew ktfmtFormat           # fix formatting
 ./gradlew checkR8KeptNames      # the R8 keep-rule guard (builds the minified release variants)
+./gradlew checkNewApi           # Android lint's NewApi check: no calls to APIs above minSdk
 ```
+
+- **Calls above minSdk: lint's `NewApi`.** Robolectric and the JVM tests run on the desktop JVM,
+  which has every `java.*` API, so a call Android lacks at API 24 (for example `java.nio.file`, which
+  Android adds in API 26) passes every unit test and crashes on old devices. `checkNewApi` runs
+  lint's fatal-only "vital" checks, with `NewApi` made fatal, on the apps' release variants (release
+  builds run them too), and lint limited to `NewApi` on `:ZmanUtils`' Android target. `:ZmanLib` is
+  a plain JVM module and is **not** covered: lint does not apply `NewApi` there. Java 8+ APIs that
+  core library desugaring backports (`java.time`) are fine. When lint cannot see a version check
+  (for example one inside a helper that calls a lambda), restructure so the check is visible, or
+  use a narrow `@RequiresApi`/`@SuppressLint("NewApi")` with a reason; there is no lint baseline.
 
 - **Formatting: ktfmt**, Google style, **100 columns**, for all Kotlin and `.kts` (including
   `build-logic`). Long `//` comments are not re-wrapped by ktfmt: wrap them by hand. Java is not
@@ -187,7 +198,7 @@ Conventions and hard-won rules:
 
 | Job | Runs | Required? |
 |---|---|---|
-| `verify` | `ktfmtCheck detekt`, then `test verifyRoborazziDebug assembleDebug`, then `checkR8KeptNames` | **Yes** (branch protection) |
+| `verify` | `ktfmtCheck detekt`, then `checkNewApi`, then `test verifyRoborazziDebug assembleDebug`, then `checkR8KeptNames` | **Yes** (branch protection) |
 | `emulator-smoke` (API 24 and 36) | the on-device tests on an emulator, then `check-instrumented-results.py` | No (`continue-on-error`) |
 | `emulator-minified` (API 36) | the same tests against the `releaseCheck` minified build | No (`continue-on-error`) |
 

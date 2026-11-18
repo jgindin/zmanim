@@ -10,5 +10,8 @@
 
 plugins {
   id("org.jetbrains.kotlin.multiplatform")
+  // Android lint for the Android target (see :ZmanUtils' `checkNewApi`). It is applied here, not
+  //  in the module, because build-logic is what puts AGP, and so this plugin, on the classpath.
+  id("com.android.lint")
   id("zmanim.static-analysis-conventions")
 }

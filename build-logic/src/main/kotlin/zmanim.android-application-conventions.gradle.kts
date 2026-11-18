@@ -57,6 +57,13 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
+  // Lint's NewApi check catches calls to APIs above minSdk, which the unit tests cannot:
+  //  Robolectric runs them on the desktop JVM, which has every java.* API whatever the minSdk.
+  //  Making it fatal puts it in the fatal-only "vital" lint that each release build runs, and that
+  //  `checkNewApi` (below) runs on CI, without turning on lint's other, non-fatal checks. Java 8+
+  //  APIs that core library desugaring backports, such as java.time, are not reported.
+  lint { fatal += "NewApi" }
+
   testOptions {
     unitTests.apply {
       // Roborazzi/Robolectric need real resources (layouts, drawables, styles) loaded to render
@@ -147,6 +154,26 @@ extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { an
         report.set(layout.buildDirectory.file("reports/r8KeptNames/${variant.name}.txt"))
       }
     checkR8KeptNames.configure { dependsOn(check) }
+  }
+}
+
+/**
+ * Runs AGP's fatal-only lint (`lintVital<Variant>`, which includes NewApi; see `lint {}` above) on
+ * each release variant, the same check a release build runs before packaging. CI calls this rather
+ * than `lintVitalRelease` because a task name containing "release" makes the advanced-build-version
+ * plugin bump the version counter (see AppVersion.kt). Vital lint analyzes only this module's own
+ * code; :ZmanUtils has a `checkNewApi` of its own.
+ */
+val checkNewApi =
+  tasks.register("checkNewApi") {
+    group = "verification"
+    description = "Runs lint's fatal checks, which include NewApi, on each release variant."
+  }
+
+extensions.getByType(ApplicationAndroidComponentsExtension::class.java).let { androidComponents ->
+  androidComponents.onVariants(androidComponents.selector().withBuildType("release")) { variant ->
+    val capitalizedName = variant.name.replaceFirstChar { it.uppercase() }
+    checkNewApi.configure { dependsOn("lintVital$capitalizedName") }
   }
 }
 

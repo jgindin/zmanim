@@ -20,6 +20,12 @@ jobs:
       #  ./gradlew ktfmtFormat to fix the formatting locally.
       - name: Check Kotlin formatting and static analysis
         run: ./gradlew ktfmtCheck detekt
+      # Android lint's NewApi check, on each app's release variants and on :ZmanUtils' Android target: fails on a call
+      #  to an API above minSdk (24), which the Robolectric and JVM tests cannot notice because the desktop JVM has every
+      #  java.* API. In the apps it is run as part of lint's fatal-only "vital" checks, the same ones a release build runs.
+      #  :ZmanLib is a plain JVM module, which lint's NewApi check does not cover.
+      - name: Check for calls to APIs above minSdk
+        run: ./gradlew checkNewApi
       - name: Run unit tests, Roborazzi verification and a debug build
         run: ./gradlew test verifyRoborazziDebug assembleDebug
       # Runs R8 on the release variants and fails if it renamed or removed a name that a keep rule exists to
@@ -27,7 +33,7 @@ jobs:
       #  works on CI, where no signing properties are set.
       - name: Check that the release builds keep the names their R8 rules protect
         run: ./gradlew checkR8KeptNames
-      - name: Upload test and Roborazzi reports on failure
+      - name: Upload test, Roborazzi and lint reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
         with:
@@ -35,6 +41,8 @@ jobs:
           path: |
             **/build/reports/tests/**
             **/build/outputs/roborazzi/**
+            **/build/reports/lint-results-*
+            **/build/intermediates/lint_vital_intermediate_text_report/**
 
   # Runs the on-device tests (src/androidTest of :Zmanim and :ZehutYosef) on an emulator at the
   #  API floor and ceiling. These guard window insets / ActionBar layout and real process launches,
