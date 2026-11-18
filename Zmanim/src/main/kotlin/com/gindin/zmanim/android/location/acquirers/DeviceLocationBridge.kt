@@ -43,6 +43,8 @@ class DeviceLocationBridge(
   private val scope: CoroutineScope,
 ) {
 
+  // Volatile because the request is started and awaited on the service's worker thread, and
+  //  cancelled on the main thread when the service is destroyed.
   @Volatile private var request: Job? = null
 
   /** Starts a request, stopping any that is still running. */
