@@ -187,6 +187,19 @@ class UT_FileGeocodeCache {
   }
 
   @Test
+  fun aSaveThatCannotReplaceTheFileIsReportedAndLeavesNoTemporaryFile() = test {
+    // A directory in the file's place cannot be renamed over, though the temporary file is written.
+    File(directory, FileGeocodeCache.FILE_NAME).mkdir()
+    File(File(directory, FileGeocodeCache.FILE_NAME), "occupied").writeText("")
+    val cache = cache()
+
+    cache.store(place("Boston, Massachusetts", BOSTON_LATITUDE, BOSTON_LONGITUDE))
+
+    assertNotNull(cache.lastWriteFailure)
+    assertFalse(File(directory, "${FileGeocodeCache.FILE_NAME}.tmp").exists())
+  }
+
+  @Test
   fun clearForgetsEverythingOnDiskToo() = test {
     installReleasedCache()
     val cache = cache()
