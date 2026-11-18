@@ -10,8 +10,6 @@ import com.gindin.zmanlib.location.ZmanimLocation
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -153,12 +151,12 @@ class FileGeocodeCache(
       val temporary = File(directory, "$FILE_NAME.tmp")
       try {
         temporary.writeText(text, Charsets.UTF_8)
-        Files.move(
-          temporary.toPath(),
-          File(directory, FILE_NAME).toPath(),
-          StandardCopyOption.REPLACE_EXISTING,
-          StandardCopyOption.ATOMIC_MOVE,
-        )
+        // java.nio.file (Files.move) is missing below Android 8, and the app runs on Android 7.
+        //  On Android, renameTo is the rename system call, which replaces the old file in one
+        //  step.
+        if (!temporary.renameTo(File(directory, FILE_NAME))) {
+          throw IOException("Could not rename $temporary to $FILE_NAME")
+        }
         File(directory, LEGACY_FILE_NAME).delete()
         lastWriteFailure = null
       } catch (e: IOException) {
