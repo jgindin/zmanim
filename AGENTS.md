@@ -231,6 +231,31 @@ policy updates the public one too.
 - **Dialogs on activities**: never `show()` a dialog on an activity that is finishing or destroyed
   (`BadTokenException`; see `DeterminingLocation` and the permission helpers).
 
+- **Location** (Phase 2). The rules live in `:ZmanLib` (`com.gindin.zmanlib.location`), as plain
+  Kotlin with coroutines; `:Zmanim` adapts Android and Play services to them and hands the results
+  to the screens through `ZmanimService` and the event bus, which Phase 4a replaces.
+  - **The device's location:** `FusedLocationSource` (a `LocationSource` whose answers are a
+    `Flow<LocationState>`) takes a fix under 30 minutes old or asks for a fresh high-accuracy one
+    for up to 30 seconds. `DeviceLocationBridge` gives `ZmanimService` the first answer, as a fix
+    or as the `LocationError` code the screens show. An approximate-only grant is accepted, and the
+    main screen warns about it once (`ApproximateLocationWarning`).
+  - **Naming a place, and finding a typed one:** `ResolverChain` asks, in order, the cache
+    (`FileGeocodeCache`, file `GeocodeCache`; it reads the older `CachedLocations` file once, on
+    upgrade), the system geocoder (`SystemGeocoder`, the only part that goes online), then the
+    bundled place data (`PlaceIndexResolver`). A fix within 25 km of a town in the data is named
+    after it. When nothing names a fix, `PlaceNamer` calls it "Near <town>" after the nearest town
+    within 100 km, and otherwise leaves it named by its coordinates. Only places a source found
+    are cached. `PlaceResolution` builds the chain; `LocationToAddressConverter` runs it.
+  - **Elevation** is height above sea level (`SeaLevelElevationPolicy`): the fix's own value
+    (API 34+), else its GPS altitude less the geoid height from the bundled grid
+    (`BundledGeoidGrid`), else the bundled data's value for a town within 25 km, else 0 (unknown).
+  - **Bundled data,** generated and committed, never downloaded at build time:
+    `assets/places/places.tsv` (GeoNames `cities15000`, CC BY 4.0, attributed on the About screen
+    and in `NOTICE`; regenerate with `./gradlew :Zmanim:generatePlaceIndex`, see
+    `Zmanim/places/README.md`, including `place-overrides.tsv`, which keeps Israeli places in
+    Israel) and `assets/geoid/geoid.bin` (EGM2008; `./gradlew :Zmanim:generateGeoidGrid`, see
+    `Zmanim/geoid/README.md`).
+
 ## Working on a constrained machine
 
 Builds are heavy. A Gradle daemon at 4 GB and an emulator at its default 4-6 GB each add up; the
@@ -248,6 +273,8 @@ instrumented tests against a physical phone that has the real app installed.
   task-by-task plan for Phase 1, with a status note at the top of each task describing what was done
   and where it differs from the original steps. Each phase gets its own design and plan; keep the
   status notes current when you finish work.
+- `docs/modernization/phase2/phase-2-design.md` and `phase-2-implementation.md`: the same for
+  Phase 2 (location), with the maintainer's decisions D1 to D7 in the design's section 8.
 
 ## Quick answers
 
