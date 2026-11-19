@@ -142,13 +142,13 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 - Create: a generator under `build-logic/` or `tools/places/` (decide in the PR; prefer a Gradle task so the asset is reproducible), `Zmanim/src/main/assets/places/` (output), `ZmanLib/.../location/PlaceIndexFormat.kt`, `ZmanLib/.../location/InMemoryPlaceIndex.kt`
 - Modify: the About/open-source attribution screen's data, `LICENSES` or a `NOTICE` file
 
-- [ ] **Step 1: Confirm the data terms (REQUIRES A HUMAN sign-off).** Read the current GeoNames readme and the file's columns (license version, elevation and DEM columns). Record the exact text of the attribution required. If D2 chose additional community data, record its license too.
-- [ ] **Step 2:** Write the generator: download pinned files by URL and checksum, filter, convert to a compact binary or TSV format with a version header, and write it to the assets directory. The output file is checked in (so builds do not need the network) together with its README: source, date, license, how to regenerate.
-- [ ] **Step 2b: Country names (D2).** Add `place-overrides.tsv` (GeoNames id, country code, display country) owned by the maintainer, applied by the generator. The generator prints every source record whose country is `PS` for review (**REQUIRES A HUMAN** to choose which are overridden to Israel) and fails if an overridden record would still display "Palestine" or "Palestinian Territory". Add a test that Jerusalem, Tel Aviv, Haifa, Be'er Sheva and Eilat are "Israel" in the generated asset.
-- [ ] **Step 2c: Elevation columns (D5).** Inspect the real file: how many records have `elevation`, how many have `dem`, whether any use the "no data" sentinel. Record the counts in the README and make the loader prefer `elevation`, then `dem`, then unknown.
-- [ ] **Step 3:** Implement `InMemoryPlaceIndex` (load once, nearest by great-circle distance with a longitude-wrapped bounding pre-filter, name lookup with Unicode-normalized, case-insensitive prefix and exact match). Tests with a small synthetic file: nearest across the antimeridian and near the poles, ties, empty index, malformed asset (fails safe).
-- [ ] **Step 4:** Add the attribution to the About screen data without changing layout (no golden change). Check the asset size against the 3 MB budget; if over, filter harder and document why.
-- [ ] **Step 5: Verify** gates and release APK size. Commit in two PRs if the generator and the loader are reviewed separately.
+- [x] **Step 1: Confirm the data terms (REQUIRES A HUMAN sign-off).** Read the current GeoNames readme and the file's columns (license version, elevation and DEM columns). Record the exact text of the attribution required. If D2 chose additional community data, record its license too.
+- [x] **Step 2:** Write the generator: download pinned files by URL and checksum, filter, convert to a compact binary or TSV format with a version header, and write it to the assets directory. The output file is checked in (so builds do not need the network) together with its README: source, date, license, how to regenerate.
+- [x] **Step 2b: Country names (D2).** Add `place-overrides.tsv` (GeoNames id, country code, display country) owned by the maintainer, applied by the generator. The generator prints every source record whose country is `PS` for review (**REQUIRES A HUMAN** to choose which are overridden to Israel) and fails if an overridden record would still display "Palestine" or "Palestinian Territory". Add a test that Jerusalem, Tel Aviv, Haifa, Be'er Sheva and Eilat are "Israel" in the generated asset.
+- [x] **Step 2c: Elevation columns (D5).** Inspect the real file: how many records have `elevation`, how many have `dem`, whether any use the "no data" sentinel. Record the counts in the README and make the loader prefer `elevation`, then `dem`, then unknown.
+- [x] **Step 3:** Implement `InMemoryPlaceIndex` (load once, nearest by great-circle distance with a longitude-wrapped bounding pre-filter, name lookup with Unicode-normalized, case-insensitive prefix and exact match). Tests with a small synthetic file: nearest across the antimeridian and near the poles, ties, empty index, malformed asset (fails safe).
+- [x] **Step 4:** Add the attribution to the About screen data without changing layout (no golden change). Check the asset size against the 3 MB budget; if over, filter harder and document why.
+- [x] **Step 5: Verify** gates and release APK size. Commit in two PRs if the generator and the loader are reviewed separately.
 
 ---
 
@@ -322,11 +322,13 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 9: Disclosure, docs, and close-out
 
+**Status (2026-11-19):** the documentation is done (Step 2): `AGENTS.md` describes the location code, the bundled data and how to regenerate it, and the offline emulator test, and the roadmap records Phase 2 as done with how it differs from the roadmap's outline. Three comments that compared the code with how it used to be were reworded. Steps 1, 1a and 3 are the maintainer's. For Step 1, what this phase changed in what is collected or sent: an approximate-only grant is now used (less precise data than before, sent nowhere new); the bundled place data and the geoid grid work on the device and send nothing; the system geocoder stays the only online lookup, and the privacy policy already says when the bundled list is used instead (Task 7, Step 3b).
+
 - [ ] **Step 1 (REQUIRES A HUMAN):** Confirm no disclosure change is needed (no new third party or data collected; the background-location declaration is unchanged). If Task 7 turned out to change what is collected, update the privacy policy and Data Safety form before release.
 - [ ] **Step 1a (REQUIRES A HUMAN, due 2027-01-27, does not wait for this phase):** File the Play Console declaration for `ACCESS_FINE_LOCATION` with the justification in D7, and confirm the background-location declaration still matches (D6). If Play rejects it, raise dropping `ACCESS_FINE_LOCATION` as a separate change.
-- [ ] **Step 2:** Update `AGENTS.md` (new location layering, the dataset and how to regenerate it, the emulator offline test) and the roadmap's Phase 2 status. Mark this plan's checkboxes.
+- [x] **Step 2:** Update `AGENTS.md` (new location layering, the dataset and how to regenerate it, the emulator offline test) and the roadmap's Phase 2 status. Mark this plan's checkboxes.
 - [ ] **Step 3:** Record the maintainer's measurements: APK size delta, cold-start time on a real device before and after, and an offline test on the phone. Add them to the PR.
-- [ ] **Step 4:** Commit: `jj commit -m "Document the Phase 2 location architecture and close out the phase"`.
+- [x] **Step 4:** Commit: `jj commit -m "Document the Phase 2 location architecture and close out the phase"`.
 
 ---
 
