@@ -305,12 +305,18 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 8: End-to-end offline proof
 
-**Files:** new tests under `Zmanim/src/androidTest/`, CI step if needed.
+**Status (2026-11-19):** done, in two stacked PRs: the "near" name, then the emulator test. Calls made, each within the design:
 
-- [ ] **Step 1:** Emulator test with the network disabled (airplane mode or no data) and an injected mock location: typed bundled city resolves with name, time zone and elevation; coordinates get a "near" name; nothing returns an unnamed location. Uses the emulator-only guard in `AppState` like the other tests.
-- [ ] **Step 2:** Run the suite against the `releaseCheck` minified build (`-Pzmanim.testBuildType=releaseCheck`) so R8 cannot break asset loading or serialization.
-- [ ] **Step 3:** Upgrade check: install the v409 fixture state, upgrade, confirm saved location and cache survive (extend the existing upgrade-state test).
-- [ ] **Step 4: Verify** CI: `emulator-smoke` (24 and 36) and `emulator-minified`. Commit.
+- **"Near" names (design, section 3):** Task 7 left a fix that no source could name under its coordinates. Now, when the cache, the geocoder and the bundled data all fail to name a fix, `PlaceNamer` names it "Near <town>" after the nearest place in the bundled data within 20 miles (about 32 km; `PlaceIndexResolver.nearbyPlaceName`, `DEFAULT_NEARBY_METERS`). The maintainer set the limit, so the name still says where the user is. A fix within 25 km of a town is already named after it, so "Near" covers fixes 25 to 32 km from the nearest town; farther than that, the fix keeps its coordinates. Only the name changes, and the place is not cached, so the geocoder names it once it can. The word "Near" is a string resource (`location_near_place`).
+- **Going offline on the emulator:** CI's `google_apis` emulators have a geocoder and a network, so the test turns Wi-Fi and mobile data off, once for the whole class: a network turned back on after one test reconnects a few seconds later, in the middle of the next. The shell user can do that on newer API levels but not on API 24, and `su` cannot be run from inside a test (on API 25 it crashes the system process). So both emulator jobs run `OfflinePlaceNamingTest` first, on its own, after turning the network off as root with `adb`, and pass `requireOffline=true`, which fails the test on a device that is still online; elsewhere it skips. The check that the device is offline reads `dumpsys connectivity`, because the app does not hold `ACCESS_NETWORK_STATE`.
+- **The minified build:** the test also runs against `releaseCheck`, where R8 renames the app's classes and Play services', so it uses only what R8 keeps (the screens, the preference names, the files the app writes): it checks the header, and reads what was found for a typed place, and that a "near" name was not cached, from the geocode cache file.
+- **The device's location** comes from a test GPS provider (`LocationManager.addTestProvider`), which Play services' fused provider reads from. An emulator that has not agreed to Google's location service shows Play services' dialog to turn it on when the app first asks; the test accepts it on a first launch and then opens the app again. With the fix mocked through Play services' mock mode instead, accepting the dialog in the same launch left the fix undelivered and the screen showed "Unable to update your current location"; this was not looked into further here.
+- **Step 3:** `UpgradeStateLaunchTest` already installs the v409 state and checks that the saved location and the cache survive the upgrade, so it was not extended.
+
+- [x] **Step 1:** Emulator test with the network disabled (airplane mode or no data) and an injected mock location: typed bundled city resolves with name, time zone and elevation; coordinates get a "near" name; nothing returns an unnamed location. Uses the emulator-only guard in `AppState` like the other tests.
+- [x] **Step 2:** Run the suite against the `releaseCheck` minified build (`-Pzmanim.testBuildType=releaseCheck`) so R8 cannot break asset loading or serialization.
+- [x] **Step 3:** Upgrade check: install the v409 fixture state, upgrade, confirm saved location and cache survive (extend the existing upgrade-state test).
+- [x] **Step 4: Verify** CI: `emulator-smoke` (24 and 36) and `emulator-minified`. Commit.
 
 ---
 
