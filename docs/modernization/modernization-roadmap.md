@@ -39,6 +39,14 @@
 
 **2026-10-17** — Task 11's Play App Signing step was done early: Zmanim and Zehut Yosef are enrolled with their existing keys (now upload keys), signing secrets live in `~/.gradle/gradle.properties`, and bundles get versioned names. Enrollment showed Zmanim's 2009 key is 1024-bit RSA / SHA-1, so Task 11 gains Step 2b: replace the upload key via an upload-key reset, then decide on Play's one-time app-signing-key upgrade. See the implementation plan's Task 11 for details.
 
+**2026-11-19** — Phase 2's code is done (Tasks 0 to 8 of `phase2/phase-2-implementation.md`; Task 9's remaining steps are the maintainer's: confirming the disclosures, the Play Console location declaration due 2027-01-27, and measuring APK size, cold start and offline use on a phone). Where it differs from Section 3's Phase 2 outline, by the maintainer's decisions in the Phase 2 design (section 8):
+- No HTTP geocoder fallback (D4): the system geocoder stays the only online lookup, so nothing new is disclosed.
+- No database (D1): the geocoding cache is a small file (`GeocodeCache`), which reads the released app's `CachedLocations` on upgrade.
+- The offline data is GeoNames `cities15000` (D2), bundled and generated at development time, with overrides that keep Israeli places in Israel. It has no curated list of Jewish communities yet; the format has a flag for one.
+- Elevation is height above sea level (D5), with a bundled EGM2008 geoid grid to correct GPS altitudes on devices before API 34.
+- An approximate-only location grant is accepted, with a one-time warning (D3), and precise location stays requested (D7).
+- The screens still receive locations through `ZmanimService` and the event bus; Phase 4a replaces that path.
+
 ---
 
 ## 1. Vision & Architectural Principles
@@ -168,6 +176,8 @@ flowchart LR
 ---
 
 ### Phase 2: Modern Location Architecture & Offline Resilience
+
+**Status:** code done 2026-11-19; see the 2026-11-19 entry in the revision history above and `phase2/phase-2-implementation.md`.
 
 **Estimated effort:** 2–3 weeks.
 
