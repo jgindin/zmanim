@@ -56,6 +56,8 @@
   <string name="cannot_determine_location">Unable to determine your current location.</string>
   <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
+  <!-- The name of a place that no source could name, after the town in the app's own list that it is near. -->
+  <string name="location_near_place">Near %1$s</string>
   <string name="action_dismiss">Dismiss</string>
 
 
