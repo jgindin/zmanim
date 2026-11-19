@@ -220,6 +220,64 @@ public class UT_LocationToAddressConverter {
   }
 
 
+  /**
+   * In the Negev, 29 km (18 miles) from Dimona, the nearest place in the bundled data: too far to be named after it, near
+   * enough to be near it.
+   */
+  private static final double                               NEGEV_LATITUDE = 30 + 51 / 60.0;
+  private static final double                               NEGEV_LONGITUDE = 34 + 52 / 60.0;
+
+  private static ZmanimLocation inTheNegev() {
+    return fix( NEGEV_LATITUDE, NEGEV_LONGITUDE );
+  }
+
+
+  @Test
+  public void offlineAFixTooFarFromATownToBeNamedAfterItIsNamedNearTheNearestOne() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( NEGEV_LATITUDE, NEGEV_LONGITUDE, 5 ) ).thenThrow( new IOException( "no network" ) );
+
+    ZmanimServiceRequests.Request request = resolvePlace( inTheNegev() );
+
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( "Near Dimona, Israel", request.location.getLocationName() );
+    Assert.assertEquals( NEGEV_LATITUDE, request.location.getLatitude(), 1e-9 );
+    Assert.assertEquals( NEGEV_LONGITUDE, request.location.getLongitude(), 1e-9 );
+    Assert.assertEquals( 30, request.location.getElevation(), 1e-9 );
+  }
+
+
+  /** Farther into the Negev, 57 km (35 miles) from Dimona, the nearest place in the bundled data: too far to be near it. */
+  @Test
+  public void offlineAFixMoreThanTwentyMilesFromEveryTownIsAcquiredUnderItsCoordinates() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 30.6, 34.8, 5 ) ).thenThrow( new IOException( "no network" ) );
+
+    ZmanimServiceRequests.Request request = resolvePlace( fix( 30.6, 34.8 ) );
+
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( ZmanimLocation.toLatLongString( 30.6, 34.8 ), request.location.getLocationName() );
+  }
+
+
+  /** A "near" name is not cached, so once the geocoder works again it names the place. */
+  @Test
+  public void aFixNamedNearATownIsNamedOnceTheGeocoderWorksAgain() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( NEGEV_LATITUDE, NEGEV_LONGITUDE, 5 ) ).thenThrow( new IOException( "no network" ) );
+    resolvePlace( inTheNegev() );
+
+    Address sdeBoker = new Address( Locale.US );
+    sdeBoker.setLocality( "Sde Boker" );
+    sdeBoker.setCountryName( "Israel" );
+    Mockito.reset( geocoder );
+    Mockito.when( geocoder.getFromLocation( NEGEV_LATITUDE, NEGEV_LONGITUDE, 5 ) ).thenReturn( Collections.singletonList( sdeBoker ) );
+
+    Assert.assertEquals( AddressNames.addressToLocationName( sdeBoker ),
+      resolvePlace( inTheNegev() ).location.getLocationName() );
+  }
+
+
   @Test
   public void aLocationThatIsAlreadyResolvedIsNotLookedUpAgain() {
 

@@ -7,6 +7,7 @@ package com.gindin.zmanlib.location
 import java.util.TimeZone
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -149,12 +150,26 @@ class UT_PlaceSourceAdapters {
     }
 
     @Test
+    fun aFixTooFarToBeNamedAfterAPlaceIsNearTheNearestOneWithinTheNearbyLimit() = runTest {
+      // About 30 km (19 miles) west of Albany: too far to be named after it, near enough to be
+      //  near it.
+      assertEquals("Albany, United States", resolver.nearbyPlaceName(fix(42.6526, -74.1229)))
+    }
+
+    @Test
+    fun aFixBeyondTheNearbyLimitIsNearNoPlace() = runTest {
+      // About 34 km (21 miles) west of Albany.
+      assertNull(resolver.nearbyPlaceName(fix(42.6526, -74.17)))
+    }
+
+    @Test
     fun noPlaceDataMeansNotFound() = runTest {
       val empty =
         PlaceIndexResolver(InMemoryPlaceIndex({ PlaceData.text(emptyMap()).byteInputStream() }))
 
       assertEquals(PlaceResult.NotFound, empty.fromCoordinates(fix(42.6526, -73.7562)))
       assertEquals(PlaceResult.NotFound, empty.fromName(typedAlbany))
+      assertNull(empty.nearbyPlaceName(fix(42.6526, -73.7562)))
     }
   }
 
