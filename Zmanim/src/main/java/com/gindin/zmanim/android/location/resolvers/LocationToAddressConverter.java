@@ -4,6 +4,7 @@
 
 package com.gindin.zmanim.android.location.resolvers;
 
+import com.gindin.zmanim.android.R;
 import com.gindin.zmanim.android.location.LocationError;
 import com.gindin.zmanim.android.location.ZmanLocationUtil;
 import com.gindin.zmanim.android.service.ZmanimService;
@@ -86,7 +87,7 @@ public class LocationToAddressConverter
   public void onCreate() {
     super.onCreate();
 
-    namer = new PlaceNamer( PlaceResolution.create( this ) );
+    namePlacesWith( PlaceResolution.create( this ) );
     if ( wipeCacheOnStart ) {
       wipeCacheOnStart = false;
       namer.forgetCachedPlaces();
@@ -97,7 +98,7 @@ public class LocationToAddressConverter
   /** Names places through {@code resolution} instead of the app's own chain. */
   @VisibleForTesting
   void namePlacesWith( @NonNull PlaceResolution resolution ) {
-    namer = new PlaceNamer( resolution );
+    namer = new PlaceNamer( resolution, town -> getString( R.string.location_near_place, town ) );
   }
 
 
