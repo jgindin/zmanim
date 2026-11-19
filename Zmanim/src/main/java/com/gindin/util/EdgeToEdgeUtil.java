@@ -42,8 +42,8 @@ public class EdgeToEdgeUtil {
    *  already noted elsewhere in this codebase between what Robolectric simulates and real device
    *  window-manager/compositor behavior (see the JDK/CLDR AM-PM note in
    *  zmanim.android-application-conventions.gradle.kts for another example of the same class of
-   *  gap). The recorded Roborazzi goldens reflect this: they still show content starting flush at
-   *  the top, same as before this fix, since that's genuinely what Robolectric renders.
+   *  gap). The recorded Roborazzi goldens reflect this: they show content starting flush at the top,
+   *  since that's what Robolectric renders.
    */
   public static void padForActionBarOverlay(
     Activity activity,
