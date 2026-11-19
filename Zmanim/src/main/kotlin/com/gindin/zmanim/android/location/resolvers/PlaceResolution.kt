@@ -18,8 +18,14 @@ import com.gindin.zmanlib.location.ZmanimLocation
  * The app's place lookup: the cache, then the system geocoder (the only one that goes online, and
  * left out on a device that has none), then the bundled place data. Each source has
  * [ResolverChain.DEFAULT_TIMEOUT_PER_SOURCE]. The caller stores what the chain finds in [cache].
+ * [placeData] is the chain's last source, which also names the town a fix no source could name is
+ * near.
  */
-class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
+class PlaceResolution(
+  val cache: FileGeocodeCache,
+  val chain: ResolverChain,
+  val placeData: PlaceIndexResolver,
+) {
 
   companion object {
 
@@ -75,13 +81,14 @@ class PlaceResolution(val cache: FileGeocodeCache, val chain: ResolverChain) {
     fun create(context: Context, geocoder: Geocoder?): PlaceResolution {
 
       val (cache, places) = shared(context)
+      val placeData = PlaceIndexResolver(places)
       val sources = buildList {
         add(GeocodeCacheResolver(cache))
         geocoder?.let { add(SystemGeocoder(it)) }
-        add(PlaceIndexResolver(places))
+        add(placeData)
       }
 
-      return PlaceResolution(cache, ResolverChain(sources))
+      return PlaceResolution(cache, ResolverChain(sources), placeData)
     }
 
     /** Forgets the shared cache and place data, so each test starts from its own files. */

@@ -220,6 +220,45 @@ public class UT_LocationToAddressConverter {
   }
 
 
+  /** In the Negev, 57 km from Dimona, the nearest place in the bundled data. */
+  private static ZmanimLocation inTheNegev() {
+    return fix( 30.6, 34.8 );
+  }
+
+
+  @Test
+  public void offlineAFixTooFarFromATownToBeNamedAfterItIsNamedNearTheNearestOne() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 30.6, 34.8, 5 ) ).thenThrow( new IOException( "no network" ) );
+
+    ZmanimServiceRequests.Request request = resolvePlace( inTheNegev() );
+
+    Assert.assertEquals( "LOCATION_ACQUIRED", request.action );
+    Assert.assertEquals( "Near Dimona, Israel", request.location.getLocationName() );
+    Assert.assertEquals( 30.6, request.location.getLatitude(), 1e-9 );
+    Assert.assertEquals( 34.8, request.location.getLongitude(), 1e-9 );
+    Assert.assertEquals( 30, request.location.getElevation(), 1e-9 );
+  }
+
+
+  /** A "near" name is not cached, so once the geocoder works again it names the place. */
+  @Test
+  public void aFixNamedNearATownIsNamedOnceTheGeocoderWorksAgain() throws IOException {
+
+    Mockito.when( geocoder.getFromLocation( 30.6, 34.8, 5 ) ).thenThrow( new IOException( "no network" ) );
+    resolvePlace( inTheNegev() );
+
+    Address mitzpeRamon = new Address( Locale.US );
+    mitzpeRamon.setLocality( "Mitzpe Ramon" );
+    mitzpeRamon.setCountryName( "Israel" );
+    Mockito.reset( geocoder );
+    Mockito.when( geocoder.getFromLocation( 30.6, 34.8, 5 ) ).thenReturn( Collections.singletonList( mitzpeRamon ) );
+
+    Assert.assertEquals( AddressNames.addressToLocationName( mitzpeRamon ),
+      resolvePlace( inTheNegev() ).location.getLocationName() );
+  }
+
+
   @Test
   public void aLocationThatIsAlreadyResolvedIsNotLookedUpAgain() {
 
