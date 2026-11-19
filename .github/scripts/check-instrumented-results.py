@@ -21,6 +21,8 @@ ASSUMPTION_SKIP = "AssumptionViolatedException"
 
 MODULES = {
     "Zmanim": "Zmanim/build/outputs/androidTest-results/connected/*",
+    # OfflinePlaceNamingTest, run on its own with the network off and its results moved here (see ci.yml).
+    "Zmanim offline": "Zmanim/build/outputs/androidTest-results/offline/*",
     "ZehutYosef barMitzvah": "ZehutYosef/build/outputs/androidTest-results/connected/*/flavors/barMitzvah",
     "ZehutYosef sidur": "ZehutYosef/build/outputs/androidTest-results/connected/*/flavors/sidur",
 }
