@@ -33,7 +33,7 @@ public fun interface ElevationPolicy {
  * 2. the fix's altitude above the ellipsoid, less the geoid height there from [geoid];
  * 3. the bundled place data's elevation for the matched place, which is a value for the town, not
  *    for the user's street;
- * 4. otherwise 0, which means unknown, as it always has.
+ * 4. otherwise 0, which means unknown.
  *
  * An input that is NaN or infinite is skipped. An elevation below sea level is 0, as
  * [ZmanimLocation.Builder.atElevation] makes it: the zmanim engine does not take negative

@@ -24,10 +24,10 @@ import kotlinx.serialization.json.Json
  * place per line in the [ZmanLocationJSON] format. The count catches a file cut short at the end of
  * a line, which would otherwise read as a shorter cache. The file is replaced whole on every
  * change, through a temporary file renamed over it, so a crash leaves the old file or the new one
- * and never half of either. Until it is first written, the entries come from the file the app has
- * always kept (`CachedLocations`: a count, then that many locations as modified UTF-8), which is
- * deleted once its entries are in the new file. A file that cannot be read is discarded, as it
- * always has been: the cache only saves lookups.
+ * and never half of either. Until it is first written, the entries come from the older cache file,
+ * `CachedLocations` (a count, then that many locations as modified UTF-8), which is deleted once
+ * its entries are in the new file. A file that cannot be read is discarded: the cache only saves
+ * lookups, and every place in it can be looked up again.
  *
  * At most [MAX_ENTRIES] places are kept; storing one more drops the one stored longest ago.
  *
