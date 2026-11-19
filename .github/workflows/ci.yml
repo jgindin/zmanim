@@ -82,7 +82,17 @@ jobs:
           # google_apis: the app uses Google Play Services location APIs and the Geocoder.
           target: google_apis
           disable-animations: true
-          script: ./gradlew :Zmanim:connectedDebugAndroidTest :ZehutYosef:connectedBarMitzvahDebugAndroidTest :ZehutYosef:connectedSidurDebugAndroidTest
+          # OfflinePlaceNamingTest runs first and on its own, with Wi-Fi and mobile data turned off as root (the shell
+          #  user cannot turn them off on every API level); requireOffline makes it fail rather than skip if the
+          #  emulator still has a network. Its results are moved aside so the main run does not overwrite them, and the
+          #  results check reads them as "Zmanim offline". A failing command here does not stop the main run: the
+          #  results check reports it.
+          script: |
+            adb shell su 0 svc wifi disable; adb shell su 0 svc data disable
+            ./gradlew :Zmanim:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.gindin.zmanim.android.OfflinePlaceNamingTest -Pandroid.testInstrumentationRunnerArguments.requireOffline=true || true
+            mv Zmanim/build/outputs/androidTest-results/connected Zmanim/build/outputs/androidTest-results/offline || true
+            adb shell su 0 svc wifi enable; adb shell su 0 svc data enable
+            ./gradlew :Zmanim:connectedDebugAndroidTest :ZehutYosef:connectedBarMitzvahDebugAndroidTest :ZehutYosef:connectedSidurDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=com.gindin.zmanim.android.OfflinePlaceNamingTest
       # A connected task finishes successfully, with no results, when an APK fails to install, and with an empty result
       #  when the instrumentation crashes before its first test (for instance on a class R8 removed from the app).
       #  Requiring tests to have run in Zmanim and in each ZehutYosef flavor treats both as the failures they are.
@@ -131,7 +141,14 @@ jobs:
           # google_apis: the app uses Google Play Services location APIs and the Geocoder.
           target: google_apis
           disable-animations: true
-          script: ./gradlew -Pzmanim.testBuildType=releaseCheck :Zmanim:connectedReleaseCheckAndroidTest :ZehutYosef:connectedBarMitzvahReleaseCheckAndroidTest :ZehutYosef:connectedSidurReleaseCheckAndroidTest
+          # The offline place-naming test runs first, offline, as in emulator-smoke: R8 must not break reading the
+          #  bundled place data.
+          script: |
+            adb shell su 0 svc wifi disable; adb shell su 0 svc data disable
+            ./gradlew -Pzmanim.testBuildType=releaseCheck :Zmanim:connectedReleaseCheckAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.gindin.zmanim.android.OfflinePlaceNamingTest -Pandroid.testInstrumentationRunnerArguments.requireOffline=true || true
+            mv Zmanim/build/outputs/androidTest-results/connected Zmanim/build/outputs/androidTest-results/offline || true
+            adb shell su 0 svc wifi enable; adb shell su 0 svc data enable
+            ./gradlew -Pzmanim.testBuildType=releaseCheck :Zmanim:connectedReleaseCheckAndroidTest :ZehutYosef:connectedBarMitzvahReleaseCheckAndroidTest :ZehutYosef:connectedSidurReleaseCheckAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=com.gindin.zmanim.android.OfflinePlaceNamingTest
       # A connected task finishes successfully, with no results, when an APK fails to install, and with an empty result
       #  when the instrumentation crashes before its first test (for instance on a class R8 removed from the app).
       #  Requiring tests to have run in Zmanim and in each ZehutYosef flavor treats both as the failures they are.

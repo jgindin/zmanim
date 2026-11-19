@@ -116,6 +116,12 @@ Conventions and hard-won rules:
 - The Android Gradle plugin writes a test that skips itself with a JUnit `Assume` as a `<failure>`
   holding an `AssumptionViolatedException` in the result XML. `.github/scripts/check-instrumented-results.py`
   treats those as skips; keep it that way.
+- `OfflinePlaceNamingTest` proves that places are named from the bundled data with no network. It
+  turns Wi-Fi and mobile data off itself and skips when the shell user cannot (the API 24 emulator);
+  CI turns them off as root (`adb shell su 0 svc wifi disable`, and the same for `data`) and passes
+  `-Pandroid.testInstrumentationRunnerArguments.requireOffline=true`, which makes a device that is
+  still online fail it. Do the same to run it locally on such an emulator, and turn the network back
+  on afterwards.
 - On-device tests that wipe app state use the emulator-only guard in `AppState` and skip on physical
   devices (unless `-Pandroid.testInstrumentationRunnerArguments.allowPhysicalDevice=true`). Never
   run them against a phone with the real app installed.
@@ -199,7 +205,7 @@ Conventions and hard-won rules:
 | Job | Runs | Required? |
 |---|---|---|
 | `verify` | `ktfmtCheck detekt`, then `checkNewApi`, then `test verifyRoborazziDebug assembleDebug`, then `checkR8KeptNames` | **Yes** (branch protection) |
-| `emulator-smoke` (API 24 and 36) | the on-device tests on an emulator, then `check-instrumented-results.py` | No (`continue-on-error`) |
+| `emulator-smoke` (API 24 and 36) | `OfflinePlaceNamingTest` with the network off, then the other on-device tests, then `check-instrumented-results.py` | No (`continue-on-error`) |
 | `emulator-minified` (API 36) | the same tests against the `releaseCheck` minified build | No (`continue-on-error`) |
 
 `check-instrumented-results.py` fails when the app, or either ZehutYosef flavor, produced no results,
