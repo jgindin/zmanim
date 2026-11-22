@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -70,6 +71,18 @@ public class ZehutYosefActivity
   private PrefsListener                                     prefsListener;
 
   private Drawer                                            drawer;
+
+  /**
+   * Back closes an open drawer before it closes the reader. It is a callback, enabled only while the drawer is open,
+   *  rather than an onBackPressed() override, because apps that target Android 16 get the system's predictive back,
+   *  which only consults the enabled callbacks and otherwise finishes the activity without calling onBackPressed().
+   */
+  private final OnBackPressedCallback                       closeDrawerOnBack = new OnBackPressedCallback( false ) {
+    @Override
+    public void handleOnBackPressed() {
+      closeDrawer();
+    }
+  };
 
   private TextView                                          textContent;
 
@@ -200,19 +213,6 @@ public class ZehutYosefActivity
   }
 
 
-  @Override
-  public void onBackPressed() {
-
-    // Handle the back press :D close the drawer first and if the drawer is closed close the activity
-    if ( drawer != null && drawer.isDrawerOpen() ) {
-      drawer.closeDrawer();
-    }
-    else {
-      super.onBackPressed();
-    }
-  }
-
-
   private void initDrawer( final Bundle savedInstanceState ) {
 
     // Handle Toolbar
@@ -256,14 +256,29 @@ public class ZehutYosefActivity
           ) {
 
             handleItem( drawerItem );
-            drawer.closeDrawer();
+            closeDrawer();
             return true;
           }
         }
       )
+      .withOnDrawerListener( new DrawerBackListener() )
       .withSavedInstance( savedInstanceState )
       .withShowDrawerOnFirstLaunch( true )
       .build();
+
+    closeDrawerOnBack.setEnabled( drawer.isDrawerOpen() );
+    getOnBackPressedDispatcher().addCallback( this, closeDrawerOnBack );
+  }
+
+
+  /**
+   * Closes the drawer and lets Back through again if it is now closed. The drawer reports no close while it has not
+   *  been laid out yet, which happens when the first section is selected at startup.
+   */
+  private void closeDrawer() {
+
+    drawer.closeDrawer();
+    closeDrawerOnBack.setEnabled( drawer.isDrawerOpen() );
   }
 
 
@@ -483,6 +498,27 @@ public class ZehutYosefActivity
         startingDate.getGregorianMonth(), startingDate.getGregorianDayOfMonth() );
     }
 
+  }
+
+
+  /** Keeps {@link #closeDrawerOnBack} enabled exactly while any part of the drawer is showing. */
+  private class DrawerBackListener
+    implements Drawer.OnDrawerListener {
+
+    @Override
+    public void onDrawerOpened( final View drawerView ) {
+      closeDrawerOnBack.setEnabled( true );
+    }
+
+    @Override
+    public void onDrawerClosed( final View drawerView ) {
+      closeDrawerOnBack.setEnabled( false );
+    }
+
+    @Override
+    public void onDrawerSlide( final View drawerView, final float slideOffset ) {
+      closeDrawerOnBack.setEnabled( slideOffset > 0 );
+    }
   }
 
 }
