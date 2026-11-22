@@ -107,6 +107,7 @@ public class LocationToAddressConverter
 
     ZmanimLocation location = ZmanLocationUtil.fromBundle( intent.getBundleExtra( ActionParams.LOCATION.name() ) );
     ZmanimLocation resolved = null;
+    LocationError notResolved = new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION );
 
     switch ( Actions.value( intent.getAction() ) ) {
       case RESOLVE_LOCATION:
@@ -121,6 +122,7 @@ public class LocationToAddressConverter
 
       case RESOLVE_PLACE:
         resolved = resolve( location );
+        notResolved = new LocationError( LocationError.Code.PLACE_NOT_FOUND, location.originalUserName );
         break;
 
       default:
@@ -132,7 +134,7 @@ public class LocationToAddressConverter
     }
 
     if ( resolved.isInvalid || !resolved.isResolved() ) {
-      ZmanimService.enqueueWork( this, new LocationError( LocationError.Code.CANNOT_DETERMINE_LOCATION ), location );
+      ZmanimService.enqueueWork( this, notResolved, location );
     }
     else {
       ZmanimService.enqueueWork( this, resolved );

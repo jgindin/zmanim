@@ -54,6 +54,8 @@
   <string name="cannot_show_notifications">Without \“All the time\” location access, Zmanim notifications won\'t work.</string>
 
   <string name="cannot_determine_location">Unable to determine your current location.</string>
+  <string name="no_place_entered">Enter a place in the location settings to calculate zmanim for it.</string>
+  <string name="place_not_found">Couldn’t find “%s”. Check the spelling. (Postal codes need a network.)</string>
   <string name="cannot_update_location">Unable to update your current location. Using last known location. (%s)</string>
   <string name="unknown_location">Unknown Location</string>
   <!-- The name of a place that no source could name, after the town in the app's own list that it is near. -->
