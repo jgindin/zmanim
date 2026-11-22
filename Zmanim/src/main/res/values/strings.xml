@@ -74,7 +74,7 @@
   </string>
   <string name="static_location">Specify Your Location</string>
   <string name="use_static_location_pref_title">Use Specified Place</string>
-  <string name="use_static_location_pref_summary">Calculate zmanim for a location. (Requires network.)</string>
+  <string name="use_static_location_pref_summary">Calculate zmanim for a place. (Postal codes need a network.)</string>
   <string name="static_location_pref_title">Place</string>
   <string name="static_location_pref_summary">E.g., seattle or 98118</string>
   <string name="lat_long_location">Use Latitude &amp; Longitude</string>
