@@ -29,7 +29,10 @@ public class LocationError {
     NO_PROVIDERS,
     NO_PERMISSIONS,
     NO_PLAY_SERVICES,
-    NO_BACKGROUND_PERMISSIONS
+    NO_BACKGROUND_PERMISSIONS,
+
+    /** No source knows the place the user typed; the message is what they typed. */
+    PLACE_NOT_FOUND
   }
 
   private static final String                               ERROR_CODE = "error code";

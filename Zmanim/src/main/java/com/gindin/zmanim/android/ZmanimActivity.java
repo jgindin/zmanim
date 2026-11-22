@@ -59,6 +59,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.os.StrictMode;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -667,6 +668,12 @@ public class ZmanimActivity
 
       case BAD_INPUT:
         errorMessage = error.message;
+        break;
+
+      case PLACE_NOT_FOUND:
+        errorMessage = TextUtils.isEmpty( error.message )
+          ? getResources().getString( R.string.no_place_entered )
+          : getResources().getString( R.string.place_not_found, error.message );
         break;
 
 

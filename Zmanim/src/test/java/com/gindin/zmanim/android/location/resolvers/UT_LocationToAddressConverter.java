@@ -327,26 +327,28 @@ public class UT_LocationToAddressConverter {
 
 
   @Test
-  public void aTypedPlaceNoSourceKnowsCannotBeDetermined() throws IOException {
+  public void aTypedPlaceNoSourceKnowsIsNotFound() throws IOException {
 
     Mockito.when( geocoder.getFromLocationName( "Qwxzvv", 5 ) ).thenReturn( Collections.emptyList() );
 
     ZmanimServiceRequests.Request request = resolvePlace( typed( "Qwxzvv" ) );
 
     Assert.assertEquals( "LOCATION_NOT_ACQUIRED", request.action );
-    Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
+    Assert.assertEquals( LocationError.Code.PLACE_NOT_FOUND, request.error.errorCode );
+    Assert.assertEquals( "Qwxzvv", request.error.message );
     Assert.assertEquals( "Qwxzvv", request.location.getLocationName() );
   }
 
 
   @Test
-  public void offlineATypedPlaceTheBundledDataDoesNotKnowCannotBeDetermined() throws IOException {
+  public void offlineATypedPlaceTheBundledDataDoesNotKnowIsNotFound() throws IOException {
 
     Mockito.when( geocoder.getFromLocationName( "Qwxzvv", 5 ) ).thenThrow( new IOException( "no network" ) );
 
     ZmanimServiceRequests.Request request = resolvePlace( typed( "Qwxzvv" ) );
 
-    Assert.assertEquals( LocationError.Code.CANNOT_DETERMINE_LOCATION, request.error.errorCode );
+    Assert.assertEquals( LocationError.Code.PLACE_NOT_FOUND, request.error.errorCode );
+    Assert.assertEquals( "Qwxzvv", request.error.message );
   }
 
 
