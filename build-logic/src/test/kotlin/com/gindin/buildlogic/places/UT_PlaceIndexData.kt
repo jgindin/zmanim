@@ -22,10 +22,14 @@ class UT_PlaceIndexData {
     elevation: String = "",
     dem: String = "10",
     timeZone: String = "America/New_York",
+    asciiName: String = name,
+    alternateNames: List<String> = emptyList(),
   ) =
     GeoNamesCity(
       id = id,
       name = name,
+      asciiName = asciiName,
+      alternateNames = alternateNames,
       countryCode = country,
       regionCode = "01",
       latitude = "1.5",
@@ -50,7 +54,7 @@ class UT_PlaceIndexData {
   fun theAssetStartsWithItsFormatAndVersionThenTheAttribution() {
     val lines = PlaceIndexData.build(listOf(city(1, "Albany")), countries, emptyList()).lines
 
-    assertEquals("zmanim-places\t1", lines[0])
+    assertEquals("zmanim-places\t2", lines[0])
     assertEquals("# ${PlaceIndexData.ATTRIBUTION}", lines[1])
   }
 
@@ -61,6 +65,67 @@ class UT_PlaceIndexData {
     assertEquals(
       listOf("P\tAlbany\tUS\t1.5\t-2.25\t45\tAmerica/New_York\t0"),
       placeLines(output),
+    )
+  }
+
+  @Test
+  fun otherNamesInLatinOrHebrewLettersAreWrittenAfterTheFlags() {
+    val output =
+      PlaceIndexData.build(
+        listOf(
+          city(
+            1,
+            "Bet Shemesh",
+            alternateNames = listOf("Beit-Shemesh", "Бейт-Шемеш", "בית שמש", "بيت شيمش", "Bet 2"),
+          )
+        ),
+        countries,
+        emptyList(),
+      )
+
+    assertEquals(
+      listOf(
+        "P\tBet Shemesh\tUS\t1.5\t-2.25\t10\tAmerica/New_York\t0\tBeit-Shemesh\tבית שמש\tBet 2"
+      ),
+      placeLines(output),
+    )
+  }
+
+  /**
+   * The app ignores case, accents, apostrophes and hyphens when it matches names (see the asset).
+   */
+  @Test
+  fun otherNamesTheAppWouldMatchTheSameWayAreWrittenOnce() {
+    val output =
+      PlaceIndexData.build(
+        listOf(
+          city(
+            1,
+            "Bet Shemesh",
+            asciiName = "Bet Shemesh",
+            alternateNames =
+              listOf("Bet-Shemesh", "bet shemesh", "Beit Şemeș", "Beit Semes", "Be’it Semes"),
+          )
+        ),
+        countries,
+        emptyList(),
+      )
+
+    assertEquals(listOf("Beit Şemeș"), placeLines(output).single().split('\t').drop(8))
+  }
+
+  @Test
+  fun aPlaceTheOverridesRenameIsStillFoundUnderGeoNamesNamesForIt() {
+    val output =
+      PlaceIndexData.build(
+        listOf(city(1, "Hebron", alternateNames = listOf("Al Khalil"))),
+        countries,
+        listOf(override(1, "Hebron", name = "Hevron")),
+      )
+
+    assertEquals(
+      listOf("Hevron", "Hebron", "Al Khalil"),
+      placeLines(output).single().split('\t').let { listOf(it[1]) + it.drop(8) },
     )
   }
 
@@ -152,8 +217,8 @@ class UT_PlaceIndexData {
 
     assertEquals(
       listOf(
-        "P\tHevron\tPS\t1.5\t-2.25\t903\tAsia/Jerusalem\t0",
-        "P\tBeitar Illit\tIL\t1.5\t-2.25\t675\tAsia/Jerusalem\t0",
+        "P\tHevron\tPS\t1.5\t-2.25\t903\tAsia/Jerusalem\t0\tHebron",
+        "P\tBeitar Illit\tIL\t1.5\t-2.25\t675\tAsia/Jerusalem\t0\tBattir",
       ),
       placeLines(output),
     )
@@ -278,6 +343,8 @@ class UT_PlaceIndexData {
         GeoNamesCity(
           id = 293397,
           name = "Tel Aviv",
+          asciiName = "Tel Aviv",
+          alternateNames = listOf("TLV", "Tel Aviv-Yafo"),
           countryCode = "IL",
           regionCode = "05",
           latitude = "32.08088",

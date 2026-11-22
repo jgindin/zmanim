@@ -32,6 +32,12 @@ committed, so builds never download anything. The format is described in
   place into a country shown as "Palestine" or "Palestinian Territory". Every run prints each record
   GeoNames assigns to `PS` and what the overrides make of it, and writes the same list to
   `Zmanim/build/places/ps-review.tsv` for review.
+- **Other names:** each place also carries GeoNames' ASCII and alternate names, so that a typed
+  "Beit Shemesh" or "בית שמש" finds Bet Shemesh. They find a place but are never shown. Only names
+  in Latin or Hebrew letters are kept (names in other scripts would add about 2.3 MB more), and of
+  names the app matches the same way (case, accents, apostrophes and hyphens aside) only the first.
+  In the 2026-11-07 data that is about 168,000 names, which doubles the asset to 3.7 MB (1.7 MB
+  compressed). A place the overrides rename is still found under GeoNames' names for it.
 - **Jewish-community flag:** always 0 until there is a curated list.
 
 ## Regenerating

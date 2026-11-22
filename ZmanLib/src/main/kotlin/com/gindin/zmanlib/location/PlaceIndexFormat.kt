@@ -14,13 +14,14 @@ public class PlaceIndexFormatException(message: String) : Exception(message)
  * The text is UTF-8, one record per line, fields separated by tabs. The first line names the format
  * and its version. `#` starts a comment line. `C` lines map a country code to its display name, and
  * `P` lines are places: name, country code, latitude, longitude, elevation in meters (empty when
- * unknown), IANA time zone and flags (`1` for a Jewish community).
+ * unknown), IANA time zone and flags (`1` for a Jewish community), then any other names the place
+ * is known by, one per field.
  */
 public object PlaceIndexFormat {
 
   public const val NAME: String = "zmanim-places"
 
-  public const val VERSION: Int = 1
+  public const val VERSION: Int = 2
 
   private const val COUNTRY_FIELDS = 3
   private const val PLACE_FIELDS = 8
@@ -38,8 +39,11 @@ public object PlaceIndexFormat {
   private const val TIME_ZONE_FIELD = 6
   private const val FLAGS_FIELD = 7
 
+  /** A place and the other names it is known by, which find it but are not shown. */
+  public data class Entry(public val place: IndexedPlace, public val alternateNames: List<String>)
+
   /** The places in the order the data lists them; fails on anything it does not understand. */
-  public fun read(lines: Sequence<String>): List<IndexedPlace> {
+  public fun read(lines: Sequence<String>): List<Entry> {
 
     val iterator = lines.iterator()
     val header = if (iterator.hasNext()) iterator.next() else ""
@@ -48,7 +52,7 @@ public object PlaceIndexFormat {
     }
 
     val countries = mutableMapOf<String, String>()
-    val places = mutableListOf<IndexedPlace>()
+    val places = mutableListOf<Entry>()
     var lineNumber = 1
     for (line in iterator) {
       lineNumber++
@@ -71,9 +75,11 @@ public object PlaceIndexFormat {
     fields: List<String>,
     countries: Map<String, String>,
     lineNumber: Int,
-  ): IndexedPlace {
+  ): Entry {
 
-    expectFields(fields, PLACE_FIELDS, lineNumber)
+    if (fields.size < PLACE_FIELDS) {
+      malformed(lineNumber, "expected at least $PLACE_FIELDS fields, found ${fields.size}")
+    }
     val country =
       countries[fields[COUNTRY_FIELD]]
         ?: malformed(
@@ -86,24 +92,26 @@ public object PlaceIndexFormat {
       malformed(lineNumber, "coordinates out of range")
     }
 
-    return IndexedPlace(
-      name = fields[NAME_FIELD],
-      country = country,
-      latitude = latitude,
-      longitude = longitude,
-      elevationMeters = fields[ELEVATION_FIELD].ifEmpty { null }?.let { number(it, lineNumber) },
-      timeZoneId = fields[TIME_ZONE_FIELD],
-      jewishCommunity =
-        when (fields[FLAGS_FIELD]) {
-          "0" -> false
-          "1" -> true
-          else ->
-            malformed(
-              lineNumber,
-              "unknown flags '${fields[FLAGS_FIELD]}'",
-            )
-        },
-    )
+    val place =
+      IndexedPlace(
+        name = fields[NAME_FIELD],
+        country = country,
+        latitude = latitude,
+        longitude = longitude,
+        elevationMeters = fields[ELEVATION_FIELD].ifEmpty { null }?.let { number(it, lineNumber) },
+        timeZoneId = fields[TIME_ZONE_FIELD],
+        jewishCommunity =
+          when (fields[FLAGS_FIELD]) {
+            "0" -> false
+            "1" -> true
+            else ->
+              malformed(
+                lineNumber,
+                "unknown flags '${fields[FLAGS_FIELD]}'",
+              )
+          },
+      )
+    return Entry(place, fields.subList(PLACE_FIELDS, fields.size))
   }
 
   private fun malformed(lineNumber: Int, problem: String): Nothing =

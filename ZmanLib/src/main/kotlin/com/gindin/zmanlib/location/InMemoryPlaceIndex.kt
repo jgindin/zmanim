@@ -60,9 +60,10 @@ public class InMemoryPlaceIndex(
   }
 
   /**
-   * Exact matches first, then names that start with the text; each group in the data's order, which
-   * lists larger places first. Matching ignores case, accents and apostrophes, and treats hyphens
-   * as spaces.
+   * Exact matches on a place's name first, then exact matches on one of its other names, then names
+   * that start with the text, then other names that do; each group in the data's order, which lists
+   * larger places first, and each place once. Matching ignores case, accents and apostrophes, and
+   * treats hyphens as spaces.
    */
   override suspend fun byName(text: String): List<IndexedPlace> {
 
@@ -70,9 +71,16 @@ public class InMemoryPlaceIndex(
     if (wanted.isEmpty()) return emptyList()
 
     val candidates = loaded()
-    val exact = candidates.filter { it.key == wanted }
-    val prefix = candidates.filter { it.key != wanted && it.key.startsWith(wanted) }
-    return (exact + prefix).map { it.place }
+    // A set of the candidates, not of the places, so that two places with the same details stay
+    // two.
+    val found = LinkedHashSet<SearchablePlace>()
+    candidates.filterTo(found) { it.key == wanted }
+    candidates.filterTo(found) { wanted in it.alternateKeys }
+    candidates.filterTo(found) { it.key.startsWith(wanted) }
+    candidates.filterTo(found) { candidate ->
+      candidate.alternateKeys.any { it.startsWith(wanted) }
+    }
+    return found.map { it.place }
   }
 
   private suspend fun loaded(): List<SearchablePlace> = mutex.withLock {
@@ -82,7 +90,12 @@ public class InMemoryPlaceIndex(
   private fun load(): List<SearchablePlace> =
     try {
       open().bufferedReader(Charsets.UTF_8).useLines { lines ->
-        PlaceIndexFormat.read(lines).map { SearchablePlace(it, searchKey(it.name)) }
+        PlaceIndexFormat.read(lines).map { entry ->
+          val key = searchKey(entry.place.name)
+          val alternateKeys =
+            entry.alternateNames.map { searchKey(it) }.filter { it.isNotEmpty() && it != key }
+          SearchablePlace(entry.place, key, alternateKeys.distinct())
+        }
       }
     } catch (e: IOException) {
       loadFailure = e
@@ -92,7 +105,11 @@ public class InMemoryPlaceIndex(
       emptyList()
     }
 
-  private class SearchablePlace(val place: IndexedPlace, val key: String)
+  private class SearchablePlace(
+    val place: IndexedPlace,
+    val key: String,
+    val alternateKeys: List<String>,
+  )
 
   private companion object {
 
