@@ -112,20 +112,18 @@ public class LocationProviderPreferences
   }
 
 
+  /**
+   * The result is set here, rather than in onBackPressed(), because every way of leaving the screen ends in finish():
+   *  apps that target Android 16 get the system's predictive back, which finishes the activity without calling
+   *  onBackPressed().
+   */
   @Override
-  public void onBackPressed() {
-
-    boolean changed = false;
+  public void finish() {
 
     final Map<String, ?> prefsAfterEditing = prefs.getAll();
-    if ( !prefsAfterEditing.equals( prefsBeforeEditing ) ) {
-      changed = true;
-    }
+    setResult( prefsAfterEditing.equals( prefsBeforeEditing ) ? RESULT_CANCELED : RESULT_OK );
 
-    setResult( changed ? RESULT_OK : RESULT_CANCELED );
-    finish();
-
-    super.onBackPressed();
+    super.finish();
   }
 
 
