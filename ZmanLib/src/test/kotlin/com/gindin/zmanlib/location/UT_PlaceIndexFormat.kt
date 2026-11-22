@@ -13,7 +13,9 @@ class UT_PlaceIndexFormat {
 
   private val countries = mapOf("XA" to "Atlantis", "XB" to "Lemuria")
 
-  private fun read(text: String) = PlaceIndexFormat.read(text.lineSequence())
+  private fun read(text: String) = PlaceIndexFormat.read(text.lineSequence()).map { it.place }
+
+  private fun readEntries(text: String) = PlaceIndexFormat.read(text.lineSequence())
 
   @Test
   fun aPlaceIsReadWithItsCountryNameElevationTimeZoneAndFlag() {
@@ -28,6 +30,29 @@ class UT_PlaceIndexFormat {
     assertEquals(
       listOf(IndexedPlace("Poseidonis", "Lemuria", 31.5, -35.25, 786.0, "UTC", true)),
       places,
+    )
+  }
+
+  @Test
+  fun aPlaceIsReadWithItsOtherNames() {
+    val entry =
+      readEntries(
+          PlaceData.text(
+            countries,
+            place("Poseidonis", 1.0, 2.0, alternateNames = listOf("Posidonia", "פוסידוניס")),
+          )
+        )
+        .single()
+
+    assertEquals("Poseidonis", entry.place.name)
+    assertEquals(listOf("Posidonia", "פוסידוניס"), entry.alternateNames)
+  }
+
+  @Test
+  fun aPlaceWithNoOtherNamesHasNone() {
+    assertEquals(
+      emptyList<String>(),
+      readEntries(PlaceData.text(countries, place("A", 1.0, 2.0))).single().alternateNames,
     )
   }
 
@@ -49,7 +74,7 @@ class UT_PlaceIndexFormat {
   @Test
   fun anotherFormatOrVersionIsRefused() {
     assertThrows<PlaceIndexFormatException> {
-      read(PlaceData.text(countries).replace(PlaceData.HEADER, "zmanim-places\t2"))
+      read(PlaceData.text(countries).replace(PlaceData.HEADER, "zmanim-places\t1"))
     }
   }
 

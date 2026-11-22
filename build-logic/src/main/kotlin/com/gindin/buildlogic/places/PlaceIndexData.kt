@@ -4,13 +4,18 @@
 
 package com.gindin.buildlogic.places
 
+import java.lang.Character.UnicodeScript
+import java.text.Normalizer
 import java.time.DateTimeException
 import java.time.ZoneId
+import java.util.Locale
 
 /** One row of GeoNames' `cities15000.txt`, reduced to the columns the place index uses. */
 data class GeoNamesCity(
   val id: Long,
   val name: String,
+  val asciiName: String,
+  val alternateNames: List<String>,
   val countryCode: String,
   val regionCode: String,
   val latitude: String,
@@ -59,9 +64,12 @@ data class ElevationCounts(
  * - `zmanim-places<TAB>1`: the first line, the format name and version.
  * - `#...`: a comment (the attribution).
  * - `C<TAB>code<TAB>name`: a country's display name, for every country code the places use.
- * - `P<TAB>name<TAB>country code<TAB>latitude<TAB>longitude<TAB>elevation<TAB>time zone<TAB>flags`:
- *   a place. Elevation is whole meters above sea level, or empty when unknown. Flags is `1` for a
- *   place marked as a Jewish community and `0` otherwise.
+ * - `P<TAB>name<TAB>country code<TAB>latitude<TAB>longitude<TAB>elevation<TAB>time zone<TAB>flags`,
+ *   then `<TAB>other name` for each other name: a place. Elevation is whole meters above sea level,
+ *   or empty when unknown. Flags is `1` for a place marked as a Jewish community and `0` otherwise.
+ *   The other names find the place when typed but are never shown. They are GeoNames' ASCII and
+ *   alternate names (which still find a place an override renames), keeping only those written in
+ *   Latin or Hebrew letters and only one of any that the app would match the same way.
  *
  * Places are in descending order of population (then by GeoNames id), so a reader that keeps the
  * file's order lists the larger of two same-named places first.
@@ -70,7 +78,7 @@ object PlaceIndexData {
 
   const val FORMAT_NAME: String = "zmanim-places"
 
-  const val FORMAT_VERSION: Int = 1
+  const val FORMAT_VERSION: Int = 2
 
   const val ATTRIBUTION: String =
     "Place data from GeoNames (geonames.org), licensed under CC BY 4.0 " +
@@ -81,9 +89,15 @@ object PlaceIndexData {
 
   private const val PALESTINE_PATTERN = "palestin"
 
+  private val COMBINING_MARKS = Regex("\\p{M}+")
+  private val APOSTROPHES = Regex("['`‘’ʻʼʿʾ]")
+  private val SEPARATORS = Regex("[\\s\\-]+")
+
   private const val CITY_COLUMNS = 19
   private const val COL_ID = 0
   private const val COL_NAME = 1
+  private const val COL_ASCII_NAME = 2
+  private const val COL_ALTERNATE_NAMES = 3
   private const val COL_LATITUDE = 4
   private const val COL_LONGITUDE = 5
   private const val COL_COUNTRY = 8
@@ -118,6 +132,8 @@ object PlaceIndexData {
         GeoNamesCity(
           id = fields[COL_ID].toLongOrFail("cities line ${index + 1} id"),
           name = fields[COL_NAME],
+          asciiName = fields[COL_ASCII_NAME],
+          alternateNames = fields[COL_ALTERNATE_NAMES].split(',').filter { it.isNotEmpty() },
           countryCode = fields[COL_COUNTRY],
           regionCode = fields[COL_REGION],
           latitude = fields[COL_LATITUDE],
@@ -177,11 +193,9 @@ object PlaceIndexData {
     val citiesById = cities.associateBy { it.id }
     val overridesById = checkOverrides(overrides, citiesById, countries)
 
-    val places =
-      cities.sortedWith(compareByDescending<GeoNamesCity> { it.population }.thenBy { it.id }).map {
-        city ->
-        applyOverride(city, overridesById[city.id])
-      }
+    val sources =
+      cities.sortedWith(compareByDescending<GeoNamesCity> { it.population }.thenBy { it.id })
+    val places = sources.map { city -> applyOverride(city, overridesById[city.id]) }
 
     val missingCountries = places.map { it.countryCode }.filter { it !in countries }.toSortedSet()
     if (missingCountries.isNotEmpty()) {
@@ -195,9 +209,9 @@ object PlaceIndexData {
         .map { it.countryCode }
         .toSortedSet()
         .forEach { code -> add("C\t$code\t${countries.getValue(code)}") }
-      places.forEach { place ->
+      sources.zip(places).forEach { (source, place) ->
         add(
-          listOf(
+          (listOf(
               "P",
               place.name,
               place.countryCode,
@@ -206,7 +220,7 @@ object PlaceIndexData {
               elevationOf(place),
               place.timeZone,
               "0",
-            )
+            ) + otherNames(source, place))
             .joinToString("\t")
         )
       }
@@ -226,6 +240,38 @@ object PlaceIndexData {
       city.dem.isNotEmpty() && city.dem != DEM_NO_DATA -> city.dem
       else -> ""
     }
+
+  /**
+   * The names that find [place] besides its own: GeoNames' ASCII name for it, then its alternate
+   * names. Only names in Latin or Hebrew letters are kept, the scripts this app's users type in;
+   * the other scripts would double the data. Of names the app would match the same way, only the
+   * first is kept.
+   */
+  private fun otherNames(source: GeoNamesCity, place: GeoNamesCity): List<String> {
+    val seen = mutableSetOf(matchKey(place.name))
+    return (listOf(source.asciiName) + source.alternateNames).filter { name ->
+      isInLatinOrHebrew(name) && matchKey(name).let { it.isNotEmpty() && seen.add(it) }
+    }
+  }
+
+  private fun isInLatinOrHebrew(name: String): Boolean =
+    name.codePoints().allMatch {
+      !Character.isLetter(it) ||
+        Character.UnicodeScript.of(it) in setOf(UnicodeScript.LATIN, UnicodeScript.HEBREW)
+    }
+
+  /**
+   * Folds a name the way the app's place search does (`InMemoryPlaceIndex.searchKey`): no accents,
+   * apostrophes or case; hyphens and runs of spaces as one space. If the two differ, the asset only
+   * carries a few names the app treats as the same.
+   */
+  private fun matchKey(name: String): String =
+    Normalizer.normalize(name, Normalizer.Form.NFD)
+      .replace(COMBINING_MARKS, "")
+      .replace(APOSTROPHES, "")
+      .replace(SEPARATORS, " ")
+      .trim()
+      .lowercase(Locale.ROOT)
 
   private fun checkOverrides(
     overrides: List<PlaceOverride>,

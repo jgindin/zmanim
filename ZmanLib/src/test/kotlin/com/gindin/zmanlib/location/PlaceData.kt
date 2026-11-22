@@ -7,7 +7,7 @@ package com.gindin.zmanlib.location
 /** Builds synthetic place data in the bundled format, for the place index tests. */
 object PlaceData {
 
-  const val HEADER = "zmanim-places\t1"
+  const val HEADER = "zmanim-places\t2"
 
   /** The data with the usual header, the given countries (code to name) and place lines. */
   fun text(countries: Map<String, String>, vararg places: String): String =
@@ -22,5 +22,9 @@ object PlaceData {
     elevation: String = "",
     timeZone: String = "UTC",
     flags: String = "0",
-  ): String = "P\t$name\t$country\t$latitude\t$longitude\t$elevation\t$timeZone\t$flags"
+    alternateNames: List<String> = emptyList(),
+  ): String =
+    (listOf("P", name, country, "$latitude", "$longitude", elevation, timeZone, flags) +
+        alternateNames)
+      .joinToString("\t")
 }

@@ -116,6 +116,45 @@ class UT_InMemoryPlaceIndex {
   }
 
   @Test
+  fun aPlaceIsFoundByAnotherOfItsNames() = runTest {
+    val index =
+      indexOf(
+        place("Bet Shemesh", 1.0, 1.0, alternateNames = listOf("Beit-Shemesh", "בית שמש")),
+        place("Albany", 2.0, 2.0),
+      )
+
+    assertEquals(listOf("Bet Shemesh"), index.byName("Beit Shemesh").map { it.name })
+    assertEquals(listOf("Bet Shemesh"), index.byName("Beit Shem").map { it.name })
+    assertEquals(listOf("Bet Shemesh"), index.byName("בית שמש").map { it.name })
+  }
+
+  /**
+   * A place's own name outranks another place's other name: exact matches on the name, then exact
+   * matches on another name, then names that start with the text, then other names that do.
+   */
+  @Test
+  fun matchesOnAPlacesOwnNameComeBeforeMatchesOnItsOtherNames() = runTest {
+    val index =
+      indexOf(
+        place("Elsewhere", 1.0, 1.0, alternateNames = listOf("Modiin Town")),
+        place("Re‘ut", 2.0, 2.0, alternateNames = listOf("Modiin")),
+        place("Modiin Town", 3.0, 3.0),
+        place("Modiin Illit", 4.0, 4.0),
+      )
+
+    assertEquals(listOf(2.0, 3.0, 4.0, 1.0), index.byName("Modiin").map { it.latitude })
+    assertEquals(listOf(3.0, 1.0), index.byName("Modiin Town").map { it.latitude })
+  }
+
+  @Test
+  fun aPlaceMatchedByManyOfItsNamesIsListedOnce() = runTest {
+    val index =
+      indexOf(place("Tsfat", 1.0, 1.0, alternateNames = listOf("Tsefat", "Tsfat Ilit", "Tsfath")))
+
+    assertEquals(listOf("Tsfat"), index.byName("Tsf").map { it.name })
+  }
+
+  @Test
   fun blankTextMatchesNothing() = runTest {
     val index = indexOf(place("Albany", 1.0, 1.0))
 

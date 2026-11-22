@@ -62,4 +62,19 @@ class UT_BundledPlaceIndex {
       assertEquals("Asia/Jerusalem", index.byName(name).first().timeZoneId, name)
     }
   }
+
+  @Test
+  fun placesAreFoundUnderOtherSpellings() = runTest {
+    val index = bundledIndex()
+
+    for (spelling in listOf("Beit Shemesh", "Beit-Shemesh", "בית שמש")) {
+      assertEquals("Bet Shemesh", index.byName(spelling).firstOrNull()?.name, spelling)
+    }
+  }
+
+  /** The overrides rename GeoNames' Hebron; the name GeoNames gives it still finds it. */
+  @Test
+  fun aPlaceTheOverridesRenameIsFoundUnderItsGeoNamesName() = runTest {
+    assertEquals("Hevron", bundledIndex().byName("Hebron").firstOrNull()?.name)
+  }
 }
