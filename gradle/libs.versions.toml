@@ -26,7 +26,7 @@ androidxPreference = "1.2.1"
 googleMaterial = "1.0.0"
 playServicesLocation = "21.4.0"
 
-robolectric = "4.17"
+robolectric = "4.18.1"
 # Stands in for the Play Services location entry points and the final Geocoder in Zmanim's JVM
 #  tests (inline mock maker, the default since Mockito 5).
 mockito = "5.24.0"
