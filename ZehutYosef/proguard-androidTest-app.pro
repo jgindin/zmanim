@@ -22,3 +22,18 @@
   <init>();
   void show(android.content.Context);
 }
+
+# DrawerBackTest opens, closes and checks the navigation drawer by its gravity, through DrawerLayout methods the app
+#  itself never calls, and asks the reader's back dispatcher whether anything still takes Back.
+-keep,allowobfuscation class androidx.activity.ComponentActivity {
+  androidx.activity.OnBackPressedDispatcher getOnBackPressedDispatcher();
+}
+-keep,allowobfuscation class androidx.activity.OnBackPressedDispatcher {
+  boolean hasEnabledCallbacks();
+}
+-keep,allowobfuscation class androidx.drawerlayout.widget.DrawerLayout {
+  void openDrawer(int);
+  void closeDrawer(int);
+  boolean isDrawerOpen(int);
+  boolean isDrawerVisible(int);
+}
