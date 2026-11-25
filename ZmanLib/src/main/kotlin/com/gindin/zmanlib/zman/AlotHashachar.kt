@@ -17,6 +17,9 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
 
   // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
   //  it would only scatter the table, so the length rule does not apply.
+  //
+  // KosherJava deprecates some of these opinions only as a warning to use them lechumra; it does
+  //  not plan to remove them. The app offers them by name, so those zmanim suppress the warning.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
@@ -29,6 +32,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           "Before sea level sunrise, based on the time to walk the distance of 5 Mil at 24 minutes a Mil.",
           Zmanim.Type.Alot,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getAlos120Minutes())
         }
@@ -42,6 +46,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           "GR'A, based on 1/6th of the day before sunrise.",
           Zmanim.Type.Alot,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getAlos120Zmanis())
         }
@@ -109,6 +114,7 @@ internal class AlotHashachar(zmanimCalculator: ZmanimCalculator) :
           "When the sun is 26 degrees below the eastern geometric horizon before sunrise.",
           Zmanim.Type.Alot,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getAlos26Degrees())
         }

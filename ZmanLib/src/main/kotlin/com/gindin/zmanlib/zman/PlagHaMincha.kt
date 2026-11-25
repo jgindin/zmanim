@@ -17,6 +17,9 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
 
   // A flat table of independent zman definitions, one per opinion, with no control flow: splitting
   //  it would only scatter the table, so the length rule does not apply.
+  //
+  // KosherJava deprecates some of these opinions only as a warning to use them lechumra; it does
+  //  not plan to remove them. The app offers them by name, so those zmanim suppress the warning.
   @Suppress("LongMethod")
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
@@ -44,6 +47,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha120Minutes())
         }
@@ -58,6 +62,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha120MinutesZmanis())
         }
@@ -72,6 +77,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha16Point1Degrees())
         }
@@ -86,6 +92,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha18Degrees())
         }
@@ -100,6 +107,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha19Point8Degrees())
         }
@@ -114,6 +122,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha26Degrees())
         }
@@ -141,6 +150,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha72Minutes())
         }
@@ -155,6 +165,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha72MinutesZmanis())
         }
@@ -169,6 +180,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha90Minutes())
         }
@@ -183,6 +195,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha90MinutesZmanis())
         }
@@ -197,6 +210,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha96Minutes())
         }
@@ -211,6 +225,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagHamincha96MinutesZmanis())
         }
@@ -267,6 +282,7 @@ internal class PlagHaMincha(zmanimCalculator: ZmanimCalculator) :
           Zmanim.Type.PlagHaMincha,
           true,
         ) {
+        @Suppress("DEPRECATION")
         override fun calculate(): Calendar? {
           return toCalendar(zmanimCalculator, zmanimCalculator.getPlagAlosToSunset())
         }

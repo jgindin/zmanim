@@ -24,6 +24,8 @@ internal open class TzaitHacochavim(
     return getByName(DEFAULT_ZMAN_NAME)
   }
 
+  // KosherJava deprecates some of these opinions only as a warning to use them lechumra; it does
+  //  not plan to remove them. The app offers them by name, so those zmanim suppress the warning.
   override fun buildZmanimList(zmanimCalculator: ZmanimCalculator): List<Zman> {
 
     return mergeZmanimLists(
@@ -66,6 +68,7 @@ internal open class TzaitHacochavim(
             "Based on the time to walk a Mil in 24 minutes, for a total of 120 minutes based on the opinion of Ula who calculated tzait as 5 Mil after sea level shkiah.",
             zmanType,
           ) {
+          @Suppress("DEPRECATION")
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120Minutes())
           }
@@ -79,6 +82,7 @@ internal open class TzaitHacochavim(
             "120 minutes zmaniyot after sea level sunset.",
             zmanType,
           ) {
+          @Suppress("DEPRECATION")
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais120Zmanis())
           }
@@ -196,6 +200,7 @@ internal open class TzaitHacochavim(
             "When the sun is 26 degrees below the western geometric horizon after sunset.",
             zmanType,
           ) {
+          @Suppress("DEPRECATION")
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzais26Degrees())
           }
@@ -313,6 +318,7 @@ internal open class TzaitHacochavim(
             "Based on the sun's position at 4.42 degrees below the western horizon.",
             zmanType,
           ) {
+          @Suppress("DEPRECATION")
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point42Degrees())
           }
@@ -326,6 +332,7 @@ internal open class TzaitHacochavim(
             "Based on the sun's position at 4.66 degrees below the western horizon.",
             zmanType,
           ) {
+          @Suppress("DEPRECATION")
           override fun calculate(): Calendar? {
             return toCalendar(zmanimCalculator, zmanimCalculator.getTzaisGeonim4Point66Degrees())
           }
