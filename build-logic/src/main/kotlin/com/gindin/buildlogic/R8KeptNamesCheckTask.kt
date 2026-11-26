@@ -29,8 +29,8 @@ import org.gradle.api.tasks.TaskAction
  *   kept member from a removed one.
  * - `seeds.txt` lists every class and member a keep rule matched and R8 kept. That supplies the
  *   "still there" half.
- * - `resources.txt` is the resource shrinker's log; its "Unused resources are:" section lists what
- *   was removed.
+ * - `resources.txt` is R8's resource shrinking log. It has a line per resource; those R8 removed
+ *   end in "is not reachable.".
  *
  * The expectations file (one per app, next to its proguard-rules.pro) holds one entry per line:
  * - `class <binary name>`: the class must be in the output under its own name.
@@ -153,22 +153,22 @@ abstract class R8KeptNamesCheckTask : DefaultTask() {
   }
 
   /**
-   * The `type:name` of every resource listed in the shrinker log's "Unused resources are:" section.
+   * The `type:name` of every resource the shrinking log marks as removed. Its lines read
+   * `string:foo:2131755207 is not reachable.` for a removed resource and `... reachable from ...`
+   * for a kept one.
    */
   private fun removedResources(log: File): List<String> {
 
     val lines = log.readLines()
-    val start = lines.indexOfFirst { it.startsWith("Unused resources are:") }
-    if (start < 0) {
+    if (lines.none { it.endsWith(NOT_REACHABLE) || it.contains(REACHABLE_FROM) }) {
       throw GradleException(
-        "${log.path} has no 'Unused resources are:' section; is resource shrinking still enabled?"
+        "${log.path} lists no kept or removed resources; is resource shrinking still enabled?"
       )
     }
 
     return lines
-      .drop(start + 1)
-      .takeWhile { it.startsWith(" ") }
-      .map { it.trim().substringBeforeLast(':') }
+      .filter { it.endsWith(NOT_REACHABLE) }
+      .map { it.removeSuffix(NOT_REACHABLE).substringBeforeLast(':') }
   }
 
   /** One check from the expectations file, with the comment block that explains it. */
@@ -263,6 +263,12 @@ abstract class R8KeptNamesCheckTask : DefaultTask() {
  * readable.
  */
 private const val MAX_LISTED_RESOURCES = 10
+
+/** How R8's resource shrinking log ends the line of a resource it removed. */
+private const val NOT_REACHABLE = " is not reachable."
+
+/** What R8's resource shrinking log puts in the line of a resource it kept. */
+private const val REACHABLE_FROM = " reachable from "
 
 /**
  * Strips the line-number ranges R8 puts around a method in `mapping.txt` (`1:3:void foo():12:14`).
