@@ -37,3 +37,11 @@
   boolean isDrawerOpen(int);
   boolean isDrawerVisible(int);
 }
+
+# The resource ids the tests look up. With non-final ids the tests read these fields at run time, but R8 inlines the
+#  ids into the app's own code and drops the R classes, which the test APK shares with the app. Each field names a
+#  resource the app itself uses, so keeping them keeps nothing the release build leaves out.
+-keep,allowobfuscation class com.gindin.zehutyosef.R$id {
+  int text_content;
+  int toolbar;
+}
