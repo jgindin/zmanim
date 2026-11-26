@@ -31,6 +31,8 @@ public class LogUtils {
   }
 
 
+  // Only reads moreInfo, so callers can pass parameterized Pairs safely.
+  @SafeVarargs
   public static void logError(
     String                            where,
     String                            message,
@@ -78,6 +80,7 @@ public class LogUtils {
     private final Pair<String, String>[]                    moreInfo;
 
 
+    @SafeVarargs
     LogErrorTask(
       String                            where,
       String                            message,

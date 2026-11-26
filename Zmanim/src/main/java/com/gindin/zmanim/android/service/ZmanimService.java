@@ -193,8 +193,10 @@ public class ZmanimService
         }
 
 
+        // Only passes moreInfo on to LogUtils, so callers can pass parameterized Pairs safely.
         @Override
-        public void log(
+        @SafeVarargs
+        public final void log(
           String                  where,
           String                  message,
           Throwable               error,
@@ -383,7 +385,6 @@ public class ZmanimService
 
     // Leave this here ... it comes in handy...
     if ( BuildConfig.DEBUG ) {
-      //noinspection unchecked
       LogUtils.logError( "scheduleUserAlert", "scheduling alert", null,
         new Pair<>( "alert time", new Date( alertTime ).toString() ),
         new Pair<>( "zman type", zman.type.displayName ),

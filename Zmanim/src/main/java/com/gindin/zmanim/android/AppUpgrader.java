@@ -83,7 +83,6 @@ class AppUpgrader {
 
       }
       catch ( Throwable e ) {
-        //noinspection unchecked
         LogUtils.logError( "doUpgrade", "", e,
           new Pair<>( "ver", Integer.toString( thisCodeVersion ) ),
           new Pair<>( "old", Integer.toString( lastKnownCodeVersion ) )
