@@ -58,3 +58,24 @@
 -keep class com.google.android.gms.common.api.ResolvableApiException {
   public <init>(com.google.android.gms.common.api.Status);
 }
+
+# The resource ids and strings the tests look up. With non-final ids the tests read these fields at run time, but R8
+#  inlines the ids into the app's own code and drops the R classes, which the test APK shares with the app. Each field
+#  names a resource the app itself uses, so keeping them keeps nothing the release build leaves out.
+-keep,allowobfuscation class com.gindin.zmanim.android.R$id {
+  int hebrew_date;
+  int location;
+  int secular_date;
+  int zman_name;
+  int zman_time;
+}
+-keep,allowobfuscation class com.gindin.zmanim.android.R$string {
+  int exact_alarm_permission_title;
+  int exact_alarms_denied_pref_title;
+  int notification_permission_denied;
+  int notification_permission_title;
+  int notifications_blocked_pref_title;
+}
+-keep,allowobfuscation class androidx.appcompat.R$id {
+  int action_bar_container;
+}
