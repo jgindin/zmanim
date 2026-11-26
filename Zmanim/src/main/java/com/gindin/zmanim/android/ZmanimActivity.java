@@ -880,29 +880,29 @@ public class ZmanimActivity
   public boolean onOptionsItemSelected( MenuItem item ) {
 
     int id = item.getItemId();
-    switch ( id ) {
+    if ( id == R.id.personal_prefs ) {
+      personalPrefsManager.editPrefs();
+      return true;
+    }
 
-      case R.id.personal_prefs:
-        personalPrefsManager.editPrefs();
-        return true;
+    if ( id == R.id.location_prefs ) {
+      eventBus.fire( new EditLocationPrefsEvent() );
+      return true;
+    }
 
-      case R.id.location_prefs:
-        eventBus.fire( new EditLocationPrefsEvent() );
-        return true;
+    if ( id == R.id.feedback ) {
+      FeedbackFragment.show( this, lastKnownLocation );
+      return true;
+    }
 
-      case R.id.feedback:
-        FeedbackFragment.show( this, lastKnownLocation );
-        return true;
+    if ( isMessageDialog( id ) ) {
+      showDialog( id );
+      return true;
+    }
 
-      case R.id.privacy:
-      case R.id.about:
-      case R.id.help:
-        showDialog( id );
-        return true;
-
-      case R.id.refresh:
-        refresh( true );
-        return true;
+    if ( id == R.id.refresh ) {
+      refresh( true );
+      return true;
     }
 
     return false;
@@ -913,14 +913,14 @@ public class ZmanimActivity
   @Override
   protected Dialog onCreateDialog( int dialogID ) {
 
-    switch ( dialogID ) {
-      case R.id.privacy:
-      case R.id.about:
-      case R.id.help:
-        return messageDisplayer.getInstance( this );
-    }
+    return isMessageDialog( dialogID ) ? messageDisplayer.getInstance( this ) : null;
+  }
 
-    return null;
+
+  /** Whether {@code dialogID} is one of the menu items that shows a page in the message dialog. */
+  private static boolean isMessageDialog( int dialogID ) {
+
+    return dialogID == R.id.privacy || dialogID == R.id.about || dialogID == R.id.help;
   }
 
 
@@ -931,21 +931,14 @@ public class ZmanimActivity
   ) {
     super.onPrepareDialog( dialogID, dialog );
 
-    switch ( dialogID ) {
-      case R.id.privacy:
-        messageDisplayer.update( R.string.privacy, "com/gindin/zmanim/android/privacy.html" );
-        break;
-
-      case R.id.about:
-        messageDisplayer.update( R.string.about_header, "com/gindin/zmanim/android/about.html" );
-        break;
-
-      case R.id.help:
-        messageDisplayer.update( R.string.help_header, "com/gindin/zmanim/android/help.html" );
-        break;
-
-      default:
-        // nothing for the other dialogs.
+    if ( dialogID == R.id.privacy ) {
+      messageDisplayer.update( R.string.privacy, "com/gindin/zmanim/android/privacy.html" );
+    }
+    else if ( dialogID == R.id.about ) {
+      messageDisplayer.update( R.string.about_header, "com/gindin/zmanim/android/about.html" );
+    }
+    else if ( dialogID == R.id.help ) {
+      messageDisplayer.update( R.string.help_header, "com/gindin/zmanim/android/help.html" );
     }
   }
 

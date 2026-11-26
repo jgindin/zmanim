@@ -285,24 +285,22 @@ public class ZehutYosefActivity
   private void handleItem( final IDrawerItem drawerItem ) {
 
     boolean handled = false;
-    switch ( drawerItem.getIdentifier() ) {
-      case R.string.action_settings:
-        startActivity( new Intent( this, Settings.class ) );
-        handled = true;
-        drawer.setSelection( activeSection.asDrawerItem(), false );
-        break;
+    int identifier = drawerItem.getIdentifier();
+    if ( identifier == R.string.action_settings ) {
+      startActivity( new Intent( this, Settings.class ) );
+      handled = true;
+      drawer.setSelection( activeSection.asDrawerItem(), false );
+    }
+    else if ( identifier == R.string.action_about ) {
 
-      case R.string.action_about:
+      if ( aboutBuilder == null ) {
+        aboutBuilder = new About();
+      }
 
-        if ( aboutBuilder == null ) {
-          aboutBuilder = new About();
-        }
+      aboutBuilder.show( this );
 
-        aboutBuilder.show( this );
-
-        handled = true;
-        drawer.setSelection( activeSection.asDrawerItem(), false );
-        break;
+      handled = true;
+      drawer.setSelection( activeSection.asDrawerItem(), false );
     }
 
     if ( !handled ) {
