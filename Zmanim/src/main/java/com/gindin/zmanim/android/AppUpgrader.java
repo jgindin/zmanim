@@ -96,7 +96,8 @@ class AppUpgrader {
   }
 
 
-  @SuppressWarnings( "MagicNumber" )
+  // Moving and then removing the old Use Elevation preferences is what their deprecated keys are still for.
+  @SuppressWarnings( { "MagicNumber", "deprecation" } )
   private static void upgradeElevationPref(
     ZmanimActivity  zmanimActivity,
     int             lastKnownCodeVersion

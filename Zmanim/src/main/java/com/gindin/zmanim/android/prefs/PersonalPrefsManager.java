@@ -27,8 +27,9 @@ public class PersonalPrefsManager
   }
 
 
+  // Upgrading from v66 or earlier sets the old Use Elevation preference, which is what its deprecated key is still for.
   @Override
-  @SuppressWarnings( { "MagicNumber" } )
+  @SuppressWarnings( { "MagicNumber", "deprecation" } )
   public @StringRes int onHandleUpgrade(
     int   thisCodeVersion,
     int   lastKnownCodeVersion
