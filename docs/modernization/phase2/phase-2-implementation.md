@@ -322,12 +322,14 @@ D1 to D6 are answered in `phase-2-design.md` Section 8. Remaining human items fr
 
 ### Task 9: Disclosure, docs, and close-out
 
+**Closed (2026-11-27):** the maintainer confirmed that no disclosure change is needed and that the app works offline on a phone, and closed the phase. The Play Console precise-location declaration (Step 1a) stays open, due 2027-01-27.
+
 **Status (2026-11-19):** the documentation is done (Step 2): `AGENTS.md` describes the location code, the bundled data and how to regenerate it, and the offline emulator test, and the roadmap records Phase 2 as done with how it differs from the roadmap's outline. Three comments that compared the code with how it used to be were reworded. Steps 1, 1a and 3 are the maintainer's. For Step 1, what this phase changed in what is collected or sent: an approximate-only grant is now used (less precise data than before, sent nowhere new); the bundled place data and the geoid grid work on the device and send nothing; the system geocoder stays the only online lookup, and the privacy policy already says when the bundled list is used instead (Task 7, Step 3b).
 
-- [ ] **Step 1 (REQUIRES A HUMAN):** Confirm no disclosure change is needed (no new third party or data collected; the background-location declaration is unchanged). If Task 7 turned out to change what is collected, update the privacy policy and Data Safety form before release.
-- [ ] **Step 1a (REQUIRES A HUMAN, due 2027-01-27, does not wait for this phase):** File the Play Console declaration for `ACCESS_FINE_LOCATION` with the justification in D7, and confirm the background-location declaration still matches (D6). If Play rejects it, raise dropping `ACCESS_FINE_LOCATION` as a separate change.
+- [x] **Step 1 (REQUIRES A HUMAN):** Confirm no disclosure change is needed (no new third party or data collected; the background-location declaration is unchanged). If Task 7 turned out to change what is collected, update the privacy policy and Data Safety form before release. The maintainer confirmed on 2026-11-27 that no disclosure change is needed.
+- [ ] **Step 1a (REQUIRES A HUMAN, due 2027-01-27, does not wait for this phase):** File the Play Console declaration for `ACCESS_FINE_LOCATION` with the justification in D7, and confirm the background-location declaration still matches (D6). If Play rejects it, raise dropping `ACCESS_FINE_LOCATION` as a separate change. Still open after the phase closed; it does not block later phases, but it must be filed by 2027-01-27.
 - [x] **Step 2:** Update `AGENTS.md` (new location layering, the dataset and how to regenerate it, the emulator offline test) and the roadmap's Phase 2 status. Mark this plan's checkboxes.
-- [ ] **Step 3:** Record the maintainer's measurements: APK size delta, cold-start time on a real device before and after, and an offline test on the phone. Add them to the PR.
+- [x] **Step 3:** Record the maintainer's measurements: APK size delta, cold-start time on a real device before and after, and an offline test on the phone. Add them to the PR. On 2026-11-27 the maintainer confirmed that the app works offline on a phone and closed the phase without measuring the APK size or the cold start.
 - [x] **Step 4:** Commit: `jj commit -m "Document the Phase 2 location architecture and close out the phase"`.
 
 ---

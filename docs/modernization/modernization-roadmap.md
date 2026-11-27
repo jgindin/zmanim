@@ -47,6 +47,8 @@
 - An approximate-only location grant is accepted, with a one-time warning (D3), and precise location stays requested (D7).
 - The screens still receive locations through `ZmanimService` and the event bus; Phase 4a replaces that path.
 
+**2026-11-27** — Phase 2 is closed. The maintainer confirmed that no disclosure change is needed and that the app works offline on a phone; the APK size and cold start were not measured. The Play Console declaration for `ACCESS_FINE_LOCATION` (Task 9 Step 1a) is still open and must be filed by 2027-01-27.
+
 ---
 
 ## 1. Vision & Architectural Principles
@@ -177,7 +179,7 @@ flowchart LR
 
 ### Phase 2: Modern Location Architecture & Offline Resilience
 
-**Status:** code done 2026-11-19; see the 2026-11-19 entry in the revision history above and `phase2/phase-2-implementation.md`.
+**Status:** done 2026-11-27; see the 2026-11-19 and 2026-11-27 entries in the revision history above and `phase2/phase-2-implementation.md`. The Play Console precise-location declaration is still to be filed by 2027-01-27.
 
 **Estimated effort:** 2–3 weeks.
 
